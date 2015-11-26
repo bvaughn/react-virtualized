@@ -15,7 +15,7 @@ describe('VirtualScroll', () => {
   })
 
   const array = []
-  for (var i = 0; i < 1000; i++) {
+  for (var i = 0; i < 100; i++) {
     array.push({
       id: '${i}',
       name: `Name ${i}`,
@@ -30,24 +30,25 @@ describe('VirtualScroll', () => {
     rowsCount = list.size,
     scrollToIndex = undefined
   } = {}) {
+    function rowRenderer (index) {
+      return (
+        <div
+          key={index}
+          className='listItem'
+        >
+          {list.get(index)}
+        </div>
+      )
+    }
+
     return (
       <VirtualScroll
         height={height}
         rowHeight={rowHeight}
+        rowRenderer={rowRenderer}
+        rowsCount={rowsCount}
         scrollToIndex={scrollToIndex}
-      >
-        {list
-          .slice(0, rowsCount)
-          .map(index => (
-            <div
-              key={index}
-              className='listItem'
-            >
-              {`Row ${index + 1}`}
-            </div>
-          ))
-        }
-      </VirtualScroll>
+      />
     )
   }
 
@@ -55,7 +56,7 @@ describe('VirtualScroll', () => {
     const virtualScroll = TestUtils.renderIntoDocument(getMarkup(props))
 
     // Allow initial setImmediate() to set :scrollTop
-    jasmine.clock().tick(100)
+    jasmine.clock().tick()
 
     return virtualScroll
   }
@@ -66,7 +67,7 @@ describe('VirtualScroll', () => {
     let virtualScroll = render(getMarkup(props), node)
 
     // Allow initial setImmediate() to set :scrollTop
-    jasmine.clock().tick(100)
+    jasmine.clock().tick()
 
     return findDOMNode(virtualScroll)
   }
@@ -87,7 +88,7 @@ describe('VirtualScroll', () => {
     })
   })
 
-  // Allows for testing initial rendering of component and scrolling via props
+  /** Allows for testing initial rendering of component and scrolling via props */
   describe('scrollToIndex', () => {
     it('should scroll to the top', () => {
       const list = renderList({ scrollToIndex: 0 })
@@ -111,7 +112,7 @@ describe('VirtualScroll', () => {
     })
   })
 
-  // Allows more fine-grained control of scrolling from position A to B
+  /** Allows more fine-grained control of scrolling from position A to B */
   describe('scrollToIndex / _calculateScrollTopForIndex', () => {
     function calculateScrollTopForIndex (scrollToIndex, scrollTop = 0) {
       return VirtualScroll._calculateScrollTopForIndex({
