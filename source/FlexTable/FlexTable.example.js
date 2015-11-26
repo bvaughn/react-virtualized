@@ -111,7 +111,7 @@ export default class TableExample extends Component {
           <FlexTable
             ref='Table'
             className='FlexTableExample__FlexTable'
-            width={300}
+            width={350}
             height={virtualScrollHeight}
             headerHeight={virtualScrollHeaderHeight}
             rowHeight={virtualScrollRowHeight}
@@ -121,6 +121,14 @@ export default class TableExample extends Component {
             sortBy={sortBy}
             sortDirection={sortDirection}
           >
+            <FlexColumn
+              label='Index'
+              cellDataGetter={
+                (dataKey, rowData, columnData) => rowData.id
+              }
+              dataKey='index'
+              width={50}/>
+
             <FlexColumn
               label='Name'
               dataKey='name'
