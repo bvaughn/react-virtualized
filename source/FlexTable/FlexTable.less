@@ -1,0 +1,64 @@
+.FlexTable {
+  overflow: hidden;
+  font-size: 11px;
+  padding: 20px;
+  width: 100%;
+}
+.FlexTable__rowWrapper {
+  overflow: auto;
+}
+
+.FlexTable__headerRow,
+.FlexTable__row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+}
+.FlexTable__headerRow {
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 1px solid #DEEBF0;
+}
+.FlexTable__headerRow__truncatedText {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.FlexTable__row {
+  border-bottom: 1px solid #DEEBF0;
+}
+
+.FlexTable__headerRow__column,
+.FlexTable__row__column {
+  display: flex;
+  margin-right: 10px;
+  min-width: 0px;
+  overflow: hidden;
+
+  &:first-of-type {
+    margin-left: 10px;
+  }
+}
+.FlexTable__headerRow__column {
+  flex-direction: row;
+  align-items: center;
+
+  &.FlexTable__headerRow__column--sortable {
+    cursor: pointer;
+  }
+}
+.FlexTable__row__column {
+  height: 100%;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.FlexTable__headerRow__Icon {
+  flex: 0 0 24px;
+}
+
+.FlexTable__row__column__truncatedText {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

@@ -1,0 +1,73 @@
+{
+  "name": "react-virtualized",
+  "description": "React components for efficiently rendering large, scrollable lists",
+  "author": "Brian Vaughn",
+  "user": "bvaughn",
+  "version": "0.0.1",
+  "scripts": {
+    "clean": "rimraf build",
+    "build:webpack": "NODE_PATH='source/modules' webpack --config webpack.config.prod.js",
+    "build": "npm run clean && npm run build:webpack",
+    "start": "node devServer.js",
+    "test": "babel-node ./test/index.js",
+    "lint": "eslint source test",
+    "watch": "watch 'clear && npm run lint -s && npm run test -s' source test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gaearon/react-transform-boilerplate.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "boilerplate",
+    "hot",
+    "reload",
+    "hmr",
+    "live",
+    "edit",
+    "webpack",
+    "babel",
+    "react-transform"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gaearon/react-transform-boilerplate/issues"
+  },
+  "homepage": "https://github.com/gaearon/react-transform-boilerplate",
+  "devDependencies": {
+    "babel": "^5.8.29",
+    "babel-core": "^5.4.7",
+    "babel-eslint": "^3.1.9",
+    "babel-loader": "^5.1.2",
+    "babel-plugin-react-transform": "^1.1.1",
+    "cheerio": "^0.19.0",
+    "css-loader": "^0.23.0",
+    "eslint": "^1.3.1",
+    "eslint-plugin-react": "^3.8.0",
+    "express": "^4.13.3",
+    "file-loader": "^0.8.5",
+    "immutable": "^3.7.5",
+    "less": "^2.5.3",
+    "less-loader": "^2.2.2",
+    "postcss-loader": "^0.8.0",
+    "react-transform-catch-errors": "^1.0.0",
+    "react-transform-hmr": "^1.0.1",
+    "redbox-react": "^1.0.1",
+    "rimraf": "^2.4.3",
+    "style-loader": "^0.13.0",
+    "tape": "^4.2.1",
+    "watch": "^0.16.0",
+    "webpack": "^1.9.6",
+    "webpack-dev-middleware": "^1.2.0",
+    "webpack-dev-server": "^1.14.0",
+    "webpack-hot-middleware": "^2.0.0"
+  },
+  "dependencies": {
+    "classnames": "^2.2.1",
+    "raf": "^3.1.0",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "react-pure-render": "^1.0.2"
+  }
+}
