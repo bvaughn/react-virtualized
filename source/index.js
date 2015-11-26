@@ -1,11 +1,11 @@
-import React from 'react';
-import { render } from 'react-dom';
-import createApp from './App';
+import React from 'react'
+import { render } from 'react-dom'
+import createApp from './Demo'
 
-const App = createApp(React);
-const props = {};
+const Demo = createApp(React)
+const props = {}
 
 render(
-  <App { ...props }></App>,
+  <Demo { ...props }/>,
   document.getElementById('root')
-);
+)

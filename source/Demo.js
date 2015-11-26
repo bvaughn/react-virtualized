@@ -6,4 +6,4 @@ export default React => () => (
     <VirtualScrollExample/>
     <FlexTableExample/>
   </div>
-);
+)

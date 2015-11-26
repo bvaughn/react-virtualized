@@ -1,5 +1,5 @@
-const path = require('path');
-const webpack = require('webpack');
+const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
   devtool: 'eval',
@@ -25,9 +25,9 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        loaders: ['style','css','less'],
+        loaders: ['style', 'css', 'less'],
         include: path.join(__dirname, 'source')
       }
     ]
   }
-};
+}
