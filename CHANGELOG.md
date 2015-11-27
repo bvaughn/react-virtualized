@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 0.0.4
+Added keypress scrolling support.
+
 #### 0.0.3
 Added "main" entry to package.json.
 
