@@ -17,20 +17,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { VirtualScroll } from 'react-virtualized';
 
-// Table data as a list of array.
+// List data as an array of strings
 const list = [
-  1, 2, 3, 4, 5, 6
+  'Brian Vaughn'
   // And so on...
 ];
 
-// Render your table
+// Render your list
 ReactDOM.render(
   <VirtualScroll
     width={300}
     height={300}
     rowsCount={list.size}
     rowHeight={20}
-    rowRenderer={index => `Row ${list[index]}`}
+    rowRenderer={index => list[index]}
   />,
   document.getElementById('example')
 );
@@ -43,7 +43,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { FlexTable, FlexColumn } from 'react-virtualized';
 
-// Table data as a list of array.
+// Table data as a array of objects
 const list = [
   { name: 'Brian Vaughn', description: 'Software engineer'
   // And so on...
