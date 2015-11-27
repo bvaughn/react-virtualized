@@ -43,6 +43,7 @@ export default class VirtualScroll extends Component {
       scrollTop: 0
     }
 
+    this._onKeyPress = this._onKeyPress.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._onWheel = this._onWheel.bind(this)
   }
@@ -170,10 +171,13 @@ export default class VirtualScroll extends Component {
       <div
         ref='scrollingContainer'
         className={cn('VirtualScroll', className)}
+        onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
         onWheel={this._onWheel}
+        tabIndex={0}
         style={{
           height: height,
+          outline: 0,
           overflow: 'auto'
         }}
       >
@@ -258,6 +262,11 @@ export default class VirtualScroll extends Component {
     })
   }
 
+  _stopEvent (event) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
   /**
    * Sets an :isScrolling flag for a small window of time.
    * This flag is used to disable pointer events on the scrollable portion of the table (the rows).
@@ -299,6 +308,30 @@ export default class VirtualScroll extends Component {
       if (scrollTop !== calculatedScrollTop) {
         this.setState({ scrollTop: calculatedScrollTop })
       }
+    }
+  }
+
+  _onKeyPress (event) {
+    const { rowHeight } = this.props
+    const { scrollTop } = this.state
+
+    switch (event.key) {
+      case 'ArrowDown':
+        this._stopEvent(event) // Prevent key from also scrolling surrounding window
+
+        const { height, rowsCount } = this.props
+        const totalRowsHeight = rowsCount * rowHeight
+        const newScrollTop = Math.min(totalRowsHeight - height, scrollTop + rowHeight)
+
+        this.setState({ scrollTop: newScrollTop })
+        break
+      case 'ArrowUp':
+        this._stopEvent(event) // Prevent key from also scrolling surrounding window
+
+        this.setState({
+          scrollTop: Math.max(0, scrollTop - rowHeight)
+        })
+        break
     }
   }
 
