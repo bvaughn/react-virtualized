@@ -1,3 +1,4 @@
+const autoprefixer = require('autoprefixer')
 var path = require('path')
 var webpack = require('webpack')
 
@@ -33,9 +34,12 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        loaders: ['style', 'css', 'less'],
+        loaders: ['style', 'css', 'postcss', 'less'],
         include: path.join(__dirname, 'source')
       }
     ]
-  }
+  },
+  postcss: [
+    autoprefixer({ browsers: ['last 2 versions'] })
+  ]
 }

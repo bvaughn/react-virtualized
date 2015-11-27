@@ -91,19 +91,19 @@ export default class TableExample extends Component {
           <input
             className='FlexTableExample__input'
             name='virtualScrollHeight'
-            onChange={event => this.setState({ virtualScrollHeight: Number.parseInt(event.target.value, 10) || 1 })}
+            onChange={event => this.setState({ virtualScrollHeight: parseInt(event.target.value, 10) || 1 })}
             value={virtualScrollHeight}/>
 
           <input
             className='FlexTableExample__input'
             name='virtualScrollRowHeight'
-            onChange={event => this.setState({ virtualScrollRowHeight: Number.parseInt(event.target.value, 10) || 1 })}
+            onChange={event => this.setState({ virtualScrollRowHeight: parseInt(event.target.value, 10) || 1 })}
             value={virtualScrollRowHeight}/>
 
           <input
             className='FlexTableExample__input'
             name='virtualScrollHeaderHeight'
-            onChange={event => this.setState({ virtualScrollHeaderHeight: Number.parseInt(event.target.value, 10) || 1 })}
+            onChange={event => this.setState({ virtualScrollHeaderHeight: parseInt(event.target.value, 10) || 1 })}
             value={virtualScrollHeaderHeight}/>
         </div>
 
@@ -151,7 +151,7 @@ export default class TableExample extends Component {
   }
 
   _onRowsCountChange (event) {
-    let rowsCount = Number.parseInt(event.target.value, 10) || 0
+    let rowsCount = parseInt(event.target.value, 10) || 0
     rowsCount = Math.max(0, Math.min(this._list.size, rowsCount))
 
     this.setState({ rowsCount })
@@ -159,9 +159,9 @@ export default class TableExample extends Component {
 
   _onScrollToRowChange (event) {
     const { rowsCount } = this.state
-    let scrollToIndex = Math.min(rowsCount - 1, Number.parseInt(event.target.value, 10))
+    let scrollToIndex = Math.min(rowsCount - 1, parseInt(event.target.value, 10))
 
-    if (Number.isNaN(scrollToIndex)) {
+    if (isNaN(scrollToIndex)) {
       scrollToIndex = undefined
     }
 
