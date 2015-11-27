@@ -6,9 +6,9 @@
   "version": "0.0.1",
   "scripts": {
     "clean": "rimraf build",
-    "build:webpack": "NODE_PATH='source/modules' webpack --config webpack.config.prod.js",
+    "build:webpack": "NODE_ENV=production NODE_PATH='source/modules' webpack --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack",
-    "postbuild": "node postBuild.js",
+    "postbuild": "node postBuild",
     "start": "node devServer.js",
     "lint": "standard",
     "test:unit": "NODE_ENV=dev karma start",
@@ -90,8 +90,7 @@
     "watch": "^0.16.0",
     "webpack": "^1.9.6",
     "webpack-dev-middleware": "^1.2.0",
-    "webpack-dev-server": "^1.14.0",
-    "webpack-hot-middleware": "^2.0.0"
+    "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
     "classnames": "^2.2.1",
