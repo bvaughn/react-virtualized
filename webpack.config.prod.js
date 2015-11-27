@@ -4,11 +4,11 @@ var webpack = require('webpack')
 module.exports = {
   devtool: 'source-map',
   entry: [
-    './source/index'
+    './source/demo'
   ],
   output: {
     path: path.join(__dirname, 'build'),
-    filename: 'index.js',
+    filename: 'demo.js',
     publicPath: '/static/'
   },
   plugins: [

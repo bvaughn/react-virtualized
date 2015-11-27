@@ -8,6 +8,7 @@
     "clean": "rimraf build",
     "build:webpack": "NODE_PATH='source/modules' webpack --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack",
+    "postbuild": "node postBuild.js",
     "start": "node devServer.js",
     "lint": "standard",
     "test:unit": "NODE_ENV=dev karma start",
@@ -82,6 +83,7 @@
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.0.1",
+    "replace": "^0.3.0",
     "rimraf": "^2.4.3",
     "standard": "^5.4.1",
     "style-loader": "^0.13.0",
@@ -93,6 +95,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.1",
+    "fs-extra": "^0.26.2",
     "raf": "^3.1.0",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
