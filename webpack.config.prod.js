@@ -25,10 +25,17 @@ module.exports = {
     })
   ],
   module: {
-    loaders: [{
-      test: /\.js$/,
-      loaders: ['babel'],
-      include: path.join(__dirname, 'source')
-    }]
+    loaders: [
+      {
+        test: /\.js$/,
+        loaders: ['babel'],
+        include: path.join(__dirname, 'source')
+      },
+      {
+        test: /\.less$/,
+        loaders: ['style', 'css', 'less'],
+        include: path.join(__dirname, 'source')
+      }
+    ]
   }
 }
