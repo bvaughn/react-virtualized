@@ -79,6 +79,10 @@ export default class VirtualScrollExample extends Component {
           rowRenderer={this._rowRenderer}
           scrollToIndex={scrollToIndex}
         />
+
+          <p>
+            View <a href='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'>the source</a>
+          </p>
       </div>
     )
   }

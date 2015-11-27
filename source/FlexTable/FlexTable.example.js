@@ -146,6 +146,10 @@ export default class TableExample extends Component {
               flexGrow={1}/>
           </FlexTable>
         </div>
+
+        <p>
+          View <a href='https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/FlexTable.example.js'>the source</a>
+        </p>
       </div>
     )
   }
