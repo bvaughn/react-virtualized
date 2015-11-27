@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 0.0.3
+Added "main" entry to package.json.
+
 #### 0.0.2
 Added CSS auto-prefixing to support Safari and other, older browsers.
 

@@ -3,7 +3,7 @@
   "description": "React components for efficiently rendering large, scrollable lists",
   "author": "Brian Vaughn",
   "user": "bvaughn",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "build": "npm run build:webpack",
     "build:webpack": "NODE_ENV=production NODE_PATH='source/modules' webpack --config webpack.config.prod.js",
@@ -41,6 +41,7 @@
     "url": "https://github.com/gaearon/react-transform-boilerplate/issues"
   },
   "homepage": "https://github.com/gaearon/react-transform-boilerplate",
+  "main": "source/index.js",
   "standard": {
     "parser": "babel-eslint",
     "ignore": [],
