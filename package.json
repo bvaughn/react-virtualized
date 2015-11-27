@@ -17,7 +17,7 @@
     "start": "node devServer.js",
     "test": "npm run lint && npm run test:unit",
     "test:unit": "NODE_ENV=dev karma start",
-    "watch": "watch 'clear && npm run lint -s && npm run test -s' source test"
+    "watch": "watch 'clear && npm run lint -s && npm run test -s' source"
   },
   "repository": {
     "type": "git",
