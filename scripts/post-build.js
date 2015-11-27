@@ -8,9 +8,9 @@ const dest = path.resolve(__dirname, '../build/index.html')
 fs.copySync(source, dest)
 
 replace({
-    regex: /script src="[^"]+"/,
-    replacement: 'script src="demo.js"',
-    paths: [dest],
-    recursive: false,
-    silent: true,
-});
+  regex: /script src="[^"]+"/,
+  replacement: 'script src="demo.js"',
+  paths: [dest],
+  recursive: false,
+  silent: true
+})

@@ -84,7 +84,7 @@ I actively welcome pull requests; learn how to [contribute](https://github.com/b
 Changelog
 ---------
 
-Changes are tracked in the [changelog](https://github.com/bvaughn/react-virtualized/CHANGELOG.md).
+Changes are tracked in the [changelog](https://github.com/bvaughn/react-virtualized/blob/master/CHANGELOG.md).
 
 License
 ---------

@@ -3,8 +3,7 @@ import FlexTableExample from './FlexTable/FlexTable.example'
 import React from 'react'
 import VirtualScrollExample from './VirtualScroll/VirtualScroll.example'
 
-render(
-  (
+render((
     <div>
       <VirtualScrollExample/>
       <FlexTableExample/>
