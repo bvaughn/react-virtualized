@@ -3,7 +3,7 @@
   "description": "React components for efficiently rendering large, scrollable lists",
   "author": "Brian Vaughn",
   "user": "bvaughn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "npm run build:demo && npm run build:dist",
     "build:demo": "npm run clean:demo && NODE_ENV=demo NODE_PATH='source/modules' webpack --config webpack.config.demo.js",
