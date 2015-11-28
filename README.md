@@ -28,7 +28,7 @@ ReactDOM.render(
   <VirtualScroll
     width={300}
     height={300}
-    rowsCount={list.size}
+    rowsCount={list.length}
     rowHeight={20}
     rowRenderer={index => list[index]}
   />,
@@ -45,7 +45,7 @@ import { FlexTable, FlexColumn } from 'react-virtualized';
 
 // Table data as a array of objects
 const list = [
-  { name: 'Brian Vaughn', description: 'Software engineer'
+  { name: 'Brian Vaughn', description: 'Software engineer' }
   // And so on...
 ];
 
