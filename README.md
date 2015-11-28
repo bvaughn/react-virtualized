@@ -12,6 +12,8 @@ npm install react-virtualized --save
 
 ### VirtualScroll Example
 
+Below is a simple `VirtualScroll` example. Each row in the virtualized list is rendered through the use of a `rowRenderer` function for performance reasons. This function must return an element with a unique `key` and must fit within the specified `rowHeight`.
+
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -43,6 +45,8 @@ ReactDOM.render(
 ```
 
 ### FlexTable Example
+
+Below is a very basic `FlexTable` example. This table has only 2 columns, each containing a simple string. Both have a fixed width and neither is sortable. [See here](blob/master/source/FlexTable/FlexTable.example.js) for a more full-featured example including custom cell renderers, sortable headers, and more.
 
 ```javascript
 import React from 'react';
