@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 1.0.1
+Updated to use ReactDOM.findDOMNode instead of getDOMNode (but added backwards-compatible check for < React v0.14).
+
 #### 1.0.0
 Package JSON updated so that "main" entry points to `dist/react-virtualized.js` to provide easier integration for users that don't want Babel/Webpack to have to process their `node_modules` folder.
 
