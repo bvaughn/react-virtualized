@@ -1,3 +1,5 @@
+<img src="https://cloud.githubusercontent.com/assets/29597/11453244/aee1b36e-95b7-11e5-9946-17659c0b24e7.png" alt="React virtualized" data-canonical-src="https://cloud.githubusercontent.com/assets/29597/11453244/aee1b36e-95b7-11e5-9946-17659c0b24e7.png" width="304" height="91" />
+
 Demos available here:
 http://bvaughn.github.io/react-virtualized/
 
@@ -10,7 +12,10 @@ Install `react-virtualized` using npm.
 npm install react-virtualized --save
 ```
 
-### VirtualScroll Example
+Examples
+---------------
+
+#### VirtualScroll Example
 
 Below is a simple `VirtualScroll` example. Each row in the virtualized list is rendered through the use of a `rowRenderer` function for performance reasons. This function must return an element with a unique `key` and must fit within the specified `rowHeight`.
 
@@ -44,7 +49,7 @@ ReactDOM.render(
 );
 ```
 
-### FlexTable Example
+#### FlexTable Example
 
 Below is a very basic `FlexTable` example. This table has only 2 columns, each containing a simple string. Both have a fixed width and neither is sortable. [See here](blob/master/source/FlexTable/FlexTable.example.js) for a more full-featured example including custom cell renderers, sortable headers, and more.
 
