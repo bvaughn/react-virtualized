@@ -3,6 +3,8 @@ import FlexTableExample from './FlexTable/FlexTable.example'
 import React from 'react'
 import VirtualScrollExample from './VirtualScroll/VirtualScroll.example'
 
+require('./demo.less')
+
 render((
     <div>
       <VirtualScrollExample/>
