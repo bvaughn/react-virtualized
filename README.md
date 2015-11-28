@@ -30,7 +30,13 @@ ReactDOM.render(
     height={300}
     rowsCount={list.length}
     rowHeight={20}
-    rowRenderer={index => list[index]}
+    rowRenderer={
+      index => (
+        <div key={index}>
+          {list[index].name}
+        </div>
+      )
+    }
   />,
   document.getElementById('example')
 );
