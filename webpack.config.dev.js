@@ -4,13 +4,14 @@ const webpack = require('webpack')
 
 module.exports = {
   devtool: 'eval',
-  entry: [
-    'webpack-hot-middleware/client',
-    './source/demo'
-  ],
+  entry: {
+    client: 'webpack-hot-middleware/client',
+    demo: './source/demo',
+    index: './source/index'
+  },
   output: {
     path: path.join(__dirname, 'build'),
-    filename: 'demo.js',
+    filename: '[name].js',
     publicPath: '/static/'
   },
   plugins: [

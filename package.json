@@ -5,13 +5,16 @@
   "user": "bvaughn",
   "version": "0.0.4",
   "scripts": {
-    "build": "npm run build:webpack",
-    "build:webpack": "NODE_ENV=production NODE_PATH='source/modules' webpack --config webpack.config.prod.js",
-    "clean": "rimraf build",
+    "build": "npm run build:demo && npm run build:dist",
+    "build:demo": "npm run clean:demo && NODE_ENV=demo NODE_PATH='source/modules' webpack --config webpack.config.demo.js",
+    "build:dist": "npm run clean:dist && NODE_ENV=dist NODE_PATH='source/modules' webpack --config webpack.config.dist.js",
+    "clean": "npm run clean:demo && npm run clean:dist",
+    "clean:demo": "rimraf build",
+    "clean:dist": "rimraf dist",
     "deploy-gh-pages": "node scripts/deploy-gh-pages",
     "lint": "standard",
     "postbuild": "node scripts/post-build",
-    "prebuild": "npm run lint && npm run clean",
+    "prebuild": "npm run lint",
     "postpublish": "npm run deploy-gh-pages",
     "prepublish": "npm run build",
     "start": "node devServer.js",
@@ -41,10 +44,12 @@
     "url": "https://github.com/gaearon/react-transform-boilerplate/issues"
   },
   "homepage": "https://github.com/gaearon/react-transform-boilerplate",
-  "main": "source/index.js",
+  "main": "dist/react-virtualized.js",
   "standard": {
     "parser": "babel-eslint",
-    "ignore": [],
+    "ignore": [
+      "dist"
+    ],
     "global": [
       "afterAll",
       "afterEach",
@@ -71,6 +76,7 @@
     "eslint-plugin-react": "^3.8.0",
     "express": "^4.13.3",
     "file-loader": "^0.8.5",
+    "fs-extra": "^0.26.2",
     "gh-pages": "^0.5.0",
     "immutable": "^3.7.5",
     "jasmine": "^2.3.2",
@@ -99,9 +105,8 @@
     "webpack-dev-middleware": "^1.2.0",
     "webpack-dev-server": "^1.14.0"
   },
-  "dependencies": {
+  "peerDependencies": {
     "classnames": "^2.2.1",
-    "fs-extra": "^0.26.2",
     "raf": "^3.1.0",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
