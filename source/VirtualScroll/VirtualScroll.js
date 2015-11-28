@@ -60,6 +60,8 @@ export default class VirtualScroll extends Component {
   componentDidMount () {
     const { scrollToIndex } = this.props
 
+    this._scrollingContainer = this.refs.scrollingContainer.getDOMNode()
+
     if (scrollToIndex >= 0) {
       // Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
       this._scrollTopId = setImmediate(() => {
@@ -89,7 +91,7 @@ export default class VirtualScroll extends Component {
 
     // Make sure any changes to :scrollTop (from :scrollToIndex) get applied
     if (scrollTop >= 0 && scrollTop !== prevState.scrollTop) {
-      this.refs.scrollingContainer.scrollTop = scrollTop
+      this._scrollingContainer.scrollTop = scrollTop
     }
 
     const hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < rowsCount
@@ -339,7 +341,7 @@ export default class VirtualScroll extends Component {
     // In certain edge-cases React dispatches an onScroll event with an invalid target.scrollTop.
     // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
     // See issue #404 for more information.
-    if (event.target !== this.refs.scrollingContainer) {
+    if (event.target !== this._scrollingContainer) {
       return
     }
 
@@ -369,7 +371,7 @@ export default class VirtualScroll extends Component {
   }
 
   _onWheel (event) {
-    const scrollTop = this.refs.scrollingContainer.scrollTop
+    const scrollTop = this._scrollingContainer.scrollTop
 
     // Certain devices (like Apple touchpad) rapid-fire duplicate events.
     // Don't force a re-render if this is the case.
