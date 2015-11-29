@@ -73,7 +73,7 @@ export default class VirtualScrollExample extends Component {
         </div>
         <VirtualScroll
           className='VirtualScrollExample__VirtualScroll'
-          width={400}
+          width={310}
           height={virtualScrollHeight}
           rowsCount={rowsCount}
           rowHeight={virtualScrollRowHeight}

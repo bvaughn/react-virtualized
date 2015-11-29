@@ -720,7 +720,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      height: _react.PropTypes.number.isRequired,
 	      /** Fixed row height; the number of rows displayed is calculated by dividing height by rowHeight */
 	      rowHeight: _react.PropTypes.number.isRequired,
-	      /** Responsbile for rednering a row given an index */
+	      /** Responsbile for rendering a row given an index */
 	      rowRenderer: _react.PropTypes.func.isRequired,
 	      /** Number of rows in list. */
 	      rowsCount: _react.PropTypes.number.isRequired,
@@ -1480,7 +1480,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Default cell renderer that displays an attribute as a simple string
-	 * This function expects to operate on an Immutable Map.
 	 * You should override the column's cellRenderer if your data is some other type of object.
 	 */
 	
@@ -1494,7 +1493,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Default accessor for returning a cell value for a given attribute.
-	 * This function expects to operate on an Immutable Map.
+	 * This function expects to operate on either a vanilla Object or an Immutable Map.
 	 * You should override the column's cellDataGetter if your data is some other type of object.
 	 */
 	
@@ -1507,7 +1506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	/**
-	 * Describes the header and cell contents of a table content.
+	 * Describes the header and cell contents of a table column.
 	 */
 	
 	var Column = (function (_Component) {
