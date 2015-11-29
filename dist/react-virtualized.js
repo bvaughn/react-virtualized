@@ -147,11 +147,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Table component with fixed headers and virtualized rows for improved performance with large data sets.
-	 * This component intentional mimicks the `fixed-data-table` component interface for convenience.
-	 * 
-	 */
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
@@ -161,6 +156,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	
+	exports.SortIndicator = SortIndicator;
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
@@ -206,7 +203,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports.SortDirection = SortDirection;
 	/**
-	 * This table component expects explicit width, height, and padding parameters.
+	 * Table component with fixed headers and virtualized rows for improved performance with large data sets.
+	 * This component expects explicit width, height, and padding parameters.
 	 */
 	
 	var FlexTable = (function (_Component) {
@@ -280,6 +278,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.shouldComponentUpdate = _reactPureRenderFunction2['default'];
 	    this._createRow = this._createRow.bind(this);
 	  }
+	
+	  /**
+	   * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
+	   */
 	
 	  /**
 	   * Scroll the table to ensure the specified index is visible.
@@ -492,45 +494,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports['default'] = FlexTable;
 	
-	var SortIndicator = (function (_Component2) {
-	  _inherits(SortIndicator, _Component2);
+	function SortIndicator(_ref) {
+	  var sortDirection = _ref.sortDirection;
 	
-	  function SortIndicator() {
-	    _classCallCheck(this, SortIndicator);
-	
-	    _get(Object.getPrototypeOf(SortIndicator.prototype), 'constructor', this).apply(this, arguments);
-	  }
-	
-	  _createClass(SortIndicator, [{
-	    key: 'render',
-	    value: function render() {
-	      var sortDirection = this.props.sortDirection;
-	
-	      return _react2['default'].createElement(
-	        'svg',
-	        {
-	          className: 'FlexTable__headerRow__SortIndicator',
-	          width: 18,
-	          height: 18,
-	          viewBox: '0 0 24 24',
-	          xmlns: 'http://www.w3.org/2000/svg'
-	        },
-	        sortDirection === SortDirection.ASC ? _react2['default'].createElement('path', { d: 'M7 14l5-5 5 5z' }) : _react2['default'].createElement('path', { d: 'M7 10l5 5 5-5z' }),
-	        _react2['default'].createElement('path', { d: 'M0 0h24v24H0z', fill: 'none' })
-	      );
-	    }
-	  }], [{
-	    key: 'propTypes',
-	    value: {
-	      sortDirection: _react.PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
+	  return _react2['default'].createElement(
+	    'svg',
+	    {
+	      className: 'FlexTable__headerRow__SortIndicator',
+	      width: 18,
+	      height: 18,
+	      viewBox: '0 0 24 24',
+	      xmlns: 'http://www.w3.org/2000/svg'
 	    },
-	    enumerable: true
-	  }]);
+	    sortDirection === SortDirection.ASC ? _react2['default'].createElement('path', { d: 'M7 14l5-5 5 5z' }) : _react2['default'].createElement('path', { d: 'M7 10l5 5 5-5z' }),
+	    _react2['default'].createElement('path', { d: 'M0 0h24v24H0z', fill: 'none' })
+	  );
+	}
 	
-	  return SortIndicator;
-	})(_react.Component);
-
-	exports.SortIndicator = SortIndicator;
+	SortIndicator.propTypes = {
+	  sortDirection: _react.PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
+	};
 
 /***/ },
 /* 4 */

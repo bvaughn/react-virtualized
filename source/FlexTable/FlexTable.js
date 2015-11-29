@@ -1,8 +1,4 @@
-/**
- * Table component with fixed headers and virtualized rows for improved performance with large data sets.
- * This component intentional mimicks the `fixed-data-table` component interface for convenience.
- * @flow
- */
+/** @flow */
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import shouldPureComponentUpdate from 'react-pure-render/function'
@@ -25,7 +21,8 @@ export const SortDirection = {
 }
 
 /**
- * This table component expects explicit width, height, and padding parameters.
+ * Table component with fixed headers and virtualized rows for improved performance with large data sets.
+ * This component expects explicit width, height, and padding parameters.
  */
 export default class FlexTable extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate
@@ -290,28 +287,27 @@ export default class FlexTable extends Component {
     return flex.join(' ')
   }
 }
-export class SortIndicator extends Component {
-  static propTypes = {
-    sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
-  }
 
-  render () {
-    const { sortDirection } = this.props
-
-    return (
-      <svg
-        className='FlexTable__headerRow__SortIndicator'
-        width={18}
-        height={18}
-        viewBox='0 0 24 24'
-        xmlns='http://www.w3.org/2000/svg'
-      >
-        {sortDirection === SortDirection.ASC
-          ? <path d='M7 14l5-5 5 5z'/>
-          : <path d='M7 10l5 5 5-5z'/>
-        }
-        <path d='M0 0h24v24H0z' fill='none'/>
-      </svg>
-    )
-  }
+/**
+ * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
+ */
+export function SortIndicator ({ sortDirection }) {
+  return (
+    <svg
+      className='FlexTable__headerRow__SortIndicator'
+      width={18}
+      height={18}
+      viewBox='0 0 24 24'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      {sortDirection === SortDirection.ASC
+        ? <path d='M7 14l5-5 5 5z'/>
+        : <path d='M7 10l5 5 5-5z'/>
+      }
+      <path d='M0 0h24v24H0z' fill='none'/>
+    </svg>
+  )
+}
+SortIndicator.propTypes = {
+  sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
 }
