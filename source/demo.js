@@ -6,9 +6,13 @@ import VirtualScrollExample from './VirtualScroll/VirtualScroll.example'
 require('./demo.less')
 
 render((
-    <div>
-      <VirtualScrollExample/>
-      <FlexTableExample/>
+    <div className='demo__row'>
+      <div className='demo__row__VirtualScrollExampleColumn'>
+        <VirtualScrollExample/>
+      </div>
+      <div className='demo__row__FlexTableExampleColumn'>
+        <FlexTableExample/>
+      </div>
     </div>
   ),
   document.getElementById('root')

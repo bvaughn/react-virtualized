@@ -32,57 +32,54 @@ export default class VirtualScrollExample extends Component {
 
     return (
       <div className='VirtualScrollExample'>
-        <h1>VirtualScroll</h1>
+        <h1 className='VirtualScrollExample__header'>
+          VirtualScroll
+          <small className='VirtualScrollExample__header__small'>
+            <a href='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'>
+              View source
+            </a>
+          </small>
+        </h1>
         <p>
           The list below is virtualized, meaning that only the visible rows are rendered.
           Adjust its configurable properties below to see how it reacts.
         </p>
-        <div>
-          <label className='VirtualScrollExample__label'>Num rows</label>
-          <label className='VirtualScrollExample__label'>Scroll to</label>
-          <label className='VirtualScrollExample__label'>List height</label>
-          <label className='VirtualScrollExample__label'>Row height</label>
-        </div>
-        <div>
-          <input
-            className='VirtualScrollExample__input'
+        <div className='VirtualScrollExample__row'>
+          <LabeledInput
+            label='Num rows'
             name='rowsCount'
             onChange={this._onRowsCountChange}
-            value={rowsCount}/>
-
-          <input
-            className='VirtualScrollExample__input'
+            value={rowsCount}
+          />
+          <LabeledInput
+            label='Scroll to'
             name='onScrollToRow'
             placeholder='Index...'
             onChange={this._onScrollToRowChange}
-            value={scrollToIndex}/>
-
-          <input
-            className='VirtualScrollExample__input'
+            value={scrollToIndex}
+          />
+          <LabeledInput
+            label='List height'
             name='virtualScrollHeight'
             onChange={event => this.setState({ virtualScrollHeight: parseInt(event.target.value, 10) || 1 })}
-            value={virtualScrollHeight}/>
-
-          <input
-            className='VirtualScrollExample__input'
+            value={virtualScrollHeight}
+          />
+          <LabeledInput
+            label='Row height'
             name='virtualScrollRowHeight'
             onChange={event => this.setState({ virtualScrollRowHeight: parseInt(event.target.value, 10) || 1 })}
-            value={virtualScrollRowHeight}/>
+            value={virtualScrollRowHeight}
+          />
         </div>
-
         <VirtualScroll
           className='VirtualScrollExample__VirtualScroll'
-          width={300}
+          width={400}
           height={virtualScrollHeight}
           rowsCount={rowsCount}
           rowHeight={virtualScrollRowHeight}
           rowRenderer={this._rowRenderer}
           scrollToIndex={scrollToIndex}
         />
-
-          <p>
-            View <a href='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'>the source</a>
-          </p>
       </div>
     )
   }
@@ -121,4 +118,21 @@ export default class VirtualScrollExample extends Component {
       </div>
     )
   }
+}
+
+function LabeledInput ({ label, name, onChange, placeholder, value }) {
+  return (
+    <div className='FlexTableExample__column'>
+      <label className='FlexTableExample__label'>
+        {label}
+      </label>
+      <input
+        className='FlexTableExample__input'
+        name={name}
+        placeholder={placeholder}
+        onChange={onChange}
+        value={value}
+      />
+    </div>
+  )
 }

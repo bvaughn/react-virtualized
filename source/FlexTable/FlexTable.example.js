@@ -11,7 +11,7 @@ export default class TableExample extends Component {
 
     this.state = {
       rowsCount: 1000,
-      scrollToIndex: 50,
+      scrollToIndex: undefined,
       sortBy: 'name',
       sortDirection: SortDirection.ASC,
       virtualScrollHeight: 300,
@@ -60,60 +60,62 @@ export default class TableExample extends Component {
 
     return (
       <div className='FlexTableExample'>
-        <h1>FlexTable</h1>
+        <h1 className='FlexTableExample__header'>
+          FlexTable
+          <small className='FlexTableExample__header__small'>
+            <a href='https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/FlexTable.example.js'>
+              View source
+            </a>
+          </small>
+        </h1>
         <p>
           The table layout below is created with flexboxes.
           This allows it to have a fixed header scrollable body content.
           It also makes use of <code>VirtualScroll</code> so that large lists of tabular data can be rendered efficiently.
           Adjust its configurable properties below to see how it reacts.
         </p>
-        <div>
-          <label className='FlexTableExample__label'>Num rows</label>
-          <label className='FlexTableExample__label'>Scroll to</label>
-          <label className='FlexTableExample__label'>List height</label>
-          <label className='FlexTableExample__label'>Row height</label>
-          <label className='FlexTableExample__label'>Header height</label>
-        </div>
-        <div>
-          <input
-            className='FlexTableExample__input'
+        <div className='FlexTableExample__row'>
+          <LabeledInput
+            label='Num rows'
             name='rowsCount'
             onChange={this._onRowsCountChange}
-            value={rowsCount}/>
-
-          <input
-            className='FlexTableExample__input'
+            value={rowsCount}
+          />
+          <LabeledInput
+            label='Scroll to'
             name='onScrollToRow'
             placeholder='Index...'
             onChange={this._onScrollToRowChange}
-            value={scrollToIndex}/>
-
-          <input
-            className='FlexTableExample__input'
+            value={scrollToIndex}
+          />
+          <LabeledInput
+            label='List height'
             name='virtualScrollHeight'
             onChange={event => this.setState({ virtualScrollHeight: parseInt(event.target.value, 10) || 1 })}
-            value={virtualScrollHeight}/>
-
-          <input
-            className='FlexTableExample__input'
+            value={virtualScrollHeight}
+          />
+          <LabeledInput
+            label='Row height'
             name='virtualScrollRowHeight'
             onChange={event => this.setState({ virtualScrollRowHeight: parseInt(event.target.value, 10) || 1 })}
-            value={virtualScrollRowHeight}/>
-
-          <input
-            className='FlexTableExample__input'
+            value={virtualScrollRowHeight}
+          />
+          <LabeledInput
+            label='Header height'
             name='virtualScrollHeaderHeight'
             onChange={event => this.setState({ virtualScrollHeaderHeight: parseInt(event.target.value, 10) || 1 })}
-            value={virtualScrollHeaderHeight}/>
+            value={virtualScrollHeaderHeight}
+          />
         </div>
 
         <div className='FlexTableExample__container'>
           <FlexTable
             ref='Table'
             className='FlexTableExample__FlexTable'
-            width={350}
-            height={virtualScrollHeight}
+            width={390}
             headerHeight={virtualScrollHeaderHeight}
+            height={virtualScrollHeight}
+            rowClassName='FlexTableExample__FlexTable__row'
             rowHeight={virtualScrollRowHeight}
             rowGetter={rowGetter}
             rowsCount={rowsCount}
@@ -146,10 +148,6 @@ export default class TableExample extends Component {
               flexGrow={1}/>
           </FlexTable>
         </div>
-
-        <p>
-          View <a href='https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/FlexTable.example.js'>the source</a>
-        </p>
       </div>
     )
   }
@@ -177,6 +175,23 @@ export default class TableExample extends Component {
   _sort (sortBy, sortDirection) {
     this.setState({ sortBy, sortDirection })
   }
+}
+
+function LabeledInput ({ label, name, onChange, placeholder, value }) {
+  return (
+    <div className='FlexTableExample__column'>
+      <label className='FlexTableExample__label'>
+        {label}
+      </label>
+      <input
+        className='FlexTableExample__input'
+        name={name}
+        placeholder={placeholder}
+        onChange={onChange}
+        value={value}
+      />
+    </div>
+  )
 }
 
 const loremIpsum = [

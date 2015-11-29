@@ -2,6 +2,30 @@
   font-family: 'Roboto', 'Open Sans', sans-serif;
   font-size: 12px;
 }
+.demo__row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.demo__row__VirtualScrollExampleColumn,
+.demo__row__FlexTableExampleColumn {
+  max-width: 100%;
+  padding: 10px;
+}
+.demo__row__VirtualScrollExampleColumn {
+  flex: 0 0 300px;
+}
+.demo__row__FlexTableExampleColumn {
+  flex: 0 0 450px;
+}
+
+a {
+  color: #4c8bf5;
+}
+
+* {
+  box-sizing: border-box;
+}
 
 .headerRow {
   display: flex;
