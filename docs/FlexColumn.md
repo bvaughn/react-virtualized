@@ -7,8 +7,8 @@ Describes the header and cell contents of a table column
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | cellClassName | String |  | CSS class to apply to cell |
-| cellDataGetter | Function |  | Callback responsible for returning a cell's data, given its `dataKey`. [Learn more](#cellDataGetter) |
-| cellRenderer |  Function |  | Callback responsible for rendering a cell's contents. [Learn more](#cellRenderer) |
+| cellDataGetter | Function |  | Callback responsible for returning a cell's data, given its `dataKey`. [Learn more](#celldatagetter) |
+| cellRenderer |  Function |  | Callback responsible for rendering a cell's contents. [Learn more](#cellrenderer) |
 | columnData | Object |  | Additional data passed to this column's `cellDataGetter` |
 | dataKey | any | ✓ | Uniquely identifies the row-data attribute correspnding to this cell |
 | disableSort | Boolean |  | If sort is enabled for the table at large, disable it for this column |
@@ -41,4 +41,4 @@ function (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, co
 ```
 
 A defdault `cellRenderer` is provided that displays an attribute as a simple string
-You should override this default method if your data is some other type of object.
+You should override this default method if your data is some other type of object or requires custom formatting.
