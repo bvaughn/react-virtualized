@@ -58,6 +58,8 @@ export default class FlexTable extends Component {
     height: PropTypes.number.isRequired,
     /** Horizontal padding of outer DOM element */
     horizontalPadding: PropTypes.number,
+    /** Optional CSS class to apply to all table rows (including the header row) */
+    rowClassName: PropTypes.string,
     /**
      * Callback responsible for returning a data row given an index.
      * (index: int): any
@@ -114,6 +116,7 @@ export default class FlexTable extends Component {
       disableHeader,
       headerHeight,
       height,
+      rowClassName,
       rowHeight,
       rowsCount,
       verticalPadding,
@@ -137,10 +140,10 @@ export default class FlexTable extends Component {
       >
         {!disableHeader && (
           <div
+            className={cn('FlexTable__headerRow', rowClassName)}
             style={{
               height: headerHeight
             }}
-            className='FlexTable__headerRow'
           >
             {this.getRenderedHeaderRow()}
           </div>
@@ -243,6 +246,7 @@ export default class FlexTable extends Component {
   _createRow (rowIndex) {
     const {
       children,
+      rowClassName,
       rowGetter,
       rowHeight
     } = this.props
@@ -260,7 +264,7 @@ export default class FlexTable extends Component {
     return (
       <div
         key={rowIndex}
-        className='FlexTable__row'
+        className={cn('FlexTable__row', rowClassName)}
         style={{
           height: rowHeight
         }}
