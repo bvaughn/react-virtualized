@@ -244,6 +244,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      height: _react.PropTypes.number.isRequired,
 	      /** Horizontal padding of outer DOM element */
 	      horizontalPadding: _react.PropTypes.number,
+	      /** Optional CSS class to apply to all table rows (including the header row) */
+	      rowClassName: _react.PropTypes.string,
 	      /**
 	       * Callback responsible for returning a data row given an index.
 	       * (index: int): any
@@ -317,6 +319,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var disableHeader = _props2.disableHeader;
 	      var headerHeight = _props2.headerHeight;
 	      var height = _props2.height;
+	      var rowClassName = _props2.rowClassName;
 	      var rowHeight = _props2.rowHeight;
 	      var rowsCount = _props2.rowsCount;
 	      var verticalPadding = _props2.verticalPadding;
@@ -341,10 +344,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        !disableHeader && _react2['default'].createElement(
 	          'div',
 	          {
+	            className: (0, _classnames2['default'])('FlexTable__headerRow', rowClassName),
 	            style: {
 	              height: headerHeight
-	            },
-	            className: 'FlexTable__headerRow'
+	            }
 	          },
 	          this.getRenderedHeaderRow()
 	        ),
@@ -448,6 +451,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var _props4 = this.props;
 	      var children = _props4.children;
+	      var rowClassName = _props4.rowClassName;
 	      var rowGetter = _props4.rowGetter;
 	      var rowHeight = _props4.rowHeight;
 	
@@ -459,7 +463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'div',
 	        {
 	          key: rowIndex,
-	          className: 'FlexTable__row',
+	          className: (0, _classnames2['default'])('FlexTable__row', rowClassName),
 	          style: {
 	            height: rowHeight
 	          }
@@ -1616,7 +1620,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	// module
-	exports.push([module.id, ".FlexTable {\n  overflow: hidden;\n  font-size: 11px;\n  padding: 20px;\n  width: 100%;\n}\n.FlexTable__rowWrapper {\n  overflow: auto;\n}\n.FlexTable__headerRow,\n.FlexTable__row {\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n  overflow: hidden;\n}\n.FlexTable__headerRow {\n  font-weight: 700;\n  text-transform: uppercase;\n  border-bottom: 1px solid #DEEBF0;\n}\n.FlexTable__headerRow__truncatedText {\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.FlexTable__row {\n  border-bottom: 1px solid #DEEBF0;\n}\n.FlexTable__headerRow__column,\n.FlexTable__row__column {\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  margin-right: 10px;\n  min-width: 0px;\n  overflow: hidden;\n}\n.FlexTable__headerRow__column:first-of-type,\n.FlexTable__row__column:first-of-type {\n  margin-left: 10px;\n}\n.FlexTable__headerRow__column {\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.FlexTable__headerRow__column.FlexTable__headerRow__column--sortable {\n  cursor: pointer;\n}\n.FlexTable__row__column {\n  height: 100%;\n  -webkit-justify-content: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-flex-direction: column;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n.FlexTable__headerRow__Icon {\n  -webkit-flex: 0 0 24px;\n      -ms-flex: 0 0 24px;\n          flex: 0 0 24px;\n}\n.FlexTable__row__column__truncatedText {\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n", ""]);
+	exports.push([module.id, ".FlexTable {\n  overflow: hidden;\n  font-size: 11px;\n  width: 100%;\n}\n.FlexTable__rowWrapper {\n  overflow: auto;\n}\n.FlexTable__headerRow,\n.FlexTable__row {\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n  overflow: hidden;\n}\n.FlexTable__headerRow {\n  font-weight: 700;\n  text-transform: uppercase;\n}\n.FlexTable__headerRow__truncatedText {\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.FlexTable__headerRow__column,\n.FlexTable__row__column {\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  margin-right: 10px;\n  min-width: 0px;\n  overflow: hidden;\n}\n.FlexTable__headerRow__column:first-of-type,\n.FlexTable__row__column:first-of-type {\n  margin-left: 10px;\n}\n.FlexTable__headerRow__column {\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.FlexTable__headerRow__column.FlexTable__headerRow__column--sortable {\n  cursor: pointer;\n}\n.FlexTable__row__column {\n  height: 100%;\n  -webkit-justify-content: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-flex-direction: column;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n.FlexTable__headerRow__Icon {\n  -webkit-flex: 0 0 24px;\n      -ms-flex: 0 0 24px;\n          flex: 0 0 24px;\n}\n.FlexTable__row__column__truncatedText {\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n", ""]);
 	
 	// exports
 

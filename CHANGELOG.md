@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 1.0.2
+Removed default row-border styling from FlexTable and added new :rowClassName property.
+
 #### 1.0.1
 Updated to use ReactDOM.findDOMNode instead of getDOMNode (but added backwards-compatible check for < React v0.14).
 
