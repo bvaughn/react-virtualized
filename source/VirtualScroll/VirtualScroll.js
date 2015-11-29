@@ -28,7 +28,7 @@ export default class VirtualScroll extends Component {
     height: PropTypes.number.isRequired,
     /** Fixed row height; the number of rows displayed is calculated by dividing height by rowHeight */
     rowHeight: PropTypes.number.isRequired,
-    /** Responsbile for rednering a row given an index */
+    /** Responsbile for rendering a row given an index */
     rowRenderer: PropTypes.func.isRequired,
     /** Number of rows in list. */
     rowsCount: PropTypes.number.isRequired,

@@ -12,6 +12,11 @@ Install `react-virtualized` using npm.
 npm install react-virtualized --save
 ```
 
+Documentation
+---------------
+
+API documentation available [here](docs/README.md).
+
 Examples
 ---------------
 
