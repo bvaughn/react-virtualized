@@ -1,0 +1,45 @@
+.LabeledInput {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 10px 5px 0;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
+.LabeledInput__input,
+.LabeledInput__label {
+  display: inline-block;
+  width: 70px;
+  box-sizing: border-box;
+}
+.LabeledInput__input {
+  appearance: none;
+  border: 0;
+  border-bottom: 1px solid #EEE;
+  padding: 5px 0;
+  font-size: 14px;
+  font-weight: 300;
+  background-color: transparent;
+
+  &:focus {
+    outline: 0;
+  }
+  &::placeholder {
+    color: #DDD;
+  }
+}
+.LabeledInput__label {
+  color: #AAA;
+  font-size: 10px;
+  margin-bottom: 5px;
+  font-weight: 100;
+}
+
+.InputRow {
+  display: flex;
+  flex-direction: row;
+}

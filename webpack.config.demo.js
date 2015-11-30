@@ -4,7 +4,7 @@ var webpack = require('webpack')
 
 module.exports = {
   devtool: 'source-map',
-  entry: ['./source/demo'],
+  entry: ['./source/demo/demo'],
   output: {
     path: path.join(__dirname, 'build'),
     filename: 'demo.js',

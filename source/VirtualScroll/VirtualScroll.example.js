@@ -2,6 +2,8 @@
  * @flow
  */
 import React, { Component } from 'react'
+import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
+import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import VirtualScroll from './VirtualScroll'
 import './VirtualScroll.example.less'
 
@@ -12,14 +14,18 @@ export default class VirtualScrollExample extends Component {
     // HACK :)
     this._list = []
     for (var i = 0; i < 1000; i++) {
-      this._list.push(i)
+      this._list.push({
+        index: i,
+        color: BADGE_COLORS[i % BADGE_COLORS.length],
+        name: NAMES[i % NAMES.length]
+      })
     }
 
     this.state = {
       rowsCount: this._list.length,
       scrollToIndex: undefined,
-      virtualScrollHeight: 150,
-      virtualScrollRowHeight: 30
+      virtualScrollHeight: 250,
+      virtualScrollRowHeight: 60
     }
 
     this._onRowsCountChange = this._onRowsCountChange.bind(this)
@@ -31,20 +37,18 @@ export default class VirtualScrollExample extends Component {
     const { rowsCount, scrollToIndex, virtualScrollHeight, virtualScrollRowHeight } = this.state
 
     return (
-      <div className='VirtualScrollExample'>
-        <h1 className='VirtualScrollExample__header'>
-          VirtualScroll
-          <small className='VirtualScrollExample__header__small'>
-            <a href='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'>
-              View source
-            </a>
-          </small>
-        </h1>
-        <p>
+      <ContentBox className='VirtualScrollExample'>
+        <ContentBoxHeader
+          text='VirtualScroll'
+          link='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'
+        />
+
+        <ContentBoxParagraph>
           The list below is virtualized, meaning that only the visible rows are rendered.
           Adjust its configurable properties below to see how it reacts.
-        </p>
-        <div className='VirtualScrollExample__row'>
+        </ContentBoxParagraph>
+
+        <InputRow>
           <LabeledInput
             label='Num rows'
             name='rowsCount'
@@ -70,7 +74,8 @@ export default class VirtualScrollExample extends Component {
             onChange={event => this.setState({ virtualScrollRowHeight: parseInt(event.target.value, 10) || 1 })}
             value={virtualScrollRowHeight}
           />
-        </div>
+        </InputRow>
+
         <VirtualScroll
           className='VirtualScrollExample__VirtualScroll'
           width={310}
@@ -80,7 +85,7 @@ export default class VirtualScrollExample extends Component {
           rowRenderer={this._rowRenderer}
           scrollToIndex={scrollToIndex}
         />
-      </div>
+      </ContentBox>
     )
   }
 
@@ -108,31 +113,34 @@ export default class VirtualScrollExample extends Component {
       height: virtualScrollRowHeight
     }
 
+    const data = this._list[index]
+
     return (
       <div
         key={index}
         className='VirtualScrollExample__VirtualScroll__row'
         style={rowStyle}
       >
-        {`Row index: ${index}`}
+        <div
+          className='VirtualScrollExample__VirtualScroll__row__letter'
+          style={{
+            backgroundColor: data.color
+          }}
+        >
+          {data.name.charAt(0)}
+        </div>
+        <div>
+          <div className='VirtualScrollExample__VirtualScroll__row__name'>
+            {data.name}
+          </div>
+          <div className='VirtualScrollExample__VirtualScroll__row__index'>
+            This is row {index}
+          </div>
+        </div>
       </div>
     )
   }
 }
 
-function LabeledInput ({ label, name, onChange, placeholder, value }) {
-  return (
-    <div className='FlexTableExample__column'>
-      <label className='FlexTableExample__label'>
-        {label}
-      </label>
-      <input
-        className='FlexTableExample__input'
-        name={name}
-        placeholder={placeholder}
-        onChange={onChange}
-        value={value}
-      />
-    </div>
-  )
-}
+const BADGE_COLORS = ['#f44336', '#3f51b5', '#4caf50', '#ff9800', '#2196f3', '#374046', '#cddc39', '#2196f3', '#9c27b0', '#ffc107', '#009688', '#673ab7', '#ffeb3b', '#cddc39', '#795548']
+const NAMES = ['Peter Brimer', 'Tera Gaona', 'Kandy Liston', 'Lonna Wrede', 'Kristie Yard', 'Raul Host', 'Yukiko Binger', 'Velvet Natera', 'Donette Ponton', 'Loraine Grim', 'Shyla Mable', 'Marhta Sing', 'Alene Munden', 'Holley Pagel', 'Randell Tolman', 'Wilfred Juneau', 'Naida Madson', 'Marine Amison', 'Glinda Palazzo', 'Lupe Island', 'Cordelia Trotta', 'Samara Berrier', 'Era Stepp', 'Malka Spradlin', 'Edward Haner', 'Clemencia Feather', 'Loretta Rasnake', 'Dana Hasbrouck', 'Sanda Nery', 'Soo Reiling', 'Apolonia Volk', 'Liliana Cacho', 'Angel Couchman', 'Yvonne Adam', 'Jonas Curci', 'Tran Cesar', 'Buddy Panos', 'Rosita Ells', 'Rosalind Tavares', 'Renae Keehn', 'Deandrea Bester', 'Kelvin Lemmon', 'Guadalupe Mccullar', 'Zelma Mayers', 'Laurel Stcyr', 'Edyth Everette', 'Marylin Shevlin', 'Hsiu Blackwelder', 'Mark Ferguson', 'Winford Noggle', 'Shizuko Gilchrist', 'Roslyn Cress', 'Nilsa Lesniak', 'Agustin Grant', 'Earlie Jester', 'Libby Daigle', 'Shanna Maloy', 'Brendan Wilken', 'Windy Knittel', 'Alice Curren', 'Eden Lumsden', 'Klara Morfin', 'Sherryl Noack', 'Gala Munsey', 'Stephani Frew', 'Twana Anthony', 'Mauro Matlock', 'Claudie Meisner', 'Adrienne Petrarca', 'Pearlene Shurtleff', 'Rachelle Piro', 'Louis Cocco', 'Susann Mcsweeney', 'Mandi Kempker', 'Ola Moller', 'Leif Mcgahan', 'Tisha Wurster', 'Hector Pinkett', 'Benita Jemison', 'Kaley Findley', 'Jim Torkelson', 'Freda Okafor', 'Rafaela Markert', 'Stasia Carwile', 'Evia Kahler', 'Rocky Almon', 'Sonja Beals', 'Dee Fomby', 'Damon Eatman', 'Alma Grieve', 'Linsey Bollig', 'Stefan Cloninger', 'Giovanna Blind', 'Myrtis Remy', 'Marguerita Dostal', 'Junior Baranowski', 'Allene Seto', 'Margery Caves', 'Nelly Moudy', 'Felix Sailer']

@@ -1,0 +1,76 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+a {
+  color: #4c8bf5;
+}
+* {
+  box-sizing: border-box;
+}
+
+.headerRow {
+  display: flex;
+  flex-direction: row;
+  height: 100px;
+  width: 100%;
+  background-color: #222222;
+}
+
+.headerRow__reactVirtualized {
+  display: flex;
+  flex-direction: row;
+  background-color: #2196f3;
+  color: #FFF;
+}
+.headerRow__logoColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  text-transform: uppercase;
+}
+.headerTextPrimary,
+.headerTextSecondary {
+  margin: 0;
+  text-transform: uppercase;
+}
+.headerTextPrimary {
+  font-size: 40px;
+  font-weight: 400;
+}
+.headerTextSecondary {
+  font-size: 20px;
+  font-weight: 100;
+}
+
+.headerRow__githubColumn {
+  display: flex;
+  flex-direction: row;
+  font-size: 20px;
+  color: #FFF;
+  text-decoration: none;
+  align-items: center;
+  font-weight: 100;
+}
+.headerRow__githubImage {
+  margin: 0 15px 0 40px;
+}
+
+.demo {
+  font-family: 'Roboto', 'Open Sans', sans-serif;
+  font-size: 12px;
+  background-color: #eeeeee;
+}
+.demo__row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.demo__row__VirtualScrollExampleColumn,
+.demo__row__FlexTableExampleColumn {
+  max-width: 100%;
+  padding: 10px;
+}

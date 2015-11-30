@@ -1,59 +1,37 @@
 .VirtualScrollExample {
-}
-.VirtualScrollExample__header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.VirtualScrollExample__header__small {
-  font-weight: 600;
-  font-size: 14px;
-  margin-left: 5px;
-}
-
-.VirtualScrollExample__row {
-  display: flex;
-  flex-direction: row;
-}
-.VirtualScrollExample__column {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-width: 0;
-  margin: 0 10px 5px 0;
-
-  &:last-of-type {
-    margin-right: 0;
-  }
-}
-
-.VirtualScrollExample__input,
-.VirtualScrollExample__label {
-  display: inline-block;
-  width: 70px;
-  box-sizing: border-box;
-}
-.VirtualScrollExample__input {
-  border: 0.1rem solid #a6c5fa;
-  border-radius: 0.1rem;
-  padding: 0.2rem 0.4rem;
-  min-width: 0;
-}
-.VirtualScrollExample__label {
-  color: #4c8bf5;
-  font-size: 10px;
-  text-transform: uppercase;
-  font-style: italic;
-  margin-bottom: 5px;
+  flex: 0 0 330px;
 }
 
 .VirtualScrollExample__VirtualScroll {
   width: 100%;
-  border: 1px solid #a6c5fa;
+  border: 1px solid #DDD;
+  margin-top: 15px;
 }
 
 .VirtualScrollExample__VirtualScroll__row {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  border-bottom: 1px solid #d2e2fc;
+  padding: 0 25px;
+  background-color: #fff;
+  border-bottom: 1px solid #EEE;
+}
+.VirtualScrollExample__VirtualScroll__row__letter {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 40px;
+  color: white;
+  font-size: 20px;
+  margin-right: 25px;
+}
+.VirtualScrollExample__VirtualScroll__row__name {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+.VirtualScrollExample__VirtualScroll__row__index {
+  color: #666;
 }
