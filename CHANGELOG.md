@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 1.0.3
+Same as version 1.0.2; published just to update NPM keyword and description.
+
 #### 1.0.2
 Removed default row-border styling from FlexTable and added new :rowClassName property.
 
