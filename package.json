@@ -29,15 +29,17 @@
   "keywords": [
     "react",
     "reactjs",
-    "boilerplate",
-    "hot",
-    "reload",
-    "hmr",
-    "live",
-    "edit",
-    "webpack",
-    "babel",
-    "react-transform"
+    "react-component",
+    "virtual",
+    "list",
+    "scrolling",
+    "infinite",
+    "virtualized",
+    "table",
+    "fixed",
+    "header",
+    "flex",
+    "flexbox"
   ],
   "license": "MIT",
   "bugs": {
