@@ -1,61 +1,16 @@
 .FlexTableExample {
-}
-.FlexTableExample__header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.FlexTableExample__header__small {
-  font-weight: 600;
-  font-size: 14px;
-  margin-left: 5px;
-}
-
-.FlexTableExample__row {
-  display: flex;
-  flex-direction: row;
-}
-.FlexTableExample__column {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-width: 0;
-  margin: 0 10px 5px 0;
-
-  &:last-of-type {
-    margin-right: 0;
-  }
-}
-
-.FlexTableExample__container {
-  width: 100%;
-  border: 1px solid #a6c5fa;
-  border-radius: 5px;
-  padding: 5px;
+  flex: 0 0 450px;
 }
 
 .FlexTableExample__FlexTable {
   width: 100%;
+  margin-top: 15px;
 }
 .FlexTableExample__FlexTable__row {
-  border-bottom: 1px solid #d2e2fc;
+  border-bottom: 1px solid #EEE;
 }
 .FlexTableExample__exampleColumn {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.FlexTableExample__label {
-  color: #4c8bf5;
-  font-size: 10px;
-  text-transform: uppercase;
-  font-style: italic;
-  margin-bottom: 5px;
-}
-.FlexTableExample__input {
-  border: 0.1rem solid #a6c5fa;
-  border-radius: 0.1rem;
-  padding: 0.2rem 0.4rem;
-  min-width: 0;
 }

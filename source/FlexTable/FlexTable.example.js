@@ -1,5 +1,7 @@
 /** @flow */
 import React, { Component } from 'react'
+import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
+import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import FlexColumn from './FlexColumn'
 import FlexTable, { SortDirection } from './FlexTable'
 import Immutable from 'immutable'
@@ -59,22 +61,20 @@ export default class TableExample extends Component {
     }
 
     return (
-      <div className='FlexTableExample'>
-        <h1 className='FlexTableExample__header'>
-          FlexTable
-          <small className='FlexTableExample__header__small'>
-            <a href='https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/FlexTable.example.js'>
-              View source
-            </a>
-          </small>
-        </h1>
-        <p>
+      <ContentBox className='FlexTableExample'>
+        <ContentBoxHeader
+          text='FlexTable'
+          link='https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/FlexTable.example.js'
+        />
+
+        <ContentBoxParagraph>
           The table layout below is created with flexboxes.
           This allows it to have a fixed header scrollable body content.
           It also makes use of <code>VirtualScroll</code> so that large lists of tabular data can be rendered efficiently.
           Adjust its configurable properties below to see how it reacts.
-        </p>
-        <div className='FlexTableExample__row'>
+        </ContentBoxParagraph>
+
+        <InputRow>
           <LabeledInput
             label='Num rows'
             name='rowsCount'
@@ -106,49 +106,47 @@ export default class TableExample extends Component {
             onChange={event => this.setState({ virtualScrollHeaderHeight: parseInt(event.target.value, 10) || 1 })}
             value={virtualScrollHeaderHeight}
           />
-        </div>
+        </InputRow>
 
-        <div className='FlexTableExample__container'>
-          <FlexTable
-            ref='Table'
-            className='FlexTableExample__FlexTable'
-            width={430}
-            headerHeight={virtualScrollHeaderHeight}
-            height={virtualScrollHeight}
-            rowClassName='FlexTableExample__FlexTable__row'
-            rowHeight={virtualScrollRowHeight}
-            rowGetter={rowGetter}
-            rowsCount={rowsCount}
-            sort={this._sort}
-            sortBy={sortBy}
-            sortDirection={sortDirection}
-          >
-            <FlexColumn
-              label='Index'
-              cellDataGetter={
-                (dataKey, rowData, columnData) => rowData.id
-              }
-              dataKey='index'
-              width={50}/>
+        <FlexTable
+          ref='Table'
+          className='FlexTableExample__FlexTable'
+          width={430}
+          headerHeight={virtualScrollHeaderHeight}
+          height={virtualScrollHeight}
+          rowClassName='FlexTableExample__FlexTable__row'
+          rowHeight={virtualScrollRowHeight}
+          rowGetter={rowGetter}
+          rowsCount={rowsCount}
+          sort={this._sort}
+          sortBy={sortBy}
+          sortDirection={sortDirection}
+        >
+          <FlexColumn
+            label='Index'
+            cellDataGetter={
+              (dataKey, rowData, columnData) => rowData.id
+            }
+            dataKey='index'
+            width={50}/>
 
-            <FlexColumn
-              label='Name'
-              dataKey='name'
-              width={90}/>
+          <FlexColumn
+            label='Name'
+            dataKey='name'
+            width={90}/>
 
-            <FlexColumn
-              width={210}
-              disableSort
-              label='The description label is really long'
-              dataKey='random'
-              cellClassName='FlexTableExample__exampleColumn'
-              cellRenderer={
-                (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
-              }
-              flexGrow={1}/>
-          </FlexTable>
-        </div>
-      </div>
+          <FlexColumn
+            width={210}
+            disableSort
+            label='The description label is really long'
+            dataKey='random'
+            cellClassName='FlexTableExample__exampleColumn'
+            cellRenderer={
+              (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
+            }
+            flexGrow={1}/>
+        </FlexTable>
+      </ContentBox>
     )
   }
 
@@ -175,23 +173,6 @@ export default class TableExample extends Component {
   _sort (sortBy, sortDirection) {
     this.setState({ sortBy, sortDirection })
   }
-}
-
-function LabeledInput ({ label, name, onChange, placeholder, value }) {
-  return (
-    <div className='FlexTableExample__column'>
-      <label className='FlexTableExample__label'>
-        {label}
-      </label>
-      <input
-        className='FlexTableExample__input'
-        name={name}
-        placeholder={placeholder}
-        onChange={onChange}
-        value={value}
-      />
-    </div>
-  )
 }
 
 const loremIpsum = [
