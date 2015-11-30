@@ -1,7 +1,7 @@
 {
   "name": "react-virtualized",
-  "description": "React components for efficiently rendering large, scrollable lists",
-  "author": "Brian Vaughn",
+  "description": "React components for efficiently rendering large, scrollable lists and tabular data",
+  "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
   "version": "1.0.2",
   "scripts": {
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gaearon/react-transform-boilerplate.git"
+    "url": "https://github.com/bvaughn/react-virtualized.git"
   },
   "keywords": [
     "react",
@@ -41,9 +41,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gaearon/react-transform-boilerplate/issues"
+    "url": "https://github.com/bvaughn/react-virtualized/issues"
   },
-  "homepage": "https://github.com/gaearon/react-transform-boilerplate",
+  "homepage": "https://github.com/bvaughn/react-virtualized",
   "main": "dist/react-virtualized.js",
   "standard": {
     "parser": "babel-eslint",
