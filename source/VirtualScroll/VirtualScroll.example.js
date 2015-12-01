@@ -24,7 +24,7 @@ export default class VirtualScrollExample extends Component {
     this.state = {
       rowsCount: this._list.length,
       scrollToIndex: undefined,
-      virtualScrollHeight: 250,
+      virtualScrollHeight: 300,
       virtualScrollRowHeight: 60
     }
 
