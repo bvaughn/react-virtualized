@@ -3,7 +3,7 @@
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "scripts": {
     "build": "npm run build:demo && npm run build:dist",
     "build:demo": "npm run clean:demo && NODE_ENV=demo NODE_PATH='source/modules' webpack --config webpack.config.demo.js",
@@ -105,13 +105,16 @@
     "watch": "^0.16.0",
     "webpack": "^1.9.6",
     "webpack-dev-middleware": "^1.2.0",
-    "webpack-dev-server": "^1.14.0"
+    "webpack-dev-server": "^1.14.0",
+    "webpack-hot-middleware": "^2.6.0"
   },
-  "peerDependencies": {
+  "dependencies": {
     "classnames": "^2.2.1",
     "raf": "^3.1.0",
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
     "react-pure-render": "^1.0.2"
+  },
+  "peerDependencies": {
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0"
   }
 }

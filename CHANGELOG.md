@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 1.0.4
+Fixed package.json dependencies by moving `classnames`, `raf`, and `react-pure-render` out of `peerDependencies` and into `dependencies`.
+
 #### 1.0.3
 Same as version 1.0.2; published just to update NPM keyword and description.
 
