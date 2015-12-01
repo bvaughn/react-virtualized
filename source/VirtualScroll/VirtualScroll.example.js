@@ -40,7 +40,8 @@ export default class VirtualScrollExample extends Component {
       <ContentBox className='VirtualScrollExample'>
         <ContentBoxHeader
           text='VirtualScroll'
-          link='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'
+          sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'
+          docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/VirtualScroll.md'
         />
 
         <ContentBoxParagraph>

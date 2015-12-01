@@ -10,17 +10,26 @@ export function ContentBox ({ className, children }) {
   )
 }
 
-export function ContentBoxHeader ({ text, link }) {
+export function ContentBoxHeader ({ text, sourceLink, docsLink }) {
   return (
     <h1 className='ContentBoxHeader'>
       {text}
 
-      <a
-        className='ContentBoxHeader__link'
-        href={link}
-      >
-        View Source
-      < /a>
+      <small className='ContentBoxHeader__small'>
+        <a
+          className='ContentBoxHeader__link'
+          href={sourceLink}
+        >
+          Source
+        </a>
+        <span> | </span>
+        <a
+          className='ContentBoxHeader__link'
+          href={docsLink}
+        >
+          Docs
+        </a>
+      </small>
     </h1>
   )
 }

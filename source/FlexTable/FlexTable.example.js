@@ -64,7 +64,8 @@ export default class TableExample extends Component {
       <ContentBox className='FlexTableExample'>
         <ContentBoxHeader
           text='FlexTable'
-          link='https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/FlexTable.example.js'
+          sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/FlexTable.example.js'
+          docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/FlexTable.md'
         />
 
         <ContentBoxParagraph>
