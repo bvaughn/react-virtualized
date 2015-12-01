@@ -31,7 +31,7 @@ import { VirtualScroll } from 'react-virtualized';
 
 // List data as an array of strings
 const list = [
-  'Brian Vaughn'
+  { name: 'Brian Vaughn', description: 'Software engineer' }
   // And so on...
 ];
 
