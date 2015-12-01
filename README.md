@@ -31,7 +31,7 @@ import { VirtualScroll } from 'react-virtualized';
 
 // List data as an array of strings
 const list = [
-  { name: 'Brian Vaughn', description: 'Software engineer' }
+  'Brian Vaughn'
   // And so on...
 ];
 
@@ -45,7 +45,7 @@ ReactDOM.render(
     rowRenderer={
       index => (
         <div key={index}>
-          {list[index].name}
+          {list[index]}
         </div>
       )
     }
