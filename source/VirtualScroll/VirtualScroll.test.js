@@ -88,7 +88,7 @@ describe('VirtualScroll', () => {
     })
   })
 
-  /** Allows for testing initial rendering of component and scrolling via props */
+  /** Tests horizontal scrolling via updated props */
   describe('scrollToIndex', () => {
     it('should scroll to the top', () => {
       const list = renderList({ scrollToIndex: 0 })
@@ -112,7 +112,7 @@ describe('VirtualScroll', () => {
     })
   })
 
-  /** Allows more fine-grained control of scrolling from position A to B */
+  /** Tests fine-grained control of scrolling from position A to B */
   describe('scrollToIndex / _calculateScrollTopForIndex', () => {
     function calculateScrollTopForIndex (scrollToIndex, scrollTop = 0) {
       return VirtualScroll._calculateScrollTopForIndex({

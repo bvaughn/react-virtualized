@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import cn from 'classnames'
 import raf from 'raf'
+import './VirtualScroll.less'
 
 const IS_SCROLLING_TIMEOUT = 150
 
@@ -184,18 +185,15 @@ export default class VirtualScroll extends Component {
         onWheel={this._onWheel}
         tabIndex={0}
         style={{
-          height: height,
-          outline: 0,
-          overflow: 'auto'
+          height: height
         }}
       >
         <div
+          className='VirtualScroll__inner'
           style={{
-            boxSizing: 'border-box',
             height: totalRowsHeight,
             maxHeight: totalRowsHeight,
             paddingTop: paddingTop,
-            overflow: 'hidden',
             pointerEvents: isScrolling ? 'none' : 'auto'
           }}
         >
