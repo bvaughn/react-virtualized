@@ -39,7 +39,7 @@ export default class FlexTable extends Component {
       const children = React.Children.toArray(props.children)
       for (let i = 0; i < children.length; i++) {
         if (children[i].type !== FlexColumn) {
-          return new Error(`FlexTable only accepts cihldren of type FlexColumn`)
+          return new Error(`FlexTable only accepts children of type FlexColumn`)
         }
       }
     },
@@ -166,13 +166,8 @@ export default class FlexTable extends Component {
       dataKey,
       cellRenderer
     } = column.props
-    const renderedCell = cellRenderer(
-      cellDataGetter(dataKey, rowData, columnData),
-      dataKey,
-      rowData,
-      rowIndex,
-      columnData
-    )
+    const cellData = cellDataGetter(dataKey, rowData, columnData)
+    const renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData)
 
     const flex = this._getFlexStyleForColumn(column)
     const style = {

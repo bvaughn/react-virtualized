@@ -5,9 +5,8 @@ import Immutable from 'immutable'
 import VirtualScroll from './VirtualScroll'
 
 describe('VirtualScroll', () => {
-  beforeAll(() => {
-    jasmine.clock().install()
-  })
+  beforeAll(() => jasmine.clock().install())
+  afterAll(() => jasmine.clock().uninstall())
 
   var node = null
   beforeEach(() => {
@@ -16,11 +15,7 @@ describe('VirtualScroll', () => {
 
   const array = []
   for (var i = 0; i < 100; i++) {
-    array.push({
-      id: '${i}',
-      name: `Name ${i}`,
-      email: 'user-${i}@treasure-data.com'
-    })
+    array.push(`Name ${i}`)
   }
   const list = Immutable.fromJS(array)
 

@@ -16,9 +16,9 @@ export default class TableExample extends Component {
       scrollToIndex: undefined,
       sortBy: 'name',
       sortDirection: SortDirection.ASC,
-      virtualScrollHeight: 290,
-      virtualScrollHeaderHeight: 20,
-      virtualScrollRowHeight: 30
+      height: 290,
+      headerHeight: 20,
+      rowHeight: 30
     }
 
     // HACK :)
@@ -39,13 +39,13 @@ export default class TableExample extends Component {
 
   render () {
     const {
+      headerHeight,
+      height,
       rowsCount,
       scrollToIndex,
       sortBy,
       sortDirection,
-      virtualScrollHeaderHeight,
-      virtualScrollHeight,
-      virtualScrollRowHeight
+      rowHeight
     } = this.state
 
     const list = this._list
@@ -91,21 +91,21 @@ export default class TableExample extends Component {
           />
           <LabeledInput
             label='List height'
-            name='virtualScrollHeight'
-            onChange={event => this.setState({ virtualScrollHeight: parseInt(event.target.value, 10) || 1 })}
-            value={virtualScrollHeight}
+            name='height'
+            onChange={event => this.setState({ height: parseInt(event.target.value, 10) || 1 })}
+            value={height}
           />
           <LabeledInput
             label='Row height'
-            name='virtualScrollRowHeight'
-            onChange={event => this.setState({ virtualScrollRowHeight: parseInt(event.target.value, 10) || 1 })}
-            value={virtualScrollRowHeight}
+            name='rowHeight'
+            onChange={event => this.setState({ rowHeight: parseInt(event.target.value, 10) || 1 })}
+            value={rowHeight}
           />
           <LabeledInput
             label='Header height'
-            name='virtualScrollHeaderHeight'
-            onChange={event => this.setState({ virtualScrollHeaderHeight: parseInt(event.target.value, 10) || 1 })}
-            value={virtualScrollHeaderHeight}
+            name='headerHeight'
+            onChange={event => this.setState({ headerHeight: parseInt(event.target.value, 10) || 1 })}
+            value={headerHeight}
           />
         </InputRow>
 
@@ -113,10 +113,10 @@ export default class TableExample extends Component {
           ref='Table'
           className='FlexTableExample__FlexTable'
           width={430}
-          headerHeight={virtualScrollHeaderHeight}
-          height={virtualScrollHeight}
+          headerHeight={headerHeight}
+          height={height}
           rowClassName='FlexTableExample__FlexTable__row'
-          rowHeight={virtualScrollRowHeight}
+          rowHeight={rowHeight}
           rowGetter={rowGetter}
           rowsCount={rowsCount}
           sort={this._sort}
@@ -129,13 +129,13 @@ export default class TableExample extends Component {
               (dataKey, rowData, columnData) => rowData.id
             }
             dataKey='index'
-            width={50}/>
-
+            width={50}
+          />
           <FlexColumn
             label='Name'
             dataKey='name'
-            width={90}/>
-
+            width={90}
+          />
           <FlexColumn
             width={210}
             disableSort
@@ -145,7 +145,8 @@ export default class TableExample extends Component {
             cellRenderer={
               (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
             }
-            flexGrow={1}/>
+            flexGrow={1}
+          />
         </FlexTable>
       </ContentBox>
     )
