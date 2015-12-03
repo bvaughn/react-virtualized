@@ -137,7 +137,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _FlexColumn2 = __webpack_require__(15);
+	var _FlexColumn2 = __webpack_require__(19);
 	
 	var _FlexColumn3 = _interopRequireDefault(_FlexColumn2);
 	
@@ -181,11 +181,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _VirtualScroll2 = _interopRequireDefault(_VirtualScroll);
 	
-	var _FlexColumn = __webpack_require__(15);
+	var _FlexColumn = __webpack_require__(19);
 	
 	var _FlexColumn2 = _interopRequireDefault(_FlexColumn);
 	
-	__webpack_require__(16);
+	__webpack_require__(20);
 	
 	var SortDirection = {
 	  /**
@@ -226,7 +226,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var children = _react2['default'].Children.toArray(props.children);
 	        for (var i = 0; i < children.length; i++) {
 	          if (children[i].type !== _FlexColumn2['default']) {
-	            return new Error('FlexTable only accepts cihldren of type FlexColumn');
+	            return new Error('FlexTable only accepts children of type FlexColumn');
 	          }
 	        }
 	      },
@@ -373,7 +373,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var dataKey = _column$props.dataKey;
 	      var cellRenderer = _column$props.cellRenderer;
 	
-	      var renderedCell = cellRenderer(cellDataGetter(dataKey, rowData, columnData), dataKey, rowData, rowIndex, columnData);
+	      var cellData = cellDataGetter(dataKey, rowData, columnData);
+	      var renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData);
 	
 	      var flex = this._getFlexStyleForColumn(column);
 	      var style = {
@@ -500,7 +501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return _react2['default'].createElement(
 	    'svg',
 	    {
-	      className: 'FlexTable__headerRow__SortIndicator',
+	      className: 'FlexTable__headerRow__SortIndicator FlexTable__headerRow__SortIndicator--' + sortDirection,
 	      width: 18,
 	      height: 18,
 	      viewBox: '0 0 24 24',
@@ -693,6 +694,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _raf = __webpack_require__(13);
 	
 	var _raf2 = _interopRequireDefault(_raf);
+	
+	__webpack_require__(15);
 	
 	var IS_SCROLLING_TIMEOUT = 150;
 	
@@ -893,20 +896,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	          onWheel: this._onWheel,
 	          tabIndex: 0,
 	          style: {
-	            height: height,
-	            outline: 0,
-	            overflow: 'auto'
+	            height: height
 	          }
 	        },
 	        _react2['default'].createElement(
 	          'div',
 	          {
+	            className: 'VirtualScroll__inner',
 	            style: {
-	              boxSizing: 'border-box',
 	              height: totalRowsHeight,
 	              maxHeight: totalRowsHeight,
 	              paddingTop: paddingTop,
-	              overflow: 'hidden',
 	              pointerEvents: isScrolling ? 'none' : 'auto'
 	            }
 	          },
@@ -1459,132 +1459,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-	
-	exports.defaultCellRenderer = defaultCellRenderer;
-	exports.defaultCellDataGetter = defaultCellDataGetter;
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var _react = __webpack_require__(4);
-	
-	/**
-	 * Default cell renderer that displays an attribute as a simple string
-	 * You should override the column's cellRenderer if your data is some other type of object.
-	 */
-	
-	function defaultCellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
-	  if (cellData === null || cellData === undefined) {
-	    return '';
-	  } else {
-	    return String(cellData);
-	  }
-	}
-	
-	/**
-	 * Default accessor for returning a cell value for a given attribute.
-	 * This function expects to operate on either a vanilla Object or an Immutable Map.
-	 * You should override the column's cellDataGetter if your data is some other type of object.
-	 */
-	
-	function defaultCellDataGetter(dataKey, rowData, columnData) {
-	  if (rowData.get instanceof Function) {
-	    return rowData.get(dataKey);
-	  } else {
-	    return rowData[dataKey];
-	  }
-	}
-	
-	/**
-	 * Describes the header and cell contents of a table column.
-	 */
-	
-	var Column = (function (_Component) {
-	  _inherits(Column, _Component);
-	
-	  function Column() {
-	    _classCallCheck(this, Column);
-	
-	    _get(Object.getPrototypeOf(Column.prototype), 'constructor', this).apply(this, arguments);
-	  }
-	
-	  _createClass(Column, null, [{
-	    key: 'defaultProps',
-	    value: {
-	      cellDataGetter: defaultCellDataGetter,
-	      cellRenderer: defaultCellRenderer,
-	      flexGrow: 0,
-	      flexShrink: 1
-	    },
-	    enumerable: true
-	  }, {
-	    key: 'propTypes',
-	    value: {
-	      /** Optional CSS class to apply to cell */
-	      cellClassName: _react.PropTypes.string,
-	      /**
-	       * Callback responsible for returning a cell's data, given its :dataKey
-	       * (dataKey: string, rowData: any): any
-	       */
-	      cellDataGetter: _react.PropTypes.func,
-	      /**
-	       * Callback responsible for rendering a cell's contents.
-	       * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
-	       */
-	      cellRenderer: _react.PropTypes.func,
-	      /** Optional additional data passed to this column's :cellDataGetter */
-	      columnData: _react.PropTypes.object,
-	      /** Uniquely identifies the row-data attribute correspnding to this cell */
-	      dataKey: _react.PropTypes.any.isRequired,
-	      /** If sort is enabled for the table at large, disable it for this column */
-	      disableSort: _react.PropTypes.bool,
-	      /** Flex grow style; defaults to 0 */
-	      flexGrow: _react.PropTypes.number,
-	      /** Flex shrink style; defaults to 1 */
-	      flexShrink: _react.PropTypes.number,
-	      /** Optional CSS class to apply to this column's header */
-	      headerClassName: _react.PropTypes.string,
-	      /** Header label for this column */
-	      label: _react.PropTypes.string,
-	      /** Optional fixed width for this column */
-	      width: _react.PropTypes.number
-	    },
-	    enumerable: true
-	  }]);
-	
-	  return Column;
-	})(_react.Component);
-	
-	exports['default'] = Column;
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(17);
+	var content = __webpack_require__(16);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(19)(content, {});
+	var update = __webpack_require__(18)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/postcss-loader/index.js!./../../node_modules/less-loader/index.js!./FlexTable.less", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/postcss-loader/index.js!./../../node_modules/less-loader/index.js!./FlexTable.less");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/postcss-loader/index.js!./../../node_modules/less-loader/index.js!./VirtualScroll.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/postcss-loader/index.js!./../../node_modules/less-loader/index.js!./VirtualScroll.less");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -1594,21 +1482,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(18)();
+	exports = module.exports = __webpack_require__(17)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, ".FlexTable {\n  overflow: hidden;\n  font-size: 11px;\n  width: 100%;\n}\n.FlexTable__rowWrapper {\n  overflow: auto;\n}\n.FlexTable__headerRow,\n.FlexTable__row {\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n  overflow: hidden;\n}\n.FlexTable__headerRow {\n  font-weight: 700;\n  text-transform: uppercase;\n}\n.FlexTable__headerRow__truncatedText {\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.FlexTable__headerRow__column,\n.FlexTable__row__column {\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  margin-right: 10px;\n  min-width: 0px;\n  overflow: hidden;\n}\n.FlexTable__headerRow__column:first-of-type,\n.FlexTable__row__column:first-of-type {\n  margin-left: 10px;\n}\n.FlexTable__headerRow__column {\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.FlexTable__headerRow__column.FlexTable__headerRow__column--sortable {\n  cursor: pointer;\n}\n.FlexTable__row__column {\n  height: 100%;\n  -webkit-justify-content: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-flex-direction: column;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n.FlexTable__headerRow__Icon {\n  -webkit-flex: 0 0 24px;\n      -ms-flex: 0 0 24px;\n          flex: 0 0 24px;\n}\n.FlexTable__row__column__truncatedText {\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n", ""]);
+	exports.push([module.id, ".VirtualScroll {\n  outline: 0;\n  overflow: auto;\n}\n.VirtualScroll__inner {\n  box-sizing: border-box;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports) {
 
 	/*
@@ -1664,7 +1552,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1915,6 +1803,158 @@ return /******/ (function(modules) { // webpackBootstrap
 		if(oldSrc)
 			URL.revokeObjectURL(oldSrc);
 	}
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	
+	exports.defaultCellRenderer = defaultCellRenderer;
+	exports.defaultCellDataGetter = defaultCellDataGetter;
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _react = __webpack_require__(4);
+	
+	/**
+	 * Default cell renderer that displays an attribute as a simple string
+	 * You should override the column's cellRenderer if your data is some other type of object.
+	 */
+	
+	function defaultCellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
+	  if (cellData === null || cellData === undefined) {
+	    return '';
+	  } else {
+	    return String(cellData);
+	  }
+	}
+	
+	/**
+	 * Default accessor for returning a cell value for a given attribute.
+	 * This function expects to operate on either a vanilla Object or an Immutable Map.
+	 * You should override the column's cellDataGetter if your data is some other type of object.
+	 */
+	
+	function defaultCellDataGetter(dataKey, rowData, columnData) {
+	  if (rowData.get instanceof Function) {
+	    return rowData.get(dataKey);
+	  } else {
+	    return rowData[dataKey];
+	  }
+	}
+	
+	/**
+	 * Describes the header and cell contents of a table column.
+	 */
+	
+	var Column = (function (_Component) {
+	  _inherits(Column, _Component);
+	
+	  function Column() {
+	    _classCallCheck(this, Column);
+	
+	    _get(Object.getPrototypeOf(Column.prototype), 'constructor', this).apply(this, arguments);
+	  }
+	
+	  _createClass(Column, null, [{
+	    key: 'defaultProps',
+	    value: {
+	      cellDataGetter: defaultCellDataGetter,
+	      cellRenderer: defaultCellRenderer,
+	      flexGrow: 0,
+	      flexShrink: 1
+	    },
+	    enumerable: true
+	  }, {
+	    key: 'propTypes',
+	    value: {
+	      /** Optional CSS class to apply to cell */
+	      cellClassName: _react.PropTypes.string,
+	      /**
+	       * Callback responsible for returning a cell's data, given its :dataKey
+	       * (dataKey: string, rowData: any): any
+	       */
+	      cellDataGetter: _react.PropTypes.func,
+	      /**
+	       * Callback responsible for rendering a cell's contents.
+	       * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
+	       */
+	      cellRenderer: _react.PropTypes.func,
+	      /** Optional additional data passed to this column's :cellDataGetter */
+	      columnData: _react.PropTypes.object,
+	      /** Uniquely identifies the row-data attribute correspnding to this cell */
+	      dataKey: _react.PropTypes.any.isRequired,
+	      /** If sort is enabled for the table at large, disable it for this column */
+	      disableSort: _react.PropTypes.bool,
+	      /** Flex grow style; defaults to 0 */
+	      flexGrow: _react.PropTypes.number,
+	      /** Flex shrink style; defaults to 1 */
+	      flexShrink: _react.PropTypes.number,
+	      /** Optional CSS class to apply to this column's header */
+	      headerClassName: _react.PropTypes.string,
+	      /** Header label for this column */
+	      label: _react.PropTypes.string,
+	      /** Optional fixed width for this column */
+	      width: _react.PropTypes.number
+	    },
+	    enumerable: true
+	  }]);
+	
+	  return Column;
+	})(_react.Component);
+	
+	exports['default'] = Column;
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(21);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(18)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/postcss-loader/index.js!./../../node_modules/less-loader/index.js!./FlexTable.less", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/postcss-loader/index.js!./../../node_modules/less-loader/index.js!./FlexTable.less");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(17)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".FlexTable {\n  font-size: 11px;\n  width: 100%;\n}\n.FlexTable__headerRow,\n.FlexTable__row {\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.FlexTable__headerRow {\n  font-weight: 700;\n  text-transform: uppercase;\n}\n.FlexTable__headerRow__truncatedText {\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.FlexTable__headerRow__column,\n.FlexTable__row__column {\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  margin-right: 10px;\n  min-width: 0px;\n  overflow: hidden;\n}\n.FlexTable__headerRow__column:first-of-type,\n.FlexTable__row__column:first-of-type {\n  margin-left: 10px;\n}\n.FlexTable__headerRow__column {\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.FlexTable__headerRow__column.FlexTable__headerRow__column--sortable {\n  cursor: pointer;\n}\n.FlexTable__row__column {\n  height: 100%;\n  -webkit-justify-content: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-flex-direction: column;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n.FlexTable__headerRow__Icon {\n  -webkit-flex: 0 0 24px;\n      -ms-flex: 0 0 24px;\n          flex: 0 0 24px;\n}\n.FlexTable__row__column__truncatedText {\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n", ""]);
+	
+	// exports
 
 
 /***/ }
