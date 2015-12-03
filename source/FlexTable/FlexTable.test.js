@@ -1,20 +1,14 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
+import { Simulate } from 'react-addons-test-utils'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import FlexColumn from './FlexColumn'
-import FlexTable from './FlexTable'
+import FlexTable, { SortDirection } from './FlexTable'
 
 describe('FlexTable', () => {
   beforeAll(() => jasmine.clock().install())
   afterAll(() => jasmine.clock().uninstall())
-
-  /*
-  var node = null
-  beforeEach(() => {
-    node = document.createElement('div')
-  })
-  */
 
   const array = []
   for (var i = 0; i < 100; i++) {
@@ -39,6 +33,7 @@ describe('FlexTable', () => {
   function getMarkup ({
     cellRenderer = undefined,
     cellDataGetter = undefined,
+    disableSort = false,
     headerHeight = 20,
     height = 100,
     rowGetter = immutableRowGetter,
@@ -68,6 +63,7 @@ describe('FlexTable', () => {
           width={50}
           cellRenderer={cellRenderer}
           cellDataGetter={cellDataGetter}
+          disableSort={disableSort}
         />
         <FlexColumn
           label='Email'
@@ -87,34 +83,10 @@ describe('FlexTable', () => {
     return flexTable
   }
 
-  /*
-  // Use ReactDOM.render for certain tests so that props changes will update the existing component
-  // TestUtils.renderIntoDocument creates a new component/instance each time
-  function renderOrUpdateTable (props) {
-    let flexTable = render(getMarkup(props), node)
-
-    // Allow initial setImmediate() to set :scrollTop
-    jasmine.clock().tick()
-
-    return findDOMNode(flexTable)
-  }
-  */
-
-  it('should not allow children of any type but FlexColumn', () => {
-    expect(() => {
-      TestUtils.renderIntoDocument(
-        <FlexTable
-          width={100}
-          headerHeight={10}
-          height={100}
-          rowHeight={10}
-          rowGetter={index => {}}
-          rowsCount={10}
-        >
-          <div>Not a FlexColumn</div>
-        </FlexTable>
-      )
-    }).toThrow()
+  // Maybe test FlexTable.propTypes.children directly
+  it('should not accept non-FlexColumn children', () => {
+    const result = FlexTable.propTypes.children({ children: <div/> }, 'children', 'FlexTable')
+    expect(result instanceof Error).toEqual(true)
   })
 
   describe('initial rendering', () => {
@@ -196,5 +168,90 @@ describe('FlexTable', () => {
     })
   })
 
-  // TODO Test sorting
+  describe('sorting', () => {
+    it('should not render sort indicators if no sort function is provided', () => {
+      const table = renderTable()
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerRow__column:first-of-type')
+
+      expect(nameColumn.className).not.toContain('FlexTable__headerRow__column--sortable')
+    })
+
+    it('should not render sort indicators for non-sortable columns', () => {
+      const table = renderTable({
+        disableSort: true,
+        sort: () => {}
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerRow__column:first-of-type')
+
+      expect(nameColumn.className).not.toContain('FlexTable__headerRow__column--sortable')
+    })
+
+    it('should render sortable column headers as sortable', () => {
+      const table = renderTable({
+        sort: () => {}
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerRow__column:first-of-type')
+
+      expect(nameColumn.className).toContain('FlexTable__headerRow__column--sortable')
+    })
+
+    it('should render the correct sort indicator by the current sort-by column', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC]
+      sortDirections.forEach(sortDirection => {
+        const table = renderTable({
+          sort: () => {},
+          sortBy: 'name',
+          sortDirection
+        })
+        const tableDOMNode = findDOMNode(table)
+        const nameColumn = tableDOMNode.querySelector('.FlexTable__headerRow__column:first-of-type')
+
+        expect(nameColumn.querySelector('.FlexTable__headerRow__SortIndicator')).not.toEqual(null)
+        expect(nameColumn.querySelector(`.FlexTable__headerRow__SortIndicator--${sortDirection}`)).not.toEqual(null)
+      })
+    })
+
+    it('should call sort with the correct arguments when the current sort-by column header is clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC]
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = []
+        const table = renderTable({
+          sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
+          sortBy: 'name',
+          sortDirection
+        })
+        const tableDOMNode = findDOMNode(table)
+        const nameColumn = tableDOMNode.querySelector('.FlexTable__headerRow__column:first-of-type')
+
+        Simulate.click(nameColumn)
+        expect(sortCalls.length).toEqual(1)
+
+        const {dataKey, newSortDirection} = sortCalls[0]
+        const expectedSortDirection = sortDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+        expect(dataKey).toEqual('name')
+        expect(newSortDirection).toEqual(expectedSortDirection)
+      })
+    })
+
+    it('should call sort with the correct arguments when a new sort-by column header is clicked', () => {
+      const sortCalls = []
+      const table = renderTable({
+        sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
+        sortBy: 'email',
+        sortDirection: SortDirection.ASC
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerRow__column:first-of-type')
+
+      Simulate.click(nameColumn)
+      expect(sortCalls.length).toEqual(1)
+
+      const {dataKey, newSortDirection} = sortCalls[0]
+      expect(dataKey).toEqual('name')
+      expect(newSortDirection).toEqual(SortDirection.ASC)
+    })
+  })
 })

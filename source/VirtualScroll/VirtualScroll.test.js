@@ -8,6 +8,7 @@ describe('VirtualScroll', () => {
   beforeAll(() => jasmine.clock().install())
   afterAll(() => jasmine.clock().uninstall())
 
+  // Used by the renderOrUpdateList() helper method
   var node = null
   beforeEach(() => {
     node = document.createElement('div')

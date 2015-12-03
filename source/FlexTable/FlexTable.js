@@ -289,7 +289,7 @@ export default class FlexTable extends Component {
 export function SortIndicator ({ sortDirection }) {
   return (
     <svg
-      className='FlexTable__headerRow__SortIndicator'
+      className={`FlexTable__headerRow__SortIndicator FlexTable__headerRow__SortIndicator--${sortDirection}`}
       width={18}
       height={18}
       viewBox='0 0 24 24'
