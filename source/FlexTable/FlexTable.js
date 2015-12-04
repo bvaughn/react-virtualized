@@ -59,7 +59,7 @@ export default class FlexTable extends Component {
     rowClassName: PropTypes.string,
     /**
      * Callback responsible for returning a data row given an index.
-     * (index: int): any
+     * (index: number): any
      */
     rowGetter: PropTypes.func.isRequired,
     /** Fixed height of table row */
