@@ -25,8 +25,6 @@ export const SortDirection = {
  * This component expects explicit width, height, and padding parameters.
  */
 export default class FlexTable extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static defaultProps = {
     disableHeader: false,
     horizontalPadding: 0,
@@ -282,6 +280,7 @@ export default class FlexTable extends Component {
     return flex.join(' ')
   }
 }
+FlexTable.prototype.shouldComponentUpdate = shouldPureComponentUpdate
 
 /**
  * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
