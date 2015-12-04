@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react"), require("react-dom"));
+		module.exports = factory(require("react"));
 	else if(typeof define === 'function' && define.amd)
-		define(["react", "react-dom"], factory);
+		define(["react"], factory);
 	else if(typeof exports === 'object')
-		exports["react-virtualized"] = factory(require("react"), require("react-dom"));
+		exports["react-virtualized"] = factory(require("react"));
 	else
-		root["react-virtualized"] = factory(root["React"], root["ReactDOM"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_12__) {
+		root["react-virtualized"] = factory(root["React"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -44,7 +44,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.c = installedModules;
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/static/";
+/******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -54,20 +54,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(1);
-
-
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
 	
-	var _FlexTable = __webpack_require__(2);
+	var _FlexTable = __webpack_require__(1);
 	
 	Object.defineProperty(exports, 'FlexTable', {
 	  enumerable: true,
@@ -94,7 +87,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _VirtualScroll = __webpack_require__(8);
+	var _VirtualScroll = __webpack_require__(7);
 	
 	Object.defineProperty(exports, 'VirtualScroll', {
 	  enumerable: true,
@@ -104,7 +97,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ },
-/* 2 */
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -115,7 +108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _FlexTable2 = __webpack_require__(3);
+	var _FlexTable2 = __webpack_require__(2);
 	
 	var _FlexTable3 = _interopRequireDefault(_FlexTable2);
 	
@@ -137,14 +130,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _FlexColumn2 = __webpack_require__(19);
+	var _FlexColumn2 = __webpack_require__(17);
 	
 	var _FlexColumn3 = _interopRequireDefault(_FlexColumn2);
 	
 	exports.FlexColumn = _FlexColumn3['default'];
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -165,27 +158,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _react = __webpack_require__(4);
+	var _react = __webpack_require__(3);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _classnames = __webpack_require__(5);
+	var _classnames = __webpack_require__(4);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _reactPureRenderFunction = __webpack_require__(6);
+	var _reactPureRenderFunction = __webpack_require__(5);
 	
 	var _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction);
 	
-	var _VirtualScroll = __webpack_require__(8);
+	var _VirtualScroll = __webpack_require__(7);
 	
 	var _VirtualScroll2 = _interopRequireDefault(_VirtualScroll);
 	
-	var _FlexColumn = __webpack_require__(19);
+	var _FlexColumn = __webpack_require__(17);
 	
 	var _FlexColumn2 = _interopRequireDefault(_FlexColumn);
 	
-	__webpack_require__(20);
+	__webpack_require__(18);
 	
 	var SortDirection = {
 	  /**
@@ -246,7 +239,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      rowClassName: _react.PropTypes.string,
 	      /**
 	       * Callback responsible for returning a data row given an index.
-	       * (index: int): any
+	       * (index: number): any
 	       */
 	      rowGetter: _react.PropTypes.func.isRequired,
 	      /** Fixed height of table row */
@@ -275,13 +268,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _get(Object.getPrototypeOf(FlexTable.prototype), 'constructor', this).call(this, props);
 	
-	    this.shouldComponentUpdate = _reactPureRenderFunction2['default'];
 	    this._createRow = this._createRow.bind(this);
 	  }
-	
-	  /**
-	   * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
-	   */
 	
 	  /**
 	   * Scroll the table to ensure the specified index is visible.
@@ -495,6 +483,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports['default'] = FlexTable;
 	
+	FlexTable.prototype.shouldComponentUpdate = _reactPureRenderFunction2['default'];
+	
+	/**
+	 * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
+	 */
+	
 	function SortIndicator(_ref) {
 	  var sortDirection = _ref.sortDirection;
 	
@@ -517,13 +511,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -577,7 +571,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -587,7 +581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _shallowEqual = __webpack_require__(7);
+	var _shallowEqual = __webpack_require__(6);
 	
 	var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
 	
@@ -598,7 +592,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -636,7 +630,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -647,7 +641,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _VirtualScroll2 = __webpack_require__(9);
+	var _VirtualScroll2 = __webpack_require__(8);
 	
 	var _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
 	
@@ -658,7 +652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.VirtualScroll = _VirtualScroll4['default'];
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {'use strict';
@@ -677,25 +671,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _reactPureRenderFunction = __webpack_require__(6);
+	var _reactPureRenderFunction = __webpack_require__(5);
 	
 	var _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction);
 	
-	var _react = __webpack_require__(4);
+	var _react = __webpack_require__(3);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDom = __webpack_require__(12);
-	
-	var _classnames = __webpack_require__(5);
+	var _classnames = __webpack_require__(4);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _raf = __webpack_require__(13);
+	var _raf = __webpack_require__(11);
 	
 	var _raf2 = _interopRequireDefault(_raf);
 	
-	__webpack_require__(15);
+	__webpack_require__(13);
 	
 	var IS_SCROLLING_TIMEOUT = 150;
 	
@@ -738,7 +730,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _get(Object.getPrototypeOf(VirtualScroll.prototype), 'constructor', this).call(this, props, context);
 	
-	    this.shouldComponentUpdate = _reactPureRenderFunction2['default'];
 	    this.state = {
 	      isScrolling: false,
 	      scrollTop: 0
@@ -766,13 +757,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this = this;
 	
 	      var scrollToIndex = this.props.scrollToIndex;
-	
-	      // React v0.14 requires ReactDOM.findDOMNode but earlier versions use getDOMNode()
-	      if (_reactDom.findDOMNode instanceof Function) {
-	        this._scrollingContainer = (0, _reactDom.findDOMNode)(this.refs.scrollingContainer);
-	      } else {
-	        this._scrollingContainer = this.refs.scrollingContainer.getDOMNode();
-	      }
 	
 	      if (scrollToIndex >= 0) {
 	        // Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
@@ -809,7 +793,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // Make sure any changes to :scrollTop (from :scrollToIndex) get applied
 	      if (scrollTop >= 0 && scrollTop !== prevState.scrollTop) {
-	        this._scrollingContainer.scrollTop = scrollTop;
+	        this.refs.scrollingContainer.scrollTop = scrollTop;
 	      }
 	
 	      var hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < rowsCount;
@@ -1034,7 +1018,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // In certain edge-cases React dispatches an onScroll event with an invalid target.scrollTop.
 	      // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
 	      // See issue #404 for more information.
-	      if (event.target !== this._scrollingContainer) {
+	      if (event.target !== this.refs.scrollingContainer) {
 	        return;
 	      }
 	
@@ -1069,7 +1053,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_onWheel',
 	    value: function _onWheel(event) {
-	      var scrollTop = this._scrollingContainer.scrollTop;
+	      var scrollTop = this.refs.scrollingContainer.scrollTop;
 	
 	      // Certain devices (like Apple touchpad) rapid-fire duplicate events.
 	      // Don't force a re-render if this is the case.
@@ -1154,14 +1138,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_react.Component);
 	
 	exports['default'] = VirtualScroll;
+	
+	VirtualScroll.prototype.shouldComponentUpdate = _reactPureRenderFunction2['default'];
 	module.exports = exports['default'];
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10).setImmediate, __webpack_require__(10).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9).setImmediate, __webpack_require__(9).clearImmediate))
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(11).nextTick;
+	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(10).nextTick;
 	var apply = Function.prototype.apply;
 	var slice = Array.prototype.slice;
 	var immediateIds = {};
@@ -1237,10 +1223,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10).setImmediate, __webpack_require__(10).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9).setImmediate, __webpack_require__(9).clearImmediate))
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1337,16 +1323,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_12__;
-
-/***/ },
-/* 13 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var now = __webpack_require__(14)
+	var now = __webpack_require__(12)
 	  , global = typeof window === 'undefined' ? {} : window
 	  , vendors = ['moz', 'webkit']
 	  , suffix = 'AnimationFrame'
@@ -1417,7 +1397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 14 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.7.1
@@ -1453,19 +1433,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	}).call(this);
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ },
-/* 15 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(16);
+	var content = __webpack_require__(14);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(18)(content, {});
+	var update = __webpack_require__(16)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -1482,10 +1462,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 16 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(17)();
+	exports = module.exports = __webpack_require__(15)();
 	// imports
 	
 	
@@ -1496,7 +1476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 17 */
+/* 15 */
 /***/ function(module, exports) {
 
 	/*
@@ -1552,7 +1532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 18 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1806,7 +1786,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 19 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1826,7 +1806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _react = __webpack_require__(4);
+	var _react = __webpack_require__(3);
 	
 	/**
 	 * Default cell renderer that displays an attribute as a simple string
@@ -1918,16 +1898,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports['default'] = Column;
 
 /***/ },
-/* 20 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(21);
+	var content = __webpack_require__(19);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(18)(content, {});
+	var update = __webpack_require__(16)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -1944,10 +1924,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 21 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(17)();
+	exports = module.exports = __webpack_require__(15)();
 	// imports
 	
 	
