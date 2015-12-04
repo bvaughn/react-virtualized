@@ -10,7 +10,7 @@ module.exports = {
   },
   output: {
     path: 'build',
-    filename: '/static/[name].js'
+    filename: 'static/[name].js'
   },
   plugins: [
     new HtmlWebpackPlugin({
