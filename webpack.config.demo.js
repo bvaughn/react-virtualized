@@ -1,25 +1,26 @@
 const autoprefixer = require('autoprefixer')
-var path = require('path')
-var webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
   devtool: 'source-map',
-  entry: ['./source/demo/demo'],
+  entry: {
+    demo: './source/demo/demo'
+  },
   output: {
-    path: path.join(__dirname, 'build'),
-    filename: 'demo.js',
-    publicPath: '/static/'
+    path: 'build',
+    filename: '/static/[name].js'
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      inject: true,
+      template: './index.html'
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false
       }
     })
   ],

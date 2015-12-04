@@ -1,18 +1,16 @@
 const autoprefixer = require('autoprefixer')
 const path = require('path')
 
-require('webpack')
-
 module.exports = {
   devtool: 'source-map',
-  entry: ['./source/index'],
+  entry: {
+    'react-virtualized': './source/index.js'
+  },
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'react-virtualized.js',
-    publicPath: '/static/',
+    path: 'dist',
+    filename: '[name].js',
     libraryTarget: 'umd',
-    library: 'react-virtualized',
-    sourceMapFilename: 'react-virtualized.js.map'
+    library: 'react-virtualized'
   },
   externals: {
     react: {
@@ -29,14 +27,12 @@ module.exports = {
       {
         test: /\.js$/,
         loaders: ['babel'],
-        include: path.join(__dirname, 'source'),
-        exclude: /(node_modules)/
+        include: path.join(__dirname, 'source')
       },
       {
         test: /\.less$/,
         loaders: ['style', 'css', 'postcss', 'less'],
-        include: path.join(__dirname, 'source'),
-        exclude: /(node_modules)/
+        include: path.join(__dirname, 'source')
       }
     ]
   },
