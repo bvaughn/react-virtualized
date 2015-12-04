@@ -1,6 +1,5 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
-import cn from 'classnames'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import VirtualScroll from '../VirtualScroll'
 import FlexColumn from './FlexColumn'
@@ -130,14 +129,14 @@ export default class FlexTable extends Component {
 
     return (
       <div
-        className={cn('FlexTable', className)}
+        className={`FlexTable ${className || ''}`}
         style={{
           maxWidth: width
         }}
       >
         {!disableHeader && (
           <div
-            className={cn('FlexTable__headerRow', rowClassName)}
+            className={`FlexTable__headerRow ${rowClassName || ''}`}
             style={{
               height: headerHeight
             }}
@@ -183,7 +182,7 @@ export default class FlexTable extends Component {
         style={style}
       >
         <div
-          className={cn('FlexTable__row__column__truncatedText', cellClassName)}
+          className={`FlexTable__row__column__truncatedText ${cellClassName || ''}`}
           title={renderedCell}
         >
           {renderedCell}
@@ -198,13 +197,13 @@ export default class FlexTable extends Component {
     const showSortIndicator = sortBy === dataKey
     const sortEnabled = !disableSort && sort
 
-    const classNames = cn('FlexTable__headerRow__column',
+    const classNames = [
+      'FlexTable__headerRow__column',
       this.props.headerClassName,
       column.props.headerClassName,
-      {
-        'FlexTable__headerRow__column--sortable': sortEnabled
-      }
-    )
+      sortEnabled && 'FlexTable__headerRow__column'
+    ].filter(str => str).join(' ')
+
     const style = {
       flex: this._getFlexStyleForColumn(column)
     }
@@ -256,7 +255,7 @@ export default class FlexTable extends Component {
     return (
       <div
         key={rowIndex}
-        className={cn('FlexTable__row', rowClassName)}
+        className={`FlexTable__row ${rowClassName || ''}`}
         style={{
           height: rowHeight
         }}

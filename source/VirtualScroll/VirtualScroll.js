@@ -2,7 +2,6 @@
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
-import cn from 'classnames'
 import raf from 'raf'
 import './VirtualScroll.less'
 
@@ -179,7 +178,7 @@ export default class VirtualScroll extends Component {
     return (
       <div
         ref='scrollingContainer'
-        className={cn('VirtualScroll', className)}
+        className={`VirtualScroll ${className || ''}`}
         onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
         onWheel={this._onWheel}
