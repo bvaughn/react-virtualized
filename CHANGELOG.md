@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 2.0.0
+Set `shouldPureComponentUpdate` on component prototypes instead of instances.
+Dropped half-ass support for React 0.13. This module has always depended on React 0.14 but it was checking in previous versions and trying to be backwards compatible with 0.13. Since that check is no longer in place, this is a major version bump (even though there is no real new functionality being added).
+
 #### 1.0.4
 Fixed package.json dependencies by moving `classnames`, `raf`, and `react-pure-render` out of `peerDependencies` and into `dependencies`.
 
