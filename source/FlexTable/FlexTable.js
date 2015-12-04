@@ -201,7 +201,7 @@ export default class FlexTable extends Component {
       'FlexTable__headerRow__column',
       this.props.headerClassName,
       column.props.headerClassName,
-      sortEnabled && 'FlexTable__headerRow__column'
+      sortEnabled && 'FlexTable__headerRow__column--sortable'
     ].filter(str => str).join(' ')
 
     const style = {
