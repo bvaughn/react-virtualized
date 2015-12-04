@@ -1,21 +1,23 @@
 const autoprefixer = require('autoprefixer')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
 
 module.exports = {
   devtool: 'eval',
   entry: {
-    client: 'webpack-hot-middleware/client',
-    demo: './source/demo/demo',
-    index: './source/index'
+    demo: './source/demo/demo'
   },
   output: {
-    path: path.join(__dirname, 'build'),
-    filename: '[name].js',
-    publicPath: '/static/'
+    path: 'build',
+    filename: '/static/[name].js'
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      inject: true,
+      template: './index.html'
+    }),
     new webpack.NoErrorsPlugin()
   ],
   module: {
@@ -34,5 +36,10 @@ module.exports = {
   },
   postcss: [
     autoprefixer({ browsers: ['last 2 versions'] })
-  ]
+  ],
+  devServer: {
+    contentBase: 'build',
+    historyApiFallback: true,
+    port: 3001
+  }
 }
