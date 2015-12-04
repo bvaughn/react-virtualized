@@ -20,8 +20,6 @@ const IS_SCROLLING_TIMEOUT = 150
  * container.
  */
 export default class VirtualScroll extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     /** Optional CSS class name */
     className: PropTypes.string,
@@ -394,3 +392,4 @@ export default class VirtualScroll extends Component {
     })
   }
 }
+VirtualScroll.prototype.shouldComponentUpdate = shouldPureComponentUpdate
