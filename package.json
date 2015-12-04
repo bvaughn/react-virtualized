@@ -116,7 +116,6 @@
     "react-pure-render": "^1.0.2"
   },
   "peerDependencies": {
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0"
+    "react": "^0.14.0"
   }
 }
