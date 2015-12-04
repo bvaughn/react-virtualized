@@ -1,7 +1,6 @@
 /** @flow */
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import React, { Component, PropTypes } from 'react'
-import { findDOMNode } from 'react-dom'
 import cn from 'classnames'
 import raf from 'raf'
 import './VirtualScroll.less'
@@ -59,13 +58,7 @@ export default class VirtualScroll extends Component {
 
   componentDidMount () {
     const { scrollToIndex } = this.props
-
-    // React v0.14 requires ReactDOM.findDOMNode but earlier versions use getDOMNode()
-    if (findDOMNode instanceof Function) {
-      this._scrollingContainer = findDOMNode(this.refs.scrollingContainer)
-    } else {
-      this._scrollingContainer = this.refs.scrollingContainer.getDOMNode()
-    }
+    this._scrollingContainer = this.refs.scrollingContainer
 
     if (scrollToIndex >= 0) {
       // Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
