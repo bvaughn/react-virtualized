@@ -2,8 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import FlexTableExample from '../FlexTable/FlexTable.example'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
-
-require('./demo.less')
+import './demo.less'
 
 render((
     <div className='demo__row'>
