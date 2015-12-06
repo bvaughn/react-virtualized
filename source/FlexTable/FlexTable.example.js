@@ -5,7 +5,7 @@ import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import FlexColumn from './FlexColumn'
 import FlexTable, { SortDirection } from './FlexTable'
 import Immutable from 'immutable'
-import './FlexTable.example.css'
+import styles from './FlexTable.example.css'
 
 export default class TableExample extends Component {
   constructor (props, context) {
@@ -61,7 +61,7 @@ export default class TableExample extends Component {
     }
 
     return (
-      <ContentBox className='FlexTableExample'>
+      <ContentBox className={styles.FlexTableExample}>
         <ContentBoxHeader
           text='FlexTable'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/FlexTable.example.js'
@@ -111,11 +111,11 @@ export default class TableExample extends Component {
 
         <FlexTable
           ref='Table'
-          className='FlexTableExample__FlexTable'
+          className={styles.FlexTableExample__FlexTable}
           width={430}
           headerHeight={headerHeight}
           height={height}
-          rowClassName='FlexTableExample__FlexTable__row'
+          rowClassName={styles.FlexTableExample__FlexTable__row}
           rowHeight={rowHeight}
           rowGetter={rowGetter}
           rowsCount={rowsCount}
@@ -141,7 +141,7 @@ export default class TableExample extends Component {
             disableSort
             label='The description label is really long'
             dataKey='random'
-            cellClassName='FlexTableExample__exampleColumn'
+            cellClassName={styles.FlexTableExample__exampleColumn}
             cellRenderer={
               (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
             }

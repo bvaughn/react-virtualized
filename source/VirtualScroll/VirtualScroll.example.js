@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import VirtualScroll from './VirtualScroll'
-import './VirtualScroll.example.css'
+import styles from './VirtualScroll.example.css'
 
 export default class VirtualScrollExample extends Component {
   constructor (props) {
@@ -37,7 +37,7 @@ export default class VirtualScrollExample extends Component {
     const { rowsCount, scrollToIndex, virtualScrollHeight, virtualScrollRowHeight } = this.state
 
     return (
-      <ContentBox className='VirtualScrollExample'>
+      <ContentBox className={styles.VirtualScrollExample}>
         <ContentBoxHeader
           text='VirtualScroll'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'
@@ -78,7 +78,7 @@ export default class VirtualScrollExample extends Component {
         </InputRow>
 
         <VirtualScroll
-          className='VirtualScrollExample__VirtualScroll'
+          className={styles.VirtualScrollExample__VirtualScroll}
           width={310}
           height={virtualScrollHeight}
           rowsCount={rowsCount}
@@ -119,11 +119,11 @@ export default class VirtualScrollExample extends Component {
     return (
       <div
         key={index}
-        className='VirtualScrollExample__VirtualScroll__row'
+        className={styles.VirtualScrollExample__VirtualScroll__row}
         style={rowStyle}
       >
         <div
-          className='VirtualScrollExample__VirtualScroll__row__letter'
+          className={styles.VirtualScrollExample__VirtualScroll__row__letter}
           style={{
             backgroundColor: data.color
           }}
@@ -131,10 +131,10 @@ export default class VirtualScrollExample extends Component {
           {data.name.charAt(0)}
         </div>
         <div>
-          <div className='VirtualScrollExample__VirtualScroll__row__name'>
+          <div className={styles.VirtualScrollExample__VirtualScroll__row__name}>
             {data.name}
           </div>
-          <div className='VirtualScrollExample__VirtualScroll__row__index'>
+          <div className={styles.VirtualScrollExample__VirtualScroll__row__index}>
             This is row {index}
           </div>
         </div>

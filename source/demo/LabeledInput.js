@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react'
-import './LabeledInput.css'
+import styles from './LabeledInput.css'
 
 export function LabeledInput ({ label, name, onChange, placeholder, value }) {
   return (
-    <div className='LabeledInput'>
-      <label className='LabeledInput__label'>
+    <div className={styles.LabeledInput}>
+      <label className={styles.LabeledInput__label}>
         {label}
       </label>
       <input
-        className='LabeledInput__input'
+        className={styles.LabeledInput__input}
         name={name}
         placeholder={placeholder}
         onChange={onChange}
@@ -27,7 +27,7 @@ LabeledInput.propTypes = {
 
 export function InputRow ({ children }) {
   return (
-    <div className='InputRow'>
+    <div className={styles.InputRow}>
       {children}
     </div>
   )

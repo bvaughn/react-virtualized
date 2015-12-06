@@ -4,7 +4,7 @@ import cn from 'classnames'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import VirtualScroll from '../VirtualScroll'
 import FlexColumn from './FlexColumn'
-import './FlexTable.css'
+import styles from './FlexTable.css'
 
 export const SortDirection = {
   /**
@@ -128,14 +128,14 @@ export default class FlexTable extends Component {
 
     return (
       <div
-        className={cn('FlexTable', className)}
+        className={cn(styles.FlexTable, className)}
         style={{
           maxWidth: width
         }}
       >
         {!disableHeader && (
           <div
-            className={cn('FlexTable__headerRow', rowClassName)}
+            className={cn(styles.FlexTable__headerRow, rowClassName)}
             style={{
               height: headerHeight
             }}
@@ -177,11 +177,11 @@ export default class FlexTable extends Component {
     return (
       <div
         key={`Row${rowIndex}-Col${columnIndex}`}
-        className='FlexTable__row__column'
+        className={styles.FlexTable__row__column}
         style={style}
       >
         <div
-          className={cn('FlexTable__row__column__truncatedText', cellClassName)}
+          className={cn(styles.FlexTable__row__column__truncatedText, cellClassName)}
           title={renderedCell}
         >
           {renderedCell}
@@ -196,11 +196,11 @@ export default class FlexTable extends Component {
     const showSortIndicator = sortBy === dataKey
     const sortEnabled = !disableSort && sort
 
-    const classNames = cn('FlexTable__headerRow__column',
+    const classNames = cn(styles.FlexTable__headerRow__column,
       this.props.headerClassName,
       column.props.headerClassName,
       {
-        'FlexTable__headerRow__column--sortable': sortEnabled
+        [styles['FlexTable__headerRow__column--sortable']]: sortEnabled
       }
     )
     const style = {
@@ -221,7 +221,7 @@ export default class FlexTable extends Component {
         onClick={onClick}
       >
         <div
-          className='FlexTable__headerRow__truncatedText'
+          className={styles.FlexTable__headerRow__truncatedText}
           title={label}
         >
           {label}
@@ -254,7 +254,7 @@ export default class FlexTable extends Component {
     return (
       <div
         key={rowIndex}
-        className={cn('FlexTable__row', rowClassName)}
+        className={cn(styles.FlexTable__row, rowClassName)}
         style={{
           height: rowHeight
         }}
@@ -286,9 +286,14 @@ FlexTable.prototype.shouldComponentUpdate = shouldPureComponentUpdate
  * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
  */
 export function SortIndicator ({ sortDirection }) {
+  const classNames = cn(styles.FlexTable__headerRow__SortIndicator, {
+    [styles['FlexTable__headerRow__SortIndicator--ASC']]: SortDirection.ASC,
+    [styles['FlexTable__headerRow__SortIndicator--DESC']]: SortDirection.DESC
+  })
+
   return (
     <svg
-      className={`FlexTable__headerRow__SortIndicator FlexTable__headerRow__SortIndicator--${sortDirection}`}
+      className={classNames}
       width={18}
       height={18}
       viewBox='0 0 24 24'

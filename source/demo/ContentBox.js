@@ -1,10 +1,10 @@
 import React from 'react'
 import cn from 'classnames'
-import './ContentBox.css'
+import styles from './ContentBox.css'
 
 export function ContentBox ({ className, children }) {
   return (
-    <div className={cn('ContentBox', className)}>
+    <div className={cn(styles.ContentBox, className)}>
       {children}
     </div>
   )
@@ -12,19 +12,19 @@ export function ContentBox ({ className, children }) {
 
 export function ContentBoxHeader ({ text, sourceLink, docsLink }) {
   return (
-    <h1 className='ContentBoxHeader'>
+    <h1 className={styles.ContentBoxHeader}>
       {text}
 
-      <small className='ContentBoxHeader__small'>
+      <small className={styles.ContentBoxHeader__small}>
         <a
-          className='ContentBoxHeader__link'
+          className={styles.ContentBoxHeader__link}
           href={sourceLink}
         >
           Source
         </a>
         <span> | </span>
         <a
-          className='ContentBoxHeader__link'
+          className={styles.ContentBoxHeader__link}
           href={docsLink}
         >
           Docs
@@ -36,6 +36,6 @@ export function ContentBoxHeader ({ text, sourceLink, docsLink }) {
 
 export function ContentBoxParagraph ({ children }) {
   return (
-    <div className='ContentBoxParagraph'>{children}</div>
+    <div className={styles.ContentBoxParagraph}>{children}</div>
   )
 }

@@ -31,7 +31,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: ['style', 'css', 'cssnext'],
+        loaders: ['style', 'css?modules&importLoaders=1', 'cssnext'],
         include: path.join(__dirname, 'source')
       }
     ]
