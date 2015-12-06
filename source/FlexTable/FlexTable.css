@@ -3,54 +3,54 @@
   width: 100%;
 }
 
-.FlexTable__headerRow,
-.FlexTable__row {
+.headerRow,
+.row {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-.FlexTable__headerRow {
+.headerRow {
   font-weight: 700;
   text-transform: uppercase;
 }
-.FlexTable__headerRow__truncatedText {
+.headerTruncatedText {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
-.FlexTable__row {
+.row {
 }
 
-.FlexTable__headerRow__column,
-.FlexTable__row__column {
+.headerColumn,
+.rowColumn {
   display: flex;
   margin-right: 10px;
   min-width: 0px;
   overflow: hidden;
 }
 
-.FlexTable__headerRow__column:first-of-type,
-.FlexTable__row__column:first-of-type {
+.headerColumn:first-of-type,
+.rowColumn:first-of-type {
   margin-left: 10px;
 }
-.FlexTable__headerRow__column {
+.headerColumn {
   flex-direction: row;
   align-items: center;
 }
-.FlexTable__headerRow__column--sortable {
+.sortableHeaderColumn {
   cursor: pointer;
 }
-.FlexTable__row__column {
+.rowColumn {
   height: 100%;
   justify-content: center;
   flex-direction: column;
 }
 
-.FlexTable__headerRow__Icon {
+.sortableHeaderIcon {
   flex: 0 0 24px;
 }
 
-.FlexTable__row__column__truncatedText {
+.truncatedColumnText {
   text-overflow: ellipsis;
   overflow: hidden;
 }

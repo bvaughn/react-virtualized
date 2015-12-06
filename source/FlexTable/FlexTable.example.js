@@ -111,11 +111,11 @@ export default class TableExample extends Component {
 
         <FlexTable
           ref='Table'
-          className={styles.FlexTableExample__FlexTable}
+          className={styles.FlexTable}
           width={430}
           headerHeight={headerHeight}
           height={height}
-          rowClassName={styles.FlexTableExample__FlexTable__row}
+          rowClassName={styles.row}
           rowHeight={rowHeight}
           rowGetter={rowGetter}
           rowsCount={rowsCount}
@@ -139,9 +139,9 @@ export default class TableExample extends Component {
           <FlexColumn
             width={210}
             disableSort
-            label='The description label is really long'
+            label='The description label is really long so that it will be truncated'
             dataKey='random'
-            cellClassName={styles.FlexTableExample__exampleColumn}
+            cellClassName={styles.exampleColumn}
             cellRenderer={
               (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
             }

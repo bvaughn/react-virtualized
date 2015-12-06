@@ -179,7 +179,7 @@ export default class VirtualScroll extends Component {
         }}
       >
         <div
-          className={styles.VirtualScroll__inner}
+          className={styles.InnerScrollContainer}
           style={{
             height: totalRowsHeight,
             maxHeight: totalRowsHeight,
