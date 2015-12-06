@@ -30,8 +30,8 @@ module.exports = {
         include: path.join(__dirname, 'source')
       },
       {
-        test: /\.less$/,
-        loaders: ['style', 'css', 'postcss', 'less'],
+        test: /\.css$/,
+        loaders: ['style', 'css', 'cssnext'],
         include: path.join(__dirname, 'source')
       }
     ]

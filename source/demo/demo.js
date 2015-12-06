@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import FlexTableExample from '../FlexTable/FlexTable.example'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
-import './demo.less'
+import './demo.css'
 
 render((
     <div className='demo__row'>

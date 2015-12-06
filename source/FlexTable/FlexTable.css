@@ -27,18 +27,18 @@
   margin-right: 10px;
   min-width: 0px;
   overflow: hidden;
+}
 
-  &:first-of-type {
-    margin-left: 10px;
-  }
+.FlexTable__headerRow__column:first-of-type,
+.FlexTable__row__column:first-of-type {
+  margin-left: 10px;
 }
 .FlexTable__headerRow__column {
   flex-direction: row;
   align-items: center;
-
-  &.FlexTable__headerRow__column--sortable {
-    cursor: pointer;
-  }
+}
+.FlexTable__headerRow__column--sortable {
+  cursor: pointer;
 }
 .FlexTable__row__column {
   height: 100%;

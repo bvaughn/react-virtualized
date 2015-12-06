@@ -18,10 +18,8 @@
   font-size: 12px;
 
 }
-.ContentBoxHeader__link {
-  &:hover {
-    text-decoration: none;
-  }
+.ContentBoxHeader__link:hover {
+  text-decoration: none;
 }
 
 .ContentBoxParagraph {

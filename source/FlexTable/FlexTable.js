@@ -4,7 +4,7 @@ import cn from 'classnames'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import VirtualScroll from '../VirtualScroll'
 import FlexColumn from './FlexColumn'
-import './FlexTable.less'
+import './FlexTable.css'
 
 export const SortDirection = {
   /**

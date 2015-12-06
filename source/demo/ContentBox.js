@@ -1,6 +1,6 @@
 import React from 'react'
 import cn from 'classnames'
-import './ContentBox.less'
+import './ContentBox.css'
 
 export function ContentBox ({ className, children }) {
   return (

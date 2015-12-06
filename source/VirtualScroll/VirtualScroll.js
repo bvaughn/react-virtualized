@@ -3,7 +3,7 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import raf from 'raf'
-import './VirtualScroll.less'
+import './VirtualScroll.css'
 
 const IS_SCROLLING_TIMEOUT = 150
 

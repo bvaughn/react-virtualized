@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import VirtualScroll from './VirtualScroll'
-import './VirtualScroll.example.less'
+import './VirtualScroll.example.css'
 
 export default class VirtualScrollExample extends Component {
   constructor (props) {

@@ -5,7 +5,7 @@ import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import FlexColumn from './FlexColumn'
 import FlexTable, { SortDirection } from './FlexTable'
 import Immutable from 'immutable'
-import './FlexTable.example.less'
+import './FlexTable.example.css'
 
 export default class TableExample extends Component {
   constructor (props, context) {

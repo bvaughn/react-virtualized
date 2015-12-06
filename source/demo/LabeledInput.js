@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import './LabeledInput.less'
+import './LabeledInput.css'
 
 export function LabeledInput ({ label, name, onChange, placeholder, value }) {
   return (
