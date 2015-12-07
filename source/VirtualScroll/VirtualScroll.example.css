@@ -2,13 +2,13 @@
   flex: 0 0 330px;
 }
 
-.VirtualScrollExample__VirtualScroll {
+.VirtualScroll {
   width: 100%;
   border: 1px solid #DDD;
   margin-top: 15px;
 }
 
-.VirtualScrollExample__VirtualScroll__row {
+.row {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -16,7 +16,7 @@
   background-color: #fff;
   border-bottom: 1px solid #EEE;
 }
-.VirtualScrollExample__VirtualScroll__row__letter {
+.letter {
   display: inline-block;
   height: 40px;
   width: 40px;
@@ -27,11 +27,11 @@
   font-size: 20px;
   margin-right: 25px;
 }
-.VirtualScrollExample__VirtualScroll__row__name {
+.name {
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 2px;
 }
-.VirtualScrollExample__VirtualScroll__row__index {
+.index {
   color: #666;
 }

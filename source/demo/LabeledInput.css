@@ -4,19 +4,18 @@
   flex: 1 1 auto;
   min-width: 0;
   margin: 0 10px 5px 0;
-
-  &:last-of-type {
-    margin-right: 0;
-  }
+}
+.LabeledInput:last-of-type {
+  margin-right: 0;
 }
 
-.LabeledInput__input,
-.LabeledInput__label {
+.LIinput,
+.Label {
   display: inline-block;
   width: 70px;
   box-sizing: border-box;
 }
-.LabeledInput__input {
+.Input {
   appearance: none;
   border: 0;
   border-bottom: 1px solid #EEE;
@@ -24,15 +23,15 @@
   font-size: 14px;
   font-weight: 300;
   background-color: transparent;
-
-  &:focus {
-    outline: 0;
-  }
-  &::placeholder {
-    color: #DDD;
-  }
 }
-.LabeledInput__label {
+.Input:focus {
+  outline: 0;
+}
+.Input::placeholder {
+  color: #DDD;
+}
+
+.Label {
   color: #AAA;
   font-size: 10px;
   margin-bottom: 5px;

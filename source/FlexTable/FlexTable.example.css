@@ -2,14 +2,14 @@
   flex: 0 0 450px;
 }
 
-.FlexTableExample__FlexTable {
+.FlexTable {
   width: 100%;
   margin-top: 15px;
 }
-.FlexTableExample__FlexTable__row {
+.row {
   border-bottom: 1px solid #EEE;
 }
-.FlexTableExample__exampleColumn {
+.exampleColumn {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

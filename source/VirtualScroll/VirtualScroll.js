@@ -3,7 +3,7 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import raf from 'raf'
-import './VirtualScroll.less'
+import styles from './VirtualScroll.css'
 
 const IS_SCROLLING_TIMEOUT = 150
 
@@ -169,7 +169,7 @@ export default class VirtualScroll extends Component {
     return (
       <div
         ref='scrollingContainer'
-        className={cn('VirtualScroll', className)}
+        className={cn(styles.VirtualScroll, className)}
         onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
         onWheel={this._onWheel}
@@ -179,7 +179,7 @@ export default class VirtualScroll extends Component {
         }}
       >
         <div
-          className='VirtualScroll__inner'
+          className={styles.InnerScrollContainer}
           style={{
             height: totalRowsHeight,
             maxHeight: totalRowsHeight,

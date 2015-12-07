@@ -3,7 +3,7 @@
   overflow: auto;
 }
 
-.VirtualScroll__inner {
+.InnerScrollContainer {
   box-sizing: border-box;
   overflow-x: auto;
   overflow-y: hidden;

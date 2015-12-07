@@ -17,13 +17,13 @@ a {
   background-color: #222222;
 }
 
-.headerRow__reactVirtualized {
+.ReactVirtualizedContainer {
   display: flex;
   flex-direction: row;
   background-color: #2196f3;
   color: #FFF;
 }
-.headerRow__logoColumn {
+.LogoColumn {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,21 +31,21 @@ a {
   padding: 0 20px;
   text-transform: uppercase;
 }
-.headerTextPrimary,
-.headerTextSecondary {
+.PrimaryLogoText,
+.SecondaryLogoText {
   margin: 0;
   text-transform: uppercase;
 }
-.headerTextPrimary {
+.PrimaryLogoText {
   font-size: 40px;
   font-weight: 400;
 }
-.headerTextSecondary {
+.SecondaryLogoText {
   font-size: 20px;
   font-weight: 100;
 }
 
-.headerRow__githubColumn {
+.GithubColumn {
   display: flex;
   flex-direction: row;
   font-size: 20px;
@@ -54,7 +54,7 @@ a {
   align-items: center;
   font-weight: 100;
 }
-.headerRow__githubImage {
+.GithubImage {
   margin: 0 15px 0 40px;
 }
 
@@ -63,14 +63,9 @@ a {
   font-size: 12px;
   background-color: #eeeeee;
 }
-.demo__row {
+.row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
-}
-.demo__row__VirtualScrollExampleColumn,
-.demo__row__FlexTableExampleColumn {
-  max-width: 100%;
-  padding: 10px;
 }
