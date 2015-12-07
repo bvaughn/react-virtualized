@@ -1,4 +1,3 @@
-const autoprefixer = require('autoprefixer')
 const path = require('path')
 
 module.exports = {
@@ -35,8 +34,5 @@ module.exports = {
         include: path.join(__dirname, 'source')
       }
     ]
-  },
-  postcss: [
-    autoprefixer({ browsers: ['last 2 versions'] })
-  ]
+  }
 }
