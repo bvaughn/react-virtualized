@@ -154,6 +154,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
@@ -178,7 +180,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _FlexColumn2 = _interopRequireDefault(_FlexColumn);
 	
-	__webpack_require__(18);
+	var _FlexTableCss = __webpack_require__(18);
+	
+	var _FlexTableCss2 = _interopRequireDefault(_FlexTableCss);
 	
 	var SortDirection = {
 	  /**
@@ -326,7 +330,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return _react2['default'].createElement(
 	        'div',
 	        {
-	          className: (0, _classnames2['default'])('FlexTable', className),
+	          className: (0, _classnames2['default'])(_FlexTableCss2['default'].FlexTable, className),
 	          style: {
 	            maxWidth: width
 	          }
@@ -334,7 +338,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        !disableHeader && _react2['default'].createElement(
 	          'div',
 	          {
-	            className: (0, _classnames2['default'])('FlexTable__headerRow', rowClassName),
+	            className: (0, _classnames2['default'])(_FlexTableCss2['default'].headerRow, rowClassName),
 	            style: {
 	              height: headerHeight
 	            }
@@ -375,13 +379,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'div',
 	        {
 	          key: 'Row' + rowIndex + '-Col' + columnIndex,
-	          className: 'FlexTable__row__column',
+	          className: _FlexTableCss2['default'].rowColumn,
 	          style: style
 	        },
 	        _react2['default'].createElement(
 	          'div',
 	          {
-	            className: (0, _classnames2['default'])('FlexTable__row__column__truncatedText', cellClassName),
+	            className: (0, _classnames2['default'])(_FlexTableCss2['default'].truncatedColumnText, cellClassName),
 	            title: renderedCell
 	          },
 	          renderedCell
@@ -403,9 +407,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var showSortIndicator = sortBy === dataKey;
 	      var sortEnabled = !disableSort && sort;
 	
-	      var classNames = (0, _classnames2['default'])('FlexTable__headerRow__column', this.props.headerClassName, column.props.headerClassName, {
-	        'FlexTable__headerRow__column--sortable': sortEnabled
-	      });
+	      var classNames = (0, _classnames2['default'])(_FlexTableCss2['default'].headerColumn, this.props.headerClassName, column.props.headerClassName, _defineProperty({}, _FlexTableCss2['default'].sortableHeaderColumn, sortEnabled));
 	      var style = {
 	        flex: this._getFlexStyleForColumn(column)
 	      };
@@ -427,7 +429,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _react2['default'].createElement(
 	          'div',
 	          {
-	            className: 'FlexTable__headerRow__truncatedText',
+	            className: _FlexTableCss2['default'].headerTruncatedText,
 	            title: label
 	          },
 	          label
@@ -454,7 +456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'div',
 	        {
 	          key: rowIndex,
-	          className: (0, _classnames2['default'])('FlexTable__row', rowClassName),
+	          className: (0, _classnames2['default'])(_FlexTableCss2['default'].row, rowClassName),
 	          style: {
 	            height: rowHeight
 	          }
@@ -493,16 +495,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var sortDirection = _ref.sortDirection;
 	
 	  return _react2['default'].createElement(
-	    'svg',
-	    {
-	      className: 'FlexTable__headerRow__SortIndicator FlexTable__headerRow__SortIndicator--' + sortDirection,
-	      width: 18,
-	      height: 18,
-	      viewBox: '0 0 24 24',
-	      xmlns: 'http://www.w3.org/2000/svg'
-	    },
-	    sortDirection === SortDirection.ASC ? _react2['default'].createElement('path', { d: 'M7 14l5-5 5 5z' }) : _react2['default'].createElement('path', { d: 'M7 10l5 5 5-5z' }),
-	    _react2['default'].createElement('path', { d: 'M0 0h24v24H0z', fill: 'none' })
+	    'div',
+	    { 'data-sort-direction': sortDirection },
+	    _react2['default'].createElement(
+	      'svg',
+	      {
+	        className: _FlexTableCss2['default'].sortableHeaderIcon,
+	        width: 18,
+	        height: 18,
+	        viewBox: '0 0 24 24',
+	        xmlns: 'http://www.w3.org/2000/svg'
+	      },
+	      sortDirection === SortDirection.ASC ? _react2['default'].createElement('path', { d: 'M7 14l5-5 5 5z' }) : _react2['default'].createElement('path', { d: 'M7 10l5 5 5-5z' }),
+	      _react2['default'].createElement('path', { d: 'M0 0h24v24H0z', fill: 'none' })
+	    )
 	  );
 	}
 	
@@ -687,7 +693,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _raf2 = _interopRequireDefault(_raf);
 	
-	__webpack_require__(13);
+	var _VirtualScrollCss = __webpack_require__(13);
+	
+	var _VirtualScrollCss2 = _interopRequireDefault(_VirtualScrollCss);
 	
 	var IS_SCROLLING_TIMEOUT = 150;
 	
@@ -874,7 +882,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'div',
 	        {
 	          ref: 'scrollingContainer',
-	          className: (0, _classnames2['default'])('VirtualScroll', className),
+	          className: (0, _classnames2['default'])(_VirtualScrollCss2['default'].VirtualScroll, className),
 	          onKeyDown: this._onKeyPress,
 	          onScroll: this._onScroll,
 	          onWheel: this._onWheel,
@@ -886,7 +894,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _react2['default'].createElement(
 	          'div',
 	          {
-	            className: 'VirtualScroll__inner',
+	            className: _VirtualScrollCss2['default'].InnerScrollContainer,
 	            style: {
 	              height: totalRowsHeight,
 	              maxHeight: totalRowsHeight,
@@ -1451,8 +1459,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/postcss-loader/index.js!./../../node_modules/less-loader/index.js!./VirtualScroll.less", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/postcss-loader/index.js!./../../node_modules/less-loader/index.js!./VirtualScroll.less");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/cssnext-loader/index.js!./VirtualScroll.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/cssnext-loader/index.js!./VirtualScroll.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -1470,10 +1478,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	// module
-	exports.push([module.id, ".VirtualScroll {\n  outline: 0;\n  overflow: auto;\n}\n.VirtualScroll__inner {\n  box-sizing: border-box;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n", ""]);
+	exports.push([module.id, "._1YRO4DwDuAvx0eclU94R2f {\n  outline: 0;\n  overflow: auto;\n}\n\n._1ivZTwowJMdKnXoTKvAg6D {\n  box-sizing: border-box;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n", ""]);
 	
 	// exports
-
+	exports.locals = {
+		"VirtualScroll": "_1YRO4DwDuAvx0eclU94R2f",
+		"InnerScrollContainer": "_1ivZTwowJMdKnXoTKvAg6D"
+	};
 
 /***/ },
 /* 15 */
@@ -1913,8 +1924,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/postcss-loader/index.js!./../../node_modules/less-loader/index.js!./FlexTable.less", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/postcss-loader/index.js!./../../node_modules/less-loader/index.js!./FlexTable.less");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/cssnext-loader/index.js!./FlexTable.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/cssnext-loader/index.js!./FlexTable.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -1932,10 +1943,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	// module
-	exports.push([module.id, ".FlexTable {\n  font-size: 11px;\n  width: 100%;\n}\n.FlexTable__headerRow,\n.FlexTable__row {\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.FlexTable__headerRow {\n  font-weight: 700;\n  text-transform: uppercase;\n}\n.FlexTable__headerRow__truncatedText {\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n}\n.FlexTable__headerRow__column,\n.FlexTable__row__column {\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  margin-right: 10px;\n  min-width: 0px;\n  overflow: hidden;\n}\n.FlexTable__headerRow__column:first-of-type,\n.FlexTable__row__column:first-of-type {\n  margin-left: 10px;\n}\n.FlexTable__headerRow__column {\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.FlexTable__headerRow__column.FlexTable__headerRow__column--sortable {\n  cursor: pointer;\n}\n.FlexTable__row__column {\n  height: 100%;\n  -webkit-justify-content: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-flex-direction: column;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n.FlexTable__headerRow__Icon {\n  -webkit-flex: 0 0 24px;\n      -ms-flex: 0 0 24px;\n          flex: 0 0 24px;\n}\n.FlexTable__row__column__truncatedText {\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n", ""]);
+	exports.push([module.id, "._23mq7CiOQELHnjSRUEmZJZ {\n  font-size: 11px;\n  width: 100%;\n}\n\n._8x6DNlF9iQxfOq8HkwO9s,\n._3G2-fp3aKZMeszgJ9srW3h {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-box-align: center;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n._8x6DNlF9iQxfOq8HkwO9s {\n  font-weight: 700;\n  text-transform: uppercase;\n}\n._1ZD0rO8svyet_5sopskjdO {\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  overflow: hidden;\n}\n._3G2-fp3aKZMeszgJ9srW3h {\n}\n\n.YC4fsS59KiPHOrBCzm0-b,\n._3r3wxIFwK7QTQpd2EOq_f7 {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: -ms-flexbox;\n  display: flex;\n  margin-right: 10px;\n  min-width: 0px;\n  overflow: hidden;\n}\n\n.YC4fsS59KiPHOrBCzm0-b:first-of-type,\n._3r3wxIFwK7QTQpd2EOq_f7:first-of-type {\n  margin-left: 10px;\n}\n.YC4fsS59KiPHOrBCzm0-b {\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n  -webkit-flex-direction: row;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -webkit-box-align: center;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n._3JB1Gm9yi90_ejHFi2Hvj2 {\n  cursor: pointer;\n}\n._3r3wxIFwK7QTQpd2EOq_f7 {\n  height: 100%;\n  -webkit-box-pack: center;\n  -webkit-justify-content: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n  -webkit-flex-direction: column;\n      -ms-flex-direction: column;\n          flex-direction: column;\n}\n\n._1JFhWUgVZavXyisriMS04s {\n  -webkit-box-flex: 0;\n  -webkit-flex: 0 0 24px;\n      -ms-flex: 0 0 24px;\n          flex: 0 0 24px;\n}\n\n._38TUMmW6whZDouUkfu_bTq {\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n", ""]);
 	
 	// exports
-
+	exports.locals = {
+		"FlexTable": "_23mq7CiOQELHnjSRUEmZJZ",
+		"headerRow": "_8x6DNlF9iQxfOq8HkwO9s",
+		"row": "_3G2-fp3aKZMeszgJ9srW3h",
+		"headerTruncatedText": "_1ZD0rO8svyet_5sopskjdO",
+		"headerColumn": "YC4fsS59KiPHOrBCzm0-b",
+		"rowColumn": "_3r3wxIFwK7QTQpd2EOq_f7",
+		"sortableHeaderColumn": "_3JB1Gm9yi90_ejHFi2Hvj2",
+		"sortableHeaderIcon": "_1JFhWUgVZavXyisriMS04s",
+		"truncatedColumnText": "_38TUMmW6whZDouUkfu_bTq"
+	};
 
 /***/ }
 /******/ ])
