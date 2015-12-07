@@ -1,4 +1,3 @@
-const autoprefixer = require('autoprefixer')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
@@ -34,12 +33,8 @@ module.exports = {
       }
     ]
   },
-  postcss: [
-    autoprefixer({ browsers: ['last 2 versions'] })
-  ],
   devServer: {
     contentBase: 'build',
-    historyApiFallback: true,
     port: 3001
   }
 }
