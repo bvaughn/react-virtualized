@@ -6,7 +6,7 @@
   margin: 10px;
 }
 
-.ContentBoxHeader {
+.Header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -14,15 +14,15 @@
   justify-content: space-between;
   margin: 0 0 10px;
 }
-.ContentBoxHeader__small {
+.Small {
   font-size: 12px;
 
 }
-.ContentBoxHeader__link:hover {
+.Link:hover {
   text-decoration: none;
 }
 
-.ContentBoxParagraph {
+.Paragraph {
   line-height: 1.4rem;
   margin: 0 0 10px;
 }

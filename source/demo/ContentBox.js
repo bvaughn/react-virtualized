@@ -12,19 +12,19 @@ export function ContentBox ({ className, children }) {
 
 export function ContentBoxHeader ({ text, sourceLink, docsLink }) {
   return (
-    <h1 className={styles.ContentBoxHeader}>
+    <h1 className={styles.Header}>
       {text}
 
-      <small className={styles.ContentBoxHeader__small}>
+      <small className={styles.Small}>
         <a
-          className={styles.ContentBoxHeader__link}
+          className={styles.Link}
           href={sourceLink}
         >
           Source
         </a>
         <span> | </span>
         <a
-          className={styles.ContentBoxHeader__link}
+          className={styles.Link}
           href={docsLink}
         >
           Docs
@@ -36,6 +36,6 @@ export function ContentBoxHeader ({ text, sourceLink, docsLink }) {
 
 export function ContentBoxParagraph ({ children }) {
   return (
-    <div className={styles.ContentBoxParagraph}>{children}</div>
+    <div className={styles.Paragraph}>{children}</div>
   )
 }

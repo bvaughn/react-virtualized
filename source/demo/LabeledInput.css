@@ -9,13 +9,13 @@
   margin-right: 0;
 }
 
-.LabeledInput__input,
-.LabeledInput__label {
+.LIinput,
+.Label {
   display: inline-block;
   width: 70px;
   box-sizing: border-box;
 }
-.LabeledInput__input {
+.Input {
   appearance: none;
   border: 0;
   border-bottom: 1px solid #EEE;
@@ -24,14 +24,14 @@
   font-weight: 300;
   background-color: transparent;
 }
-.LabeledInput__input:focus {
+.Input:focus {
   outline: 0;
 }
-.LabeledInput__input::placeholder {
+.Input::placeholder {
   color: #DDD;
 }
 
-.LabeledInput__label {
+.Label {
   color: #AAA;
   font-size: 10px;
   margin-bottom: 5px;

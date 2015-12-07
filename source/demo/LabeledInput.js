@@ -4,11 +4,11 @@ import styles from './LabeledInput.css'
 export function LabeledInput ({ label, name, onChange, placeholder, value }) {
   return (
     <div className={styles.LabeledInput}>
-      <label className={styles.LabeledInput__label}>
+      <label className={styles.Label}>
         {label}
       </label>
       <input
-        className={styles.LabeledInput__input}
+        className={styles.Input}
         name={name}
         placeholder={placeholder}
         onChange={onChange}
