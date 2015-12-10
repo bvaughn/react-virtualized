@@ -22,6 +22,7 @@ describe('VirtualScroll', () => {
 
   function getMarkup ({
     height = 100,
+    noRowsRenderer = undefined,
     rowHeight = 10,
     rowsCount = list.size,
     scrollToIndex = undefined
@@ -40,6 +41,7 @@ describe('VirtualScroll', () => {
     return (
       <VirtualScroll
         height={height}
+        noRowsRenderer={noRowsRenderer}
         rowHeight={rowHeight}
         rowRenderer={rowRenderer}
         rowsCount={rowsCount}
@@ -245,6 +247,23 @@ describe('VirtualScroll', () => {
       list = renderOrUpdateList()
       list = renderOrUpdateList({ scrollToIndex: 500, rowsCount: 10 })
       expect(list.textContent).toContain('Name 9')
+    })
+  })
+
+  describe('noRowsRenderer', () => {
+    it('should call :noRowsRenderer if :rowsCount is 0', () => {
+      let list = renderOrUpdateList({
+        noRowsRenderer: () => <div>No rows!</div>,
+        rowsCount: 0
+      })
+      expect(list.textContent).toEqual('No rows!')
+    })
+
+    it('should render an empty body if :rowsCount is 0 and there is no :noRowsRenderer', () => {
+      let list = renderOrUpdateList({
+        rowsCount: 0
+      })
+      expect(list.textContent).toEqual('')
     })
   })
 })

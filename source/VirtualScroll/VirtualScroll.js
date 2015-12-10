@@ -22,6 +22,8 @@ export default class VirtualScroll extends Component {
   static propTypes = {
     /** Optional CSS class name */
     className: PropTypes.string,
+    /** Optional renderer to be used in place of rows when rowsCount is 0 */
+    noRowsRenderer: PropTypes.func,
     /** Height constraint for list (determines how many actual rows are rendered) */
     height: PropTypes.number.isRequired,
     /** Fixed row height; the number of rows displayed is calculated by dividing height by rowHeight */
@@ -32,6 +34,10 @@ export default class VirtualScroll extends Component {
     rowsCount: PropTypes.number.isRequired,
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number
+  }
+
+  static defaultProps = {
+    noRowsRenderer: () => null
   }
 
   constructor (props, context) {
@@ -129,6 +135,7 @@ export default class VirtualScroll extends Component {
     const {
       className,
       height,
+      noRowsRenderer,
       rowsCount,
       rowHeight,
       rowRenderer
@@ -164,6 +171,10 @@ export default class VirtualScroll extends Component {
       for (let i = rowIndexStart; i <= rowIndexStop; i++) {
         childrenToDisplay.push(rowRenderer(i))
       }
+    }
+
+    if (rowsCount === 0) {
+      childrenToDisplay = noRowsRenderer()
     }
 
     return (

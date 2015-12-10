@@ -32,6 +32,7 @@ export default class TableExample extends Component {
     }
     this._list = Immutable.List(list)
 
+    this._noRowsRenderer = this._noRowsRenderer.bind(this)
     this._onRowsCountChange = this._onRowsCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._sort = this._sort.bind(this)
@@ -115,6 +116,7 @@ export default class TableExample extends Component {
           width={430}
           headerHeight={headerHeight}
           height={height}
+          noRowsRenderer={this._noRowsRenderer}
           rowClassName={styles.row}
           rowHeight={rowHeight}
           rowGetter={rowGetter}
@@ -149,6 +151,14 @@ export default class TableExample extends Component {
           />
         </FlexTable>
       </ContentBox>
+    )
+  }
+
+  _noRowsRenderer () {
+    return (
+      <div className={styles.noRows}>
+        No rows
+      </div>
     )
   }
 

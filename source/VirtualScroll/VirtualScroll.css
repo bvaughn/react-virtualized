@@ -1,6 +1,7 @@
 .VirtualScroll {
   outline: 0;
   overflow: auto;
+  position: relative;
 }
 
 .InnerScrollContainer {

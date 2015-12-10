@@ -49,6 +49,7 @@ describe('FlexTable', () => {
     disableSort = false,
     headerHeight = 20,
     height = 100,
+    noRowsRenderer = undefined,
     rowGetter = immutableRowGetter,
     rowHeight = 10,
     rowsCount = list.size,
@@ -63,6 +64,7 @@ describe('FlexTable', () => {
         width={width}
         headerHeight={headerHeight}
         height={height}
+        noRowsRenderer={noRowsRenderer}
         rowHeight={rowHeight}
         rowGetter={rowGetter}
         rowsCount={rowsCount}
@@ -267,6 +269,25 @@ describe('FlexTable', () => {
       const {dataKey, newSortDirection} = sortCalls[0]
       expect(dataKey).toEqual('name')
       expect(newSortDirection).toEqual(SortDirection.ASC)
+    })
+  })
+
+  describe('noRowsRenderer', () => {
+    it('should call :noRowsRenderer if :rowsCount is 0', () => {
+      let table = renderTable({
+        noRowsRenderer: () => <div>No rows!</div>,
+        rowsCount: 0
+      })
+      const bodyDOMNode = findDOMNode(table.refs.VirtualScroll)
+      expect(bodyDOMNode.textContent).toEqual('No rows!')
+    })
+
+    it('should render an empty body if :rowsCount is 0 and there is no :noRowsRenderer', () => {
+      let table = renderTable({
+        rowsCount: 0
+      })
+      const bodyDOMNode = findDOMNode(table.refs.VirtualScroll)
+      expect(bodyDOMNode.textContent).toEqual('')
     })
   })
 })

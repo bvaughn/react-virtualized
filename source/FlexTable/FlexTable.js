@@ -28,6 +28,7 @@ export default class FlexTable extends Component {
   static defaultProps = {
     disableHeader: false,
     horizontalPadding: 0,
+    noRowsRenderer: () => null,
     verticalPadding: 0
   }
 
@@ -53,6 +54,8 @@ export default class FlexTable extends Component {
     height: PropTypes.number.isRequired,
     /** Horizontal padding of outer DOM element */
     horizontalPadding: PropTypes.number,
+    /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
+    noRowsRenderer: PropTypes.func,
     /** Optional CSS class to apply to all table rows (including the header row) */
     rowClassName: PropTypes.string,
     /**
@@ -111,6 +114,7 @@ export default class FlexTable extends Component {
       disableHeader,
       headerHeight,
       height,
+      noRowsRenderer,
       rowClassName,
       rowHeight,
       rowsCount,
@@ -148,6 +152,7 @@ export default class FlexTable extends Component {
           ref='VirtualScroll'
           width={width}
           height={availableRowsHeight}
+          noRowsRenderer={noRowsRenderer}
           rowHeight={rowHeight}
           rowRenderer={rowRenderer}
           rowsCount={rowsCount}

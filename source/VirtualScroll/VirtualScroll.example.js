@@ -28,6 +28,7 @@ export default class VirtualScrollExample extends Component {
       virtualScrollRowHeight: 60
     }
 
+    this._noRowsRenderer = this._noRowsRenderer.bind(this)
     this._onRowsCountChange = this._onRowsCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._rowRenderer = this._rowRenderer.bind(this)
@@ -81,12 +82,21 @@ export default class VirtualScrollExample extends Component {
           className={styles.VirtualScroll}
           width={310}
           height={virtualScrollHeight}
+          noRowsRenderer={this._noRowsRenderer}
           rowsCount={rowsCount}
           rowHeight={virtualScrollRowHeight}
           rowRenderer={this._rowRenderer}
           scrollToIndex={scrollToIndex}
         />
       </ContentBox>
+    )
+  }
+
+  _noRowsRenderer () {
+    return (
+      <div className={styles.noRows}>
+        No rows
+      </div>
     )
   }
 
