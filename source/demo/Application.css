@@ -1,0 +1,75 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Roboto', 'Open Sans', sans-serif;
+  font-size: 14px;
+  color: #272727;
+  background-color: #e0e0e0;
+}
+a {
+  color: #409890;
+}
+* {
+  box-sizing: border-box;
+}
+
+.headerRow {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  background-color: #4db6ac;
+}
+
+.ReactVirtualizedContainer {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0 0;
+}
+.LogoColumn {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+  text-transform: uppercase;
+}
+.PrimaryLogoText,
+.SecondaryLogoText {
+  text-transform: lowercase;
+  font-size: 3em;
+}
+.PrimaryLogoText {
+  font-weight: bold;
+  color: #272727;
+  margin: 0 1rem;
+}
+.SecondaryLogoText {
+  color: #ffffff;
+}
+
+.NavList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.demo {
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: .5rem;
+}
+
+.footer {
+  text-align: center;
+  font-size: .75em;
+  color: #37474f;
+  margin: 0 0 1rem;
+}

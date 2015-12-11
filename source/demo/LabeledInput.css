@@ -18,9 +18,9 @@
 .Input {
   appearance: none;
   border: 0;
-  border-bottom: 1px solid #EEE;
+  border-bottom: 1px solid #e0e0e0;
   padding: 5px 0;
-  font-size: 14px;
+  font-size: 1em;
   font-weight: 300;
   background-color: transparent;
 }
@@ -28,12 +28,12 @@
   outline: 0;
 }
 .Input::placeholder {
-  color: #DDD;
+  color: #e0e0e0;
 }
 
 .Label {
-  color: #AAA;
-  font-size: 10px;
+  color: #bdbdbd;
+  font-size: .75em;
   margin-bottom: 5px;
   font-weight: 100;
 }

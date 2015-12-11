@@ -7,7 +7,7 @@
   margin-top: 15px;
 }
 .row {
-  border-bottom: 1px solid #EEE;
+  border-bottom: 1px solid #e0e0e0;
 }
 .exampleColumn {
   white-space: nowrap;
@@ -24,6 +24,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  color: #DDD;
+  font-size: 1em;
+  color: #bdbdbd;
 }

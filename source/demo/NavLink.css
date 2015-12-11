@@ -1,0 +1,37 @@
+.NavListItem {
+  display: inline-block;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to { 
+    transform: rotate(360deg);
+  }
+}
+
+.NavLink {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1rem 1rem .5rem;
+  border-bottom: .5rem solid transparent;
+  font-size: 1.2em;
+  color: #FFFFFF;
+  text-transform: lowercase;
+  text-decoration: none;
+}
+.NavLink:hover {
+  border-bottom-color: #409890;
+}
+
+.NavLinkIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: .5rem;
+  fill: #fff;
+}
+.NavLink:hover > .NavLinkIcon {
+  animation: spin 5s infinite linear;
+}

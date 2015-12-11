@@ -14,7 +14,7 @@
   align-items: center;
   padding: 0 25px;
   background-color: #fff;
-  border-bottom: 1px solid #EEE;
+  border-bottom: 1px solid #e0e0e0;
 }
 .letter {
   display: inline-block;
@@ -24,16 +24,15 @@
   text-align: center;
   border-radius: 40px;
   color: white;
-  font-size: 20px;
+  font-size: 1.5em;
   margin-right: 25px;
 }
 .name {
-  font-size: 14px;
   font-weight: bold;
   margin-bottom: 2px;
 }
 .index {
-  color: #666;
+  color: #37474f;
 }
 
 .noRows {
@@ -45,6 +44,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  color: #DDD;
+  color: #bdbdbd;
 }

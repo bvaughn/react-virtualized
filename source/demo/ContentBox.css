@@ -3,7 +3,7 @@
   background-color: #FFF;
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,.15);
   border-radius: 2px;
-  margin: 10px;
+  margin: 1rem;
 }
 
 .Header {
@@ -12,10 +12,10 @@
   align-items: center;
   font-weight: normal;
   justify-content: space-between;
-  margin: 0 0 10px;
+  margin: 0 0 1rem;
 }
 .Small {
-  font-size: 12px;
+  font-size: .5em;
 
 }
 .Link:hover {
@@ -24,5 +24,5 @@
 
 .Paragraph {
   line-height: 1.4rem;
-  margin: 0 0 10px;
+  margin: 0 0 1rem;
 }
