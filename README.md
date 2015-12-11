@@ -26,6 +26,8 @@ Examples
 
 Below is a simple `VirtualScroll` example. Each row in the virtualized list is rendered through the use of a `rowRenderer` function for performance reasons. This function must return an element with a unique `key` and must fit within the specified `rowHeight`.
 
+**Note** that it is very important that rows do not have vertical overflow. This will make scrolling the list difficult (as individual items will intercept the scroll events). For this reason it is recommended that your rows use a style like `overflow-y: hidden`.)
+
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
