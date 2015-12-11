@@ -1,4 +1,4 @@
-<img src="https://cloud.githubusercontent.com/assets/29597/11453244/aee1b36e-95b7-11e5-9946-17659c0b24e7.png" alt="React virtualized" data-canonical-src="https://cloud.githubusercontent.com/assets/29597/11453244/aee1b36e-95b7-11e5-9946-17659c0b24e7.png" width="304" height="91" />
+<img src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" alt="React virtualized" data-canonical-src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" width="330" height="100" />
 
 <img src="https://circleci.com/gh/bvaughn/react-virtualized.svg?style=shield&circle-token=:circle-token" alt="Circle CI badge">
 
