@@ -1,6 +1,9 @@
 body {
   padding: 0;
   margin: 0;
+  font-family: 'Roboto', 'Open Sans', sans-serif;
+  font-size: 12px;
+  background-color: #eeeeee;
 }
 a {
   color: #4c8bf5;
@@ -59,9 +62,6 @@ a {
 }
 
 .demo {
-  font-family: 'Roboto', 'Open Sans', sans-serif;
-  font-size: 12px;
-  background-color: #eeeeee;
 }
 .row {
   display: flex;
