@@ -212,6 +212,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: {
 	      disableHeader: false,
 	      horizontalPadding: 0,
+	      noRowsRenderer: function noRowsRenderer() {
+	        return null;
+	      },
 	      verticalPadding: 0
 	    },
 	    enumerable: true
@@ -239,6 +242,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      height: _react.PropTypes.number.isRequired,
 	      /** Horizontal padding of outer DOM element */
 	      horizontalPadding: _react.PropTypes.number,
+	      /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
+	      noRowsRenderer: _react.PropTypes.func,
 	      /** Optional CSS class to apply to all table rows (including the header row) */
 	      rowClassName: _react.PropTypes.string,
 	      /**
@@ -313,6 +318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var disableHeader = _props2.disableHeader;
 	      var headerHeight = _props2.headerHeight;
 	      var height = _props2.height;
+	      var noRowsRenderer = _props2.noRowsRenderer;
 	      var rowClassName = _props2.rowClassName;
 	      var rowHeight = _props2.rowHeight;
 	      var rowsCount = _props2.rowsCount;
@@ -349,6 +355,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          ref: 'VirtualScroll',
 	          width: width,
 	          height: availableRowsHeight,
+	          noRowsRenderer: noRowsRenderer,
 	          rowHeight: rowHeight,
 	          rowRenderer: rowRenderer,
 	          rowsCount: rowsCount
@@ -719,6 +726,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: {
 	      /** Optional CSS class name */
 	      className: _react.PropTypes.string,
+	      /** Optional renderer to be used in place of rows when rowsCount is 0 */
+	      noRowsRenderer: _react.PropTypes.func,
 	      /** Height constraint for list (determines how many actual rows are rendered) */
 	      height: _react.PropTypes.number.isRequired,
 	      /** Fixed row height; the number of rows displayed is calculated by dividing height by rowHeight */
@@ -729,6 +738,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      rowsCount: _react.PropTypes.number.isRequired,
 	      /** Row index to ensure visible (by forcefully scrolling if necessary) */
 	      scrollToIndex: _react.PropTypes.number
+	    },
+	    enumerable: true
+	  }, {
+	    key: 'defaultProps',
+	    value: {
+	      noRowsRenderer: function noRowsRenderer() {
+	        return null;
+	      }
 	    },
 	    enumerable: true
 	  }]);
@@ -844,6 +861,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _props2 = this.props;
 	      var className = _props2.className;
 	      var height = _props2.height;
+	      var noRowsRenderer = _props2.noRowsRenderer;
 	      var rowsCount = _props2.rowsCount;
 	      var rowHeight = _props2.rowHeight;
 	      var rowRenderer = _props2.rowRenderer;
@@ -876,6 +894,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        for (var i = rowIndexStart; i <= rowIndexStop; i++) {
 	          childrenToDisplay.push(rowRenderer(i));
 	        }
+	      }
+	
+	      if (rowsCount === 0) {
+	        childrenToDisplay = noRowsRenderer();
 	      }
 	
 	      return _react2['default'].createElement(
@@ -1478,7 +1500,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	// module
-	exports.push([module.id, "._1YRO4DwDuAvx0eclU94R2f {\n  outline: 0;\n  overflow: auto;\n}\n\n._1ivZTwowJMdKnXoTKvAg6D {\n  box-sizing: border-box;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n", ""]);
+	exports.push([module.id, "._1YRO4DwDuAvx0eclU94R2f {\n  outline: 0;\n  overflow: auto;\n  position: relative;\n}\n\n._1ivZTwowJMdKnXoTKvAg6D {\n  box-sizing: border-box;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n", ""]);
 	
 	// exports
 	exports.locals = {
