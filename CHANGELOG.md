@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+#### 2.2.0
+Added `onRowClick` property to `FlexTable`.
+
+#### 2.1.1
+Fixed a few minor FlexTable font styles to use relative sizes instead of custom ones
+
 #### 2.1.0
 Added optional `noRowsRenderer` property to `VirtualScroll` and `FlexTable`.
 This property can be used to render loading indicators or placeholder content for empty lists.
