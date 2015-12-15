@@ -50,6 +50,7 @@ describe('FlexTable', () => {
     headerHeight = 20,
     height = 100,
     noRowsRenderer = undefined,
+    onRowClick = undefined,
     rowGetter = immutableRowGetter,
     rowHeight = 10,
     rowsCount = list.size,
@@ -65,8 +66,9 @@ describe('FlexTable', () => {
         headerHeight={headerHeight}
         height={height}
         noRowsRenderer={noRowsRenderer}
-        rowHeight={rowHeight}
+        onRowClick={onRowClick}
         rowGetter={rowGetter}
+        rowHeight={rowHeight}
         rowsCount={rowsCount}
         sort={sort}
         sortBy={sortBy}
@@ -274,7 +276,7 @@ describe('FlexTable', () => {
 
   describe('noRowsRenderer', () => {
     it('should call :noRowsRenderer if :rowsCount is 0', () => {
-      let table = renderTable({
+      const table = renderTable({
         noRowsRenderer: () => <div>No rows!</div>,
         rowsCount: 0
       })
@@ -283,11 +285,25 @@ describe('FlexTable', () => {
     })
 
     it('should render an empty body if :rowsCount is 0 and there is no :noRowsRenderer', () => {
-      let table = renderTable({
+      const table = renderTable({
         rowsCount: 0
       })
       const bodyDOMNode = findDOMNode(table.refs.VirtualScroll)
       expect(bodyDOMNode.textContent).toEqual('')
+    })
+  })
+
+  describe('onRowClick', () => {
+    it('should call :onRowClick with the correct :rowIndex when a row is clicked', () => {
+      const onRowClickCalls = []
+      const table = renderTable({
+        onRowClick: index => onRowClickCalls.push(index)
+      })
+      const tableDOMNode = findDOMNode(table)
+      const rows = findAll(tableDOMNode, '.row')
+      Simulate.click(rows[0])
+      Simulate.click(rows[3])
+      expect(onRowClickCalls).toEqual([0, 3])
     })
   })
 })

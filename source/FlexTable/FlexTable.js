@@ -29,6 +29,7 @@ export default class FlexTable extends Component {
     disableHeader: false,
     horizontalPadding: 0,
     noRowsRenderer: () => null,
+    onRowClick: () => null,
     verticalPadding: 0
   }
 
@@ -56,6 +57,11 @@ export default class FlexTable extends Component {
     horizontalPadding: PropTypes.number,
     /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
     noRowsRenderer: PropTypes.func,
+    /**
+     * Callback invoked when a user clicks on a table row.
+     * (rowIndex: number): void
+     */
+    onRowClick: PropTypes.func,
     /** Optional CSS class to apply to all table rows (including the header row) */
     rowClassName: PropTypes.string,
     /**
@@ -241,6 +247,7 @@ export default class FlexTable extends Component {
   _createRow (rowIndex) {
     const {
       children,
+      onRowClick,
       rowClassName,
       rowGetter,
       rowHeight
@@ -260,6 +267,7 @@ export default class FlexTable extends Component {
       <div
         key={rowIndex}
         className={cn(styles.row, rowClassName)}
+        onClick={() => onRowClick(rowIndex)}
         style={{
           height: rowHeight
         }}
