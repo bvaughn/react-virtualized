@@ -15,6 +15,7 @@ This component expects explicit width, height, and padding parameters.
 | height | Number | ✓ | Fixed/available height for out DOM element |
 | horizontalPadding | Number |  | Horizontal padding of outer DOM element |
 | noRowsRenderer |  | Function | Callback used to render placeholder content when :rowsCount is 0 |
+| onRowClick |  | Function | Callback invoked when a user clicks on a table row. `(rowIndex: number): void` |
 | rowClassName | String |  | CSS class to apply to all table rows (including the header row) |
 | rowGetter | Function | ✓ | Callback responsible for returning a data row given an index. `(index: int): any` |
 | rowHeight |  | ✓ | Fixed height of table row |
