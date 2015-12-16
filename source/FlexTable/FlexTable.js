@@ -62,7 +62,11 @@ export default class FlexTable extends Component {
      * (rowIndex: number): void
      */
     onRowClick: PropTypes.func,
-    /** Optional CSS class to apply to all table rows (including the header row) */
+    /**
+     * Optional CSS class to apply to all table rows (including the header row).
+     * This property can be a CSS class name (string) or a function that returns a class name.
+     * If a function is provided its signature should be: (rowIndex: number): string
+     */
     rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
     /**
      * Callback responsible for returning a data row given an index.

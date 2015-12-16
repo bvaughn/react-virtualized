@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 2.3.0
+`FlexTable`'s `rowClassName` property can now be either a string or a function in order to support dynamic row classes (eg. alternating colors).
+
 #### 2.2.0
 Added `onRowClick` property to `FlexTable`.
 

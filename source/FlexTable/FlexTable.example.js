@@ -117,7 +117,7 @@ export default class TableExample extends Component {
           headerHeight={headerHeight}
           height={height}
           noRowsRenderer={this._noRowsRenderer}
-          rowClassName={styles.row}
+          rowClassName={::this._rowClassName}
           rowHeight={rowHeight}
           rowGetter={rowGetter}
           rowsCount={rowsCount}
@@ -180,6 +180,14 @@ export default class TableExample extends Component {
     this.setState({ scrollToIndex })
 
     this.refs.Table.scrollToRow(scrollToIndex)
+  }
+
+  _rowClassName (index) {
+    if (index < 0) {
+      return styles.headerRow
+    } else {
+      return index % 2 === 0 ? styles.evenRow : styles.oddRow
+    }
   }
 
   _sort (sortBy, sortDirection) {
