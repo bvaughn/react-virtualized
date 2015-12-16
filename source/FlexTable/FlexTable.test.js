@@ -54,6 +54,7 @@ describe('FlexTable', () => {
     rowGetter = immutableRowGetter,
     rowHeight = 10,
     rowsCount = list.size,
+    rowClassName = undefined,
     scrollToIndex = undefined,
     sort = undefined,
     sortBy = undefined,
@@ -70,6 +71,7 @@ describe('FlexTable', () => {
         rowGetter={rowGetter}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
+        rowClassName={rowClassName}
         sort={sort}
         sortBy={sortBy}
         sortDirection={sortDirection}
@@ -304,6 +306,38 @@ describe('FlexTable', () => {
       Simulate.click(rows[0])
       Simulate.click(rows[3])
       expect(onRowClickCalls).toEqual([0, 3])
+    })
+  })
+  describe('rowClassName', () => {
+    it('should render a static classname given :rowClassName as a string', () => {
+      const staticClassName = 'staticClass'
+      const table = renderTable({
+        rowClassName: staticClassName
+      })
+      const tableDOMNode = findDOMNode(table)
+      const rows = findAll(tableDOMNode, '.row')
+      for (let index = 0; index < rows.length; index++) {
+        let row = rows[index]
+        expect(row.className).toContain(staticClassName)
+      }
+    })
+
+    it('should render dynamic classname given :rowClassName as a function', () => {
+      const table = renderTable({
+        rowClassName: rowIndex => rowIndex % 2 === 0 ? 'even' : 'odd'
+      })
+      const tableDOMNode = findDOMNode(table)
+      const rows = findAll(tableDOMNode, '.row')
+      for (let index = 0; index < rows.length; index++) {
+        let row = rows[index]
+        if (index % 2 === 0) {
+          expect(row.className).toContain('even')
+          expect(row.className).not.toContain('odd')
+        } else {
+          expect(row.className).toContain('odd')
+          expect(row.className).not.toContain('even')
+        }
+      }
     })
   })
 })

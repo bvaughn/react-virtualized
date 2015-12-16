@@ -63,7 +63,7 @@ export default class FlexTable extends Component {
      */
     onRowClick: PropTypes.func,
     /** Optional CSS class to apply to all table rows (including the header row) */
-    rowClassName: PropTypes.string,
+    rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
     /**
      * Callback responsible for returning a data row given an index.
      * (index: number): any
@@ -135,6 +135,7 @@ export default class FlexTable extends Component {
     const rowRenderer = index => {
       return this._createRow(index)
     }
+    const rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName
 
     return (
       <div
@@ -145,7 +146,7 @@ export default class FlexTable extends Component {
       >
         {!disableHeader && (
           <div
-            className={cn(styles.headerRow, rowClassName)}
+            className={cn(styles.headerRow, rowClass)}
             style={{
               height: headerHeight
             }}
@@ -253,6 +254,7 @@ export default class FlexTable extends Component {
       rowHeight
     } = this.props
 
+    const rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName
     const renderedRow = React.Children.map(
       children,
       (column, columnIndex) => this._createColumn(
@@ -266,7 +268,7 @@ export default class FlexTable extends Component {
     return (
       <div
         key={rowIndex}
-        className={cn(styles.row, rowClassName)}
+        className={cn(styles.row, rowClass)}
         onClick={() => onRowClick(rowIndex)}
         style={{
           height: rowHeight
