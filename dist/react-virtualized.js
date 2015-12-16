@@ -215,6 +215,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      noRowsRenderer: function noRowsRenderer() {
 	        return null;
 	      },
+	      onRowClick: function onRowClick() {
+	        return null;
+	      },
 	      verticalPadding: 0
 	    },
 	    enumerable: true
@@ -244,6 +247,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      horizontalPadding: _react.PropTypes.number,
 	      /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
 	      noRowsRenderer: _react.PropTypes.func,
+	      /**
+	       * Callback invoked when a user clicks on a table row.
+	       * (rowIndex: number): void
+	       */
+	      onRowClick: _react.PropTypes.func,
 	      /** Optional CSS class to apply to all table rows (including the header row) */
 	      rowClassName: _react.PropTypes.string,
 	      /**
@@ -451,6 +459,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var _props4 = this.props;
 	      var children = _props4.children;
+	      var onRowClick = _props4.onRowClick;
 	      var rowClassName = _props4.rowClassName;
 	      var rowGetter = _props4.rowGetter;
 	      var rowHeight = _props4.rowHeight;
@@ -464,6 +473,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        {
 	          key: rowIndex,
 	          className: (0, _classnames2['default'])(_FlexTableCss2['default'].row, rowClassName),
+	          onClick: function () {
+	            return onRowClick(rowIndex);
+	          },
 	          style: {
 	            height: rowHeight
 	          }
