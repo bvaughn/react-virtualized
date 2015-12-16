@@ -253,7 +253,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	       */
 	      onRowClick: _react.PropTypes.func,
 	      /** Optional CSS class to apply to all table rows (including the header row) */
-	      rowClassName: _react.PropTypes.string,
+	      rowClassName: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.func]),
 	      /**
 	       * Callback responsible for returning a data row given an index.
 	       * (index: number): any
@@ -340,6 +340,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var rowRenderer = function rowRenderer(index) {
 	        return _this2._createRow(index);
 	      };
+	      var rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
 	
 	      return _react2['default'].createElement(
 	        'div',
@@ -352,7 +353,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        !disableHeader && _react2['default'].createElement(
 	          'div',
 	          {
-	            className: (0, _classnames2['default'])(_FlexTableCss2['default'].headerRow, rowClassName),
+	            className: (0, _classnames2['default'])(_FlexTableCss2['default'].headerRow, rowClass),
 	            style: {
 	              height: headerHeight
 	            }
@@ -464,6 +465,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var rowGetter = _props4.rowGetter;
 	      var rowHeight = _props4.rowHeight;
 	
+	      var rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName;
 	      var renderedRow = _react2['default'].Children.map(children, function (column, columnIndex) {
 	        return _this3._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
 	      });
@@ -472,7 +474,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'div',
 	        {
 	          key: rowIndex,
-	          className: (0, _classnames2['default'])(_FlexTableCss2['default'].row, rowClassName),
+	          className: (0, _classnames2['default'])(_FlexTableCss2['default'].row, rowClass),
 	          onClick: function () {
 	            return onRowClick(rowIndex);
 	          },
