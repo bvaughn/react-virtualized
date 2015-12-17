@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 2.4.0
+`FlexTable` and `VirtualScroll` offer new callback property `onRowsRendered` to be invoked with a params object `{ startIndex, stopIndex }` after rows have been rendered.
+
 #### 2.3.0
 `FlexTable`'s `rowClassName` property can now be either a string or a function in order to support dynamic row classes (eg. alternating colors).
 
