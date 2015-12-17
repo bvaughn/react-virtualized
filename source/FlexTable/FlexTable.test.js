@@ -51,6 +51,7 @@ describe('FlexTable', () => {
     height = 100,
     noRowsRenderer = undefined,
     onRowClick = undefined,
+    onRowsRendered = undefined,
     rowGetter = immutableRowGetter,
     rowHeight = 10,
     rowsCount = list.size,
@@ -68,6 +69,7 @@ describe('FlexTable', () => {
         height={height}
         noRowsRenderer={noRowsRenderer}
         onRowClick={onRowClick}
+        onRowsRendered={onRowsRendered}
         rowGetter={rowGetter}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
@@ -145,6 +147,7 @@ describe('FlexTable', () => {
         })
         const tableDOMNode = findDOMNode(table)
         const rows = findAll(tableDOMNode, '.row')
+        expect(rows.length).toEqual(3)
 
         for (let index = 0; index < rows.length; index++) {
           let row = rows[index]
@@ -338,6 +341,27 @@ describe('FlexTable', () => {
           expect(row.className).not.toContain('even')
         }
       }
+    })
+  })
+
+  describe('onRowsRendered', () => {
+    it('should call :onRowsRendered at least one row is rendered', () => {
+      let startIndex, stopIndex
+      renderTable({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params)
+      })
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(8)
+    })
+
+    it('should not call :onRowsRendered if no rows are rendered', () => {
+      let startIndex, stopIndex
+      renderTable({
+        height: 0,
+        onRowsRendered: params => ({ startIndex, stopIndex } = params)
+      })
+      expect(startIndex).toEqual(undefined)
+      expect(stopIndex).toEqual(undefined)
     })
   })
 })
