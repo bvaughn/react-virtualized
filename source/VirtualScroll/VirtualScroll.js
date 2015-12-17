@@ -173,8 +173,6 @@ export default class VirtualScroll extends Component {
         scrollTop
       })
 
-      childrenToDisplay = []
-
       for (let i = rowIndexStart; i <= rowIndexStop; i++) {
         childrenToDisplay.push(rowRenderer(i))
       }
@@ -183,10 +181,6 @@ export default class VirtualScroll extends Component {
         startIndex: rowIndexStart,
         stopIndex: rowIndexStop
       })
-    }
-
-    if (rowsCount === 0) {
-      childrenToDisplay = noRowsRenderer()
     }
 
     return (
@@ -201,17 +195,22 @@ export default class VirtualScroll extends Component {
           height: height
         }}
       >
-        <div
-          className={styles.InnerScrollContainer}
-          style={{
-            height: totalRowsHeight,
-            maxHeight: totalRowsHeight,
-            paddingTop: paddingTop,
-            pointerEvents: isScrolling ? 'none' : 'auto'
-          }}
-        >
-          {childrenToDisplay}
-        </div>
+        {rowsCount > 0 &&
+          <div
+            className={styles.InnerScrollContainer}
+            style={{
+              height: totalRowsHeight,
+              maxHeight: totalRowsHeight,
+              paddingTop: paddingTop,
+              pointerEvents: isScrolling ? 'none' : 'auto'
+            }}
+          >
+            {childrenToDisplay}
+          </div>
+        }
+        {rowsCount === 0 &&
+          noRowsRenderer()
+        }
       </div>
     )
   }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
+import AutoSizerExample from '../AutoSizer/AutoSizer.example'
 import FlexTableExample from '../FlexTable/FlexTable.example'
 import NavLink from './NavLink'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
@@ -44,6 +45,7 @@ render((
       <div className={styles.row}>
         <VirtualScrollExample/>
         <FlexTableExample/>
+        <AutoSizerExample/>
       </div>
 
       <p className={styles.footer}>
