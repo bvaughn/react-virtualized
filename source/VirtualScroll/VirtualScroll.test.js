@@ -23,6 +23,7 @@ describe('VirtualScroll', () => {
   function getMarkup ({
     height = 100,
     noRowsRenderer = undefined,
+    onRowsRendered = undefined,
     rowHeight = 10,
     rowsCount = list.size,
     scrollToIndex = undefined
@@ -42,6 +43,7 @@ describe('VirtualScroll', () => {
       <VirtualScroll
         height={height}
         noRowsRenderer={noRowsRenderer}
+        onRowsRendered={onRowsRendered}
         rowHeight={rowHeight}
         rowRenderer={rowRenderer}
         rowsCount={rowsCount}
@@ -264,6 +266,27 @@ describe('VirtualScroll', () => {
         rowsCount: 0
       })
       expect(list.textContent).toEqual('')
+    })
+  })
+
+  describe('onRowsRendered', () => {
+    it('should call :onRowsRendered at least one row is rendered', () => {
+      let startIndex, stopIndex
+      renderOrUpdateList({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params)
+      })
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(10)
+    })
+
+    it('should not call :onRowsRendered if no rows are rendered', () => {
+      let startIndex, stopIndex
+      renderOrUpdateList({
+        height: 0,
+        onRowsRendered: params => ({ startIndex, stopIndex } = params)
+      })
+      expect(startIndex).toEqual(undefined)
+      expect(stopIndex).toEqual(undefined)
     })
   })
 })

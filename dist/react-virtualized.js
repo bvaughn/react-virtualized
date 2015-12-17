@@ -218,6 +218,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      onRowClick: function onRowClick() {
 	        return null;
 	      },
+	      onRowsRendered: function onRowsRendered() {
+	        return null;
+	      },
 	      verticalPadding: 0
 	    },
 	    enumerable: true
@@ -252,6 +255,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	       * (rowIndex: number): void
 	       */
 	      onRowClick: _react.PropTypes.func,
+	      /**
+	       * Callback invoked with information about the slice of rows that were just rendered.
+	       * ({ startIndex, stopIndex }): void
+	       */
+	      onRowsRendered: _react.PropTypes.func,
 	      /**
 	       * Optional CSS class to apply to all table rows (including the header row).
 	       * This property can be a CSS class name (string) or a function that returns a class name.
@@ -331,6 +339,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var headerHeight = _props2.headerHeight;
 	      var height = _props2.height;
 	      var noRowsRenderer = _props2.noRowsRenderer;
+	      var onRowsRendered = _props2.onRowsRendered;
 	      var rowClassName = _props2.rowClassName;
 	      var rowHeight = _props2.rowHeight;
 	      var rowsCount = _props2.rowsCount;
@@ -369,6 +378,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          width: width,
 	          height: availableRowsHeight,
 	          noRowsRenderer: noRowsRenderer,
+	          onRowsRendered: onRowsRendered,
 	          rowHeight: rowHeight,
 	          rowRenderer: rowRenderer,
 	          rowsCount: rowsCount
@@ -744,10 +754,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: {
 	      /** Optional CSS class name */
 	      className: _react.PropTypes.string,
-	      /** Optional renderer to be used in place of rows when rowsCount is 0 */
-	      noRowsRenderer: _react.PropTypes.func,
 	      /** Height constraint for list (determines how many actual rows are rendered) */
 	      height: _react.PropTypes.number.isRequired,
+	      /** Optional renderer to be used in place of rows when rowsCount is 0 */
+	      noRowsRenderer: _react.PropTypes.func,
+	      /**
+	       * Callback invoked with information about the slice of rows that were just rendered.
+	       * ({ startIndex, stopIndex }): void
+	       */
+	      onRowsRendered: _react.PropTypes.func,
 	      /** Fixed row height; the number of rows displayed is calculated by dividing height by rowHeight */
 	      rowHeight: _react.PropTypes.number.isRequired,
 	      /** Responsbile for rendering a row given an index */
@@ -762,6 +777,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'defaultProps',
 	    value: {
 	      noRowsRenderer: function noRowsRenderer() {
+	        return null;
+	      },
+	      onRowsRendered: function onRowsRendered() {
 	        return null;
 	      }
 	    },
@@ -880,6 +898,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var className = _props2.className;
 	      var height = _props2.height;
 	      var noRowsRenderer = _props2.noRowsRenderer;
+	      var onRowsRendered = _props2.onRowsRendered;
 	      var rowsCount = _props2.rowsCount;
 	      var rowHeight = _props2.rowHeight;
 	      var rowRenderer = _props2.rowRenderer;
@@ -912,6 +931,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        for (var i = rowIndexStart; i <= rowIndexStop; i++) {
 	          childrenToDisplay.push(rowRenderer(i));
 	        }
+	
+	        onRowsRendered({
+	          startIndex: rowIndexStart,
+	          stopIndex: rowIndexStop
+	        });
 	      }
 	
 	      if (rowsCount === 0) {
