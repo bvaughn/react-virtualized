@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 2.5.0
+Added `AutoSizer` component for wrapping `FlexTable` or `VirtualScroll` and growing to fill the parent container. This should hopefully simplify usage of these components.
+
 #### 2.4.0
 `FlexTable` and `VirtualScroll` offer new callback property `onRowsRendered` to be invoked with a params object `{ startIndex, stopIndex }` after rows have been rendered.
 
