@@ -1,0 +1,17 @@
+.AutoSizerExample {
+  flex: 0 0 350px;
+}
+
+.AutoSizerWrapper {
+  flex: 1 1 auto;
+}
+
+.Empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+}
