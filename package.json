@@ -59,6 +59,8 @@
       "beforeEach",
       "describe",
       "expect",
+      "fdescribe",
+      "fit",
       "it",
       "jasmine"
     ]

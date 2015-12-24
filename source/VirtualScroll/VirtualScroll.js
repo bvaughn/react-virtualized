@@ -3,6 +3,11 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import raf from 'raf'
+import {
+  getUpdatedOffsetForIndex,
+  getVisibleRowIndices,
+  initCellMetadata
+} from '../utils'
 import styles from './VirtualScroll.css'
 
 const IS_SCROLLING_TIMEOUT = 150
@@ -33,6 +38,7 @@ export default class VirtualScroll extends Component {
     onRowsRendered: PropTypes.func,
     /** Fixed row height; the number of rows displayed is calculated by dividing height by rowHeight */
     rowHeight: PropTypes.number.isRequired,
+    // TODO rowHeightGetter
     /** Responsbile for rendering a row given an index */
     rowRenderer: PropTypes.func.isRequired,
     /** Number of rows in list. */
@@ -114,12 +120,11 @@ export default class VirtualScroll extends Component {
     // If we don't have a selected item but list size or number of children have decreased,
     // Make sure we aren't scrolled too far past the current content.
     } else if (!hasScrollToIndex && (height < prevProps.height || rowsCount < previousRowsCount)) {
-      const calculatedScrollTop = VirtualScroll._calculateScrollTopForIndex({
-        height,
-        rowHeight,
-        rowsCount,
-        scrollTop,
-        scrollToIndex: rowsCount - 1
+      const calculatedScrollTop = getUpdatedOffsetForIndex({
+        cellMetadata: this._cellMetadata,
+        containerSize: height,
+        currentOffset: scrollTop,
+        targetIndex: rowsCount - 1
       })
 
       // Only adjust the scroll position if we've scrolled below the last set of rows.
@@ -127,6 +132,16 @@ export default class VirtualScroll extends Component {
         this._updateScrollTopForScrollToIndex(rowsCount - 1)
       }
     }
+  }
+
+  componentWillMount () {
+    const { rowHeight, rowsCount } = this.props
+
+    this._cellMetadata = initCellMetadata({
+      cellCount: rowsCount,
+      fixedSize: rowHeight
+      // sizeGetter: Function
+    })
   }
 
   componentWillUpdate (prevProps, prevState) {
@@ -164,13 +179,13 @@ export default class VirtualScroll extends Component {
     // Render only enough rows to cover the visible (vertical) area of the table.
     if (height > 0) {
       const {
-        rowIndexStart,
-        rowIndexStop
-      } = VirtualScroll._getStartAndStopIndexForScrollTop({
-        height,
-        rowHeight,
-        rowsCount,
-        scrollTop
+        start: rowIndexStart,
+        stop: rowIndexStop
+      } = getVisibleRowIndices({
+        cellCount: rowsCount,
+        cellMetadata: this._cellMetadata,
+        containerSize: height,
+        currentOffset: scrollTop
       })
 
       for (let i = rowIndexStart; i <= rowIndexStop; i++) {
@@ -213,55 +228,6 @@ export default class VirtualScroll extends Component {
         }
       </div>
     )
-  }
-
-  /**
-   * Scroll the table to ensure the specified index is visible.
-   *
-   * @private
-   * Why was this functionality implemented as a method instead of a property?
-   * Short answer: A user of this component may want to scroll to the same row twice.
-   * In this case the scroll-to-row property would not change and so it would not be picked up by the component.
-   */
-  static _calculateScrollTopForIndex ({ rowsCount, height, rowHeight, scrollTop, scrollToIndex }) {
-    scrollToIndex = Math.max(0, Math.min(rowsCount - 1, scrollToIndex))
-
-    const maxScrollTop = scrollToIndex * rowHeight
-    const minScrollTop = maxScrollTop - height + rowHeight
-    const newScrollTop = Math.max(minScrollTop, Math.min(maxScrollTop, scrollTop))
-
-    return newScrollTop
-  }
-
-  /**
-   * Calculates the maximum number of visible rows based on the row-height and the number of rows in the table.
-   */
-  static _getMaxVisibleRows ({ height, rowHeight, rowsCount }) {
-    const minNumRowsToFillSpace = Math.ceil(height / rowHeight)
-
-    // Add one to account for partially-clipped rows on the top and bottom
-    const maxNumRowsToFillSpace = minNumRowsToFillSpace + 1
-
-    return Math.min(rowsCount, maxNumRowsToFillSpace)
-  }
-
-  /**
-   * Calculates the start and end index for visible rows based on a scroll offset.
-   * Handles edge-cases to ensure that the table never scrolls past the available rows.
-   */
-  static _getStartAndStopIndexForScrollTop ({ height, rowHeight, rowsCount, scrollTop }) {
-    const maxVisibleRows = VirtualScroll._getMaxVisibleRows({ height, rowHeight, rowsCount })
-    const totalRowsHeight = rowHeight * rowsCount
-    const safeScrollTop = Math.max(0, Math.min(totalRowsHeight - height, scrollTop))
-
-    let scrollPercentage = safeScrollTop / totalRowsHeight
-    let rowIndexStart = Math.floor(scrollPercentage * rowsCount)
-    let rowIndexStop = Math.min(rowsCount, rowIndexStart + maxVisibleRows) - 1
-
-    return {
-      rowIndexStart,
-      rowIndexStop
-    }
   }
 
   /**
@@ -311,16 +277,15 @@ export default class VirtualScroll extends Component {
       ? scrollToIndexOverride
       : this.props.scrollToIndex
 
-    const { height, rowsCount, rowHeight } = this.props
+    const { height } = this.props
     const { scrollTop } = this.state
 
     if (scrollToIndex >= 0) {
-      const calculatedScrollTop = VirtualScroll._calculateScrollTopForIndex({
-        height,
-        rowHeight,
-        rowsCount,
-        scrollTop,
-        scrollToIndex
+      const calculatedScrollTop = getUpdatedOffsetForIndex({
+        cellMetadata: this._cellMetadata,
+        containerSize: height,
+        currentOffset: scrollTop,
+        targetIndex: scrollToIndex
       })
 
       if (scrollTop !== calculatedScrollTop) {
