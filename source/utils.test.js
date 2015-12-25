@@ -4,6 +4,7 @@ import {
   initCellMetadata
 } from './utils'
 
+// Default cell sizes and offsets for use in below tests
 function getCellMetadata () {
   const cellSizes = [
     10, // 0: 0..0 (min)
@@ -18,7 +19,7 @@ function getCellMetadata () {
   ]
   return initCellMetadata({
     cellCount: cellSizes.length,
-    sizeGetter: index => cellSizes[index]
+    size: index => cellSizes[index]
   })
 }
 

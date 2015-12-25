@@ -1,8 +1,3 @@
-var BINARY_INDEX_SEARCH_MODE = {
-  EQUAL_OR_LOWER: 1,
-  EQUAL_OR_HIGHER: 2
-}
-
 /**
  * Binary search function inspired by react-infinite.
  */
@@ -29,12 +24,15 @@ export function findNearestCell ({
     }
   }
 
-  if (mode === BINARY_INDEX_SEARCH_MODE.EQUAL_OR_LOWER && low > 0) {
+  if (mode === findNearestCell.EQUAL_OR_LOWER && low > 0) {
     return low - 1
-  } else if (mode === BINARY_INDEX_SEARCH_MODE.EQUAL_OR_HIGHER && high < cellMetadata.length - 1) {
+  } else if (mode === findNearestCell.EQUAL_OR_HIGHER && high < cellMetadata.length - 1) {
     return high + 1
   }
 }
+
+findNearestCell.EQUAL_OR_LOWER = 1
+findNearestCell.EQUAL_OR_HIGHER = 2
 
 /**
  * Give a new offset that ensures a certain cell is visible, given the current offset.
@@ -85,7 +83,7 @@ export function getVisibleRowIndices ({
 
   let start = findNearestCell({
     cellMetadata,
-    mode: BINARY_INDEX_SEARCH_MODE.EQUAL_OR_LOWER,
+    mode: findNearestCell.EQUAL_OR_LOWER,
     offset: currentOffset
   })
 
@@ -112,17 +110,16 @@ export function getVisibleRowIndices ({
  * This data is used to determine which cells are visible given a container size and scroll position.
  *
  * @param cellCount Total number of cells.
- * @param fixedSize If provided this value will be used as the fixed size for all cells.
- * @param sizeGetter If provided this function will be used to determine the height of each cell.
- *   It should implement the signature: (cellIndex)
+ * @param size Either a fixed size or a function that returns the size for a given given an index.
  * @return Object mapping cell index to cell metadata (size, offset)
  */
 export function initCellMetadata ({
   cellCount,
-  fixedSize,
-  sizeGetter
+  size
 }) {
-  sizeGetter = sizeGetter || () => fixedSize
+  const sizeGetter = size instanceof Function
+    ? size
+    : index => size
 
   const cellMetadata = []
   let offset = 0

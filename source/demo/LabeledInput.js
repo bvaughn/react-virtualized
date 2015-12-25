@@ -1,10 +1,22 @@
 import React, { PropTypes } from 'react'
+import cn from 'classnames'
 import styles from './LabeledInput.css'
 
-export function LabeledInput ({ label, name, onChange, placeholder, value }) {
+export function LabeledInput ({
+  disabled,
+  label,
+  name,
+  onChange,
+  placeholder,
+  value
+}) {
+  const labelClassName = cn(styles.Label, {
+    [styles.LabelDisabled]: disabled
+  })
+
   return (
     <div className={styles.LabeledInput}>
-      <label className={styles.Label}>
+      <label className={labelClassName}>
         {label}
       </label>
       <input
@@ -13,11 +25,13 @@ export function LabeledInput ({ label, name, onChange, placeholder, value }) {
         placeholder={placeholder}
         onChange={onChange}
         value={value}
+        disabled={disabled}
       />
     </div>
   )
 }
 LabeledInput.propTypes = {
+  disabled: PropTypes.bool,
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
