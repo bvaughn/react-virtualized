@@ -89,16 +89,12 @@ export function getVisibleRowIndices ({
 
   const maxOffset = currentOffset + containerSize
 
-  // Account for the fact that we may have scrolled part way past the first cell.
-  currentOffset += currentOffset - cellMetadata[start].offset
-
   let stop = start
 
   while (currentOffset < maxOffset && stop < cellCount - 1) {
     currentOffset += cellMetadata[++stop].size
   }
 
-  // TODO Do I need to shift if we run out of cells before filling the container size? I don't think so...
   return {
     start,
     stop

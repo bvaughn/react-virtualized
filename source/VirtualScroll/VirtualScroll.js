@@ -154,11 +154,21 @@ export default class VirtualScroll extends Component {
     this._computeCellMetadata()
   }
 
-  componentWillUpdate (prevProps, prevState) {
+  componentWillUpdate (nextProps, nextState) {
     const { rowsCount } = this.props
 
     if (rowsCount === 0) {
       this.setState({ scrollTop: 0 })
+    }
+
+    if (
+      this.props.rowsCount !== nextProps.rowsCount ||
+      (
+        this.props.rowHeight instanceof Number &&
+        this.props.rowHeight !== nextProps.rowHeight
+      )
+    ) {
+      this._computeCellMetadata()
     }
   }
 
@@ -168,7 +178,6 @@ export default class VirtualScroll extends Component {
       height,
       noRowsRenderer,
       onRowsRendered,
-      rowHeight,
       rowsCount,
       rowRenderer
     } = this.props
@@ -178,9 +187,6 @@ export default class VirtualScroll extends Component {
       scrollTop
     } = this.state
 
-    // Shift the visible rows down so that they remain visible while scrolling.
-    // This mimicks scrolling behavior within a non-virtualized list.
-    let paddingTop = scrollTop
     let childrenToDisplay = []
 
     // Render only enough rows to cover the visible (vertical) area of the table.
@@ -196,19 +202,25 @@ export default class VirtualScroll extends Component {
       })
 
       for (let i = start; i <= stop; i++) {
-        childrenToDisplay.push(rowRenderer(i))
+        let datum = this._cellMetadata[i]
+        let child = React.cloneElement(
+          rowRenderer(i), {
+            style: {
+              position: 'absolute',
+              top: datum.offset,
+              width: '100%',
+              height: this._getRowHeight(i)
+            }
+          }
+        )
+
+        childrenToDisplay.push(child)
       }
 
       onRowsRendered({
         startIndex: start,
         stopIndex: stop
       })
-
-      // Adjust for smoother scrolling
-      const staticRowHeight = rowHeight instanceof Function
-        ? rowHeight(start)
-        : rowHeight
-      paddingTop -= (scrollTop % staticRowHeight)
     }
 
     return (
@@ -229,7 +241,6 @@ export default class VirtualScroll extends Component {
             style={{
               height: this._getTotalRowsHeight(),
               maxHeight: this._getTotalRowsHeight(),
-              paddingTop: paddingTop,
               pointerEvents: isScrolling ? 'none' : 'auto'
             }}
           >
@@ -245,11 +256,19 @@ export default class VirtualScroll extends Component {
 
   _computeCellMetadata () {
     const { rowHeight, rowsCount } = this.props
-    
+
     this._cellMetadata = initCellMetadata({
       cellCount: rowsCount,
       size: rowHeight
     })
+  }
+
+  _getRowHeight (index) {
+    const { rowHeight } = this.props
+
+    return rowHeight instanceof Function
+      ? rowHeight(index)
+      : rowHeight
   }
 
   _getTotalRowsHeight () {
