@@ -157,18 +157,19 @@ export default class VirtualScroll extends Component {
   }
 
   componentWillUpdate (nextProps, nextState) {
-    const { rowHeight, rowsCount } = this.props
-
-    if (rowsCount === 0) {
+    if (
+      nextProps.rowsCount === 0 &&
+      nextState.scrollTop !== 0
+    ) {
       this.setState({ scrollTop: 0 })
     }
 
     if (
       nextState.computeCellMetadataOnNextUpdate ||
-      rowsCount !== nextProps.rowsCount ||
+      nextProps.rowsCount !== nextProps.rowsCount ||
       (
-        rowHeight instanceof Number &&
-        rowHeight !== nextProps.rowHeight
+        this.props.rowHeight instanceof Number &&
+        this.props.rowHeight !== nextProps.rowHeight
       )
     ) {
       this._computeCellMetadata(nextProps)
