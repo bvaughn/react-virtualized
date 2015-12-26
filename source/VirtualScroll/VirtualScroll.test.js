@@ -73,11 +73,11 @@ describe('VirtualScroll', () => {
   }
 
   describe('number of rendered children', () => {
-    it('should render enough children to fill the view +1 for partial visibility at top and bottom', () => {
+    it('should render enough children to fill the view', () => {
       const list = renderList()
       const listDOMNode = findDOMNode(list)
 
-      expect(listDOMNode.querySelectorAll('.listItem').length).toEqual(11)
+      expect(listDOMNode.querySelectorAll('.listItem').length).toEqual(10)
     })
 
     it('should not render more children than available if the list is not filled', () => {
@@ -168,7 +168,7 @@ describe('VirtualScroll', () => {
         onRowsRendered: params => ({ startIndex, stopIndex } = params)
       })
       expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(10)
+      expect(stopIndex).toEqual(9)
     })
 
     it('should not call :onRowsRendered if no rows are rendered', () => {

@@ -75,7 +75,7 @@ describe('getVisibleRowIndices', () => {
   it('should handle unscrolled', () => {
     const { start, stop } = testHelper(0)
     expect(start).toEqual(0)
-    expect(stop).toEqual(4)
+    expect(stop).toEqual(3)
   })
 
   it('should handle scrolled to the middle', () => {
@@ -99,6 +99,6 @@ describe('getVisibleRowIndices', () => {
   it('should handle scrolled past the beginning', () => {
     const { start, stop } = testHelper(-50)
     expect(start).toEqual(0)
-    expect(stop).toEqual(4)
+    expect(stop).toEqual(3)
   })
 })

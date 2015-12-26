@@ -24,6 +24,8 @@ const IS_SCROLLING_TIMEOUT = 150
  * container.
  */
 export default class VirtualScroll extends Component {
+  static shouldComponentUpdate = shouldPureComponentUpdate
+
   static propTypes = {
     /** Optional CSS class name */
     className: PropTypes.string,
@@ -55,6 +57,7 @@ export default class VirtualScroll extends Component {
     super(props, context)
 
     this.state = {
+      computeCellMetadataOnNextUpdate: false,
       isScrolling: false,
       scrollTop: 0
     }
@@ -79,8 +82,9 @@ export default class VirtualScroll extends Component {
    * Since VirtualScroll receives a :rowsCount it has no way of knowing if the underlying list data has changed.
    */
   recomputeRowHeights () {
-    this._computeCellMetadata()
-    this.forceUpdate()
+    this.setState({
+      computeCellMetadataOnNextUpdate: true
+    })
   }
 
   componentDidMount () {
@@ -95,23 +99,9 @@ export default class VirtualScroll extends Component {
     }
   }
 
-  componentWillUnmount () {
-    if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId)
-    }
-    if (this._scrollTopId) {
-      clearImmediate(this._scrollTopId)
-    }
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
-    }
-  }
-
   componentDidUpdate (prevProps, prevState) {
     const { height, rowsCount, rowHeight, scrollToIndex } = this.props
     const { scrollTop } = this.state
-
-    const previousRowsCount = prevProps.rowsCount
 
     // Make sure any changes to :scrollTop (from :scrollToIndex) get applied
     if (scrollTop >= 0 && scrollTop !== prevState.scrollTop) {
@@ -135,7 +125,7 @@ export default class VirtualScroll extends Component {
 
     // If we don't have a selected item but list size or number of children have decreased,
     // Make sure we aren't scrolled too far past the current content.
-    } else if (!hasScrollToIndex && (height < prevProps.height || rowsCount < previousRowsCount)) {
+    } else if (!hasScrollToIndex && (height < prevProps.height || rowsCount < prevProps.rowsCount)) {
       const calculatedScrollTop = getUpdatedOffsetForIndex({
         cellMetadata: this._cellMetadata,
         containerSize: height,
@@ -151,24 +141,41 @@ export default class VirtualScroll extends Component {
   }
 
   componentWillMount () {
-    this._computeCellMetadata()
+    this._computeCellMetadata(this.props)
+  }
+
+  componentWillUnmount () {
+    if (this._disablePointerEventsTimeoutId) {
+      clearTimeout(this._disablePointerEventsTimeoutId)
+    }
+    if (this._scrollTopId) {
+      clearImmediate(this._scrollTopId)
+    }
+    if (this._setNextStateAnimationFrameId) {
+      raf.cancel(this._setNextStateAnimationFrameId)
+    }
   }
 
   componentWillUpdate (nextProps, nextState) {
-    const { rowsCount } = this.props
+    const { rowHeight, rowsCount } = this.props
 
     if (rowsCount === 0) {
       this.setState({ scrollTop: 0 })
     }
 
     if (
-      this.props.rowsCount !== nextProps.rowsCount ||
+      nextState.computeCellMetadataOnNextUpdate ||
+      rowsCount !== nextProps.rowsCount ||
       (
-        this.props.rowHeight instanceof Number &&
-        this.props.rowHeight !== nextProps.rowHeight
+        rowHeight instanceof Number &&
+        rowHeight !== nextProps.rowHeight
       )
     ) {
-      this._computeCellMetadata()
+      this._computeCellMetadata(nextProps)
+
+      this.setState({
+        computeCellMetadataOnNextUpdate: false
+      })
     }
   }
 
@@ -254,8 +261,8 @@ export default class VirtualScroll extends Component {
     )
   }
 
-  _computeCellMetadata () {
-    const { rowHeight, rowsCount } = this.props
+  _computeCellMetadata (props) {
+    const { rowHeight, rowsCount } = props
 
     this._cellMetadata = initCellMetadata({
       cellCount: rowsCount,
@@ -434,4 +441,3 @@ export default class VirtualScroll extends Component {
     })
   }
 }
-VirtualScroll.prototype.shouldComponentUpdate = shouldPureComponentUpdate

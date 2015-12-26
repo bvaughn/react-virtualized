@@ -81,18 +81,23 @@ export function getVisibleRowIndices ({
 
   currentOffset = Math.max(0, currentOffset)
 
+  const maxOffset = currentOffset + containerSize
+
   let start = findNearestCell({
     cellMetadata,
     mode: findNearestCell.EQUAL_OR_LOWER,
     offset: currentOffset
   })
 
-  const maxOffset = currentOffset + containerSize
+  let datum = cellMetadata[start]
+  currentOffset = datum.offset + datum.size
 
   let stop = start
 
   while (currentOffset < maxOffset && stop < cellCount - 1) {
-    currentOffset += cellMetadata[++stop].size
+    stop++
+
+    currentOffset += cellMetadata[stop].size
   }
 
   return {
