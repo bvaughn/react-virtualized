@@ -4,7 +4,7 @@ FlexTable
 Table component with fixed headers and virtualized rows for improved performance with large data sets.
 This component expects explicit width, height, and padding parameters.
 
-#### Prop Types
+### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | children | [FlexColumn](FlexColumn.md) | ✓ | One or more FlexColumns describing the data displayed in this row |
@@ -26,3 +26,14 @@ This component expects explicit width, height, and padding parameters.
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
 | width | Number | ✓ | Fixed/available width for out DOM element |
 | verticalPadding | Number |  | Vertical padding of outer DOM element |
+
+### Public Methods
+
+##### recomputeRowHeights
+Recompute row heights and offsets.
+
+VirtualScroll has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property. If the `rowHeight` is a number it can compare before and after values but if it is a function- that comparison is error prone. In the event that a dynamic `rowHeight` function is in use and the row heights have changed, this function should be manually called by the "smart" container parent.
+
+##### scrollToRow
+
+Scroll the list to ensure the row at the specified index is visible. This method exists so that a user can forcefully scroll to the same row twice. (The `scrollToIndex` property would not change in that case and so it would not be picked up by VirtualScroll.)

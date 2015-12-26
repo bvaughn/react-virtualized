@@ -68,15 +68,6 @@ export default class VirtualScroll extends Component {
   }
 
   /**
-   * Scroll the list to ensure the row at the specified index is visible.
-   * This method exists so that a user can forcefully scroll to the same row twice.
-   * (The :scrollToIndex property would not change in that case, so it would not be picked up by the component.)
-   */
-  scrollToRow (scrollToIndex) {
-    this._updateScrollTopForScrollToIndex(scrollToIndex)
-  }
-
-  /**
    * Forced recompute of row heights.
    * This function should be called if dynamic row heights have changed but nothing else has.
    * Since VirtualScroll receives a :rowsCount it has no way of knowing if the underlying list data has changed.
@@ -85,6 +76,15 @@ export default class VirtualScroll extends Component {
     this.setState({
       computeCellMetadataOnNextUpdate: true
     })
+  }
+
+  /**
+   * Scroll the list to ensure the row at the specified index is visible.
+   * This method exists so that a user can forcefully scroll to the same row twice.
+   * (The :scrollToIndex property would not change in that case, so it would not be picked up by the component.)
+   */
+  scrollToRow (scrollToIndex) {
+    this._updateScrollTopForScrollToIndex(scrollToIndex)
   }
 
   componentDidMount () {
