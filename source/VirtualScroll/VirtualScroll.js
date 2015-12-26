@@ -164,11 +164,16 @@ export default class VirtualScroll extends Component {
       this.setState({ scrollTop: 0 })
     }
 
+    // Don't compare rowHeight if it's a function because inline functions would cause infinite loops.
+    // In that event users should use recomputeRowHeights() to inform of changes.
     if (
       nextState.computeCellMetadataOnNextUpdate ||
-      nextProps.rowsCount !== nextProps.rowsCount ||
+      this.props.rowsCount !== nextProps.rowsCount ||
       (
-        this.props.rowHeight instanceof Number &&
+        (
+          typeof this.props.rowHeight === 'number' ||
+          typeof nextProps.rowHeight === 'number'
+        ) &&
         this.props.rowHeight !== nextProps.rowHeight
       )
     ) {
@@ -177,6 +182,12 @@ export default class VirtualScroll extends Component {
       this.setState({
         computeCellMetadataOnNextUpdate: false
       })
+
+      // Updated cell metadata may have hidden the previous scrolled-to item.
+      // In this case we should also update the scrollTop to ensure it stays visible.
+      if (this.props.scrollToIndex === nextProps.scrollToIndex) {
+        this._updateScrollTopForScrollToIndex()
+      }
     }
   }
 
@@ -280,6 +291,10 @@ export default class VirtualScroll extends Component {
   }
 
   _getTotalRowsHeight () {
+    if (this._cellMetadata.length === 0) {
+      return 0
+    }
+
     const datum = this._cellMetadata[this._cellMetadata.length - 1]
     return datum.offset + datum.size
   }

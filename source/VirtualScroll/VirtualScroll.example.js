@@ -38,12 +38,6 @@ export default class VirtualScrollExample extends Component {
     this._updateUseDynamicRowHeight = this._updateUseDynamicRowHeight.bind(this)
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    if (this.state.useDynamicRowHeight !== prevState.useDynamicRowHeight) {
-      this.refs.VirtualScroll.recomputeRowHeights()
-    }
-  }
-
   render () {
     const {
       rowsCount,
@@ -193,6 +187,7 @@ export default class VirtualScrollExample extends Component {
 
   _updateUseDynamicRowHeight (value) {
     this.setState({
+      rowsCount: 100,
       useDynamicRowHeight: value
     })
   }

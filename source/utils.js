@@ -50,6 +50,10 @@ export function getUpdatedOffsetForIndex ({
   currentOffset,
   targetIndex
 }) {
+  if (cellMetadata.length === 0) {
+    return 0
+  }
+
   targetIndex = Math.max(0, Math.min(cellMetadata.length - 1, targetIndex))
 
   const datum = cellMetadata[targetIndex]
