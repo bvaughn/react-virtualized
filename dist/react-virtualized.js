@@ -863,7 +863,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _FlexColumn2 = __webpack_require__(22);
+	var _FlexColumn2 = __webpack_require__(23);
 	
 	var _FlexColumn3 = _interopRequireDefault(_FlexColumn2);
 	
@@ -909,11 +909,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _VirtualScroll2 = _interopRequireDefault(_VirtualScroll);
 	
-	var _FlexColumn = __webpack_require__(22);
+	var _FlexColumn = __webpack_require__(23);
 	
 	var _FlexColumn2 = _interopRequireDefault(_FlexColumn);
 	
-	var _FlexTableCss = __webpack_require__(23);
+	var _FlexTableCss = __webpack_require__(24);
 	
 	var _FlexTableCss2 = _interopRequireDefault(_FlexTableCss);
 	
@@ -941,6 +941,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(FlexTable, _Component);
 	
 	  _createClass(FlexTable, null, [{
+	    key: 'shouldComponentUpdate',
+	    value: _reactPureRenderFunction2['default'],
+	    enumerable: true
+	  }, {
 	    key: 'defaultProps',
 	    value: {
 	      disableHeader: false,
@@ -1034,57 +1038,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	   * Scroll the table to ensure the specified index is visible.
-	   *
-	   * @private
-	   * Why was this functionality implemented as a method instead of a property?
-	   * Short answer: A user of this component may want to scroll to the same row twice.
-	   * In this case the scroll-to-row property would not change and so it would not be picked up by the component.
+	   * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
+	   */
+	
+	  /**
+	   * See VirtualScroll#recomputeRowHeights
 	   */
 	
 	  _createClass(FlexTable, [{
+	    key: 'recomputeRowHeights',
+	    value: function recomputeRowHeights() {
+	      this.refs.VirtualScroll.recomputeRowHeights();
+	    }
+	
+	    /**
+	     * See VirtualScroll#scrollToRow
+	     */
+	  }, {
 	    key: 'scrollToRow',
 	    value: function scrollToRow(scrollToIndex) {
 	      this.refs.VirtualScroll.scrollToRow(scrollToIndex);
 	    }
 	  }, {
-	    key: 'getRenderedHeaderRow',
-	    value: function getRenderedHeaderRow() {
+	    key: 'render',
+	    value: function render() {
 	      var _this = this;
 	
 	      var _props = this.props;
-	      var children = _props.children;
+	      var className = _props.className;
 	      var disableHeader = _props.disableHeader;
-	
-	      var items = disableHeader ? [] : children;
-	      return _react2['default'].Children.map(items, function (column, columnIndex) {
-	        return _this._createHeader(column, columnIndex);
-	      });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-	
-	      var _props2 = this.props;
-	      var className = _props2.className;
-	      var disableHeader = _props2.disableHeader;
-	      var headerHeight = _props2.headerHeight;
-	      var height = _props2.height;
-	      var noRowsRenderer = _props2.noRowsRenderer;
-	      var onRowsRendered = _props2.onRowsRendered;
-	      var rowClassName = _props2.rowClassName;
-	      var rowHeight = _props2.rowHeight;
-	      var rowsCount = _props2.rowsCount;
-	      var verticalPadding = _props2.verticalPadding;
-	      var width = _props2.width;
+	      var headerHeight = _props.headerHeight;
+	      var height = _props.height;
+	      var noRowsRenderer = _props.noRowsRenderer;
+	      var onRowsRendered = _props.onRowsRendered;
+	      var rowClassName = _props.rowClassName;
+	      var rowHeight = _props.rowHeight;
+	      var rowsCount = _props.rowsCount;
+	      var verticalPadding = _props.verticalPadding;
+	      var width = _props.width;
 	
 	      var availableRowsHeight = height - headerHeight - verticalPadding;
 	
 	      // This row-renderer wrapper function is necessary in order to trigger re-render when the
 	      // sort-by or sort-direction have changed (else VirtualScroll will not see any props changes)
 	      var rowRenderer = function rowRenderer(index) {
-	        return _this2._createRow(index);
+	        return _this._createRow(index);
 	      };
 	      var rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
 	
@@ -1104,7 +1102,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              height: headerHeight
 	            }
 	          },
-	          this.getRenderedHeaderRow()
+	          this._getRenderedHeaderRow()
 	        ),
 	        _react2['default'].createElement(_VirtualScroll2['default'], {
 	          ref: 'VirtualScroll',
@@ -1158,10 +1156,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_createHeader',
 	    value: function _createHeader(column, columnIndex) {
-	      var _props3 = this.props;
-	      var sort = _props3.sort;
-	      var sortBy = _props3.sortBy;
-	      var sortDirection = _props3.sortDirection;
+	      var _props2 = this.props;
+	      var sort = _props2.sort;
+	      var sortBy = _props2.sortBy;
+	      var sortDirection = _props2.sortDirection;
 	      var _column$props2 = column.props;
 	      var dataKey = _column$props2.dataKey;
 	      var disableSort = _column$props2.disableSort;
@@ -1203,18 +1201,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_createRow',
 	    value: function _createRow(rowIndex) {
-	      var _this3 = this;
+	      var _this2 = this;
 	
-	      var _props4 = this.props;
-	      var children = _props4.children;
-	      var onRowClick = _props4.onRowClick;
-	      var rowClassName = _props4.rowClassName;
-	      var rowGetter = _props4.rowGetter;
-	      var rowHeight = _props4.rowHeight;
+	      var _props3 = this.props;
+	      var children = _props3.children;
+	      var onRowClick = _props3.onRowClick;
+	      var rowClassName = _props3.rowClassName;
+	      var rowGetter = _props3.rowGetter;
+	      var rowHeight = _props3.rowHeight;
 	
 	      var rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName;
 	      var renderedRow = _react2['default'].Children.map(children, function (column, columnIndex) {
-	        return _this3._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
+	        return _this2._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
 	      });
 	
 	      return _react2['default'].createElement(
@@ -1246,18 +1244,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      return flex.join(' ');
 	    }
+	  }, {
+	    key: '_getRenderedHeaderRow',
+	    value: function _getRenderedHeaderRow() {
+	      var _this3 = this;
+	
+	      var _props4 = this.props;
+	      var children = _props4.children;
+	      var disableHeader = _props4.disableHeader;
+	
+	      var items = disableHeader ? [] : children;
+	      return _react2['default'].Children.map(items, function (column, columnIndex) {
+	        return _this3._createHeader(column, columnIndex);
+	      });
+	    }
 	  }]);
 	
 	  return FlexTable;
 	})(_react.Component);
 	
 	exports['default'] = FlexTable;
-	
-	FlexTable.prototype.shouldComponentUpdate = _reactPureRenderFunction2['default'];
-	
-	/**
-	 * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
-	 */
 	
 	function SortIndicator(_ref) {
 	  var sortDirection = _ref.sortDirection;
@@ -1396,7 +1402,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _raf2 = _interopRequireDefault(_raf);
 	
-	var _VirtualScrollCss = __webpack_require__(20);
+	var _utils = __webpack_require__(20);
+	
+	var _VirtualScrollCss = __webpack_require__(21);
 	
 	var _VirtualScrollCss2 = _interopRequireDefault(_VirtualScrollCss);
 	
@@ -1418,6 +1426,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(VirtualScroll, _Component);
 	
 	  _createClass(VirtualScroll, null, [{
+	    key: 'shouldComponentUpdate',
+	    value: _reactPureRenderFunction2['default'],
+	    enumerable: true
+	  }, {
 	    key: 'propTypes',
 	    value: {
 	      /** Optional CSS class name */
@@ -1431,8 +1443,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	       * ({ startIndex, stopIndex }): void
 	       */
 	      onRowsRendered: _react.PropTypes.func,
-	      /** Fixed row height; the number of rows displayed is calculated by dividing height by rowHeight */
-	      rowHeight: _react.PropTypes.number.isRequired,
+	      /** Either a fixed row height (number) or a function that returns the height of a row given its index. */
+	      rowHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
 	      /** Responsbile for rendering a row given an index */
 	      rowRenderer: _react.PropTypes.func.isRequired,
 	      /** Number of rows in list. */
@@ -1460,6 +1472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _get(Object.getPrototypeOf(VirtualScroll.prototype), 'constructor', this).call(this, props, context);
 	
 	    this.state = {
+	      computeCellMetadataOnNextUpdate: false,
 	      isScrolling: false,
 	      scrollTop: 0
 	    };
@@ -1470,12 +1483,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	   * Scroll the list to ensure the row at the specified index is visible.
-	   * This method exists so that a user can forcefully scroll to the same row twice.
-	   * (The :scrollToIndex property would not change in that case, so it would not be picked up by the component.)
+	   * Forced recompute of row heights.
+	   * This function should be called if dynamic row heights have changed but nothing else has.
+	   * Since VirtualScroll receives a :rowsCount it has no way of knowing if the underlying list data has changed.
 	   */
 	
 	  _createClass(VirtualScroll, [{
+	    key: 'recomputeRowHeights',
+	    value: function recomputeRowHeights() {
+	      this.setState({
+	        computeCellMetadataOnNextUpdate: true
+	      });
+	    }
+	
+	    /**
+	     * Scroll the list to ensure the row at the specified index is visible.
+	     * This method exists so that a user can forcefully scroll to the same row twice.
+	     * (The :scrollToIndex property would not change in that case, so it would not be picked up by the component.)
+	     */
+	  }, {
 	    key: 'scrollToRow',
 	    value: function scrollToRow(scrollToIndex) {
 	      this._updateScrollTopForScrollToIndex(scrollToIndex);
@@ -1496,6 +1522,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate(prevProps, prevState) {
+	      var _props = this.props;
+	      var height = _props.height;
+	      var rowsCount = _props.rowsCount;
+	      var rowHeight = _props.rowHeight;
+	      var scrollToIndex = _props.scrollToIndex;
+	      var scrollTop = this.state.scrollTop;
+	
+	      // Make sure any changes to :scrollTop (from :scrollToIndex) get applied
+	      if (scrollTop >= 0 && scrollTop !== prevState.scrollTop) {
+	        this.refs.scrollingContainer.scrollTop = scrollTop;
+	      }
+	
+	      var hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < rowsCount;
+	      var sizeHasChanged = height !== prevProps.height || !prevProps.rowHeight || rowHeight instanceof Number && rowHeight !== prevProps.rowHeight;
+	
+	      // If we have a new scroll target OR if height/row-height has changed,
+	      // We should ensure that the scroll target is visible.
+	      if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== prevProps.scrollToIndex)) {
+	        this._updateScrollTopForScrollToIndex();
+	
+	        // If we don't have a selected item but list size or number of children have decreased,
+	        // Make sure we aren't scrolled too far past the current content.
+	      } else if (!hasScrollToIndex && (height < prevProps.height || rowsCount < prevProps.rowsCount)) {
+	          var calculatedScrollTop = (0, _utils.getUpdatedOffsetForIndex)({
+	            cellMetadata: this._cellMetadata,
+	            containerSize: height,
+	            currentOffset: scrollTop,
+	            targetIndex: rowsCount - 1
+	          });
+	
+	          // Only adjust the scroll position if we've scrolled below the last set of rows.
+	          if (calculatedScrollTop < scrollTop) {
+	            this._updateScrollTopForScrollToIndex(rowsCount - 1);
+	          }
+	        }
+	    }
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this._computeCellMetadata(this.props);
+	    }
+	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      if (this._disablePointerEventsTimeoutId) {
@@ -1509,54 +1579,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate(prevProps, prevState) {
-	      var _props = this.props;
-	      var height = _props.height;
-	      var rowsCount = _props.rowsCount;
-	      var rowHeight = _props.rowHeight;
-	      var scrollToIndex = _props.scrollToIndex;
-	      var scrollTop = this.state.scrollTop;
-	
-	      var previousRowsCount = prevProps.rowsCount;
-	
-	      // Make sure any changes to :scrollTop (from :scrollToIndex) get applied
-	      if (scrollTop >= 0 && scrollTop !== prevState.scrollTop) {
-	        this.refs.scrollingContainer.scrollTop = scrollTop;
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      if (nextProps.rowsCount === 0 && nextState.scrollTop !== 0) {
+	        this.setState({ scrollTop: 0 });
 	      }
 	
-	      var hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < rowsCount;
-	      var sizeHasChanged = height !== prevProps.height || rowHeight !== prevProps.rowHeight;
+	      // Don't compare rowHeight if it's a function because inline functions would cause infinite loops.
+	      // In that event users should use recomputeRowHeights() to inform of changes.
+	      if (nextState.computeCellMetadataOnNextUpdate || this.props.rowsCount !== nextProps.rowsCount || (typeof this.props.rowHeight === 'number' || typeof nextProps.rowHeight === 'number') && this.props.rowHeight !== nextProps.rowHeight) {
+	        this._computeCellMetadata(nextProps);
 	
-	      // If we have a new scroll target OR if height/row-height has changed,
-	      // We should ensure that the scroll target is visible.
-	      if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== prevProps.scrollToIndex)) {
-	        this._updateScrollTopForScrollToIndex();
+	        this.setState({
+	          computeCellMetadataOnNextUpdate: false
+	        });
 	
-	        // If we don't have a selected item but list size or number of children have decreased,
-	        // Make sure we aren't scrolled too far past the current content.
-	      } else if (!hasScrollToIndex && (height < prevProps.height || rowsCount < previousRowsCount)) {
-	          var calculatedScrollTop = VirtualScroll._calculateScrollTopForIndex({
-	            height: height,
-	            rowHeight: rowHeight,
-	            rowsCount: rowsCount,
-	            scrollTop: scrollTop,
-	            scrollToIndex: rowsCount - 1
-	          });
-	
-	          // Only adjust the scroll position if we've scrolled below the last set of rows.
-	          if (calculatedScrollTop < scrollTop) {
-	            this._updateScrollTopForScrollToIndex(rowsCount - 1);
-	          }
+	        // Updated cell metadata may have hidden the previous scrolled-to item.
+	        // In this case we should also update the scrollTop to ensure it stays visible.
+	        if (this.props.scrollToIndex === nextProps.scrollToIndex) {
+	          this._updateScrollTopForScrollToIndex();
 	        }
-	    }
-	  }, {
-	    key: 'componentWillUpdate',
-	    value: function componentWillUpdate(prevProps, prevState) {
-	      var rowsCount = this.props.rowsCount;
-	
-	      if (rowsCount === 0) {
-	        this.setState({ scrollTop: 0 });
 	      }
 	    }
 	  }, {
@@ -1568,39 +1610,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var noRowsRenderer = _props2.noRowsRenderer;
 	      var onRowsRendered = _props2.onRowsRendered;
 	      var rowsCount = _props2.rowsCount;
-	      var rowHeight = _props2.rowHeight;
 	      var rowRenderer = _props2.rowRenderer;
 	      var _state = this.state;
 	      var isScrolling = _state.isScrolling;
 	      var scrollTop = _state.scrollTop;
 	
-	      var totalRowsHeight = rowsCount * rowHeight;
-	
-	      // Shift the visible rows down so that they remain visible while scrolling.
-	      // This mimicks scrolling behavior within a non-virtualized list.
-	      var paddingTop = scrollTop - scrollTop % rowHeight;
-	
 	      var childrenToDisplay = [];
 	
 	      // Render only enough rows to cover the visible (vertical) area of the table.
 	      if (height > 0) {
-	        var _VirtualScroll$_getStartAndStopIndexForScrollTop = VirtualScroll._getStartAndStopIndexForScrollTop({
-	          height: height,
-	          rowHeight: rowHeight,
-	          rowsCount: rowsCount,
-	          scrollTop: scrollTop
+	        var _getVisibleRowIndices = (0, _utils.getVisibleRowIndices)({
+	          cellCount: rowsCount,
+	          cellMetadata: this._cellMetadata,
+	          containerSize: height,
+	          currentOffset: scrollTop
 	        });
 	
-	        var rowIndexStart = _VirtualScroll$_getStartAndStopIndexForScrollTop.rowIndexStart;
-	        var rowIndexStop = _VirtualScroll$_getStartAndStopIndexForScrollTop.rowIndexStop;
+	        var start = _getVisibleRowIndices.start;
+	        var _stop = _getVisibleRowIndices.stop;
 	
-	        for (var i = rowIndexStart; i <= rowIndexStop; i++) {
-	          childrenToDisplay.push(rowRenderer(i));
+	        for (var i = start; i <= _stop; i++) {
+	          var datum = this._cellMetadata[i];
+	          var child = _react2['default'].cloneElement(rowRenderer(i), {
+	            style: {
+	              position: 'absolute',
+	              top: datum.offset,
+	              width: '100%',
+	              height: this._getRowHeight(i)
+	            }
+	          });
+	
+	          childrenToDisplay.push(child);
 	        }
 	
 	        onRowsRendered({
-	          startIndex: rowIndexStart,
-	          stopIndex: rowIndexStop
+	          startIndex: start,
+	          stopIndex: _stop
 	        });
 	      }
 	
@@ -1622,9 +1667,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          {
 	            className: _VirtualScrollCss2['default'].InnerScrollContainer,
 	            style: {
-	              height: totalRowsHeight,
-	              maxHeight: totalRowsHeight,
-	              paddingTop: paddingTop,
+	              height: this._getTotalRowsHeight(),
+	              maxHeight: this._getTotalRowsHeight(),
 	              pointerEvents: isScrolling ? 'none' : 'auto'
 	            }
 	          },
@@ -1633,23 +1677,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	        rowsCount === 0 && noRowsRenderer()
 	      );
 	    }
-	
-	    /**
-	     * Scroll the table to ensure the specified index is visible.
-	     *
-	     * @private
-	     * Why was this functionality implemented as a method instead of a property?
-	     * Short answer: A user of this component may want to scroll to the same row twice.
-	     * In this case the scroll-to-row property would not change and so it would not be picked up by the component.
-	     */
 	  }, {
-	    key: '_setNextState',
+	    key: '_computeCellMetadata',
+	    value: function _computeCellMetadata(props) {
+	      var rowHeight = props.rowHeight;
+	      var rowsCount = props.rowsCount;
+	
+	      this._cellMetadata = (0, _utils.initCellMetadata)({
+	        cellCount: rowsCount,
+	        size: rowHeight
+	      });
+	    }
+	  }, {
+	    key: '_getRowHeight',
+	    value: function _getRowHeight(index) {
+	      var rowHeight = this.props.rowHeight;
+	
+	      return rowHeight instanceof Function ? rowHeight(index) : rowHeight;
+	    }
+	  }, {
+	    key: '_getTotalRowsHeight',
+	    value: function _getTotalRowsHeight() {
+	      if (this._cellMetadata.length === 0) {
+	        return 0;
+	      }
+	
+	      var datum = this._cellMetadata[this._cellMetadata.length - 1];
+	
+	      return datum.offset + datum.size;
+	    }
 	
 	    /**
 	     * Updates the state during the next animation frame.
 	     * Use this method to avoid multiple renders in a small span of time.
 	     * This helps performance for bursty events (like onWheel).
 	     */
+	  }, {
+	    key: '_setNextState',
 	    value: function _setNextState(state) {
 	      var _this2 = this;
 	
@@ -1699,19 +1763,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _updateScrollTopForScrollToIndex(scrollToIndexOverride) {
 	      var scrollToIndex = scrollToIndexOverride !== undefined ? scrollToIndexOverride : this.props.scrollToIndex;
 	
-	      var _props3 = this.props;
-	      var height = _props3.height;
-	      var rowsCount = _props3.rowsCount;
-	      var rowHeight = _props3.rowHeight;
+	      var height = this.props.height;
 	      var scrollTop = this.state.scrollTop;
 	
 	      if (scrollToIndex >= 0) {
-	        var calculatedScrollTop = VirtualScroll._calculateScrollTopForIndex({
-	          height: height,
-	          rowHeight: rowHeight,
-	          rowsCount: rowsCount,
-	          scrollTop: scrollTop,
-	          scrollToIndex: scrollToIndex
+	        var calculatedScrollTop = (0, _utils.getUpdatedOffsetForIndex)({
+	          cellMetadata: this._cellMetadata,
+	          containerSize: height,
+	          currentOffset: scrollTop,
+	          targetIndex: scrollToIndex
 	        });
 	
 	        if (scrollTop !== calculatedScrollTop) {
@@ -1722,28 +1782,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_onKeyPress',
 	    value: function _onKeyPress(event) {
-	      var rowHeight = this.props.rowHeight;
+	      var _props3 = this.props;
+	      var height = _props3.height;
+	      var rowsCount = _props3.rowsCount;
 	      var scrollTop = this.state.scrollTop;
+	
+	      var start = undefined,
+	          datum = undefined,
+	          newScrollTop = undefined;
 	
 	      switch (event.key) {
 	        case 'ArrowDown':
 	          this._stopEvent(event); // Prevent key from also scrolling surrounding window
 	
-	          var _props4 = this.props,
-	              height = _props4.height,
-	              rowsCount = _props4.rowsCount;
+	          start = (0, _utils.getVisibleRowIndices)({
+	            cellCount: rowsCount,
+	            cellMetadata: this._cellMetadata,
+	            containerSize: height,
+	            currentOffset: scrollTop
+	          }).start;
+	          datum = this._cellMetadata[start];
+	          newScrollTop = Math.min(this._getTotalRowsHeight() - height, scrollTop + datum.size);
 	
-	          var totalRowsHeight = rowsCount * rowHeight;
-	          var newScrollTop = Math.min(totalRowsHeight - height, scrollTop + rowHeight);
-	
-	          this.setState({ scrollTop: newScrollTop });
+	          this.setState({
+	            scrollTop: newScrollTop
+	          });
 	          break;
 	        case 'ArrowUp':
 	          this._stopEvent(event); // Prevent key from also scrolling surrounding window
 	
-	          this.setState({
-	            scrollTop: Math.max(0, scrollTop - rowHeight)
-	          });
+	          start = (0, _utils.getVisibleRowIndices)({
+	            cellCount: rowsCount,
+	            cellMetadata: this._cellMetadata,
+	            containerSize: height,
+	            currentOffset: scrollTop
+	          }).start;
+	
+	          this.scrollToRow(Math.max(0, start - 1));
 	          break;
 	      }
 	    }
@@ -1761,12 +1836,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
 	      // This causes a series of rapid renders that is slow for long lists.
 	      // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-	      var _props5 = this.props;
-	      var height = _props5.height;
-	      var rowsCount = _props5.rowsCount;
-	      var rowHeight = _props5.rowHeight;
+	      var height = this.props.height;
 	
-	      var totalRowsHeight = rowsCount * rowHeight;
+	      var totalRowsHeight = this._getTotalRowsHeight();
 	      var scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
 	
 	      // Certain devices (like Apple touchpad) rapid-fire duplicate events.
@@ -1806,75 +1878,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        scrollTop: scrollTop
 	      });
 	    }
-	  }], [{
-	    key: '_calculateScrollTopForIndex',
-	    value: function _calculateScrollTopForIndex(_ref) {
-	      var rowsCount = _ref.rowsCount;
-	      var height = _ref.height;
-	      var rowHeight = _ref.rowHeight;
-	      var scrollTop = _ref.scrollTop;
-	      var scrollToIndex = _ref.scrollToIndex;
-	
-	      scrollToIndex = Math.max(0, Math.min(rowsCount - 1, scrollToIndex));
-	
-	      var maxScrollTop = scrollToIndex * rowHeight;
-	      var minScrollTop = maxScrollTop - height + rowHeight;
-	      var newScrollTop = Math.max(minScrollTop, Math.min(maxScrollTop, scrollTop));
-	
-	      return newScrollTop;
-	    }
-	
-	    /**
-	     * Calculates the maximum number of visible rows based on the row-height and the number of rows in the table.
-	     */
-	  }, {
-	    key: '_getMaxVisibleRows',
-	    value: function _getMaxVisibleRows(_ref2) {
-	      var height = _ref2.height;
-	      var rowHeight = _ref2.rowHeight;
-	      var rowsCount = _ref2.rowsCount;
-	
-	      var minNumRowsToFillSpace = Math.ceil(height / rowHeight);
-	
-	      // Add one to account for partially-clipped rows on the top and bottom
-	      var maxNumRowsToFillSpace = minNumRowsToFillSpace + 1;
-	
-	      return Math.min(rowsCount, maxNumRowsToFillSpace);
-	    }
-	
-	    /**
-	     * Calculates the start and end index for visible rows based on a scroll offset.
-	     * Handles edge-cases to ensure that the table never scrolls past the available rows.
-	     */
-	  }, {
-	    key: '_getStartAndStopIndexForScrollTop',
-	    value: function _getStartAndStopIndexForScrollTop(_ref3) {
-	      var height = _ref3.height;
-	      var rowHeight = _ref3.rowHeight;
-	      var rowsCount = _ref3.rowsCount;
-	      var scrollTop = _ref3.scrollTop;
-	
-	      var maxVisibleRows = VirtualScroll._getMaxVisibleRows({ height: height, rowHeight: rowHeight, rowsCount: rowsCount });
-	      var totalRowsHeight = rowHeight * rowsCount;
-	      var safeScrollTop = Math.max(0, Math.min(totalRowsHeight - height, scrollTop));
-	
-	      var scrollPercentage = safeScrollTop / totalRowsHeight;
-	      var rowIndexStart = Math.floor(scrollPercentage * rowsCount);
-	      var rowIndexStop = Math.min(rowsCount, rowIndexStart + maxVisibleRows) - 1;
-	
-	      return {
-	        rowIndexStart: rowIndexStart,
-	        rowIndexStop: rowIndexStop
-	      };
-	    }
 	  }]);
 	
 	  return VirtualScroll;
 	})(_react.Component);
 	
 	exports['default'] = VirtualScroll;
-	
-	VirtualScroll.prototype.shouldComponentUpdate = _reactPureRenderFunction2['default'];
 	module.exports = exports['default'];
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16).setImmediate, __webpack_require__(16).clearImmediate))
 
@@ -2172,12 +2181,174 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 20 */
+/***/ function(module, exports) {
+
+	/**
+	 * Binary search function inspired by react-infinite.
+	 */
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.findNearestCell = findNearestCell;
+	exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex;
+	exports.getVisibleRowIndices = getVisibleRowIndices;
+	exports.initCellMetadata = initCellMetadata;
+	
+	function findNearestCell(_ref) {
+	  var cellMetadata = _ref.cellMetadata;
+	  var mode = _ref.mode;
+	  var offset = _ref.offset;
+	
+	  var high = cellMetadata.length - 1;
+	  var low = 0;
+	  var middle = undefined;
+	  var currentOffset = undefined;
+	
+	  while (low <= high) {
+	    middle = low + Math.floor((high - low) / 2);
+	    currentOffset = cellMetadata[middle].offset;
+	
+	    if (currentOffset === offset) {
+	      return middle;
+	    } else if (currentOffset < offset) {
+	      low = middle + 1;
+	    } else if (currentOffset > offset) {
+	      high = middle - 1;
+	    }
+	  }
+	
+	  if (mode === findNearestCell.EQUAL_OR_LOWER && low > 0) {
+	    return low - 1;
+	  } else if (mode === findNearestCell.EQUAL_OR_HIGHER && high < cellMetadata.length - 1) {
+	    return high + 1;
+	  }
+	}
+	
+	findNearestCell.EQUAL_OR_LOWER = 1;
+	findNearestCell.EQUAL_OR_HIGHER = 2;
+	
+	/**
+	 * Give a new offset that ensures a certain cell is visible, given the current offset.
+	 * If the cell is already visible then the current offset will be returned.
+	 *
+	 * @param cellMetadata Metadata initially computed by initCellMetadata()
+	 * @param containerSize Total size (width or height) of the container
+	 * @param currentOffset Container's current (x or y) offset
+	 * @param targetIndex Index of target cell
+	 * @return Offset to use to ensure the specified cell is visible
+	 */
+	
+	function getUpdatedOffsetForIndex(_ref2) {
+	  var cellMetadata = _ref2.cellMetadata;
+	  var containerSize = _ref2.containerSize;
+	  var currentOffset = _ref2.currentOffset;
+	  var targetIndex = _ref2.targetIndex;
+	
+	  if (cellMetadata.length === 0) {
+	    return 0;
+	  }
+	
+	  targetIndex = Math.max(0, Math.min(cellMetadata.length - 1, targetIndex));
+	
+	  var datum = cellMetadata[targetIndex];
+	  var maxOffset = datum.offset;
+	  var minOffset = maxOffset - containerSize + datum.size;
+	  var newOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
+	
+	  return newOffset;
+	}
+	
+	/**
+	 * Determines the range of cells to display for a given offset in order to fill the specified container.
+	 *
+	 * @param cellCount Total number of cells.
+	 * @param cellMetadata Metadata initially computed by initCellMetadata()
+	 * @param containerSize Total size (width or height) of the container
+	 * @param currentOffset Container's current (x or y) offset
+	 * @return An object containing :start and :stop attributes, each specifying a cell index
+	 */
+	
+	function getVisibleRowIndices(_ref3) {
+	  var cellCount = _ref3.cellCount;
+	  var cellMetadata = _ref3.cellMetadata;
+	  var containerSize = _ref3.containerSize;
+	  var currentOffset = _ref3.currentOffset;
+	
+	  if (cellCount === 0) {
+	    return {};
+	  }
+	
+	  currentOffset = Math.max(0, currentOffset);
+	
+	  var maxOffset = currentOffset + containerSize;
+	
+	  var start = findNearestCell({
+	    cellMetadata: cellMetadata,
+	    mode: findNearestCell.EQUAL_OR_LOWER,
+	    offset: currentOffset
+	  });
+	
+	  var datum = cellMetadata[start];
+	  currentOffset = datum.offset + datum.size;
+	
+	  var stop = start;
+	
+	  while (currentOffset < maxOffset && stop < cellCount - 1) {
+	    stop++;
+	
+	    currentOffset += cellMetadata[stop].size;
+	  }
+	
+	  return {
+	    start: start,
+	    stop: stop
+	  };
+	}
+	
+	/**
+	 * Initializes metadata for an axis and its cells.
+	 * This data is used to determine which cells are visible given a container size and scroll position.
+	 *
+	 * @param cellCount Total number of cells.
+	 * @param size Either a fixed size or a function that returns the size for a given given an index.
+	 * @return Object mapping cell index to cell metadata (size, offset)
+	 */
+	
+	function initCellMetadata(_ref4) {
+	  var cellCount = _ref4.cellCount;
+	  var size = _ref4.size;
+	
+	  var sizeGetter = size instanceof Function ? size : function (index) {
+	    return size;
+	  };
+	
+	  var cellMetadata = [];
+	  var offset = 0;
+	
+	  for (var i = 0; i < cellCount; i++) {
+	    var _size = sizeGetter(i);
+	
+	    cellMetadata[i] = {
+	      size: _size,
+	      offset: offset
+	    };
+	
+	    offset += _size;
+	  }
+	
+	  return cellMetadata;
+	}
+
+/***/ },
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(21);
+	var content = __webpack_require__(22);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(10)(content, {});
@@ -2197,7 +2368,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(9)();
@@ -2214,7 +2385,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2326,13 +2497,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports['default'] = Column;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(24);
+	var content = __webpack_require__(25);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(10)(content, {});
@@ -2352,7 +2523,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(9)();

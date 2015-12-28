@@ -19,7 +19,7 @@ This component expects explicit width, height, and padding parameters.
 | onRowsRendered |  | Function | Callback invoked with information about the slice of rows that were just rendered: `({ startIndex, stopIndex }): void` |
 | rowClassName | String or Function |  | CSS class to apply to all table rows (including the header row). This value may be either a static string or a function with the signature `(rowIndex: number): string`. Note that for the header row an index of `-1` is provided. |
 | rowGetter | Function | ✓ | Callback responsible for returning a data row given an index. `(index: int): any` |
-| rowHeight |  | ✓ | Fixed height of table row |
+| rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
 | rowsCount | Number | ✓ | Number of rows in table. |
 | sort | Function |  | Sort function to be called if a sortable header is clicked. `(dataKey: string, sortDirection: SortDirection): void` |
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
@@ -32,7 +32,7 @@ This component expects explicit width, height, and padding parameters.
 ##### recomputeRowHeights
 Recompute row heights and offsets.
 
-VirtualScroll has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property. If the `rowHeight` is a number it can compare before and after values but if it is a function- that comparison is error prone. In the event that a dynamic `rowHeight` function is in use and the row heights have changed, this function should be manually called by the "smart" container parent.
+VirtualScroll has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property. If the `rowHeight` is a number it can compare before and after values but if it is a function that comparison is error prone. In the event that a dynamic `rowHeight` function is in use and the row heights have changed this function should be manually called by the "smart" container parent.
 
 ##### scrollToRow
 

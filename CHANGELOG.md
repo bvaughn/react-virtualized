@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 2.6.0
+`VirtualScroll` and `FlexTable` now support dynamic row heights by accepting a function as the `rowHeight` property.
+
 #### 2.5.0
 Added `AutoSizer` component for wrapping `FlexTable` or `VirtualScroll` and growing to fill the parent container. This should hopefully simplify usage of these components.
 
