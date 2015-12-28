@@ -1,6 +1,6 @@
 import {
   getUpdatedOffsetForIndex,
-  getVisibleRowIndices,
+  getVisibleCellIndices,
   initCellMetadata
 } from './utils'
 
@@ -62,9 +62,9 @@ describe('getUpdatedOffsetForIndex', () => {
   })
 })
 
-describe('getVisibleRowIndices', () => {
+describe('getVisibleCellIndices', () => {
   function testHelper (currentOffset, cellMetadata = getCellMetadata()) {
-    return getVisibleRowIndices({
+    return getVisibleCellIndices({
       cellCount: cellMetadata.length,
       cellMetadata,
       containerSize: 50,

@@ -5,7 +5,7 @@ import cn from 'classnames'
 import raf from 'raf'
 import {
   getUpdatedOffsetForIndex,
-  getVisibleRowIndices,
+  getVisibleCellIndices,
   initCellMetadata
 } from '../utils'
 import styles from './VirtualScroll.css'
@@ -213,7 +213,7 @@ export default class VirtualScroll extends Component {
       const {
         start,
         stop
-      } = getVisibleRowIndices({
+      } = getVisibleCellIndices({
         cellCount: rowsCount,
         cellMetadata: this._cellMetadata,
         containerSize: height,
@@ -374,7 +374,7 @@ export default class VirtualScroll extends Component {
       case 'ArrowDown':
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
 
-        start = getVisibleRowIndices({
+        start = getVisibleCellIndices({
           cellCount: rowsCount,
           cellMetadata: this._cellMetadata,
           containerSize: height,
@@ -393,7 +393,7 @@ export default class VirtualScroll extends Component {
       case 'ArrowUp':
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
 
-        start = getVisibleRowIndices({
+        start = getVisibleCellIndices({
           cellCount: rowsCount,
           cellMetadata: this._cellMetadata,
           containerSize: height,

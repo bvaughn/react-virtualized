@@ -35,8 +35,9 @@ findNearestCell.EQUAL_OR_LOWER = 1
 findNearestCell.EQUAL_OR_HIGHER = 2
 
 /**
- * Give a new offset that ensures a certain cell is visible, given the current offset.
+ * Determines a new offset that ensures a certain cell is visible, given the current offset.
  * If the cell is already visible then the current offset will be returned.
+ * If the current offset is too great or small, it will be adjusted just enough to ensure the specified index is visible.
  *
  * @param cellMetadata Metadata initially computed by initCellMetadata()
  * @param containerSize Total size (width or height) of the container
@@ -73,7 +74,7 @@ export function getUpdatedOffsetForIndex ({
  * @param currentOffset Container's current (x or y) offset
  * @return An object containing :start and :stop attributes, each specifying a cell index
  */
-export function getVisibleRowIndices ({
+export function getVisibleCellIndices ({
   cellCount,
   cellMetadata,
   containerSize,
