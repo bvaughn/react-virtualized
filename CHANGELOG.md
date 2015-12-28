@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 2.6.1
+Cell `title` now only set if rendered cell contents are a string. This fixes issue #35.
+
 #### 2.6.0
 `VirtualScroll` and `FlexTable` now support dynamic row heights by accepting a function as the `rowHeight` property.
 

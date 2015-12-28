@@ -1136,6 +1136,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        flex: flex
 	      };
 	
+	      var title = typeof renderedCell === 'string' ? renderedCell : null;
+	
 	      return _react2['default'].createElement(
 	        'div',
 	        {
@@ -1147,7 +1149,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          'div',
 	          {
 	            className: (0, _classnames2['default'])(_FlexTableCss2['default'].truncatedColumnText, cellClassName),
-	            title: renderedCell
+	            title: title
 	          },
 	          renderedCell
 	        )
