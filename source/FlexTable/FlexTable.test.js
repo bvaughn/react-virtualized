@@ -187,6 +187,24 @@ describe('FlexTable', () => {
         expect(nameColumn.textContent).toEqual(`Custom ${rowData.get('name')}`)
       }
     })
+
+    it('should set the rendered cell content as the cell :title if it is a string', () => {
+      const table = renderTable({
+        cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => 'Custom'
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = find(tableDOMNode, '.rowColumn:first-of-type')
+      expect(nameColumn.children[0].getAttribute('title')).toContain('Custom')
+    })
+
+    it('should not set a cell :title if the rendered cell content is not a string', () => {
+      const table = renderTable({
+        cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => <div>Custom</div>
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = find(tableDOMNode, '.rowColumn:first-of-type')
+      expect(nameColumn.children[0].getAttribute('title')).toEqual(null)
+    })
   })
 
   describe('sorting', () => {

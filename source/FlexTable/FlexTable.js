@@ -194,6 +194,10 @@ export default class FlexTable extends Component {
       flex: flex
     }
 
+    const title = typeof renderedCell === 'string'
+      ? renderedCell
+      : null
+
     return (
       <div
         key={`Row${rowIndex}-Col${columnIndex}`}
@@ -202,7 +206,7 @@ export default class FlexTable extends Component {
       >
         <div
           className={cn(styles.truncatedColumnText, cellClassName)}
-          title={renderedCell}
+          title={title}
         >
           {renderedCell}
         </div>
