@@ -120,10 +120,9 @@ describe('FlexTable', () => {
         })
         const tableDOMNode = findDOMNode(table)
 
-        // 100px height should fit 1 header (20px) and 9 rows (10px each) -
-        // 8 to fill the remaining space and 1 to account for partial scrolling
+        // 100px height should fit 1 header (20px) and 8 rows (10px each) -
         expect(findAll(tableDOMNode, '.headerRow').length).toEqual(1)
-        expect(findAll(tableDOMNode, '.row').length).toEqual(9)
+        expect(findAll(tableDOMNode, '.row').length).toEqual(8)
       })
 
       it('should render the expected headers', () => {
@@ -147,7 +146,7 @@ describe('FlexTable', () => {
         })
         const tableDOMNode = findDOMNode(table)
         const rows = findAll(tableDOMNode, '.row')
-        expect(rows.length).toEqual(3)
+        expect(rows.length).toEqual(2)
 
         for (let index = 0; index < rows.length; index++) {
           let row = rows[index]
@@ -351,7 +350,7 @@ describe('FlexTable', () => {
         onRowsRendered: params => ({ startIndex, stopIndex } = params)
       })
       expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(8)
+      expect(stopIndex).toEqual(7)
     })
 
     it('should not call :onRowsRendered if no rows are rendered', () => {

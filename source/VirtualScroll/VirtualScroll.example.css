@@ -34,6 +34,13 @@
 .index {
   color: #37474f;
 }
+.height {
+  flex: 1;
+  text-align: right;
+  color: #bdbdbd;
+  font-size: .75em;
+  font-weight: 100;
+}
 
 .noRows {
   position: absolute;
@@ -45,4 +52,12 @@
   align-items: center;
   justify-content: center;
   color: #bdbdbd;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+}
+.checkbox {
+  margin-right: 5px;
 }

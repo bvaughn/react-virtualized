@@ -25,6 +25,8 @@ export const SortDirection = {
  * This component expects explicit width, height, and padding parameters.
  */
 export default class FlexTable extends Component {
+  static shouldComponentUpdate = shouldPureComponentUpdate
+
   static defaultProps = {
     disableHeader: false,
     horizontalPadding: 0,
@@ -105,23 +107,17 @@ export default class FlexTable extends Component {
   }
 
   /**
-   * Scroll the table to ensure the specified index is visible.
-   *
-   * @private
-   * Why was this functionality implemented as a method instead of a property?
-   * Short answer: A user of this component may want to scroll to the same row twice.
-   * In this case the scroll-to-row property would not change and so it would not be picked up by the component.
+   * See VirtualScroll#recomputeRowHeights
+   */
+  recomputeRowHeights () {
+    this.refs.VirtualScroll.recomputeRowHeights()
+  }
+
+  /**
+   * See VirtualScroll#scrollToRow
    */
   scrollToRow (scrollToIndex) {
     this.refs.VirtualScroll.scrollToRow(scrollToIndex)
-  }
-
-  getRenderedHeaderRow () {
-    const { children, disableHeader } = this.props
-    const items = disableHeader ? [] : children
-    return React.Children.map(items, (column, columnIndex) =>
-      this._createHeader(column, columnIndex)
-    )
   }
 
   render () {
@@ -162,7 +158,7 @@ export default class FlexTable extends Component {
               height: headerHeight
             }}
           >
-            {this.getRenderedHeaderRow()}
+            {this._getRenderedHeaderRow()}
           </div>
         )}
 
@@ -306,8 +302,15 @@ export default class FlexTable extends Component {
 
     return flex.join(' ')
   }
+
+  _getRenderedHeaderRow () {
+    const { children, disableHeader } = this.props
+    const items = disableHeader ? [] : children
+    return React.Children.map(items, (column, columnIndex) =>
+      this._createHeader(column, columnIndex)
+    )
+  }
 }
-FlexTable.prototype.shouldComponentUpdate = shouldPureComponentUpdate
 
 /**
  * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
