@@ -12,7 +12,7 @@ render((
         <div className={styles.ReactVirtualizedContainer}>
           <img
             alt='React virtualized'
-            style={{width: 100, height: 100}}
+            className={styles.logo}
             src='https://cloud.githubusercontent.com/assets/29597/11736841/c0497158-9f87-11e5-8dfe-9c0be97d4286.png'
           />
           <div className={styles.PrimaryLogoText}>

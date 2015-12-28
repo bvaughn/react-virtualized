@@ -13,6 +13,9 @@
   display: inline-block;
   width: 70px;
   box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .Input {
   appearance: none;

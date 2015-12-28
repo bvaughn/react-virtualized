@@ -21,6 +21,11 @@ a {
   background-color: #4db6ac;
 }
 
+.logo {
+  width: 100px;
+  height: 100px;
+}
+
 .ReactVirtualizedContainer {
   display: inline-flex;
   flex-direction: row;
@@ -44,7 +49,7 @@ a {
 .PrimaryLogoText {
   font-weight: bold;
   color: #272727;
-  margin: 0 1rem;
+  margin: 0 .5em;
 }
 .SecondaryLogoText {
   color: #ffffff;
@@ -72,4 +77,16 @@ a {
   font-size: .75em;
   color: #37474f;
   margin: 0 0 1rem;
+}
+
+@media (max-width: 500px) {
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .PrimaryLogoText,
+  .SecondaryLogoText {
+    font-size: 2em;
+  }
 }

@@ -15,12 +15,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 1rem 1rem .5rem;
-  border-bottom: .5rem solid transparent;
+  padding: 1em 1em .5em;
+  border-bottom: .5em solid transparent;
   font-size: 1.2em;
   color: #FFFFFF;
   text-transform: lowercase;
   text-decoration: none;
+  cursor: pointer;
 }
 .NavLink:hover {
   border-bottom-color: #409890;
@@ -29,9 +30,20 @@
 .NavLinkIcon {
   width: 20px;
   height: 20px;
-  margin-right: .5rem;
+  margin-right: .5em;
   fill: #fff;
 }
 .NavLink:hover > .NavLinkIcon {
   animation: spin 5s infinite linear;
+}
+
+@media (max-width: 500px) {
+  .NavLink {
+    font-size: 1em;
+  }
+
+  .NavLinkIcon {
+    width: 15px;
+    height: 15px;
+  }
 }
