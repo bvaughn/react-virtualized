@@ -296,6 +296,7 @@ export default class VirtualScroll extends Component {
     }
 
     const datum = this._cellMetadata[this._cellMetadata.length - 1]
+
     return datum.offset + datum.size
   }
 
