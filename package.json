@@ -76,6 +76,7 @@
     "cssnext": "^1.8.4",
     "cssnext-loader": "^1.0.1",
     "express": "^4.13.3",
+    "file-loader": "^0.8.5",
     "fs-extra": "^0.26.2",
     "gh-pages": "^0.6.0",
     "html-webpack-plugin": "^1.7.0",

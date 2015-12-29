@@ -16,7 +16,7 @@ export default class TableExample extends Component {
       scrollToIndex: undefined,
       sortBy: 'name',
       sortDirection: SortDirection.ASC,
-      height: 310,
+      height: 270,
       headerHeight: 30,
       rowHeight: 40
     }
