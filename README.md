@@ -1,7 +1,10 @@
 <img src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" alt="React virtualized" data-canonical-src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" width="330" height="100" />
 
+![NPM version](https://img.shields.io/npm/v/react-virtualized.svg)
+![NPM license](https://img.shields.io/npm/l/react-virtualized.svg)
+![NPM total downloads](https://img.shields.io/npm/dt/react-virtualized.svg)
+![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg)
 [![Circle CI badge](https://circleci.com/gh/bvaughn/react-virtualized.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/bvaughn/react-virtualized)
-[![npm downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat-square)](https://www.npmjs.com/package/react-virtualized)
 
 ### Demos available here: http://bvaughn.github.io/react-virtualized/
 
