@@ -4,7 +4,7 @@
 ![NPM license](https://img.shields.io/npm/l/react-virtualized.svg)
 ![NPM total downloads](https://img.shields.io/npm/dt/react-virtualized.svg)
 ![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg)
-[![Circle CI badge](https://circleci.com/gh/bvaughn/react-virtualized.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/bvaughn/react-virtualized)
+[![Circle CI badge](https://img.shields.io/circleci/project/bvaughn/react-virtualized.svg)](https://circleci.com/gh/bvaughn/react-virtualized)
 
 ### Demos available here: http://bvaughn.github.io/react-virtualized/
 
