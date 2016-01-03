@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+
+#### 2.6.2
+Added check for undefined `document` before accessing `attachEvent` to avoid causing problems with server-side rendering.
+
 #### 2.6.1
 Cell `title` now only set if rendered cell contents are a string. This fixes issue #35.
 

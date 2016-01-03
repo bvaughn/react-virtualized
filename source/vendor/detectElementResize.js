@@ -7,8 +7,8 @@
 * version: 0.5.3
 **/
 
-
-var attachEvent = document.attachEvent;
+// Check `document` as well in case of server-side rendering (see issue #41)
+var attachEvent = document && document.attachEvent;
 var stylesCreated = false;
 
 if (!attachEvent) {

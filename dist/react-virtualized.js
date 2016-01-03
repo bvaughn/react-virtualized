@@ -275,9 +275,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	* version: 0.5.3
 	**/
 	
+	// Check `document` as well in case of server-side rendering (see issue #41)
 	'use strict';
 	
-	var attachEvent = document.attachEvent;
+	var attachEvent = document && document.attachEvent;
 	var stylesCreated = false;
 	
 	if (!attachEvent) {
@@ -1621,15 +1622,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // Render only enough rows to cover the visible (vertical) area of the table.
 	      if (height > 0) {
-	        var _getVisibleRowIndices = (0, _utils.getVisibleRowIndices)({
+	        var _getVisibleCellIndices = (0, _utils.getVisibleCellIndices)({
 	          cellCount: rowsCount,
 	          cellMetadata: this._cellMetadata,
 	          containerSize: height,
 	          currentOffset: scrollTop
 	        });
 	
-	        var start = _getVisibleRowIndices.start;
-	        var _stop = _getVisibleRowIndices.stop;
+	        var start = _getVisibleCellIndices.start;
+	        var _stop = _getVisibleCellIndices.stop;
 	
 	        for (var i = start; i <= _stop; i++) {
 	          var datum = this._cellMetadata[i];
@@ -1797,7 +1798,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        case 'ArrowDown':
 	          this._stopEvent(event); // Prevent key from also scrolling surrounding window
 	
-	          start = (0, _utils.getVisibleRowIndices)({
+	          start = (0, _utils.getVisibleCellIndices)({
 	            cellCount: rowsCount,
 	            cellMetadata: this._cellMetadata,
 	            containerSize: height,
@@ -1813,7 +1814,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        case 'ArrowUp':
 	          this._stopEvent(event); // Prevent key from also scrolling surrounding window
 	
-	          start = (0, _utils.getVisibleRowIndices)({
+	          start = (0, _utils.getVisibleCellIndices)({
 	            cellCount: rowsCount,
 	            cellMetadata: this._cellMetadata,
 	            containerSize: height,
@@ -2195,7 +2196,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.findNearestCell = findNearestCell;
 	exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex;
-	exports.getVisibleRowIndices = getVisibleRowIndices;
+	exports.getVisibleCellIndices = getVisibleCellIndices;
 	exports.initCellMetadata = initCellMetadata;
 	
 	function findNearestCell(_ref) {
@@ -2232,8 +2233,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	findNearestCell.EQUAL_OR_HIGHER = 2;
 	
 	/**
-	 * Give a new offset that ensures a certain cell is visible, given the current offset.
+	 * Determines a new offset that ensures a certain cell is visible, given the current offset.
 	 * If the cell is already visible then the current offset will be returned.
+	 * If the current offset is too great or small, it will be adjusted just enough to ensure the specified index is visible.
 	 *
 	 * @param cellMetadata Metadata initially computed by initCellMetadata()
 	 * @param containerSize Total size (width or height) of the container
@@ -2272,7 +2274,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return An object containing :start and :stop attributes, each specifying a cell index
 	 */
 	
-	function getVisibleRowIndices(_ref3) {
+	function getVisibleCellIndices(_ref3) {
 	  var cellCount = _ref3.cellCount;
 	  var cellMetadata = _ref3.cellMetadata;
 	  var containerSize = _ref3.containerSize;
