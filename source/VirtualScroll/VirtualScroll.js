@@ -124,7 +124,7 @@ export default class VirtualScroll extends Component {
       height !== prevProps.height ||
       !prevProps.rowHeight ||
       (
-        rowHeight instanceof Number &&
+        typeof rowHeight === 'number' &&
         rowHeight !== prevProps.rowHeight
       )
     )
