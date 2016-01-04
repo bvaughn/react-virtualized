@@ -143,3 +143,30 @@ export function initCellMetadata ({
 
   return cellMetadata
 }
+
+/**
+ * Helper utility that updates the specified onRowsRendered callback each time start or stop indices have changed.
+ */
+export function initOnRowsRenderedHelper () {
+  let cachedStartIndex, cachedStopIndex
+
+  return ({
+    onRowsRendered,
+    startIndex,
+    stopIndex
+  }) => {
+    if (
+      startIndex >= 0 &&
+      stopIndex >= 0 &&
+      (
+        startIndex !== cachedStartIndex ||
+        stopIndex !== cachedStopIndex
+      )
+    ) {
+      cachedStartIndex = startIndex
+      cachedStopIndex = stopIndex
+
+      onRowsRendered({ startIndex, stopIndex })
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { findDOMNode } from 'react-dom'
+import { findDOMNode, render } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
@@ -22,6 +22,12 @@ function find (element, expression) {
 describe('FlexTable', () => {
   beforeAll(() => jasmine.clock().install())
   afterAll(() => jasmine.clock().uninstall())
+
+  // Used by the renderOrUpdateTable() helper method
+  var node = null
+  beforeEach(() => {
+    node = document.createElement('div')
+  })
 
   const array = []
   for (var i = 0; i < 100; i++) {
@@ -102,6 +108,17 @@ describe('FlexTable', () => {
     jasmine.clock().tick()
 
     return flexTable
+  }
+
+  // Use ReactDOM.render for certain tests so that props changes will update the existing component
+  // TestUtils.renderIntoDocument creates a new component/instance each time
+  function renderOrUpdateTable (props) {
+    let flexTable = render(getMarkup(props), node)
+
+    // Allow initial setImmediate() to set :scrollTop
+    jasmine.clock().tick()
+
+    return findDOMNode(flexTable)
   }
 
   // Maybe test FlexTable.propTypes.children directly
@@ -369,6 +386,47 @@ describe('FlexTable', () => {
       })
       expect(startIndex).toEqual(0)
       expect(stopIndex).toEqual(7)
+    })
+
+    it('should not call :onRowsRendered unless the start or stop indices have changed', () => {
+      let numCalls = 0
+      let startIndex
+      let stopIndex
+      const onRowsRendered = params => {
+        startIndex = params.startIndex
+        stopIndex = params.stopIndex
+        numCalls++
+      }
+      renderOrUpdateTable({ onRowsRendered })
+      expect(numCalls).toEqual(1)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(7)
+      renderOrUpdateTable({ onRowsRendered })
+      expect(numCalls).toEqual(1)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(7)
+    })
+
+    it('should call :onRowsRendered if the start or stop indices have changed', () => {
+      let numCalls = 0
+      let startIndex
+      let stopIndex
+      const onRowsRendered = params => {
+        startIndex = params.startIndex
+        stopIndex = params.stopIndex
+        numCalls++
+      }
+      renderOrUpdateTable({ onRowsRendered })
+      expect(numCalls).toEqual(1)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(7)
+      renderOrUpdateTable({
+        height: 50,
+        onRowsRendered
+      })
+      expect(numCalls).toEqual(2)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(2)
     })
 
     it('should not call :onRowsRendered if no rows are rendered', () => {

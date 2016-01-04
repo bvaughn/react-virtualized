@@ -6,7 +6,8 @@ import raf from 'raf'
 import {
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
-  initCellMetadata
+  initCellMetadata,
+  initOnRowsRenderedHelper
 } from '../utils'
 import styles from './VirtualScroll.css'
 
@@ -62,6 +63,9 @@ export default class VirtualScroll extends Component {
       scrollTop: 0
     }
 
+    // Invokes onRowsRendered callback only when start/stop row indices change
+    this._OnRowsRenderedHelper = initOnRowsRenderedHelper()
+
     this._onKeyPress = this._onKeyPress.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._onWheel = this._onWheel.bind(this)
@@ -88,7 +92,7 @@ export default class VirtualScroll extends Component {
   }
 
   componentDidMount () {
-    const { scrollToIndex } = this.props
+    const { onRowsRendered, scrollToIndex } = this.props
 
     if (scrollToIndex >= 0) {
       // Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
@@ -97,10 +101,17 @@ export default class VirtualScroll extends Component {
         this._updateScrollTopForScrollToIndex()
       })
     }
+
+    // Update onRowsRendered callback
+    this._OnRowsRenderedHelper({
+      onRowsRendered,
+      startIndex: this._renderedStartIndex,
+      stopIndex: this._renderedStopIndex
+    })
   }
 
   componentDidUpdate (prevProps, prevState) {
-    const { height, rowsCount, rowHeight, scrollToIndex } = this.props
+    const { height, onRowsRendered, rowsCount, rowHeight, scrollToIndex } = this.props
     const { scrollTop } = this.state
 
     // Make sure any changes to :scrollTop (from :scrollToIndex) get applied
@@ -138,6 +149,13 @@ export default class VirtualScroll extends Component {
         this._updateScrollTopForScrollToIndex(rowsCount - 1)
       }
     }
+
+    // Update onRowsRendered callback if start/stop indices have changed
+    this._OnRowsRenderedHelper({
+      onRowsRendered,
+      startIndex: this._renderedStartIndex,
+      stopIndex: this._renderedStopIndex
+    })
   }
 
   componentWillMount () {
@@ -196,7 +214,6 @@ export default class VirtualScroll extends Component {
       className,
       height,
       noRowsRenderer,
-      onRowsRendered,
       rowsCount,
       rowRenderer
     } = this.props
@@ -220,6 +237,10 @@ export default class VirtualScroll extends Component {
         currentOffset: scrollTop
       })
 
+      // Store for onRowsRendered callback in componentDidUpdate
+      this._renderedStartIndex = start
+      this._renderedStopIndex = stop
+
       for (let i = start; i <= stop; i++) {
         let datum = this._cellMetadata[i]
         let child = React.cloneElement(
@@ -235,11 +256,6 @@ export default class VirtualScroll extends Component {
 
         childrenToDisplay.push(child)
       }
-
-      onRowsRendered({
-        startIndex: start,
-        stopIndex: stop
-      })
     }
 
     return (
