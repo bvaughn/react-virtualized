@@ -145,7 +145,7 @@ export function initCellMetadata ({
 }
 
 /**
- * Helper utility that updates the specified onRowsRendered callback each time start or stop indices have changed.
+ * Helper utility that updates the specified onRowsRendered callback on when start or stop indices have changed.
  */
 export function initOnRowsRenderedHelper () {
   let cachedStartIndex, cachedStopIndex

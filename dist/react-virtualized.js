@@ -1480,6 +1480,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      scrollTop: 0
 	    };
 	
+	    // Invokes onRowsRendered callback only when start/stop row indices change
+	    this._OnRowsRenderedHelper = (0, _utils.initOnRowsRenderedHelper)();
+	
 	    this._onKeyPress = this._onKeyPress.bind(this);
 	    this._onScroll = this._onScroll.bind(this);
 	    this._onWheel = this._onWheel.bind(this);
@@ -1514,7 +1517,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function componentDidMount() {
 	      var _this = this;
 	
-	      var scrollToIndex = this.props.scrollToIndex;
+	      var _props = this.props;
+	      var onRowsRendered = _props.onRowsRendered;
+	      var scrollToIndex = _props.scrollToIndex;
 	
 	      if (scrollToIndex >= 0) {
 	        // Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
@@ -1523,15 +1528,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	          _this._updateScrollTopForScrollToIndex();
 	        });
 	      }
+	
+	      // Update onRowsRendered callback
+	      this._OnRowsRenderedHelper({
+	        onRowsRendered: onRowsRendered,
+	        startIndex: this._renderedStartIndex,
+	        stopIndex: this._renderedStopIndex
+	      });
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate(prevProps, prevState) {
-	      var _props = this.props;
-	      var height = _props.height;
-	      var rowsCount = _props.rowsCount;
-	      var rowHeight = _props.rowHeight;
-	      var scrollToIndex = _props.scrollToIndex;
+	      var _props2 = this.props;
+	      var height = _props2.height;
+	      var onRowsRendered = _props2.onRowsRendered;
+	      var rowsCount = _props2.rowsCount;
+	      var rowHeight = _props2.rowHeight;
+	      var scrollToIndex = _props2.scrollToIndex;
 	      var scrollTop = this.state.scrollTop;
 	
 	      // Make sure any changes to :scrollTop (from :scrollToIndex) get applied
@@ -1562,6 +1575,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._updateScrollTopForScrollToIndex(rowsCount - 1);
 	          }
 	        }
+	
+	      // Update onRowsRendered callback if start/stop indices have changed
+	      this._OnRowsRenderedHelper({
+	        onRowsRendered: onRowsRendered,
+	        startIndex: this._renderedStartIndex,
+	        stopIndex: this._renderedStopIndex
+	      });
 	    }
 	  }, {
 	    key: 'componentWillMount',
@@ -1607,13 +1627,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props2 = this.props;
-	      var className = _props2.className;
-	      var height = _props2.height;
-	      var noRowsRenderer = _props2.noRowsRenderer;
-	      var onRowsRendered = _props2.onRowsRendered;
-	      var rowsCount = _props2.rowsCount;
-	      var rowRenderer = _props2.rowRenderer;
+	      var _props3 = this.props;
+	      var className = _props3.className;
+	      var height = _props3.height;
+	      var noRowsRenderer = _props3.noRowsRenderer;
+	      var rowsCount = _props3.rowsCount;
+	      var rowRenderer = _props3.rowRenderer;
 	      var _state = this.state;
 	      var isScrolling = _state.isScrolling;
 	      var scrollTop = _state.scrollTop;
@@ -1632,6 +1651,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var start = _getVisibleCellIndices.start;
 	        var _stop = _getVisibleCellIndices.stop;
 	
+	        // Store for onRowsRendered callback in componentDidUpdate
+	        this._renderedStartIndex = start;
+	        this._renderedStopIndex = _stop;
+	
 	        for (var i = start; i <= _stop; i++) {
 	          var datum = this._cellMetadata[i];
 	          var child = _react2['default'].cloneElement(rowRenderer(i), {
@@ -1645,11 +1668,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	          childrenToDisplay.push(child);
 	        }
-	
-	        onRowsRendered({
-	          startIndex: start,
-	          stopIndex: _stop
-	        });
 	      }
 	
 	      return _react2['default'].createElement(
@@ -1785,9 +1803,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_onKeyPress',
 	    value: function _onKeyPress(event) {
-	      var _props3 = this.props;
-	      var height = _props3.height;
-	      var rowsCount = _props3.rowsCount;
+	      var _props4 = this.props;
+	      var height = _props4.height;
+	      var rowsCount = _props4.rowsCount;
 	      var scrollTop = this.state.scrollTop;
 	
 	      var start = undefined,
@@ -2198,6 +2216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex;
 	exports.getVisibleCellIndices = getVisibleCellIndices;
 	exports.initCellMetadata = initCellMetadata;
+	exports.initOnRowsRenderedHelper = initOnRowsRenderedHelper;
 	
 	function findNearestCell(_ref) {
 	  var cellMetadata = _ref.cellMetadata;
@@ -2343,6 +2362,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  return cellMetadata;
+	}
+	
+	/**
+	 * Helper utility that updates the specified onRowsRendered callback on when start or stop indices have changed.
+	 */
+	
+	function initOnRowsRenderedHelper() {
+	  var cachedStartIndex = undefined,
+	      cachedStopIndex = undefined;
+	
+	  return function (_ref5) {
+	    var onRowsRendered = _ref5.onRowsRendered;
+	    var startIndex = _ref5.startIndex;
+	    var stopIndex = _ref5.stopIndex;
+	
+	    if (startIndex >= 0 && stopIndex >= 0 && (startIndex !== cachedStartIndex || stopIndex !== cachedStopIndex)) {
+	      cachedStartIndex = startIndex;
+	      cachedStopIndex = stopIndex;
+	
+	      onRowsRendered({ startIndex: startIndex, stopIndex: stopIndex });
+	    }
+	  };
 	}
 
 /***/ },
