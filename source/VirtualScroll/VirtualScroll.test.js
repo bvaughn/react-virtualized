@@ -164,16 +164,57 @@ describe('VirtualScroll', () => {
   describe('onRowsRendered', () => {
     it('should call :onRowsRendered at least one row is rendered', () => {
       let startIndex, stopIndex
-      renderOrUpdateList({
+      renderList({
         onRowsRendered: params => ({ startIndex, stopIndex } = params)
       })
       expect(startIndex).toEqual(0)
       expect(stopIndex).toEqual(9)
     })
 
+    it('should not call :onRowsRendered unless the start or stop indices have changed', () => {
+      let numCalls = 0
+      let startIndex
+      let stopIndex
+      const onRowsRendered = params => {
+        startIndex = params.startIndex
+        stopIndex = params.stopIndex
+        numCalls++
+      }
+      renderOrUpdateList({ onRowsRendered })
+      expect(numCalls).toEqual(1)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(9)
+      renderOrUpdateList({ onRowsRendered })
+      expect(numCalls).toEqual(1)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(9)
+    })
+
+    it('should call :onRowsRendered if the start or stop indices have changed', () => {
+      let numCalls = 0
+      let startIndex
+      let stopIndex
+      const onRowsRendered = params => {
+        startIndex = params.startIndex
+        stopIndex = params.stopIndex
+        numCalls++
+      }
+      renderOrUpdateList({ onRowsRendered })
+      expect(numCalls).toEqual(1)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(9)
+      renderOrUpdateList({
+        height: 50,
+        onRowsRendered
+      })
+      expect(numCalls).toEqual(2)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(4)
+    })
+
     it('should not call :onRowsRendered if no rows are rendered', () => {
       let startIndex, stopIndex
-      renderOrUpdateList({
+      renderList({
         height: 0,
         onRowsRendered: params => ({ startIndex, stopIndex } = params)
       })
