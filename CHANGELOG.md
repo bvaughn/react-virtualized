@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 2.7.1
+Replaced invalid `rowHeight instanceof Number` check with `typeof rowHeight === 'number'` in `VirtualScroll`.
+
 #### 2.7.0
 Moved `onRowsRendered` to `componentDidUpdate` (instead of `render`) to keep `render` free of side-effects.
 Added tests to ensure that the callback is only invoked once per start/stop index pair (and not again unless the indices change).

@@ -167,6 +167,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _AutoSizerCss2 = _interopRequireDefault(_AutoSizerCss);
 	
+	/**
+	 * Decorator component that automatically adjusts the width and height of a single child.
+	 * Child component should not be declared as a child but should rather be specified by a `ChildComponent` property.
+	 * All other properties will be passed through to the child component.
+	 */
+	
 	var AutoSizer = (function (_Component) {
 	  _inherits(AutoSizer, _Component);
 	
@@ -1553,7 +1559,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	
 	      var hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < rowsCount;
-	      var sizeHasChanged = height !== prevProps.height || !prevProps.rowHeight || rowHeight instanceof Number && rowHeight !== prevProps.rowHeight;
+	      var sizeHasChanged = height !== prevProps.height || !prevProps.rowHeight || typeof rowHeight === 'number' && rowHeight !== prevProps.rowHeight;
 	
 	      // If we have a new scroll target OR if height/row-height has changed,
 	      // We should ensure that the scroll target is visible.
