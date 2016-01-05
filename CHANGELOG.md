@@ -1,8 +1,8 @@
 Changelog
 ------------
 
-#### 2.7.2
-Updated check for undefined `document`.
+#### 2.7.2 & 2.7.3
+Improved checks for undefined `document` and `window` in hopes of better supporting server-side rendering.
 
 #### 2.7.1
 Replaced invalid `rowHeight instanceof Number` check with `typeof rowHeight === 'number'` in `VirtualScroll`.

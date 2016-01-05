@@ -273,7 +273,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	/**
-	* Detect Element Resize
+	* Detect Element Resize.
+	* Forked in order to guard against unsafe 'window' and 'document' references.
 	*
 	* https://github.com/sdecima/javascript-detect-element-resize
 	* Sebastian Decima
@@ -281,16 +282,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	* version: 0.5.3
 	**/
 	
-	// Check `document` as well in case of server-side rendering (see issue #41)
+	// Check `document` and `window` in case of server-side rendering
 	'use strict';
+	
+	var _window;
+	if (typeof window !== 'undefined') {
+	  _window = window;
+	} else if (typeof self !== 'undefined') {
+	  _window = self;
+	} else {
+	  _window = undefined;
+	}
 	
 	var attachEvent = typeof document !== 'undefined' && document.attachEvent;
 	var stylesCreated = false;
 	
 	if (!attachEvent) {
 	  var requestFrame = (function () {
-	    var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || function (fn) {
-	      return window.setTimeout(fn, 20);
+	    var raf = _window.requestAnimationFrame || _window.mozRequestAnimationFrame || _window.webkitRequestAnimationFrame || function (fn) {
+	      return _window.setTimeout(fn, 20);
 	    };
 	    return function (fn) {
 	      return raf(fn);
@@ -298,7 +308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  })();
 	
 	  var cancelFrame = (function () {
-	    var cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame || window.clearTimeout;
+	    var cancel = _window.cancelAnimationFrame || _window.mozCancelAnimationFrame || _window.webkitCancelAnimationFrame || _window.clearTimeout;
 	    return function (id) {
 	      return cancel(id);
 	    };
