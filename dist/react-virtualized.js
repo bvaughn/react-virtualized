@@ -284,7 +284,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Check `document` as well in case of server-side rendering (see issue #41)
 	'use strict';
 	
-	var attachEvent = document && document.attachEvent;
+	var attachEvent = typeof document !== 'undefined' && document.attachEvent;
 	var stylesCreated = false;
 	
 	if (!attachEvent) {

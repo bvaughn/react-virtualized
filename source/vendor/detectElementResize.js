@@ -8,7 +8,7 @@
 **/
 
 // Check `document` as well in case of server-side rendering (see issue #41)
-var attachEvent = document && document.attachEvent;
+var attachEvent = typeof document !== 'undefined' && document.attachEvent;
 var stylesCreated = false;
 
 if (!attachEvent) {

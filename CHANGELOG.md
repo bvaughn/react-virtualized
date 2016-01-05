@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 2.7.2
+Updated check for undefined `document`.
+
 #### 2.7.1
 Replaced invalid `rowHeight instanceof Number` check with `typeof rowHeight === 'number'` in `VirtualScroll`.
 
