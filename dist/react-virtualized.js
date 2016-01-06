@@ -510,8 +510,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/cssnext-loader/index.js!./AutoSizer.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/cssnext-loader/index.js!./AutoSizer.css");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/postcss-loader/index.js!./AutoSizer.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/postcss-loader/index.js!./AutoSizer.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -2418,8 +2418,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/cssnext-loader/index.js!./VirtualScroll.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/cssnext-loader/index.js!./VirtualScroll.css");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/postcss-loader/index.js!./VirtualScroll.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/postcss-loader/index.js!./VirtualScroll.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -2573,8 +2573,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/cssnext-loader/index.js!./FlexTable.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/cssnext-loader/index.js!./FlexTable.css");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/postcss-loader/index.js!./FlexTable.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?modules&importLoaders=1!./../../node_modules/postcss-loader/index.js!./FlexTable.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});

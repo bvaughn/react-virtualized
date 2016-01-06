@@ -66,6 +66,7 @@
     ]
   },
   "devDependencies": {
+    "autoprefixer": "^6.2.3",
     "babel": "^5.8.34",
     "babel-core": "^5.8.34",
     "babel-eslint": "^4.1.6",
@@ -73,8 +74,6 @@
     "babel-plugin-react-transform": "^1.1.1",
     "bluebird": "^3.0.5",
     "css-loader": "^0.23.0",
-    "cssnext": "^1.8.4",
-    "cssnext-loader": "^1.0.1",
     "express": "^4.13.3",
     "file-loader": "^0.8.5",
     "fs-extra": "^0.26.2",
@@ -91,6 +90,7 @@
     "karma-spec-reporter": "0.0.23",
     "karma-webpack": "^1.7.0",
     "phantomjs": "^1.9.19",
+    "postcss-loader": "^0.8.0",
     "react": "^0.14.3",
     "react-addons-test-utils": "^0.14.3",
     "react-dom": "^0.14.3",

@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const autoprefixer = require('autoprefixer')
 const path = require('path')
 const webpack = require('webpack')
 
@@ -32,9 +33,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: ['style', 'css?modules&importLoaders=1', 'cssnext'],
+        loaders: ['style', 'css?modules&importLoaders=1', 'postcss'],
         include: path.join(__dirname, 'source')
       }
     ]
+  },
+  postcss: function () {
+    return [autoprefixer]
   }
 }

@@ -1,3 +1,4 @@
+const autoprefixer = require('autoprefixer')
 const path = require('path')
 
 module.exports = {
@@ -30,9 +31,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: ['style', 'css?modules&importLoaders=1', 'cssnext'],
+        loaders: ['style', 'css?modules&importLoaders=1', 'postcss'],
         include: path.join(__dirname, 'source')
       }
     ]
+  },
+  postcss: function () {
+    return [autoprefixer]
   }
 }
