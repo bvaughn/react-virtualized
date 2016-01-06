@@ -1,5 +1,6 @@
 const autoprefixer = require('autoprefixer')
 const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
   devtool: 'source-map',
@@ -21,6 +22,11 @@ module.exports = {
     }
   },
   plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      beautify: true,
+      comments: true,
+      mangle: false
+    })
   ],
   module: {
     loaders: [

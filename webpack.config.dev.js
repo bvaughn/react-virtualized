@@ -18,7 +18,8 @@ module.exports = {
       inject: true,
       template: './index.html'
     }),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new webpack.optimize.UglifyJsPlugin()
   ],
   module: {
     loaders: [

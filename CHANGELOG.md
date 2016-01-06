@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 2.7.4
+Uglify dist build to remove dead code.
+
 #### 2.7.2 & 2.7.3
 Improved checks for undefined `document` and `window` in hopes of better supporting server-side rendering.
 
