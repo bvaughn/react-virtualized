@@ -12,8 +12,18 @@ export default class AutoSizer extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate
 
   static propTypes = {
-    /** React component to manage as a child */
-    ChildComponent: PropTypes.any.isRequired
+    /**
+     * Component to manage width/height of.
+     */
+    children: PropTypes.element,
+
+    /**
+     * React component to manage as a child.
+     * This property is left in place for backwards compatibility but is not preferred.
+     * If specified it will override any React children,
+     * Although it is recommended to declare child component as a normal React child instead.
+     */
+    ChildComponent: PropTypes.any
   }
 
   constructor (props) {
@@ -42,19 +52,30 @@ export default class AutoSizer extends Component {
   }
 
   render () {
-    const { ChildComponent, ...props } = this.props
+    const { children, ChildComponent, ...props } = this.props
     const { height, width } = this.state
+
+    let child
+
+    if (ChildComponent) {
+      child = (
+        <ChildComponent
+          height={height}
+          width={width}
+          {...props}
+        />
+      )
+    } else {
+      child = React.Children.only(children)
+      child = React.cloneElement(child, { height, width })
+    }
 
     return (
       <div
         ref={this._setRef}
         className={styles.Wrapper}
       >
-        <ChildComponent
-          height={height}
-          width={width}
-          {...props}
-        />
+        {child}
       </div>
     )
   }

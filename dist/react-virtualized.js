@@ -199,8 +199,17 @@
             return _inherits(AutoSizer, _Component), _createClass(AutoSizer, null, [ {
                 key: "propTypes",
                 value: {
-                    /** React component to manage as a child */
-                    ChildComponent: _react.PropTypes.any.isRequired
+                    /**
+	       * Component to manage width/height of.
+	       */
+                    children: _react.PropTypes.element,
+                    /**
+	       * React component to manage as a child.
+	       * This property is left in place for backwards compatibility but is not preferred.
+	       * If specified it will override any React children,
+	       * Although it is recommended to declare child component as a normal React child instead.
+	       */
+                    ChildComponent: _react.PropTypes.any
                 },
                 enumerable: !0
             } ]), _createClass(AutoSizer, [ {
@@ -219,14 +228,17 @@
             }, {
                 key: "render",
                 value: function() {
-                    var _props = this.props, ChildComponent = _props.ChildComponent, props = _objectWithoutProperties(_props, [ "ChildComponent" ]), _state = this.state, height = _state.height, width = _state.width;
-                    return _react2["default"].createElement("div", {
-                        ref: this._setRef,
-                        className: _AutoSizerCss2["default"].Wrapper
-                    }, _react2["default"].createElement(ChildComponent, _extends({
+                    var _props = this.props, children = _props.children, ChildComponent = _props.ChildComponent, props = _objectWithoutProperties(_props, [ "children", "ChildComponent" ]), _state = this.state, height = _state.height, width = _state.width, child = void 0;
+                    return ChildComponent ? child = _react2["default"].createElement(ChildComponent, _extends({
                         height: height,
                         width: width
-                    }, props)));
+                    }, props)) : (child = _react2["default"].Children.only(children), child = _react2["default"].cloneElement(child, {
+                        height: height,
+                        width: width
+                    })), _react2["default"].createElement("div", {
+                        ref: this._setRef,
+                        className: _AutoSizerCss2["default"].Wrapper
+                    }, child);
                 }
             }, {
                 key: "_onResize",

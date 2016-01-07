@@ -16,3 +16,11 @@
   background-color: #fafafa;
   border: 1px solid #e0e0e0;
 }
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+}
+.checkbox {
+  margin-right: 5px;
+}

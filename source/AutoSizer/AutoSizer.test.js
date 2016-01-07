@@ -23,40 +23,64 @@ describe('AutoSizer', () => {
     document.body.removeChild(node)
   })
 
-  function getMarkup ({
-    bar = 123,
-    foo = 456,
-    height = 100,
-    width = 200
-  } = {}) {
-    return (
-      <div style={{ height, width }}>
+  function getMarkup (
+    useReactChild,
+    {
+      bar = 123,
+      foo = 456,
+      height = 100,
+      width = 200
+    } = {}
+  ) {
+    let autoSizer
+
+    if (useReactChild) {
+      autoSizer = (
+        <AutoSizer>
+          <ChildComponent
+            bar={bar}
+            foo={foo}
+          />
+        </AutoSizer>
+      )
+    } else {
+      autoSizer = (
         <AutoSizer
           ChildComponent={ChildComponent}
           bar={bar}
           foo={foo}
         />
+      )
+    }
+
+    return (
+      <div style={{ height, width }}>
+        {autoSizer}
       </div>
     )
   }
 
-  function renderOrUpdateList (props) {
+  function renderOrUpdateList (useReactChild, props) {
     let rendered = render(getMarkup(props), node)
 
     return findDOMNode(rendered)
   }
 
-  it('should relay properties to ChildComponent', () => {
-    const component = renderOrUpdateList()
-    expect(findDOMNode(component).textContent).toContain('foo:456')
-    expect(findDOMNode(component).textContent).toContain('bar:123')
+  it('should relay properties to ChildComponent or React child', () => {
+    [false, true].forEach(useReactChild => {
+      const component = renderOrUpdateList(useReactChild)
+      expect(findDOMNode(component).textContent).toContain('foo:456')
+      expect(findDOMNode(component).textContent).toContain('bar:123')
+    })
   })
 
-  it('should set the correct initial width and height of ChildComponent', () => {
-    const component = renderOrUpdateList()
-    let domNode = findDOMNode(component)
-    expect(domNode.textContent).toContain('height:100')
-    expect(domNode.textContent).toContain('width:200')
+  it('should set the correct initial width and height of ChildComponent or React child', () => {
+    [false, true].forEach(useReactChild => {
+      const component = renderOrUpdateList(useReactChild)
+      let domNode = findDOMNode(component)
+      expect(domNode.textContent).toContain('height:100')
+      expect(domNode.textContent).toContain('width:200')
+    })
   })
 
   // TODO It would be nice to test that resize events update the width/height

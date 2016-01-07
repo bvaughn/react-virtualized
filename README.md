@@ -101,6 +101,42 @@ ReactDOM.render(
 );
 ```
 
+#### Autosizer Example
+`VirtualScroll` and `FlexTable` require explicit dimensions but sometimes you just want a component to just grow to fill all of the available space. In that case you should use the `AutoSizer` component. Building on the `VirtualScroll` example above...
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { AutoSizer, VirtualScroll } from 'react-virtualized';
+
+// List data as an array of strings
+const list = [
+  'Brian Vaughn'
+  // And so on...
+];
+
+// Render your list
+ReactDOM.render(
+  <AutoSizer>
+    <VirtualScroll
+      height={0}
+      rowsCount={list.length}
+      rowHeight={20}
+      rowRenderer={
+        index => (
+          <div key={index}>
+            {list[index]}
+          </div>
+        )
+      }
+    />
+  </AutoSizer>,
+  document.getElementById('example')
+);
+```
+
+Note that in this example we initialize `height` to 0. (We do this because it is a required property and React will warn in dev mode if we leave it off.) However the `AutoSizer` wrapper component will inject a valid height for us.
+
 Contributions
 ------------
 

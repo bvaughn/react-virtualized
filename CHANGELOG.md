@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 2.8.0
+Changed `Autosizer` component to support a single child instead of the `ChildComponent` property.
+(For backwards compatibility purposes the `ChildComponent` property will continue to be supported.)
+
 #### 2.7.5
 Defer loading of element resize code until `componentDidMount` to avoid undefined `document` and `body` references.
 This was breaking server-side rendering.
