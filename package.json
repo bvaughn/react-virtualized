@@ -106,8 +106,6 @@
   },
   "dependencies": {
     "classnames": "^2.2.1",
-    "detect-element-resize": "0.0.1",
-    "element-resize-event": "^2.0.3",
     "raf": "^3.1.0",
     "react-pure-render": "^1.0.2"
   },

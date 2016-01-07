@@ -1,6 +1,5 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
-import detectElementResize from '../vendor/detectElementResize'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import styles from './AutoSizer.css'
 
@@ -30,13 +29,16 @@ export default class AutoSizer extends Component {
   }
 
   componentDidMount () {
-    detectElementResize.addResizeListener(this._parentNode, this._onResize)
+    // Defer requiring resize handler in order to support server-side rendering.
+    // See issue #41
+    this._detectElementResize = require('../vendor/detectElementResize')
+    this._detectElementResize.addResizeListener(this._parentNode, this._onResize)
 
     this._onResize()
   }
 
   componentWillUnmount () {
-    detectElementResize.removeResizeListener(this._parentNode, this._onResize)
+    this._detectElementResize.removeResizeListener(this._parentNode, this._onResize)
   }
 
   render () {
