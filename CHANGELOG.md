@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 2.7.5
+Defer loading of element resize code until `componentDidMount` to avoid undefined `document` and `body` references.
+This was breaking server-side rendering.
+
 #### 2.7.4
 Uglify dist build to remove dead code.
 
