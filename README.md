@@ -22,6 +22,10 @@ Documentation
 
 API documentation available [here](docs/README.md).
 
+Note that as of version 3.0 react-virtualized has separated presentational styles from components to simplify usage within universal/isomorphic applications. Presentational styles can be loaded separately by importing `'react-virtualized/theme.css'`.
+
+You can provide your own presentational styles by forking [theme.css](https://github.com/bvaughn/react-virtualized/blob/master/theme.css).
+
 Examples
 ---------------
 
@@ -35,6 +39,7 @@ Below is a simple `VirtualScroll` example. Each row in the virtualized list is r
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { VirtualScroll } from 'react-virtualized';
+import 'react-virtualized/theme.css'; // Recommended presentational styles
 
 // List data as an array of strings
 const list = [
@@ -69,6 +74,7 @@ Below is a very basic `FlexTable` example. This table has only 2 columns, each c
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { FlexTable, FlexColumn } from 'react-virtualized';
+import 'react-virtualized/theme.css'; // Recommended presentational styles
 
 // Table data as a array of objects
 const list = [
@@ -108,6 +114,7 @@ ReactDOM.render(
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AutoSizer, VirtualScroll } from 'react-virtualized';
+import 'react-virtualized/theme.css'; // Recommended presentational styles
 
 // List data as an array of strings
 const list = [

@@ -1,9 +1,9 @@
-/********** AutoSizer default theme **********/
+/* AutoSizer default theme */
 
 .AutoSizer {
 }
 
-/********** FlexTable default theme **********/
+/* FlexTable default theme */
 
 .FlexTable {
 }
@@ -57,7 +57,7 @@
   overflow: hidden;
 }
 
-/********** VirtualScroll default theme **********/
+/* VirtualScroll default theme */
 
 .VirtualScroll {
 }
