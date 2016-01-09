@@ -2,14 +2,13 @@ Changelog
 ------------
 
 ## 3.0.0
-Functional styles (eg. `position`, `overflow`) have been converted to inline styles and presentation styles (eg. `text-transform`, `color`) have been moved to `theme.css` to be imported separately. This was done primarily to better support universal/isomorphic rendering but it also enables greater style customization.
+CSS styles have been split into two groups: functional styles (eg. `position`, `overflow`) and presentational styles (eg. `text-transform`, `color`) and both have been converted to inline styles rather than being loaded as CSS. This was done primarily to simplify usage for universal/isomorphic rendering.
 
-To use react-virtualized with the default styles make sure to import the following CSS:
-```js
-import 'react-virtualized/theme.css'
-```
-
-You can provide your own presentational styles by forking [theme.css](https://github.com/bvaughn/react-virtualized/blob/master/theme.css).
+Functional styles cannot be overridden but you can override presentational styles in a variety of ways:
+* Load your own CSS file that defines global classes (eg. `FlexTable`, `FlexTable__row`) to append to default styles.
+* Supply a custom `styleSheet` to a component (eg. `<VirtualScroll styleSheet={...}/>`) to override default styles for a single component instance.
+* Override the static `defaultStyleSheet` property of a component class (eg. `FlexTable.defaultStyleSheet = {...}` to customize styles for all instances.
+* Specify custom class names to be appended to a component instance (eg. `FlexTable` supports `className`, `headerClassName`, and `rowClassName`). Read more about which class names are supported in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
 
 #### 2.8.0
 Changed `Autosizer` component to support a single child instead of the `ChildComponent` property.

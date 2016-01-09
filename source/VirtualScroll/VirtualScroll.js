@@ -496,7 +496,7 @@ export default class VirtualScroll extends Component {
   }
 }
 
-// Functional styles can't be overridden so they only need to be prefixed once.
+/** Functional styles can't be overridden so they only need to be prefixed once. */
 const functionalStyles = prefixStyleSheet({
   VirtualScroll: {
     position: 'relative',

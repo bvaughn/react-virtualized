@@ -386,7 +386,7 @@ SortIndicator.propTypes = {
   sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
 }
 
-// Functional styles can't be overridden so they only need to be prefixed once.
+/** Functional styles can't be overridden so they only need to be prefixed once. */
 const functionalStyles = prefixStyleSheet({
   FlexTable: {
     width: '100%'

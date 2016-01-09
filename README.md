@@ -22,9 +22,13 @@ Documentation
 
 API documentation available [here](docs/README.md).
 
-Note that as of version 3.0 react-virtualized has separated presentational styles from components to simplify usage within universal/isomorphic applications. Presentational styles can be loaded separately by importing `'react-virtualized/theme.css'`.
+React virtual CSS styles are split into two groups: functional styles (eg. `position`, `overflow`) and presentational styles (eg. `text-transform`, `color`). Both are defined as inline styles (rather than external CSS) to simplify usage for universal/isomorphic rendering.
 
-You can provide your own presentational styles by forking [theme.css](https://github.com/bvaughn/react-virtualized/blob/master/theme.css).
+Functional styles cannot be overridden but you can override presentational styles in a variety of ways:
+* Load your own CSS file that defines global classes (eg. `FlexTable`, `FlexTable__row`) to append to default styles.
+* Supply a custom `styleSheet` to a component (eg. `<VirtualScroll styleSheet={...}/>`) to override default styles for a single component instance.
+* Override the static `defaultStyleSheet` property of a component class (eg. `FlexTable.defaultStyleSheet = {...}` to customize styles for all instances.
+* Specify custom class names to be appended to a component instance (eg. `FlexTable` supports `className`, `headerClassName`, and `rowClassName`). Read more about which class names are supported in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
 
 Examples
 ---------------
