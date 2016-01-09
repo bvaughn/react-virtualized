@@ -31,9 +31,6 @@ const IS_SCROLLING_TIMEOUT = 150
 export default class VirtualScroll extends Component {
   static shouldComponentUpdate = shouldPureComponentUpdate
 
-  /** Default presentational styles for all <VirtualScroll> instances. */
-  static defaultStyleSheet = presentationalStyles
-
   static propTypes = {
     /** Optional CSS class name */
     className: PropTypes.string,
@@ -60,8 +57,7 @@ export default class VirtualScroll extends Component {
 
   static defaultProps = {
     noRowsRenderer: () => null,
-    onRowsRendered: () => null,
-    styleSheet: VirtualScroll.defaultStyleSheet
+    onRowsRendered: () => null
   }
 
   constructor (props, context) {
@@ -70,6 +66,7 @@ export default class VirtualScroll extends Component {
     this.state = {
       computeCellMetadataOnNextUpdate: false,
       isScrolling: false,
+      styleSheet: prefixStyleSheet(props.styleSheet || VirtualScroll.defaultStyleSheet),
       scrollTop: 0
     }
 
@@ -192,6 +189,12 @@ export default class VirtualScroll extends Component {
       this.setState({ scrollTop: 0 })
     }
 
+    if (this.props.styleSheet !== nextProps.styleSheet) {
+      this.setState({
+        styleSheet: prefixStyleSheet(nextProps.styleSheet)
+      })
+    }
+
     // Don't compare rowHeight if it's a function because inline functions would cause infinite loops.
     // In that event users should use recomputeRowHeights() to inform of changes.
     if (
@@ -230,7 +233,8 @@ export default class VirtualScroll extends Component {
 
     const {
       isScrolling,
-      scrollTop
+      scrollTop,
+      styleSheet
     } = this.state
 
     let childrenToDisplay = []
@@ -281,7 +285,7 @@ export default class VirtualScroll extends Component {
         tabIndex={0}
         style={{
           ...functionalStyles.VirtualScroll,
-          ...presentationalStyles.VirtualScroll,
+          ...styleSheet.VirtualScroll,
           height: height
         }}
       >
@@ -290,7 +294,7 @@ export default class VirtualScroll extends Component {
             className='VirtualScroll__innerScrollContainer'
             style={{
               ...functionalStyles.innerScrollContainer,
-              ...presentationalStyles.innerScrollContainer,
+              ...styleSheet.innerScrollContainer,
               height: this._getTotalRowsHeight(),
               maxHeight: this._getTotalRowsHeight(),
               pointerEvents: isScrolling ? 'none' : 'auto'
@@ -492,6 +496,7 @@ export default class VirtualScroll extends Component {
   }
 }
 
+// Functional styles can't be overridden so they only need to be prefixed once.
 const functionalStyles = prefixStyleSheet({
   VirtualScroll: {
     position: 'relative',
@@ -505,7 +510,8 @@ const functionalStyles = prefixStyleSheet({
   }
 })
 
-const presentationalStyles = {
+/** Default presentational styles for all <VirtualScroll> instances. */
+VirtualScroll.defaultStyleSheet = {
   VirtualScroll: {
   },
   innerScrollContainer: {

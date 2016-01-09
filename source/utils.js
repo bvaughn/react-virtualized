@@ -176,12 +176,19 @@ export function initOnRowsRenderedHelper () {
 }
 
 /**
+ * Adds vender prefixes to a style object.
+ */
+export function prefixStyle (style) {
+  return prefixer.prefix(style)
+}
+
+/**
  * Adds vender prefixes for all of the styles in a stylesheet and returns a prefixed copy.
  */
 export function prefixStyleSheet (styleSheet) {
   const prefixedStyleSheet = {}
   for (var style in styleSheet) {
-    prefixedStyleSheet[style] = prefixer.prefix(styleSheet[style])
+    prefixedStyleSheet[style] = prefixStyle(styleSheet[style])
   }
   return prefixedStyleSheet
 }

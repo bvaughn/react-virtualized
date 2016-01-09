@@ -1,6 +1,7 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
+import { prefixStyleSheet } from '../utils'
 
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
@@ -10,22 +11,20 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
 export default class AutoSizer extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate
 
-  /** Default presentational styles for all <AutoSizer> instances. */
-  static defaultStyleSheet = presentationalStyles
-
   static propTypes = {
     /**
      * Component to manage width/height of.
      */
     children: PropTypes.element,
-
     /**
      * React component to manage as a child.
      * This property is left in place for backwards compatibility but is not preferred.
      * If specified it will override any React children,
      * Although it is recommended to declare child component as a normal React child instead.
      */
-    ChildComponent: PropTypes.any
+    ChildComponent: PropTypes.any,
+    /** Specifies presentational styles for component. */
+    styleSheet: PropTypes.object
   }
 
   static defaultProps = {
@@ -37,6 +36,7 @@ export default class AutoSizer extends Component {
 
     this.state = {
       height: 0,
+      styleSheet: prefixStyleSheet(props.styleSheet),
       width: 0
     }
 
@@ -57,9 +57,17 @@ export default class AutoSizer extends Component {
     this._detectElementResize.removeResizeListener(this._parentNode, this._onResize)
   }
 
+  componentWillUpdate (nextProps, nextState) {
+    if (this.props.styleSheet !== nextProps.styleSheet) {
+      this.setState({
+        styleSheet: prefixStyleSheet(nextProps.styleSheet)
+      })
+    }
+  }
+
   render () {
     const { children, ChildComponent, ...props } = this.props
-    const { height, width } = this.state
+    const { height, styleSheet, width } = this.state
 
     let child
 
@@ -81,7 +89,7 @@ export default class AutoSizer extends Component {
         ref={this._setRef}
         style={{
           ...functionalStyles.AutoSizer,
-          ...presentationalStyles.AutoSizer
+          ...styleSheet.AutoSizer
         }}
       >
         {child}
@@ -110,7 +118,8 @@ const functionalStyles = {
   }
 }
 
-const presentationalStyles = {
+/** Default presentational styles for all <AutoSizer> instances. */
+AutoSizer.defaultStyleSheet = {
   AutoSizer: {
   }
 }
