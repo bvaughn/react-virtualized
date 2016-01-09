@@ -1,7 +1,6 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
-import styles from './AutoSizer.css'
 
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
@@ -73,7 +72,8 @@ export default class AutoSizer extends Component {
     return (
       <div
         ref={this._setRef}
-        className={styles.Wrapper}
+        className='AutoSizer'
+        style={style.AutoSizer}
       >
         {child}
       </div>
@@ -91,5 +91,12 @@ export default class AutoSizer extends Component {
 
   _setRef (autoSizer) {
     this._parentNode = autoSizer.parentNode
+  }
+}
+
+const style = {
+  AutoSizer: {
+    width: '100%',
+    height: '100%'
   }
 }

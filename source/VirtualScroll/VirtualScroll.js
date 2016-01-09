@@ -9,7 +9,6 @@ import {
   initCellMetadata,
   initOnRowsRenderedHelper
 } from '../utils'
-import styles from './VirtualScroll.css'
 
 const IS_SCROLLING_TIMEOUT = 150
 
@@ -243,9 +242,12 @@ export default class VirtualScroll extends Component {
 
       for (let i = start; i <= stop; i++) {
         let datum = this._cellMetadata[i]
-        let child = React.cloneElement(
-          rowRenderer(i), {
+        let child = rowRenderer(i)
+        child = React.cloneElement(
+          child,
+          {
             style: {
+              ...child.props.style,
               position: 'absolute',
               top: datum.offset,
               width: '100%',
@@ -261,19 +263,21 @@ export default class VirtualScroll extends Component {
     return (
       <div
         ref='scrollingContainer'
-        className={cn(styles.VirtualScroll, className)}
+        className={cn('VirtualScroll', className)}
         onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
         onWheel={this._onWheel}
         tabIndex={0}
         style={{
+          ...style.VirtualScroll,
           height: height
         }}
       >
         {rowsCount > 0 &&
           <div
-            className={styles.InnerScrollContainer}
+            className='VirtualScroll_innerScrollContainer'
             style={{
+              ...style.innerScrollContainer,
               height: this._getTotalRowsHeight(),
               maxHeight: this._getTotalRowsHeight(),
               pointerEvents: isScrolling ? 'none' : 'auto'
@@ -472,5 +476,18 @@ export default class VirtualScroll extends Component {
       isScrolling: true,
       scrollTop
     })
+  }
+}
+
+const style = {
+  VirtualScroll: {
+    position: 'relative',
+    overflow: 'auto',
+    outline: 0
+  },
+  innerScrollContainer: {
+    boxSizing: 'border-box',
+    overflowX: 'auto',
+    overflowY: 'hidden'
   }
 }

@@ -4,7 +4,6 @@ import cn from 'classnames'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import VirtualScroll from '../VirtualScroll'
 import FlexColumn from './FlexColumn'
-import styles from './FlexTable.css'
 
 export const SortDirection = {
   /**
@@ -146,15 +145,17 @@ export default class FlexTable extends Component {
 
     return (
       <div
-        className={cn(styles.FlexTable, className)}
+        className={cn('FlexTable', className)}
         style={{
+          ...style.FlexTable,
           maxWidth: width
         }}
       >
         {!disableHeader && (
           <div
-            className={cn(styles.headerRow, rowClass)}
+            className={cn('FlexTable__headerRow', rowClass)}
             style={{
+              ...style.headerRow,
               height: headerHeight
             }}
           >
@@ -188,11 +189,6 @@ export default class FlexTable extends Component {
     const renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData)
 
     const flex = this._getFlexStyleForColumn(column)
-    const style = {
-      WebkitFlex: flex,
-      msFlex: flex,
-      flex: flex
-    }
 
     const title = typeof renderedCell === 'string'
       ? renderedCell
@@ -201,11 +197,16 @@ export default class FlexTable extends Component {
     return (
       <div
         key={`Row${rowIndex}-Col${columnIndex}`}
-        className={styles.rowColumn}
-        style={style}
+        className='FlexTable__rowColumn'
+        style={{
+          ...style.rowColumn,
+          WebkitFlex: flex,
+          msFlex: flex,
+          flex: flex
+        }}
       >
         <div
-          className={cn(styles.truncatedColumnText, cellClassName)}
+          className={cn('FlexTable__truncatedColumnText', cellClassName)}
           title={title}
         >
           {renderedCell}
@@ -220,16 +221,13 @@ export default class FlexTable extends Component {
     const showSortIndicator = sortBy === dataKey
     const sortEnabled = !disableSort && sort
 
-    const classNames = cn(styles.headerColumn,
+    const classNames = cn('FlexTable__headerColumn',
       this.props.headerClassName,
       column.props.headerClassName,
       {
-        [styles.sortableHeaderColumn]: sortEnabled
+        ['FlexTable__sortableHeaderColumn']: sortEnabled
       }
     )
-    const style = {
-      flex: this._getFlexStyleForColumn(column)
-    }
 
     // If this is a sortable header, clicking it should update the table data's sorting.
     const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
@@ -241,11 +239,14 @@ export default class FlexTable extends Component {
       <div
         key={`Header-Col${columnIndex}`}
         className={classNames}
-        style={style}
+        style={{
+          ...style.headerColumn,
+          flex: this._getFlexStyleForColumn(column)
+        }}
         onClick={onClick}
       >
         <div
-          className={styles.headerTruncatedText}
+          className='FlexTable__headerTruncatedText'
           title={label}
         >
           {label}
@@ -280,9 +281,10 @@ export default class FlexTable extends Component {
     return (
       <div
         key={rowIndex}
-        className={cn(styles.row, rowClass)}
+        className={cn('FlexTable__row', rowClass)}
         onClick={() => onRowClick(rowIndex)}
         style={{
+          ...style.row,
           height: rowHeight
         }}
       >
@@ -321,9 +323,12 @@ export default class FlexTable extends Component {
  */
 export function SortIndicator ({ sortDirection }) {
   return (
-    <div data-sort-direction={sortDirection}>
+    <div
+      className='FlexTable__sortableHeaderIconContainer'
+      data-sort-direction={sortDirection}
+    >
       <svg
-        className={styles.sortableHeaderIcon}
+        className='FlexTable__sortableHeaderIcon'
         width={18}
         height={18}
         viewBox='0 0 24 24'
@@ -340,4 +345,32 @@ export function SortIndicator ({ sortDirection }) {
 }
 SortIndicator.propTypes = {
   sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
+}
+
+const style = {
+  FlexTable: {
+    width: '100%'
+  },
+  headerRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    overflow: 'hidden'
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    overflow: 'hidden'
+  },
+  headerColumn: {
+    display: 'flex',
+    flexDirection: 'row',
+    overflow: 'hidden'
+  },
+  rowColumn: {
+    display: 'flex',
+    overflow: 'hidden',
+    height: '100%'
+  }
 }

@@ -5,6 +5,7 @@ import FlexTableExample from '../FlexTable/FlexTable.example'
 import NavLink from './NavLink'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
 import styles from './Application.css'
+import '../../theme.css'
 
 render((
     <div className={styles.demo}>
