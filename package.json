@@ -105,7 +105,8 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
-    "classnames": "^2.2.1",
+    "classnames": "^2.2.3",
+    "inline-style-prefixer": "^0.6.2",
     "raf": "^3.1.0",
     "react-pure-render": "^1.0.2"
   },

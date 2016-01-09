@@ -10,6 +10,9 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
 export default class AutoSizer extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate
 
+  /** Default presentational styles for all <AutoSizer> instances. */
+  static defaultStyleSheet = presentationalStyles
+
   static propTypes = {
     /**
      * Component to manage width/height of.
@@ -23,6 +26,10 @@ export default class AutoSizer extends Component {
      * Although it is recommended to declare child component as a normal React child instead.
      */
     ChildComponent: PropTypes.any
+  }
+
+  static defaultProps = {
+    styleSheet: AutoSizer.defaultStyleSheet
   }
 
   constructor (props) {
@@ -72,8 +79,10 @@ export default class AutoSizer extends Component {
     return (
       <div
         ref={this._setRef}
-        className='AutoSizer'
-        style={style.AutoSizer}
+        style={{
+          ...functionalStyles.AutoSizer,
+          ...presentationalStyles.AutoSizer
+        }}
       >
         {child}
       </div>
@@ -94,9 +103,14 @@ export default class AutoSizer extends Component {
   }
 }
 
-const style = {
+const functionalStyles = {
   AutoSizer: {
     width: '100%',
     height: '100%'
+  }
+}
+
+const presentationalStyles = {
+  AutoSizer: {
   }
 }

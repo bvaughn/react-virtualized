@@ -1,15 +1,20 @@
 /** @flow */
-import shouldPureComponentUpdate from 'react-pure-render/function'
-import React, { Component, PropTypes } from 'react'
-import cn from 'classnames'
-import raf from 'raf'
 import {
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
-  initOnRowsRenderedHelper
+  initOnRowsRenderedHelper,
+  prefixStyleSheet
 } from '../utils'
+import cn from 'classnames'
+import raf from 'raf'
+import React, { Component, PropTypes } from 'react'
+import shouldPureComponentUpdate from 'react-pure-render/function'
 
+/**
+ * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
+ * This improves performance and makes scrolling smoother.
+ */
 const IS_SCROLLING_TIMEOUT = 150
 
 /**
@@ -25,6 +30,9 @@ const IS_SCROLLING_TIMEOUT = 150
  */
 export default class VirtualScroll extends Component {
   static shouldComponentUpdate = shouldPureComponentUpdate
+
+  /** Default presentational styles for all <VirtualScroll> instances. */
+  static defaultStyleSheet = presentationalStyles
 
   static propTypes = {
     /** Optional CSS class name */
@@ -45,12 +53,15 @@ export default class VirtualScroll extends Component {
     /** Number of rows in list. */
     rowsCount: PropTypes.number.isRequired,
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
-    scrollToIndex: PropTypes.number
+    scrollToIndex: PropTypes.number,
+    /** Specifies presentational styles for component. */
+    styleSheet: PropTypes.object
   }
 
   static defaultProps = {
     noRowsRenderer: () => null,
-    onRowsRendered: () => null
+    onRowsRendered: () => null,
+    styleSheet: VirtualScroll.defaultStyleSheet
   }
 
   constructor (props, context) {
@@ -269,15 +280,17 @@ export default class VirtualScroll extends Component {
         onWheel={this._onWheel}
         tabIndex={0}
         style={{
-          ...style.VirtualScroll,
+          ...functionalStyles.VirtualScroll,
+          ...presentationalStyles.VirtualScroll,
           height: height
         }}
       >
         {rowsCount > 0 &&
           <div
-            className='VirtualScroll_innerScrollContainer'
+            className='VirtualScroll__innerScrollContainer'
             style={{
-              ...style.innerScrollContainer,
+              ...functionalStyles.innerScrollContainer,
+              ...presentationalStyles.innerScrollContainer,
               height: this._getTotalRowsHeight(),
               maxHeight: this._getTotalRowsHeight(),
               pointerEvents: isScrolling ? 'none' : 'auto'
@@ -479,7 +492,7 @@ export default class VirtualScroll extends Component {
   }
 }
 
-const style = {
+const functionalStyles = prefixStyleSheet({
   VirtualScroll: {
     position: 'relative',
     overflow: 'auto',
@@ -489,5 +502,12 @@ const style = {
     boxSizing: 'border-box',
     overflowX: 'auto',
     overflowY: 'hidden'
+  }
+})
+
+const presentationalStyles = {
+  VirtualScroll: {
+  },
+  innerScrollContainer: {
   }
 }

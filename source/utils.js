@@ -1,3 +1,7 @@
+import Prefixer from 'inline-style-prefixer'
+
+const prefixer = new Prefixer()
+
 /**
  * Binary search function inspired by react-infinite.
  */
@@ -169,4 +173,15 @@ export function initOnRowsRenderedHelper () {
       onRowsRendered({ startIndex, stopIndex })
     }
   }
+}
+
+/**
+ * Adds vender prefixes for all of the styles in a stylesheet and returns a prefixed copy.
+ */
+export function prefixStyleSheet (styleSheet) {
+  const prefixedStyleSheet = {}
+  for (var style in styleSheet) {
+    prefixedStyleSheet[style] = prefixer.prefix(styleSheet[style])
+  }
+  return prefixedStyleSheet
 }
