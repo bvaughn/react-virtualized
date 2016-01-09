@@ -1,14 +1,10 @@
 Changelog
 ------------
 
-## 3.0.0
+#### 2.9.0
 CSS styles have been split into two groups: functional styles (eg. `position`, `overflow`) and presentational styles (eg. `text-transform`, `color`) and both have been converted to inline styles rather than being loaded as CSS. This was done primarily to simplify usage for universal/isomorphic rendering.
 
-Functional styles cannot be overridden but you can override presentational styles in a variety of ways:
-* Load your own CSS file that defines global classes (eg. `FlexTable`, `FlexTable__row`) to append to default styles.
-* Supply a custom `styleSheet` to a component (eg. `<VirtualScroll styleSheet={...}/>`) to override default styles for a single component instance.
-* Override the static `defaultStyleSheet` property of a component class (eg. `FlexTable.defaultStyleSheet = {...}` to customize styles for all instances.
-* Specify custom class names to be appended to a component instance (eg. `FlexTable` supports `className`, `headerClassName`, and `rowClassName`). Read more about which class names are supported in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
+For more information on customizing styles refer to the [documentation](https://github.com/bvaughn/react-virtualized/#customizing-styles)...
 
 #### 2.8.0
 Changed `Autosizer` component to support a single child instead of the `ChildComponent` property.

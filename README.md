@@ -22,13 +22,31 @@ Documentation
 
 API documentation available [here](docs/README.md).
 
+### Customizing Styles
+
 React virtual CSS styles are split into two groups: functional styles (eg. `position`, `overflow`) and presentational styles (eg. `text-transform`, `color`). Both are defined as inline styles (rather than external CSS) to simplify usage for universal/isomorphic rendering.
 
 Functional styles cannot be overridden but you can override presentational styles in a variety of ways:
-* Load your own CSS file that defines global classes (eg. `FlexTable`, `FlexTable__row`) to append to default styles.
-* Supply a custom `styleSheet` to a component (eg. `<VirtualScroll styleSheet={...}/>`) to override default styles for a single component instance.
-* Override the static `defaultStyleSheet` property of a component class (eg. `FlexTable.defaultStyleSheet = {...}` to customize styles for all instances.
-* Specify custom class names to be appended to a component instance (eg. `FlexTable` supports `className`, `headerClassName`, and `rowClassName`). Read more about which class names are supported in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
+
+###### Styling a single component
+
+Supply a custom `styleSheet` to a component (eg. `<VirtualScroll styleSheet={...}/>`) to override default styles for a single component instance. Styles injected as properties will be automatically processed to add vendor prefixes.
+
+Learn more about which styles a component supports in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
+
+###### Styling all instances
+
+Override the static `defaultStyleSheet` property of a component class (eg. `FlexTable.defaultStyleSheet = {...}` to customize styles for all instances.
+
+###### Global CSS
+Load an external CSS file that defines global classes (eg. `FlexTable`, `FlexTable__row`) to append to default inline styles.
+
+Learn more about which class names a component supports in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
+
+###### CSS Modules
+If you are using CSS modules you can specify custom class names to be appended to a component instance (eg. `FlexTable` supports `className`, `headerClassName`, and `rowClassName` properties).
+
+Learn more about which class names are supported in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
 
 Examples
 ---------------
@@ -145,6 +163,26 @@ ReactDOM.render(
   document.getElementById('example')
 );
 ```
+
+Note that in this example we initialize `height` to 0. (We do this because it is a required property and React will warn in dev mode if we leave it off.) However the `AutoSizer` wrapper component will inject a valid height for us.
+
+Contributions
+------------
+
+Use [GitHub issues](https://github.com/bvaughn/react-virtualized/issues) for requests.
+
+I actively welcome pull requests; learn how to [contribute](https://github.com/bvaughn/react-virtualized/blob/master/CONTRIBUTING.md).
+
+Changelog
+---------
+
+Changes are tracked in the [changelog](https://github.com/bvaughn/react-virtualized/blob/master/CHANGELOG.md).
+
+License
+---------
+
+*react-virtualized* is available under the MIT License.
+
 
 Note that in this example we initialize `height` to 0. (We do this because it is a required property and React will warn in dev mode if we leave it off.) However the `AutoSizer` wrapper component will inject a valid height for us.
 
