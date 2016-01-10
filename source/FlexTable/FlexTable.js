@@ -165,8 +165,8 @@ export default class FlexTable extends Component {
       <div
         className={cn('FlexTable', className)}
         style={{
-          ...functionalStyles.FlexTable,
           ...styleSheet.FlexTable,
+          ...functionalStyles.FlexTable,
           maxWidth: width
         }}
       >
@@ -174,8 +174,8 @@ export default class FlexTable extends Component {
           <div
             className={cn('FlexTable__headerRow', rowClass)}
             style={{
-              ...functionalStyles.headerRow,
               ...styleSheet.headerRow,
+              ...functionalStyles.headerRow,
               height: headerHeight
             }}
           >
@@ -220,8 +220,8 @@ export default class FlexTable extends Component {
         key={`Row${rowIndex}-Col${columnIndex}`}
         className={cn('FlexTable__rowColumn', cellClassName)}
         style={{
-          ...functionalStyles.rowColumn,
           ...styleSheet.rowColumn,
+          ...functionalStyles.rowColumn,
           ...prefixStyle({ flex })
         }}
       >
@@ -268,8 +268,8 @@ export default class FlexTable extends Component {
         key={`Header-Col${columnIndex}`}
         className={classNames}
         style={{
-          ...functionalStyles.headerColumn,
           ...styleSheet.headerColumn,
+          ...functionalStyles.headerColumn,
           ...sortableStyles,
           ...prefixStyle({ flex })
         }}
@@ -320,8 +320,8 @@ export default class FlexTable extends Component {
         className={cn('FlexTable__row', rowClass)}
         onClick={() => onRowClick(rowIndex)}
         style={{
-          ...functionalStyles.row,
           ...styleSheet.row,
+          ...functionalStyles.row,
           height: rowHeight
         }}
       >

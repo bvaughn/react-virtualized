@@ -21,12 +21,14 @@ describe('VirtualScroll', () => {
   const list = Immutable.fromJS(array)
 
   function getMarkup ({
+    className = undefined,
     height = 100,
     noRowsRenderer = undefined,
     onRowsRendered = undefined,
     rowHeight = 10,
     rowsCount = list.size,
-    scrollToIndex = undefined
+    scrollToIndex = undefined,
+    styleSheet = undefined
   } = {}) {
     function rowRenderer (index) {
       return (
@@ -41,6 +43,7 @@ describe('VirtualScroll', () => {
 
     return (
       <VirtualScroll
+        className={className}
         height={height}
         noRowsRenderer={noRowsRenderer}
         onRowsRendered={onRowsRendered}
@@ -48,6 +51,7 @@ describe('VirtualScroll', () => {
         rowRenderer={rowRenderer}
         rowsCount={rowsCount}
         scrollToIndex={scrollToIndex}
+        styleSheet={styleSheet}
       />
     )
   }
@@ -220,6 +224,40 @@ describe('VirtualScroll', () => {
       })
       expect(startIndex).toEqual(undefined)
       expect(stopIndex).toEqual(undefined)
+    })
+  })
+
+  describe('styles and classeNames', () => {
+    it('should use the expected global CSS classNames', () => {
+      const node = findDOMNode(renderList())
+      expect(node.className).toEqual('VirtualScroll')
+      expect(node.querySelectorAll('.VirtualScroll__innerScrollContainer').length).toEqual(1)
+    })
+
+    it('should use a custom :className if specified', () => {
+      const node = findDOMNode(renderList({ className: 'foo' }))
+      expect(node.className).toContain('foo')
+    })
+
+    it('should use custom :styleSheet if specified', () => {
+      const node = findDOMNode(renderList({
+        styleSheet: {
+          VirtualScroll: { color: 'red' },
+          innerScrollContainer: { color: 'green' }
+        }
+      }))
+      expect(node.style.color).toEqual('red')
+      expect(node.querySelector('.VirtualScroll__innerScrollContainer').style.color).toEqual('green')
+    })
+
+    it('should use overriden static styles', () => {
+      const backup = { ...VirtualScroll.defaultStyleSheet }
+      VirtualScroll.defaultStyleSheet.VirtualScroll = { color: 'blue' }
+      VirtualScroll.defaultStyleSheet.innerScrollContainer = { color: 'purple' }
+      const node = findDOMNode(renderList())
+      expect(node.style.color).toEqual('blue')
+      expect(node.querySelector('.VirtualScroll__innerScrollContainer').style.color).toEqual('purple')
+      VirtualScroll.defaultStyleSheet = backup
     })
   })
 })

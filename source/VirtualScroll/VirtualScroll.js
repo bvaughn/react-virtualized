@@ -284,8 +284,8 @@ export default class VirtualScroll extends Component {
         onWheel={this._onWheel}
         tabIndex={0}
         style={{
-          ...functionalStyles.VirtualScroll,
           ...styleSheet.VirtualScroll,
+          ...functionalStyles.VirtualScroll,
           height: height
         }}
       >
@@ -293,8 +293,8 @@ export default class VirtualScroll extends Component {
           <div
             className='VirtualScroll__innerScrollContainer'
             style={{
-              ...functionalStyles.innerScrollContainer,
               ...styleSheet.innerScrollContainer,
+              ...functionalStyles.innerScrollContainer,
               height: this._getTotalRowsHeight(),
               maxHeight: this._getTotalRowsHeight(),
               pointerEvents: isScrolling ? 'none' : 'auto'

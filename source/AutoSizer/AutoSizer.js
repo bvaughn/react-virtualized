@@ -1,4 +1,5 @@
 /** @flow */
+import cn from 'classnames'
 import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import { prefixStyleSheet } from '../utils'
@@ -23,12 +24,10 @@ export default class AutoSizer extends Component {
      * Although it is recommended to declare child component as a normal React child instead.
      */
     ChildComponent: PropTypes.any,
+    /** Optional CSS class name */
+    className: PropTypes.string,
     /** Specifies presentational styles for component. */
     styleSheet: PropTypes.object
-  }
-
-  static defaultProps = {
-    styleSheet: AutoSizer.defaultStyleSheet
   }
 
   constructor (props) {
@@ -36,7 +35,7 @@ export default class AutoSizer extends Component {
 
     this.state = {
       height: 0,
-      styleSheet: prefixStyleSheet(props.styleSheet),
+      styleSheet: prefixStyleSheet(props.styleSheet || AutoSizer.defaultStyleSheet),
       width: 0
     }
 
@@ -66,7 +65,7 @@ export default class AutoSizer extends Component {
   }
 
   render () {
-    const { children, ChildComponent, ...props } = this.props
+    const { children, ChildComponent, className, ...props } = this.props
     const { height, styleSheet, width } = this.state
 
     let child
@@ -87,9 +86,10 @@ export default class AutoSizer extends Component {
     return (
       <div
         ref={this._setRef}
+        className={cn('AutoSizer', className)}
         style={{
-          ...functionalStyles.AutoSizer,
-          ...styleSheet.AutoSizer
+          ...styleSheet.AutoSizer,
+          ...functionalStyles.AutoSizer
         }}
       >
         {child}

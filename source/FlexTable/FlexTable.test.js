@@ -39,37 +39,43 @@ describe('FlexTable', () => {
   function getMarkup ({
     cellRenderer = undefined,
     cellDataGetter = undefined,
+    className = undefined,
     disableSort = false,
+    headerClassName = undefined,
     headerHeight = 20,
     height = 100,
     noRowsRenderer = undefined,
     onRowClick = undefined,
     onRowsRendered = undefined,
+    rowClassName = undefined,
     rowGetter = immutableRowGetter,
     rowHeight = 10,
     rowsCount = list.size,
-    rowClassName = undefined,
     scrollToIndex = undefined,
     sort = undefined,
     sortBy = undefined,
     sortDirection = undefined,
+    styleSheet = undefined,
     width = 100
   } = {}) {
     return (
       <FlexTable
-        width={width}
+        className={className}
+        headerClassName={headerClassName}
         headerHeight={headerHeight}
         height={height}
         noRowsRenderer={noRowsRenderer}
         onRowClick={onRowClick}
         onRowsRendered={onRowsRendered}
+        rowClassName={rowClassName}
         rowGetter={rowGetter}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
-        rowClassName={rowClassName}
         sort={sort}
         sortBy={sortBy}
         sortDirection={sortDirection}
+        styleSheet={styleSheet}
+        width={width}
       >
         <FlexColumn
           label='Name'
@@ -424,6 +430,58 @@ describe('FlexTable', () => {
       })
       expect(startIndex).toEqual(undefined)
       expect(stopIndex).toEqual(undefined)
+    })
+  })
+
+  describe('styles and classeNames', () => {
+    it('should use the expected global CSS classNames', () => {
+      const node = findDOMNode(renderTable({
+        sort: () => {},
+        sortBy: 'name',
+        sortDirection: SortDirection.ASC
+      }))
+      expect(node.className).toEqual('FlexTable')
+      expect(node.querySelector('.FlexTable__headerRow')).toBeTruthy()
+      expect(node.querySelector('.FlexTable__rowColumn')).toBeTruthy()
+      expect(node.querySelector('.FlexTable__truncatedColumnText')).toBeTruthy()
+      expect(node.querySelector('.FlexTable__headerColumn')).toBeTruthy()
+      expect(node.querySelector('.FlexTable__headerTruncatedText')).toBeTruthy()
+      expect(node.querySelector('.FlexTable__row')).toBeTruthy()
+      expect(node.querySelector('.FlexTable__sortableHeaderColumn')).toBeTruthy()
+      expect(node.querySelector('.FlexTable__sortableHeaderIconContainer')).toBeTruthy()
+      expect(node.querySelector('.FlexTable__sortableHeaderIcon')).toBeTruthy()
+    })
+
+    it('should use a custom :className if specified', () => {
+      const node = findDOMNode(renderTable({
+        className: 'foo',
+        headerClassName: 'bar',
+        rowClassName: 'baz'
+      }))
+      expect(node.className).toContain('foo')
+      expect(node.querySelectorAll('.bar').length).toEqual(2)
+      expect(node.querySelectorAll('.baz').length).toEqual(9)
+    })
+
+    it('should use custom :styleSheet if specified', () => {
+      const node = findDOMNode(renderTable({
+        styleSheet: {
+          headerColumn: { color: 'red' },
+          rowColumn: { color: 'green' }
+        }
+      }))
+      expect(node.querySelector('.FlexTable__headerColumn').style.color).toEqual('red')
+      expect(node.querySelector('.FlexTable__rowColumn').style.color).toEqual('green')
+    })
+
+    it('should use overriden static styles', () => {
+      const backup = { ...FlexTable.defaultStyleSheet }
+      FlexTable.defaultStyleSheet.headerColumn = { color: 'blue' }
+      FlexTable.defaultStyleSheet.rowColumn = { color: 'purple' }
+      const node = findDOMNode(renderTable())
+      expect(node.querySelector('.FlexTable__headerColumn').style.color).toEqual('blue')
+      expect(node.querySelector('.FlexTable__rowColumn').style.color).toEqual('purple')
+      FlexTable.defaultStyleSheet = backup
     })
   })
 })
