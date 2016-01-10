@@ -1,6 +1,6 @@
 !function(root, factory) {
     "object" == typeof exports && "object" == typeof module ? module.exports = factory(require("react")) : "function" == typeof define && define.amd ? define([ "react" ], factory) : "object" == typeof exports ? exports["react-virtualized"] = factory(require("react")) : root["react-virtualized"] = factory(root.React);
-}(this, function(__WEBPACK_EXTERNAL_MODULE_3__) {
+}(this, function(__WEBPACK_EXTERNAL_MODULE_4__) {
     /******/
     return function(modules) {
         /******/
@@ -79,7 +79,7 @@
                 return _AutoSizer.AutoSizer;
             }
         });
-        var _FlexTable = __webpack_require__(11);
+        var _FlexTable = __webpack_require__(25);
         Object.defineProperty(exports, "FlexTable", {
             enumerable: !0,
             get: function() {
@@ -101,7 +101,7 @@
                 return _FlexTable.SortIndicator;
             }
         });
-        var _VirtualScroll = __webpack_require__(14);
+        var _VirtualScroll = __webpack_require__(28);
         Object.defineProperty(exports, "VirtualScroll", {
             enumerable: !0,
             get: function() {
@@ -188,11 +188,12 @@
                 if (null === parent) return;
                 _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
             }
-        }, _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _AutoSizerCss = __webpack_require__(6), _AutoSizerCss2 = _interopRequireDefault(_AutoSizerCss), AutoSizer = function(_Component) {
+        }, _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _utils = __webpack_require__(7), AutoSizer = function(_Component) {
             function AutoSizer(props) {
                 _classCallCheck(this, AutoSizer), _get(Object.getPrototypeOf(AutoSizer.prototype), "constructor", this).call(this, props), 
                 this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
                     height: 0,
+                    styleSheet: (0, _utils.prefixStyleSheet)(props.styleSheet || AutoSizer.defaultStyleSheet),
                     width: 0
                 }, this._onResize = this._onResize.bind(this), this._setRef = this._setRef.bind(this);
             }
@@ -209,7 +210,11 @@
 	       * If specified it will override any React children,
 	       * Although it is recommended to declare child component as a normal React child instead.
 	       */
-                    ChildComponent: _react.PropTypes.any
+                    ChildComponent: _react.PropTypes.any,
+                    /** Optional CSS class name */
+                    className: _react.PropTypes.string,
+                    /** Specifies presentational styles for component. */
+                    styleSheet: _react.PropTypes.object
                 },
                 enumerable: !0
             } ]), _createClass(AutoSizer, [ {
@@ -217,7 +222,7 @@
                 value: function() {
                     // Defer requiring resize handler in order to support server-side rendering.
                     // See issue #41
-                    this._detectElementResize = __webpack_require__(10), this._detectElementResize.addResizeListener(this._parentNode, this._onResize), 
+                    this._detectElementResize = __webpack_require__(24), this._detectElementResize.addResizeListener(this._parentNode, this._onResize), 
                     this._onResize();
                 }
             }, {
@@ -226,9 +231,16 @@
                     this._detectElementResize.removeResizeListener(this._parentNode, this._onResize);
                 }
             }, {
+                key: "componentWillUpdate",
+                value: function(nextProps, nextState) {
+                    this.props.styleSheet !== nextProps.styleSheet && this.setState({
+                        styleSheet: (0, _utils.prefixStyleSheet)(nextProps.styleSheet)
+                    });
+                }
+            }, {
                 key: "render",
                 value: function() {
-                    var _props = this.props, children = _props.children, ChildComponent = _props.ChildComponent, props = _objectWithoutProperties(_props, [ "children", "ChildComponent" ]), _state = this.state, height = _state.height, width = _state.width, child = void 0;
+                    var _props = this.props, children = _props.children, ChildComponent = _props.ChildComponent, className = _props.className, props = _objectWithoutProperties(_props, [ "children", "ChildComponent", "className" ]), _state = this.state, height = _state.height, styleSheet = _state.styleSheet, width = _state.width, child = void 0;
                     return ChildComponent ? child = _react2["default"].createElement(ChildComponent, _extends({
                         height: height,
                         width: width
@@ -237,7 +249,8 @@
                         width: width
                     })), _react2["default"].createElement("div", {
                         ref: this._setRef,
-                        className: _AutoSizerCss2["default"].Wrapper
+                        className: (0, _classnames2["default"])("AutoSizer", className),
+                        style: _extends({}, styleSheet.AutoSizer, functionalStyles.AutoSizer)
                     }, child);
                 }
             }, {
@@ -256,12 +269,50 @@
                 }
             } ]), AutoSizer;
         }(_react.Component);
-        exports["default"] = AutoSizer, module.exports = exports["default"];
+        exports["default"] = AutoSizer;
+        var functionalStyles = {
+            AutoSizer: {
+                width: "100%",
+                height: "100%"
+            }
+        };
+        /** Default presentational styles for all <AutoSizer> instances. */
+        AutoSizer.defaultStyleSheet = {
+            AutoSizer: {}
+        }, module.exports = exports["default"];
     }, /* 3 */
     /***/
-    function(module, exports) {
-        module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
+    function(module, exports, __webpack_require__) {
+        var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+        /*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+        /* global define */
+        !function() {
+            "use strict";
+            function classNames() {
+                for (var classes = [], i = 0; i < arguments.length; i++) {
+                    var arg = arguments[i];
+                    if (arg) {
+                        var argType = typeof arg;
+                        if ("string" === argType || "number" === argType) classes.push(arg); else if (Array.isArray(arg)) classes.push(classNames.apply(null, arg)); else if ("object" === argType) for (var key in arg) hasOwn.call(arg, key) && arg[key] && classes.push(key);
+                    }
+                }
+                return classes.join(" ");
+            }
+            var hasOwn = {}.hasOwnProperty;
+            "undefined" != typeof module && module.exports ? module.exports = classNames : (__WEBPACK_AMD_DEFINE_ARRAY__ = [], 
+            __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+                return classNames;
+            }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), !(void 0 !== __WEBPACK_AMD_DEFINE_RESULT__ && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)));
+        }();
     }, /* 4 */
+    /***/
+    function(module, exports) {
+        module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
+    }, /* 5 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -274,9 +325,9 @@
             return !(0, _shallowEqual2["default"])(this.props, nextProps) || !(0, _shallowEqual2["default"])(this.state, nextState);
         }
         exports.__esModule = !0, exports["default"] = shouldPureComponentUpdate;
-        var _shallowEqual = __webpack_require__(5), _shallowEqual2 = _interopRequireDefault(_shallowEqual);
+        var _shallowEqual = __webpack_require__(6), _shallowEqual2 = _interopRequireDefault(_shallowEqual);
         module.exports = exports["default"];
-    }, /* 5 */
+    }, /* 6 */
     /***/
     function(module, exports) {
         "use strict";
@@ -289,202 +340,1431 @@
             return !0;
         }
         exports.__esModule = !0, exports["default"] = shallowEqual, module.exports = exports["default"];
-    }, /* 6 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        // style-loader: Adds some css to the DOM by adding a <style> tag
-        // load the styles
-        var content = __webpack_require__(7);
-        "string" == typeof content && (content = [ [ module.id, content, "" ] ]);
-        // add the styles to the DOM
-        __webpack_require__(9)(content, {});
-        content.locals && (module.exports = content.locals);
     }, /* 7 */
     /***/
     function(module, exports, __webpack_require__) {
-        exports = module.exports = __webpack_require__(8)(), exports.push([ module.id, "._3qJh3o88orzNqwhRZG_NxE{width:100%;height:100%}", "" ]), 
-        exports.locals = {
-            Wrapper: "_3qJh3o88orzNqwhRZG_NxE"
-        };
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        /**
+	 * Binary search function inspired by react-infinite.
+	 */
+        function findNearestCell(_ref) {
+            for (var cellMetadata = _ref.cellMetadata, mode = _ref.mode, offset = _ref.offset, high = cellMetadata.length - 1, low = 0, middle = void 0, currentOffset = void 0; high >= low; ) {
+                if (middle = low + Math.floor((high - low) / 2), currentOffset = cellMetadata[middle].offset, 
+                currentOffset === offset) return middle;
+                offset > currentOffset ? low = middle + 1 : currentOffset > offset && (high = middle - 1);
+            }
+            return mode === findNearestCell.EQUAL_OR_LOWER && low > 0 ? low - 1 : mode === findNearestCell.EQUAL_OR_HIGHER && high < cellMetadata.length - 1 ? high + 1 : void 0;
+        }
+        /**
+	 * Determines a new offset that ensures a certain cell is visible, given the current offset.
+	 * If the cell is already visible then the current offset will be returned.
+	 * If the current offset is too great or small, it will be adjusted just enough to ensure the specified index is visible.
+	 *
+	 * @param cellMetadata Metadata initially computed by initCellMetadata()
+	 * @param containerSize Total size (width or height) of the container
+	 * @param currentOffset Container's current (x or y) offset
+	 * @param targetIndex Index of target cell
+	 * @return Offset to use to ensure the specified cell is visible
+	 */
+        function getUpdatedOffsetForIndex(_ref2) {
+            var cellMetadata = _ref2.cellMetadata, containerSize = _ref2.containerSize, currentOffset = _ref2.currentOffset, targetIndex = _ref2.targetIndex;
+            if (0 === cellMetadata.length) return 0;
+            targetIndex = Math.max(0, Math.min(cellMetadata.length - 1, targetIndex));
+            var datum = cellMetadata[targetIndex], maxOffset = datum.offset, minOffset = maxOffset - containerSize + datum.size, newOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
+            return newOffset;
+        }
+        /**
+	 * Determines the range of cells to display for a given offset in order to fill the specified container.
+	 *
+	 * @param cellCount Total number of cells.
+	 * @param cellMetadata Metadata initially computed by initCellMetadata()
+	 * @param containerSize Total size (width or height) of the container
+	 * @param currentOffset Container's current (x or y) offset
+	 * @return An object containing :start and :stop attributes, each specifying a cell index
+	 */
+        function getVisibleCellIndices(_ref3) {
+            var cellCount = _ref3.cellCount, cellMetadata = _ref3.cellMetadata, containerSize = _ref3.containerSize, currentOffset = _ref3.currentOffset;
+            if (0 === cellCount) return {};
+            currentOffset = Math.max(0, currentOffset);
+            var maxOffset = currentOffset + containerSize, start = findNearestCell({
+                cellMetadata: cellMetadata,
+                mode: findNearestCell.EQUAL_OR_LOWER,
+                offset: currentOffset
+            }), datum = cellMetadata[start];
+            currentOffset = datum.offset + datum.size;
+            for (var stop = start; maxOffset > currentOffset && cellCount - 1 > stop; ) stop++, 
+            currentOffset += cellMetadata[stop].size;
+            return {
+                start: start,
+                stop: stop
+            };
+        }
+        /**
+	 * Initializes metadata for an axis and its cells.
+	 * This data is used to determine which cells are visible given a container size and scroll position.
+	 *
+	 * @param cellCount Total number of cells.
+	 * @param size Either a fixed size or a function that returns the size for a given given an index.
+	 * @return Object mapping cell index to cell metadata (size, offset)
+	 */
+        function initCellMetadata(_ref4) {
+            for (var cellCount = _ref4.cellCount, size = _ref4.size, sizeGetter = size instanceof Function ? size : function(index) {
+                return size;
+            }, cellMetadata = [], offset = 0, i = 0; cellCount > i; i++) {
+                var _size = sizeGetter(i);
+                cellMetadata[i] = {
+                    size: _size,
+                    offset: offset
+                }, offset += _size;
+            }
+            return cellMetadata;
+        }
+        /**
+	 * Helper utility that updates the specified onRowsRendered callback on when start or stop indices have changed.
+	 */
+        function initOnRowsRenderedHelper() {
+            var cachedStartIndex = void 0, cachedStopIndex = void 0;
+            return function(_ref5) {
+                var onRowsRendered = _ref5.onRowsRendered, startIndex = _ref5.startIndex, stopIndex = _ref5.stopIndex;
+                startIndex >= 0 && stopIndex >= 0 && (startIndex !== cachedStartIndex || stopIndex !== cachedStopIndex) && (cachedStartIndex = startIndex, 
+                cachedStopIndex = stopIndex, onRowsRendered({
+                    startIndex: startIndex,
+                    stopIndex: stopIndex
+                }));
+            };
+        }
+        /**
+	 * Adds vender prefixes to a style object.
+	 */
+        function prefixStyle(style) {
+            return prefixer.prefix(style);
+        }
+        /**
+	 * Adds vender prefixes for all of the styles in a stylesheet and returns a prefixed copy.
+	 */
+        function prefixStyleSheet(styleSheet) {
+            var prefixedStyleSheet = {};
+            for (var style in styleSheet) prefixedStyleSheet[style] = prefixStyle(styleSheet[style]);
+            return prefixedStyleSheet;
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports.findNearestCell = findNearestCell, exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex, 
+        exports.getVisibleCellIndices = getVisibleCellIndices, exports.initCellMetadata = initCellMetadata, 
+        exports.initOnRowsRenderedHelper = initOnRowsRenderedHelper, exports.prefixStyle = prefixStyle, 
+        exports.prefixStyleSheet = prefixStyleSheet;
+        var _inlineStylePrefixer = __webpack_require__(8), _inlineStylePrefixer2 = _interopRequireDefault(_inlineStylePrefixer), prefixer = new _inlineStylePrefixer2["default"]();
+        findNearestCell.EQUAL_OR_LOWER = 1, findNearestCell.EQUAL_OR_HIGHER = 2;
     }, /* 8 */
     /***/
-    function(module, exports) {
-        /*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-        // css base code, injected by the css-loader
-        module.exports = function() {
-            var list = [];
-            // return the list of modules as css string
-            // import a list of modules into the list
-            return list.toString = function() {
-                for (var result = [], i = 0; i < this.length; i++) {
-                    var item = this[i];
-                    item[2] ? result.push("@media " + item[2] + "{" + item[1] + "}") : result.push(item[1]);
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
                 }
-                return result.join("");
-            }, list.i = function(modules, mediaQuery) {
-                "string" == typeof modules && (modules = [ [ null, modules, "" ] ]);
-                for (var alreadyImportedModules = {}, i = 0; i < this.length; i++) {
-                    var id = this[i][0];
-                    "number" == typeof id && (alreadyImportedModules[id] = !0);
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), _utilsGetBrowserInformation = __webpack_require__(9), _utilsGetBrowserInformation2 = _interopRequireDefault(_utilsGetBrowserInformation), _utilsGetPrefixedKeyframes = __webpack_require__(11), _utilsGetPrefixedKeyframes2 = _interopRequireDefault(_utilsGetPrefixedKeyframes), _utilsCapitalizeString = __webpack_require__(12), _utilsCapitalizeString2 = _interopRequireDefault(_utilsCapitalizeString), _utilsAssign = __webpack_require__(13), _utilsAssign2 = _interopRequireDefault(_utilsAssign), _utilsWarn = __webpack_require__(14), _utilsWarn2 = _interopRequireDefault(_utilsWarn), _caniuseData = __webpack_require__(16), _caniuseData2 = _interopRequireDefault(_caniuseData), _Plugins = __webpack_require__(17), _Plugins2 = _interopRequireDefault(_Plugins), browserWhitelist = [ "phantom" ], defaultUserAgent = "undefined" != typeof navigator ? navigator.userAgent : void 0, defaultOpts = {
+            userAgent: defaultUserAgent,
+            keepUnprefixed: !1
+        }, Prefixer = function() {
+            /**
+	   * Instantiante a new prefixer
+	   * @param {string} userAgent - userAgent to gather prefix information according to caniuse.com
+	   * @param {string} keepUnprefixed - keeps unprefixed properties and values
+	   */
+            function Prefixer() {
+                var _this = this, options = arguments.length <= 0 || void 0 === arguments[0] ? defaultOpts : arguments[0];
+                // Checks if the userAgent was resolved correctly
+                if (_classCallCheck(this, Prefixer), this._userAgent = options.userAgent, this._keepUnprefixed = options.keepUnprefixed, 
+                this._browserInfo = (0, _utilsGetBrowserInformation2["default"])(this._userAgent), 
+                !this._browserInfo || !this._browserInfo.prefix) return this._hasPropsRequiringPrefix = !1, 
+                (0, _utilsWarn2["default"])("Either the global navigator was undefined or an invalid userAgent was provided.", "Using a valid userAgent? Please let us know and create an issue at https://github.com/rofrischmann/inline-style-prefixer/issues"), 
+                !1;
+                this.cssPrefix = this._browserInfo.prefix.CSS, this.jsPrefix = this._browserInfo.prefix.inline, 
+                this.prefixedKeyframes = (0, _utilsGetPrefixedKeyframes2["default"])(this._browserInfo);
+                var data = this._browserInfo.browser && _caniuseData2["default"][this._browserInfo.browser];
+                // check for whitelisted browsers
+                // Do not throw a warning if whitelisted
+                return data ? (this._requiresPrefix = Object.keys(data).filter(function(key) {
+                    return data[key] >= _this._browserInfo.version;
+                }).reduce(function(result, name) {
+                    return result[name] = !0, result;
+                }, {}), void (this._hasPropsRequiringPrefix = Object.keys(this._requiresPrefix).length > 0)) : (browserWhitelist.forEach(function(browser) {
+                    _this._browserInfo[browser] && (_this._isWhitelisted = !0);
+                }), this._hasPropsRequiringPrefix = !1, this._isWhitelisted ? !0 : ((0, _utilsWarn2["default"])("Your userAgent seems to be not supported by inline-style-prefixer. Feel free to open an issue."), 
+                !1));
+            }
+            /**
+	   * Returns a prefixed version of the style object
+	   * @param {Object} styles - Style object that gets prefixed properties added
+	   * @returns {Object} - Style object with prefixed properties and values
+	   */
+            return _createClass(Prefixer, [ {
+                key: "prefix",
+                value: function(styles) {
+                    var _this2 = this;
+                    // only add prefixes if needed
+                    // only add prefixes if needed
+                    return this._hasPropsRequiringPrefix ? (styles = (0, _utilsAssign2["default"])({}, styles), 
+                    Object.keys(styles).forEach(function(property) {
+                        var value = styles[property];
+                        value instanceof Object ? styles[property] = _this2.prefix(value) : (_this2._requiresPrefix[property] && (styles[_this2.jsPrefix + (0, 
+                        _utilsCapitalizeString2["default"])(property)] = value, _this2._keepUnprefixed || delete styles[property]), 
+                        _Plugins2["default"].forEach(function(plugin) {
+                            (0, _utilsAssign2["default"])(styles, plugin(property, value, _this2._browserInfo, styles, _this2._keepUnprefixed, !1));
+                        }));
+                    }), styles) : styles;
                 }
-                for (i = 0; i < modules.length; i++) {
-                    var item = modules[i];
-                    // skip already imported module
-                    // this implementation is not 100% perfect for weird media query combinations
-                    //  when a module is imported multiple times with different media queries.
-                    //  I hope this will never occur (Hey this way we have smaller bundles)
-                    "number" == typeof item[0] && alreadyImportedModules[item[0]] || (mediaQuery && !item[2] ? item[2] = mediaQuery : mediaQuery && (item[2] = "(" + item[2] + ") and (" + mediaQuery + ")"), 
-                    list.push(item));
+            } ], [ {
+                key: "prefixAll",
+                value: function(styles) {
+                    var prefixes = {}, browserInfo = (0, _utilsGetBrowserInformation2["default"])("*");
+                    // there should always be at least one prefixed style, but just incase
+                    // there should always be at least one prefixed style, but just incase
+                    return browserInfo.browsers.forEach(function(browser) {
+                        var data = _caniuseData2["default"][browser];
+                        data && (0, _utilsAssign2["default"])(prefixes, data);
+                    }), !Object.keys(prefixes).length > 0 ? styles : (styles = (0, _utilsAssign2["default"])({}, styles), 
+                    Object.keys(styles).forEach(function(property) {
+                        var value = styles[property];
+                        if (value instanceof Object) styles[property] = Prefixer.prefixAll(value); else {
+                            var browsers = Object.keys(browserInfo.prefixes);
+                            browsers.forEach(function(browser) {
+                                var style = browserInfo.prefixes[browser];
+                                prefixes[property] && (styles[style.inline + (0, _utilsCapitalizeString2["default"])(property)] = value), 
+                                _Plugins2["default"].forEach(function(plugin) {
+                                    var browserInfo = {
+                                        name: browser,
+                                        prefix: style,
+                                        version: 0
+                                    };
+                                    (0, _utilsAssign2["default"])(styles, plugin(property, value, browserInfo, styles, !0, !0));
+                                });
+                            });
+                        }
+                    }), styles);
                 }
-            }, list;
-        };
+            } ]), Prefixer;
+        }();
+        exports["default"] = Prefixer, module.exports = exports["default"];
     }, /* 9 */
     /***/
     function(module, exports, __webpack_require__) {
-        function addStylesToDom(styles, options) {
-            for (var i = 0; i < styles.length; i++) {
-                var item = styles[i], domStyle = stylesInDom[item.id];
-                if (domStyle) {
-                    domStyle.refs++;
-                    for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j](item.parts[j]);
-                    for (;j < item.parts.length; j++) domStyle.parts.push(addStyle(item.parts[j], options));
-                } else {
-                    for (var parts = [], j = 0; j < item.parts.length; j++) parts.push(addStyle(item.parts[j], options));
-                    stylesInDom[item.id] = {
-                        id: item.id,
-                        refs: 1,
-                        parts: parts
-                    };
-                }
-            }
-        }
-        function listToStyles(list) {
-            for (var styles = [], newStyles = {}, i = 0; i < list.length; i++) {
-                var item = list[i], id = item[0], css = item[1], media = item[2], sourceMap = item[3], part = {
-                    css: css,
-                    media: media,
-                    sourceMap: sourceMap
-                };
-                newStyles[id] ? newStyles[id].parts.push(part) : styles.push(newStyles[id] = {
-                    id: id,
-                    parts: [ part ]
-                });
-            }
-            return styles;
-        }
-        function insertStyleElement(options, styleElement) {
-            var head = getHeadElement(), lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
-            if ("top" === options.insertAt) lastStyleElementInsertedAtTop ? lastStyleElementInsertedAtTop.nextSibling ? head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling) : head.appendChild(styleElement) : head.insertBefore(styleElement, head.firstChild), 
-            styleElementsInsertedAtTop.push(styleElement); else {
-                if ("bottom" !== options.insertAt) throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
-                head.appendChild(styleElement);
-            }
-        }
-        function removeStyleElement(styleElement) {
-            styleElement.parentNode.removeChild(styleElement);
-            var idx = styleElementsInsertedAtTop.indexOf(styleElement);
-            idx >= 0 && styleElementsInsertedAtTop.splice(idx, 1);
-        }
-        function createStyleElement(options) {
-            var styleElement = document.createElement("style");
-            return styleElement.type = "text/css", insertStyleElement(options, styleElement), 
-            styleElement;
-        }
-        function createLinkElement(options) {
-            var linkElement = document.createElement("link");
-            return linkElement.rel = "stylesheet", insertStyleElement(options, linkElement), 
-            linkElement;
-        }
-        function addStyle(obj, options) {
-            var styleElement, update, remove;
-            if (options.singleton) {
-                var styleIndex = singletonCounter++;
-                styleElement = singletonElement || (singletonElement = createStyleElement(options)), 
-                update = applyToSingletonTag.bind(null, styleElement, styleIndex, !1), remove = applyToSingletonTag.bind(null, styleElement, styleIndex, !0);
-            } else obj.sourceMap && "function" == typeof URL && "function" == typeof URL.createObjectURL && "function" == typeof URL.revokeObjectURL && "function" == typeof Blob && "function" == typeof btoa ? (styleElement = createLinkElement(options), 
-            update = updateLink.bind(null, styleElement), remove = function() {
-                removeStyleElement(styleElement), styleElement.href && URL.revokeObjectURL(styleElement.href);
-            }) : (styleElement = createStyleElement(options), update = applyToTag.bind(null, styleElement), 
-            remove = function() {
-                removeStyleElement(styleElement);
-            });
-            return update(obj), function(newObj) {
-                if (newObj) {
-                    if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap) return;
-                    update(obj = newObj);
-                } else remove();
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
             };
         }
-        function applyToSingletonTag(styleElement, index, remove, obj) {
-            var css = remove ? "" : obj.css;
-            if (styleElement.styleSheet) styleElement.styleSheet.cssText = replaceText(index, css); else {
-                var cssNode = document.createTextNode(css), childNodes = styleElement.childNodes;
-                childNodes[index] && styleElement.removeChild(childNodes[index]), childNodes.length ? styleElement.insertBefore(cssNode, childNodes[index]) : styleElement.appendChild(cssNode);
-            }
-        }
-        function applyToTag(styleElement, obj) {
-            var css = obj.css, media = obj.media;
-            obj.sourceMap;
-            if (media && styleElement.setAttribute("media", media), styleElement.styleSheet) styleElement.styleSheet.cssText = css; else {
-                for (;styleElement.firstChild; ) styleElement.removeChild(styleElement.firstChild);
-                styleElement.appendChild(document.createTextNode(css));
-            }
-        }
-        function updateLink(linkElement, obj) {
-            var css = obj.css, sourceMap = (obj.media, obj.sourceMap);
-            sourceMap && (// http://stackoverflow.com/a/26603875
-            css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */");
-            var blob = new Blob([ css ], {
-                type: "text/css"
-            }), oldSrc = linkElement.href;
-            linkElement.href = URL.createObjectURL(blob), oldSrc && URL.revokeObjectURL(oldSrc);
-        }
-        /*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-        var stylesInDom = {}, memoize = function(fn) {
-            var memo;
-            return function() {
-                return "undefined" == typeof memo && (memo = fn.apply(this, arguments)), memo;
-            };
-        }, isOldIE = memoize(function() {
-            return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
-        }), getHeadElement = memoize(function() {
-            return document.head || document.getElementsByTagName("head")[0];
-        }), singletonElement = null, singletonCounter = 0, styleElementsInsertedAtTop = [];
-        module.exports = function(list, options) {
-            options = options || {}, "undefined" == typeof options.singleton && (options.singleton = isOldIE()), 
-            "undefined" == typeof options.insertAt && (options.insertAt = "bottom");
-            var styles = listToStyles(list);
-            return addStylesToDom(styles, options), function(newList) {
-                for (var mayRemove = [], i = 0; i < styles.length; i++) {
-                    var item = styles[i], domStyle = stylesInDom[item.id];
-                    domStyle.refs--, mayRemove.push(domStyle);
-                }
-                if (newList) {
-                    var newStyles = listToStyles(newList);
-                    addStylesToDom(newStyles, options);
-                }
-                for (var i = 0; i < mayRemove.length; i++) {
-                    var domStyle = mayRemove[i];
-                    if (0 === domStyle.refs) {
-                        for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
-                        delete stylesInDom[domStyle.id];
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _bowser = __webpack_require__(10), _bowser2 = _interopRequireDefault(_bowser), vendorPrefixes = {
+            Webkit: [ "chrome", "safari", "ios", "android", "phantom", "opera", "webos", "blackberry", "bada", "tizen" ],
+            Moz: [ "firefox", "seamonkey", "sailfish" ],
+            ms: [ "msie", "msedge" ]
+        }, browsers = {
+            chrome: [ [ "chrome" ] ],
+            safari: [ [ "safari" ] ],
+            firefox: [ [ "firefox" ] ],
+            ie: [ [ "msie" ] ],
+            edge: [ [ "msedge" ] ],
+            opera: [ [ "opera" ] ],
+            ios_saf: [ [ "ios", "mobile" ], [ "ios", "tablet" ] ],
+            ie_mob: [ [ "windowsphone", "mobile", "msie" ], [ "windowsphone", "tablet", "msie" ], [ "windowsphone", "mobile", "msedge" ], [ "windowsphone", "tablet", "msedge" ] ],
+            op_mini: [ [ "opera", "mobile" ], [ "opera", "tablet" ] ],
+            and_chr: [ [ "android", "chrome", "mobile" ], [ "android", "chrome", "tablet" ] ],
+            and_uc: [ [ "android", "mobile" ], [ "android", "tablet" ] ],
+            android: [ [ "android", "mobile" ], [ "android", "tablet" ] ]
+        }, getPrefixes = function(browser) {
+            var prefixKeys = void 0, prefix = void 0, vendors = void 0, conditions = void 0, prefixVendor = void 0, browserVendors = void 0;
+            // Find the prefix for this browser (if any)
+            prefixKeys = Object.keys(vendorPrefixes);
+            var _iteratorNormalCompletion = !0, _didIteratorError = !1, _iteratorError = void 0;
+            try {
+                for (var _step, _iterator = prefixKeys[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = !0) {
+                    prefix = _step.value, // Find a matching vendor
+                    vendors = vendorPrefixes[prefix], conditions = browsers[browser];
+                    var _iteratorNormalCompletion2 = !0, _didIteratorError2 = !1, _iteratorError2 = void 0;
+                    try {
+                        for (var _step2, _iterator2 = vendors[Symbol.iterator](); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = !0) {
+                            prefixVendor = _step2.value;
+                            var _iteratorNormalCompletion3 = !0, _didIteratorError3 = !1, _iteratorError3 = void 0;
+                            try {
+                                for (var _step3, _iterator3 = conditions[Symbol.iterator](); !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = !0) if (browserVendors = _step3.value, 
+                                -1 !== browserVendors.indexOf(prefixVendor)) return {
+                                    inline: prefix,
+                                    CSS: "-" + prefix.toLowerCase() + "-"
+                                };
+                            } catch (err) {
+                                _didIteratorError3 = !0, _iteratorError3 = err;
+                            } finally {
+                                try {
+                                    !_iteratorNormalCompletion3 && _iterator3["return"] && _iterator3["return"]();
+                                } finally {
+                                    if (_didIteratorError3) throw _iteratorError3;
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError2 = !0, _iteratorError2 = err;
+                    } finally {
+                        try {
+                            !_iteratorNormalCompletion2 && _iterator2["return"] && _iterator2["return"]();
+                        } finally {
+                            if (_didIteratorError2) throw _iteratorError2;
+                        }
                     }
                 }
+            } catch (err) {
+                _didIteratorError = !0, _iteratorError = err;
+            } finally {
+                try {
+                    !_iteratorNormalCompletion && _iterator["return"] && _iterator["return"]();
+                } finally {
+                    if (_didIteratorError) throw _iteratorError;
+                }
+            }
+            return {
+                inline: "",
+                CSS: ""
             };
         };
-        var replaceText = function() {
-            var textStore = [];
-            return function(index, replacement) {
-                return textStore[index] = replacement, textStore.filter(Boolean).join("\n");
-            };
-        }();
+        /**
+	 * Uses bowser to get default browser information such as version and name
+	 * Evaluates bowser info and adds vendorPrefix information
+	 * @param {string} userAgent - userAgent that gets evaluated
+	 */
+        exports["default"] = function(userAgent) {
+            if (!userAgent) return !1;
+            var info = {};
+            // Special user agent, return all supported prefixes
+            // instead of returning a string browser name and a prefix object
+            // we return an array of browser names and map of prefixes for each browser
+            if ("*" === userAgent) // Return an array of supported browsers
+            // Return prefixes associated by browser
+            // Iterate browser list, assign prefix to each
+            return info.browsers = Object.keys(browsers), info.prefixes = {}, info.browsers.forEach(function(browser) {
+                info.prefixes[browser] = getPrefixes(browser);
+            }), info;
+            info = _bowser2["default"]._detect(userAgent), Object.keys(vendorPrefixes).forEach(function(prefix) {
+                vendorPrefixes[prefix].forEach(function(browser) {
+                    info[browser] && (info.prefix = {
+                        inline: prefix,
+                        CSS: "-" + prefix.toLowerCase() + "-"
+                    });
+                });
+            });
+            var name = "";
+            // For android < 4.4 we want to check the osversion
+            // not the chrome version, see issue #26
+            // https://github.com/rofrischmann/inline-style-prefixer/issues/26
+            return Object.keys(browsers).forEach(function(browser) {
+                browsers[browser].forEach(function(condition) {
+                    var match = 0;
+                    condition.forEach(function(single) {
+                        info[single] && (match += 1);
+                    }), condition.length === match && (name = browser);
+                });
+            }), info.browser = name, info.version = parseFloat(info.version), info.osversion = parseFloat(info.osversion), 
+            "android" === name && info.osversion < 5 && (info.version = info.osversion), info;
+        }, module.exports = exports["default"];
     }, /* 10 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
+        /*!
+	  * Bowser - a browser detector
+	  * https://github.com/ded/bowser
+	  * MIT License | (c) Dustin Diaz 2015
+	  */
+        !function(name, definition) {
+            "undefined" != typeof module && module.exports ? module.exports = definition() : (__WEBPACK_AMD_DEFINE_FACTORY__ = definition, 
+            __WEBPACK_AMD_DEFINE_RESULT__ = "function" == typeof __WEBPACK_AMD_DEFINE_FACTORY__ ? __WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(void 0 !== __WEBPACK_AMD_DEFINE_RESULT__ && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)));
+        }("bowser", function() {
+            function detect(ua) {
+                function getFirstMatch(regex) {
+                    var match = ua.match(regex);
+                    return match && match.length > 1 && match[1] || "";
+                }
+                function getSecondMatch(regex) {
+                    var match = ua.match(regex);
+                    return match && match.length > 1 && match[2] || "";
+                }
+                var result, iosdevice = getFirstMatch(/(ipod|iphone|ipad)/i).toLowerCase(), likeAndroid = /like android/i.test(ua), android = !likeAndroid && /android/i.test(ua), chromeBook = /CrOS/.test(ua), edgeVersion = getFirstMatch(/edge\/(\d+(\.\d+)?)/i), versionIdentifier = getFirstMatch(/version\/(\d+(\.\d+)?)/i), tablet = /tablet/i.test(ua), mobile = !tablet && /[^-]mobi/i.test(ua);
+                /opera|opr/i.test(ua) ? result = {
+                    name: "Opera",
+                    opera: t,
+                    version: versionIdentifier || getFirstMatch(/(?:opera|opr)[\s\/](\d+(\.\d+)?)/i)
+                } : /yabrowser/i.test(ua) ? result = {
+                    name: "Yandex Browser",
+                    yandexbrowser: t,
+                    version: versionIdentifier || getFirstMatch(/(?:yabrowser)[\s\/](\d+(\.\d+)?)/i)
+                } : /windows phone/i.test(ua) ? (result = {
+                    name: "Windows Phone",
+                    windowsphone: t
+                }, edgeVersion ? (result.msedge = t, result.version = edgeVersion) : (result.msie = t, 
+                result.version = getFirstMatch(/iemobile\/(\d+(\.\d+)?)/i))) : /msie|trident/i.test(ua) ? result = {
+                    name: "Internet Explorer",
+                    msie: t,
+                    version: getFirstMatch(/(?:msie |rv:)(\d+(\.\d+)?)/i)
+                } : chromeBook ? result = {
+                    name: "Chrome",
+                    chromeBook: t,
+                    chrome: t,
+                    version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+                } : /chrome.+? edge/i.test(ua) ? result = {
+                    name: "Microsoft Edge",
+                    msedge: t,
+                    version: edgeVersion
+                } : /chrome|crios|crmo/i.test(ua) ? result = {
+                    name: "Chrome",
+                    chrome: t,
+                    version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+                } : iosdevice ? (result = {
+                    name: "iphone" == iosdevice ? "iPhone" : "ipad" == iosdevice ? "iPad" : "iPod"
+                }, versionIdentifier && (result.version = versionIdentifier)) : /sailfish/i.test(ua) ? result = {
+                    name: "Sailfish",
+                    sailfish: t,
+                    version: getFirstMatch(/sailfish\s?browser\/(\d+(\.\d+)?)/i)
+                } : /seamonkey\//i.test(ua) ? result = {
+                    name: "SeaMonkey",
+                    seamonkey: t,
+                    version: getFirstMatch(/seamonkey\/(\d+(\.\d+)?)/i)
+                } : /firefox|iceweasel/i.test(ua) ? (result = {
+                    name: "Firefox",
+                    firefox: t,
+                    version: getFirstMatch(/(?:firefox|iceweasel)[ \/](\d+(\.\d+)?)/i)
+                }, /\((mobile|tablet);[^\)]*rv:[\d\.]+\)/i.test(ua) && (result.firefoxos = t)) : /silk/i.test(ua) ? result = {
+                    name: "Amazon Silk",
+                    silk: t,
+                    version: getFirstMatch(/silk\/(\d+(\.\d+)?)/i)
+                } : android ? result = {
+                    name: "Android",
+                    version: versionIdentifier
+                } : /phantom/i.test(ua) ? result = {
+                    name: "PhantomJS",
+                    phantom: t,
+                    version: getFirstMatch(/phantomjs\/(\d+(\.\d+)?)/i)
+                } : /blackberry|\bbb\d+/i.test(ua) || /rim\stablet/i.test(ua) ? result = {
+                    name: "BlackBerry",
+                    blackberry: t,
+                    version: versionIdentifier || getFirstMatch(/blackberry[\d]+\/(\d+(\.\d+)?)/i)
+                } : /(web|hpw)os/i.test(ua) ? (result = {
+                    name: "WebOS",
+                    webos: t,
+                    version: versionIdentifier || getFirstMatch(/w(?:eb)?osbrowser\/(\d+(\.\d+)?)/i)
+                }, /touchpad\//i.test(ua) && (result.touchpad = t)) : result = /bada/i.test(ua) ? {
+                    name: "Bada",
+                    bada: t,
+                    version: getFirstMatch(/dolfin\/(\d+(\.\d+)?)/i)
+                } : /tizen/i.test(ua) ? {
+                    name: "Tizen",
+                    tizen: t,
+                    version: getFirstMatch(/(?:tizen\s?)?browser\/(\d+(\.\d+)?)/i) || versionIdentifier
+                } : /safari/i.test(ua) ? {
+                    name: "Safari",
+                    safari: t,
+                    version: versionIdentifier
+                } : {
+                    name: getFirstMatch(/^(.*)\/(.*) /),
+                    version: getSecondMatch(/^(.*)\/(.*) /)
+                }, // set webkit or gecko flag for browsers based on these engines
+                !result.msedge && /(apple)?webkit/i.test(ua) ? (result.name = result.name || "Webkit", 
+                result.webkit = t, !result.version && versionIdentifier && (result.version = versionIdentifier)) : !result.opera && /gecko\//i.test(ua) && (result.name = result.name || "Gecko", 
+                result.gecko = t, result.version = result.version || getFirstMatch(/gecko\/(\d+(\.\d+)?)/i)), 
+                // set OS flags for platforms that have multiple browsers
+                result.msedge || !android && !result.silk ? iosdevice && (result[iosdevice] = t, 
+                result.ios = t) : result.android = t;
+                // OS version extraction
+                var osVersion = "";
+                result.windowsphone ? osVersion = getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i) : iosdevice ? (osVersion = getFirstMatch(/os (\d+([_\s]\d+)*) like mac os x/i), 
+                osVersion = osVersion.replace(/[_\s]/g, ".")) : android ? osVersion = getFirstMatch(/android[ \/-](\d+(\.\d+)*)/i) : result.webos ? osVersion = getFirstMatch(/(?:web|hpw)os\/(\d+(\.\d+)*)/i) : result.blackberry ? osVersion = getFirstMatch(/rim\stablet\sos\s(\d+(\.\d+)*)/i) : result.bada ? osVersion = getFirstMatch(/bada\/(\d+(\.\d+)*)/i) : result.tizen && (osVersion = getFirstMatch(/tizen[\/\s](\d+(\.\d+)*)/i)), 
+                osVersion && (result.osversion = osVersion);
+                // device type extraction
+                var osMajorVersion = osVersion.split(".")[0];
+                // Graded Browser Support
+                // http://developer.yahoo.com/yui/articles/gbs
+                return tablet || "ipad" == iosdevice || android && (3 == osMajorVersion || 4 == osMajorVersion && !mobile) || result.silk ? result.tablet = t : (mobile || "iphone" == iosdevice || "ipod" == iosdevice || android || result.blackberry || result.webos || result.bada) && (result.mobile = t), 
+                result.msedge || result.msie && result.version >= 10 || result.yandexbrowser && result.version >= 15 || result.chrome && result.version >= 20 || result.firefox && result.version >= 20 || result.safari && result.version >= 6 || result.opera && result.version >= 10 || result.ios && result.osversion && result.osversion.split(".")[0] >= 6 || result.blackberry && result.version >= 10.1 ? result.a = t : result.msie && result.version < 10 || result.chrome && result.version < 20 || result.firefox && result.version < 20 || result.safari && result.version < 6 || result.opera && result.version < 10 || result.ios && result.osversion && result.osversion.split(".")[0] < 6 ? result.c = t : result.x = t, 
+                result;
+            }
+            /**
+	    * See useragents.js for examples of navigator.userAgent
+	    */
+            var t = !0, bowser = detect("undefined" != typeof navigator ? navigator.userAgent : "");
+            /*
+	   * Set our detect method to the main bowser object so we can
+	   * reuse it to test other user agents.
+	   * This is needed to implement future tests.
+	   */
+            return bowser.test = function(browserList) {
+                for (var i = 0; i < browserList.length; ++i) {
+                    var browserItem = browserList[i];
+                    if ("string" == typeof browserItem && browserItem in bowser) return !0;
+                }
+                return !1;
+            }, bowser._detect = detect, bowser;
+        });
+    }, /* 11 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = function(_ref) {
+            var browser = _ref.browser, version = _ref.version, prefix = _ref.prefix, prefixedKeyframes = "keyframes";
+            return ("chrome" === browser && 43 > version || ("safari" === browser || "ios_saf" === browser) && 9 > version || "opera" === browser && 30 > version || "android" === browser && 4.4 >= version || "and_uc" === browser) && (prefixedKeyframes = prefix.CSS + prefixedKeyframes), 
+            prefixedKeyframes;
+        }, module.exports = exports["default"];
+    }, /* 12 */
+    /***/
+    function(module, exports) {
+        // helper to capitalize strings
+        "use strict";
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = function(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }, module.exports = exports["default"];
+    }, /* 13 */
+    /***/
+    function(module, exports) {
+        // leight polyfill for Object.assign
+        "use strict";
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = function(base) {
+            var extend = arguments.length <= 1 || void 0 === arguments[1] ? {} : arguments[1];
+            return Object.keys(extend).forEach(function(key) {
+                return base[key] = extend[key];
+            }), base;
+        }, module.exports = exports["default"];
+    }, /* 14 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        /* WEBPACK VAR INJECTION */
+        (function(process) {
+            // only throw warnings if devmode is enabled
+            "use strict";
+            Object.defineProperty(exports, "__esModule", {
+                value: !0
+            }), exports["default"] = function() {
+                "production" !== process.env.NODE_ENV && console.warn.apply(console, arguments);
+            }, module.exports = exports["default"];
+        }).call(exports, __webpack_require__(15));
+    }, /* 15 */
+    /***/
+    function(module, exports) {
+        function cleanUpNextTick() {
+            draining = !1, currentQueue.length ? queue = currentQueue.concat(queue) : queueIndex = -1, 
+            queue.length && drainQueue();
+        }
+        function drainQueue() {
+            if (!draining) {
+                var timeout = setTimeout(cleanUpNextTick);
+                draining = !0;
+                for (var len = queue.length; len; ) {
+                    for (currentQueue = queue, queue = []; ++queueIndex < len; ) currentQueue && currentQueue[queueIndex].run();
+                    queueIndex = -1, len = queue.length;
+                }
+                currentQueue = null, draining = !1, clearTimeout(timeout);
+            }
+        }
+        // v8 likes predictible objects
+        function Item(fun, array) {
+            this.fun = fun, this.array = array;
+        }
+        function noop() {}
+        // shim for using process in browser
+        var currentQueue, process = module.exports = {}, queue = [], draining = !1, queueIndex = -1;
+        process.nextTick = function(fun) {
+            var args = new Array(arguments.length - 1);
+            if (arguments.length > 1) for (var i = 1; i < arguments.length; i++) args[i - 1] = arguments[i];
+            queue.push(new Item(fun, args)), 1 !== queue.length || draining || setTimeout(drainQueue, 0);
+        }, Item.prototype.run = function() {
+            this.fun.apply(null, this.array);
+        }, process.title = "browser", process.browser = !0, process.env = {}, process.argv = [], 
+        process.version = "", // empty string to avoid regexp issues
+        process.versions = {}, process.on = noop, process.addListener = noop, process.once = noop, 
+        process.off = noop, process.removeListener = noop, process.removeAllListeners = noop, 
+        process.emit = noop, process.binding = function(name) {
+            throw new Error("process.binding is not supported");
+        }, process.cwd = function() {
+            return "/";
+        }, process.chdir = function(dir) {
+            throw new Error("process.chdir is not supported");
+        }, process.umask = function() {
+            return 0;
+        };
+    }, /* 16 */
+    /***/
+    function(module, exports) {
+        var caniuseData = {
+            chrome: {
+                transform: 35,
+                transformOrigin: 35,
+                transformOriginX: 35,
+                transformOriginY: 35,
+                backfaceVisibility: 35,
+                perspective: 35,
+                perspectiveOrigin: 35,
+                transformStyle: 35,
+                transformOriginZ: 35,
+                animation: 42,
+                animationDelay: 42,
+                animationDirection: 42,
+                animationFillMode: 42,
+                animationDuration: 42,
+                animationIterationCount: 42,
+                animationName: 42,
+                animationPlayState: 42,
+                animationTimingFunction: 42,
+                appearance: 49,
+                userSelect: 49,
+                fontKerning: 32,
+                textEmphasisPosition: 49,
+                textEmphasis: 49,
+                textEmphasisStyle: 49,
+                textEmphasisColor: 49,
+                boxDecorationBreak: 49,
+                clipPath: 49,
+                maskImage: 49,
+                maskMode: 49,
+                maskRepeat: 49,
+                maskPosition: 49,
+                maskClip: 49,
+                maskOrigin: 49,
+                maskSize: 49,
+                maskComposite: 49,
+                mask: 49,
+                maskBorderSource: 49,
+                maskBorderMode: 49,
+                maskBorderSlice: 49,
+                maskBorderWidth: 49,
+                maskBorderOutset: 49,
+                maskBorderRepeat: 49,
+                maskBorder: 49,
+                maskType: 49,
+                textDecorationStyle: 49,
+                textDecorationSkip: 49,
+                textDecorationLine: 49,
+                textDecorationColor: 49,
+                filter: 49,
+                fontFeatureSettings: 49,
+                breakAfter: 49,
+                breakBefore: 49,
+                breakInside: 49,
+                columnCount: 49,
+                columnFill: 49,
+                columnGap: 49,
+                columnRule: 49,
+                columnRuleColor: 49,
+                columnRuleStyle: 49,
+                columnRuleWidth: 49,
+                columns: 49,
+                columnSpan: 49,
+                columnWidth: 49
+            },
+            safari: {
+                flex: 8,
+                flexBasis: 8,
+                flexDirection: 8,
+                flexGrow: 8,
+                flexFlow: 8,
+                flexShrink: 8,
+                flexWrap: 8,
+                alignContent: 8,
+                alignItems: 8,
+                alignSelf: 8,
+                justifyContent: 8,
+                order: 8,
+                transition: 6,
+                transitionDelay: 6,
+                transitionDuration: 6,
+                transitionProperty: 6,
+                transitionTimingFunction: 6,
+                transform: 8,
+                transformOrigin: 8,
+                transformOriginX: 8,
+                transformOriginY: 8,
+                backfaceVisibility: 8,
+                perspective: 8,
+                perspectiveOrigin: 8,
+                transformStyle: 8,
+                transformOriginZ: 8,
+                animation: 8,
+                animationDelay: 8,
+                animationDirection: 8,
+                animationFillMode: 8,
+                animationDuration: 8,
+                animationIterationCount: 8,
+                animationName: 8,
+                animationPlayState: 8,
+                animationTimingFunction: 8,
+                appearance: 9,
+                userSelect: 9,
+                backdropFilter: 9,
+                fontKerning: 9,
+                scrollSnapType: 9,
+                scrollSnapPointsX: 9,
+                scrollSnapPointsY: 9,
+                scrollSnapDestination: 9,
+                scrollSnapCoordinate: 9,
+                textEmphasisPosition: 7,
+                textEmphasis: 7,
+                textEmphasisStyle: 7,
+                textEmphasisColor: 7,
+                boxDecorationBreak: 9,
+                clipPath: 9,
+                maskImage: 9,
+                maskMode: 9,
+                maskRepeat: 9,
+                maskPosition: 9,
+                maskClip: 9,
+                maskOrigin: 9,
+                maskSize: 9,
+                maskComposite: 9,
+                mask: 9,
+                maskBorderSource: 9,
+                maskBorderMode: 9,
+                maskBorderSlice: 9,
+                maskBorderWidth: 9,
+                maskBorderOutset: 9,
+                maskBorderRepeat: 9,
+                maskBorder: 9,
+                maskType: 9,
+                textDecorationStyle: 9,
+                textDecorationSkip: 9,
+                textDecorationLine: 9,
+                textDecorationColor: 9,
+                shapeImageThreshold: 9,
+                shapeImageMargin: 9,
+                shapeImageOutside: 9,
+                filter: 9,
+                hyphens: 9,
+                flowInto: 9,
+                flowFrom: 9,
+                breakBefore: 8,
+                breakAfter: 8,
+                breakInside: 8,
+                regionFragment: 9,
+                columnCount: 8,
+                columnFill: 8,
+                columnGap: 8,
+                columnRule: 8,
+                columnRuleColor: 8,
+                columnRuleStyle: 8,
+                columnRuleWidth: 8,
+                columns: 8,
+                columnSpan: 8,
+                columnWidth: 8
+            },
+            firefox: {
+                appearance: 45,
+                userSelect: 45,
+                boxSizing: 28,
+                textAlignLast: 45,
+                textDecorationStyle: 35,
+                textDecorationSkip: 35,
+                textDecorationLine: 35,
+                textDecorationColor: 35,
+                tabSize: 45,
+                hyphens: 42,
+                fontFeatureSettings: 33,
+                breakAfter: 45,
+                breakBefore: 45,
+                breakInside: 45,
+                columnCount: 45,
+                columnFill: 45,
+                columnGap: 45,
+                columnRule: 45,
+                columnRuleColor: 45,
+                columnRuleStyle: 45,
+                columnRuleWidth: 45,
+                columns: 45,
+                columnSpan: 45,
+                columnWidth: 45
+            },
+            opera: {
+                flex: 16,
+                flexBasis: 16,
+                flexDirection: 16,
+                flexGrow: 16,
+                flexFlow: 16,
+                flexShrink: 16,
+                flexWrap: 16,
+                alignContent: 16,
+                alignItems: 16,
+                alignSelf: 16,
+                justifyContent: 16,
+                order: 16,
+                transform: 22,
+                transformOrigin: 22,
+                transformOriginX: 22,
+                transformOriginY: 22,
+                backfaceVisibility: 22,
+                perspective: 22,
+                perspectiveOrigin: 22,
+                transformStyle: 22,
+                transformOriginZ: 22,
+                animation: 29,
+                animationDelay: 29,
+                animationDirection: 29,
+                animationFillMode: 29,
+                animationDuration: 29,
+                animationIterationCount: 29,
+                animationName: 29,
+                animationPlayState: 29,
+                animationTimingFunction: 29,
+                appearance: 35,
+                userSelect: 35,
+                fontKerning: 19,
+                textEmphasisPosition: 35,
+                textEmphasis: 35,
+                textEmphasisStyle: 35,
+                textEmphasisColor: 35,
+                boxDecorationBreak: 35,
+                clipPath: 35,
+                maskImage: 35,
+                maskMode: 35,
+                maskRepeat: 35,
+                maskPosition: 35,
+                maskClip: 35,
+                maskOrigin: 35,
+                maskSize: 35,
+                maskComposite: 35,
+                mask: 35,
+                maskBorderSource: 35,
+                maskBorderMode: 35,
+                maskBorderSlice: 35,
+                maskBorderWidth: 35,
+                maskBorderOutset: 35,
+                maskBorderRepeat: 35,
+                maskBorder: 35,
+                maskType: 35,
+                filter: 35,
+                fontFeatureSettings: 35,
+                breakAfter: 35,
+                breakBefore: 35,
+                breakInside: 35,
+                columnCount: 35,
+                columnFill: 35,
+                columnGap: 35,
+                columnRule: 35,
+                columnRuleColor: 35,
+                columnRuleStyle: 35,
+                columnRuleWidth: 35,
+                columns: 35,
+                columnSpan: 35,
+                columnWidth: 35
+            },
+            ie: {
+                gridTemplateColumns: 11,
+                scrollSnapType: 11,
+                gridTemplate: 11,
+                flowFrom: 11,
+                flexWrap: 10,
+                scrollSnapPointsX: 11,
+                breakBefore: 11,
+                breakInside: 11,
+                gridRow: 11,
+                gridRowStart: 11,
+                gridRowEnd: 11,
+                wrapThrough: 11,
+                columnGap: 11,
+                transform: 9,
+                flexDirection: 10,
+                gridAutoColumns: 11,
+                regionFragment: 11,
+                gridAutoRows: 11,
+                breakAfter: 11,
+                gridAutoFlow: 11,
+                scrollSnapCoordinate: 11,
+                transformOriginY: 9,
+                gridTemplateAreas: 11,
+                transformOrigin: 9,
+                flexFlow: 10,
+                gridGap: 11,
+                grid: 11,
+                touchAction: 10,
+                gridColumnStart: 11,
+                transformOriginX: 9,
+                rowGap: 11,
+                wrapFlow: 11,
+                userSelect: 11,
+                flowInto: 11,
+                scrollSnapDestination: 11,
+                gridColumn: 11,
+                scrollSnapPointsY: 11,
+                hyphens: 11,
+                flex: 10,
+                gridArea: 11,
+                gridTemplateRows: 11,
+                wrapMargin: 11,
+                textSizeAdjust: 11
+            },
+            edge: {
+                userSelect: 14,
+                wrapFlow: 14,
+                wrapThrough: 14,
+                wrapMargin: 14,
+                scrollSnapType: 14,
+                scrollSnapPointsX: 14,
+                scrollSnapPointsY: 14,
+                scrollSnapDestination: 14,
+                scrollSnapCoordinate: 14,
+                hyphens: 14,
+                flowInto: 14,
+                flowFrom: 14,
+                breakBefore: 14,
+                breakAfter: 14,
+                breakInside: 14,
+                regionFragment: 14,
+                gridTemplateColumns: 14,
+                gridTemplateRows: 14,
+                gridTemplateAreas: 14,
+                gridTemplate: 14,
+                gridAutoColumns: 14,
+                gridAutoRows: 14,
+                gridAutoFlow: 14,
+                grid: 14,
+                gridRowStart: 14,
+                gridColumnStart: 14,
+                gridRowEnd: 14,
+                gridRow: 14,
+                gridColumn: 14,
+                gridArea: 14,
+                rowGap: 14,
+                columnGap: 14,
+                gridGap: 14
+            },
+            ios_saf: {
+                flex: 8.1,
+                flexBasis: 8.1,
+                flexDirection: 8.1,
+                flexGrow: 8.1,
+                flexFlow: 8.1,
+                flexShrink: 8.1,
+                flexWrap: 8.1,
+                alignContent: 8.1,
+                alignItems: 8.1,
+                alignSelf: 8.1,
+                justifyContent: 8.1,
+                order: 8.1,
+                transition: 6,
+                transitionDelay: 6,
+                transitionDuration: 6,
+                transitionProperty: 6,
+                transitionTimingFunction: 6,
+                transform: 8.1,
+                transformOrigin: 8.1,
+                transformOriginX: 8.1,
+                transformOriginY: 8.1,
+                backfaceVisibility: 8.1,
+                perspective: 8.1,
+                perspectiveOrigin: 8.1,
+                transformStyle: 8.1,
+                transformOriginZ: 8.1,
+                animation: 8.1,
+                animationDelay: 8.1,
+                animationDirection: 8.1,
+                animationFillMode: 8.1,
+                animationDuration: 8.1,
+                animationIterationCount: 8.1,
+                animationName: 8.1,
+                animationPlayState: 8.1,
+                animationTimingFunction: 8.1,
+                appearance: 9,
+                userSelect: 9,
+                backdropFilter: 9,
+                fontKerning: 9,
+                scrollSnapType: 9,
+                scrollSnapPointsX: 9,
+                scrollSnapPointsY: 9,
+                scrollSnapDestination: 9,
+                scrollSnapCoordinate: 9,
+                boxDecorationBreak: 9,
+                clipPath: 9,
+                maskImage: 9,
+                maskMode: 9,
+                maskRepeat: 9,
+                maskPosition: 9,
+                maskClip: 9,
+                maskOrigin: 9,
+                maskSize: 9,
+                maskComposite: 9,
+                mask: 9,
+                maskBorderSource: 9,
+                maskBorderMode: 9,
+                maskBorderSlice: 9,
+                maskBorderWidth: 9,
+                maskBorderOutset: 9,
+                maskBorderRepeat: 9,
+                maskBorder: 9,
+                maskType: 9,
+                textSizeAdjust: 9,
+                textDecorationStyle: 9,
+                textDecorationSkip: 9,
+                textDecorationLine: 9,
+                textDecorationColor: 9,
+                shapeImageThreshold: 9,
+                shapeImageMargin: 9,
+                shapeImageOutside: 9,
+                filter: 9,
+                hyphens: 9,
+                flowInto: 9,
+                flowFrom: 9,
+                breakBefore: 8.1,
+                breakAfter: 8.1,
+                breakInside: 8.1,
+                regionFragment: 9,
+                columnCount: 8.1,
+                columnFill: 8.1,
+                columnGap: 8.1,
+                columnRule: 8.1,
+                columnRuleColor: 8.1,
+                columnRuleStyle: 8.1,
+                columnRuleWidth: 8.1,
+                columns: 8.1,
+                columnSpan: 8.1,
+                columnWidth: 8.1
+            },
+            android: {
+                borderImage: 4.2,
+                borderImageOutset: 4.2,
+                borderImageRepeat: 4.2,
+                borderImageSlice: 4.2,
+                borderImageSource: 4.2,
+                borderImageWidth: 4.2,
+                flex: 4.2,
+                flexBasis: 4.2,
+                flexDirection: 4.2,
+                flexGrow: 4.2,
+                flexFlow: 4.2,
+                flexShrink: 4.2,
+                flexWrap: 4.2,
+                alignContent: 4.2,
+                alignItems: 4.2,
+                alignSelf: 4.2,
+                justifyContent: 4.2,
+                order: 4.2,
+                transition: 4.2,
+                transitionDelay: 4.2,
+                transitionDuration: 4.2,
+                transitionProperty: 4.2,
+                transitionTimingFunction: 4.2,
+                transform: 4.4,
+                transformOrigin: 4.4,
+                transformOriginX: 4.4,
+                transformOriginY: 4.4,
+                backfaceVisibility: 4.4,
+                perspective: 4.4,
+                perspectiveOrigin: 4.4,
+                transformStyle: 4.4,
+                transformOriginZ: 4.4,
+                animation: 4.4,
+                animationDelay: 4.4,
+                animationDirection: 4.4,
+                animationFillMode: 4.4,
+                animationDuration: 4.4,
+                animationIterationCount: 4.4,
+                animationName: 4.4,
+                animationPlayState: 4.4,
+                animationTimingFunction: 4.4,
+                appearance: 44,
+                userSelect: 44,
+                fontKerning: 4.4,
+                textEmphasisPosition: 44,
+                textEmphasis: 44,
+                textEmphasisStyle: 44,
+                textEmphasisColor: 44,
+                boxDecorationBreak: 44,
+                clipPath: 44,
+                maskImage: 44,
+                maskMode: 44,
+                maskRepeat: 44,
+                maskPosition: 44,
+                maskClip: 44,
+                maskOrigin: 44,
+                maskSize: 44,
+                maskComposite: 44,
+                mask: 44,
+                maskBorderSource: 44,
+                maskBorderMode: 44,
+                maskBorderSlice: 44,
+                maskBorderWidth: 44,
+                maskBorderOutset: 44,
+                maskBorderRepeat: 44,
+                maskBorder: 44,
+                maskType: 44,
+                filter: 44,
+                fontFeatureSettings: 44,
+                breakAfter: 44,
+                breakBefore: 44,
+                breakInside: 44,
+                columnCount: 44,
+                columnFill: 44,
+                columnGap: 44,
+                columnRule: 44,
+                columnRuleColor: 44,
+                columnRuleStyle: 44,
+                columnRuleWidth: 44,
+                columns: 44,
+                columnSpan: 44,
+                columnWidth: 44
+            },
+            and_chr: {
+                appearance: 46,
+                userSelect: 46,
+                textEmphasisPosition: 46,
+                textEmphasis: 46,
+                textEmphasisStyle: 46,
+                textEmphasisColor: 46,
+                boxDecorationBreak: 46,
+                clipPath: 46,
+                maskImage: 46,
+                maskMode: 46,
+                maskRepeat: 46,
+                maskPosition: 46,
+                maskClip: 46,
+                maskOrigin: 46,
+                maskSize: 46,
+                maskComposite: 46,
+                mask: 46,
+                maskBorderSource: 46,
+                maskBorderMode: 46,
+                maskBorderSlice: 46,
+                maskBorderWidth: 46,
+                maskBorderOutset: 46,
+                maskBorderRepeat: 46,
+                maskBorder: 46,
+                maskType: 46,
+                textDecorationStyle: 46,
+                textDecorationSkip: 46,
+                textDecorationLine: 46,
+                textDecorationColor: 46,
+                filter: 46,
+                fontFeatureSettings: 46,
+                breakAfter: 46,
+                breakBefore: 46,
+                breakInside: 46,
+                columnCount: 46,
+                columnFill: 46,
+                columnGap: 46,
+                columnRule: 46,
+                columnRuleColor: 46,
+                columnRuleStyle: 46,
+                columnRuleWidth: 46,
+                columns: 46,
+                columnSpan: 46,
+                columnWidth: 46
+            },
+            and_uc: {
+                flex: 9.9,
+                flexBasis: 9.9,
+                flexDirection: 9.9,
+                flexGrow: 9.9,
+                flexFlow: 9.9,
+                flexShrink: 9.9,
+                flexWrap: 9.9,
+                alignContent: 9.9,
+                alignItems: 9.9,
+                alignSelf: 9.9,
+                justifyContent: 9.9,
+                order: 9.9,
+                transition: 9.9,
+                transitionDelay: 9.9,
+                transitionDuration: 9.9,
+                transitionProperty: 9.9,
+                transitionTimingFunction: 9.9,
+                transform: 9.9,
+                transformOrigin: 9.9,
+                transformOriginX: 9.9,
+                transformOriginY: 9.9,
+                backfaceVisibility: 9.9,
+                perspective: 9.9,
+                perspectiveOrigin: 9.9,
+                transformStyle: 9.9,
+                transformOriginZ: 9.9,
+                animation: 9.9,
+                animationDelay: 9.9,
+                animationDirection: 9.9,
+                animationFillMode: 9.9,
+                animationDuration: 9.9,
+                animationIterationCount: 9.9,
+                animationName: 9.9,
+                animationPlayState: 9.9,
+                animationTimingFunction: 9.9,
+                appearance: 9.9,
+                userSelect: 9.9,
+                fontKerning: 9.9,
+                textEmphasisPosition: 9.9,
+                textEmphasis: 9.9,
+                textEmphasisStyle: 9.9,
+                textEmphasisColor: 9.9,
+                maskImage: 9.9,
+                maskMode: 9.9,
+                maskRepeat: 9.9,
+                maskPosition: 9.9,
+                maskClip: 9.9,
+                maskOrigin: 9.9,
+                maskSize: 9.9,
+                maskComposite: 9.9,
+                mask: 9.9,
+                maskBorderSource: 9.9,
+                maskBorderMode: 9.9,
+                maskBorderSlice: 9.9,
+                maskBorderWidth: 9.9,
+                maskBorderOutset: 9.9,
+                maskBorderRepeat: 9.9,
+                maskBorder: 9.9,
+                maskType: 9.9,
+                textSizeAdjust: 9.9,
+                filter: 9.9,
+                hyphens: 9.9,
+                flowInto: 9.9,
+                flowFrom: 9.9,
+                breakBefore: 9.9,
+                breakAfter: 9.9,
+                breakInside: 9.9,
+                regionFragment: 9.9,
+                fontFeatureSettings: 9.9,
+                columnCount: 9.9,
+                columnFill: 9.9,
+                columnGap: 9.9,
+                columnRule: 9.9,
+                columnRuleColor: 9.9,
+                columnRuleStyle: 9.9,
+                columnRuleWidth: 9.9,
+                columns: 9.9,
+                columnSpan: 9.9,
+                columnWidth: 9.9
+            },
+            op_mini: {
+                borderImage: 5,
+                borderImageOutset: 5,
+                borderImageRepeat: 5,
+                borderImageSlice: 5,
+                borderImageSource: 5,
+                borderImageWidth: 5,
+                tabSize: 5,
+                objectFit: 5,
+                objectPosition: 5
+            }
+        };
+        module.exports = caniuseData;
+    }, /* 17 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _pluginsCursor = __webpack_require__(18), _pluginsCursor2 = _interopRequireDefault(_pluginsCursor), _pluginsFlex = __webpack_require__(19), _pluginsFlex2 = _interopRequireDefault(_pluginsFlex), _pluginsSizing = __webpack_require__(20), _pluginsSizing2 = _interopRequireDefault(_pluginsSizing), _pluginsGradient = __webpack_require__(21), _pluginsGradient2 = _interopRequireDefault(_pluginsGradient), _pluginsFlexboxIE = __webpack_require__(22), _pluginsFlexboxIE2 = _interopRequireDefault(_pluginsFlexboxIE), _pluginsFlexboxOld = __webpack_require__(23), _pluginsFlexboxOld2 = _interopRequireDefault(_pluginsFlexboxOld);
+        exports["default"] = [ _pluginsCursor2["default"], _pluginsFlex2["default"], _pluginsSizing2["default"], _pluginsGradient2["default"], _pluginsFlexboxIE2["default"], _pluginsFlexboxOld2["default"] ], 
+        module.exports = exports["default"];
+    }, /* 18 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function _defineProperty(obj, key, value) {
+            return key in obj ? Object.defineProperty(obj, key, {
+                value: value,
+                enumerable: !0,
+                configurable: !0,
+                writable: !0
+            }) : obj[key] = value, obj;
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var values = [ "zoom-in", "zoom-out", "grab", "grabbing" ];
+        exports["default"] = function(property, value, _ref2, styles, keepUnprefixed, forceRun) {
+            var browser = _ref2.browser, version = _ref2.version, prefix = _ref2.prefix;
+            return "cursor" === property && values.indexOf(value) > -1 && (forceRun || "firefox" === browser && 24 > version || "chrome" === browser && 37 > version || "safari" === browser && 9 > version || "opera" === browser && 24 > version) ? _defineProperty({}, property, prefix.CSS + value + (keepUnprefixed ? ";" + property + ":" + value : "")) : void 0;
+        }, module.exports = exports["default"];
+    }, /* 19 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function _defineProperty(obj, key, value) {
+            return key in obj ? Object.defineProperty(obj, key, {
+                value: value,
+                enumerable: !0,
+                configurable: !0,
+                writable: !0
+            }) : obj[key] = value, obj;
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var values = [ "flex", "inline-flex" ];
+        exports["default"] = function(property, value, _ref2, styles, keepUnprefixed, forceRun) {
+            var browser = _ref2.browser, version = _ref2.version, prefix = _ref2.prefix;
+            return "display" === property && values.indexOf(value) > -1 && (forceRun || "chrome" === browser && 29 > version && version > 20 || ("safari" === browser || "ios_saf" === browser) && 9 > version && version > 6 || "opera" === browser && (15 == version || 16 == version)) ? _defineProperty({}, property, prefix.CSS + value + (keepUnprefixed ? ";" + property + ":" + value : "")) : void 0;
+        }, module.exports = exports["default"];
+    }, /* 20 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function _defineProperty(obj, key, value) {
+            return key in obj ? Object.defineProperty(obj, key, {
+                value: value,
+                enumerable: !0,
+                configurable: !0,
+                writable: !0
+            }) : obj[key] = value, obj;
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var properties = [ "maxHeight", "maxWidth", "width", "height", "columnWidth", "minWidth", "minHeight" ], values = [ "min-content", "max-content", "fill-available", "fit-content", "contain-floats" ];
+        exports["default"] = function(property, value, _ref2, styles, keepUnprefixed, forceRun) {
+            var prefix = _ref2.prefix;
+            /**
+	   * This actually is only available with prefixes
+	   * NOTE: This might change in the future
+	   */
+            /**
+	   * This actually is only available with prefixes
+	   * NOTE: This might change in the future
+	   */
+            return properties.indexOf(property) > -1 && values.indexOf(value) > -1 ? _defineProperty({}, property, prefix.CSS + value + (keepUnprefixed ? ";" + property + ":" + value : "")) : void 0;
+        }, module.exports = exports["default"];
+    }, /* 21 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function _defineProperty(obj, key, value) {
+            return key in obj ? Object.defineProperty(obj, key, {
+                value: value,
+                enumerable: !0,
+                configurable: !0,
+                writable: !0
+            }) : obj[key] = value, obj;
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var properties = [ "background", "backgroundImage" ], values = [ "linear-gradient", "radial-gradient", "repeating-linear-gradient", "repeating-radial-gradient" ];
+        exports["default"] = function(property, value, _ref2, styles, keepUnprefixed, forceRun) {
+            var browser = _ref2.browser, version = _ref2.version, prefix = _ref2.prefix;
+            return properties.indexOf(property) > -1 && values.indexOf(value) > -1 && (forceRun || "firefox" === browser && 16 > version || "chrome" === browser && 26 > version || ("safari" === browser || "ios_saf" === browser) && 7 > version || ("opera" === browser || "op_mini" === browser) && 12.1 > version || "android" === browser && 4.4 > version || "and_uc" === browser) ? _defineProperty({}, property, prefix.CSS + value + (keepUnprefixed ? ";" + property + ":" + value : "")) : void 0;
+        }, module.exports = exports["default"];
+    }, /* 22 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function _defineProperty(obj, key, value) {
+            return key in obj ? Object.defineProperty(obj, key, {
+                value: value,
+                enumerable: !0,
+                configurable: !0,
+                writable: !0
+            }) : obj[key] = value, obj;
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var alternativeValues = {
+            "space-around": "distribute",
+            "space-between": "justify",
+            "flex-start": "start",
+            "flex-end": "end",
+            flex: "-ms-flexbox",
+            "inline-flex": "-ms-inline-flexbox"
+        }, alternativeProps = {
+            alignContent: "msFlexLinePack",
+            alignSelf: "msFlexItemAlign",
+            alignItems: "msFlexAlign",
+            justifyContent: "msFlexPack",
+            order: "msFlexOrder",
+            flexGrow: "msFlexPositive",
+            flexShrink: "msFlexNegative",
+            flexBasis: "msPreferredSize"
+        }, properties = Object.keys(alternativeProps).concat("display");
+        exports["default"] = function(property, value, _ref3, styles, keepUnprefixed, forceRun) {
+            var browser = _ref3.browser, version = _ref3.version;
+            if (properties.indexOf(property) > -1 && (forceRun || ("ie_mob" === browser || "ie" === browser) && 10 == version)) {
+                if (keepUnprefixed || delete styles[property], alternativeProps[property]) return _defineProperty({}, alternativeProps[property], alternativeValues[value] || value);
+                if (alternativeValues[value]) return _defineProperty({}, property, alternativeValues[value] + (keepUnprefixed ? ";" + property + ":" + value : ""));
+            }
+        }, module.exports = exports["default"];
+    }, /* 23 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function _defineProperty(obj, key, value) {
+            return key in obj ? Object.defineProperty(obj, key, {
+                value: value,
+                enumerable: !0,
+                configurable: !0,
+                writable: !0
+            }) : obj[key] = value, obj;
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var alternativeValues = {
+            "space-around": "justify",
+            "space-between": "justify",
+            "flex-start": "start",
+            "flex-end": "end",
+            "wrap-reverse": "multiple",
+            wrap: "multiple",
+            flex: "box",
+            "inline-flex": "inline-box"
+        }, alternativeProps = {
+            alignItems: "WebkitBoxAlign",
+            justifyContent: "WebkitBoxPack",
+            flexWrap: "WebkitBoxLines"
+        }, properties = Object.keys(alternativeProps).concat([ "alignContent", "alignSelf", "display", "order", "flexGrow", "flexShrink", "flexBasis", "flexDirection" ]);
+        exports["default"] = function(property, value, _ref3, styles, keepUnprefixed, forceRun) {
+            var browser = _ref3.browser, version = _ref3.version, prefix = _ref3.prefix;
+            if (properties.indexOf(property) > -1 && (forceRun || "firefox" === browser && 22 > version || "chrome" === browser && 21 > version || ("safari" === browser || "ios_saf" === browser) && 6.1 >= version || "android" === browser && 4.4 > version || "and_uc" === browser)) {
+                if ("flexDirection" === property) return {
+                    WebkitBoxOrient: value.indexOf("column") > -1 ? "vertical" : "horizontal",
+                    WebkitBoxDirection: value.indexOf("reverse") > -1 ? "reverse" : "normal"
+                };
+                if ("display" === property && alternativeValues[value]) return {
+                    display: prefix.CSS + alternativeValues[value] + (keepUnprefixed ? ";" + property + ":" + value : "")
+                };
+                if (alternativeProps[property]) return _defineProperty({}, alternativeProps[property], alternativeValues[value] || value);
+                if (alternativeValues[value]) return _defineProperty({}, property, alternativeValues[value] + (keepUnprefixed ? ";" + property + ":" + value : ""));
+            }
+        }, module.exports = exports["default"];
+    }, /* 24 */
     /***/
     function(module, exports) {
         /**
@@ -562,7 +1842,7 @@
             addResizeListener: addResizeListener,
             removeResizeListener: removeResizeListener
         };
-    }, /* 11 */
+    }, /* 25 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -574,7 +1854,7 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _FlexTable2 = __webpack_require__(12), _FlexTable3 = _interopRequireDefault(_FlexTable2);
+        var _FlexTable2 = __webpack_require__(26), _FlexTable3 = _interopRequireDefault(_FlexTable2);
         exports["default"] = _FlexTable3["default"];
         var _FlexTable4 = _interopRequireDefault(_FlexTable2);
         exports.FlexTable = _FlexTable4["default"], Object.defineProperty(exports, "SortDirection", {
@@ -588,9 +1868,9 @@
                 return _FlexTable2.SortIndicator;
             }
         });
-        var _FlexColumn2 = __webpack_require__(24), _FlexColumn3 = _interopRequireDefault(_FlexColumn2);
+        var _FlexColumn2 = __webpack_require__(27), _FlexColumn3 = _interopRequireDefault(_FlexColumn2);
         exports.FlexColumn = _FlexColumn3["default"];
-    }, /* 12 */
+    }, /* 26 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -598,14 +1878,6 @@
             return obj && obj.__esModule ? obj : {
                 "default": obj
             };
-        }
-        function _defineProperty(obj, key, value) {
-            return key in obj ? Object.defineProperty(obj, key, {
-                value: value,
-                enumerable: !0,
-                configurable: !0,
-                writable: !0
-            }) : obj[key] = value, obj;
         }
         function _classCallCheck(instance, Constructor) {
             if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
@@ -622,11 +1894,14 @@
             }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
         }
         function SortIndicator(_ref) {
-            var sortDirection = _ref.sortDirection;
-            return _react2["default"].createElement("div", {
-                "data-sort-direction": sortDirection
-            }, _react2["default"].createElement("svg", {
-                className: _FlexTableCss2["default"].sortableHeaderIcon,
+            var sortDirection = _ref.sortDirection, styleSheet = _ref.styleSheet, classNames = (0, 
+            _classnames2["default"])("FlexTable__sortableHeaderIcon", {
+                "FlexTable__sortableHeaderIcon--ASC": sortDirection === SortDirection.ASC,
+                "FlexTable__sortableHeaderIcon--DESC": sortDirection === SortDirection.DESC
+            });
+            return _react2["default"].createElement("svg", {
+                className: classNames,
+                style: styleSheet.sortableHeaderIcon,
                 width: 18,
                 height: 18,
                 viewBox: "0 0 24 24",
@@ -638,12 +1913,18 @@
             }), _react2["default"].createElement("path", {
                 d: "M0 0h24v24H0z",
                 fill: "none"
-            })));
+            }));
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _createClass = function() {
+        var _extends = Object.assign || function(target) {
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
+            }
+            return target;
+        }, _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -672,7 +1953,7 @@
             }
         };
         exports.SortIndicator = SortIndicator;
-        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(13), _classnames2 = _interopRequireDefault(_classnames), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _VirtualScroll = __webpack_require__(14), _VirtualScroll2 = _interopRequireDefault(_VirtualScroll), _FlexColumn = __webpack_require__(24), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _FlexTableCss = __webpack_require__(25), _FlexTableCss2 = _interopRequireDefault(_FlexTableCss), SortDirection = {
+        var _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(27), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _VirtualScroll = __webpack_require__(28), _VirtualScroll2 = _interopRequireDefault(_VirtualScroll), _utils = __webpack_require__(7), SortDirection = {
             /**
 	   * Sort items in ascending order.
 	   * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
@@ -692,7 +1973,9 @@
         var FlexTable = function(_Component) {
             function FlexTable(props) {
                 _classCallCheck(this, FlexTable), _get(Object.getPrototypeOf(FlexTable.prototype), "constructor", this).call(this, props), 
-                this._createRow = this._createRow.bind(this);
+                this._createRow = this._createRow.bind(this), this.state = {
+                    styleSheet: (0, _utils.prefixStyleSheet)(props.styleSheet || FlexTable.defaultStyleSheet)
+                };
             }
             /**
 	   * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
@@ -703,23 +1986,6 @@
             return _inherits(FlexTable, _Component), _createClass(FlexTable, null, [ {
                 key: "shouldComponentUpdate",
                 value: _reactPureRenderFunction2["default"],
-                enumerable: !0
-            }, {
-                key: "defaultProps",
-                value: {
-                    disableHeader: !1,
-                    horizontalPadding: 0,
-                    noRowsRenderer: function() {
-                        return null;
-                    },
-                    onRowClick: function() {
-                        return null;
-                    },
-                    onRowsRendered: function() {
-                        return null;
-                    },
-                    verticalPadding: 0
-                },
                 enumerable: !0
             }, {
                 key: "propTypes",
@@ -776,10 +2042,29 @@
                     sortBy: _react.PropTypes.string,
                     /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
                     sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ]),
+                    /** Specifies presentational styles for component. */
+                    styleSheet: _react.PropTypes.object,
                     /** Fixed/available width for out DOM element */
                     width: _react.PropTypes.number.isRequired,
                     /** Vertical padding of outer DOM element */
                     verticalPadding: _react.PropTypes.number
+                },
+                enumerable: !0
+            }, {
+                key: "defaultProps",
+                value: {
+                    disableHeader: !1,
+                    horizontalPadding: 0,
+                    noRowsRenderer: function() {
+                        return null;
+                    },
+                    onRowClick: function() {
+                        return null;
+                    },
+                    onRowsRendered: function() {
+                        return null;
+                    },
+                    verticalPadding: 0
                 },
                 enumerable: !0
             } ]), _createClass(FlexTable, [ {
@@ -793,21 +2078,28 @@
                     this.refs.VirtualScroll.scrollToRow(scrollToIndex);
                 }
             }, {
+                key: "componentWillUpdate",
+                value: function(nextProps, nextState) {
+                    this.props.styleSheet !== nextProps.styleSheet && this.setState({
+                        styleSheet: (0, _utils.prefixStyleSheet)(nextProps.styleSheet)
+                    });
+                }
+            }, {
                 key: "render",
                 value: function() {
-                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, verticalPadding = _props.verticalPadding, width = _props.width, availableRowsHeight = height - headerHeight - verticalPadding, rowRenderer = function(index) {
+                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, verticalPadding = _props.verticalPadding, width = _props.width, styleSheet = this.state.styleSheet, availableRowsHeight = height - headerHeight - verticalPadding, rowRenderer = function(index) {
                         return _this._createRow(index);
                     }, rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
                     return _react2["default"].createElement("div", {
-                        className: (0, _classnames2["default"])(_FlexTableCss2["default"].FlexTable, className),
-                        style: {
+                        className: (0, _classnames2["default"])("FlexTable", className),
+                        style: _extends({}, styleSheet.FlexTable, functionalStyles.FlexTable, {
                             maxWidth: width
-                        }
+                        })
                     }, !disableHeader && _react2["default"].createElement("div", {
-                        className: (0, _classnames2["default"])(_FlexTableCss2["default"].headerRow, rowClass),
-                        style: {
+                        className: (0, _classnames2["default"])("FlexTable__headerRow", rowClass),
+                        style: _extends({}, styleSheet.headerRow, functionalStyles.headerRow, {
                             height: headerHeight
-                        }
+                        })
                     }, this._getRenderedHeaderRow()), _react2["default"].createElement(_VirtualScroll2["default"], {
                         ref: "VirtualScroll",
                         width: width,
@@ -822,56 +2114,60 @@
             }, {
                 key: "_createColumn",
                 value: function(column, columnIndex, rowData, rowIndex) {
-                    var _column$props = column.props, cellClassName = _column$props.cellClassName, cellDataGetter = _column$props.cellDataGetter, columnData = _column$props.columnData, dataKey = _column$props.dataKey, cellRenderer = _column$props.cellRenderer, cellData = cellDataGetter(dataKey, rowData, columnData), renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData), flex = this._getFlexStyleForColumn(column), style = {
-                        WebkitFlex: flex,
-                        msFlex: flex,
-                        flex: flex
-                    }, title = "string" == typeof renderedCell ? renderedCell : null;
+                    var _column$props = column.props, cellClassName = _column$props.cellClassName, cellDataGetter = _column$props.cellDataGetter, columnData = _column$props.columnData, dataKey = _column$props.dataKey, cellRenderer = _column$props.cellRenderer, styleSheet = this.state.styleSheet, cellData = cellDataGetter(dataKey, rowData, columnData), renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData), flex = this._getFlexStyleForColumn(column), title = "string" == typeof renderedCell ? renderedCell : null;
                     return _react2["default"].createElement("div", {
                         key: "Row" + rowIndex + "-Col" + columnIndex,
-                        className: _FlexTableCss2["default"].rowColumn,
-                        style: style
+                        className: (0, _classnames2["default"])("FlexTable__rowColumn", cellClassName),
+                        style: _extends({}, styleSheet.rowColumn, functionalStyles.rowColumn, (0, _utils.prefixStyle)({
+                            flex: flex
+                        }))
                     }, _react2["default"].createElement("div", {
-                        className: (0, _classnames2["default"])(_FlexTableCss2["default"].truncatedColumnText, cellClassName),
+                        className: "FlexTable__truncatedColumnText",
+                        style: styleSheet.truncatedColumnText,
                         title: title
                     }, renderedCell));
                 }
             }, {
                 key: "_createHeader",
                 value: function(column, columnIndex) {
-                    var _props2 = this.props, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, classNames = (0, 
-                    _classnames2["default"])(_FlexTableCss2["default"].headerColumn, this.props.headerClassName, column.props.headerClassName, _defineProperty({}, _FlexTableCss2["default"].sortableHeaderColumn, sortEnabled)), style = {
-                        flex: this._getFlexStyleForColumn(column)
-                    }, newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC, onClick = function() {
+                    var _props2 = this.props, headerClassName = _props2.headerClassName, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, styleSheet = this.state.styleSheet, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, sortableStyles = sortEnabled ? styleSheet.sortableHeaderColumn : {}, classNames = (0, 
+                    _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
+                        FlexTable__sortableHeaderColumn: sortEnabled
+                    }), flex = this._getFlexStyleForColumn(column), newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC, onClick = function() {
                         return sortEnabled && sort(dataKey, newSortDirection);
                     };
                     return _react2["default"].createElement("div", {
                         key: "Header-Col" + columnIndex,
                         className: classNames,
-                        style: style,
+                        style: _extends({}, styleSheet.headerColumn, functionalStyles.headerColumn, sortableStyles, (0, 
+                        _utils.prefixStyle)({
+                            flex: flex
+                        })),
                         onClick: onClick
                     }, _react2["default"].createElement("div", {
-                        className: _FlexTableCss2["default"].headerTruncatedText,
+                        className: "FlexTable__headerTruncatedText",
+                        style: styleSheet.headerTruncatedText,
                         title: label
                     }, label), showSortIndicator && _react2["default"].createElement(SortIndicator, {
-                        sortDirection: sortDirection
+                        sortDirection: sortDirection,
+                        styleSheet: styleSheet
                     }));
                 }
             }, {
                 key: "_createRow",
                 value: function(rowIndex) {
-                    var _this2 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, rowHeight = _props3.rowHeight, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
+                    var _this2 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, rowHeight = _props3.rowHeight, styleSheet = this.state.styleSheet, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
                         return _this2._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
                     });
                     return _react2["default"].createElement("div", {
                         key: rowIndex,
-                        className: (0, _classnames2["default"])(_FlexTableCss2["default"].row, rowClass),
+                        className: (0, _classnames2["default"])("FlexTable__row", rowClass),
                         onClick: function() {
                             return onRowClick(rowIndex);
                         },
-                        style: {
+                        style: _extends({}, styleSheet.row, functionalStyles.row, {
                             height: rowHeight
-                        }
+                        })
                     }, renderedRow);
                 }
             }, {
@@ -894,35 +2190,191 @@
         exports["default"] = FlexTable, SortIndicator.propTypes = {
             sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ])
         };
-    }, /* 13 */
+        /** Functional styles can't be overridden so they only need to be prefixed once. */
+        var functionalStyles = (0, _utils.prefixStyleSheet)({
+            FlexTable: {
+                width: "100%"
+            },
+            headerColumn: {
+                display: "flex",
+                flexDirection: "row",
+                overflow: "hidden"
+            },
+            headerRow: {
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                overflow: "hidden"
+            },
+            row: {
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                overflow: "hidden"
+            },
+            rowColumn: {
+                display: "flex",
+                overflow: "hidden",
+                height: "100%"
+            }
+        });
+        /** Default presentational styles for all <FlexTable> instances. */
+        FlexTable.defaultStyleSheet = {
+            FlexTable: {},
+            headerColumn: {
+                marginRight: 10,
+                minWidth: 0,
+                alignItems: "center"
+            },
+            headerRow: {
+                fontWeight: 700,
+                textTransform: "uppercase",
+                paddingLeft: 10
+            },
+            headerTruncatedText: {
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                overflow: "hidden"
+            },
+            row: {
+                paddingLeft: 10
+            },
+            rowColumn: {
+                marginRight: 10,
+                minWidth: 0,
+                justifyContent: "center",
+                flexDirection: "column"
+            },
+            sortableHeaderColumn: {
+                cursor: "pointer"
+            },
+            sortableHeaderIcon: {
+                flex: "0 0 24",
+                height: "1em",
+                width: "1em",
+                fill: "currentColor"
+            },
+            truncatedColumnText: {
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                overflow: "hidden"
+            }
+        };
+    }, /* 27 */
     /***/
     function(module, exports, __webpack_require__) {
-        var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
-        /*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-        /* global define */
-        !function() {
-            "use strict";
-            function classNames() {
-                for (var classes = [], i = 0; i < arguments.length; i++) {
-                    var arg = arguments[i];
-                    if (arg) {
-                        var argType = typeof arg;
-                        if ("string" === argType || "number" === argType) classes.push(arg); else if (Array.isArray(arg)) classes.push(classNames.apply(null, arg)); else if ("object" === argType) for (var key in arg) hasOwn.call(arg, key) && arg[key] && classes.push(key);
-                    }
+        "use strict";
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _inherits(subClass, superClass) {
+            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+            subClass.prototype = Object.create(superClass && superClass.prototype, {
+                constructor: {
+                    value: subClass,
+                    enumerable: !1,
+                    writable: !0,
+                    configurable: !0
                 }
-                return classes.join(" ");
+            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
+        }
+        /**
+	 * Default cell renderer that displays an attribute as a simple string
+	 * You should override the column's cellRenderer if your data is some other type of object.
+	 */
+        function defaultCellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
+            return null === cellData || void 0 === cellData ? "" : String(cellData);
+        }
+        /**
+	 * Default accessor for returning a cell value for a given attribute.
+	 * This function expects to operate on either a vanilla Object or an Immutable Map.
+	 * You should override the column's cellDataGetter if your data is some other type of object.
+	 */
+        function defaultCellDataGetter(dataKey, rowData, columnData) {
+            return rowData.get instanceof Function ? rowData.get(dataKey) : rowData[dataKey];
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+                }
             }
-            var hasOwn = {}.hasOwnProperty;
-            "undefined" != typeof module && module.exports ? module.exports = classNames : (__WEBPACK_AMD_DEFINE_ARRAY__ = [], 
-            __WEBPACK_AMD_DEFINE_RESULT__ = function() {
-                return classNames;
-            }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), !(void 0 !== __WEBPACK_AMD_DEFINE_RESULT__ && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)));
-        }();
-    }, /* 14 */
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), _get = function(_x, _x2, _x3) {
+            for (var _again = !0; _again; ) {
+                var object = _x, property = _x2, receiver = _x3;
+                _again = !1, null === object && (object = Function.prototype);
+                var desc = Object.getOwnPropertyDescriptor(object, property);
+                if (void 0 !== desc) {
+                    if ("value" in desc) return desc.value;
+                    var getter = desc.get;
+                    if (void 0 === getter) return;
+                    return getter.call(receiver);
+                }
+                var parent = Object.getPrototypeOf(object);
+                if (null === parent) return;
+                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
+            }
+        };
+        exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter;
+        var _react = __webpack_require__(4), Column = function(_Component) {
+            function Column() {
+                _classCallCheck(this, Column), _get(Object.getPrototypeOf(Column.prototype), "constructor", this).apply(this, arguments);
+            }
+            return _inherits(Column, _Component), _createClass(Column, null, [ {
+                key: "defaultProps",
+                value: {
+                    cellDataGetter: defaultCellDataGetter,
+                    cellRenderer: defaultCellRenderer,
+                    flexGrow: 0,
+                    flexShrink: 1
+                },
+                enumerable: !0
+            }, {
+                key: "propTypes",
+                value: {
+                    /** Optional CSS class to apply to cell */
+                    cellClassName: _react.PropTypes.string,
+                    /**
+	       * Callback responsible for returning a cell's data, given its :dataKey
+	       * (dataKey: string, rowData: any): any
+	       */
+                    cellDataGetter: _react.PropTypes.func,
+                    /**
+	       * Callback responsible for rendering a cell's contents.
+	       * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
+	       */
+                    cellRenderer: _react.PropTypes.func,
+                    /** Optional additional data passed to this column's :cellDataGetter */
+                    columnData: _react.PropTypes.object,
+                    /** Uniquely identifies the row-data attribute correspnding to this cell */
+                    dataKey: _react.PropTypes.any.isRequired,
+                    /** If sort is enabled for the table at large, disable it for this column */
+                    disableSort: _react.PropTypes.bool,
+                    /** Flex grow style; defaults to 0 */
+                    flexGrow: _react.PropTypes.number,
+                    /** Flex shrink style; defaults to 1 */
+                    flexShrink: _react.PropTypes.number,
+                    /** Optional CSS class to apply to this column's header */
+                    headerClassName: _react.PropTypes.string,
+                    /** Header label for this column */
+                    label: _react.PropTypes.string,
+                    /** Optional fixed width for this column */
+                    width: _react.PropTypes.number
+                },
+                enumerable: !0
+            } ]), Column;
+        }(_react.Component);
+        exports["default"] = Column;
+    }, /* 28 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -934,11 +2386,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _VirtualScroll2 = __webpack_require__(15), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
+        var _VirtualScroll2 = __webpack_require__(29), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
         exports["default"] = _VirtualScroll3["default"];
         var _VirtualScroll4 = _interopRequireDefault(_VirtualScroll2);
         exports.VirtualScroll = _VirtualScroll4["default"];
-    }, /* 15 */
+    }, /* 29 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -966,7 +2418,13 @@
             Object.defineProperty(exports, "__esModule", {
                 value: !0
             });
-            var _createClass = function() {
+            var _extends = Object.assign || function(target) {
+                for (var i = 1; i < arguments.length; i++) {
+                    var source = arguments[i];
+                    for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
+                }
+                return target;
+            }, _createClass = function() {
                 function defineProperties(target, props) {
                     for (var i = 0; i < props.length; i++) {
                         var descriptor = props[i];
@@ -993,17 +2451,19 @@
                     if (null === parent) return;
                     _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
                 }
-            }, _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(13), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(18), _raf2 = _interopRequireDefault(_raf), _utils = __webpack_require__(21), _VirtualScrollCss = __webpack_require__(22), _VirtualScrollCss2 = _interopRequireDefault(_VirtualScrollCss), IS_SCROLLING_TIMEOUT = 150, VirtualScroll = function(_Component) {
+            }, _utils = __webpack_require__(7), _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(32), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), IS_SCROLLING_TIMEOUT = 150, VirtualScroll = function(_Component) {
                 function VirtualScroll(props, context) {
                     _classCallCheck(this, VirtualScroll), _get(Object.getPrototypeOf(VirtualScroll.prototype), "constructor", this).call(this, props, context), 
                     this.state = {
                         computeCellMetadataOnNextUpdate: !1,
                         isScrolling: !1,
+                        styleSheet: (0, _utils.prefixStyleSheet)(props.styleSheet || VirtualScroll.defaultStyleSheet),
                         scrollTop: 0
                     }, // Invokes onRowsRendered callback only when start/stop row indices change
                     this._OnRowsRenderedHelper = (0, _utils.initOnRowsRenderedHelper)(), this._onKeyPress = this._onKeyPress.bind(this), 
                     this._onScroll = this._onScroll.bind(this), this._onWheel = this._onWheel.bind(this);
                 }
+                /** Functional styles can't be overridden so they only need to be prefixed once. */
                 /**
 	   * Forced recompute of row heights.
 	   * This function should be called if dynamic row heights have changed but nothing else has.
@@ -1034,7 +2494,9 @@
                         /** Number of rows in list. */
                         rowsCount: _react.PropTypes.number.isRequired,
                         /** Row index to ensure visible (by forcefully scrolling if necessary) */
-                        scrollToIndex: _react.PropTypes.number
+                        scrollToIndex: _react.PropTypes.number,
+                        /** Specifies presentational styles for component. */
+                        styleSheet: _react.PropTypes.object
                     },
                     enumerable: !0
                 }, {
@@ -1116,6 +2578,8 @@
                     value: function(nextProps, nextState) {
                         0 === nextProps.rowsCount && 0 !== nextState.scrollTop && this.setState({
                             scrollTop: 0
+                        }), this.props.styleSheet !== nextProps.styleSheet && this.setState({
+                            styleSheet: (0, _utils.prefixStyleSheet)(nextProps.styleSheet)
                         }), // Don't compare rowHeight if it's a function because inline functions would cause infinite loops.
                         // In that event users should use recomputeRowHeights() to inform of changes.
                         (nextState.computeCellMetadataOnNextUpdate || this.props.rowsCount !== nextProps.rowsCount || ("number" == typeof this.props.rowHeight || "number" == typeof nextProps.rowHeight) && this.props.rowHeight !== nextProps.rowHeight) && (this._computeCellMetadata(nextProps), 
@@ -1128,7 +2592,7 @@
                 }, {
                     key: "render",
                     value: function() {
-                        var _props3 = this.props, className = _props3.className, height = _props3.height, noRowsRenderer = _props3.noRowsRenderer, rowsCount = _props3.rowsCount, rowRenderer = _props3.rowRenderer, _state = this.state, isScrolling = _state.isScrolling, scrollTop = _state.scrollTop, childrenToDisplay = [];
+                        var _props3 = this.props, className = _props3.className, height = _props3.height, noRowsRenderer = _props3.noRowsRenderer, rowsCount = _props3.rowsCount, rowRenderer = _props3.rowRenderer, _state = this.state, isScrolling = _state.isScrolling, scrollTop = _state.scrollTop, styleSheet = _state.styleSheet, childrenToDisplay = [];
                         // Render only enough rows to cover the visible (vertical) area of the table.
                         if (height > 0) {
                             var _getVisibleCellIndices = (0, _utils.getVisibleCellIndices)({
@@ -1140,34 +2604,33 @@
                             // Store for onRowsRendered callback in componentDidUpdate
                             this._renderedStartIndex = start, this._renderedStopIndex = _stop;
                             for (var i = start; _stop >= i; i++) {
-                                var datum = this._cellMetadata[i], child = _react2["default"].cloneElement(rowRenderer(i), {
-                                    style: {
+                                var datum = this._cellMetadata[i], child = rowRenderer(i);
+                                child = _react2["default"].cloneElement(child, {
+                                    style: _extends({}, child.props.style, {
                                         position: "absolute",
                                         top: datum.offset,
                                         width: "100%",
                                         height: this._getRowHeight(i)
-                                    }
-                                });
-                                childrenToDisplay.push(child);
+                                    })
+                                }), childrenToDisplay.push(child);
                             }
                         }
                         return _react2["default"].createElement("div", {
                             ref: "scrollingContainer",
-                            className: (0, _classnames2["default"])(_VirtualScrollCss2["default"].VirtualScroll, className),
+                            className: (0, _classnames2["default"])("VirtualScroll", className),
                             onKeyDown: this._onKeyPress,
                             onScroll: this._onScroll,
                             onWheel: this._onWheel,
                             tabIndex: 0,
-                            style: {
+                            style: _extends({}, styleSheet.VirtualScroll, functionalStyles.VirtualScroll, {
                                 height: height
-                            }
+                            })
                         }, rowsCount > 0 && _react2["default"].createElement("div", {
-                            className: _VirtualScrollCss2["default"].InnerScrollContainer,
-                            style: {
+                            style: _extends({}, functionalStyles.innerScrollContainer, {
                                 height: this._getTotalRowsHeight(),
                                 maxHeight: this._getTotalRowsHeight(),
                                 pointerEvents: isScrolling ? "none" : "auto"
-                            }
+                            })
                         }, childrenToDisplay), 0 === rowsCount && noRowsRenderer());
                     }
                 }, {
@@ -1300,9 +2763,25 @@
                     }
                 } ]), VirtualScroll;
             }(_react.Component);
-            exports["default"] = VirtualScroll, module.exports = exports["default"];
-        }).call(exports, __webpack_require__(16).setImmediate, __webpack_require__(16).clearImmediate);
-    }, /* 16 */
+            exports["default"] = VirtualScroll;
+            var functionalStyles = (0, _utils.prefixStyleSheet)({
+                VirtualScroll: {
+                    position: "relative",
+                    overflow: "auto",
+                    outline: 0
+                },
+                innerScrollContainer: {
+                    boxSizing: "border-box",
+                    overflowX: "auto",
+                    overflowY: "hidden"
+                }
+            });
+            /** Default presentational styles for all <VirtualScroll> instances. */
+            VirtualScroll.defaultStyleSheet = {
+                VirtualScroll: {}
+            }, module.exports = exports["default"];
+        }).call(exports, __webpack_require__(30).setImmediate, __webpack_require__(30).clearImmediate);
+    }, /* 30 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -1310,7 +2789,7 @@
             function Timeout(id, clearFn) {
                 this._id = id, this._clearFn = clearFn;
             }
-            var nextTick = __webpack_require__(17).nextTick, apply = Function.prototype.apply, slice = Array.prototype.slice, immediateIds = {}, nextImmediateId = 0;
+            var nextTick = __webpack_require__(31).nextTick, apply = Function.prototype.apply, slice = Array.prototype.slice, immediateIds = {}, nextImmediateId = 0;
             // DOM APIs, for completeness
             exports.setTimeout = function() {
                 return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
@@ -1343,8 +2822,8 @@
             }, exports.clearImmediate = "function" == typeof clearImmediate ? clearImmediate : function(id) {
                 delete immediateIds[id];
             };
-        }).call(exports, __webpack_require__(16).setImmediate, __webpack_require__(16).clearImmediate);
-    }, /* 17 */
+        }).call(exports, __webpack_require__(30).setImmediate, __webpack_require__(30).clearImmediate);
+    }, /* 31 */
     /***/
     function(module, exports) {
         function cleanUpNextTick() {
@@ -1388,10 +2867,10 @@
         }, process.umask = function() {
             return 0;
         };
-    }, /* 18 */
+    }, /* 32 */
     /***/
     function(module, exports, __webpack_require__) {
-        for (var now = __webpack_require__(19), global = "undefined" == typeof window ? {} : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = global["request" + suffix], caf = global["cancel" + suffix] || global["cancelRequest" + suffix], i = 0; i < vendors.length && !raf; i++) raf = global[vendors[i] + "Request" + suffix], 
+        for (var now = __webpack_require__(33), global = "undefined" == typeof window ? {} : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = global["request" + suffix], caf = global["cancel" + suffix] || global["cancelRequest" + suffix], i = 0; i < vendors.length && !raf; i++) raf = global[vendors[i] + "Request" + suffix], 
         caf = global[vendors[i] + "Cancel" + suffix] || global[vendors[i] + "CancelRequest" + suffix];
         // Some versions of FF have rAF but not cAF
         if (!raf || !caf) {
@@ -1431,7 +2910,7 @@
         }, module.exports.cancel = function() {
             caf.apply(global, arguments);
         };
-    }, /* 19 */
+    }, /* 33 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -1452,307 +2931,7 @@
                     return new Date().getTime() - loadTime;
                 }, loadTime = new Date().getTime());
             }).call(this);
-        }).call(exports, __webpack_require__(20));
-    }, /* 20 */
-    /***/
-    function(module, exports) {
-        function cleanUpNextTick() {
-            draining = !1, currentQueue.length ? queue = currentQueue.concat(queue) : queueIndex = -1, 
-            queue.length && drainQueue();
-        }
-        function drainQueue() {
-            if (!draining) {
-                var timeout = setTimeout(cleanUpNextTick);
-                draining = !0;
-                for (var len = queue.length; len; ) {
-                    for (currentQueue = queue, queue = []; ++queueIndex < len; ) currentQueue && currentQueue[queueIndex].run();
-                    queueIndex = -1, len = queue.length;
-                }
-                currentQueue = null, draining = !1, clearTimeout(timeout);
-            }
-        }
-        // v8 likes predictible objects
-        function Item(fun, array) {
-            this.fun = fun, this.array = array;
-        }
-        function noop() {}
-        // shim for using process in browser
-        var currentQueue, process = module.exports = {}, queue = [], draining = !1, queueIndex = -1;
-        process.nextTick = function(fun) {
-            var args = new Array(arguments.length - 1);
-            if (arguments.length > 1) for (var i = 1; i < arguments.length; i++) args[i - 1] = arguments[i];
-            queue.push(new Item(fun, args)), 1 !== queue.length || draining || setTimeout(drainQueue, 0);
-        }, Item.prototype.run = function() {
-            this.fun.apply(null, this.array);
-        }, process.title = "browser", process.browser = !0, process.env = {}, process.argv = [], 
-        process.version = "", // empty string to avoid regexp issues
-        process.versions = {}, process.on = noop, process.addListener = noop, process.once = noop, 
-        process.off = noop, process.removeListener = noop, process.removeAllListeners = noop, 
-        process.emit = noop, process.binding = function(name) {
-            throw new Error("process.binding is not supported");
-        }, process.cwd = function() {
-            return "/";
-        }, process.chdir = function(dir) {
-            throw new Error("process.chdir is not supported");
-        }, process.umask = function() {
-            return 0;
-        };
-    }, /* 21 */
-    /***/
-    function(module, exports) {
-        /**
-	 * Binary search function inspired by react-infinite.
-	 */
-        "use strict";
-        function findNearestCell(_ref) {
-            for (var cellMetadata = _ref.cellMetadata, mode = _ref.mode, offset = _ref.offset, high = cellMetadata.length - 1, low = 0, middle = void 0, currentOffset = void 0; high >= low; ) {
-                if (middle = low + Math.floor((high - low) / 2), currentOffset = cellMetadata[middle].offset, 
-                currentOffset === offset) return middle;
-                offset > currentOffset ? low = middle + 1 : currentOffset > offset && (high = middle - 1);
-            }
-            return mode === findNearestCell.EQUAL_OR_LOWER && low > 0 ? low - 1 : mode === findNearestCell.EQUAL_OR_HIGHER && high < cellMetadata.length - 1 ? high + 1 : void 0;
-        }
-        /**
-	 * Determines a new offset that ensures a certain cell is visible, given the current offset.
-	 * If the cell is already visible then the current offset will be returned.
-	 * If the current offset is too great or small, it will be adjusted just enough to ensure the specified index is visible.
-	 *
-	 * @param cellMetadata Metadata initially computed by initCellMetadata()
-	 * @param containerSize Total size (width or height) of the container
-	 * @param currentOffset Container's current (x or y) offset
-	 * @param targetIndex Index of target cell
-	 * @return Offset to use to ensure the specified cell is visible
-	 */
-        function getUpdatedOffsetForIndex(_ref2) {
-            var cellMetadata = _ref2.cellMetadata, containerSize = _ref2.containerSize, currentOffset = _ref2.currentOffset, targetIndex = _ref2.targetIndex;
-            if (0 === cellMetadata.length) return 0;
-            targetIndex = Math.max(0, Math.min(cellMetadata.length - 1, targetIndex));
-            var datum = cellMetadata[targetIndex], maxOffset = datum.offset, minOffset = maxOffset - containerSize + datum.size, newOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
-            return newOffset;
-        }
-        /**
-	 * Determines the range of cells to display for a given offset in order to fill the specified container.
-	 *
-	 * @param cellCount Total number of cells.
-	 * @param cellMetadata Metadata initially computed by initCellMetadata()
-	 * @param containerSize Total size (width or height) of the container
-	 * @param currentOffset Container's current (x or y) offset
-	 * @return An object containing :start and :stop attributes, each specifying a cell index
-	 */
-        function getVisibleCellIndices(_ref3) {
-            var cellCount = _ref3.cellCount, cellMetadata = _ref3.cellMetadata, containerSize = _ref3.containerSize, currentOffset = _ref3.currentOffset;
-            if (0 === cellCount) return {};
-            currentOffset = Math.max(0, currentOffset);
-            var maxOffset = currentOffset + containerSize, start = findNearestCell({
-                cellMetadata: cellMetadata,
-                mode: findNearestCell.EQUAL_OR_LOWER,
-                offset: currentOffset
-            }), datum = cellMetadata[start];
-            currentOffset = datum.offset + datum.size;
-            for (var stop = start; maxOffset > currentOffset && cellCount - 1 > stop; ) stop++, 
-            currentOffset += cellMetadata[stop].size;
-            return {
-                start: start,
-                stop: stop
-            };
-        }
-        /**
-	 * Initializes metadata for an axis and its cells.
-	 * This data is used to determine which cells are visible given a container size and scroll position.
-	 *
-	 * @param cellCount Total number of cells.
-	 * @param size Either a fixed size or a function that returns the size for a given given an index.
-	 * @return Object mapping cell index to cell metadata (size, offset)
-	 */
-        function initCellMetadata(_ref4) {
-            for (var cellCount = _ref4.cellCount, size = _ref4.size, sizeGetter = size instanceof Function ? size : function(index) {
-                return size;
-            }, cellMetadata = [], offset = 0, i = 0; cellCount > i; i++) {
-                var _size = sizeGetter(i);
-                cellMetadata[i] = {
-                    size: _size,
-                    offset: offset
-                }, offset += _size;
-            }
-            return cellMetadata;
-        }
-        /**
-	 * Helper utility that updates the specified onRowsRendered callback on when start or stop indices have changed.
-	 */
-        function initOnRowsRenderedHelper() {
-            var cachedStartIndex = void 0, cachedStopIndex = void 0;
-            return function(_ref5) {
-                var onRowsRendered = _ref5.onRowsRendered, startIndex = _ref5.startIndex, stopIndex = _ref5.stopIndex;
-                startIndex >= 0 && stopIndex >= 0 && (startIndex !== cachedStartIndex || stopIndex !== cachedStopIndex) && (cachedStartIndex = startIndex, 
-                cachedStopIndex = stopIndex, onRowsRendered({
-                    startIndex: startIndex,
-                    stopIndex: stopIndex
-                }));
-            };
-        }
-        Object.defineProperty(exports, "__esModule", {
-            value: !0
-        }), exports.findNearestCell = findNearestCell, exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex, 
-        exports.getVisibleCellIndices = getVisibleCellIndices, exports.initCellMetadata = initCellMetadata, 
-        exports.initOnRowsRenderedHelper = initOnRowsRenderedHelper, findNearestCell.EQUAL_OR_LOWER = 1, 
-        findNearestCell.EQUAL_OR_HIGHER = 2;
-    }, /* 22 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        // style-loader: Adds some css to the DOM by adding a <style> tag
-        // load the styles
-        var content = __webpack_require__(23);
-        "string" == typeof content && (content = [ [ module.id, content, "" ] ]);
-        // add the styles to the DOM
-        __webpack_require__(9)(content, {});
-        content.locals && (module.exports = content.locals);
-    }, /* 23 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        exports = module.exports = __webpack_require__(8)(), exports.push([ module.id, "._1YRO4DwDuAvx0eclU94R2f{outline:0;overflow:auto;position:relative}._1ivZTwowJMdKnXoTKvAg6D{box-sizing:border-box;overflow-x:auto;overflow-y:hidden}", "" ]), 
-        exports.locals = {
-            VirtualScroll: "_1YRO4DwDuAvx0eclU94R2f",
-            InnerScrollContainer: "_1ivZTwowJMdKnXoTKvAg6D"
-        };
-    }, /* 24 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        "use strict";
-        function _classCallCheck(instance, Constructor) {
-            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
-        }
-        function _inherits(subClass, superClass) {
-            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-            subClass.prototype = Object.create(superClass && superClass.prototype, {
-                constructor: {
-                    value: subClass,
-                    enumerable: !1,
-                    writable: !0,
-                    configurable: !0
-                }
-            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
-        }
-        /**
-	 * Default cell renderer that displays an attribute as a simple string
-	 * You should override the column's cellRenderer if your data is some other type of object.
-	 */
-        function defaultCellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
-            return null === cellData || void 0 === cellData ? "" : String(cellData);
-        }
-        /**
-	 * Default accessor for returning a cell value for a given attribute.
-	 * This function expects to operate on either a vanilla Object or an Immutable Map.
-	 * You should override the column's cellDataGetter if your data is some other type of object.
-	 */
-        function defaultCellDataGetter(dataKey, rowData, columnData) {
-            return rowData.get instanceof Function ? rowData.get(dataKey) : rowData[dataKey];
-        }
-        Object.defineProperty(exports, "__esModule", {
-            value: !0
-        });
-        var _createClass = function() {
-            function defineProperties(target, props) {
-                for (var i = 0; i < props.length; i++) {
-                    var descriptor = props[i];
-                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
-                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
-                }
-            }
-            return function(Constructor, protoProps, staticProps) {
-                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
-                Constructor;
-            };
-        }(), _get = function(_x, _x2, _x3) {
-            for (var _again = !0; _again; ) {
-                var object = _x, property = _x2, receiver = _x3;
-                _again = !1, null === object && (object = Function.prototype);
-                var desc = Object.getOwnPropertyDescriptor(object, property);
-                if (void 0 !== desc) {
-                    if ("value" in desc) return desc.value;
-                    var getter = desc.get;
-                    if (void 0 === getter) return;
-                    return getter.call(receiver);
-                }
-                var parent = Object.getPrototypeOf(object);
-                if (null === parent) return;
-                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
-            }
-        };
-        exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter;
-        var _react = __webpack_require__(3), Column = function(_Component) {
-            function Column() {
-                _classCallCheck(this, Column), _get(Object.getPrototypeOf(Column.prototype), "constructor", this).apply(this, arguments);
-            }
-            return _inherits(Column, _Component), _createClass(Column, null, [ {
-                key: "defaultProps",
-                value: {
-                    cellDataGetter: defaultCellDataGetter,
-                    cellRenderer: defaultCellRenderer,
-                    flexGrow: 0,
-                    flexShrink: 1
-                },
-                enumerable: !0
-            }, {
-                key: "propTypes",
-                value: {
-                    /** Optional CSS class to apply to cell */
-                    cellClassName: _react.PropTypes.string,
-                    /**
-	       * Callback responsible for returning a cell's data, given its :dataKey
-	       * (dataKey: string, rowData: any): any
-	       */
-                    cellDataGetter: _react.PropTypes.func,
-                    /**
-	       * Callback responsible for rendering a cell's contents.
-	       * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
-	       */
-                    cellRenderer: _react.PropTypes.func,
-                    /** Optional additional data passed to this column's :cellDataGetter */
-                    columnData: _react.PropTypes.object,
-                    /** Uniquely identifies the row-data attribute correspnding to this cell */
-                    dataKey: _react.PropTypes.any.isRequired,
-                    /** If sort is enabled for the table at large, disable it for this column */
-                    disableSort: _react.PropTypes.bool,
-                    /** Flex grow style; defaults to 0 */
-                    flexGrow: _react.PropTypes.number,
-                    /** Flex shrink style; defaults to 1 */
-                    flexShrink: _react.PropTypes.number,
-                    /** Optional CSS class to apply to this column's header */
-                    headerClassName: _react.PropTypes.string,
-                    /** Header label for this column */
-                    label: _react.PropTypes.string,
-                    /** Optional fixed width for this column */
-                    width: _react.PropTypes.number
-                },
-                enumerable: !0
-            } ]), Column;
-        }(_react.Component);
-        exports["default"] = Column;
-    }, /* 25 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        // style-loader: Adds some css to the DOM by adding a <style> tag
-        // load the styles
-        var content = __webpack_require__(26);
-        "string" == typeof content && (content = [ [ module.id, content, "" ] ]);
-        // add the styles to the DOM
-        __webpack_require__(9)(content, {});
-        content.locals && (module.exports = content.locals);
-    }, /* 26 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        exports = module.exports = __webpack_require__(8)(), exports.push([ module.id, "._23mq7CiOQELHnjSRUEmZJZ{width:100%}._3G2-fp3aKZMeszgJ9srW3h,._8x6DNlF9iQxfOq8HkwO9s{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center}._8x6DNlF9iQxfOq8HkwO9s{font-weight:700;text-transform:uppercase}._1ZD0rO8svyet_5sopskjdO{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}._3r3wxIFwK7QTQpd2EOq_f7,.YC4fsS59KiPHOrBCzm0-b{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-right:10px;min-width:0;overflow:hidden}._3r3wxIFwK7QTQpd2EOq_f7:first-of-type,.YC4fsS59KiPHOrBCzm0-b:first-of-type{margin-left:10px}.YC4fsS59KiPHOrBCzm0-b{-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-box-align:center;-webkit-align-items:center;-ms-flex-align:center;align-items:center}._3JB1Gm9yi90_ejHFi2Hvj2{cursor:pointer}._3r3wxIFwK7QTQpd2EOq_f7{height:100%;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column}._1JFhWUgVZavXyisriMS04s{-webkit-box-flex:0;-webkit-flex:0 0 24px;-ms-flex:0 0 24px;flex:0 0 24px;height:1em;width:1em;fill:currentColor}._38TUMmW6whZDouUkfu_bTq{text-overflow:ellipsis;overflow:hidden}", "" ]), 
-        exports.locals = {
-            FlexTable: "_23mq7CiOQELHnjSRUEmZJZ",
-            headerRow: "_8x6DNlF9iQxfOq8HkwO9s",
-            row: "_3G2-fp3aKZMeszgJ9srW3h",
-            headerTruncatedText: "_1ZD0rO8svyet_5sopskjdO",
-            headerColumn: "YC4fsS59KiPHOrBCzm0-b",
-            rowColumn: "_3r3wxIFwK7QTQpd2EOq_f7",
-            sortableHeaderColumn: "_3JB1Gm9yi90_ejHFi2Hvj2",
-            sortableHeaderIcon: "_1JFhWUgVZavXyisriMS04s",
-            truncatedColumnText: "_38TUMmW6whZDouUkfu_bTq"
-        };
+        }).call(exports, __webpack_require__(15));
     } ]);
 });
 //# sourceMappingURL=react-virtualized.js.map
