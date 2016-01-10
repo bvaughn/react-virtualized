@@ -2700,7 +2700,7 @@
                     key: "_onKeyPress",
                     value: function(event) {
                         var _props4 = this.props, height = _props4.height, rowsCount = _props4.rowsCount, scrollTop = this.state.scrollTop, start = void 0, datum = void 0, newScrollTop = void 0;
-                        switch (event.key) {
+                        if (0 !== rowsCount) switch (event.key) {
                           case "ArrowDown":
                             this._stopEvent(event), // Prevent key from also scrolling surrounding window
                             start = (0, _utils.getVisibleCellIndices)({
