@@ -359,27 +359,25 @@ export default class FlexTable extends Component {
  * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
  */
 export function SortIndicator ({ sortDirection, styleSheet }) {
+  const classNames = cn('FlexTable__sortableHeaderIcon', {
+    'FlexTable__sortableHeaderIcon--ASC': sortDirection === SortDirection.ASC,
+    'FlexTable__sortableHeaderIcon--DESC': sortDirection === SortDirection.DESC
+  })
   return (
-    <div
-      className='FlexTable__sortableHeaderIconContainer'
-      style={styleSheet.sortableHeaderIconContainer}
-      data-sort-direction={sortDirection}
+    <svg
+      className={classNames}
+      style={styleSheet.sortableHeaderIcon}
+      width={18}
+      height={18}
+      viewBox='0 0 24 24'
+      xmlns='http://www.w3.org/2000/svg'
     >
-      <svg
-        className='FlexTable__sortableHeaderIcon'
-        style={styleSheet.sortableHeaderIcon}
-        width={18}
-        height={18}
-        viewBox='0 0 24 24'
-        xmlns='http://www.w3.org/2000/svg'
-      >
-        {sortDirection === SortDirection.ASC
-          ? <path d='M7 14l5-5 5 5z'/>
-          : <path d='M7 10l5 5 5-5z'/>
-        }
-        <path d='M0 0h24v24H0z' fill='none'/>
-      </svg>
-    </div>
+      {sortDirection === SortDirection.ASC
+        ? <path d='M7 14l5-5 5 5z'/>
+        : <path d='M7 10l5 5 5-5z'/>
+      }
+      <path d='M0 0h24v24H0z' fill='none'/>
+    </svg>
   )
 }
 SortIndicator.propTypes = {
@@ -451,10 +449,6 @@ FlexTable.defaultStyleSheet = {
     height: '1em',
     width: '1em',
     fill: 'currentColor'
-  },
-  sortableHeaderIconContainer: {
-    display: 'flex',
-    alignItems: 'center'
   },
   truncatedColumnText: {
     whiteSpace: 'nowrap',

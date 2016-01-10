@@ -24,6 +24,7 @@ This component expects explicit width, height, and padding parameters.
 | sort | Function |  | Sort function to be called if a sortable header is clicked. `(dataKey: string, sortDirection: SortDirection): void` |
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
+| styleSheet | object |  | Presentational styles for component. |
 | width | Number | ✓ | Fixed/available width for out DOM element |
 | verticalPadding | Number |  | Vertical padding of outer DOM element |
 
@@ -37,3 +38,19 @@ VirtualScroll has no way of knowing when its underlying list data has changed si
 ##### scrollToRow
 
 Scroll the list to ensure the row at the specified index is visible. This method exists so that a user can forcefully scroll to the same row twice. (The `scrollToIndex` property would not change in that case and so it would not be picked up by VirtualScroll.)
+
+### Stylesheet properties
+
+The FlexTable component supports the following nested styles in its `styleSheet` property:
+
+| Property | Description |
+|:---|:---|:---:|:---|
+| FlexTable | Main (outer) element |
+| headerColumn | Header cell (similar to `thead > tr > th`) |
+| headerRow | Header row (similar to `thead > tr`) |
+| headerTruncatedText | Element within header cell responsible for truncating text |
+| row | Table row (akin to `tbody > tr`) |
+| rowColumn | Table column (akin to `tbody > tr > td`) |
+| sortableHeaderColumn | Applied to header columns that are sortable |
+| sortableHeaderIcon | SVG sort indicator |
+| truncatedColumnText | Element within table column responsible for truncating text |

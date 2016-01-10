@@ -291,9 +291,7 @@ export default class VirtualScroll extends Component {
       >
         {rowsCount > 0 &&
           <div
-            className='VirtualScroll__innerScrollContainer'
             style={{
-              ...styleSheet.innerScrollContainer,
               ...functionalStyles.innerScrollContainer,
               height: this._getTotalRowsHeight(),
               maxHeight: this._getTotalRowsHeight(),
@@ -513,7 +511,5 @@ const functionalStyles = prefixStyleSheet({
 /** Default presentational styles for all <VirtualScroll> instances. */
 VirtualScroll.defaultStyleSheet = {
   VirtualScroll: {
-  },
-  innerScrollContainer: {
   }
 }

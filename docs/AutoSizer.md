@@ -6,4 +6,15 @@ Decorator component that automatically adjusts the width and height of a single 
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| ChildComponent| ReactComponent | ✓ | React component (class or function) to be created and managed. |
+| children | element | ✓ | Element to be parameterized with `width` and `height` properties |
+| ChildComponent| ReactComponent |  | React component (class or function) to be created and managed. This property has been deprecated in favor of `children`. |
+| className | string |  | Optional CSS class name. |
+| styleSheet | object |  | Presentational styles for component. |
+
+### Stylesheet properties
+
+The AutoSizer component supports the following nested styles in its `styleSheet` property:
+
+| Property | Description |
+|:---|:---|:---:|:---|
+| AutoSizer | Main (outer) element |

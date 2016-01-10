@@ -261,7 +261,7 @@ describe('FlexTable', () => {
         const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
 
         expect(nameColumn.querySelector('.FlexTable__sortableHeaderIcon')).not.toEqual(null)
-        expect(nameColumn.querySelector(`[data-sort-direction=${sortDirection}]`)).not.toEqual(null)
+        expect(nameColumn.querySelector(`.FlexTable__sortableHeaderIcon--${sortDirection}`)).not.toEqual(null)
       })
     })
 
@@ -448,7 +448,6 @@ describe('FlexTable', () => {
       expect(node.querySelector('.FlexTable__headerTruncatedText')).toBeTruthy()
       expect(node.querySelector('.FlexTable__row')).toBeTruthy()
       expect(node.querySelector('.FlexTable__sortableHeaderColumn')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__sortableHeaderIconContainer')).toBeTruthy()
       expect(node.querySelector('.FlexTable__sortableHeaderIcon')).toBeTruthy()
     })
 

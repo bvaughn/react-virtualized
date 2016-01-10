@@ -231,7 +231,6 @@ describe('VirtualScroll', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(renderList())
       expect(node.className).toEqual('VirtualScroll')
-      expect(node.querySelectorAll('.VirtualScroll__innerScrollContainer').length).toEqual(1)
     })
 
     it('should use a custom :className if specified', () => {
@@ -242,21 +241,17 @@ describe('VirtualScroll', () => {
     it('should use custom :styleSheet if specified', () => {
       const node = findDOMNode(renderList({
         styleSheet: {
-          VirtualScroll: { color: 'red' },
-          innerScrollContainer: { color: 'green' }
+          VirtualScroll: { color: 'red' }
         }
       }))
       expect(node.style.color).toEqual('red')
-      expect(node.querySelector('.VirtualScroll__innerScrollContainer').style.color).toEqual('green')
     })
 
     it('should use overriden static styles', () => {
       const backup = { ...VirtualScroll.defaultStyleSheet }
       VirtualScroll.defaultStyleSheet.VirtualScroll = { color: 'blue' }
-      VirtualScroll.defaultStyleSheet.innerScrollContainer = { color: 'purple' }
       const node = findDOMNode(renderList())
       expect(node.style.color).toEqual('blue')
-      expect(node.querySelector('.VirtualScroll__innerScrollContainer').style.color).toEqual('purple')
       VirtualScroll.defaultStyleSheet = backup
     })
   })
