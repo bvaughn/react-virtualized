@@ -182,23 +182,3 @@ License
 ---------
 
 *react-virtualized* is available under the MIT License.
-
-
-Note that in this example we initialize `height` to 0. (We do this because it is a required property and React will warn in dev mode if we leave it off.) However the `AutoSizer` wrapper component will inject a valid height for us.
-
-Contributions
-------------
-
-Use [GitHub issues](https://github.com/bvaughn/react-virtualized/issues) for requests.
-
-I actively welcome pull requests; learn how to [contribute](https://github.com/bvaughn/react-virtualized/blob/master/CONTRIBUTING.md).
-
-Changelog
----------
-
-Changes are tracked in the [changelog](https://github.com/bvaughn/react-virtualized/blob/master/CHANGELOG.md).
-
-License
----------
-
-*react-virtualized* is available under the MIT License.
