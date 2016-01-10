@@ -61,7 +61,6 @@ Below is a simple `VirtualScroll` example. Each row in the virtualized list is r
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { VirtualScroll } from 'react-virtualized';
-import 'react-virtualized/theme.css'; // Recommended presentational styles
 
 // List data as an array of strings
 const list = [
@@ -96,7 +95,6 @@ Below is a very basic `FlexTable` example. This table has only 2 columns, each c
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { FlexTable, FlexColumn } from 'react-virtualized';
-import 'react-virtualized/theme.css'; // Recommended presentational styles
 
 // Table data as a array of objects
 const list = [
@@ -136,7 +134,6 @@ ReactDOM.render(
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AutoSizer, VirtualScroll } from 'react-virtualized';
-import 'react-virtualized/theme.css'; // Recommended presentational styles
 
 // List data as an array of strings
 const list = [
