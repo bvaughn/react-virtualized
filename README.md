@@ -22,6 +22,32 @@ Documentation
 
 API documentation available [here](docs/README.md).
 
+### Customizing Styles
+
+React virtual CSS styles are split into two groups: functional styles (eg. `position`, `overflow`) and presentational styles (eg. `text-transform`, `color`). Both are defined as inline styles (rather than external CSS) to simplify usage for universal/isomorphic rendering.
+
+Functional styles cannot be overridden but you can override presentational styles in a variety of ways:
+
+###### Styling a single component
+
+Supply a custom `styleSheet` to a component (eg. `<VirtualScroll styleSheet={...}/>`) to override default styles for a single component instance. Styles injected as properties will be automatically processed to add vendor prefixes.
+
+Learn more about which styles a component supports in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
+
+###### Styling all instances
+
+Override the static `defaultStyleSheet` property of a component class (eg. `FlexTable.defaultStyleSheet = {...}` to customize styles for all instances.
+
+###### Global CSS
+Load an external CSS file that defines global classes (eg. `FlexTable`, `FlexTable__row`) to append to default inline styles.
+
+Learn more about which class names a component supports in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
+
+###### CSS Modules
+If you are using CSS modules you can specify custom class names to be appended to a component instance (eg. `FlexTable` supports `className`, `headerClassName`, and `rowClassName` properties).
+
+Learn more about which class names are supported in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
+
 Examples
 ---------------
 

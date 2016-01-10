@@ -1,7 +1,8 @@
 /** @flow */
+import cn from 'classnames'
 import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
-import styles from './AutoSizer.css'
+import { prefixStyleSheet } from '../utils'
 
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
@@ -16,14 +17,17 @@ export default class AutoSizer extends Component {
      * Component to manage width/height of.
      */
     children: PropTypes.element,
-
     /**
      * React component to manage as a child.
      * This property is left in place for backwards compatibility but is not preferred.
      * If specified it will override any React children,
      * Although it is recommended to declare child component as a normal React child instead.
      */
-    ChildComponent: PropTypes.any
+    ChildComponent: PropTypes.any,
+    /** Optional CSS class name */
+    className: PropTypes.string,
+    /** Specifies presentational styles for component. */
+    styleSheet: PropTypes.object
   }
 
   constructor (props) {
@@ -31,6 +35,7 @@ export default class AutoSizer extends Component {
 
     this.state = {
       height: 0,
+      styleSheet: prefixStyleSheet(props.styleSheet || AutoSizer.defaultStyleSheet),
       width: 0
     }
 
@@ -51,9 +56,17 @@ export default class AutoSizer extends Component {
     this._detectElementResize.removeResizeListener(this._parentNode, this._onResize)
   }
 
+  componentWillUpdate (nextProps, nextState) {
+    if (this.props.styleSheet !== nextProps.styleSheet) {
+      this.setState({
+        styleSheet: prefixStyleSheet(nextProps.styleSheet)
+      })
+    }
+  }
+
   render () {
-    const { children, ChildComponent, ...props } = this.props
-    const { height, width } = this.state
+    const { children, ChildComponent, className, ...props } = this.props
+    const { height, styleSheet, width } = this.state
 
     let child
 
@@ -73,7 +86,11 @@ export default class AutoSizer extends Component {
     return (
       <div
         ref={this._setRef}
-        className={styles.Wrapper}
+        className={cn('AutoSizer', className)}
+        style={{
+          ...styleSheet.AutoSizer,
+          ...functionalStyles.AutoSizer
+        }}
       >
         {child}
       </div>
@@ -91,5 +108,18 @@ export default class AutoSizer extends Component {
 
   _setRef (autoSizer) {
     this._parentNode = autoSizer.parentNode
+  }
+}
+
+const functionalStyles = {
+  AutoSizer: {
+    width: '100%',
+    height: '100%'
+  }
+}
+
+/** Default presentational styles for all <AutoSizer> instances. */
+AutoSizer.defaultStyleSheet = {
+  AutoSizer: {
   }
 }

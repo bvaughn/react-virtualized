@@ -1,16 +1,20 @@
 /** @flow */
-import shouldPureComponentUpdate from 'react-pure-render/function'
-import React, { Component, PropTypes } from 'react'
-import cn from 'classnames'
-import raf from 'raf'
 import {
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
-  initOnRowsRenderedHelper
+  initOnRowsRenderedHelper,
+  prefixStyleSheet
 } from '../utils'
-import styles from './VirtualScroll.css'
+import cn from 'classnames'
+import raf from 'raf'
+import React, { Component, PropTypes } from 'react'
+import shouldPureComponentUpdate from 'react-pure-render/function'
 
+/**
+ * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
+ * This improves performance and makes scrolling smoother.
+ */
 const IS_SCROLLING_TIMEOUT = 150
 
 /**
@@ -46,7 +50,9 @@ export default class VirtualScroll extends Component {
     /** Number of rows in list. */
     rowsCount: PropTypes.number.isRequired,
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
-    scrollToIndex: PropTypes.number
+    scrollToIndex: PropTypes.number,
+    /** Specifies presentational styles for component. */
+    styleSheet: PropTypes.object
   }
 
   static defaultProps = {
@@ -60,6 +66,7 @@ export default class VirtualScroll extends Component {
     this.state = {
       computeCellMetadataOnNextUpdate: false,
       isScrolling: false,
+      styleSheet: prefixStyleSheet(props.styleSheet || VirtualScroll.defaultStyleSheet),
       scrollTop: 0
     }
 
@@ -182,6 +189,12 @@ export default class VirtualScroll extends Component {
       this.setState({ scrollTop: 0 })
     }
 
+    if (this.props.styleSheet !== nextProps.styleSheet) {
+      this.setState({
+        styleSheet: prefixStyleSheet(nextProps.styleSheet)
+      })
+    }
+
     // Don't compare rowHeight if it's a function because inline functions would cause infinite loops.
     // In that event users should use recomputeRowHeights() to inform of changes.
     if (
@@ -220,7 +233,8 @@ export default class VirtualScroll extends Component {
 
     const {
       isScrolling,
-      scrollTop
+      scrollTop,
+      styleSheet
     } = this.state
 
     let childrenToDisplay = []
@@ -243,9 +257,12 @@ export default class VirtualScroll extends Component {
 
       for (let i = start; i <= stop; i++) {
         let datum = this._cellMetadata[i]
-        let child = React.cloneElement(
-          rowRenderer(i), {
+        let child = rowRenderer(i)
+        child = React.cloneElement(
+          child,
+          {
             style: {
+              ...child.props.style,
               position: 'absolute',
               top: datum.offset,
               width: '100%',
@@ -261,19 +278,21 @@ export default class VirtualScroll extends Component {
     return (
       <div
         ref='scrollingContainer'
-        className={cn(styles.VirtualScroll, className)}
+        className={cn('VirtualScroll', className)}
         onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
         onWheel={this._onWheel}
         tabIndex={0}
         style={{
+          ...styleSheet.VirtualScroll,
+          ...functionalStyles.VirtualScroll,
           height: height
         }}
       >
         {rowsCount > 0 &&
           <div
-            className={styles.InnerScrollContainer}
             style={{
+              ...functionalStyles.innerScrollContainer,
               height: this._getTotalRowsHeight(),
               maxHeight: this._getTotalRowsHeight(),
               pointerEvents: isScrolling ? 'none' : 'auto'
@@ -472,5 +491,25 @@ export default class VirtualScroll extends Component {
       isScrolling: true,
       scrollTop
     })
+  }
+}
+
+/** Functional styles can't be overridden so they only need to be prefixed once. */
+const functionalStyles = prefixStyleSheet({
+  VirtualScroll: {
+    position: 'relative',
+    overflow: 'auto',
+    outline: 0
+  },
+  innerScrollContainer: {
+    boxSizing: 'border-box',
+    overflowX: 'auto',
+    overflowY: 'hidden'
+  }
+})
+
+/** Default presentational styles for all <VirtualScroll> instances. */
+VirtualScroll.defaultStyleSheet = {
+  VirtualScroll: {
   }
 }

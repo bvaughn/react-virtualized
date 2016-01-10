@@ -114,6 +114,7 @@ export default class TableExample extends Component {
           ref='Table'
           className={styles.FlexTable}
           width={430}
+          headerClassName={styles.headerColumn}
           headerHeight={headerHeight}
           height={height}
           noRowsRenderer={this._noRowsRenderer}

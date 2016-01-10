@@ -14,6 +14,7 @@ Describes the header and cell contents of a table column
 | rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Rendered rows must have a unique `key` attribute. |
 | rowsCount | Number | ✓ | Number of rows in list. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
+| styleSheet | object |  | Presentational styles for component. |
 
 ### Public Methods
 
@@ -25,3 +26,11 @@ VirtualScroll has no way of knowing when its underlying list data has changed si
 ##### scrollToRow
 
 Scroll the list to ensure the row at the specified index is visible. This method exists so that a user can forcefully scroll to the same row twice. (The `scrollToIndex` property would not change in that case and so it would not be picked up by VirtualScroll.)
+
+### Stylesheet properties
+
+The VirtualScroll component supports the following nested styles in its `styleSheet` property:
+
+| Property | Description |
+|:---|:---|:---:|:---|
+| VirtualScroll | Main (outer) element |

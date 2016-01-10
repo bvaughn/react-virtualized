@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+## 3.0.0
+CSS styles have been split into two groups: functional styles (eg. `position`, `overflow`) and presentational styles (eg. `text-transform`, `color`) and both have been converted to inline styles rather than being loaded as CSS. This was done primarily to simplify usage for universal/isomorphic rendering.
+
+For more information on customizing styles refer to the [documentation](https://github.com/bvaughn/react-virtualized/#customizing-styles)...
+
 #### 2.8.0
 Changed `Autosizer` component to support a single child instead of the `ChildComponent` property.
 (For backwards compatibility purposes the `ChildComponent` property will continue to be supported.)
@@ -50,7 +55,7 @@ Fixed a few minor FlexTable font styles to use relative sizes instead of custom 
 Added optional `noRowsRenderer` property to `VirtualScroll` and `FlexTable`.
 This property can be used to render loading indicators or placeholder content for empty lists.
 
-#### 2.0.0
+## 2.0.0
 Set `shouldPureComponentUpdate` on component prototypes instead of instances.
 Dropped half-ass support for React 0.13. This module has always depended on React 0.14 but it was checking in previous versions and trying to be backwards compatible with 0.13. Since that check is no longer in place, this is a major version bump (even though there is no real new functionality being added).
 
@@ -66,7 +71,7 @@ Removed default row-border styling from FlexTable and added new :rowClassName pr
 #### 1.0.1
 Updated to use ReactDOM.findDOMNode instead of getDOMNode (but added backwards-compatible check for < React v0.14).
 
-#### 1.0.0
+## 1.0.0
 Package JSON updated so that "main" entry points to `dist/react-virtualized.js` to provide easier integration for users that don't want Babel/Webpack to have to process their `node_modules` folder.
 
 #### 0.0.4
