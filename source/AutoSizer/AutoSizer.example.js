@@ -19,7 +19,7 @@ export default class AutoSizerExample extends Component {
 
     return (
       <ContentBox
-        className={styles.AutoSizerExample}
+         {...this.props}
         style={{
           maxHeight: 600
         }}

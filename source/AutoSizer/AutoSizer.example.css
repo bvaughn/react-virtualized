@@ -1,7 +1,3 @@
-.AutoSizerExample {
-  flex: 0 0 330px;
-}
-
 .AutoSizerWrapper {
   flex: 1 1 auto;
   min-height: 200px;

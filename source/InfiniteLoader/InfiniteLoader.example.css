@@ -1,0 +1,20 @@
+.VirtualScroll {
+  width: 100%;
+  border: 1px solid #DDD;
+  margin-top: 15px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 25px;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.placeholder {
+  display: inline-block;
+  height: 1em;
+  background-color: #DDD;
+}

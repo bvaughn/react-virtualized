@@ -123,7 +123,7 @@ export default class VirtualScroll extends Component {
 
     // Make sure any changes to :scrollTop (from :scrollToIndex) get applied
     if (scrollTop >= 0 && scrollTop !== prevState.scrollTop) {
-      this.refs.scrollingContainer.scrollTop = scrollTop
+      // TODO this.refs.scrollingContainer.scrollTop = scrollTop
     }
 
     const hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < rowsCount

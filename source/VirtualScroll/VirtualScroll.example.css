@@ -1,7 +1,3 @@
-.VirtualScrollExample {
-  flex: 0 0 330px;
-}
-
 .VirtualScroll {
   width: 100%;
   border: 1px solid #DDD;
