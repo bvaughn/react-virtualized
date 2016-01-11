@@ -127,7 +127,7 @@ ReactDOM.render(
 );
 ```
 
-#### Autosizer Example
+#### AutoSizer Example
 `VirtualScroll` and `FlexTable` require explicit dimensions but sometimes you just want a component to just grow to fill all of the available space. In that case you should use the `AutoSizer` component. Building on the `VirtualScroll` example above...
 
 ```javascript
@@ -162,6 +162,51 @@ ReactDOM.render(
 ```
 
 Note that in this example we initialize `height` to 0. (We do this because it is a required property and React will warn in dev mode if we leave it off.) However the `AutoSizer` wrapper component will inject a valid height for us.
+
+#### InfiniteLoader Example
+High-order component that manages just-in-time fetching of data as a user scrolls up or down in a list.
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { InfiniteLoader, VirtualScroll } from 'react-virtualized';
+
+const list = {};
+
+function isRowLoaded (index) {
+  return !!list[index];
+}
+
+function loadMoreRows ({ startIndex, stopIndex }) {
+  return fetch(`path/to/api?startIndex=${startIndex}&stopIndex=${stopIndex}`)
+    .then(response => {
+      // Store response data in list...
+    })
+}
+
+// Render your list
+ReactDOM.render(
+  <InfiniteLoader
+    isRowLoaded={isRowLoaded}
+    loadMoreRows={loadMoreRows}
+    rowsCount={remoteRowsCount}
+  >
+    <VirtualScroll
+      height={300}
+      rowsCount={list.length}
+      rowHeight={20}
+      rowRenderer={
+        index => (
+          <div key={index}>
+            {list[index]}
+          </div>
+        )
+      }
+    />
+  </InfiniteLoader>,
+  document.getElementById('example')
+);
+```
 
 Contributions
 ------------

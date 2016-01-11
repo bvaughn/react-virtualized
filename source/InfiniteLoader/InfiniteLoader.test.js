@@ -1,8 +1,7 @@
-import InfiniteLoader from './InfiniteLoader'
+import InfiniteLoader, { isRangeVisible, scanForUnloadedRanges } from './InfiniteLoader'
 import React from 'react'
 import VirtualScroll from '../VirtualScroll'
 import { findDOMNode, render } from 'react-dom'
-import { scanForUnloadedRanges } from './InfiniteLoader'
 
 describe('InfiniteLoader', () => {
   beforeAll(() => jasmine.clock().install())
@@ -69,8 +68,6 @@ describe('InfiniteLoader', () => {
     renderOrUpdateComponent()
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 14 }])
   })
-
-  // TODO Check to ensure that forceUpdate is called if and only if rows are visible
 })
 
 describe('scanForUnloadedRanges', () => {
@@ -116,5 +113,50 @@ describe('scanForUnloadedRanges', () => {
       { startIndex: 4, stopIndex: 4 },
       { startIndex: 6, stopIndex: 6 }
     ])
+  })
+})
+
+describe('isRangeVisible', () => {
+  it('first row(s) are visible', () => {
+    expect(isRangeVisible({
+      lastRenderedStartIndex: 10,
+      lastRenderedStopIndex: 20,
+      startIndex: 20,
+      stopIndex: 30
+    })).toEqual(true)
+  })
+
+  it('last row(s) are visible', () => {
+    expect(isRangeVisible({
+      lastRenderedStartIndex: 10,
+      lastRenderedStopIndex: 20,
+      startIndex: 0,
+      stopIndex: 10
+    })).toEqual(true)
+  })
+
+  it('all row(s) are visible', () => {
+    expect(isRangeVisible({
+      lastRenderedStartIndex: 10,
+      lastRenderedStopIndex: 20,
+      startIndex: 12,
+      stopIndex: 14
+    })).toEqual(true)
+  })
+
+  it('no row(s) are visible', () => {
+    expect(isRangeVisible({
+      lastRenderedStartIndex: 10,
+      lastRenderedStopIndex: 20,
+      startIndex: 0,
+      stopIndex: 9
+    })).toEqual(false)
+
+    expect(isRangeVisible({
+      lastRenderedStartIndex: 10,
+      lastRenderedStopIndex: 20,
+      startIndex: 21,
+      stopIndex: 30
+    })).toEqual(false)
   })
 })

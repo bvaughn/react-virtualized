@@ -43,7 +43,7 @@ export default class InfiniteLoader extends Component {
     /**
      * Threshold at which to pre-fetch data.
      * A threshold X means that data will start loading when a user scrolls within X rows.
-     * This value defaults to 10.
+     * This value defaults to 15.
      */
     threshold: PropTypes.number
   }
@@ -90,16 +90,32 @@ export default class InfiniteLoader extends Component {
       if (promise) {
         promise.then(() => {
           // Refresh the visible rows if any of them have just been loaded
-          if (!(
-            unloadedRange.startIndex > this._lastRenderedStopIndex ||
-            unloadedRange.stopIndex < this._lastRenderedStartIndex
-          )) {
+          if (
+            isRangeVisible({
+              lastRenderedStartIndex: this._lastRenderedStartIndex,
+              lastRenderedStopIndex: this._lastRenderedStopIndex,
+              startIndex: unloadedRange.startIndex,
+              stopIndex: unloadedRange.stopIndex
+            })
+          ) {
             this.refs.VirtualScroll.forceUpdate()
           }
         })
       }
     })
   }
+}
+
+/**
+ * Decides if the specified start/stop row range is visible.
+ */
+export function isRangeVisible ({
+  lastRenderedStartIndex,
+  lastRenderedStopIndex,
+  startIndex,
+  stopIndex
+}) {
+  return !(startIndex > lastRenderedStopIndex || stopIndex < lastRenderedStartIndex)
 }
 
 /**

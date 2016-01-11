@@ -32,8 +32,6 @@ export default class InfiniteLoaderExample extends Component {
     const { list, ...props } = this.props
     const { randomScrollToIndex } = this.state
 
-    // TODO Reset button
-
     return (
       <ContentBox {...props}>
         <ContentBoxHeader
