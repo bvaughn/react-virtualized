@@ -58,10 +58,25 @@ export default class InfiniteLoader extends Component {
     this._onRowsRendered = this._onRowsRendered.bind(this)
   }
 
+  componentDidReceiveProps (previousProps) {
+    const { children } = this.props
+    if (previousProps.children !== children) {
+      let child = React.Children.only(children)
+      this._originalOnRowsRendered = child.props.onRowsRendered
+    }
+  }
+
+  componentWillMount () {
+    const { children } = this.props
+    let child = React.Children.only(children)
+    this._originalOnRowsRendered = child.props.onRowsRendered
+  }
+
   render () {
     const { children, ...props } = this.props
 
     let child = React.Children.only(children)
+
     child = React.cloneElement(
       child,
       {
@@ -103,11 +118,15 @@ export default class InfiniteLoader extends Component {
         })
       }
     })
+
+    if (this._originalOnRowsRendered) {
+      this._originalOnRowsRendered({ startIndex, stopIndex })
+    }
   }
 }
 
 /**
- * Decides if the specified start/stop row range is visible.
+ * Determines if the specified start/stop range is visible based on the most recently rendered range.
  */
 export function isRangeVisible ({
   lastRenderedStartIndex,

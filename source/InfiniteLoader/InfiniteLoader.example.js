@@ -97,7 +97,7 @@ export default class InfiniteLoaderExample extends Component {
       }
 
       promiseResolver()
-    }, 1000) // TODO Randomize time?
+    }, 1000 + Math.round(Math.random() * 2000))
 
     let promiseResolver
 

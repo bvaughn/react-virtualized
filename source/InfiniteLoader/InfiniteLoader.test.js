@@ -34,6 +34,7 @@ describe('InfiniteLoader', () => {
 
   function getMarkup ({
     height = 100,
+    onRowsRendered = undefined,
     rowHeight = 20,
     rowsCount = 100,
     threshold = 10
@@ -47,6 +48,7 @@ describe('InfiniteLoader', () => {
       >
         <VirtualScroll
           height={height}
+          onRowsRendered={onRowsRendered}
           rowHeight={rowHeight}
           rowRenderer={index => <div key={index}/>}
           rowsCount={rowsCount}
@@ -56,7 +58,12 @@ describe('InfiniteLoader', () => {
   }
 
   function renderOrUpdateComponent (props) {
-    return findDOMNode(render(getMarkup(props), node))
+    const component = findDOMNode(render(getMarkup(props), node))
+
+    // Allow initial setImmediate() to set :scrollTop
+    jasmine.clock().tick()
+
+    return component
   }
 
   it('should call :isRowLoaded for all rows within the threshold each time a range of rows are rendered', () => {
@@ -67,6 +74,14 @@ describe('InfiniteLoader', () => {
   it('should call :loadMoreRows for unloaded rows within the threshold', () => {
     renderOrUpdateComponent()
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 14 }])
+  })
+
+  it('should not override the specified :onRowsRendered', () => {
+    const onRowsRenderedCalls = []
+    renderOrUpdateComponent({
+      onRowsRendered: params => onRowsRenderedCalls.push(params)
+    })
+    expect(onRowsRenderedCalls.length).toEqual(1)
   })
 })
 
