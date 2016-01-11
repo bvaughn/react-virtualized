@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 3.0.1
+Fixed small NPE when up/down arrow key was used while an empty VirtualScroll was in-focus.
+
 ## 3.0.0
 CSS styles have been split into two groups: functional styles (eg. `position`, `overflow`) and presentational styles (eg. `text-transform`, `color`) and both have been converted to inline styles rather than being loaded as CSS. This was done primarily to simplify usage for universal/isomorphic rendering.
 

@@ -405,6 +405,10 @@ export default class VirtualScroll extends Component {
 
     let start, datum, newScrollTop
 
+    if (rowsCount === 0) {
+      return
+    }
+
     switch (event.key) {
       case 'ArrowDown':
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
