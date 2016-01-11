@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 3.1.0
+Added high-order `InfiniteLoader` component to manage just-in-time fetching of data as a user scrolls up or down in a list.
+For more information about this component refer to the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/InfiniteLoader.md).
+
 #### 3.0.1
 Fixed small NPE when up/down arrow key was used while an empty VirtualScroll was in-focus.
 

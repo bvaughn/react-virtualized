@@ -69,7 +69,11 @@ a {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  padding-top: .5rem;
+  padding: .5rem 1rem;
+}
+.column {
+  flex: 0 0 100%;
+  max-width: 500px;
 }
 
 .footer {

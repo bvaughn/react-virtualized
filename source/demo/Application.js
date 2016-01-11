@@ -1,10 +1,16 @@
-import React from 'react'
-import { render } from 'react-dom'
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
 import FlexTableExample from '../FlexTable/FlexTable.example'
+import Immutable from 'immutable'
+import InfiniteLoaderExample from '../InfiniteLoader/InfiniteLoader.example'
 import NavLink from './NavLink'
-import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
+import React from 'react'
 import styles from './Application.css'
+import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
+import { generateRandomList } from './utils'
+import { render } from 'react-dom'
+
+// HACK Generate arbitrary data for use in example components :)
+const list = Immutable.List(generateRandomList())
 
 render((
     <div className={styles.demo}>
@@ -43,9 +49,22 @@ render((
       </div>
 
       <div className={styles.row}>
-        <VirtualScrollExample/>
-        <FlexTableExample/>
-        <AutoSizerExample/>
+        <VirtualScrollExample
+          className={styles.column}
+          list={list}
+        />
+        <FlexTableExample
+          className={styles.column}
+          list={list}
+        />
+        <AutoSizerExample
+          className={styles.column}
+          list={list}
+        />
+        <InfiniteLoaderExample
+          className={styles.column}
+          list={list}
+        />
       </div>
 
       <p className={styles.footer}>

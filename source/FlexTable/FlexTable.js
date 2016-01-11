@@ -25,7 +25,7 @@ export const SortDirection = {
  * This component expects explicit width, height, and padding parameters.
  */
 export default class FlexTable extends Component {
-  static shouldComponentUpdate = shouldPureComponentUpdate
+  shouldComponentUpdate = shouldPureComponentUpdate
 
   static propTypes = {
     /** One or more FlexColumns describing the data displayed in this row */

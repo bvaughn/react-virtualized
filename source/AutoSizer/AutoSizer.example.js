@@ -1,25 +1,33 @@
 /** @flow */
-import React, { Component } from 'react'
+import Immutable from 'immutable'
+import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from './AutoSizer'
 import VirtualScroll from '../VirtualScroll'
 import styles from './AutoSizer.example.css'
 
 export default class AutoSizerExample extends Component {
+  static propTypes = {
+    list: PropTypes.instanceOf(Immutable.List).isRequired
+  }
+
   constructor (props) {
     super(props)
 
     this.state = {
       hideDescription: false
     }
+
+    this._rowRenderer = this._rowRenderer.bind(this)
   }
 
   render () {
     const { hideDescription } = this.state
+    const { list } = this.props
 
     return (
       <ContentBox
-        className={styles.AutoSizerExample}
+        {...this.props}
         style={{
           maxHeight: 600
         }}
@@ -53,19 +61,30 @@ export default class AutoSizerExample extends Component {
         <div className={styles.AutoSizerWrapper}>
           <AutoSizer className={styles.AutoSizer}>
             <VirtualScroll
+              className={styles.VirtualScroll}
               height={0}
-              noRowsRenderer={() => (
-                <div className={styles.Empty}>
-                  Empty &nbsp; <code>VirtualScroll</code>
-                </div>
-              )}
-              rowsCount={0}
-              rowHeight={1}
-              rowRenderer={() => {}}
+              rowsCount={list.size}
+              rowHeight={30}
+              rowRenderer={this._rowRenderer}
             />
           </AutoSizer>
         </div>
       </ContentBox>
+    )
+  }
+
+  _rowRenderer (index) {
+    const { list } = this.props
+    const row = list.get(index)
+
+    return (
+      <div
+        key={index}
+        className={styles.row}
+        style={{ height: 30 }}
+      >
+        {row.name}
+      </div>
     )
   }
 }
