@@ -69,6 +69,8 @@ describe('InfiniteLoader', () => {
     renderOrUpdateComponent()
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 14 }])
   })
+
+  // TODO Check to ensure that forceUpdate is called if and only if rows are visible
 })
 
 describe('scanForUnloadedRanges', () => {

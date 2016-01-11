@@ -1,13 +1,18 @@
 /**
  * @flow
  */
-import React, { Component } from 'react'
+import Immutable from 'immutable'
+import React, { Component, PropTypes } from 'react'
+import styles from './VirtualScroll.example.css'
+import VirtualScroll from './VirtualScroll'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
-import VirtualScroll from './VirtualScroll'
-import styles from './VirtualScroll.example.css'
 
 export default class VirtualScrollExample extends Component {
+  static propTypes = {
+    list: PropTypes.instanceOf(Immutable.List).isRequired
+  }
+
   constructor (props) {
     super(props)
 
@@ -143,13 +148,13 @@ export default class VirtualScrollExample extends Component {
 
     const datum = list.get(index)
     const height = useDynamicRowHeight
-      ? datum.height
+      ? datum.size
       : virtualScrollRowHeight
 
     let additionalContent
 
     if (useDynamicRowHeight) {
-      switch (datum.height) {
+      switch (datum.size) {
         case 75:
           additionalContent = <div>It is medium-sized.</div>
           break
@@ -184,7 +189,7 @@ export default class VirtualScrollExample extends Component {
         </div>
         {useDynamicRowHeight &&
           <span className={styles.height}>
-            {datum.height}px
+            {datum.size}px
           </span>
         }
       </div>

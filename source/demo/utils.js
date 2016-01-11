@@ -7,10 +7,10 @@ export function generateRandomList () {
   for (var i = 0; i < 1000; i++) {
     list.push({
       color: BADGE_COLORS[i % BADGE_COLORS.length],
-      height: ROW_HEIGHTS[Math.floor(Math.random() * ROW_HEIGHTS.length)],
       index: i,
       name: NAMES[i % NAMES.length],
-      random: loremIpsum[i % loremIpsum.length]
+      random: loremIpsum[i % loremIpsum.length],
+      size: ROW_HEIGHTS[Math.floor(Math.random() * ROW_HEIGHTS.length)]
     })
   }
 

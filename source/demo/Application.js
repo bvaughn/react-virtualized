@@ -57,7 +57,10 @@ render((
           className={styles.column}
           list={list}
         />
-        <AutoSizerExample className={styles.column}/>
+        <AutoSizerExample
+          className={styles.column}
+          list={list}
+        />
         <InfiniteLoaderExample
           className={styles.column}
           list={list}

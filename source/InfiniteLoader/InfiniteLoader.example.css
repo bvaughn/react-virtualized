@@ -1,7 +1,6 @@
 .VirtualScroll {
   width: 100%;
   border: 1px solid #DDD;
-  margin-top: 15px;
 }
 
 .row {
@@ -17,4 +16,14 @@
   display: inline-block;
   height: 1em;
   background-color: #DDD;
+}
+
+.button {
+  background-color: #4db6ac;
+  color: #fff;
+  appearance: none;
+  border: none;
+  padding: .5em 1em;
+  border-radius: .35em;
+  font-size: 1em;
 }

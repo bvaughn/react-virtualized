@@ -1,5 +1,6 @@
 /** @flow */
-import React, { Component } from 'react'
+import Immutable from 'immutable'
+import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import FlexColumn from './FlexColumn'
@@ -7,6 +8,10 @@ import FlexTable, { SortDirection } from './FlexTable'
 import styles from './FlexTable.example.css'
 
 export default class TableExample extends Component {
+  static propTypes = {
+    list: PropTypes.instanceOf(Immutable.List).isRequired
+  }
+
   constructor (props, context) {
     super(props, context)
 

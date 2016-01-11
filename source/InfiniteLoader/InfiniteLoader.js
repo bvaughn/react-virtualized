@@ -30,11 +30,15 @@ export default class InfiniteLoader extends Component {
     isRowLoaded: PropTypes.func,
     /**
      * Callback to be invoked when more rows must be loaded.
-     * It should implement the following signature: ({ startIndex, stopIndex }): void
+     * It should implement the following signature: ({ startIndex, stopIndex }): Promise
+     * The returned Promise should be resolved once row data has finished loading.
+     * It will be used to determine when to refresh the list with the newly-loaded data.
      * This callback may be called multiple times in reaction to a single scroll event.
      */
     loadMoreRows: PropTypes.func.isRequired,
-    /** Number of rows in list; can be arbitrary high number if actual number is unknown. */
+    /**
+     * Number of rows in list; can be arbitrary high number if actual number is unknown.
+     */
     rowsCount: PropTypes.number,
     /**
      * Threshold at which to pre-fetch data.
@@ -45,7 +49,7 @@ export default class InfiniteLoader extends Component {
   }
 
   static defaultProps = {
-    threshold: 10
+    threshold: 15
   }
 
   constructor (props) {
@@ -61,7 +65,8 @@ export default class InfiniteLoader extends Component {
     child = React.cloneElement(
       child,
       {
-        onRowsRendered: this._onRowsRendered
+        onRowsRendered: this._onRowsRendered,
+        ref: 'VirtualScroll'
       }
     )
 
@@ -71,13 +76,29 @@ export default class InfiniteLoader extends Component {
   _onRowsRendered ({ startIndex, stopIndex }) {
     const { isRowLoaded, loadMoreRows, rowsCount, threshold } = this.props
 
+    this._lastRenderedStartIndex = startIndex
+    this._lastRenderedStopIndex = stopIndex
+
     const unloadedRanges = scanForUnloadedRanges({
       isRowLoaded,
       startIndex: Math.max(0, startIndex - threshold),
       stopIndex: Math.min(rowsCount, stopIndex + threshold)
     })
 
-    unloadedRanges.forEach(unloadedRange => loadMoreRows(unloadedRange))
+    unloadedRanges.forEach(unloadedRange => {
+      let promise = loadMoreRows(unloadedRange)
+      if (promise) {
+        promise.then(() => {
+          // Refresh the visible rows if any of them have just been loaded
+          if (!(
+            unloadedRange.startIndex > this._lastRenderedStopIndex ||
+            unloadedRange.stopIndex < this._lastRenderedStartIndex
+          )) {
+            this.refs.VirtualScroll.forceUpdate()
+          }
+        })
+      }
+    })
   }
 }
 
