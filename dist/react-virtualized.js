@@ -101,6 +101,13 @@
                 return _FlexTable.SortIndicator;
             }
         });
+        var _InfiniteLoader = __webpack_require__(34);
+        Object.defineProperty(exports, "InfiniteLoader", {
+            enumerable: !0,
+            get: function() {
+                return _InfiniteLoader.InfiniteLoader;
+            }
+        });
         var _VirtualScroll = __webpack_require__(28);
         Object.defineProperty(exports, "VirtualScroll", {
             enumerable: !0,
@@ -1973,7 +1980,8 @@
         var FlexTable = function(_Component) {
             function FlexTable(props) {
                 _classCallCheck(this, FlexTable), _get(Object.getPrototypeOf(FlexTable.prototype), "constructor", this).call(this, props), 
-                this._createRow = this._createRow.bind(this), this.state = {
+                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this._createRow = this._createRow.bind(this), 
+                this.state = {
                     styleSheet: (0, _utils.prefixStyleSheet)(props.styleSheet || FlexTable.defaultStyleSheet)
                 };
             }
@@ -1984,10 +1992,6 @@
 	   * See VirtualScroll#recomputeRowHeights
 	   */
             return _inherits(FlexTable, _Component), _createClass(FlexTable, null, [ {
-                key: "shouldComponentUpdate",
-                value: _reactPureRenderFunction2["default"],
-                enumerable: !0
-            }, {
                 key: "propTypes",
                 value: {
                     /** One or more FlexColumns describing the data displayed in this row */
@@ -2454,7 +2458,7 @@
             }, _utils = __webpack_require__(7), _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(32), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), IS_SCROLLING_TIMEOUT = 150, VirtualScroll = function(_Component) {
                 function VirtualScroll(props, context) {
                     _classCallCheck(this, VirtualScroll), _get(Object.getPrototypeOf(VirtualScroll.prototype), "constructor", this).call(this, props, context), 
-                    this.state = {
+                    this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
                         computeCellMetadataOnNextUpdate: !1,
                         isScrolling: !1,
                         styleSheet: (0, _utils.prefixStyleSheet)(props.styleSheet || VirtualScroll.defaultStyleSheet),
@@ -2470,10 +2474,6 @@
 	   * Since VirtualScroll receives a :rowsCount it has no way of knowing if the underlying list data has changed.
 	   */
                 return _inherits(VirtualScroll, _Component), _createClass(VirtualScroll, null, [ {
-                    key: "shouldComponentUpdate",
-                    value: _reactPureRenderFunction2["default"],
-                    enumerable: !0
-                }, {
                     key: "propTypes",
                     value: {
                         /** Optional CSS class name */
@@ -2932,6 +2932,205 @@
                 }, loadTime = new Date().getTime());
             }).call(this);
         }).call(exports, __webpack_require__(15));
+    }, /* 34 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _InfiniteLoader2 = __webpack_require__(35), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
+        exports["default"] = _InfiniteLoader3["default"];
+        var _InfiniteLoader4 = _interopRequireDefault(_InfiniteLoader2);
+        exports.InfiniteLoader = _InfiniteLoader4["default"];
+    }, /* 35 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function _objectWithoutProperties(obj, keys) {
+            var target = {};
+            for (var i in obj) keys.indexOf(i) >= 0 || Object.prototype.hasOwnProperty.call(obj, i) && (target[i] = obj[i]);
+            return target;
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _inherits(subClass, superClass) {
+            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+            subClass.prototype = Object.create(superClass && superClass.prototype, {
+                constructor: {
+                    value: subClass,
+                    enumerable: !1,
+                    writable: !0,
+                    configurable: !0
+                }
+            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
+        }
+        function isRangeVisible(_ref2) {
+            var lastRenderedStartIndex = _ref2.lastRenderedStartIndex, lastRenderedStopIndex = _ref2.lastRenderedStopIndex, startIndex = _ref2.startIndex, stopIndex = _ref2.stopIndex;
+            return !(startIndex > lastRenderedStopIndex || lastRenderedStartIndex > stopIndex);
+        }
+        /**
+	 * Returns all of the ranges within a larger range that contain unloaded rows.
+	 */
+        function scanForUnloadedRanges(_ref3) {
+            for (var isRowLoaded = _ref3.isRowLoaded, startIndex = _ref3.startIndex, stopIndex = _ref3.stopIndex, unloadedRanges = [], rangeStartIndex = null, rangeStopIndex = null, i = startIndex; stopIndex >= i; i++) {
+                var loaded = isRowLoaded(i);
+                loaded ? null !== rangeStopIndex && (unloadedRanges.push({
+                    startIndex: rangeStartIndex,
+                    stopIndex: rangeStopIndex
+                }), rangeStartIndex = rangeStopIndex = null) : (rangeStopIndex = i, null === rangeStartIndex && (rangeStartIndex = i));
+            }
+            return null !== rangeStopIndex && unloadedRanges.push({
+                startIndex: rangeStartIndex,
+                stopIndex: rangeStopIndex
+            }), unloadedRanges;
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), _get = function(_x, _x2, _x3) {
+            for (var _again = !0; _again; ) {
+                var object = _x, property = _x2, receiver = _x3;
+                _again = !1, null === object && (object = Function.prototype);
+                var desc = Object.getOwnPropertyDescriptor(object, property);
+                if (void 0 !== desc) {
+                    if ("value" in desc) return desc.value;
+                    var getter = desc.get;
+                    if (void 0 === getter) return;
+                    return getter.call(receiver);
+                }
+                var parent = Object.getPrototypeOf(object);
+                if (null === parent) return;
+                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
+            }
+        };
+        exports.isRangeVisible = isRangeVisible, exports.scanForUnloadedRanges = scanForUnloadedRanges;
+        var _FlexTable = __webpack_require__(25), _FlexTable2 = _interopRequireDefault(_FlexTable), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _VirtualScroll = __webpack_require__(28), _VirtualScroll2 = _interopRequireDefault(_VirtualScroll), InfiniteLoader = function(_Component) {
+            function InfiniteLoader(props) {
+                _classCallCheck(this, InfiniteLoader), _get(Object.getPrototypeOf(InfiniteLoader.prototype), "constructor", this).call(this, props), 
+                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this._onRowsRendered = this._onRowsRendered.bind(this);
+            }
+            /**
+	   * Determines if the specified start/stop range is visible based on the most recently rendered range.
+	   */
+            return _inherits(InfiniteLoader, _Component), _createClass(InfiniteLoader, null, [ {
+                key: "propTypes",
+                value: {
+                    /** Children must be either FlexTable or VirtualScroll */
+                    children: function(props, propName, componentName) {
+                        var error = void 0;
+                        return _react2["default"].Children.forEach(props.children, function(child) {
+                            child.type !== _FlexTable2["default"] && child.type !== _VirtualScroll2["default"] && (error = new Error("InfiniteLoader only accepts children of types FlexTable or VirtualScroll not " + child.type));
+                        }), error;
+                    },
+                    /**
+	       * Function responsible for tracking the loaded state of each row.
+	       * It should implement the following signature: (index: number): boolean
+	       */
+                    isRowLoaded: _react.PropTypes.func,
+                    /**
+	       * Callback to be invoked when more rows must be loaded.
+	       * It should implement the following signature: ({ startIndex, stopIndex }): Promise
+	       * The returned Promise should be resolved once row data has finished loading.
+	       * It will be used to determine when to refresh the list with the newly-loaded data.
+	       * This callback may be called multiple times in reaction to a single scroll event.
+	       */
+                    loadMoreRows: _react.PropTypes.func.isRequired,
+                    /**
+	       * Number of rows in list; can be arbitrary high number if actual number is unknown.
+	       */
+                    rowsCount: _react.PropTypes.number,
+                    /**
+	       * Threshold at which to pre-fetch data.
+	       * A threshold X means that data will start loading when a user scrolls within X rows.
+	       * This value defaults to 15.
+	       */
+                    threshold: _react.PropTypes.number
+                },
+                enumerable: !0
+            }, {
+                key: "defaultProps",
+                value: {
+                    threshold: 15
+                },
+                enumerable: !0
+            } ]), _createClass(InfiniteLoader, [ {
+                key: "componentDidReceiveProps",
+                value: function(previousProps) {
+                    var children = this.props.children;
+                    if (previousProps.children !== children) {
+                        var child = _react2["default"].Children.only(children);
+                        this._originalOnRowsRendered = child.props.onRowsRendered;
+                    }
+                }
+            }, {
+                key: "componentWillMount",
+                value: function() {
+                    var children = this.props.children, child = _react2["default"].Children.only(children);
+                    this._originalOnRowsRendered = child.props.onRowsRendered;
+                }
+            }, {
+                key: "render",
+                value: function() {
+                    var _props = this.props, children = _props.children, child = (_objectWithoutProperties(_props, [ "children" ]), 
+                    _react2["default"].Children.only(children));
+                    return child = _react2["default"].cloneElement(child, {
+                        onRowsRendered: this._onRowsRendered,
+                        ref: "VirtualScroll"
+                    });
+                }
+            }, {
+                key: "_onRowsRendered",
+                value: function(_ref) {
+                    var _this = this, startIndex = _ref.startIndex, stopIndex = _ref.stopIndex, _props2 = this.props, isRowLoaded = _props2.isRowLoaded, loadMoreRows = _props2.loadMoreRows, rowsCount = _props2.rowsCount, threshold = _props2.threshold;
+                    this._lastRenderedStartIndex = startIndex, this._lastRenderedStopIndex = stopIndex;
+                    var unloadedRanges = scanForUnloadedRanges({
+                        isRowLoaded: isRowLoaded,
+                        startIndex: Math.max(0, startIndex - threshold),
+                        stopIndex: Math.min(rowsCount, stopIndex + threshold)
+                    });
+                    unloadedRanges.forEach(function(unloadedRange) {
+                        var promise = loadMoreRows(unloadedRange);
+                        promise && promise.then(function() {
+                            // Refresh the visible rows if any of them have just been loaded
+                            isRangeVisible({
+                                lastRenderedStartIndex: _this._lastRenderedStartIndex,
+                                lastRenderedStopIndex: _this._lastRenderedStopIndex,
+                                startIndex: unloadedRange.startIndex,
+                                stopIndex: unloadedRange.stopIndex
+                            }) && _this.refs.VirtualScroll.forceUpdate();
+                        });
+                    }), this._originalOnRowsRendered && this._originalOnRowsRendered({
+                        startIndex: startIndex,
+                        stopIndex: stopIndex
+                    });
+                }
+            } ]), InfiniteLoader;
+        }(_react.Component);
+        exports["default"] = InfiniteLoader;
     } ]);
 });
 //# sourceMappingURL=react-virtualized.js.map
