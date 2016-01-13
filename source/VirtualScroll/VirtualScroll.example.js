@@ -114,7 +114,7 @@ export default class VirtualScrollExample extends Component {
 
   _getRowHeight (index) {
     const { list } = this.props
-    return list.get(index).height
+    return list.get(index).size
   }
 
   _noRowsRenderer () {
