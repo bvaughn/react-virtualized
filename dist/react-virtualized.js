@@ -2013,6 +2013,11 @@
                     /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
                     noRowsRenderer: _react.PropTypes.func,
                     /**
+	      * Optional callback when a column's header is clicked.
+	      * (dataKey: string): void
+	      */
+                    onHeaderClick: _react.PropTypes.func,
+                    /**
 	       * Callback invoked when a user clicks on a table row.
 	       * (rowIndex: number): void
 	       */
@@ -2060,6 +2065,9 @@
                     disableHeader: !1,
                     horizontalPadding: 0,
                     noRowsRenderer: function() {
+                        return null;
+                    },
+                    onHeaderClick: function() {
                         return null;
                     },
                     onRowClick: function() {
@@ -2134,11 +2142,11 @@
             }, {
                 key: "_createHeader",
                 value: function(column, columnIndex) {
-                    var _props2 = this.props, headerClassName = _props2.headerClassName, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, styleSheet = this.state.styleSheet, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, sortableStyles = sortEnabled ? styleSheet.sortableHeaderColumn : {}, classNames = (0, 
+                    var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, styleSheet = this.state.styleSheet, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, sortableStyles = sortEnabled ? styleSheet.sortableHeaderColumn : {}, classNames = (0, 
                     _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
                         FlexTable__sortableHeaderColumn: sortEnabled
                     }), flex = this._getFlexStyleForColumn(column), newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC, onClick = function() {
-                        return sortEnabled && sort(dataKey, newSortDirection);
+                        sortEnabled && sort(dataKey, newSortDirection), onHeaderClick(dataKey);
                     };
                     return _react2["default"].createElement("div", {
                         key: "Header-Col" + columnIndex,
