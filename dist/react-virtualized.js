@@ -248,7 +248,8 @@
             }, {
                 key: "_setRef",
                 value: function(autoSizer) {
-                    this._parentNode = autoSizer.parentNode;
+                    // In case the component has been unmounted
+                    this._parentNode = autoSizer && autoSizer.parentNode;
                 }
             } ]), AutoSizer;
         }(_react.Component);
@@ -2985,7 +2986,7 @@
                                 lastRenderedStopIndex: _this._lastRenderedStopIndex,
                                 startIndex: unloadedRange.startIndex,
                                 stopIndex: unloadedRange.stopIndex
-                            }) && _this.refs.VirtualScroll.forceUpdate();
+                            }) && _this.refs.VirtualScroll && _this.refs.VirtualScroll.forceUpdate();
                         });
                     }), this._originalOnRowsRendered && this._originalOnRowsRendered({
                         startIndex: startIndex,
