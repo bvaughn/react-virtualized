@@ -5,7 +5,7 @@
   "user": "bvaughn",
   "version": "3.1.1",
   "scripts": {
-    "build": "npm run build:demo && npm run build:dist",
+    "build": "npm run build:css && npm run build:dist && npm run build:demo",
     "build:css": "postcss --use autoprefixer source/theme.css > theme.css",
     "build:demo": "npm run clean:demo && NODE_ENV=production webpack --config webpack.config.demo.js -p --bail",
     "build:dist": "npm run clean:dist && NODE_ENV=production webpack --config webpack.config.dist.js --bail",

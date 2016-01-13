@@ -55,10 +55,6 @@
   display: flex;
   flexDirection: row;
   overflow: hidden;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
 }
 .FlexTable__sortableHeaderColumn {
   cursor: pointer;
