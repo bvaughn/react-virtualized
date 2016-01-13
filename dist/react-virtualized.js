@@ -101,7 +101,7 @@
                 return _FlexTable.SortIndicator;
             }
         });
-        var _InfiniteLoader = __webpack_require__(36);
+        var _InfiniteLoader = __webpack_require__(34);
         Object.defineProperty(exports, "InfiniteLoader", {
             enumerable: !0,
             get: function() {
@@ -494,9 +494,7 @@
             }
         };
         exports.SortIndicator = SortIndicator;
-        var _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(10), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _VirtualScroll = __webpack_require__(11), _VirtualScroll2 = _interopRequireDefault(_VirtualScroll);
-        __webpack_require__(34);
-        var SortDirection = {
+        var _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(10), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _VirtualScroll = __webpack_require__(11), _VirtualScroll2 = _interopRequireDefault(_VirtualScroll), SortDirection = {
             /**
 	   * Sort items in ascending order.
 	   * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
@@ -546,6 +544,11 @@
                     /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
                     noRowsRenderer: _react.PropTypes.func,
                     /**
+	      * Optional callback when a column's header is clicked.
+	      * (dataKey: string): void
+	      */
+                    onHeaderClick: _react.PropTypes.func,
+                    /**
 	       * Callback invoked when a user clicks on a table row.
 	       * (rowIndex: number): void
 	       */
@@ -591,6 +594,9 @@
                     disableHeader: !1,
                     horizontalPadding: 0,
                     noRowsRenderer: function() {
+                        return null;
+                    },
+                    onHeaderClick: function() {
                         return null;
                     },
                     onRowClick: function() {
@@ -657,13 +663,13 @@
             }, {
                 key: "_createHeader",
                 value: function(column, columnIndex) {
-                    var _props2 = this.props, headerClassName = _props2.headerClassName, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, classNames = (0, 
+                    var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, classNames = (0, 
                     _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
                         FlexTable__sortableHeaderColumn: sortEnabled
                     }), flex = this._getFlexStyleForColumn(column), style = {
                         flex: flex
                     }, newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC, onClick = function() {
-                        return sortEnabled && sort(dataKey, newSortDirection);
+                        sortEnabled && sort(dataKey, newSortDirection), onHeaderClick(dataKey);
                     };
                     return _react2["default"].createElement("div", {
                         key: "Header-Col" + columnIndex,
@@ -2792,9 +2798,6 @@
         }).call(exports, __webpack_require__(23));
     }, /* 34 */
     /***/
-    function(module, exports) {}, /* 35 */
-    , /* 36 */
-    /***/
     function(module, exports, __webpack_require__) {
         "use strict";
         function _interopRequireDefault(obj) {
@@ -2805,11 +2808,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _InfiniteLoader2 = __webpack_require__(37), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
+        var _InfiniteLoader2 = __webpack_require__(35), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
         exports["default"] = _InfiniteLoader3["default"];
         var _InfiniteLoader4 = _interopRequireDefault(_InfiniteLoader2);
         exports.InfiniteLoader = _InfiniteLoader4["default"];
-    }, /* 37 */
+    }, /* 35 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";

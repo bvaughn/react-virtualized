@@ -3,7 +3,7 @@
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "scripts": {
     "build": "npm run build:demo && npm run build:dist",
     "build:css": "postcss --use autoprefixer source/theme.css > theme.css",

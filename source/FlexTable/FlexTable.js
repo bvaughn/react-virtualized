@@ -51,9 +51,15 @@ export default class FlexTable extends Component {
     /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
     noRowsRenderer: PropTypes.func,
     /**
+    * Optional callback when a column's header is clicked.
+    * (dataKey: string): void
+    */
+    onHeaderClick: PropTypes.func,
+    /**
      * Callback invoked when a user clicks on a table row.
      * (rowIndex: number): void
      */
+
     onRowClick: PropTypes.func,
     /**
      * Callback invoked with information about the slice of rows that were just rendered.
@@ -94,6 +100,7 @@ export default class FlexTable extends Component {
     disableHeader: false,
     horizontalPadding: 0,
     noRowsRenderer: () => null,
+    onHeaderClick: () => null,
     onRowClick: () => null,
     onRowsRendered: () => null,
     verticalPadding: 0
@@ -213,7 +220,7 @@ export default class FlexTable extends Component {
   }
 
   _createHeader (column, columnIndex) {
-    const { headerClassName, sort, sortBy, sortDirection } = this.props
+    const { headerClassName, onHeaderClick, sort, sortBy, sortDirection } = this.props
     const { dataKey, disableSort, label } = column.props
     const showSortIndicator = sortBy === dataKey
     const sortEnabled = !disableSort && sort
@@ -235,7 +242,10 @@ export default class FlexTable extends Component {
     const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
       ? SortDirection.ASC
       : SortDirection.DESC
-    const onClick = () => sortEnabled && sort(dataKey, newSortDirection)
+    const onClick = () => {
+      sortEnabled && sort(dataKey, newSortDirection)
+      onHeaderClick(dataKey)
+    }
 
     return (
       <div

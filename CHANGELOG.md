@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 3.1.1
+New `onHeaderClick` property added to `FlexTable`. Thanks to @olslash for the contribution!
+
 #### 3.1.0
 Added high-order `InfiniteLoader` component to manage just-in-time fetching of data as a user scrolls up or down in a list.
 For more information about this component refer to the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/InfiniteLoader.md).
