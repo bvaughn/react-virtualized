@@ -68,6 +68,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.2.3",
+    "autoprefixer-loader": "^3.1.0",
     "babel": "^5.8.34",
     "babel-core": "^5.8.34",
     "babel-eslint": "^4.1.6",
@@ -76,6 +77,7 @@
     "bluebird": "^3.0.5",
     "css-loader": "^0.23.0",
     "express": "^4.13.3",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "fs-extra": "^0.26.2",
     "gh-pages": "^0.6.0",
@@ -93,6 +95,7 @@
     "phantomjs": "^1.9.19",
     "postcss": "^5.0.14",
     "postcss-cli": "^2.3.3",
+    "postcss-loader": "^0.8.0",
     "react": "^0.14.3",
     "react-addons-test-utils": "^0.14.3",
     "react-dom": "^0.14.3",
@@ -108,7 +111,6 @@
   },
   "dependencies": {
     "classnames": "^2.2.3",
-    "inline-style-prefixer": "^0.6.2",
     "raf": "^3.1.0",
     "react-pure-render": "^1.0.2"
   },
