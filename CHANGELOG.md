@@ -1,6 +1,16 @@
 Changelog
 ------------
 
+## 4.0.0
+CSS styles have been split into their own, separately loaded stylesheet. This simplifies universal/isomorphic use cases while also enabling styles to be customized.
+
+To upgrade to react-virtualized 4.x you'll need to import the following additional item:
+```js
+import 'react-virtualized/theme.css';
+```
+
+For more information on styles and customizing refer to the [documentation](https://github.com/bvaughn/react-virtualized/#customizing-styles)...
+
 #### 3.1.1
 New `onHeaderClick` property added to `FlexTable`. Thanks to @olslash for the contribution!
 

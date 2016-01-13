@@ -27,10 +27,11 @@ VirtualScroll has no way of knowing when its underlying list data has changed si
 
 Scroll the list to ensure the row at the specified index is visible. This method exists so that a user can forcefully scroll to the same row twice. (The `scrollToIndex` property would not change in that case and so it would not be picked up by VirtualScroll.)
 
-### Stylesheet properties
+### Class names
 
-The VirtualScroll component supports the following nested styles in its `styleSheet` property:
+The VirtualScroll component supports the following static class names
 
 | Property | Description |
-|:---|:---|:---:|:---|
+|:---|:---|
 | VirtualScroll | Main (outer) element |
+| VirtualScroll_innerScrollContainer | Inner element on which virtual items are positioned |

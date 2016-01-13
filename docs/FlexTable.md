@@ -40,18 +40,18 @@ VirtualScroll has no way of knowing when its underlying list data has changed si
 
 Scroll the list to ensure the row at the specified index is visible. This method exists so that a user can forcefully scroll to the same row twice. (The `scrollToIndex` property would not change in that case and so it would not be picked up by VirtualScroll.)
 
-### Stylesheet properties
+### Class names
 
-The FlexTable component supports the following nested styles in its `styleSheet` property:
+The FlexTable component supports the following static class names
 
 | Property | Description |
-|:---|:---|:---:|:---|
+|:---|:---|
 | FlexTable | Main (outer) element |
-| headerColumn | Header cell (similar to `thead > tr > th`) |
-| headerRow | Header row (similar to `thead > tr`) |
-| headerTruncatedText | Element within header cell responsible for truncating text |
-| row | Table row (akin to `tbody > tr`) |
-| rowColumn | Table column (akin to `tbody > tr > td`) |
-| sortableHeaderColumn | Applied to header columns that are sortable |
-| sortableHeaderIcon | SVG sort indicator |
-| truncatedColumnText | Element within table column responsible for truncating text |
+| FlexTable__headerColumn | Header cell (similar to `thead > tr > th`) |
+| FlexTable__headerRow | Header row (similar to `thead > tr`) |
+| FlexTable__headerTruncatedText | Element within header cell responsible for truncating text |
+| FlexTable__row | Table row (akin to `tbody > tr`) |
+| FlexTable__rowColumn | Table column (akin to `tbody > tr > td`) |
+| FlexTable__sortableHeaderColumn | Applied to header columns that are sortable |
+| FlexTable__sortableHeaderIcon | SVG sort indicator |
+| FlexTable__truncatedColumnText | Element within table column responsible for truncating text |

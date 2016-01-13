@@ -11,10 +11,10 @@ Decorator component that automatically adjusts the width and height of a single 
 | className | string |  | Optional CSS class name. |
 | styleSheet | object |  | Presentational styles for component. |
 
-### Stylesheet properties
+### Class names
 
-The AutoSizer component supports the following nested styles in its `styleSheet` property:
+The AutoSizer component supports the following static class names:
 
 | Property | Description |
-|:---|:---|:---:|:---|
+|:---|:---|
 | AutoSizer | Main (outer) element |
