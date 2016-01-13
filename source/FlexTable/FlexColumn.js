@@ -68,11 +68,6 @@ export default class Column extends Component {
     dataKey: PropTypes.any.isRequired,
     /** If sort is enabled for the table at large, disable it for this column */
     disableSort: PropTypes.bool,
-    /**
-    * Optional callback when this column's header is clicked.
-    * (): void
-    */
-    onHeaderClick: PropTypes.func,
     /** Flex grow style; defaults to 0 */
     flexGrow: PropTypes.number,
     /** Flex shrink style; defaults to 1 */

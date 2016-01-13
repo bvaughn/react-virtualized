@@ -44,8 +44,8 @@ describe('FlexTable', () => {
     headerClassName = undefined,
     headerHeight = 20,
     height = 100,
-    onHeaderClick = undefined,
     noRowsRenderer = undefined,
+    onHeaderClick = undefined,
     onRowClick = undefined,
     onRowsRendered = undefined,
     rowClassName = undefined,
@@ -66,6 +66,7 @@ describe('FlexTable', () => {
         headerHeight={headerHeight}
         height={height}
         noRowsRenderer={noRowsRenderer}
+        onHeaderClick={onHeaderClick}
         onRowClick={onRowClick}
         onRowsRendered={onRowsRendered}
         rowClassName={rowClassName}
@@ -85,8 +86,6 @@ describe('FlexTable', () => {
           cellRenderer={cellRenderer}
           cellDataGetter={cellDataGetter}
           disableSort={disableSort}
-          onHeaderClick={onHeaderClick}
-
         />
         <FlexColumn
           label='Email'
@@ -329,30 +328,32 @@ describe('FlexTable', () => {
   })
 
   describe('onHeaderClick', () => {
-    it('should call :onHeaderClick when a column header is clicked and sorting is disabled', () => {
-      let onHeaderClickCalls = 0
+    it('should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is disabled', () => {
+      let onHeaderClickCalls = []
       const table = renderTable({
         disableSort: true,
-        onHeaderClick: () => onHeaderClickCalls++
+        onHeaderClick: (dataKey) => onHeaderClickCalls.push({dataKey})
       })
       const tableDOMNode = findDOMNode(table)
       const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
 
       Simulate.click(nameColumn)
-      expect(onHeaderClickCalls).toEqual(1)
+      expect(onHeaderClickCalls.length).toEqual(1)
+      expect(onHeaderClickCalls[0].dataKey).toEqual('name')
     })
 
-    it('should call :onHeaderClick when a column header is clicked and sorting is enabled', () => {
-      let onHeaderClickCalls = 0
+    it('should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is enabled', () => {
+      let onHeaderClickCalls = []
       const table = renderTable({
         disableSort: false,
-        onHeaderClick: () => onHeaderClickCalls++
+        onHeaderClick: (dataKey) => onHeaderClickCalls.push({dataKey})
       })
       const tableDOMNode = findDOMNode(table)
       const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
 
       Simulate.click(nameColumn)
-      expect(onHeaderClickCalls).toEqual(1)
+      expect(onHeaderClickCalls.length).toEqual(1)
+      expect(onHeaderClickCalls[0].dataKey).toEqual('name')
     })
   })
 
