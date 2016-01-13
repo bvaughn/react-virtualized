@@ -4,9 +4,12 @@ import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from './AutoSizer'
 import VirtualScroll from '../VirtualScroll'
+import shouldPureComponentUpdate from 'react-pure-render/function'
 import styles from './AutoSizer.example.css'
 
 export default class AutoSizerExample extends Component {
+  shouldComponentUpdate = shouldPureComponentUpdate
+
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }

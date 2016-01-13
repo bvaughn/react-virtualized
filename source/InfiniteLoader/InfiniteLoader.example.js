@@ -4,12 +4,15 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import Immutable from 'immutable'
 import InfiniteLoader from './InfiniteLoader'
 import VirtualScroll from '../VirtualScroll'
+import shouldPureComponentUpdate from 'react-pure-render/function'
 import styles from './InfiniteLoader.example.css'
 
 const STATUS_LOADING = 1
 const STATUS_LOADED = 2
 
 export default class InfiniteLoaderExample extends Component {
+  shouldComponentUpdate = shouldPureComponentUpdate
+
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }

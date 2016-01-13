@@ -9,12 +9,15 @@ import styles from './Application.css'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
 import { generateRandomList } from './utils'
 import { render } from 'react-dom'
+import shouldPureComponentUpdate from 'react-pure-render/function'
 import '../../theme.css'
 
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
 
 class Application extends Component {
+  shouldComponentUpdate = shouldPureComponentUpdate
+
   constructor (props) {
     super(props)
 
