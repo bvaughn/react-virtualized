@@ -45,6 +45,7 @@ describe('FlexTable', () => {
     headerHeight = 20,
     height = 100,
     noRowsRenderer = undefined,
+    onHeaderClick = undefined,
     onRowClick = undefined,
     onRowsRendered = undefined,
     rowClassName = undefined,
@@ -65,6 +66,7 @@ describe('FlexTable', () => {
         headerHeight={headerHeight}
         height={height}
         noRowsRenderer={noRowsRenderer}
+        onHeaderClick={onHeaderClick}
         onRowClick={onRowClick}
         onRowsRendered={onRowsRendered}
         rowClassName={rowClassName}
@@ -325,6 +327,36 @@ describe('FlexTable', () => {
     })
   })
 
+  describe('onHeaderClick', () => {
+    it('should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is disabled', () => {
+      let onHeaderClickCalls = []
+      const table = renderTable({
+        disableSort: true,
+        onHeaderClick: (dataKey) => onHeaderClickCalls.push({dataKey})
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
+
+      Simulate.click(nameColumn)
+      expect(onHeaderClickCalls.length).toEqual(1)
+      expect(onHeaderClickCalls[0].dataKey).toEqual('name')
+    })
+
+    it('should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is enabled', () => {
+      let onHeaderClickCalls = []
+      const table = renderTable({
+        disableSort: false,
+        onHeaderClick: (dataKey) => onHeaderClickCalls.push({dataKey})
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
+
+      Simulate.click(nameColumn)
+      expect(onHeaderClickCalls.length).toEqual(1)
+      expect(onHeaderClickCalls[0].dataKey).toEqual('name')
+    })
+  })
+
   describe('onRowClick', () => {
     it('should call :onRowClick with the correct :rowIndex when a row is clicked', () => {
       const onRowClickCalls = []
@@ -338,6 +370,7 @@ describe('FlexTable', () => {
       expect(onRowClickCalls).toEqual([0, 3])
     })
   })
+
   describe('rowClassName', () => {
     it('should render a static classname given :rowClassName as a string', () => {
       const staticClassName = 'staticClass'
