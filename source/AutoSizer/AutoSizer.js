@@ -74,6 +74,7 @@ export default class AutoSizer extends Component {
   }
 
   _setRef (autoSizer) {
-    this._parentNode = autoSizer.parentNode
+    // In case the component has been unmounted
+    this._parentNode = autoSizer && autoSizer.parentNode
   }
 }

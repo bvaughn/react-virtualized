@@ -1,0 +1,14 @@
+.ComponentLink {
+  display: inline-block;
+  padding: 1em 1.5em;
+  color: #bdbdbd;
+  cursor: pointer;
+  font-size: .8rem;
+  text-transform: uppercase;
+}
+.ComponentLink:hover {
+  color: #fff;
+}
+.ActiveComponentLink {
+  color: #fff;
+}

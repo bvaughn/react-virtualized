@@ -62,6 +62,16 @@ a {
   text-align: center;
 }
 
+.ComponentList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: #272727;
+}
+
 .demo {
 }
 .row {

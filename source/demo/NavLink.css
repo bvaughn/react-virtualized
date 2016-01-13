@@ -21,8 +21,10 @@
   color: #FFFFFF;
   text-transform: lowercase;
   text-decoration: none;
+  text-transform: uppercase;
   cursor: pointer;
 }
+.ActiveNavLink,
 .NavLink:hover {
   border-bottom-color: #409890;
 }
