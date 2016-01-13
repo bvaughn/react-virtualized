@@ -44,6 +44,7 @@ describe('FlexTable', () => {
     headerClassName = undefined,
     headerHeight = 20,
     height = 100,
+    onHeaderClick = undefined,
     noRowsRenderer = undefined,
     onRowClick = undefined,
     onRowsRendered = undefined,
@@ -84,6 +85,8 @@ describe('FlexTable', () => {
           cellRenderer={cellRenderer}
           cellDataGetter={cellDataGetter}
           disableSort={disableSort}
+          onHeaderClick={onHeaderClick}
+
         />
         <FlexColumn
           label='Email'
@@ -325,6 +328,34 @@ describe('FlexTable', () => {
     })
   })
 
+  describe('onHeaderClick', () => {
+    it('should call :onHeaderClick when a column header is clicked and sorting is disabled', () => {
+      let onHeaderClickCalls = 0
+      const table = renderTable({
+        disableSort: true,
+        onHeaderClick: () => onHeaderClickCalls++
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
+
+      Simulate.click(nameColumn)
+      expect(onHeaderClickCalls).toEqual(1)
+    })
+
+    it('should call :onHeaderClick when a column header is clicked and sorting is enabled', () => {
+      let onHeaderClickCalls = 0
+      const table = renderTable({
+        disableSort: false,
+        onHeaderClick: () => onHeaderClickCalls++
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
+
+      Simulate.click(nameColumn)
+      expect(onHeaderClickCalls).toEqual(1)
+    })
+  })
+
   describe('onRowClick', () => {
     it('should call :onRowClick with the correct :rowIndex when a row is clicked', () => {
       const onRowClickCalls = []
@@ -338,6 +369,7 @@ describe('FlexTable', () => {
       expect(onRowClickCalls).toEqual([0, 3])
     })
   })
+
   describe('rowClassName', () => {
     it('should render a static classname given :rowClassName as a string', () => {
       const staticClassName = 'staticClass'

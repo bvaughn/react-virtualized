@@ -239,7 +239,7 @@ export default class FlexTable extends Component {
   _createHeader (column, columnIndex) {
     const { headerClassName, sort, sortBy, sortDirection } = this.props
     const { styleSheet } = this.state
-    const { dataKey, disableSort, label } = column.props
+    const { dataKey, disableSort, label, onHeaderClick } = column.props
     const showSortIndicator = sortBy === dataKey
     const sortEnabled = !disableSort && sort
 
@@ -261,7 +261,10 @@ export default class FlexTable extends Component {
     const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
       ? SortDirection.ASC
       : SortDirection.DESC
-    const onClick = () => sortEnabled && sort(dataKey, newSortDirection)
+    const onClick = () => {
+      sortEnabled && sort(dataKey, newSortDirection)
+      onHeaderClick()
+    }
 
     return (
       <div
