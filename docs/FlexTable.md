@@ -15,6 +15,7 @@ This component expects explicit width, height, and padding parameters.
 | height | Number | ✓ | Fixed/available height for out DOM element |
 | horizontalPadding | Number |  | Horizontal padding of outer DOM element |
 | noRowsRenderer |  | Function | Callback used to render placeholder content when :rowsCount is 0 |
+| onHeaderClick |  | Function | Callback invoked when a user clicks on a table header. `(dataKey: string): void` |
 | onRowClick |  | Function | Callback invoked when a user clicks on a table row. `(rowIndex: number): void` |
 | onRowsRendered |  | Function | Callback invoked with information about the slice of rows that were just rendered: `({ startIndex, stopIndex }): void` |
 | rowClassName | String or Function |  | CSS class to apply to all table rows (including the header row). This value may be either a static string or a function with the signature `(rowIndex: number): string`. Note that for the header row an index of `-1` is provided. |
