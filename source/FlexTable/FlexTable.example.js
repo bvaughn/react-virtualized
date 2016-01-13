@@ -123,7 +123,7 @@ export default class TableExample extends Component {
           <FlexColumn
             label='Index'
             cellDataGetter={
-              (dataKey, rowData, columnData) => rowData.id
+              (dataKey, rowData, columnData) => rowData.index
             }
             dataKey='index'
             width={50}
