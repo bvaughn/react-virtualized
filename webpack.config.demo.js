@@ -35,6 +35,11 @@ module.exports = {
         test: /\.css$/,
         loaders: ['style', 'css?modules&importLoaders=1', 'postcss'],
         include: path.join(__dirname, 'source')
+      },
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css?importLoaders=1'],
+        include: path.join(__dirname, 'theme.css')
       }
     ]
   },

@@ -22,31 +22,9 @@ Documentation
 
 API documentation available [here](docs/README.md).
 
-### Customizing Styles
-
-React virtual CSS styles are split into two groups: functional styles (eg. `position`, `overflow`) and presentational styles (eg. `text-transform`, `color`). Both are defined as inline styles (rather than external CSS) to simplify usage for universal/isomorphic rendering.
-
-Functional styles cannot be overridden but you can override presentational styles in a variety of ways:
-
-###### Styling a single component
-
-Supply a custom `styleSheet` to a component (eg. `<VirtualScroll styleSheet={...}/>`) to override default styles for a single component instance. Styles injected as properties will be automatically processed to add vendor prefixes.
-
-Learn more about which styles a component supports in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
-
-###### Styling all instances
-
-Override the static `defaultStyleSheet` property of a component class (eg. `FlexTable.defaultStyleSheet = {...}` to customize styles for all instances.
-
-###### Global CSS
-Load an external CSS file that defines global classes (eg. `FlexTable`, `FlexTable__row`) to append to default inline styles.
-
-Learn more about which class names a component supports in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
-
-###### CSS Modules
-If you are using CSS modules you can specify custom class names to be appended to a component instance (eg. `FlexTable` supports `className`, `headerClassName`, and `rowClassName` properties).
-
-Learn more about which class names are supported in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
+There are also a couple of how-to guides:
+* [Customizing classes and styles](docs/customizingStyles.md).
+* [Displaying items in reverse order](docs/reverseList.md).
 
 Examples
 ---------------
@@ -61,6 +39,7 @@ Below is a simple `VirtualScroll` example. Each row in the virtualized list is r
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { VirtualScroll } from 'react-virtualized';
+import 'react-virtualized/theme.css'; // only needs to be imported once
 
 // List data as an array of strings
 const list = [
@@ -95,6 +74,7 @@ Below is a very basic `FlexTable` example. This table has only 2 columns, each c
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { FlexTable, FlexColumn } from 'react-virtualized';
+import 'react-virtualized/theme.css'; // only needs to be imported once
 
 // Table data as a array of objects
 const list = [
@@ -134,6 +114,7 @@ ReactDOM.render(
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AutoSizer, VirtualScroll } from 'react-virtualized';
+import 'react-virtualized/theme.css'; // only needs to be imported once
 
 // List data as an array of strings
 const list = [
@@ -170,6 +151,7 @@ High-order component that manages just-in-time fetching of data as a user scroll
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { InfiniteLoader, VirtualScroll } from 'react-virtualized';
+import 'react-virtualized/theme.css'; // only needs to be imported once
 
 const list = {};
 

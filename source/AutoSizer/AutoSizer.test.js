@@ -23,21 +23,16 @@ describe('AutoSizer', () => {
     document.body.removeChild(node)
   })
 
-  function getMarkup (
-    useReactChild,
-    {
-      bar = 123,
-      className = undefined,
-      foo = 456,
-      height = 100,
-      styleSheet = undefined,
-      width = 200
-    } = {}
-  ) {
-    let autoSizer
-
-    if (useReactChild) {
-      autoSizer = (
+  function getMarkup ({
+    bar = 123,
+    className = undefined,
+    foo = 456,
+    height = 100,
+    styleSheet = undefined,
+    width = 200
+  } = {}) {
+    return (
+      <div style={{ height, width }}>
         <AutoSizer
           className={className}
           styleSheet={styleSheet}
@@ -47,47 +42,27 @@ describe('AutoSizer', () => {
             foo={foo}
           />
         </AutoSizer>
-      )
-    } else {
-      autoSizer = (
-        <AutoSizer
-          ChildComponent={ChildComponent}
-          bar={bar}
-          className={className}
-          foo={foo}
-          styleSheet={styleSheet}
-        />
-      )
-    }
-
-    return (
-      <div style={{ height, width }}>
-        {autoSizer}
       </div>
     )
   }
 
-  function renderOrUpdateComponent (useReactChild, props) {
-    let rendered = render(getMarkup(useReactChild, props), node)
+  function renderOrUpdateComponent (props) {
+    let rendered = render(getMarkup(props), node)
 
     return findDOMNode(rendered)
   }
 
   it('should relay properties to ChildComponent or React child', () => {
-    [false, true].forEach(useReactChild => {
-      const component = renderOrUpdateComponent(useReactChild)
-      expect(findDOMNode(component).textContent).toContain('foo:456')
-      expect(findDOMNode(component).textContent).toContain('bar:123')
-    })
+    const component = renderOrUpdateComponent()
+    expect(findDOMNode(component).textContent).toContain('foo:456')
+    expect(findDOMNode(component).textContent).toContain('bar:123')
   })
 
   it('should set the correct initial width and height of ChildComponent or React child', () => {
-    [false, true].forEach(useReactChild => {
-      const component = renderOrUpdateComponent(useReactChild)
-      let domNode = findDOMNode(component)
-      expect(domNode.textContent).toContain('height:100')
-      expect(domNode.textContent).toContain('width:200')
-    })
+    const component = renderOrUpdateComponent()
+    let domNode = findDOMNode(component)
+    expect(domNode.textContent).toContain('height:100')
+    expect(domNode.textContent).toContain('width:200')
   })
 
   describe('styles and classeNames', () => {
@@ -97,25 +72,8 @@ describe('AutoSizer', () => {
     })
 
     it('should use a custom :className if specified', () => {
-      const node = renderOrUpdateComponent(true, { className: 'foo' })
+      const node = renderOrUpdateComponent({ className: 'foo' })
       expect(node.querySelector('.AutoSizer').className).toContain('foo')
-    })
-
-    it('should use custom :styleSheet if specified', () => {
-      const node = renderOrUpdateComponent(true, {
-        styleSheet: {
-          AutoSizer: { color: 'red' }
-        }
-      })
-      expect(node.querySelector('.AutoSizer').style.color).toEqual('red')
-    })
-
-    it('should use overriden static styles', () => {
-      const backup = { ...AutoSizer.defaultStyleSheet }
-      AutoSizer.defaultStyleSheet.AutoSizer = { color: 'blue' }
-      const node = renderOrUpdateComponent()
-      expect(node.querySelector('.AutoSizer').style.color).toEqual('blue')
-      AutoSizer.defaultStyleSheet = backup
     })
   })
 

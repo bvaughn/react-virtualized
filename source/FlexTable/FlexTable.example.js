@@ -5,9 +5,12 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import FlexColumn from './FlexColumn'
 import FlexTable, { SortDirection } from './FlexTable'
+import shouldPureComponentUpdate from 'react-pure-render/function'
 import styles from './FlexTable.example.css'
 
 export default class TableExample extends Component {
+  shouldComponentUpdate = shouldPureComponentUpdate
+
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }

@@ -113,7 +113,10 @@ export default class InfiniteLoader extends Component {
               stopIndex: unloadedRange.stopIndex
             })
           ) {
-            this.refs.VirtualScroll.forceUpdate()
+            // In case the component has been unmounted since the range was loaded
+            if (this.refs.VirtualScroll) {
+              this.refs.VirtualScroll.forceUpdate()
+            }
           }
         })
       }

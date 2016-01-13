@@ -4,12 +4,15 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import Immutable from 'immutable'
 import InfiniteLoader from './InfiniteLoader'
 import VirtualScroll from '../VirtualScroll'
+import shouldPureComponentUpdate from 'react-pure-render/function'
 import styles from './InfiniteLoader.example.css'
 
 const STATUS_LOADING = 1
 const STATUS_LOADED = 2
 
 export default class InfiniteLoaderExample extends Component {
+  shouldComponentUpdate = shouldPureComponentUpdate
+
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -18,7 +21,9 @@ export default class InfiniteLoaderExample extends Component {
     super(props)
 
     this.state = {
+      loadedRowsCount: 0,
       loadedRowsMap: {},
+      loadingRowsCount: 0,
       randomScrollToIndex: null
     }
 
@@ -30,7 +35,7 @@ export default class InfiniteLoaderExample extends Component {
 
   render () {
     const { list, ...props } = this.props
-    const { randomScrollToIndex } = this.state
+    const { loadedRowsCount, loadingRowsCount, randomScrollToIndex } = this.state
 
     return (
       <ContentBox {...props}>
@@ -46,12 +51,18 @@ export default class InfiniteLoaderExample extends Component {
         </ContentBoxParagraph>
 
         <ContentBoxParagraph>
-          <button
-            className={styles.button}
-            onClick={this._clearData}
-          >
-            Flush Cached Data
-          </button>
+          <div className={styles.cacheButtonAndCountRow}>
+            <button
+              className={styles.button}
+              onClick={this._clearData}
+            >
+              Flush Cached Data
+            </button>
+
+            <div className={styles.cacheCountRow}>
+              {`${loadingRowsCount} loading, ${loadedRowsCount} loaded`}
+            </div>
+          </div>
         </ContentBoxParagraph>
 
         <InfiniteLoader
@@ -75,26 +86,40 @@ export default class InfiniteLoaderExample extends Component {
 
   _clearData () {
     this.setState({
-      loadedRowsMap: {}
+      loadedRowsCount: 0,
+      loadedRowsMap: {},
+      loadingRowsCount: 0
     })
   }
 
   _isRowLoaded (index) {
     const { loadedRowsMap } = this.state
-    return !!loadedRowsMap[index]
+    return !!loadedRowsMap[index] // STATUS_LOADING or STATUS_LOADED
   }
 
   _loadMoreRows ({ startIndex, stopIndex }) {
-    const { loadedRowsMap } = this.state
+    const { loadedRowsMap, loadingRowsCount } = this.state
+    const increment = stopIndex - startIndex + 1
 
     for (var i = startIndex; i <= stopIndex; i++) {
       loadedRowsMap[i] = STATUS_LOADING
     }
 
+    this.setState({
+      loadingRowsCount: loadingRowsCount + increment
+    })
+
     setTimeout(() => {
+      const { loadedRowsCount, loadingRowsCount } = this.state
+
       for (var i = startIndex; i <= stopIndex; i++) {
         loadedRowsMap[i] = STATUS_LOADED
       }
+
+      this.setState({
+        loadingRowsCount: loadingRowsCount - increment,
+        loadedRowsCount: loadedRowsCount + increment
+      })
 
       promiseResolver()
     }, 1000 + Math.round(Math.random() * 2000))

@@ -3,8 +3,7 @@ import {
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
-  initOnRowsRenderedHelper,
-  prefixStyleSheet
+  initOnRowsRenderedHelper
 } from '../utils'
 import cn from 'classnames'
 import raf from 'raf'
@@ -50,9 +49,7 @@ export default class VirtualScroll extends Component {
     /** Number of rows in list. */
     rowsCount: PropTypes.number.isRequired,
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
-    scrollToIndex: PropTypes.number,
-    /** Specifies presentational styles for component. */
-    styleSheet: PropTypes.object
+    scrollToIndex: PropTypes.number
   }
 
   static defaultProps = {
@@ -66,7 +63,6 @@ export default class VirtualScroll extends Component {
     this.state = {
       computeCellMetadataOnNextUpdate: false,
       isScrolling: false,
-      styleSheet: prefixStyleSheet(props.styleSheet || VirtualScroll.defaultStyleSheet),
       scrollTop: 0
     }
 
@@ -189,12 +185,6 @@ export default class VirtualScroll extends Component {
       this.setState({ scrollTop: 0 })
     }
 
-    if (this.props.styleSheet !== nextProps.styleSheet) {
-      this.setState({
-        styleSheet: prefixStyleSheet(nextProps.styleSheet)
-      })
-    }
-
     // Don't compare rowHeight if it's a function because inline functions would cause infinite loops.
     // In that event users should use recomputeRowHeights() to inform of changes.
     if (
@@ -233,8 +223,7 @@ export default class VirtualScroll extends Component {
 
     const {
       isScrolling,
-      scrollTop,
-      styleSheet
+      scrollTop
     } = this.state
 
     let childrenToDisplay = []
@@ -284,18 +273,21 @@ export default class VirtualScroll extends Component {
         onWheel={this._onWheel}
         tabIndex={0}
         style={{
-          ...styleSheet.VirtualScroll,
-          ...functionalStyles.VirtualScroll,
-          height: height
+          position: 'relative',
+          overflow: 'auto',
+          height: height,
+          outline: 0
         }}
       >
         {rowsCount > 0 &&
           <div
             style={{
-              ...functionalStyles.innerScrollContainer,
               height: this._getTotalRowsHeight(),
               maxHeight: this._getTotalRowsHeight(),
-              pointerEvents: isScrolling ? 'none' : 'auto'
+              pointerEvents: isScrolling ? 'none' : 'auto',
+              boxSizing: 'border-box',
+              overflowX: 'auto',
+              overflowY: 'hidden'
             }}
           >
             {childrenToDisplay}
@@ -495,25 +487,5 @@ export default class VirtualScroll extends Component {
       isScrolling: true,
       scrollTop
     })
-  }
-}
-
-/** Functional styles can't be overridden so they only need to be prefixed once. */
-const functionalStyles = prefixStyleSheet({
-  VirtualScroll: {
-    position: 'relative',
-    overflow: 'auto',
-    outline: 0
-  },
-  innerScrollContainer: {
-    boxSizing: 'border-box',
-    overflowX: 'auto',
-    overflowY: 'hidden'
-  }
-})
-
-/** Default presentational styles for all <VirtualScroll> instances. */
-VirtualScroll.defaultStyleSheet = {
-  VirtualScroll: {
   }
 }

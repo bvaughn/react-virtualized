@@ -18,7 +18,12 @@
   background-color: #DDD;
 }
 
+.cacheButtonAndCountRow {
+  display: flex;
+  align-items: center;
+}
 .button {
+  flex: 0 0 auto;
   background-color: #4db6ac;
   color: #fff;
   appearance: none;
@@ -26,4 +31,11 @@
   padding: .5em 1em;
   border-radius: .35em;
   font-size: 1em;
+}
+.cacheCountRow {
+  flex: 1 1 auto;
+  text-align: right;
+  color: #bdbdbd;
+  font-size: .75em;
+  font-weight: 100;
 }
