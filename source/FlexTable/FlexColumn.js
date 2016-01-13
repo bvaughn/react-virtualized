@@ -45,8 +45,7 @@ export default class Column extends Component {
     cellDataGetter: defaultCellDataGetter,
     cellRenderer: defaultCellRenderer,
     flexGrow: 0,
-    flexShrink: 1,
-    onHeaderClick: () => null
+    flexShrink: 1
   }
 
   static propTypes = {
