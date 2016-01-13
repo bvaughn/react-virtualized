@@ -8,6 +8,8 @@ import styles from './Application.css'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
 import { generateRandomList } from './utils'
 import { render } from 'react-dom'
+import '../../theme.css'
+console.log('styles:', require('../../theme.css'))
 
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())

@@ -461,26 +461,5 @@ describe('FlexTable', () => {
       expect(node.querySelectorAll('.bar').length).toEqual(2)
       expect(node.querySelectorAll('.baz').length).toEqual(9)
     })
-
-    it('should use custom :styleSheet if specified', () => {
-      const node = findDOMNode(renderTable({
-        styleSheet: {
-          headerColumn: { color: 'red' },
-          rowColumn: { color: 'green' }
-        }
-      }))
-      expect(node.querySelector('.FlexTable__headerColumn').style.color).toEqual('red')
-      expect(node.querySelector('.FlexTable__rowColumn').style.color).toEqual('green')
-    })
-
-    it('should use overriden static styles', () => {
-      const backup = { ...FlexTable.defaultStyleSheet }
-      FlexTable.defaultStyleSheet.headerColumn = { color: 'blue' }
-      FlexTable.defaultStyleSheet.rowColumn = { color: 'purple' }
-      const node = findDOMNode(renderTable())
-      expect(node.querySelector('.FlexTable__headerColumn').style.color).toEqual('blue')
-      expect(node.querySelector('.FlexTable__rowColumn').style.color).toEqual('purple')
-      FlexTable.defaultStyleSheet = backup
-    })
   })
 })

@@ -237,22 +237,5 @@ describe('VirtualScroll', () => {
       const node = findDOMNode(renderList({ className: 'foo' }))
       expect(node.className).toContain('foo')
     })
-
-    it('should use custom :styleSheet if specified', () => {
-      const node = findDOMNode(renderList({
-        styleSheet: {
-          VirtualScroll: { color: 'red' }
-        }
-      }))
-      expect(node.style.color).toEqual('red')
-    })
-
-    it('should use overriden static styles', () => {
-      const backup = { ...VirtualScroll.defaultStyleSheet }
-      VirtualScroll.defaultStyleSheet.VirtualScroll = { color: 'blue' }
-      const node = findDOMNode(renderList())
-      expect(node.style.color).toEqual('blue')
-      VirtualScroll.defaultStyleSheet = backup
-    })
   })
 })

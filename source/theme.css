@@ -1,0 +1,80 @@
+/* AutoSizer default theme */
+
+.AutoSizer {
+}
+
+/* FlexTable default theme */
+
+.FlexTable {
+}
+
+.FlexTable__headerRow {
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  flexDirection: row;
+  alignItems: center;
+  overflow: hidden;
+}
+.FlexTable__headerTruncatedText {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.FlexTable__row {
+  display: flex;
+  flexDirection: row;
+  alignItems: center;
+  overflow: hidden;
+}
+
+.FlexTable__headerColumn,
+.FlexTable__rowColumn {
+  margin-right: 10px;
+  min-width: 0px;
+}
+
+.FlexTable__headerColumn:first-of-type,
+.FlexTable__rowColumn:first-of-type {
+  margin-left: 10px;
+}
+.FlexTable__headerColumn {
+  align-items: center;
+  display: flex;
+  flexDirection: row;
+  overflow: hidden;
+}
+.FlexTable__sortableHeaderColumn {
+  cursor: pointer;
+}
+.FlexTable__rowColumn {
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  overflow: hidden;
+  height: 100%;
+}
+
+.FlexTable__sortableHeaderIconContainer {
+  display: flex;
+  align-items: center;
+}
+.FlexTable__sortableHeaderIcon {
+  flex: 0 0 24px;
+  height: 1em;
+  width: 1em;
+  fill: currentColor;
+}
+
+.FlexTable__truncatedColumnText {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* VirtualScroll default theme */
+
+.VirtualScroll {
+}
+
+.VirtualScroll_innerScrollContainer {
+}
