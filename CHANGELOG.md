@@ -2,14 +2,26 @@ Changelog
 ------------
 
 ## 4.0.0
-CSS styles have been split into their own, separately loaded stylesheet. This simplifies universal/isomorphic use cases without breaking vendor prefixing.
-
-To upgrade to react-virtualized 4.x you'll need to import the following additional file. This only needs to be done once (usually during bootstrapping).
+CSS styles have been split into their own, separately loaded stylesheet. This simplifies universal/isomorphic use cases without breaking vendor prefixing. This change means that you'll need to import the following additional file. This only needs to be done once (usually during bootstrapping).
 ```js
-import 'react-virtualized/theme.css';
+import 'react-virtualized/styles.css';
 ```
 
-For more information on styles and customizing refer to the [documentation](https://github.com/bvaughn/react-virtualized/#customizing-styles)...
+In this release the `width` property of the `FlexTable` component was removed. Tables will now grow to fill 100% of the width of their parent container.
+
+The `AutoSizer`'s `ChildComponent` attribute has been removed in favor of using a regular react child. For example:
+```html
+<AutoSizer
+  ChildComponent={VirtualScroll}
+  {...props}
+/>
+```
+Should instead be this:
+```html
+<AutoSizer>
+  <VirtualScroll {...props}/>
+</AutoSizer>
+```
 
 #### 3.1.1
 New `onHeaderClick` property added to `FlexTable`. Thanks to @olslash for the contribution!

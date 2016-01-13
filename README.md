@@ -39,7 +39,7 @@ Below is a simple `VirtualScroll` example. Each row in the virtualized list is r
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { VirtualScroll } from 'react-virtualized';
-import 'react-virtualized/theme.css'; // only needs to be imported once
+import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // List data as an array of strings
 const list = [
@@ -74,7 +74,7 @@ Below is a very basic `FlexTable` example. This table has only 2 columns, each c
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { FlexTable, FlexColumn } from 'react-virtualized';
-import 'react-virtualized/theme.css'; // only needs to be imported once
+import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // Table data as a array of objects
 const list = [
@@ -114,7 +114,7 @@ ReactDOM.render(
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AutoSizer, VirtualScroll } from 'react-virtualized';
-import 'react-virtualized/theme.css'; // only needs to be imported once
+import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // List data as an array of strings
 const list = [
@@ -151,7 +151,7 @@ High-order component that manages just-in-time fetching of data as a user scroll
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { InfiniteLoader, VirtualScroll } from 'react-virtualized';
-import 'react-virtualized/theme.css'; // only needs to be imported once
+import 'react-virtualized/styles.css'; // only needs to be imported once
 
 const list = {};
 

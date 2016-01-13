@@ -22,7 +22,7 @@ module.exports = {
     }
   },
   plugins: [
-    new ExtractTextPlugin('../theme.css', {
+    new ExtractTextPlugin('../styles.css', {
       allChunks: false,
       beautify: true,
       mangle: false

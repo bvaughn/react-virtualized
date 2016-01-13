@@ -90,8 +90,6 @@ export default class FlexTable extends Component {
     sortBy: PropTypes.string,
     /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
     sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
-    /** Fixed/available width for out DOM element */
-    width: PropTypes.number.isRequired,
     /** Vertical padding of outer DOM element */
     verticalPadding: PropTypes.number
   }
@@ -137,8 +135,7 @@ export default class FlexTable extends Component {
       rowClassName,
       rowHeight,
       rowsCount,
-      verticalPadding,
-      width
+      verticalPadding
     } = this.props
 
     const availableRowsHeight = height - headerHeight - verticalPadding
@@ -154,9 +151,6 @@ export default class FlexTable extends Component {
     return (
       <div
         className={cn('FlexTable', className)}
-        style={{
-          maxWidth: width
-        }}
       >
         {!disableHeader && (
           <div
@@ -171,7 +165,6 @@ export default class FlexTable extends Component {
 
         <VirtualScroll
           ref='VirtualScroll'
-          width={width}
           height={availableRowsHeight}
           noRowsRenderer={noRowsRenderer}
           onRowsRendered={onRowsRendered}

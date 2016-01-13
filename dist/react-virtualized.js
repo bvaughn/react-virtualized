@@ -583,8 +583,6 @@
                     sortBy: _react.PropTypes.string,
                     /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
                     sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ]),
-                    /** Fixed/available width for out DOM element */
-                    width: _react.PropTypes.number.isRequired,
                     /** Vertical padding of outer DOM element */
                     verticalPadding: _react.PropTypes.number
                 },
@@ -622,14 +620,11 @@
             }, {
                 key: "render",
                 value: function() {
-                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, verticalPadding = _props.verticalPadding, width = _props.width, availableRowsHeight = height - headerHeight - verticalPadding, rowRenderer = function(index) {
+                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, verticalPadding = _props.verticalPadding, availableRowsHeight = height - headerHeight - verticalPadding, rowRenderer = function(index) {
                         return _this._createRow(index);
                     }, rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
                     return _react2["default"].createElement("div", {
-                        className: (0, _classnames2["default"])("FlexTable", className),
-                        style: {
-                            maxWidth: width
-                        }
+                        className: (0, _classnames2["default"])("FlexTable", className)
                     }, !disableHeader && _react2["default"].createElement("div", {
                         className: (0, _classnames2["default"])("FlexTable__headerRow", rowClass),
                         style: {
@@ -637,7 +632,6 @@
                         }
                     }, this._getRenderedHeaderRow()), _react2["default"].createElement(_VirtualScroll2["default"], {
                         ref: "VirtualScroll",
-                        width: width,
                         height: availableRowsHeight,
                         noRowsRenderer: noRowsRenderer,
                         onRowsRendered: onRowsRendered,

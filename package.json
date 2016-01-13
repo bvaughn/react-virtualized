@@ -6,7 +6,7 @@
   "version": "4.0.0",
   "scripts": {
     "build": "npm run build:css && npm run build:dist && npm run build:demo",
-    "build:css": "postcss --use autoprefixer source/theme.css > theme.css",
+    "build:css": "postcss --use autoprefixer source/styles.css > styles.css",
     "build:demo": "npm run clean:demo && NODE_ENV=production webpack --config webpack.config.demo.js -p --bail",
     "build:dist": "npm run clean:dist && NODE_ENV=production webpack --config webpack.config.dist.js --bail",
     "clean": "npm run clean:demo && npm run clean:dist",

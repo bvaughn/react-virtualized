@@ -10,7 +10,7 @@ import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
 import { generateRandomList } from './utils'
 import { render } from 'react-dom'
 import shouldPureComponentUpdate from 'react-pure-render/function'
-import '../../theme.css'
+import '../../styles.css'
 
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())

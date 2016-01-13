@@ -14,7 +14,6 @@ Describes the header and cell contents of a table column
 | rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Rendered rows must have a unique `key` attribute. |
 | rowsCount | Number | ✓ | Number of rows in list. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
-| styleSheet | object |  | Presentational styles for component. |
 
 ### Public Methods
 

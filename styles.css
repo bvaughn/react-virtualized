@@ -6,11 +6,15 @@
 /* FlexTable default theme */
 
 .FlexTable {
+  width: 100%;
 }
 
 .FlexTable__headerRow {
   font-weight: 700;
   text-transform: uppercase;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   flexDirection: row;
   alignItems: center;
@@ -22,6 +26,9 @@
   overflow: hidden;
 }
 .FlexTable__row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   flexDirection: row;
   alignItems: center;
@@ -39,7 +46,13 @@
   margin-left: 10px;
 }
 .FlexTable__headerColumn {
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   flexDirection: row;
   overflow: hidden;
@@ -48,19 +61,38 @@
   cursor: pointer;
 }
 .FlexTable__rowColumn {
-  justify-content: center;
-  flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   overflow: hidden;
   height: 100%;
 }
 
 .FlexTable__sortableHeaderIconContainer {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .FlexTable__sortableHeaderIcon {
-  flex: 0 0 24px;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 24px;
+      -ms-flex: 0 0 24px;
+          flex: 0 0 24px;
   height: 1em;
   width: 1em;
   fill: currentColor;
