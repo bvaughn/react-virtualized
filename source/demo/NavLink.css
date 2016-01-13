@@ -29,23 +29,9 @@
   border-bottom-color: #409890;
 }
 
-.NavLinkIcon {
-  width: 20px;
-  height: 20px;
-  margin-right: .5em;
-  fill: #fff;
-}
-.NavLink:hover > .NavLinkIcon {
-  animation: spin 5s infinite linear;
-}
-
 @media (max-width: 500px) {
   .NavLink {
-    font-size: 1em;
-  }
-
-  .NavLinkIcon {
-    width: 15px;
-    height: 15px;
+    padding: 1em .5em .5em;
+    font-size: .9em;
   }
 }
