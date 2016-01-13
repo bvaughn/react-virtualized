@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.0.1
+Removed an unused dependency on 'inline-style-prefixer' from the `package.json`.
+
 ## 4.0.0
 CSS styles have been split into their own, separately loaded stylesheet. This simplifies universal/isomorphic use cases without breaking vendor prefixing. This change means that you'll need to import the following additional file. This only needs to be done once (usually during bootstrapping).
 ```js
