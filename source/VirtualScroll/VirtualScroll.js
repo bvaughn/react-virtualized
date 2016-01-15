@@ -42,6 +42,11 @@ export default class VirtualScroll extends Component {
      * ({ startIndex, stopIndex }): void
      */
     onRowsRendered: PropTypes.func,
+    /**
+     * Number of rows to render above/below the visible bounds of the list.
+     * These rows can help for smoother scrolling on touch devices.
+     */
+    overscanRowsCount: PropTypes.number,
     /** Either a fixed row height (number) or a function that returns the height of a row given its index. */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
     /** Responsbile for rendering a row given an index */
@@ -54,7 +59,8 @@ export default class VirtualScroll extends Component {
 
   static defaultProps = {
     noRowsRenderer: () => null,
-    onRowsRendered: () => null
+    onRowsRendered: () => null,
+    overscanRowsCount: 0
   }
 
   constructor (props, context) {
@@ -217,6 +223,7 @@ export default class VirtualScroll extends Component {
       className,
       height,
       noRowsRenderer,
+      overscanRowsCount,
       rowsCount,
       rowRenderer
     } = this.props
@@ -230,7 +237,7 @@ export default class VirtualScroll extends Component {
 
     // Render only enough rows to cover the visible (vertical) area of the table.
     if (height > 0) {
-      const {
+      let {
         start,
         stop
       } = getVisibleCellIndices({
@@ -243,6 +250,9 @@ export default class VirtualScroll extends Component {
       // Store for onRowsRendered callback in componentDidUpdate
       this._renderedStartIndex = start
       this._renderedStopIndex = stop
+
+      start = Math.max(0, start - overscanRowsCount)
+      stop = Math.min(rowsCount - 1, stop + overscanRowsCount)
 
       for (let i = start; i <= stop; i++) {
         let datum = this._cellMetadata[i]

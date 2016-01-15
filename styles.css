@@ -106,6 +106,7 @@
 /* VirtualScroll default theme */
 
 .VirtualScroll {
+  -webkit-overflow-scrolling: touch;
 }
 
 .VirtualScroll_innerScrollContainer {
