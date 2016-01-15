@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.0.2
+Additional `columnData` parameter passed to `onHeaderClick` callback.
+
 #### 4.0.1
 Removed an unused dependency on 'inline-style-prefixer' from the `package.json`.
 

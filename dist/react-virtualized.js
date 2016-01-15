@@ -658,13 +658,13 @@
             }, {
                 key: "_createHeader",
                 value: function(column, columnIndex) {
-                    var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, classNames = (0, 
+                    var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, columnData = _column$props2.columnData, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, classNames = (0, 
                     _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
                         FlexTable__sortableHeaderColumn: sortEnabled
                     }), flex = this._getFlexStyleForColumn(column), style = {
                         flex: flex
                     }, newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC, onClick = function() {
-                        sortEnabled && sort(dataKey, newSortDirection), onHeaderClick(dataKey);
+                        sortEnabled && sort(dataKey, newSortDirection), onHeaderClick(dataKey, columnData);
                     };
                     return _react2["default"].createElement("div", {
                         key: "Header-Col" + columnIndex,
