@@ -82,6 +82,7 @@ describe('FlexTable', () => {
         <FlexColumn
           label='Name'
           dataKey='name'
+          columnData={ {data: 123} }
           width={50}
           cellRenderer={cellRenderer}
           cellDataGetter={cellDataGetter}
@@ -332,7 +333,7 @@ describe('FlexTable', () => {
       let onHeaderClickCalls = []
       const table = renderTable({
         disableSort: true,
-        onHeaderClick: (dataKey) => onHeaderClickCalls.push({dataKey})
+        onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push({dataKey, columnData})
       })
       const tableDOMNode = findDOMNode(table)
       const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
@@ -340,13 +341,14 @@ describe('FlexTable', () => {
       Simulate.click(nameColumn)
       expect(onHeaderClickCalls.length).toEqual(1)
       expect(onHeaderClickCalls[0].dataKey).toEqual('name')
+      expect(onHeaderClickCalls[0].columnData.data).toEqual(123)
     })
 
     it('should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is enabled', () => {
       let onHeaderClickCalls = []
       const table = renderTable({
         disableSort: false,
-        onHeaderClick: (dataKey) => onHeaderClickCalls.push({dataKey})
+        onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push({dataKey, columnData})
       })
       const tableDOMNode = findDOMNode(table)
       const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
@@ -354,6 +356,7 @@ describe('FlexTable', () => {
       Simulate.click(nameColumn)
       expect(onHeaderClickCalls.length).toEqual(1)
       expect(onHeaderClickCalls[0].dataKey).toEqual('name')
+      expect(onHeaderClickCalls[0].columnData.data).toEqual(123)
     })
   })
 
