@@ -99,7 +99,6 @@ export default class VirtualScrollExample extends Component {
             value={virtualScrollRowHeight}
           />
           <LabeledInput
-            disabled={useDynamicRowHeight}
             label='Overscan'
             name='overscanRowsCount'
             onChange={event => this.setState({ overscanRowsCount: parseInt(event.target.value, 10) || 0 })}
