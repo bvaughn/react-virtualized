@@ -20,6 +20,7 @@ export default class VirtualScrollExample extends Component {
     super(props)
 
     this.state = {
+      overscanRowsCount: 0,
       rowsCount: props.list.size,
       scrollToIndex: undefined,
       useDynamicRowHeight: false,
@@ -37,6 +38,7 @@ export default class VirtualScrollExample extends Component {
 
   render () {
     const {
+      overscanRowsCount,
       rowsCount,
       scrollToIndex,
       useDynamicRowHeight,
@@ -96,6 +98,12 @@ export default class VirtualScrollExample extends Component {
             onChange={event => this.setState({ virtualScrollRowHeight: parseInt(event.target.value, 10) || 1 })}
             value={virtualScrollRowHeight}
           />
+          <LabeledInput
+            label='Overscan'
+            name='overscanRowsCount'
+            onChange={event => this.setState({ overscanRowsCount: parseInt(event.target.value, 10) || 0 })}
+            value={overscanRowsCount}
+          />
         </InputRow>
 
         <VirtualScroll
@@ -103,6 +111,7 @@ export default class VirtualScrollExample extends Component {
           className={styles.VirtualScroll}
           height={virtualScrollHeight}
           noRowsRenderer={this._noRowsRenderer}
+          overscanRowsCount={overscanRowsCount}
           rowsCount={rowsCount}
           rowHeight={useDynamicRowHeight ? this._getRowHeight : virtualScrollRowHeight}
           rowRenderer={this._rowRenderer}

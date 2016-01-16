@@ -67,6 +67,11 @@ export default class FlexTable extends Component {
      */
     onRowsRendered: PropTypes.func,
     /**
+     * Number of rows to render above/below the visible bounds of the list.
+     * These rows can help for smoother scrolling on touch devices.
+     */
+    overscanRowsCount: PropTypes.number,
+    /**
      * Optional CSS class to apply to all table rows (including the header row).
      * This property can be a CSS class name (string) or a function that returns a class name.
      * If a function is provided its signature should be: (rowIndex: number): string
@@ -132,6 +137,7 @@ export default class FlexTable extends Component {
       height,
       noRowsRenderer,
       onRowsRendered,
+      overscanRowsCount,
       rowClassName,
       rowHeight,
       rowsCount,
@@ -168,6 +174,7 @@ export default class FlexTable extends Component {
           height={availableRowsHeight}
           noRowsRenderer={noRowsRenderer}
           onRowsRendered={onRowsRendered}
+          overscanRowsCount={overscanRowsCount}
           rowHeight={rowHeight}
           rowRenderer={rowRenderer}
           rowsCount={rowsCount}
