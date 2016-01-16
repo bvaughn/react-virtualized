@@ -106,6 +106,7 @@
 /* VirtualScroll default theme */
 
 .VirtualScroll {
+  overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
 

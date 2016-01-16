@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.1.0
+Added `-webkit-overflow-scrolling: touch` for smoother inertial scrolling on mobile devices.
+
 #### 4.0.2
 Additional `columnData` parameter passed to `onHeaderClick` callback.
 
