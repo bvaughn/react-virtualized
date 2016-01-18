@@ -50,7 +50,7 @@ export function getUpdatedOffsetForIndex ({
   containerSize,
   currentOffset,
   targetIndex
-}) {
+  }, scrollToIndexFromTop, scrollToIndexFromBot) {
   if (cellMetadata.length === 0) {
     return 0
   }
@@ -62,9 +62,16 @@ export function getUpdatedOffsetForIndex ({
   const minOffset = maxOffset - containerSize + datum.size
   const newOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset))
 
+  if (scrollToIndexFromTop) {
+    return maxOffset
+  }
+
+  if (scrollToIndexFromBot) {
+    return minOffset
+  }
+
   return newOffset
 }
-
 /**
  * Determines the range of cells to display for a given offset in order to fill the specified container.
  *

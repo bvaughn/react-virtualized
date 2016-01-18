@@ -14,6 +14,8 @@ Describes the header and cell contents of a table column
 | rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Rendered rows must have a unique `key` attribute. |
 | rowsCount | Number | ✓ | Number of rows in list. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
+| scrollToIndexFromTop | Boolean |  | A Boolean that determines whether the scrollToIndex will be forcefully from top: `scrollToIndexFromTop: {true}`|
+| scrollToIndexFromBot | Boolean |  | A Boolean that determines whether the scrollToIndex will be forcefully from bot: `scrollToIndexFromBot: {true}`|
 
 ### Public Methods
 

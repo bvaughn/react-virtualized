@@ -49,12 +49,18 @@ export default class VirtualScroll extends Component {
     /** Number of rows in list. */
     rowsCount: PropTypes.number.isRequired,
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
-    scrollToIndex: PropTypes.number
+    scrollToIndex: PropTypes.number,
+    /** if you want the scrollToIndex property to forcefully show from top make this prop true*/
+    scrollToIndexFromTop: PropTypes.bool,
+    /** if you want the scrollToIndex property to forcefully show from bottom make this prop true*/
+    scrollToIndexFromBot: PropTypes.bool
   }
 
   static defaultProps = {
     noRowsRenderer: () => null,
-    onRowsRendered: () => null
+    onRowsRendered: () => null,
+    scrollToIndexFromTop: false,
+    scrollToIndexFromBot: false
   }
 
   constructor (props, context) {
@@ -383,7 +389,7 @@ export default class VirtualScroll extends Component {
         containerSize: height,
         currentOffset: scrollTop,
         targetIndex: scrollToIndex
-      })
+      }, this.props.scrollToIndexFromTop, this.props.scrollToIndexFromBot)
 
       if (scrollTop !== calculatedScrollTop) {
         this.setState({ scrollTop: calculatedScrollTop })
