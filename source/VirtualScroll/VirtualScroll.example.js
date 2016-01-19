@@ -147,12 +147,9 @@ export default class VirtualScrollExample extends Component {
 
   _rowRenderer (index) {
     const { list } = this.props
-    const { useDynamicRowHeight, virtualScrollRowHeight } = this.state
+    const { useDynamicRowHeight } = this.state
 
     const datum = list.get(index)
-    const height = useDynamicRowHeight
-      ? datum.size
-      : virtualScrollRowHeight
 
     let additionalContent
 
@@ -169,9 +166,8 @@ export default class VirtualScrollExample extends Component {
 
     return (
       <div
-        key={index}
         className={styles.row}
-        style={{ height }}
+        style={{ height: '100%' }}
       >
         <div
           className={styles.letter}

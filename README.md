@@ -55,11 +55,7 @@ ReactDOM.render(
     rowsCount={list.length}
     rowHeight={20}
     rowRenderer={
-      index => (
-        <div key={index}>
-          {list[index]}
-        </div>
-      )
+      index => list[index] // Could also be a DOM element
     }
   />,
   document.getElementById('example')
@@ -130,11 +126,7 @@ ReactDOM.render(
       rowsCount={list.length}
       rowHeight={20}
       rowRenderer={
-        index => (
-          <div key={index}>
-            {list[index]}
-          </div>
-        )
+        index => list[index] // Could also be a DOM element
       }
     />
   </AutoSizer>,
@@ -178,11 +170,7 @@ ReactDOM.render(
       rowsCount={list.length}
       rowHeight={20}
       rowRenderer={
-        index => (
-          <div key={index}>
-            {list[index]}
-          </div>
-        )
+        index => list[index] // Could also be a DOM element
       }
     />
   </InfiniteLoader>,
