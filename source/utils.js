@@ -34,6 +34,13 @@ export function findNearestCell ({
 findNearestCell.EQUAL_OR_LOWER = 1
 findNearestCell.EQUAL_OR_HIGHER = 2
 
+export function getOverscanIndices ({ overscanRowsCount, rowsCount, startIndex, stopIndex }) {
+  return {
+    overscanStartIndex: Math.max(0, startIndex - overscanRowsCount),
+    overscanStopIndex: Math.min(rowsCount - 1, stopIndex + overscanRowsCount)
+  }
+}
+
 /**
  * Determines a new offset that ensures a certain cell is visible, given the current offset.
  * If the cell is already visible then the current offset will be returned.
@@ -148,10 +155,12 @@ export function initCellMetadata ({
  * Helper utility that updates the specified onRowsRendered callback on when start or stop indices have changed.
  */
 export function initOnRowsRenderedHelper () {
-  let cachedStartIndex, cachedStopIndex
+  let cachedOverscanRowsCount, cachedStartIndex, cachedStopIndex
 
   return ({
     onRowsRendered,
+    overscanRowsCount,
+    rowsCount,
     startIndex,
     stopIndex
   }) => {
@@ -160,13 +169,25 @@ export function initOnRowsRenderedHelper () {
       stopIndex >= 0 &&
       (
         startIndex !== cachedStartIndex ||
-        stopIndex !== cachedStopIndex
+        stopIndex !== cachedStopIndex ||
+        overscanRowsCount !== cachedOverscanRowsCount
       )
     ) {
+      cachedOverscanRowsCount = overscanRowsCount
       cachedStartIndex = startIndex
       cachedStopIndex = stopIndex
 
-      onRowsRendered({ startIndex, stopIndex })
+      const {
+        overscanStartIndex,
+        overscanStopIndex
+      } = getOverscanIndices({
+        overscanRowsCount,
+        rowsCount,
+        startIndex,
+        stopIndex
+      })
+
+      onRowsRendered({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex })
     }
   }
 }

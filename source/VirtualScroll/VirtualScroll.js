@@ -1,5 +1,6 @@
 /** @flow */
 import {
+  getOverscanIndices,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
@@ -101,7 +102,7 @@ export default class VirtualScroll extends Component {
   }
 
   componentDidMount () {
-    const { onRowsRendered, scrollToIndex } = this.props
+    const { onRowsRendered, overscanRowsCount, rowsCount, scrollToIndex } = this.props
 
     if (scrollToIndex >= 0) {
       // Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
@@ -114,13 +115,15 @@ export default class VirtualScroll extends Component {
     // Update onRowsRendered callback
     this._OnRowsRenderedHelper({
       onRowsRendered,
+      overscanRowsCount,
+      rowsCount,
       startIndex: this._renderedStartIndex,
       stopIndex: this._renderedStopIndex
     })
   }
 
   componentDidUpdate (prevProps, prevState) {
-    const { height, onRowsRendered, rowsCount, rowHeight, scrollToIndex } = this.props
+    const { height, onRowsRendered, overscanRowsCount, rowsCount, rowHeight, scrollToIndex } = this.props
     const { scrollTop } = this.state
 
     // Make sure any changes to :scrollTop (from :scrollToIndex) get applied
@@ -162,6 +165,8 @@ export default class VirtualScroll extends Component {
     // Update onRowsRendered callback if start/stop indices have changed
     this._OnRowsRenderedHelper({
       onRowsRendered,
+      overscanRowsCount,
+      rowsCount,
       startIndex: this._renderedStartIndex,
       stopIndex: this._renderedStopIndex
     })
@@ -251,8 +256,18 @@ export default class VirtualScroll extends Component {
       this._renderedStartIndex = start
       this._renderedStopIndex = stop
 
-      start = Math.max(0, start - overscanRowsCount)
-      stop = Math.min(rowsCount - 1, stop + overscanRowsCount)
+      const {
+        overscanStartIndex,
+        overscanStopIndex
+      } = getOverscanIndices({
+        overscanRowsCount,
+        rowsCount,
+        startIndex: start,
+        stopIndex: stop
+      })
+
+      start = overscanStartIndex
+      stop = overscanStopIndex
 
       for (let i = start; i <= stop; i++) {
         let datum = this._cellMetadata[i]

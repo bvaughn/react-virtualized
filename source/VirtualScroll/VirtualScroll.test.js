@@ -25,6 +25,7 @@ describe('VirtualScroll', () => {
     height = 100,
     noRowsRenderer = undefined,
     onRowsRendered = undefined,
+    overscanRowsCount = 0,
     rowHeight = 10,
     rowsCount = list.size,
     scrollToIndex = undefined,
@@ -47,6 +48,7 @@ describe('VirtualScroll', () => {
         height={height}
         noRowsRenderer={noRowsRenderer}
         onRowsRendered={onRowsRendered}
+        overscanRowsCount={overscanRowsCount}
         rowHeight={rowHeight}
         rowRenderer={rowRenderer}
         rowsCount={rowsCount}
@@ -236,6 +238,55 @@ describe('VirtualScroll', () => {
     it('should use a custom :className if specified', () => {
       const node = findDOMNode(renderList({ className: 'foo' }))
       expect(node.className).toContain('foo')
+    })
+  })
+
+  describe('overscanRowsCount', () => {
+    it('should not overscan by default', () => {
+      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+      renderList({
+        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params)
+      })
+      expect(overscanStartIndex).toEqual(startIndex)
+      expect(overscanStopIndex).toEqual(stopIndex)
+    })
+
+    it('should overscan the specified amount', () => {
+      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+      renderList({
+        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+        overscanRowsCount: 10,
+        scrollToIndex: 30
+      })
+      expect(overscanStartIndex).toEqual(11)
+      expect(startIndex).toEqual(21)
+      expect(stopIndex).toEqual(30)
+      expect(overscanStopIndex).toEqual(40)
+    })
+
+    it('should not overscan beyond the start of the list', () => {
+      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+      renderList({
+        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+        overscanRowsCount: 10
+      })
+      expect(overscanStartIndex).toEqual(0)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(9)
+      expect(overscanStopIndex).toEqual(19)
+    })
+
+    it('should not overscan beyond the end of the list', () => {
+      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+      renderList({
+        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+        overscanRowsCount: 10,
+        rowsCount: 15
+      })
+      expect(overscanStartIndex).toEqual(0)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(9)
+      expect(overscanStopIndex).toEqual(14)
     })
   })
 })

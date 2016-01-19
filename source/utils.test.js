@@ -1,4 +1,5 @@
 import {
+  getOverscanIndices,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
@@ -107,14 +108,20 @@ describe('getVisibleCellIndices', () => {
 describe('initOnRowsRenderedHelper', () => {
   function OnRowsRendered () {
     let numCalls = 0
+    let overscanStartIndex
+    let overscanStopIndex
     let startIndex
     let stopIndex
 
     return {
       numCalls: () => numCalls,
+      overscanStartIndex: () => overscanStartIndex,
+      overscanStopIndex: () => overscanStopIndex,
       startIndex: () => startIndex,
       stopIndex: () => stopIndex,
       update: (params) => {
+        overscanStartIndex = params.overscanStartIndex
+        overscanStopIndex = params.overscanStopIndex
         startIndex = params.startIndex
         stopIndex = params.stopIndex
         numCalls++
@@ -196,5 +203,73 @@ describe('initOnRowsRenderedHelper', () => {
     expect(util.numCalls()).toEqual(3)
     expect(util.startIndex()).toEqual(1)
     expect(util.stopIndex()).toEqual(2)
+  })
+
+  it('should call onRowsRendered if overscanRowsCount changes', () => {
+    const util = new OnRowsRendered()
+    const helper = initOnRowsRenderedHelper()
+    helper({
+      onRowsRendered: util.update,
+      overscanRowsCount: 1,
+      rowsCount: 10,
+      startIndex: 0,
+      stopIndex: 1
+    })
+    expect(util.numCalls()).toEqual(1)
+    expect(util.startIndex()).toEqual(0)
+    expect(util.stopIndex()).toEqual(1)
+    expect(util.overscanStartIndex()).toEqual(0)
+    expect(util.overscanStopIndex()).toEqual(2)
+    helper({
+      onRowsRendered: util.update,
+      overscanRowsCount: 2,
+      rowsCount: 10,
+      startIndex: 0,
+      stopIndex: 1
+    })
+    expect(util.numCalls()).toEqual(2)
+    expect(util.startIndex()).toEqual(0)
+    expect(util.stopIndex()).toEqual(1)
+    expect(util.overscanStartIndex()).toEqual(0)
+    expect(util.overscanStopIndex()).toEqual(3)
+  })
+})
+
+describe('getOverscanIndices', () => {
+  function testHelper (rowsCount, startIndex, stopIndex, overscanRowsCount) {
+    return getOverscanIndices({
+      overscanRowsCount,
+      rowsCount,
+      startIndex,
+      stopIndex
+    })
+  }
+
+  it('should not overscan if :overscanRowsCount is 0', () => {
+    expect(testHelper(100, 10, 20, 0)).toEqual({
+      overscanStartIndex: 10,
+      overscanStopIndex: 20
+    })
+  })
+
+  it('should overscan by the specified :overscanRowsCount', () => {
+    expect(testHelper(100, 10, 20, 10)).toEqual({
+      overscanStartIndex: 0,
+      overscanStopIndex: 30
+    })
+  })
+
+  it('should not overscan beyond the start of the list', () => {
+    expect(testHelper(100, 5, 15, 10)).toEqual({
+      overscanStartIndex: 0,
+      overscanStopIndex: 25
+    })
+  })
+
+  it('should not overscan beyond the end of the list', () => {
+    expect(testHelper(25, 10, 20, 10)).toEqual({
+      overscanStartIndex: 0,
+      overscanStopIndex: 24
+    })
   })
 })
