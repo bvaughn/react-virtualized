@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.2.1
+Set `VirtualScroll` default style to `width: 100%` to be more inline with default `FlexTable` behavior.
+
 #### 4.2.0
 Replaced `React.cloneElement` with wrapper element in order to:
 * Better support for pure function components; (they were not compatible with inline style positioning).
