@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+#### 4.2.0
+Replaced `React.cloneElement` with wrapper element in order to:
+* Better support for pure function components; (they were not compatible with inline style positioning).
+* Relax the requirement of `rowRenderer` having to specify a `key`.
+* Support `React.PropTypes.node` children (including plain strings, numbers, etc.) instead of just elements.
+
 #### 4.1.0
 Added `-webkit-overflow-scrolling: touch` for smoother inertial scrolling on mobile devices.
 

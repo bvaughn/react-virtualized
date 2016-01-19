@@ -873,13 +873,7 @@
             Object.defineProperty(exports, "__esModule", {
                 value: !0
             });
-            var _extends = Object.assign || function(target) {
-                for (var i = 1; i < arguments.length; i++) {
-                    var source = arguments[i];
-                    for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
-                }
-                return target;
-            }, _createClass = function() {
+            var _createClass = function() {
                 function defineProperties(target, props) {
                     for (var i = 0; i < props.length; i++) {
                         var descriptor = props[i];
@@ -1050,14 +1044,15 @@
                             this._renderedStartIndex = start, this._renderedStopIndex = _stop;
                             for (var i = start; _stop >= i; i++) {
                                 var datum = this._cellMetadata[i], child = rowRenderer(i);
-                                child = _react2["default"].cloneElement(child, {
-                                    style: _extends({}, child.props.style, {
+                                child = _react2["default"].createElement("div", {
+                                    key: i,
+                                    style: {
                                         position: "absolute",
                                         top: datum.offset,
                                         width: "100%",
                                         height: this._getRowHeight(i)
-                                    })
-                                }), childrenToDisplay.push(child);
+                                    }
+                                }, child), childrenToDisplay.push(child);
                             }
                         }
                         return _react2["default"].createElement("div", {
