@@ -247,17 +247,18 @@ export default class VirtualScroll extends Component {
       for (let i = start; i <= stop; i++) {
         let datum = this._cellMetadata[i]
         let child = rowRenderer(i)
-        child = React.cloneElement(
-          child,
-          {
-            style: {
-              ...child.props.style,
+        child = (
+          <div
+            key={i}
+            style={{
               position: 'absolute',
               top: datum.offset,
               width: '100%',
               height: this._getRowHeight(i)
-            }
-          }
+            }}
+          >
+            {child}
+          </div>
         )
 
         childrenToDisplay.push(child)

@@ -11,7 +11,7 @@ Describes the header and cell contents of a table column
 | noRowsRenderer |  | Function | Callback used to render placeholder content when `rowsCount` is 0 |
 | onRowsRendered |  | Function | Callback invoked with information about the slice of rows that were just rendered: `({ startIndex, stopIndex }): void` |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
-| rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Rendered rows must have a unique `key` attribute. |
+| rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Signature should look like `(index: number): React.PropTypes.node` |
 | rowsCount | Number | ✓ | Number of rows in list. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 
