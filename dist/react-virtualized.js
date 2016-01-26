@@ -570,8 +570,11 @@
 	       * (index: number): any
 	       */
                     rowGetter: _react.PropTypes.func.isRequired,
-                    /** Fixed height of table row */
-                    rowHeight: _react.PropTypes.number.isRequired,
+                    /**
+	       * Either a fixed row height (number) or a function that returns the height of a row given its index.
+	       * (index: number): number
+	       */
+                    rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
                     /** Number of rows in table. */
                     rowsCount: _react.PropTypes.number.isRequired,
                     /**
@@ -681,7 +684,7 @@
             }, {
                 key: "_createRow",
                 value: function(rowIndex) {
-                    var _this2 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, rowHeight = _props3.rowHeight, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
+                    var _this2 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
                         return _this2._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
                     });
                     return _react2["default"].createElement("div", {
@@ -691,7 +694,7 @@
                             return onRowClick(rowIndex);
                         },
                         style: {
-                            height: rowHeight
+                            height: this._getRowHeight(rowIndex)
                         }
                     }, renderedRow);
                 }
@@ -709,6 +712,12 @@
                     return _react2["default"].Children.map(items, function(column, columnIndex) {
                         return _this3._createHeader(column, columnIndex);
                     });
+                }
+            }, {
+                key: "_getRowHeight",
+                value: function(rowIndex) {
+                    var rowHeight = this.props.rowHeight;
+                    return rowHeight instanceof Function ? rowHeight(rowIndex) : rowHeight;
                 }
             } ]), FlexTable;
         }(_react.Component);
@@ -930,7 +939,10 @@
 	       * ({ startIndex, stopIndex }): void
 	       */
                         onRowsRendered: _react.PropTypes.func,
-                        /** Either a fixed row height (number) or a function that returns the height of a row given its index. */
+                        /**
+	       * Either a fixed row height (number) or a function that returns the height of a row given its index.
+	       * (index: number): number
+	       */
                         rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
                         /** Responsbile for rendering a row given an index */
                         rowRenderer: _react.PropTypes.func.isRequired,

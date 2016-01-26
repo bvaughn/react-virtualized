@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.3.0
+`FlexTable` now supports dynamic row-heights (in the same way as `VirtualScroll`).
+
 #### 4.2.1
 Set `VirtualScroll` default style to `width: 100%` to be more inline with default `FlexTable` behavior.
 
