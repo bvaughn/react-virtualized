@@ -16,8 +16,15 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  flexDirection: row;
-  alignItems: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   overflow: hidden;
 }
 .FlexTable__headerTruncatedText {
@@ -30,8 +37,15 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  flexDirection: row;
-  alignItems: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   overflow: hidden;
 }
 
@@ -54,7 +68,11 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  flexDirection: row;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
   overflow: hidden;
 }
 .FlexTable__sortableHeaderColumn {

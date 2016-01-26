@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.3.1
+Fixed small CSS property misnaming issue.
+
 #### 4.3.0
 `FlexTable` now supports dynamic row-heights (in the same way as `VirtualScroll`).
 

@@ -13,8 +13,8 @@
   font-weight: 700;
   text-transform: uppercase;
   display: flex;
-  flexDirection: row;
-  alignItems: center;
+  flex-direction: row;
+  align-items: center;
   overflow: hidden;
 }
 .FlexTable__headerTruncatedText {
@@ -24,8 +24,8 @@
 }
 .FlexTable__row {
   display: flex;
-  flexDirection: row;
-  alignItems: center;
+  flex-direction: row;
+  align-items: center;
   overflow: hidden;
 }
 
@@ -42,7 +42,7 @@
 .FlexTable__headerColumn {
   align-items: center;
   display: flex;
-  flexDirection: row;
+  flex-direction: row;
   overflow: hidden;
 }
 .FlexTable__sortableHeaderColumn {
