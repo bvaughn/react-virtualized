@@ -42,7 +42,10 @@ export default class VirtualScroll extends Component {
      * ({ startIndex, stopIndex }): void
      */
     onRowsRendered: PropTypes.func,
-    /** Either a fixed row height (number) or a function that returns the height of a row given its index. */
+    /**
+     * Either a fixed row height (number) or a function that returns the height of a row given its index.
+     * (index: number): number
+     */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
     /** Responsbile for rendering a row given an index */
     rowRenderer: PropTypes.func.isRequired,

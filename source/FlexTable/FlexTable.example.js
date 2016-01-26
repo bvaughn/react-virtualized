@@ -19,15 +19,17 @@ export default class TableExample extends Component {
     super(props, context)
 
     this.state = {
+      headerHeight: 30,
+      height: 270,
+      rowHeight: 40,
       rowsCount: 1000,
       scrollToIndex: undefined,
       sortBy: 'name',
       sortDirection: SortDirection.ASC,
-      height: 270,
-      headerHeight: 30,
-      rowHeight: 40
+      useDynamicRowHeight: false
     }
 
+    this._getRowHeight = this._getRowHeight.bind(this)
     this._noRowsRenderer = this._noRowsRenderer.bind(this)
     this._onRowsCountChange = this._onRowsCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
@@ -38,11 +40,12 @@ export default class TableExample extends Component {
     const {
       headerHeight,
       height,
+      rowHeight,
       rowsCount,
       scrollToIndex,
       sortBy,
       sortDirection,
-      rowHeight
+      useDynamicRowHeight
     } = this.state
 
     const { list } = this.props
@@ -71,6 +74,18 @@ export default class TableExample extends Component {
           This allows it to have a fixed header scrollable body content.
           It also makes use of <code>VirtualScroll</code> so that large lists of tabular data can be rendered efficiently.
           Adjust its configurable properties below to see how it reacts.
+        </ContentBoxParagraph>
+
+        <ContentBoxParagraph>
+          <label className={styles.checkboxLabel}>
+            <input
+              className={styles.checkbox}
+              type='checkbox'
+              value={useDynamicRowHeight}
+              onChange={event => this._updateUseDynamicRowHeight(event.target.checked)}
+            />
+            Use dynamic row heights?
+          </label>
         </ContentBoxParagraph>
 
         <InputRow>
@@ -115,7 +130,7 @@ export default class TableExample extends Component {
           height={height}
           noRowsRenderer={this._noRowsRenderer}
           rowClassName={::this._rowClassName}
-          rowHeight={rowHeight}
+          rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
           rowGetter={rowGetter}
           rowsCount={rowsCount}
           sort={this._sort}
@@ -150,6 +165,11 @@ export default class TableExample extends Component {
         </FlexTable>
       </ContentBox>
     )
+  }
+
+  _getRowHeight (index) {
+    const { list } = this.props
+    return list.get(index).size
   }
 
   _noRowsRenderer () {
@@ -190,5 +210,11 @@ export default class TableExample extends Component {
 
   _sort (sortBy, sortDirection) {
     this.setState({ sortBy, sortDirection })
+  }
+
+  _updateUseDynamicRowHeight (value) {
+    this.setState({
+      useDynamicRowHeight: value
+    })
   }
 }

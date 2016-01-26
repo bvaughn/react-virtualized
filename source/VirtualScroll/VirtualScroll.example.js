@@ -197,7 +197,6 @@ export default class VirtualScrollExample extends Component {
 
   _updateUseDynamicRowHeight (value) {
     this.setState({
-      rowsCount: 100,
       useDynamicRowHeight: value
     })
   }

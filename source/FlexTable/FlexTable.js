@@ -77,8 +77,11 @@ export default class FlexTable extends Component {
      * (index: number): any
      */
     rowGetter: PropTypes.func.isRequired,
-    /** Fixed height of table row */
-    rowHeight: PropTypes.number.isRequired,
+    /**
+     * Either a fixed row height (number) or a function that returns the height of a row given its index.
+     * (index: number): number
+     */
+    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
     /** Number of rows in table. */
     rowsCount: PropTypes.number.isRequired,
     /**
@@ -265,8 +268,7 @@ export default class FlexTable extends Component {
       children,
       onRowClick,
       rowClassName,
-      rowGetter,
-      rowHeight
+      rowGetter
     } = this.props
 
     const rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName
@@ -287,7 +289,7 @@ export default class FlexTable extends Component {
         className={cn('FlexTable__row', rowClass)}
         onClick={() => onRowClick(rowIndex)}
         style={{
-          height: rowHeight
+          height: this._getRowHeight(rowIndex)
         }}
       >
         {renderedRow}
@@ -317,6 +319,13 @@ export default class FlexTable extends Component {
     return React.Children.map(items, (column, columnIndex) =>
       this._createHeader(column, columnIndex)
     )
+  }
+  _getRowHeight (rowIndex) {
+    const { rowHeight } = this.props
+
+    return rowHeight instanceof Function
+      ? rowHeight(rowIndex)
+      : rowHeight
   }
 }
 
