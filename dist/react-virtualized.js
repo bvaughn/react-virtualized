@@ -1329,7 +1329,20 @@
     }, /* 15 */
     /***/
     function(module, exports) {
-        // TODO Document
+        /**
+	 * Helper method that determines when to recalculate row or column metadata.
+	 *
+	 * @param cellsCount Number of rows or columns in the current axis
+	 * @param cellsSize Width or height of cells for the current axis
+	 * @param computeMetadataCallback Method to invoke if cell metadata should be recalculated
+	 * @param computeMetadataCallbackProps Parameters to pass to :computeMetadataCallback
+	 * @param computeMetadataOnNextUpdate Flag specifying that metadata should be recalculated
+	 * @param nextCellsCount Newly updated number of rows or columns in the current axis
+	 * @param nextCellsSize Newly updated width or height of cells for the current axis
+	 * @param nextScrollToIndex Newly updated scroll-to-index
+	 * @param scrollToIndex Scroll-to-index
+	 * @param updateScrollOffsetForScrollToIndex Callback to invoke if the scroll position should be recalculated
+	 */
         "use strict";
         function computeCellMetadataAndUpdateScrollOffsetHelper(_ref) {
             var cellsCount = _ref.cellsCount, cellSize = _ref.cellSize, computeMetadataCallback = _ref.computeMetadataCallback, computeMetadataCallbackProps = _ref.computeMetadataCallbackProps, computeMetadataOnNextUpdate = _ref.computeMetadataOnNextUpdate, nextCellsCount = _ref.nextCellsCount, nextCellSize = _ref.nextCellSize, nextScrollToIndex = _ref.nextScrollToIndex, scrollToIndex = _ref.scrollToIndex, updateScrollOffsetForScrollToIndex = _ref.updateScrollOffsetForScrollToIndex;
@@ -1430,7 +1443,21 @@
                 cachedIndices = indices, allInitialized && indexChanged && callback(indices);
             };
         }
-        // TODO Document
+        /**
+	 * Helper function that determines when to update scroll offsets to ensure that a scroll-to-index remains visible.
+	 *
+	 * @param cellMetadata Metadata initially computed by initCellMetadata()
+	 * @param cellsCount Number of rows or columns in the current axis
+	 * @param cellsSize Width or height of cells for the current axis
+	 * @param previousCellsCount Previous number of rows or columns
+	 * @param previousCellsSize Previous width or height of cells
+	 * @param previousScrollToIndex Previous scroll-to-index
+	 * @param previousSize Previous width or height of the virtualized container
+	 * @param scrollOffset Current scrollLeft or scrollTop
+	 * @param scrollToIndex Scroll-to-index
+	 * @param size Width or height of the virtualized container
+	 * @param updateScrollIndexCallback Callback to invoke with an optional scroll-to-index override
+	 */
         function updateScrollIndexHelper(_ref7) {
             var cellMetadata = _ref7.cellMetadata, cellsCount = _ref7.cellsCount, cellSize = _ref7.cellSize, previousCellsCount = _ref7.previousCellsCount, previousCellSize = _ref7.previousCellSize, previousScrollToIndex = _ref7.previousScrollToIndex, previousSize = _ref7.previousSize, scrollOffset = _ref7.scrollOffset, scrollToIndex = _ref7.scrollToIndex, size = _ref7.size, updateScrollIndexCallback = _ref7.updateScrollIndexCallback, hasScrollToIndex = scrollToIndex >= 0 && cellsCount > scrollToIndex, sizeHasChanged = size !== previousSize || !previousCellSize || "number" == typeof cellSize && cellSize !== previousCellSize;
             // If we have a new scroll target OR if height/row-height has changed,
