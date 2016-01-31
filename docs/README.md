@@ -5,6 +5,7 @@ Documentation
 
 * [AutoSizer](AutoSizer.md)
 * [FlexColumn](FlexColumn.md)
+* [Grid](Grid.md)
 * [FlexTable](FlexTable.md)
 * [InfiniteLoader](InfiniteLoader.md)
 * [SortDirection](SortDirection.md)

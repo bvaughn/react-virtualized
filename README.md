@@ -103,6 +103,37 @@ ReactDOM.render(
 );
 ```
 
+#### Grid Example
+
+Below is a very basic `Grid` example. The grid displays an array of objects with fixed row and column sizes. (Dynamic sizes are also supported but this example is intended to be basic.) [See here](blob/master/source/Grid/Grid.example.js) for a more full-featured example with dynamic cell sizes and more.
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Grid } from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
+
+// Grid data as an array of arrays
+const list = [
+  ['Brian Vaughn', 'Software Engineer', 'Sunnyvale', 'CA', 94086 /* ... */ ]
+  // And so on...
+];
+
+// Render your grid
+ReactDOM.render(
+  <Grid
+    width={300}
+    height={300}
+    columnWidth={100}
+    rowHeight={30}
+    columnsCount={list.length}
+    rowsCount={list.length}
+    renderCell={({ columnIndex, rowIndex }) => list[rowIndex][columnIndex]}
+  />,
+  document.getElementById('example')
+);
+```
+
 #### AutoSizer Example
 `VirtualScroll` and `FlexTable` require explicit dimensions but sometimes you just want a component to just grow to fill all of the available space. In that case you should use the `AutoSizer` component. Building on the `VirtualScroll` example above...
 

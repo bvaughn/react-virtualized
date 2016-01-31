@@ -77,5 +77,7 @@ describe('AutoSizer', () => {
     })
   })
 
+  // TODO Test :disableWidth and :disableHeight
+
   // TODO It would be nice to test that resize events update the width/height
 })

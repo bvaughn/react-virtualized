@@ -15,7 +15,11 @@ export default class AutoSizer extends Component {
     /** Component to manage width/height of */
     children: PropTypes.element,
     /** Optional CSS class name */
-    className: PropTypes.string
+    className: PropTypes.string,
+    /** Disable dynamic :height property */
+    disableHeight: PropTypes.bool,
+    /** Disable dynamic :width property */
+    disableWidth: PropTypes.bool
   }
 
   constructor (props) {
@@ -44,11 +48,21 @@ export default class AutoSizer extends Component {
   }
 
   render () {
-    const { children, className, ...props } = this.props
+    const { children, className, disableHeight, disableWidth, ...props } = this.props
     const { height, width } = this.state
 
+    const childProps = {}
+
+    if (!disableHeight) {
+      childProps.height = height
+    }
+
+    if (!disableWidth) {
+      childProps.width = width
+    }
+
     let child = React.Children.only(children)
-    child = React.cloneElement(child, { height, width })
+    child = React.cloneElement(child, childProps)
 
     return (
       <div

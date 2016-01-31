@@ -2,7 +2,7 @@ import {
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
-  initOnRowsRenderedHelper
+  initOnSectionRenderedHelper
 } from './utils'
 
 // Default cell sizes and offsets for use in below tests
@@ -104,7 +104,7 @@ describe('getVisibleCellIndices', () => {
   })
 })
 
-describe('initOnRowsRenderedHelper', () => {
+describe('initOnSectionRenderedHelper', () => {
   function OnRowsRendered () {
     let numCalls = 0
     let startIndex
@@ -124,26 +124,34 @@ describe('initOnRowsRenderedHelper', () => {
 
   it('should not call onRowsRendered if startIndex or stopIndex are invalid', () => {
     const util = new OnRowsRendered()
-    const helper = initOnRowsRenderedHelper()
+    const helper = initOnSectionRenderedHelper()
     helper({
-      onRowsRendered: util.update,
-      startIndex: 0
+      callback: util.update,
+      indices: {
+        startIndex: 0,
+        stopIndex: undefined
+      }
     })
     expect(util.numCalls()).toEqual(0)
     helper({
-      onRowsRendered: util.update,
-      stopIndex: 0
+      callback: util.update,
+      indices: {
+        startIndex: undefined,
+        stopIndex: 0
+      }
     })
     expect(util.numCalls()).toEqual(0)
   })
 
   it('should call onRowsRendered if startIndex and stopIndex are valid', () => {
     const util = new OnRowsRendered()
-    const helper = initOnRowsRenderedHelper()
+    const helper = initOnSectionRenderedHelper()
     helper({
-      onRowsRendered: util.update,
-      startIndex: 0,
-      stopIndex: 1
+      callback: util.update,
+      indices: {
+        startIndex: 0,
+        stopIndex: 1
+      }
     })
     expect(util.numCalls()).toEqual(1)
     expect(util.startIndex()).toEqual(0)
@@ -152,49 +160,63 @@ describe('initOnRowsRenderedHelper', () => {
 
   it('should not call onRowsRendered if startIndex or stopIndex have not changed', () => {
     const util = new OnRowsRendered()
-    const helper = initOnRowsRenderedHelper()
+    const helper = initOnSectionRenderedHelper()
     helper({
-      onRowsRendered: util.update,
-      startIndex: 0,
-      stopIndex: 1
+      callback: util.update,
+      indices: {
+        startIndex: 0,
+        stopIndex: 1
+      }
     })
     expect(util.numCalls()).toEqual(1)
     expect(util.startIndex()).toEqual(0)
     expect(util.stopIndex()).toEqual(1)
     helper({
-      onRowsRendered: util.update,
-      startIndex: 0,
-      stopIndex: 1
+      callback: util.update,
+      indices: {
+        startIndex: 0,
+        stopIndex: 1
+      }
     })
     expect(util.numCalls()).toEqual(1)
   })
 
   it('should not call onRowsRendered if startIndex or stopIndex have changed', () => {
     const util = new OnRowsRendered()
-    const helper = initOnRowsRenderedHelper()
+    const helper = initOnSectionRenderedHelper()
     helper({
-      onRowsRendered: util.update,
-      startIndex: 0,
-      stopIndex: 1
+      callback: util.update,
+      indices: {
+        startIndex: 0,
+        stopIndex: 1
+      }
     })
     expect(util.numCalls()).toEqual(1)
     expect(util.startIndex()).toEqual(0)
     expect(util.stopIndex()).toEqual(1)
     helper({
-      onRowsRendered: util.update,
-      startIndex: 1,
-      stopIndex: 1
+      callback: util.update,
+      indices: {
+        startIndex: 1,
+        stopIndex: 1
+      }
     })
     expect(util.numCalls()).toEqual(2)
     expect(util.startIndex()).toEqual(1)
     expect(util.stopIndex()).toEqual(1)
     helper({
-      onRowsRendered: util.update,
-      startIndex: 1,
-      stopIndex: 2
+      callback: util.update,
+      indices: {
+        startIndex: 1,
+        stopIndex: 2
+      }
     })
     expect(util.numCalls()).toEqual(3)
     expect(util.startIndex()).toEqual(1)
     expect(util.stopIndex()).toEqual(2)
   })
+
+  // TODO Test computeCellMetadataAndUpdateScrollOffsetHelper()
+
+  // TODO Test updateScrollIndexHelper()
 })
