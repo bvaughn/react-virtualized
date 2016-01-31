@@ -13,6 +13,8 @@ import { render } from 'react-dom'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import '../../styles.css'
 
+const COMPONENTS = ['AutoSizer', 'Grid', 'FlexTable', 'InfiniteLoader', 'VirtualScroll']
+
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
 
@@ -22,8 +24,14 @@ class Application extends Component {
   constructor (props) {
     super(props)
 
+    // Support deep links to specific components
+    const matches = window.location.search.match('component=(.+)')
+    const activeComponent = matches && COMPONENTS.includes(matches[1])
+      ? matches[1]
+      : 'VirtualScroll'
+
     this.state = {
-      activeComponent: 'VirtualScroll'
+      activeComponent
     }
   }
 
@@ -31,7 +39,6 @@ class Application extends Component {
     const { activeComponent } = this.state
 
     const setActiveComponent = component => this.setState({ activeComponent: component })
-    const components = ['AutoSizer', 'Grid', 'FlexTable', 'InfiniteLoader', 'VirtualScroll']
 
     return (
       <div className={styles.demo}>
@@ -69,7 +76,7 @@ class Application extends Component {
           </ul>
 
           <ul className={styles.ComponentList}>
-            {components.map(component => (
+            {COMPONENTS.map(component => (
               <ComponentLink
                 key={component}
                 activeComponent={activeComponent}
