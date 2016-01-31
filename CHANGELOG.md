@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 4.4.0
+Added new `Grid` component for virtualizing rows _and_ columns .
+Updated `AutoSizer` component to support managing _only_ `width` or `height` (in addition to both).
+
 #### 4.3.1
 Fixed small CSS property misnaming issue.
 
