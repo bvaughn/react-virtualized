@@ -215,4 +215,8 @@ describe('initOnSectionRenderedHelper', () => {
     expect(util.startIndex()).toEqual(1)
     expect(util.stopIndex()).toEqual(2)
   })
+
+  // TODO Test computeCellMetadataAndUpdateScrollOffsetHelper()
+
+  // TODO Test updateScrollIndexHelper()
 })

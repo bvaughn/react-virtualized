@@ -1,4 +1,17 @@
-// TODO Document
+/**
+ * Helper method that determines when to recalculate row or column metadata.
+ *
+ * @param cellsCount Number of rows or columns in the current axis
+ * @param cellsSize Width or height of cells for the current axis
+ * @param computeMetadataCallback Method to invoke if cell metadata should be recalculated
+ * @param computeMetadataCallbackProps Parameters to pass to :computeMetadataCallback
+ * @param computeMetadataOnNextUpdate Flag specifying that metadata should be recalculated
+ * @param nextCellsCount Newly updated number of rows or columns in the current axis
+ * @param nextCellsSize Newly updated width or height of cells for the current axis
+ * @param nextScrollToIndex Newly updated scroll-to-index
+ * @param scrollToIndex Scroll-to-index
+ * @param updateScrollOffsetForScrollToIndex Callback to invoke if the scroll position should be recalculated
+ */
 export function computeCellMetadataAndUpdateScrollOffsetHelper ({
   cellsCount,
   cellSize,
@@ -206,7 +219,21 @@ export function initOnSectionRenderedHelper () {
   }
 }
 
-// TODO Document
+/**
+ * Helper function that determines when to update scroll offsets to ensure that a scroll-to-index remains visible.
+ *
+ * @param cellMetadata Metadata initially computed by initCellMetadata()
+ * @param cellsCount Number of rows or columns in the current axis
+ * @param cellsSize Width or height of cells for the current axis
+ * @param previousCellsCount Previous number of rows or columns
+ * @param previousCellsSize Previous width or height of cells
+ * @param previousScrollToIndex Previous scroll-to-index
+ * @param previousSize Previous width or height of the virtualized container
+ * @param scrollOffset Current scrollLeft or scrollTop
+ * @param scrollToIndex Scroll-to-index
+ * @param size Width or height of the virtualized container
+ * @param updateScrollIndexCallback Callback to invoke with an optional scroll-to-index override
+ */
 export function updateScrollIndexHelper ({
   cellMetadata,
   cellsCount,
