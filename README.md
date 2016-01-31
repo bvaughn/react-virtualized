@@ -105,7 +105,7 @@ ReactDOM.render(
 
 #### Grid Example
 
-Below is a very basic `Grid` example. The grid display an array is objects with fixed row and column sizes. (Dynamic sizes are also supported but this example is intended to be basic.) [See here](blob/master/source/Grid/Grid.example.js) for a more full-featured example including custom cell renderers, dynamic cell sizes, and more.
+Below is a very basic `Grid` example. The grid displays an array of objects with fixed row and column sizes. (Dynamic sizes are also supported but this example is intended to be basic.) [See here](blob/master/source/Grid/Grid.example.js) for a more full-featured example with dynamic cell sizes and more.
 
 ```javascript
 import React from 'react';

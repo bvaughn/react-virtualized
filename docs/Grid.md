@@ -11,7 +11,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | columnsCount | Number | ✓ | Number of columns in grid. |
 | columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `(index: number): number` |
 | height | Number | ✓ | Height of Grid; this property determines the number of visible (vs virtualized) rows. |
-| noContentRenderer | Function |  | Optional renderer to be used in place of rows when either `rowsCount` or `columnsCount` is 0: `(): PropTypes.node` |
+| noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowsCount` or `columnsCount` is 0: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered: `({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void` |
 | renderCell | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
 | rowsCount | Number | ✓ | Number of rows in grid. |
@@ -23,6 +23,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 ### Public Methods
 
 ##### recomputeGridSize
+
 Recomputes row heights and column widths.
 
 This function should be called if dynamic column or row sizes have changed but nothing else has.
