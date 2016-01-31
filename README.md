@@ -64,7 +64,7 @@ ReactDOM.render(
 
 #### FlexTable Example
 
-Below is a very basic `FlexTable` example. This table has only 2 columns, each containing a simple string. Both have a fixed width and neither is sortable. [See here](blob/master/source/FlexTable/FlexTable.example.js) for a more full-featured example including custom cell renderers, sortable headers, and more.
+Below is a very basic `FlexTable` example. This table has only 2 columns, each containing a simple string. Both have a fixed width and neither is sortable. [See here](source/FlexTable/FlexTable.example.js) for a more full-featured example including custom cell renderers, sortable headers, and more.
 
 ```javascript
 import React from 'react';
@@ -105,7 +105,7 @@ ReactDOM.render(
 
 #### Grid Example
 
-Below is a very basic `Grid` example. The grid displays an array of objects with fixed row and column sizes. (Dynamic sizes are also supported but this example is intended to be basic.) [See here](blob/master/source/Grid/Grid.example.js) for a more full-featured example with dynamic cell sizes and more.
+Below is a very basic `Grid` example. The grid displays an array of objects with fixed row and column sizes. (Dynamic sizes are also supported but this example is intended to be basic.) [See here](source/Grid/Grid.example.js) for a more full-featured example with dynamic cell sizes and more.
 
 ```javascript
 import React from 'react';
