@@ -125,6 +125,8 @@ export default class GridExample extends Component {
             renderCell={this._renderCell}
             rowHeight={useDynamicRowHeights ? this._getRowHeight : rowHeight}
             rowsCount={rowsCount}
+            scrollToColumn={scrollToColumn}
+            scrollToRow={scrollToRow}
             width={0}
           />
         </AutoSizer>
