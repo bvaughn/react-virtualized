@@ -1,3 +1,39 @@
+// TODO Document
+export function computeCellMetadataAndUpdateScrollOffsetHelper ({
+  cellsCount,
+  cellSize,
+  computeMetadataCallback,
+  computeMetadataCallbackProps,
+  computeMetadataOnNextUpdate,
+  nextCellsCount,
+  nextCellSize,
+  nextScrollToIndex,
+  scrollToIndex,
+  updateScrollOffsetForScrollToIndex
+}) {
+  // Don't compare cell sizez if they are functions because inline functions would cause infinite loops.
+  // In that event users should use the manual recompute methods to inform of changes.
+  if (
+    computeMetadataOnNextUpdate ||
+    cellsCount !== nextCellsCount ||
+    (
+      (
+        typeof cellSize === 'number' ||
+        typeof nextCellSize === 'number'
+      ) &&
+      cellSize !== nextCellSize
+    )
+  ) {
+    computeMetadataCallback(computeMetadataCallbackProps)
+
+    // Updated cell metadata may have hidden the previous scrolled-to item.
+    // In this case we should also update the scrollTop to ensure it stays visible.
+    if (scrollToIndex === nextScrollToIndex) {
+      updateScrollOffsetForScrollToIndex()
+    }
+  }
+}
+
 /**
  * Binary search function inspired by react-infinite.
  */
@@ -133,6 +169,10 @@ export function initCellMetadata ({
   for (var i = 0; i < cellCount; i++) {
     let size = sizeGetter(i)
 
+    if (size == null || Number.isNaN(size)) {
+      throw Error(`Invalid size returned for cell ${i} of value ${size}`)
+    }
+
     cellMetadata[i] = {
       size,
       offset
@@ -145,28 +185,69 @@ export function initCellMetadata ({
 }
 
 /**
- * Helper utility that updates the specified onRowsRendered callback on when start or stop indices have changed.
+ * Helper utility that updates the specified callback whenever any of the specified indices have changed.
  */
-export function initOnRowsRenderedHelper () {
-  let cachedStartIndex, cachedStopIndex
+export function initOnSectionRenderedHelper () {
+  let cachedIndices = {}
 
   return ({
-    onRowsRendered,
-    startIndex,
-    stopIndex
+    callback,
+    indices
   }) => {
-    if (
-      startIndex >= 0 &&
-      stopIndex >= 0 &&
-      (
-        startIndex !== cachedStartIndex ||
-        stopIndex !== cachedStopIndex
-      )
-    ) {
-      cachedStartIndex = startIndex
-      cachedStopIndex = stopIndex
+    const keys = Object.keys(indices)
+    const allInitialized = keys.every(key => indices[key] >= 0)
+    const indexChanged = keys.some(key => cachedIndices[key] !== indices[key])
 
-      onRowsRendered({ startIndex, stopIndex })
+    cachedIndices = indices
+
+    if (allInitialized && indexChanged) {
+      callback(indices)
+    }
+  }
+}
+
+// TODO Document
+export function updateScrollIndexHelper ({
+  cellMetadata,
+  cellsCount,
+  cellSize,
+  previousCellsCount,
+  previousCellSize,
+  previousScrollToIndex,
+  previousSize,
+  scrollOffset,
+  scrollToIndex,
+  size,
+  updateScrollIndexCallback
+}) {
+  const hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < cellsCount
+  const sizeHasChanged = (
+    size !== previousSize ||
+    !previousCellSize ||
+    (
+      typeof cellSize === 'number' &&
+      cellSize !== previousCellSize
+    )
+  )
+
+  // If we have a new scroll target OR if height/row-height has changed,
+  // We should ensure that the scroll target is visible.
+  if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== previousScrollToIndex)) {
+    updateScrollIndexCallback()
+
+  // If we don't have a selected item but list size or number of children have decreased,
+  // Make sure we aren't scrolled too far past the current content.
+  } else if (!hasScrollToIndex && (size < previousSize || cellsCount < previousCellsCount)) {
+    const calculatedScrollOffset = getUpdatedOffsetForIndex({
+      cellMetadata: cellMetadata,
+      containerSize: size,
+      currentOffset: scrollOffset,
+      targetIndex: cellsCount - 1
+    })
+
+    // Only adjust the scroll position if we've scrolled below the last set of rows.
+    if (calculatedScrollOffset < scrollOffset) {
+      updateScrollIndexCallback(cellsCount - 1)
     }
   }
 }

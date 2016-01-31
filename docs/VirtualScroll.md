@@ -1,7 +1,7 @@
 VirtualScroll
 ---------------
 
-Describes the header and cell contents of a table column
+This component renders a virtualized list of elements with either fixed or dynamic heights.
 
 ### Prop Types
 | Property | Type | Required? | Description |

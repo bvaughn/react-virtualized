@@ -1,5 +1,6 @@
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
 import ComponentLink from './ComponentLink'
+import GridExample from '../Grid/Grid.example'
 import FlexTableExample from '../FlexTable/FlexTable.example'
 import Immutable from 'immutable'
 import InfiniteLoaderExample from '../InfiniteLoader/InfiniteLoader.example'
@@ -30,7 +31,7 @@ class Application extends Component {
     const { activeComponent } = this.state
 
     const setActiveComponent = component => this.setState({ activeComponent: component })
-    const components = ['AutoSizer', 'FlexTable', 'InfiniteLoader', 'VirtualScroll']
+    const components = ['AutoSizer', 'Grid', 'FlexTable', 'InfiniteLoader', 'VirtualScroll']
 
     return (
       <div className={styles.demo}>
@@ -88,6 +89,12 @@ class Application extends Component {
           }
           {activeComponent === 'FlexTable' &&
             <FlexTableExample
+              className={styles.column}
+              list={list}
+            />
+          }
+          {activeComponent === 'Grid' &&
+            <GridExample
               className={styles.column}
               list={list}
             />

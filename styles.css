@@ -1,6 +1,17 @@
 /* AutoSizer default theme */
 
 .AutoSizer {
+  overflow: hidden;
+}
+
+/* Grid default theme */
+
+.Grid {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.VirtualScroll_innerScrollContainer {
 }
 
 /* FlexTable default theme */
@@ -125,7 +136,7 @@
 
 .VirtualScroll {
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 

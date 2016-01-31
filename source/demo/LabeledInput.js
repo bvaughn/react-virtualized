@@ -16,7 +16,10 @@ export function LabeledInput ({
 
   return (
     <div className={styles.LabeledInput}>
-      <label className={labelClassName}>
+      <label
+        className={labelClassName}
+        title={label}
+      >
         {label}
       </label>
       <input

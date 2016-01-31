@@ -203,7 +203,11 @@
                     /** Component to manage width/height of */
                     children: _react.PropTypes.element,
                     /** Optional CSS class name */
-                    className: _react.PropTypes.string
+                    className: _react.PropTypes.string,
+                    /** Disable dynamic :height property */
+                    disableHeight: _react.PropTypes.bool,
+                    /** Disable dynamic :width property */
+                    disableWidth: _react.PropTypes.bool
                 },
                 enumerable: !0
             } ]), _createClass(AutoSizer, [ {
@@ -222,12 +226,11 @@
             }, {
                 key: "render",
                 value: function() {
-                    var _props = this.props, children = _props.children, className = _props.className, _state = (_objectWithoutProperties(_props, [ "children", "className" ]), 
-                    this.state), height = _state.height, width = _state.width, child = _react2["default"].Children.only(children);
-                    return child = _react2["default"].cloneElement(child, {
-                        height: height,
-                        width: width
-                    }), _react2["default"].createElement("div", {
+                    var _props = this.props, children = _props.children, className = _props.className, disableHeight = _props.disableHeight, disableWidth = _props.disableWidth, _state = (_objectWithoutProperties(_props, [ "children", "className", "disableHeight", "disableWidth" ]), 
+                    this.state), height = _state.height, width = _state.width, childProps = {};
+                    disableHeight || (childProps.height = height), disableWidth || (childProps.width = width);
+                    var child = _react2["default"].Children.only(children);
+                    return child = _react2["default"].cloneElement(child, childProps), _react2["default"].createElement("div", {
                         ref: this._setRef,
                         className: (0, _classnames2["default"])("AutoSizer", className),
                         style: {
@@ -917,8 +920,10 @@
                         isScrolling: !1,
                         scrollTop: 0
                     }, // Invokes onRowsRendered callback only when start/stop row indices change
-                    this._OnRowsRenderedHelper = (0, _utils.initOnRowsRenderedHelper)(), this._onKeyPress = this._onKeyPress.bind(this), 
-                    this._onScroll = this._onScroll.bind(this), this._onWheel = this._onWheel.bind(this);
+                    this._OnRowsRenderedHelper = (0, _utils.initOnSectionRenderedHelper)(), // Bind functions to instance so they don't lose context when passed around
+                    this._computeCellMetadata = this._computeCellMetadata.bind(this), this._invokeOnRowsRenderedHelper = this._invokeOnRowsRenderedHelper.bind(this), 
+                    this._onKeyPress = this._onKeyPress.bind(this), this._onScroll = this._onScroll.bind(this), 
+                    this._onWheel = this._onWheel.bind(this), this._updateScrollTopForScrollToIndex = this._updateScrollTopForScrollToIndex.bind(this);
                 }
                 /**
 	   * Forced recompute of row heights.
@@ -933,12 +938,12 @@
                         /** Height constraint for list (determines how many actual rows are rendered) */
                         height: _react.PropTypes.number.isRequired,
                         /** Optional renderer to be used in place of rows when rowsCount is 0 */
-                        noRowsRenderer: _react.PropTypes.func,
+                        noRowsRenderer: _react.PropTypes.func.isRequired,
                         /**
 	       * Callback invoked with information about the slice of rows that were just rendered.
 	       * ({ startIndex, stopIndex }): void
 	       */
-                        onRowsRendered: _react.PropTypes.func,
+                        onRowsRendered: _react.PropTypes.func.isRequired,
                         /**
 	       * Either a fixed row height (number) or a function that returns the height of a row given its index.
 	       * (index: number): number
@@ -978,42 +983,34 @@
                 }, {
                     key: "componentDidMount",
                     value: function() {
-                        var _this = this, _props = this.props, onRowsRendered = _props.onRowsRendered, scrollToIndex = _props.scrollToIndex;
+                        var _this = this, scrollToIndex = this.props.scrollToIndex;
                         scrollToIndex >= 0 && (// Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
                         this._scrollTopId = setImmediate(function() {
                             _this._scrollTopId = null, _this._updateScrollTopForScrollToIndex();
                         })), // Update onRowsRendered callback
-                        this._OnRowsRenderedHelper({
-                            onRowsRendered: onRowsRendered,
-                            startIndex: this._renderedStartIndex,
-                            stopIndex: this._renderedStopIndex
-                        });
+                        this._invokeOnRowsRenderedHelper();
                     }
                 }, {
                     key: "componentDidUpdate",
                     value: function(prevProps, prevState) {
-                        var _props2 = this.props, height = _props2.height, onRowsRendered = _props2.onRowsRendered, rowsCount = _props2.rowsCount, rowHeight = _props2.rowHeight, scrollToIndex = _props2.scrollToIndex, scrollTop = this.state.scrollTop;
+                        var _props = this.props, height = _props.height, rowsCount = _props.rowsCount, rowHeight = _props.rowHeight, scrollToIndex = _props.scrollToIndex, scrollTop = this.state.scrollTop;
                         // Make sure any changes to :scrollTop (from :scrollToIndex) get applied
-                        scrollTop >= 0 && scrollTop !== prevState.scrollTop && (this.refs.scrollingContainer.scrollTop = scrollTop);
-                        var hasScrollToIndex = scrollToIndex >= 0 && rowsCount > scrollToIndex, sizeHasChanged = height !== prevProps.height || !prevProps.rowHeight || "number" == typeof rowHeight && rowHeight !== prevProps.rowHeight;
-                        // If we have a new scroll target OR if height/row-height has changed,
-                        // We should ensure that the scroll target is visible.
-                        if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== prevProps.scrollToIndex)) this._updateScrollTopForScrollToIndex(); else if (!hasScrollToIndex && (height < prevProps.height || rowsCount < prevProps.rowsCount)) {
-                            var calculatedScrollTop = (0, _utils.getUpdatedOffsetForIndex)({
-                                cellMetadata: this._cellMetadata,
-                                containerSize: height,
-                                currentOffset: scrollTop,
-                                targetIndex: rowsCount - 1
-                            });
-                            // Only adjust the scroll position if we've scrolled below the last set of rows.
-                            scrollTop > calculatedScrollTop && this._updateScrollTopForScrollToIndex(rowsCount - 1);
-                        }
-                        // Update onRowsRendered callback if start/stop indices have changed
-                        this._OnRowsRenderedHelper({
-                            onRowsRendered: onRowsRendered,
-                            startIndex: this._renderedStartIndex,
-                            stopIndex: this._renderedStopIndex
-                        });
+                        scrollTop >= 0 && scrollTop !== prevState.scrollTop && (this.refs.scrollingContainer.scrollTop = scrollTop), 
+                        // Update scrollTop if appropriate
+                        (0, _utils.updateScrollIndexHelper)({
+                            cellMetadata: this._cellMetadata,
+                            cellsCount: rowsCount,
+                            cellSize: rowHeight,
+                            previousCellsCount: prevProps.rowsCount,
+                            previousCellSize: prevProps.rowHeight,
+                            previousScrollToIndex: prevProps.scrollToIndex,
+                            previousSize: prevProps.height,
+                            scrollOffset: scrollTop,
+                            scrollToIndex: scrollToIndex,
+                            size: height,
+                            updateScrollIndexCallback: this._updateScrollTopForScrollToIndex
+                        }), // Update onRowsRendered callback if start/stop indices have changed
+                        this._invokeOnRowsRenderedHelper();
                     }
                 }, {
                     key: "componentWillMount",
@@ -1031,19 +1028,25 @@
                     value: function(nextProps, nextState) {
                         0 === nextProps.rowsCount && 0 !== nextState.scrollTop && this.setState({
                             scrollTop: 0
-                        }), // Don't compare rowHeight if it's a function because inline functions would cause infinite loops.
-                        // In that event users should use recomputeRowHeights() to inform of changes.
-                        (nextState.computeCellMetadataOnNextUpdate || this.props.rowsCount !== nextProps.rowsCount || ("number" == typeof this.props.rowHeight || "number" == typeof nextProps.rowHeight) && this.props.rowHeight !== nextProps.rowHeight) && (this._computeCellMetadata(nextProps), 
-                        this.setState({
+                        }), (0, _utils.computeCellMetadataAndUpdateScrollOffsetHelper)({
+                            cellsCount: this.props.rowsCount,
+                            cellSize: this.props.rowHeight,
+                            computeMetadataCallback: this._computeCellMetadata,
+                            computeMetadataCallbackProps: nextProps,
+                            computeMetadataOnNextUpdate: nextState.computeCellMetadataOnNextUpdate,
+                            nextCellsCount: nextProps.rowsCount,
+                            nextCellSize: nextProps.rowHeight,
+                            nextScrollToIndex: nextProps.scrollToIndex,
+                            scrollToIndex: this.props.scrollToIndex,
+                            updateScrollOffsetForScrollToIndex: this._updateScrollTopForScrollToIndex
+                        }), this.setState({
                             computeCellMetadataOnNextUpdate: !1
-                        }), // Updated cell metadata may have hidden the previous scrolled-to item.
-                        // In this case we should also update the scrollTop to ensure it stays visible.
-                        this.props.scrollToIndex === nextProps.scrollToIndex && this._updateScrollTopForScrollToIndex());
+                        });
                     }
                 }, {
                     key: "render",
                     value: function() {
-                        var _props3 = this.props, className = _props3.className, height = _props3.height, noRowsRenderer = _props3.noRowsRenderer, rowsCount = _props3.rowsCount, rowRenderer = _props3.rowRenderer, _state = this.state, isScrolling = _state.isScrolling, scrollTop = _state.scrollTop, childrenToDisplay = [];
+                        var _props2 = this.props, className = _props2.className, height = _props2.height, noRowsRenderer = _props2.noRowsRenderer, rowsCount = _props2.rowsCount, rowRenderer = _props2.rowRenderer, _state = this.state, isScrolling = _state.isScrolling, scrollTop = _state.scrollTop, childrenToDisplay = [];
                         // Render only enough rows to cover the visible (vertical) area of the table.
                         if (height > 0) {
                             var _getVisibleCellIndices = (0, _utils.getVisibleCellIndices)({
@@ -1114,6 +1117,18 @@
                         return datum.offset + datum.size;
                     }
                 }, {
+                    key: "_invokeOnRowsRenderedHelper",
+                    value: function() {
+                        var onRowsRendered = this.props.onRowsRendered;
+                        this._OnRowsRenderedHelper({
+                            callback: onRowsRendered,
+                            indices: {
+                                startIndex: this._renderedStartIndex,
+                                stopIndex: this._renderedStopIndex
+                            }
+                        });
+                    }
+                }, {
                     key: "_setNextState",
                     value: function(state) {
                         var _this2 = this;
@@ -1121,6 +1136,20 @@
                         this._setNextStateAnimationFrameId = (0, _raf2["default"])(function() {
                             _this2._setNextStateAnimationFrameId = null, _this2.setState(state);
                         });
+                    }
+                }, {
+                    key: "_setNextStateForScrollHelper",
+                    value: function(_ref) {
+                        var scrollTop = _ref.scrollTop;
+                        // Certain devices (like Apple touchpad) rapid-fire duplicate events.
+                        // Don't force a re-render if this is the case.
+                        this.state.scrollTop !== scrollTop && (// Prevent pointer events from interrupting a smooth scroll
+                        this._temporarilyDisablePointerEvents(), // The mouse may move faster then the animation frame does.
+                        // Use requestAnimationFrame to avoid over-updating.
+                        this._setNextState({
+                            isScrolling: !0,
+                            scrollTop: scrollTop
+                        }));
                     }
                 }, {
                     key: "_stopEvent",
@@ -1157,7 +1186,7 @@
                 }, {
                     key: "_onKeyPress",
                     value: function(event) {
-                        var _props4 = this.props, height = _props4.height, rowsCount = _props4.rowsCount, scrollTop = this.state.scrollTop, start = void 0, datum = void 0, newScrollTop = void 0;
+                        var _props3 = this.props, height = _props3.height, rowsCount = _props3.rowsCount, scrollTop = this.state.scrollTop, start = void 0, datum = void 0, newScrollTop = void 0;
                         if (0 !== rowsCount) switch (event.key) {
                           case "ArrowDown":
                             this._stopEvent(event), // Prevent key from also scrolling surrounding window
@@ -1194,30 +1223,18 @@
                             // This causes a series of rapid renders that is slow for long lists.
                             // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
                             var height = this.props.height, totalRowsHeight = this._getTotalRowsHeight(), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
-                            // Certain devices (like Apple touchpad) rapid-fire duplicate events.
-                            // Don't force a re-render if this is the case.
-                            this.state.scrollTop !== scrollTop && (// Prevent pointer events from interrupting a smooth scroll
-                            this._temporarilyDisablePointerEvents(), // The mouse may move faster then the animation frame does.
-                            // Use requestAnimationFrame to avoid over-updating.
-                            this._setNextState({
-                                isScrolling: !0,
+                            this._setNextStateForScrollHelper({
                                 scrollTop: scrollTop
-                            }));
+                            });
                         }
                     }
                 }, {
                     key: "_onWheel",
                     value: function(event) {
                         var scrollTop = this.refs.scrollingContainer.scrollTop;
-                        // Certain devices (like Apple touchpad) rapid-fire duplicate events.
-                        // Don't force a re-render if this is the case.
-                        this.state.scrollTop !== scrollTop && (// Prevent pointer events from interrupting a smooth scroll
-                        this._temporarilyDisablePointerEvents(), // The mouse may move faster then the animation frame does.
-                        // Use requestAnimationFrame to avoid over-updating.
-                        this._setNextState({
-                            isScrolling: !0,
+                        this._setNextStateForScrollHelper({
                             scrollTop: scrollTop
-                        }));
+                        });
                     }
                 } ]), VirtualScroll;
             }(_react.Component);
@@ -1312,12 +1329,22 @@
     }, /* 15 */
     /***/
     function(module, exports) {
+        // TODO Document
+        "use strict";
+        function computeCellMetadataAndUpdateScrollOffsetHelper(_ref) {
+            var cellsCount = _ref.cellsCount, cellSize = _ref.cellSize, computeMetadataCallback = _ref.computeMetadataCallback, computeMetadataCallbackProps = _ref.computeMetadataCallbackProps, computeMetadataOnNextUpdate = _ref.computeMetadataOnNextUpdate, nextCellsCount = _ref.nextCellsCount, nextCellSize = _ref.nextCellSize, nextScrollToIndex = _ref.nextScrollToIndex, scrollToIndex = _ref.scrollToIndex, updateScrollOffsetForScrollToIndex = _ref.updateScrollOffsetForScrollToIndex;
+            // Don't compare cell sizez if they are functions because inline functions would cause infinite loops.
+            // In that event users should use the manual recompute methods to inform of changes.
+            (computeMetadataOnNextUpdate || cellsCount !== nextCellsCount || ("number" == typeof cellSize || "number" == typeof nextCellSize) && cellSize !== nextCellSize) && (computeMetadataCallback(computeMetadataCallbackProps), 
+            // Updated cell metadata may have hidden the previous scrolled-to item.
+            // In this case we should also update the scrollTop to ensure it stays visible.
+            scrollToIndex === nextScrollToIndex && updateScrollOffsetForScrollToIndex());
+        }
         /**
 	 * Binary search function inspired by react-infinite.
 	 */
-        "use strict";
-        function findNearestCell(_ref) {
-            for (var cellMetadata = _ref.cellMetadata, mode = _ref.mode, offset = _ref.offset, high = cellMetadata.length - 1, low = 0, middle = void 0, currentOffset = void 0; high >= low; ) {
+        function findNearestCell(_ref2) {
+            for (var cellMetadata = _ref2.cellMetadata, mode = _ref2.mode, offset = _ref2.offset, high = cellMetadata.length - 1, low = 0, middle = void 0, currentOffset = void 0; high >= low; ) {
                 if (middle = low + Math.floor((high - low) / 2), currentOffset = cellMetadata[middle].offset, 
                 currentOffset === offset) return middle;
                 offset > currentOffset ? low = middle + 1 : currentOffset > offset && (high = middle - 1);
@@ -1335,8 +1362,8 @@
 	 * @param targetIndex Index of target cell
 	 * @return Offset to use to ensure the specified cell is visible
 	 */
-        function getUpdatedOffsetForIndex(_ref2) {
-            var cellMetadata = _ref2.cellMetadata, containerSize = _ref2.containerSize, currentOffset = _ref2.currentOffset, targetIndex = _ref2.targetIndex;
+        function getUpdatedOffsetForIndex(_ref3) {
+            var cellMetadata = _ref3.cellMetadata, containerSize = _ref3.containerSize, currentOffset = _ref3.currentOffset, targetIndex = _ref3.targetIndex;
             if (0 === cellMetadata.length) return 0;
             targetIndex = Math.max(0, Math.min(cellMetadata.length - 1, targetIndex));
             var datum = cellMetadata[targetIndex], maxOffset = datum.offset, minOffset = maxOffset - containerSize + datum.size, newOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
@@ -1351,8 +1378,8 @@
 	 * @param currentOffset Container's current (x or y) offset
 	 * @return An object containing :start and :stop attributes, each specifying a cell index
 	 */
-        function getVisibleCellIndices(_ref3) {
-            var cellCount = _ref3.cellCount, cellMetadata = _ref3.cellMetadata, containerSize = _ref3.containerSize, currentOffset = _ref3.currentOffset;
+        function getVisibleCellIndices(_ref4) {
+            var cellCount = _ref4.cellCount, cellMetadata = _ref4.cellMetadata, containerSize = _ref4.containerSize, currentOffset = _ref4.currentOffset;
             if (0 === cellCount) return {};
             currentOffset = Math.max(0, currentOffset);
             var maxOffset = currentOffset + containerSize, start = findNearestCell({
@@ -1376,11 +1403,12 @@
 	 * @param size Either a fixed size or a function that returns the size for a given given an index.
 	 * @return Object mapping cell index to cell metadata (size, offset)
 	 */
-        function initCellMetadata(_ref4) {
-            for (var cellCount = _ref4.cellCount, size = _ref4.size, sizeGetter = size instanceof Function ? size : function(index) {
+        function initCellMetadata(_ref5) {
+            for (var cellCount = _ref5.cellCount, size = _ref5.size, sizeGetter = size instanceof Function ? size : function(index) {
                 return size;
             }, cellMetadata = [], offset = 0, i = 0; cellCount > i; i++) {
                 var _size = sizeGetter(i);
+                if (null == _size || Number.isNaN(_size)) throw Error("Invalid size returned for cell " + i + " of value " + _size);
                 cellMetadata[i] = {
                     size: _size,
                     offset: offset
@@ -1389,25 +1417,42 @@
             return cellMetadata;
         }
         /**
-	 * Helper utility that updates the specified onRowsRendered callback on when start or stop indices have changed.
+	 * Helper utility that updates the specified callback whenever any of the specified indices have changed.
 	 */
-        function initOnRowsRenderedHelper() {
-            var cachedStartIndex = void 0, cachedStopIndex = void 0;
-            return function(_ref5) {
-                var onRowsRendered = _ref5.onRowsRendered, startIndex = _ref5.startIndex, stopIndex = _ref5.stopIndex;
-                startIndex >= 0 && stopIndex >= 0 && (startIndex !== cachedStartIndex || stopIndex !== cachedStopIndex) && (cachedStartIndex = startIndex, 
-                cachedStopIndex = stopIndex, onRowsRendered({
-                    startIndex: startIndex,
-                    stopIndex: stopIndex
-                }));
+        function initOnSectionRenderedHelper() {
+            var cachedIndices = {};
+            return function(_ref6) {
+                var callback = _ref6.callback, indices = _ref6.indices, keys = Object.keys(indices), allInitialized = keys.every(function(key) {
+                    return indices[key] >= 0;
+                }), indexChanged = keys.some(function(key) {
+                    return cachedIndices[key] !== indices[key];
+                });
+                cachedIndices = indices, allInitialized && indexChanged && callback(indices);
             };
+        }
+        // TODO Document
+        function updateScrollIndexHelper(_ref7) {
+            var cellMetadata = _ref7.cellMetadata, cellsCount = _ref7.cellsCount, cellSize = _ref7.cellSize, previousCellsCount = _ref7.previousCellsCount, previousCellSize = _ref7.previousCellSize, previousScrollToIndex = _ref7.previousScrollToIndex, previousSize = _ref7.previousSize, scrollOffset = _ref7.scrollOffset, scrollToIndex = _ref7.scrollToIndex, size = _ref7.size, updateScrollIndexCallback = _ref7.updateScrollIndexCallback, hasScrollToIndex = scrollToIndex >= 0 && cellsCount > scrollToIndex, sizeHasChanged = size !== previousSize || !previousCellSize || "number" == typeof cellSize && cellSize !== previousCellSize;
+            // If we have a new scroll target OR if height/row-height has changed,
+            // We should ensure that the scroll target is visible.
+            if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== previousScrollToIndex)) updateScrollIndexCallback(); else if (!hasScrollToIndex && (previousSize > size || previousCellsCount > cellsCount)) {
+                var calculatedScrollOffset = getUpdatedOffsetForIndex({
+                    cellMetadata: cellMetadata,
+                    containerSize: size,
+                    currentOffset: scrollOffset,
+                    targetIndex: cellsCount - 1
+                });
+                // Only adjust the scroll position if we've scrolled below the last set of rows.
+                scrollOffset > calculatedScrollOffset && updateScrollIndexCallback(cellsCount - 1);
+            }
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports.findNearestCell = findNearestCell, exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex, 
+        }), exports.computeCellMetadataAndUpdateScrollOffsetHelper = computeCellMetadataAndUpdateScrollOffsetHelper, 
+        exports.findNearestCell = findNearestCell, exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex, 
         exports.getVisibleCellIndices = getVisibleCellIndices, exports.initCellMetadata = initCellMetadata, 
-        exports.initOnRowsRenderedHelper = initOnRowsRenderedHelper, findNearestCell.EQUAL_OR_LOWER = 1, 
-        findNearestCell.EQUAL_OR_HIGHER = 2;
+        exports.initOnSectionRenderedHelper = initOnSectionRenderedHelper, exports.updateScrollIndexHelper = updateScrollIndexHelper, 
+        findNearestCell.EQUAL_OR_LOWER = 1, findNearestCell.EQUAL_OR_HIGHER = 2;
     }, /* 16 */
     /***/
     function(module, exports, __webpack_require__) {
