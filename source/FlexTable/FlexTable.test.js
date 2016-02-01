@@ -12,9 +12,7 @@ describe('FlexTable', () => {
 
   // Used by the renderOrUpdateTable() helper method
   var node = null
-  beforeEach(() => {
-    node = document.createElement('div')
-  })
+  beforeEach(() => node = document.createElement('div'))
 
   const array = []
   for (var i = 0; i < 100; i++) {

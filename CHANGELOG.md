@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.4.2
+Fixed invalid function reference in `Grid` triggered by specifying an initial `scrollToRow` property.
+
 #### 4.4.1
 Fixed distribution to include new `Grid` component as an export.
 

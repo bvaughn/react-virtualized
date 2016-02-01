@@ -1353,12 +1353,12 @@
         "use strict";
         function computeCellMetadataAndUpdateScrollOffsetHelper(_ref) {
             var cellsCount = _ref.cellsCount, cellSize = _ref.cellSize, computeMetadataCallback = _ref.computeMetadataCallback, computeMetadataCallbackProps = _ref.computeMetadataCallbackProps, computeMetadataOnNextUpdate = _ref.computeMetadataOnNextUpdate, nextCellsCount = _ref.nextCellsCount, nextCellSize = _ref.nextCellSize, nextScrollToIndex = _ref.nextScrollToIndex, scrollToIndex = _ref.scrollToIndex, updateScrollOffsetForScrollToIndex = _ref.updateScrollOffsetForScrollToIndex;
-            // Don't compare cell sizez if they are functions because inline functions would cause infinite loops.
+            // Don't compare cell sizes if they are functions because inline functions would cause infinite loops.
             // In that event users should use the manual recompute methods to inform of changes.
             (computeMetadataOnNextUpdate || cellsCount !== nextCellsCount || ("number" == typeof cellSize || "number" == typeof nextCellSize) && cellSize !== nextCellSize) && (computeMetadataCallback(computeMetadataCallbackProps), 
             // Updated cell metadata may have hidden the previous scrolled-to item.
             // In this case we should also update the scrollTop to ensure it stays visible.
-            scrollToIndex === nextScrollToIndex && updateScrollOffsetForScrollToIndex());
+            scrollToIndex >= 0 && scrollToIndex === nextScrollToIndex && updateScrollOffsetForScrollToIndex());
         }
         /**
 	 * Binary search function inspired by react-infinite.
@@ -1722,14 +1722,14 @@
 	       */
                         renderCell: _react.PropTypes.func.isRequired,
                         /**
-	       * Number of rows in grid.
-	       */
-                        rowsCount: _react.PropTypes.number.isRequired,
-                        /**
 	       * Either a fixed row height (number) or a function that returns the height of a row given its index.
 	       * Should implement the following interface: (index: number): number
 	       */
                         rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
+                        /**
+	       * Number of rows in grid.
+	       */
+                        rowsCount: _react.PropTypes.number.isRequired,
                         /**
 	       * Column index to ensure visible (by forcefully scrolling if necessary)
 	       */
@@ -1774,14 +1774,14 @@
                         var _this = this, _props = this.props, scrollToColumn = _props.scrollToColumn, scrollToRow = _props.scrollToRow;
                         (scrollToColumn >= 0 || scrollToRow >= 0) && (// Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
                         this._setImmediateId = setImmediate(function() {
-                            _this._setImmediateId = null, _this._updateScrollLeftForScrollToColumn(), _this._updateScrollTopForScrollToIndex();
+                            _this._setImmediateId = null, _this._updateScrollLeftForScrollToColumn(), _this._updateScrollTopForScrollToRow();
                         })), // Update onRowsRendered callback
                         this._invokeOnGridRenderedHelper();
                     }
                 }, {
                     key: "componentDidUpdate",
                     value: function(prevProps, prevState) {
-                        var _props2 = this.props, columnsCount = _props2.columnsCount, columnWidth = _props2.columnWidth, height = _props2.height, rowsCount = _props2.rowsCount, rowHeight = _props2.rowHeight, scrollToColumn = _props2.scrollToColumn, scrollToRow = _props2.scrollToRow, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollTop = _state.scrollTop;
+                        var _props2 = this.props, columnsCount = _props2.columnsCount, columnWidth = _props2.columnWidth, height = _props2.height, rowHeight = _props2.rowHeight, rowsCount = _props2.rowsCount, scrollToColumn = _props2.scrollToColumn, scrollToRow = _props2.scrollToRow, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollTop = _state.scrollTop;
                         // Make sure any changes to :scrollLeft or :scrollTop get applied
                         (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft || scrollTop >= 0 && scrollTop !== prevState.scrollTop) && (this.refs.scrollingContainer.scrollLeft = scrollLeft, 
                         this.refs.scrollingContainer.scrollTop = scrollTop), // Update scrollLeft if appropriate

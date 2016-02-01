@@ -65,15 +65,15 @@ export default class Grid extends Component {
     renderCell: PropTypes.func.isRequired,
 
     /**
-     * Number of rows in grid.
-     */
-    rowsCount: PropTypes.number.isRequired,
-
-    /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * Should implement the following interface: (index: number): number
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+
+    /**
+     * Number of rows in grid.
+     */
+    rowsCount: PropTypes.number.isRequired,
 
     /**
      * Column index to ensure visible (by forcefully scrolling if necessary)
@@ -148,7 +148,7 @@ export default class Grid extends Component {
       this._setImmediateId = setImmediate(() => {
         this._setImmediateId = null
         this._updateScrollLeftForScrollToColumn()
-        this._updateScrollTopForScrollToIndex()
+        this._updateScrollTopForScrollToRow()
       })
     }
 
@@ -157,7 +157,7 @@ export default class Grid extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    const { columnsCount, columnWidth, height, rowsCount, rowHeight, scrollToColumn, scrollToRow, width } = this.props
+    const { columnsCount, columnWidth, height, rowHeight, rowsCount, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollTop } = this.state
 
     // Make sure any changes to :scrollLeft or :scrollTop get applied

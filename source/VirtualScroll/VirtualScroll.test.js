@@ -10,9 +10,7 @@ describe('VirtualScroll', () => {
 
   // Used by the renderOrUpdateList() helper method
   var node = null
-  beforeEach(() => {
-    node = document.createElement('div')
-  })
+  beforeEach(() => node = document.createElement('div'))
 
   const array = []
   for (var i = 0; i < 100; i++) {
@@ -92,7 +90,7 @@ describe('VirtualScroll', () => {
     })
   })
 
-  /** Tests horizontal scrolling via updated props */
+  /** Tests scrolling via initial props */
   describe('scrollToIndex', () => {
     it('should scroll to the top', () => {
       const list = renderList({ scrollToIndex: 0 })
