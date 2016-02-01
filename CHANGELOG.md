@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.4.1
+Fixed distribution to include new `Grid` component as an export.
+
 #### 4.4.0
 Added new `Grid` component for virtualizing rows _and_ columns .
 Updated `AutoSizer` component to support managing _only_ `width` or `height` (in addition to both).
