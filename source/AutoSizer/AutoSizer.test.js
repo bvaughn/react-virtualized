@@ -26,6 +26,8 @@ describe('AutoSizer', () => {
   function getMarkup ({
     bar = 123,
     className = undefined,
+    disableHeight = false,
+    disableWidth = false,
     foo = 456,
     height = 100,
     styleSheet = undefined,
@@ -34,6 +36,8 @@ describe('AutoSizer', () => {
     return (
       <div style={{ height, width }}>
         <AutoSizer
+          disableHeight={disableHeight}
+          disableWidth={disableWidth}
           className={className}
           styleSheet={styleSheet}
         >
@@ -65,6 +69,20 @@ describe('AutoSizer', () => {
     expect(domNode.textContent).toContain('width:200')
   })
 
+  it('should not update :width if :disableWidth is true', () => {
+    const component = renderOrUpdateComponent({ disableWidth: true })
+    let domNode = findDOMNode(component)
+    expect(domNode.textContent).toContain('height:100')
+    expect(domNode.textContent).toContain('width:undefined')
+  })
+
+  it('should not update :height if :disableHeight is true', () => {
+    const component = renderOrUpdateComponent({ disableHeight: true })
+    let domNode = findDOMNode(component)
+    expect(domNode.textContent).toContain('height:undefined')
+    expect(domNode.textContent).toContain('width:200')
+  })
+
   describe('styles and classeNames', () => {
     it('should use the expected global CSS classNames', () => {
       const node = renderOrUpdateComponent()
@@ -76,8 +94,6 @@ describe('AutoSizer', () => {
       expect(node.querySelector('.AutoSizer').className).toContain('foo')
     })
   })
-
-  // TODO Test :disableWidth and :disableHeight
 
   // TODO It would be nice to test that resize events update the width/height
 })
