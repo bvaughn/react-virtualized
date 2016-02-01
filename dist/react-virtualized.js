@@ -656,9 +656,7 @@
             }, {
                 key: "_createColumn",
                 value: function(column, columnIndex, rowData, rowIndex) {
-                    var _column$props = column.props, cellClassName = _column$props.cellClassName, cellDataGetter = _column$props.cellDataGetter, columnData = _column$props.columnData, dataKey = _column$props.dataKey, cellRenderer = _column$props.cellRenderer, cellData = cellDataGetter(dataKey, rowData, columnData), renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData), flex = this._getFlexStyleForColumn(column), style = {
-                        flex: flex
-                    }, title = "string" == typeof renderedCell ? renderedCell : null;
+                    var _column$props = column.props, cellClassName = _column$props.cellClassName, cellDataGetter = _column$props.cellDataGetter, columnData = _column$props.columnData, dataKey = _column$props.dataKey, cellRenderer = _column$props.cellRenderer, cellData = cellDataGetter(dataKey, rowData, columnData), renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData), style = this._getFlexStyleForColumn(column), title = "string" == typeof renderedCell ? renderedCell : null;
                     return _react2["default"].createElement("div", {
                         key: "Row" + rowIndex + "-Col" + columnIndex,
                         className: (0, _classnames2["default"])("FlexTable__rowColumn", cellClassName),
@@ -674,9 +672,7 @@
                     var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, columnData = _column$props2.columnData, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, classNames = (0, 
                     _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
                         FlexTable__sortableHeaderColumn: sortEnabled
-                    }), flex = this._getFlexStyleForColumn(column), style = {
-                        flex: flex
-                    }, newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC, onClick = function() {
+                    }), style = this._getFlexStyleForColumn(column), newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC, onClick = function() {
                         sortEnabled && sort(dataKey, newSortDirection), onHeaderClick(dataKey, columnData);
                     };
                     return _react2["default"].createElement("div", {
@@ -712,8 +708,13 @@
                 key: "_getFlexStyleForColumn",
                 value: function(column) {
                     var flex = [];
-                    return flex.push(column.props.flexGrow), flex.push(column.props.flexShrink), flex.push(column.props.width ? column.props.width + "px" : "auto"), 
-                    flex.join(" ");
+                    flex.push(column.props.flexGrow), flex.push(column.props.flexShrink), flex.push(column.props.width ? column.props.width + "px" : "auto");
+                    var flexValue = flex.join(" ");
+                    return {
+                        flex: flexValue,
+                        msFlex: flexValue,
+                        WebkitFlex: flexValue
+                    };
                 }
             }, {
                 key: "_getRenderedHeaderRow",

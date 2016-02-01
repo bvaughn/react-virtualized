@@ -190,10 +190,7 @@ export default class FlexTable extends Component {
     const cellData = cellDataGetter(dataKey, rowData, columnData)
     const renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData)
 
-    const flex = this._getFlexStyleForColumn(column)
-    const style = {
-      flex // TODO
-    }
+    const style = this._getFlexStyleForColumn(column)
 
     const title = typeof renderedCell === 'string'
       ? renderedCell
@@ -229,10 +226,7 @@ export default class FlexTable extends Component {
         'FlexTable__sortableHeaderColumn': sortEnabled
       }
     )
-    const flex = this._getFlexStyleForColumn(column)
-    const style = {
-      flex // TODO
-    }
+    const style = this._getFlexStyleForColumn(column)
 
     // If this is a sortable header, clicking it should update the table data's sorting.
     const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
@@ -310,7 +304,13 @@ export default class FlexTable extends Component {
         : 'auto'
     )
 
-    return flex.join(' ')
+    const flexValue = flex.join(' ')
+
+    return {
+      flex: flexValue,
+      msFlex: flexValue,
+      WebkitFlex: flexValue
+    }
   }
 
   _getRenderedHeaderRow () {

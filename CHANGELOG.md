@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.4.3
+Added `-ms-flex` and `-webkit-flex` browser prefixes to `FlexTable` cells.
+
 #### 4.4.2
 Fixed invalid function reference in `Grid` triggered by specifying an initial `scrollToRow` property.
 
