@@ -164,7 +164,7 @@ describe('VirtualScroll', () => {
   })
 
   describe('onRowsRendered', () => {
-    it('should call :onRowsRendered at least one row is rendered', () => {
+    it('should call :onRowsRendered if at least one row is rendered', () => {
       let startIndex, stopIndex
       renderList({
         onRowsRendered: params => ({ startIndex, stopIndex } = params)
