@@ -1,8 +1,10 @@
 import {
+  computeCellMetadataAndUpdateScrollOffsetHelper,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
-  initOnSectionRenderedHelper
+  initOnSectionRenderedHelper,
+  updateScrollIndexHelper
 } from './utils'
 
 // Default cell sizes and offsets for use in below tests
@@ -23,6 +25,108 @@ function getCellMetadata () {
     size: index => cellSizes[index]
   })
 }
+
+describe('computeCellMetadataAndUpdateScrollOffsetHelper', () => {
+  function helper ({
+    cellsCount = 100,
+    cellSize = 10,
+    computeMetadataCallbackProps = {},
+    computeMetadataOnNextUpdate = false,
+    nextCellsCount = 100,
+    nextCellSize = 10,
+    nextScrollToIndex,
+    scrollToIndex
+  } = {}) {
+    const computeMetadataCallbackCalls = []
+    const updateScrollOffsetForScrollToIndexCalls = []
+
+    computeCellMetadataAndUpdateScrollOffsetHelper({
+      cellsCount,
+      cellSize,
+      computeMetadataCallback: params => computeMetadataCallbackCalls.push(params),
+      computeMetadataCallbackProps,
+      computeMetadataOnNextUpdate,
+      nextCellsCount,
+      nextCellSize,
+      nextScrollToIndex,
+      scrollToIndex,
+      updateScrollOffsetForScrollToIndex: params => updateScrollOffsetForScrollToIndexCalls.push(params)
+    })
+
+    return {
+      computeMetadataCallbackCalls,
+      updateScrollOffsetForScrollToIndexCalls
+    }
+  }
+
+  it('should call :computeMetadataCallback if :computeMetadataOnNextUpdate is true', () => {
+    const { computeMetadataCallbackCalls } = helper({ computeMetadataOnNextUpdate: true })
+    expect(computeMetadataCallbackCalls.length).toEqual(1)
+  })
+
+  it('should pass the specified :computeMetadataCallbackProps to :computeMetadataCallback', () => {
+    const params = { foo: 'bar' }
+    const { computeMetadataCallbackCalls } = helper({
+      computeMetadataCallbackProps: params,
+      computeMetadataOnNextUpdate: true
+    })
+    expect(computeMetadataCallbackCalls).toEqual([params])
+  })
+
+  it('should call :computeMetadataCallback if :cellsCount has changed', () => {
+    const { computeMetadataCallbackCalls } = helper({
+      cellsCount: 100,
+      nextCellsCount: 200
+    })
+    expect(computeMetadataCallbackCalls.length).toEqual(1)
+  })
+
+  it('should call :computeMetadataCallback if numeric :cellSize has changed', () => {
+    const { computeMetadataCallbackCalls } = helper({
+      cellSize: 10,
+      nextCellSize: 20
+    })
+    expect(computeMetadataCallbackCalls.length).toEqual(1)
+  })
+
+  it('should not call :computeMetadataCallback if :cellSize callback has changed', () => {
+    const { computeMetadataCallbackCalls } = helper({
+      cellSize: () => {},
+      nextCellSize: () => {}
+    })
+    expect(computeMetadataCallbackCalls.length).toEqual(0)
+  })
+
+  it('should call :updateScrollOffsetForScrollToIndex if metadata has changed and :scrollToIndex has not', () => {
+    const { updateScrollOffsetForScrollToIndexCalls } = helper({
+      computeMetadataOnNextUpdate: true,
+      scrollToIndex: 10,
+      nextScrollToIndex: 10
+    })
+    expect(updateScrollOffsetForScrollToIndexCalls.length).toEqual(1)
+  })
+
+  it('should not call :updateScrollOffsetForScrollToIndex if :scrollToIndex is not specified', () => {
+    const { updateScrollOffsetForScrollToIndexCalls } = helper({
+      computeMetadataOnNextUpdate: true
+    })
+    expect(updateScrollOffsetForScrollToIndexCalls.length).toEqual(0)
+  })
+
+  it('should not call :updateScrollOffsetForScrollToIndex if :scrollToIndex has also changed', () => {
+    const { updateScrollOffsetForScrollToIndexCalls } = helper({
+      computeMetadataOnNextUpdate: true,
+      scrollToIndex: 10,
+      nextScrollToIndex: 20
+    })
+    expect(updateScrollOffsetForScrollToIndexCalls.length).toEqual(0)
+  })
+
+  it('should not call :computeMetadataCallback if the above conditions are not true', () => {
+    const { computeMetadataCallbackCalls } = helper()
+    expect(computeMetadataCallbackCalls.length).toEqual(0)
+  })
+})
 
 describe('getUpdatedOffsetForIndex', () => {
   function testHelper (targetIndex, currentOffset, cellMetadata = getCellMetadata()) {
@@ -215,8 +319,106 @@ describe('initOnSectionRenderedHelper', () => {
     expect(util.startIndex()).toEqual(1)
     expect(util.stopIndex()).toEqual(2)
   })
+})
 
-  // TODO Test computeCellMetadataAndUpdateScrollOffsetHelper()
+describe('updateScrollIndexHelper', () => {
+  function helper ({
+    cellMetadata = getCellMetadata(),
+    cellsCount = 100,
+    cellSize = 10,
+    previousCellsCount = 100,
+    previousCellSize = 10,
+    previousScrollToIndex,
+    previousSize = 50,
+    scrollOffset = 0,
+    scrollToIndex,
+    size = 50
+  } = {}) {
+    let updateScrollIndexCallbackCalled = false
 
-  // TODO Test updateScrollIndexHelper()
+    function updateScrollIndexCallback (params) {
+      updateScrollIndexCallbackCalled = true
+    }
+
+    updateScrollIndexHelper({
+      cellMetadata,
+      cellsCount,
+      cellSize,
+      previousCellsCount,
+      previousCellSize,
+      previousScrollToIndex,
+      previousSize,
+      scrollOffset,
+      scrollToIndex,
+      size,
+      updateScrollIndexCallback
+    })
+
+    return updateScrollIndexCallbackCalled
+  }
+
+  it('should not call :updateScrollIndexCallback if there is no :scrollToIndex and size has not changed', () => {
+    expect(helper()).toEqual(false)
+  })
+
+  it('should not call :updateScrollIndexCallback if an invalid :scrollToIndex has been specified', () => {
+    expect(helper({
+      size: 100,
+      previousSize: 50,
+      scrollToIndex: -1
+    })).toEqual(false)
+  })
+
+  it('should call :updateScrollIndexCallback if there is a :scrollToIndex and :size has changed', () => {
+    expect(helper({
+      size: 100,
+      previousSize: 50,
+      scrollToIndex: 10
+    })).toEqual(true)
+  })
+
+  it('should call :updateScrollIndexCallback if there is a :scrollToIndex and :cellSize has changed', () => {
+    expect(helper({
+      cellSize: 15,
+      previousCellSize: 20,
+      scrollToIndex: 10
+    })).toEqual(true)
+  })
+
+  it('should call :updateScrollIndexCallback if previous :scrollToIndex has changed', () => {
+    expect(helper({
+      previousScrollToIndex: 20,
+      scrollToIndex: 10
+    })).toEqual(true)
+  })
+
+  it('should call :updateScrollIndexCallback if :cellsCount has been reduced past the current scroll offset', () => {
+    expect(helper({
+      cellsCount: 50,
+      previousCellsCount: 100,
+      scrollOffset: 510
+    })).toEqual(true)
+  })
+
+  it('should call :updateScrollIndexCallback if there is no :scrollToIndex but :size has been reduced', () => {
+    expect(helper({
+      previousSize: 100,
+      scrollOffset: 510,
+      size: 50
+    })).toEqual(true)
+  })
+
+  it('should not call :updateScrollIndexCallback if there is no :scrollToIndex but :cellsCount has been increased', () => {
+    expect(helper({
+      cellsCount: 100,
+      previousCellsCount: 50
+    })).toEqual(false)
+  })
+
+  it('should not call :updateScrollIndexCallback if there is no :scrollToIndex but :size has been increased', () => {
+    expect(helper({
+      previousSize: 50,
+      size: 100
+    })).toEqual(false)
+  })
 })

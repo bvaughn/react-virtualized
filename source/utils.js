@@ -24,7 +24,7 @@ export function computeCellMetadataAndUpdateScrollOffsetHelper ({
   scrollToIndex,
   updateScrollOffsetForScrollToIndex
 }) {
-  // Don't compare cell sizez if they are functions because inline functions would cause infinite loops.
+  // Don't compare cell sizes if they are functions because inline functions would cause infinite loops.
   // In that event users should use the manual recompute methods to inform of changes.
   if (
     computeMetadataOnNextUpdate ||
@@ -41,7 +41,7 @@ export function computeCellMetadataAndUpdateScrollOffsetHelper ({
 
     // Updated cell metadata may have hidden the previous scrolled-to item.
     // In this case we should also update the scrollTop to ensure it stays visible.
-    if (scrollToIndex === nextScrollToIndex) {
+    if (scrollToIndex >= 0 && scrollToIndex === nextScrollToIndex) {
       updateScrollOffsetForScrollToIndex()
     }
   }
@@ -266,7 +266,7 @@ export function updateScrollIndexHelper ({
   // Make sure we aren't scrolled too far past the current content.
   } else if (!hasScrollToIndex && (size < previousSize || cellsCount < previousCellsCount)) {
     const calculatedScrollOffset = getUpdatedOffsetForIndex({
-      cellMetadata: cellMetadata,
+      cellMetadata,
       containerSize: size,
       currentOffset: scrollOffset,
       targetIndex: cellsCount - 1
