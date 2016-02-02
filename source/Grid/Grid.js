@@ -1,10 +1,10 @@
 /** @flow */
 import {
   computeCellMetadataAndUpdateScrollOffsetHelper,
+  createCallbackCacheGuard,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
-  initOnSectionRenderedHelper,
   updateScrollIndexHelper
 } from '../utils'
 import cn from 'classnames'
@@ -115,7 +115,8 @@ export default class Grid extends Component {
     }
 
     // Invokes onSectionRendered callback only when start/stop row or column indices change
-    this._OnGridRenderedHelper = initOnSectionRenderedHelper()
+    this._onGridRenderedCacheGuard = createCallbackCacheGuard()
+    this._onScrollCacheGuard = createCallbackCacheGuard(false)
 
     // Bind functions to instance so they don't lose context when passed around
     this._computeGridMetadata = this._computeGridMetadata.bind(this)
@@ -155,13 +156,22 @@ export default class Grid extends Component {
    * It is appropriate to use in that case.
    */
   setScrollPosition ({ scrollLeft, scrollTop }) {
-    scrollLeft = Number.isNaN(scrollLeft) ? 0 : scrollLeft
-    scrollTop = Number.isNaN(scrollTop) ? 0 : scrollTop
+    const props = {}
 
-    this.setState({
-      scrollLeft,
-      scrollTop
-    })
+    if (scrollLeft >= 0) {
+      props.scrollLeft = scrollLeft
+    }
+
+    if (scrollTop >= 0) {
+      props.scrollTop = scrollTop
+    }
+
+    if (
+      scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft ||
+      scrollTop >= 0 && scrollTop !== this.state.scrollTop
+    ) {
+      this.setState(props)
+    }
   }
 
   componentDidMount () {
@@ -454,7 +464,7 @@ export default class Grid extends Component {
   _invokeOnGridRenderedHelper () {
     const { onSectionRendered } = this.props
 
-    this._OnGridRenderedHelper({
+    this._onGridRenderedCacheGuard({
       callback: onSectionRendered,
       indices: {
         columnStartIndex: this._renderedColumnStartIndex,
@@ -674,7 +684,13 @@ export default class Grid extends Component {
 
     this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
 
-    onScroll({ scrollLeft, scrollTop })
+    this._onScrollCacheGuard({
+      callback: onScroll,
+      indices: {
+        scrollLeft,
+        scrollTop
+      }
+    })
   }
 
   _onWheel (event) {
@@ -685,6 +701,12 @@ export default class Grid extends Component {
 
     this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
 
-    onScroll({ scrollLeft, scrollTop })
+    this._onScrollCacheGuard({
+      callback: onScroll,
+      indices: {
+        scrollLeft,
+        scrollTop
+      }
+    })
   }
 }

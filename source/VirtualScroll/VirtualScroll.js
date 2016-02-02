@@ -1,10 +1,10 @@
 /** @flow */
 import {
   computeCellMetadataAndUpdateScrollOffsetHelper,
+  createCallbackCacheGuard,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
-  initOnSectionRenderedHelper,
   updateScrollIndexHelper
 } from '../utils'
 import cn from 'classnames'
@@ -76,7 +76,8 @@ export default class VirtualScroll extends Component {
     }
 
     // Invokes onRowsRendered callback only when start/stop row indices change
-    this._OnRowsRenderedHelper = initOnSectionRenderedHelper()
+    this._onRowsRenderedCacheGuard = createCallbackCacheGuard()
+    this._onScrollCacheGuard = createCallbackCacheGuard(false)
 
     // Bind functions to instance so they don't lose context when passed around
     this._computeCellMetadata = this._computeCellMetadata.bind(this)
@@ -324,7 +325,7 @@ export default class VirtualScroll extends Component {
   _invokeOnRowsRenderedHelper () {
     const { onRowsRendered } = this.props
 
-    this._OnRowsRenderedHelper({
+    this._onRowsRenderedCacheGuard({
       callback: onRowsRendered,
       indices: {
         startIndex: this._renderedStartIndex,
@@ -480,7 +481,12 @@ export default class VirtualScroll extends Component {
 
     this._setNextStateForScrollHelper({ scrollTop })
 
-    onScroll({ scrollTop })
+    this._onScrollCacheGuard({
+      callback: onScroll,
+      indices: {
+        scrollTop
+      }
+    })
   }
 
   _onWheel (event) {
@@ -490,6 +496,11 @@ export default class VirtualScroll extends Component {
 
     this._setNextStateForScrollHelper({ scrollTop })
 
-    onScroll({ scrollTop })
+    this._onScrollCacheGuard({
+      callback: onScroll,
+      indices: {
+        scrollTop
+      }
+    })
   }
 }
