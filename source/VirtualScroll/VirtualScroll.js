@@ -243,8 +243,8 @@ export default class VirtualScroll extends Component {
         child = (
           <div
             key={i}
+            className='VirtualScroll__row'
             style={{
-              position: 'absolute',
               top: datum.offset,
               width: '100%',
               height: this._getRowHeight(i)
@@ -267,21 +267,16 @@ export default class VirtualScroll extends Component {
         onWheel={this._onWheel}
         tabIndex={0}
         style={{
-          position: 'relative',
-          overflow: 'auto',
-          height: height,
-          outline: 0
+          height: height
         }}
       >
         {rowsCount > 0 &&
           <div
+            className='VirtualScroll__innerScrollContainer'
             style={{
               height: this._getTotalRowsHeight(),
               maxHeight: this._getTotalRowsHeight(),
-              pointerEvents: isScrolling ? 'none' : 'auto',
-              boxSizing: 'border-box',
-              overflowX: 'auto',
-              overflowY: 'hidden'
+              pointerEvents: isScrolling ? 'none' : 'auto'
             }}
           >
             {childrenToDisplay}

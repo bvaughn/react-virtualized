@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 4.6.0
+Relocated a couple of static style properties from inline style object to exported CSS file for easier customization.
+Added `Grid__cell` and `VirtualScroll__row` classes.
+
 #### 4.5.0
 Added `onScroll` callback to `Grid`, `FlexTable`, and `VirtualScroll`.
 Added `scrollToCell` method to `Grid` and `scrollToRow` to `FlexTable`, and `VirtualScroll`.

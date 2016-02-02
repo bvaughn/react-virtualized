@@ -7,11 +7,19 @@
 /* Grid default theme */
 
 .Grid {
+  position: relative;
   overflow: auto;
+  outline: 0;
   -webkit-overflow-scrolling: touch;
 }
 
-.VirtualScroll_innerScrollContainer {
+.Grid__innerScrollContainer {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.Grid__cell {
+  position: absolute;
 }
 
 /* FlexTable default theme */
@@ -87,9 +95,17 @@
 
 .VirtualScroll {
   width: 100%;
-  overflow-y: auto;
+  position: relative;
+  overflow: auto;
+  outline: 0;
   -webkit-overflow-scrolling: touch;
 }
 
-.VirtualScroll_innerScrollContainer {
+.VirtualScroll__innerScrollContainer {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.VirtualScroll__row {
+  position: absolute;
 }

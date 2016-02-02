@@ -43,4 +43,5 @@ The VirtualScroll component supports the following static class names
 | Property | Description |
 |:---|:---|
 | VirtualScroll | Main (outer) element |
-| VirtualScroll_innerScrollContainer | Inner element on which virtual items are positioned |
+| VirtualScroll__innerScrollContainer | Inner element on which virtual items are positioned |
+| VirtualScroll__row | Individual row |
