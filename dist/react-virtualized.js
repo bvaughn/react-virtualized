@@ -570,6 +570,12 @@
 	       */
                     onRowsRendered: _react.PropTypes.func,
                     /**
+	       * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+	       * This callback can be used to sync scrolling between lists, tables, or grids.
+	       * ({ scrollTop }): void
+	       */
+                    onScroll: _react.PropTypes.func.isRequired,
+                    /**
 	       * Optional CSS class to apply to all table rows (including the header row).
 	       * This property can be a CSS class name (string) or a function that returns a class name.
 	       * If a function is provided its signature should be: (rowIndex: number): string
@@ -617,6 +623,9 @@
                     onRowsRendered: function() {
                         return null;
                     },
+                    onScroll: function() {
+                        return null;
+                    },
                     verticalPadding: 0
                 },
                 enumerable: !0
@@ -631,9 +640,14 @@
                     this.refs.VirtualScroll.scrollToRow(scrollToIndex);
                 }
             }, {
+                key: "setScrollTop",
+                value: function(scrollTop) {
+                    this.refs.VirtualScroll.setScrollTop(scrollTop);
+                }
+            }, {
                 key: "render",
                 value: function() {
-                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, verticalPadding = _props.verticalPadding, availableRowsHeight = height - headerHeight - verticalPadding, rowRenderer = function(index) {
+                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, onScroll = _props.onScroll, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, verticalPadding = _props.verticalPadding, availableRowsHeight = height - headerHeight - verticalPadding, rowRenderer = function(index) {
                         return _this._createRow(index);
                     }, rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
                     return _react2["default"].createElement("div", {
@@ -648,6 +662,7 @@
                         height: availableRowsHeight,
                         noRowsRenderer: noRowsRenderer,
                         onRowsRendered: onRowsRendered,
+                        onScroll: onScroll,
                         rowHeight: rowHeight,
                         rowRenderer: rowRenderer,
                         rowsCount: rowsCount
@@ -928,7 +943,8 @@
                         isScrolling: !1,
                         scrollTop: 0
                     }, // Invokes onRowsRendered callback only when start/stop row indices change
-                    this._OnRowsRenderedHelper = (0, _utils.initOnSectionRenderedHelper)(), // Bind functions to instance so they don't lose context when passed around
+                    this._onRowsRenderedMemoizer = (0, _utils.createCallbackMemoizer)(), this._onScrollMemoizer = (0, 
+                    _utils.createCallbackMemoizer)(!1), // Bind functions to instance so they don't lose context when passed around
                     this._computeCellMetadata = this._computeCellMetadata.bind(this), this._invokeOnRowsRenderedHelper = this._invokeOnRowsRenderedHelper.bind(this), 
                     this._onKeyPress = this._onKeyPress.bind(this), this._onScroll = this._onScroll.bind(this), 
                     this._onWheel = this._onWheel.bind(this), this._updateScrollTopForScrollToIndex = this._updateScrollTopForScrollToIndex.bind(this);
@@ -953,6 +969,12 @@
 	       */
                         onRowsRendered: _react.PropTypes.func.isRequired,
                         /**
+	       * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+	       * This callback can be used to sync scrolling between lists, tables, or grids.
+	       * ({ scrollTop }): void
+	       */
+                        onScroll: _react.PropTypes.func.isRequired,
+                        /**
 	       * Either a fixed row height (number) or a function that returns the height of a row given its index.
 	       * (index: number): number
 	       */
@@ -973,6 +995,9 @@
                         },
                         onRowsRendered: function() {
                             return null;
+                        },
+                        onScroll: function() {
+                            return null;
                         }
                     },
                     enumerable: !0
@@ -987,6 +1012,13 @@
                     key: "scrollToRow",
                     value: function(scrollToIndex) {
                         this._updateScrollTopForScrollToIndex(scrollToIndex);
+                    }
+                }, {
+                    key: "setScrollTop",
+                    value: function(scrollTop) {
+                        scrollTop = Number.isNaN(scrollTop) ? 0 : scrollTop, this.setState({
+                            scrollTop: scrollTop
+                        });
                     }
                 }, {
                     key: "componentDidMount",
@@ -1128,7 +1160,7 @@
                     key: "_invokeOnRowsRenderedHelper",
                     value: function() {
                         var onRowsRendered = this.props.onRowsRendered;
-                        this._OnRowsRenderedHelper({
+                        this._onRowsRenderedMemoizer({
                             callback: onRowsRendered,
                             indices: {
                                 startIndex: this._renderedStartIndex,
@@ -1230,18 +1262,28 @@
                             // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
                             // This causes a series of rapid renders that is slow for long lists.
                             // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-                            var height = this.props.height, totalRowsHeight = this._getTotalRowsHeight(), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
+                            var _props4 = this.props, height = _props4.height, onScroll = _props4.onScroll, totalRowsHeight = this._getTotalRowsHeight(), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
                             this._setNextStateForScrollHelper({
                                 scrollTop: scrollTop
+                            }), this._onScrollMemoizer({
+                                callback: onScroll,
+                                indices: {
+                                    scrollTop: scrollTop
+                                }
                             });
                         }
                     }
                 }, {
                     key: "_onWheel",
                     value: function(event) {
-                        var scrollTop = this.refs.scrollingContainer.scrollTop;
+                        var onScroll = this.props.onScroll, scrollTop = this.refs.scrollingContainer.scrollTop;
                         this._setNextStateForScrollHelper({
                             scrollTop: scrollTop
+                        }), this._onScrollMemoizer({
+                            callback: onScroll,
+                            indices: {
+                                scrollTop: scrollTop
+                            }
                         });
                     }
                 } ]), VirtualScroll;
@@ -1362,10 +1404,25 @@
             scrollToIndex >= 0 && scrollToIndex === nextScrollToIndex && updateScrollOffsetForScrollToIndex());
         }
         /**
+	 * Helper utility that updates the specified callback whenever any of the specified indices have changed.
+	 */
+        function createCallbackMemoizer() {
+            var requireAllKeys = arguments.length <= 0 || void 0 === arguments[0] ? !0 : arguments[0], cachedIndices = {};
+            return function(_ref2) {
+                var callback = _ref2.callback, indices = _ref2.indices, keys = Object.keys(indices), allInitialized = !requireAllKeys || keys.every(function(key) {
+                    return indices[key] >= 0;
+                }), indexChanged = keys.some(function(key) {
+                    return cachedIndices[key] !== indices[key];
+                });
+                cachedIndices = indices, allInitialized && indexChanged && callback(indices);
+            };
+        }
+        /**
 	 * Binary search function inspired by react-infinite.
 	 */
-        function findNearestCell(_ref2) {
-            for (var cellMetadata = _ref2.cellMetadata, mode = _ref2.mode, offset = _ref2.offset, high = cellMetadata.length - 1, low = 0, middle = void 0, currentOffset = void 0; high >= low; ) {
+        function findNearestCell(_ref3) {
+            // TODO Add better guards here against NaN offset
+            for (var cellMetadata = _ref3.cellMetadata, mode = _ref3.mode, offset = _ref3.offset, high = cellMetadata.length - 1, low = 0, middle = void 0, currentOffset = void 0; high >= low; ) {
                 if (middle = low + Math.floor((high - low) / 2), currentOffset = cellMetadata[middle].offset, 
                 currentOffset === offset) return middle;
                 offset > currentOffset ? low = middle + 1 : currentOffset > offset && (high = middle - 1);
@@ -1383,8 +1440,8 @@
 	 * @param targetIndex Index of target cell
 	 * @return Offset to use to ensure the specified cell is visible
 	 */
-        function getUpdatedOffsetForIndex(_ref3) {
-            var cellMetadata = _ref3.cellMetadata, containerSize = _ref3.containerSize, currentOffset = _ref3.currentOffset, targetIndex = _ref3.targetIndex;
+        function getUpdatedOffsetForIndex(_ref4) {
+            var cellMetadata = _ref4.cellMetadata, containerSize = _ref4.containerSize, currentOffset = _ref4.currentOffset, targetIndex = _ref4.targetIndex;
             if (0 === cellMetadata.length) return 0;
             targetIndex = Math.max(0, Math.min(cellMetadata.length - 1, targetIndex));
             var datum = cellMetadata[targetIndex], maxOffset = datum.offset, minOffset = maxOffset - containerSize + datum.size, newOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
@@ -1399,8 +1456,8 @@
 	 * @param currentOffset Container's current (x or y) offset
 	 * @return An object containing :start and :stop attributes, each specifying a cell index
 	 */
-        function getVisibleCellIndices(_ref4) {
-            var cellCount = _ref4.cellCount, cellMetadata = _ref4.cellMetadata, containerSize = _ref4.containerSize, currentOffset = _ref4.currentOffset;
+        function getVisibleCellIndices(_ref5) {
+            var cellCount = _ref5.cellCount, cellMetadata = _ref5.cellMetadata, containerSize = _ref5.containerSize, currentOffset = _ref5.currentOffset;
             if (0 === cellCount) return {};
             currentOffset = Math.max(0, currentOffset);
             var maxOffset = currentOffset + containerSize, start = findNearestCell({
@@ -1424,8 +1481,8 @@
 	 * @param size Either a fixed size or a function that returns the size for a given given an index.
 	 * @return Object mapping cell index to cell metadata (size, offset)
 	 */
-        function initCellMetadata(_ref5) {
-            for (var cellCount = _ref5.cellCount, size = _ref5.size, sizeGetter = size instanceof Function ? size : function(index) {
+        function initCellMetadata(_ref6) {
+            for (var cellCount = _ref6.cellCount, size = _ref6.size, sizeGetter = size instanceof Function ? size : function(index) {
                 return size;
             }, cellMetadata = [], offset = 0, i = 0; cellCount > i; i++) {
                 var _size = sizeGetter(i);
@@ -1436,20 +1493,6 @@
                 }, offset += _size;
             }
             return cellMetadata;
-        }
-        /**
-	 * Helper utility that updates the specified callback whenever any of the specified indices have changed.
-	 */
-        function initOnSectionRenderedHelper() {
-            var cachedIndices = {};
-            return function(_ref6) {
-                var callback = _ref6.callback, indices = _ref6.indices, keys = Object.keys(indices), allInitialized = keys.every(function(key) {
-                    return indices[key] >= 0;
-                }), indexChanged = keys.some(function(key) {
-                    return cachedIndices[key] !== indices[key];
-                });
-                cachedIndices = indices, allInitialized && indexChanged && callback(indices);
-            };
         }
         /**
 	 * Helper function that determines when to update scroll offsets to ensure that a scroll-to-index remains visible.
@@ -1484,9 +1527,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.computeCellMetadataAndUpdateScrollOffsetHelper = computeCellMetadataAndUpdateScrollOffsetHelper, 
-        exports.findNearestCell = findNearestCell, exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex, 
-        exports.getVisibleCellIndices = getVisibleCellIndices, exports.initCellMetadata = initCellMetadata, 
-        exports.initOnSectionRenderedHelper = initOnSectionRenderedHelper, exports.updateScrollIndexHelper = updateScrollIndexHelper, 
+        exports.createCallbackMemoizer = createCallbackMemoizer, exports.findNearestCell = findNearestCell, 
+        exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex, exports.getVisibleCellIndices = getVisibleCellIndices, 
+        exports.initCellMetadata = initCellMetadata, exports.updateScrollIndexHelper = updateScrollIndexHelper, 
         findNearestCell.EQUAL_OR_LOWER = 1, findNearestCell.EQUAL_OR_HIGHER = 2;
     }, /* 16 */
     /***/
@@ -1677,7 +1720,8 @@
                         scrollLeft: 0,
                         scrollTop: 0
                     }, // Invokes onSectionRendered callback only when start/stop row or column indices change
-                    this._OnGridRenderedHelper = (0, _utils.initOnSectionRenderedHelper)(), // Bind functions to instance so they don't lose context when passed around
+                    this._onGridRenderedMemoizer = (0, _utils.createCallbackMemoizer)(), this._onScrollMemoizer = (0, 
+                    _utils.createCallbackMemoizer)(!1), // Bind functions to instance so they don't lose context when passed around
                     this._computeGridMetadata = this._computeGridMetadata.bind(this), this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this), 
                     this._onKeyPress = this._onKeyPress.bind(this), this._onScroll = this._onScroll.bind(this), 
                     this._onWheel = this._onWheel.bind(this), this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this), 
@@ -1712,6 +1756,12 @@
 	       * Optional renderer to be used in place of rows when either :rowsCount or :columnsCount is 0.
 	       */
                         noContentRenderer: _react.PropTypes.func.isRequired,
+                        /**
+	       * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+	       * This callback can be used to sync scrolling between lists, tables, or grids.
+	       * ({ scrollLeft, scrollTop }): void
+	       */
+                        onScroll: _react.PropTypes.func.isRequired,
                         /**
 	       * Callback invoked with information about the section of the Grid that was just rendered.
 	       * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
@@ -1751,6 +1801,9 @@
                         noContentRenderer: function() {
                             return null;
                         },
+                        onScroll: function() {
+                            return null;
+                        },
                         onSectionRendered: function() {
                             return null;
                         }
@@ -1768,6 +1821,13 @@
                     value: function(_ref) {
                         var scrollToColumn = _ref.scrollToColumn, scrollToRow = _ref.scrollToRow;
                         this._updateScrollLeftForScrollToColumn(scrollToColumn), this._updateScrollTopForScrollToRow(scrollToRow);
+                    }
+                }, {
+                    key: "setScrollPosition",
+                    value: function(_ref2) {
+                        var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop, props = {};
+                        scrollLeft >= 0 && (props.scrollLeft = scrollLeft), scrollTop >= 0 && (props.scrollTop = scrollTop), 
+                        (scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft || scrollTop >= 0 && scrollTop !== this.state.scrollTop) && this.setState(props);
                     }
                 }, {
                     key: "componentDidMount",
@@ -1965,7 +2025,7 @@
                     key: "_invokeOnGridRenderedHelper",
                     value: function() {
                         var onSectionRendered = this.props.onSectionRendered;
-                        this._OnGridRenderedHelper({
+                        this._onGridRenderedMemoizer({
                             callback: onSectionRendered,
                             indices: {
                                 columnStartIndex: this._renderedColumnStartIndex,
@@ -1986,8 +2046,8 @@
                     }
                 }, {
                     key: "_setNextStateForScrollHelper",
-                    value: function(_ref2) {
-                        var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop;
+                    value: function(_ref3) {
+                        var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop;
                         // Certain devices (like Apple touchpad) rapid-fire duplicate events.
                         // Don't force a re-render if this is the case.
                         (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) && (// Prevent pointer events from interrupting a smooth scroll
@@ -2115,20 +2175,32 @@
                             // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
                             // This causes a series of rapid renders that is slow for long lists.
                             // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-                            var _props5 = this.props, height = _props5.height, width = _props5.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
+                            var _props5 = this.props, height = _props5.height, onScroll = _props5.onScroll, width = _props5.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
                             this._setNextStateForScrollHelper({
                                 scrollLeft: scrollLeft,
                                 scrollTop: scrollTop
+                            }), this._onScrollMemoizer({
+                                callback: onScroll,
+                                indices: {
+                                    scrollLeft: scrollLeft,
+                                    scrollTop: scrollTop
+                                }
                             });
                         }
                     }
                 }, {
                     key: "_onWheel",
                     value: function(event) {
-                        var scrollLeft = this.refs.scrollingContainer.scrollLeft, scrollTop = this.refs.scrollingContainer.scrollTop;
+                        var onScroll = this.props.onScroll, scrollLeft = this.refs.scrollingContainer.scrollLeft, scrollTop = this.refs.scrollingContainer.scrollTop;
                         this._setNextStateForScrollHelper({
                             scrollLeft: scrollLeft,
                             scrollTop: scrollTop
+                        }), this._onScrollMemoizer({
+                            callback: onScroll,
+                            indices: {
+                                scrollLeft: scrollLeft,
+                                scrollTop: scrollTop
+                            }
                         });
                     }
                 } ]), Grid;

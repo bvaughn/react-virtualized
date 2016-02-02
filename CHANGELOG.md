@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 4.5.0
+Added `onScroll` callback to `Grid`, `FlexTable`, and `VirtualScroll`.
+Added `scrollToCell` method to `Grid` and `scrollToRow` to `FlexTable`, and `VirtualScroll`.
+
 #### 4.4.3
 Added `-ms-flex` and `-webkit-flex` browser prefixes to `FlexTable` cells.
 
