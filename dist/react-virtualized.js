@@ -1102,7 +1102,6 @@
                                 child = _react2["default"].createElement("div", {
                                     key: i,
                                     style: {
-                                        position: "absolute",
                                         top: datum.offset,
                                         width: "100%",
                                         height: this._getRowHeight(i)
@@ -1118,19 +1117,14 @@
                             onWheel: this._onWheel,
                             tabIndex: 0,
                             style: {
-                                position: "relative",
-                                overflow: "auto",
-                                height: height,
-                                outline: 0
+                                height: height
                             }
                         }, rowsCount > 0 && _react2["default"].createElement("div", {
+                            className: "VirtualScroll__innerScrollContainer",
                             style: {
                                 height: this._getTotalRowsHeight(),
                                 maxHeight: this._getTotalRowsHeight(),
-                                pointerEvents: isScrolling ? "none" : "auto",
-                                boxSizing: "border-box",
-                                overflowX: "auto",
-                                overflowY: "hidden"
+                                pointerEvents: isScrolling ? "none" : "auto"
                             }
                         }, childrenToDisplay), 0 === rowsCount && noRowsRenderer());
                     }
@@ -1946,8 +1940,8 @@
                                 });
                                 child = _react2["default"].createElement("div", {
                                     key: "row:" + rowIndex + ", column:" + columnIndex,
+                                    className: "Grid__cell",
                                     style: {
-                                        position: "absolute",
                                         left: columnDatum.offset,
                                         top: rowDatum.offset,
                                         height: this._getRowHeight(rowIndex),
@@ -1964,22 +1958,17 @@
                             onWheel: this._onWheel,
                             tabIndex: 0,
                             style: {
-                                position: "relative",
-                                overflow: "auto",
                                 height: height,
-                                width: width,
-                                outline: 0
+                                width: width
                             }
                         }, childrenToDisplay.length > 0 && _react2["default"].createElement("div", {
+                            className: "Grid__innerScrollContainer",
                             style: {
                                 width: this._getTotalColumnsWidth(),
                                 height: this._getTotalRowsHeight(),
                                 maxWidth: this._getTotalColumnsWidth(),
                                 maxHeight: this._getTotalRowsHeight(),
-                                pointerEvents: isScrolling ? "none" : "auto",
-                                boxSizing: "border-box",
-                                overflowX: "auto",
-                                overflowY: "hidden"
+                                pointerEvents: isScrolling ? "none" : "auto"
                             }
                         }, childrenToDisplay), 0 === childrenToDisplay.length && noContentRenderer());
                     }

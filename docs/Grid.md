@@ -51,3 +51,5 @@ The Grid component supports the following static class names
 | Property | Description |
 |:---|:---|
 | Grid | Main (outer) element |
+| Grid__innerScrollContainer | Inner scrollable area |
+| Grid__cell | Individual cell |

@@ -356,8 +356,8 @@ export default class Grid extends Component {
           child = (
             <div
               key={`row:${rowIndex}, column:${columnIndex}`}
+              className='Grid__cell'
               style={{
-                position: 'absolute',
                 left: columnDatum.offset,
                 top: rowDatum.offset,
                 height: this._getRowHeight(rowIndex),
@@ -382,24 +382,19 @@ export default class Grid extends Component {
         onWheel={this._onWheel}
         tabIndex={0}
         style={{
-          position: 'relative',
-          overflow: 'auto',
           height: height,
-          width: width,
-          outline: 0
+          width: width
         }}
       >
         {childrenToDisplay.length > 0 &&
           <div
+            className='Grid__innerScrollContainer'
             style={{
               width: this._getTotalColumnsWidth(),
               height: this._getTotalRowsHeight(),
               maxWidth: this._getTotalColumnsWidth(),
               maxHeight: this._getTotalRowsHeight(),
-              pointerEvents: isScrolling ? 'none' : 'auto',
-              boxSizing: 'border-box',
-              overflowX: 'auto',
-              overflowY: 'hidden'
+              pointerEvents: isScrolling ? 'none' : 'auto'
             }}
           >
             {childrenToDisplay}
