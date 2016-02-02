@@ -1101,6 +1101,7 @@
                                 var datum = this._cellMetadata[i], child = rowRenderer(i);
                                 child = _react2["default"].createElement("div", {
                                     key: i,
+                                    className: "VirtualScroll__row",
                                     style: {
                                         top: datum.offset,
                                         width: "100%",

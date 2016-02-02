@@ -15,8 +15,7 @@
 
 .Grid__innerScrollContainer {
   box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 .Grid__cell {
@@ -104,8 +103,7 @@
 
 .VirtualScroll__innerScrollContainer {
   box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 .VirtualScroll__row {
