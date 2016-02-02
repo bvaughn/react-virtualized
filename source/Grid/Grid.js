@@ -53,6 +53,13 @@ export default class Grid extends Component {
     noContentRenderer: PropTypes.func.isRequired,
 
     /**
+     * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+     * This callback can be used to sync scrolling between lists, tables, or grids.
+     * ({ scrollTop }): void
+     */
+    onScroll: PropTypes.func.isRequired,
+
+    /**
      * Callback invoked with information about the section of the Grid that was just rendered.
      * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
      */
@@ -93,6 +100,7 @@ export default class Grid extends Component {
 
   static defaultProps = {
     noContentRenderer: () => null,
+    onScroll: () => null,
     onSectionRendered: () => null
   }
 
@@ -138,6 +146,16 @@ export default class Grid extends Component {
   scrollToCell ({ scrollToColumn, scrollToRow }) {
     this._updateScrollLeftForScrollToColumn(scrollToColumn)
     this._updateScrollTopForScrollToRow(scrollToRow)
+  }
+
+  /**
+   * TODO
+   */
+  setScrollPosition ({ scrollLeft, scrollTop }) {
+    this.setState({
+      scrollLeft,
+      scrollTop
+    })
   }
 
   componentDidMount () {
@@ -642,19 +660,25 @@ export default class Grid extends Component {
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
     // This causes a series of rapid renders that is slow for long lists.
     // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-    const { height, width } = this.props
+    const { height, onScroll, width } = this.props
     const totalRowsHeight = this._getTotalRowsHeight()
     const totalColumnsWidth = this._getTotalColumnsWidth()
     const scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft)
     const scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop)
 
     this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
+
+    onScroll({ scrollLeft, scrollTop })
   }
 
   _onWheel (event) {
+    const{ onScroll } = this.props
+
     const scrollLeft = this.refs.scrollingContainer.scrollLeft
     const scrollTop = this.refs.scrollingContainer.scrollTop
 
     this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
+
+    onScroll({ scrollLeft, scrollTop })
   }
 }

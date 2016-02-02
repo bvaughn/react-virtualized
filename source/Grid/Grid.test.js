@@ -1,6 +1,6 @@
 import React from 'react'
 import { findDOMNode, render } from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
+import { renderIntoDocument, Simulate } from 'react-addons-test-utils'
 import Grid from './Grid'
 
 const NUM_ROWS = 100
@@ -15,16 +15,17 @@ describe('Grid', () => {
   beforeEach(() => node = document.createElement('div'))
 
   function getMarkup ({
-    className = undefined,
+    className,
     columnsCount = NUM_COLUMNS,
     columnWidth = 50,
     height = 100,
-    noContentRenderer = undefined,
-    onSectionRendered = undefined,
+    noContentRenderer,
+    onSectionRendered,
+    onScroll,
     rowHeight = 20,
     rowsCount = NUM_ROWS,
-    scrollToColumn = undefined,
-    scrollToRow = undefined,
+    scrollToColumn,
+    scrollToRow,
     width = 200
   } = {}) {
     function renderCell ({ columnIndex, rowIndex }) {
@@ -43,6 +44,7 @@ describe('Grid', () => {
         height={height}
         noContentRenderer={noContentRenderer}
         onSectionRendered={onSectionRendered}
+        onScroll={onScroll}
         renderCell={renderCell}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
@@ -54,7 +56,7 @@ describe('Grid', () => {
   }
 
   function renderGrid (props) {
-    const grid = TestUtils.renderIntoDocument(getMarkup(props))
+    const grid = renderIntoDocument(getMarkup(props))
 
     // Allow initial setImmediate() to set :scrollTop
     jasmine.clock().tick()
@@ -63,7 +65,7 @@ describe('Grid', () => {
   }
 
   // Use ReactDOM.render for certain tests so that props changes will update the existing component
-  // TestUtils.renderIntoDocument creates a new component/instance each time
+  // renderIntoDocument creates a new component/instance each time
   function renderOrUpdateGrid (props) {
     let grid = render(getMarkup(props), node)
 
@@ -320,4 +322,41 @@ describe('Grid', () => {
       expect(node.className).toContain('foo')
     })
   })
+
+  describe('onScroll', () => {
+    function helper ({ grid, scrollLeft, scrollTop }) {
+      const target = { scrollLeft, scrollTop }
+      grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
+      Simulate.scroll(findDOMNode(grid), { target })
+    }
+
+    it('should trigger callback when component scrolls horizontally', () => {
+      const onScrollCalls = []
+      const grid = renderGrid({
+        onScroll: params => onScrollCalls.push(params)
+      })
+      helper({
+        grid,
+        scrollLeft: 100,
+        scrollTop: 0
+      })
+      expect(onScrollCalls).toEqual([{ scrollLeft: 100, scrollTop: 0 }])
+    })
+
+    it('should trigger callback when component scrolls horizontally', () => {
+      const onScrollCalls = []
+      const grid = renderGrid({
+        onScroll: params => onScrollCalls.push(params)
+      })
+      helper({
+        grid,
+        scrollLeft: 0,
+        scrollTop: 100
+      })
+      expect(onScrollCalls).toEqual([{ scrollLeft: 0, scrollTop: 100 }])
+    })
+  })
+
+  // TODO Add tests for :scrollToCell and :setScrollPosition.
+  // This probably requires the creation of an inner test-only class with refs.
 })

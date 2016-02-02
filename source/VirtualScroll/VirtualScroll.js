@@ -42,6 +42,12 @@ export default class VirtualScroll extends Component {
      */
     onRowsRendered: PropTypes.func.isRequired,
     /**
+     * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+     * This callback can be used to sync scrolling between lists, tables, or grids.
+     * ({ scrollTop }): void
+     */
+    onScroll: PropTypes.func.isRequired,
+    /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * (index: number): number
      */
@@ -56,7 +62,8 @@ export default class VirtualScroll extends Component {
 
   static defaultProps = {
     noRowsRenderer: () => null,
-    onRowsRendered: () => null
+    onRowsRendered: () => null,
+    onScroll: () => null
   }
 
   constructor (props, context) {
@@ -98,6 +105,13 @@ export default class VirtualScroll extends Component {
    */
   scrollToRow (scrollToIndex) {
     this._updateScrollTopForScrollToIndex(scrollToIndex)
+  }
+
+  /**
+   * TODO
+   */
+  setScrollTop (scrollTop) {
+    this.setState({ scrollTop })
   }
 
   componentDidMount () {
@@ -455,16 +469,22 @@ export default class VirtualScroll extends Component {
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
     // This causes a series of rapid renders that is slow for long lists.
     // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-    const { height } = this.props
+    const { height, onScroll } = this.props
     const totalRowsHeight = this._getTotalRowsHeight()
     const scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop)
 
     this._setNextStateForScrollHelper({ scrollTop })
+
+    onScroll({ scrollTop })
   }
 
   _onWheel (event) {
+    const{ onScroll } = this.props
+
     const scrollTop = this.refs.scrollingContainer.scrollTop
 
     this._setNextStateForScrollHelper({ scrollTop })
+
+    onScroll({ scrollTop })
   }
 }

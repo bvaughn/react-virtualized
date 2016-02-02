@@ -1,6 +1,6 @@
 import React from 'react'
 import { findDOMNode, render } from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
+import { renderIntoDocument, Simulate } from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import VirtualScroll from './VirtualScroll'
 
@@ -19,14 +19,15 @@ describe('VirtualScroll', () => {
   const list = Immutable.fromJS(array)
 
   function getMarkup ({
-    className = undefined,
+    className,
     height = 100,
-    noRowsRenderer = undefined,
-    onRowsRendered = undefined,
+    noRowsRenderer,
+    onRowsRendered,
+    onScroll,
     rowHeight = 10,
     rowsCount = list.size,
-    scrollToIndex = undefined,
-    styleSheet = undefined
+    scrollToIndex,
+    styleSheet
   } = {}) {
     function rowRenderer (index) {
       return (
@@ -45,6 +46,7 @@ describe('VirtualScroll', () => {
         height={height}
         noRowsRenderer={noRowsRenderer}
         onRowsRendered={onRowsRendered}
+        onScroll={onScroll}
         rowHeight={rowHeight}
         rowRenderer={rowRenderer}
         rowsCount={rowsCount}
@@ -55,7 +57,7 @@ describe('VirtualScroll', () => {
   }
 
   function renderList (props) {
-    const virtualScroll = TestUtils.renderIntoDocument(getMarkup(props))
+    const virtualScroll = renderIntoDocument(getMarkup(props))
 
     // Allow initial setImmediate() to set :scrollTop
     jasmine.clock().tick()
@@ -64,7 +66,7 @@ describe('VirtualScroll', () => {
   }
 
   // Use ReactDOM.render for certain tests so that props changes will update the existing component
-  // TestUtils.renderIntoDocument creates a new component/instance each time
+  // renderIntoDocument creates a new component/instance each time
   function renderOrUpdateList (props) {
     let virtualScroll = render(getMarkup(props), node)
 
@@ -236,4 +238,22 @@ describe('VirtualScroll', () => {
       expect(node.className).toContain('foo')
     })
   })
+
+  describe('onScroll', () => {
+    it('should trigger callback when component scrolls', () => {
+      const onScrollCalls = []
+      const list = renderList({
+        onScroll: params => onScrollCalls.push(params)
+      })
+      const target = {
+        scrollTop: 100
+      }
+      list.refs.scrollingContainer = target // HACK to work around _onScroll target check
+      Simulate.scroll(findDOMNode(list), { target })
+      expect(onScrollCalls).toEqual([{ scrollTop: 100 }])
+    })
+  })
+
+  // TODO Add tests for :scrollToRow and :setScrollTop.
+  // This probably requires the creation of an inner test-only class with refs.
 })

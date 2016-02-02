@@ -60,6 +60,8 @@ export function findNearestCell ({
   let middle
   let currentOffset
 
+  // TODO Add better guards here against NaN offset
+
   while (low <= high) {
     middle = low + Math.floor((high - low) / 2)
     currentOffset = cellMetadata[middle].offset
@@ -136,6 +138,8 @@ export function getVisibleCellIndices ({
   currentOffset = Math.max(0, currentOffset)
 
   const maxOffset = currentOffset + containerSize
+
+  // TODO Add better guards here against NaN offset
 
   let start = findNearestCell({
     cellMetadata,

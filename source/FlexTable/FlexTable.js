@@ -67,6 +67,12 @@ export default class FlexTable extends Component {
      */
     onRowsRendered: PropTypes.func,
     /**
+     * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+     * This callback can be used to sync scrolling between lists, tables, or grids.
+     * ({ scrollTop }): void
+     */
+    onScroll: PropTypes.func.isRequired,
+    /**
      * Optional CSS class to apply to all table rows (including the header row).
      * This property can be a CSS class name (string) or a function that returns a class name.
      * If a function is provided its signature should be: (rowIndex: number): string
@@ -104,6 +110,7 @@ export default class FlexTable extends Component {
     onHeaderClick: () => null,
     onRowClick: () => null,
     onRowsRendered: () => null,
+    onScroll: () => null,
     verticalPadding: 0
   }
 
@@ -127,6 +134,13 @@ export default class FlexTable extends Component {
     this.refs.VirtualScroll.scrollToRow(scrollToIndex)
   }
 
+  /**
+   * TODO
+   */
+  setScrollTop (scrollTop) {
+    this.refs.VirtualScroll.setScrollTop(scrollTop)
+  }
+
   render () {
     const {
       className,
@@ -135,6 +149,7 @@ export default class FlexTable extends Component {
       height,
       noRowsRenderer,
       onRowsRendered,
+      onScroll,
       rowClassName,
       rowHeight,
       rowsCount,
@@ -171,6 +186,7 @@ export default class FlexTable extends Component {
           height={availableRowsHeight}
           noRowsRenderer={noRowsRenderer}
           onRowsRendered={onRowsRendered}
+          onScroll={onScroll}
           rowHeight={rowHeight}
           rowRenderer={rowRenderer}
           rowsCount={rowsCount}
