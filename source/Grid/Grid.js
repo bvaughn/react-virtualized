@@ -1,7 +1,7 @@
 /** @flow */
 import {
   computeCellMetadataAndUpdateScrollOffsetHelper,
-  createCallbackCacheGuard,
+  createCallbackMemoizer,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
@@ -115,8 +115,8 @@ export default class Grid extends Component {
     }
 
     // Invokes onSectionRendered callback only when start/stop row or column indices change
-    this._onGridRenderedCacheGuard = createCallbackCacheGuard()
-    this._onScrollCacheGuard = createCallbackCacheGuard(false)
+    this._onGridRenderedMemoizer = createCallbackMemoizer()
+    this._onScrollMemoizer = createCallbackMemoizer(false)
 
     // Bind functions to instance so they don't lose context when passed around
     this._computeGridMetadata = this._computeGridMetadata.bind(this)
@@ -464,7 +464,7 @@ export default class Grid extends Component {
   _invokeOnGridRenderedHelper () {
     const { onSectionRendered } = this.props
 
-    this._onGridRenderedCacheGuard({
+    this._onGridRenderedMemoizer({
       callback: onSectionRendered,
       indices: {
         columnStartIndex: this._renderedColumnStartIndex,
@@ -684,7 +684,7 @@ export default class Grid extends Component {
 
     this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
 
-    this._onScrollCacheGuard({
+    this._onScrollMemoizer({
       callback: onScroll,
       indices: {
         scrollLeft,
@@ -701,7 +701,7 @@ export default class Grid extends Component {
 
     this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
 
-    this._onScrollCacheGuard({
+    this._onScrollMemoizer({
       callback: onScroll,
       indices: {
         scrollLeft,

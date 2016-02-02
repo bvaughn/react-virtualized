@@ -50,7 +50,7 @@ export function computeCellMetadataAndUpdateScrollOffsetHelper ({
 /**
  * Helper utility that updates the specified callback whenever any of the specified indices have changed.
  */
-export function createCallbackCacheGuard (requireAllKeys = true) {
+export function createCallbackMemoizer (requireAllKeys = true) {
   let cachedIndices = {}
 
   return ({

@@ -1,6 +1,6 @@
 import {
   computeCellMetadataAndUpdateScrollOffsetHelper,
-  createCallbackCacheGuard,
+  createCallbackMemoizer,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
@@ -128,7 +128,7 @@ describe('computeCellMetadataAndUpdateScrollOffsetHelper', () => {
   })
 })
 
-describe('createCallbackCacheGuard', () => {
+describe('createCallbackMemoizer', () => {
   function OnRowsRendered () {
     let numCalls = 0
     let startIndex
@@ -148,7 +148,7 @@ describe('createCallbackCacheGuard', () => {
 
   it('should not call onRowsRendered if startIndex or stopIndex are invalid', () => {
     const util = new OnRowsRendered()
-    const helper = createCallbackCacheGuard()
+    const helper = createCallbackMemoizer()
     helper({
       callback: util.update,
       indices: {
@@ -169,7 +169,7 @@ describe('createCallbackCacheGuard', () => {
 
   it('should call onRowsRendered if startIndex and stopIndex are valid', () => {
     const util = new OnRowsRendered()
-    const helper = createCallbackCacheGuard()
+    const helper = createCallbackMemoizer()
     helper({
       callback: util.update,
       indices: {
@@ -184,7 +184,7 @@ describe('createCallbackCacheGuard', () => {
 
   it('should call onRowsRendered if startIndex and stopIndex are invalid but :requireAllKeys is false', () => {
     const util = new OnRowsRendered()
-    const helper = createCallbackCacheGuard(false)
+    const helper = createCallbackMemoizer(false)
     helper({
       callback: util.update,
       indices: {
@@ -199,7 +199,7 @@ describe('createCallbackCacheGuard', () => {
 
   it('should not call onRowsRendered if startIndex or stopIndex have not changed', () => {
     const util = new OnRowsRendered()
-    const helper = createCallbackCacheGuard()
+    const helper = createCallbackMemoizer()
     helper({
       callback: util.update,
       indices: {
@@ -222,7 +222,7 @@ describe('createCallbackCacheGuard', () => {
 
   it('should not call onRowsRendered if startIndex or stopIndex have changed', () => {
     const util = new OnRowsRendered()
-    const helper = createCallbackCacheGuard()
+    const helper = createCallbackMemoizer()
     helper({
       callback: util.update,
       indices: {
