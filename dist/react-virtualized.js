@@ -1189,7 +1189,7 @@
                 }, {
                     key: "_stopEvent",
                     value: function(event) {
-                        event.preventDefault(), event.stopPropagation();
+                        event.preventDefault();
                     }
                 }, {
                     key: "_temporarilyDisablePointerEvents",
@@ -2052,7 +2052,7 @@
                 }, {
                     key: "_stopEvent",
                     value: function(event) {
-                        event.preventDefault(), event.stopPropagation();
+                        event.preventDefault();
                     }
                 }, {
                     key: "_temporarilyDisablePointerEvents",

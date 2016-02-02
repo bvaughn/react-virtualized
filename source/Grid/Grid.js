@@ -510,7 +510,6 @@ export default class Grid extends Component {
 
   _stopEvent (event) {
     event.preventDefault()
-    event.stopPropagation()
   }
 
   /**

@@ -365,7 +365,6 @@ export default class VirtualScroll extends Component {
 
   _stopEvent (event) {
     event.preventDefault()
-    event.stopPropagation()
   }
 
   /**
