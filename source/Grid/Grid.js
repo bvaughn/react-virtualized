@@ -55,7 +55,7 @@ export default class Grid extends Component {
     /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
-     * ({ scrollTop }): void
+     * ({ scrollLeft, scrollTop }): void
      */
     onScroll: PropTypes.func.isRequired,
 
@@ -149,9 +149,15 @@ export default class Grid extends Component {
   }
 
   /**
-   * TODO
+   * Set the :scrollLeft and :scrollTop position within the inner scroll container.
+   * Normally it is best to let Grid manage these properties or to use a method like :scrollToCell.
+   * This method enables Grid to be scroll-synced to another react-virtualized component though.
+   * It is appropriate to use in that case.
    */
   setScrollPosition ({ scrollLeft, scrollTop }) {
+    scrollLeft = Number.isNaN(scrollLeft) ? 0 : scrollLeft
+    scrollTop = Number.isNaN(scrollTop) ? 0 : scrollTop
+
     this.setState({
       scrollLeft,
       scrollTop

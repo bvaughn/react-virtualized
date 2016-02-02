@@ -108,9 +108,14 @@ export default class VirtualScroll extends Component {
   }
 
   /**
-   * TODO
+   * Set the :scrollTop position within the inner scroll container.
+   * Normally it is best to let VirtualScroll manage this properties or to use a method like :scrollToRow.
+   * This method enables VirtualScroll to be scroll-synced to another react-virtualized component though.
+   * It is appropriate to use in that case.
    */
   setScrollTop (scrollTop) {
+    scrollTop = Number.isNaN(scrollTop) ? 0 : scrollTop
+
     this.setState({ scrollTop })
   }
 

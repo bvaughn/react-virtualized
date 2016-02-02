@@ -135,7 +135,10 @@ export default class FlexTable extends Component {
   }
 
   /**
-   * TODO
+   * Set the :scrollTop position within the inner scroll container.
+   * Normally it is best to let FlexTable manage this properties or to use a method like :scrollToRow.
+   * This method enables FlexTable to be scroll-synced to another react-virtualized component though.
+   * It is appropriate to use in that case.
    */
   setScrollTop (scrollTop) {
     this.refs.VirtualScroll.setScrollTop(scrollTop)
