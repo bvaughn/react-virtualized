@@ -48,6 +48,28 @@ export function computeCellMetadataAndUpdateScrollOffsetHelper ({
 }
 
 /**
+ * Helper utility that updates the specified callback whenever any of the specified indices have changed.
+ */
+export function createCallbackMemoizer (requireAllKeys = true) {
+  let cachedIndices = {}
+
+  return ({
+    callback,
+    indices
+  }) => {
+    const keys = Object.keys(indices)
+    const allInitialized = !requireAllKeys || keys.every(key => indices[key] >= 0)
+    const indexChanged = keys.some(key => cachedIndices[key] !== indices[key])
+
+    cachedIndices = indices
+
+    if (allInitialized && indexChanged) {
+      callback(indices)
+    }
+  }
+}
+
+/**
  * Binary search function inspired by react-infinite.
  */
 export function findNearestCell ({
@@ -59,6 +81,8 @@ export function findNearestCell ({
   let low = 0
   let middle
   let currentOffset
+
+  // TODO Add better guards here against NaN offset
 
   while (low <= high) {
     middle = low + Math.floor((high - low) / 2)
@@ -137,6 +161,8 @@ export function getVisibleCellIndices ({
 
   const maxOffset = currentOffset + containerSize
 
+  // TODO Add better guards here against NaN offset
+
   let start = findNearestCell({
     cellMetadata,
     mode: findNearestCell.EQUAL_OR_LOWER,
@@ -195,28 +221,6 @@ export function initCellMetadata ({
   }
 
   return cellMetadata
-}
-
-/**
- * Helper utility that updates the specified callback whenever any of the specified indices have changed.
- */
-export function initOnSectionRenderedHelper () {
-  let cachedIndices = {}
-
-  return ({
-    callback,
-    indices
-  }) => {
-    const keys = Object.keys(indices)
-    const allInitialized = keys.every(key => indices[key] >= 0)
-    const indexChanged = keys.some(key => cachedIndices[key] !== indices[key])
-
-    cachedIndices = indices
-
-    if (allInitialized && indexChanged) {
-      callback(indices)
-    }
-  }
 }
 
 /**

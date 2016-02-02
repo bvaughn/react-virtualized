@@ -1,10 +1,10 @@
 /** @flow */
 import {
   computeCellMetadataAndUpdateScrollOffsetHelper,
+  createCallbackMemoizer,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
-  initOnSectionRenderedHelper,
   updateScrollIndexHelper
 } from '../utils'
 import cn from 'classnames'
@@ -53,6 +53,13 @@ export default class Grid extends Component {
     noContentRenderer: PropTypes.func.isRequired,
 
     /**
+     * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+     * This callback can be used to sync scrolling between lists, tables, or grids.
+     * ({ scrollLeft, scrollTop }): void
+     */
+    onScroll: PropTypes.func.isRequired,
+
+    /**
      * Callback invoked with information about the section of the Grid that was just rendered.
      * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
      */
@@ -93,6 +100,7 @@ export default class Grid extends Component {
 
   static defaultProps = {
     noContentRenderer: () => null,
+    onScroll: () => null,
     onSectionRendered: () => null
   }
 
@@ -107,7 +115,8 @@ export default class Grid extends Component {
     }
 
     // Invokes onSectionRendered callback only when start/stop row or column indices change
-    this._OnGridRenderedHelper = initOnSectionRenderedHelper()
+    this._onGridRenderedMemoizer = createCallbackMemoizer()
+    this._onScrollMemoizer = createCallbackMemoizer(false)
 
     // Bind functions to instance so they don't lose context when passed around
     this._computeGridMetadata = this._computeGridMetadata.bind(this)
@@ -138,6 +147,31 @@ export default class Grid extends Component {
   scrollToCell ({ scrollToColumn, scrollToRow }) {
     this._updateScrollLeftForScrollToColumn(scrollToColumn)
     this._updateScrollTopForScrollToRow(scrollToRow)
+  }
+
+  /**
+   * Set the :scrollLeft and :scrollTop position within the inner scroll container.
+   * Normally it is best to let Grid manage these properties or to use a method like :scrollToCell.
+   * This method enables Grid to be scroll-synced to another react-virtualized component though.
+   * It is appropriate to use in that case.
+   */
+  setScrollPosition ({ scrollLeft, scrollTop }) {
+    const props = {}
+
+    if (scrollLeft >= 0) {
+      props.scrollLeft = scrollLeft
+    }
+
+    if (scrollTop >= 0) {
+      props.scrollTop = scrollTop
+    }
+
+    if (
+      scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft ||
+      scrollTop >= 0 && scrollTop !== this.state.scrollTop
+    ) {
+      this.setState(props)
+    }
   }
 
   componentDidMount () {
@@ -430,7 +464,7 @@ export default class Grid extends Component {
   _invokeOnGridRenderedHelper () {
     const { onSectionRendered } = this.props
 
-    this._OnGridRenderedHelper({
+    this._onGridRenderedMemoizer({
       callback: onSectionRendered,
       indices: {
         columnStartIndex: this._renderedColumnStartIndex,
@@ -642,19 +676,37 @@ export default class Grid extends Component {
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
     // This causes a series of rapid renders that is slow for long lists.
     // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-    const { height, width } = this.props
+    const { height, onScroll, width } = this.props
     const totalRowsHeight = this._getTotalRowsHeight()
     const totalColumnsWidth = this._getTotalColumnsWidth()
     const scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft)
     const scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop)
 
     this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
+
+    this._onScrollMemoizer({
+      callback: onScroll,
+      indices: {
+        scrollLeft,
+        scrollTop
+      }
+    })
   }
 
   _onWheel (event) {
+    const{ onScroll } = this.props
+
     const scrollLeft = this.refs.scrollingContainer.scrollLeft
     const scrollTop = this.refs.scrollingContainer.scrollTop
 
     this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
+
+    this._onScrollMemoizer({
+      callback: onScroll,
+      indices: {
+        scrollLeft,
+        scrollTop
+      }
+    })
   }
 }
