@@ -145,7 +145,8 @@
 .VirtualScroll {
   width: 100%;
   position: relative;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   outline: 0;
   -webkit-overflow-scrolling: touch;
 }
