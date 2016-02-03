@@ -37,21 +37,25 @@ describe('InfiniteLoader', () => {
     onRowsRendered = undefined,
     rowHeight = 20,
     rowsCount = 100,
-    threshold = 10
+    threshold = 10,
+    width = 200
   } = {}) {
     return (
       <InfiniteLoader
+        height={height}
         isRowLoaded={isRowLoaded}
         loadMoreRows={loadMoreRows}
         rowsCount={rowsCount}
         threshold={threshold}
+        width={width}
       >
         <VirtualScroll
-          height={height}
+          height={0}
           onRowsRendered={onRowsRendered}
           rowHeight={rowHeight}
           rowRenderer={index => <div key={index}/>}
           rowsCount={rowsCount}
+          width={0}
         />
       </InfiniteLoader>
     )

@@ -69,6 +69,7 @@ export default class AutoSizerExample extends Component {
               rowsCount={list.size}
               rowHeight={30}
               rowRenderer={this._rowRenderer}
+              width={0}
             />
           </AutoSizer>
         </div>
