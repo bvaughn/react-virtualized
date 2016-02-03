@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+#### 4.6.2
+Replaced single occurence of `Number.isNaN` with `isNaN` to avoid IE compatibility issues. Maybe in the future I will add a polyfill dependency but I did not intend to introduce this without a major version bump so I'm removing it.
+
+#### 4.6.1
+Removes `event.stopPropagation` since it was unnecessary to prevent keyboard event bubbling, only to prevent the default browser behavior.
+
 #### 4.6.0
 Relocated a couple of static style properties from inline style object to exported CSS file for easier customization.
 Added `Grid__cell` and `VirtualScroll__row` classes.
