@@ -27,7 +27,8 @@ describe('VirtualScroll', () => {
     rowHeight = 10,
     rowsCount = list.size,
     scrollToIndex,
-    styleSheet
+    styleSheet,
+    width = 100
   } = {}) {
     function rowRenderer (index) {
       return (
@@ -52,6 +53,7 @@ describe('VirtualScroll', () => {
         rowsCount={rowsCount}
         scrollToIndex={scrollToIndex}
         styleSheet={styleSheet}
+        width={width}
       />
     )
   }
@@ -95,24 +97,24 @@ describe('VirtualScroll', () => {
   /** Tests scrolling via initial props */
   describe('scrollToIndex', () => {
     it('should scroll to the top', () => {
-      const list = renderList({ scrollToIndex: 0 })
-      expect(list.state.scrollTop).toEqual(0)
+      const list = renderOrUpdateList({ scrollToIndex: 0 })
+      expect(list.textContent).toContain('Name 0')
     })
 
     it('should scroll down to the middle', () => {
-      const list = renderList({ scrollToIndex: 49 })
+      const list = renderOrUpdateList({ scrollToIndex: 49 })
       // 100 items * 10 item height = 1,000 total item height
       // 10 items can be visible at a time and :scrollTop is initially 0,
       // So the minimum amount of scrolling leaves the 50th item at the bottom (just scrolled into view).
-      expect(list.state.scrollTop).toEqual(400)
+      expect(list.textContent).toContain('Name 49')
     })
 
     it('should scroll to the bottom', () => {
-      const list = renderList({ scrollToIndex: 99 })
+      const list = renderOrUpdateList({ scrollToIndex: 99 })
       // 100 height - 10 header = 90 available scroll space.
       // 100 items * 10 item height = 1,000 total item height
       // Target height for the last item then is 1000 - 90
-      expect(list.state.scrollTop).toEqual(900)
+      expect(list.textContent).toContain('Name 99')
     })
   })
 
@@ -227,10 +229,10 @@ describe('VirtualScroll', () => {
     })
   })
 
-  describe('styles and classeNames', () => {
+  describe('styles and classNames', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(renderList())
-      expect(node.className).toEqual('VirtualScroll')
+      expect(node.className).toContain('VirtualScroll')
     })
 
     it('should use a custom :className if specified', () => {
@@ -248,7 +250,7 @@ describe('VirtualScroll', () => {
       const target = {
         scrollTop: 100
       }
-      list.refs.scrollingContainer = target // HACK to work around _onScroll target check
+      list.refs.Grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
       Simulate.scroll(findDOMNode(list), { target })
       expect(onScrollCalls).toEqual([{ scrollTop: 100 }])
     })

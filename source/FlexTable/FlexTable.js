@@ -3,7 +3,7 @@ import cn from 'classnames'
 import FlexColumn from './FlexColumn'
 import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
-import VirtualScroll from '../VirtualScroll'
+import Grid from '../Grid'
 
 export const SortDirection = {
   /**
@@ -90,6 +90,8 @@ export default class FlexTable extends Component {
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
     /** Number of rows in table. */
     rowsCount: PropTypes.number.isRequired,
+    /** Row index to ensure visible (by forcefully scrolling if necessary) */
+    scrollToIndex: PropTypes.number,
     /**
      * Sort function to be called if a sortable header is clicked.
      * (dataKey: string, sortDirection: SortDirection): void
@@ -100,7 +102,9 @@ export default class FlexTable extends Component {
     /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
     sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
     /** Vertical padding of outer DOM element */
-    verticalPadding: PropTypes.number
+    verticalPadding: PropTypes.number,
+    /** Width of list */
+    width: PropTypes.number.isRequired
   }
 
   static defaultProps = {
@@ -121,17 +125,20 @@ export default class FlexTable extends Component {
   }
 
   /**
-   * See VirtualScroll#recomputeRowHeights
+   * See Grid#recomputeRowHeights
    */
   recomputeRowHeights () {
-    this.refs.VirtualScroll.recomputeRowHeights()
+    this.refs.Grid.recomputeGridSize()
   }
 
   /**
-   * See VirtualScroll#scrollToRow
+   * See Grid#scrollToRow
    */
   scrollToRow (scrollToIndex) {
-    this.refs.VirtualScroll.scrollToRow(scrollToIndex)
+    this.refs.Grid.scrollToCell({
+      scrollToColumn: 0,
+      scrollToRow: scrollToIndex
+    })
   }
 
   /**
@@ -141,7 +148,10 @@ export default class FlexTable extends Component {
    * It is appropriate to use in that case.
    */
   setScrollTop (scrollTop) {
-    this.refs.VirtualScroll.setScrollTop(scrollTop)
+    this.refs.Grid.setScrollPosition({
+      scrollLeft: 0,
+      scrollTop
+    })
   }
 
   render () {
@@ -156,13 +166,15 @@ export default class FlexTable extends Component {
       rowClassName,
       rowHeight,
       rowsCount,
-      verticalPadding
+      scrollToIndex,
+      verticalPadding,
+      width
     } = this.props
 
     const availableRowsHeight = height - headerHeight - verticalPadding
 
     // This row-renderer wrapper function is necessary in order to trigger re-render when the
-    // sort-by or sort-direction have changed (else VirtualScroll will not see any props changes)
+    // sort-by or sort-direction have changed (else Grid will not see any props changes)
     const rowRenderer = index => {
       return this._createRow(index)
     }
@@ -184,15 +196,23 @@ export default class FlexTable extends Component {
           </div>
         )}
 
-        <VirtualScroll
-          ref='VirtualScroll'
+        <Grid
+          ref='Grid'
+          className={className}
+          columnWidth={width}
+          columnsCount={1}
           height={availableRowsHeight}
-          noRowsRenderer={noRowsRenderer}
-          onRowsRendered={onRowsRendered}
+          noContentRenderer={noRowsRenderer}
           onScroll={onScroll}
+          onSectionRendered={({ rowStartIndex, rowStopIndex }) => onRowsRendered({
+            startIndex: rowStartIndex,
+            stopIndex: rowStopIndex
+          })}
+          renderCell={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
           rowHeight={rowHeight}
-          rowRenderer={rowRenderer}
           rowsCount={rowsCount}
+          scrollToRow={scrollToIndex}
+          width={width}
         />
       </div>
     )

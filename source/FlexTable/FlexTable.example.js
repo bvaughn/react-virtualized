@@ -3,6 +3,7 @@ import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
+import AutoSizer from '../AutoSizer'
 import FlexColumn from './FlexColumn'
 import FlexTable, { SortDirection } from './FlexTable'
 import shouldPureComponentUpdate from 'react-pure-render/function'
@@ -109,6 +110,7 @@ export default class TableExample extends Component {
             value={height}
           />
           <LabeledInput
+            disabled={useDynamicRowHeight}
             label='Row height'
             name='rowHeight'
             onChange={event => this.setState({ rowHeight: parseInt(event.target.value, 10) || 1 })}
@@ -122,47 +124,51 @@ export default class TableExample extends Component {
           />
         </InputRow>
 
-        <FlexTable
-          ref='Table'
-          className={styles.FlexTable}
-          headerClassName={styles.headerColumn}
-          headerHeight={headerHeight}
-          height={height}
-          noRowsRenderer={this._noRowsRenderer}
-          rowClassName={::this._rowClassName}
-          rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
-          rowGetter={rowGetter}
-          rowsCount={rowsCount}
-          sort={this._sort}
-          sortBy={sortBy}
-          sortDirection={sortDirection}
-          width={430}
-        >
-          <FlexColumn
-            label='Index'
-            cellDataGetter={
-              (dataKey, rowData, columnData) => rowData.index
-            }
-            dataKey='index'
-            width={50}
-          />
-          <FlexColumn
-            label='Name'
-            dataKey='name'
-            width={90}
-          />
-          <FlexColumn
-            width={210}
-            disableSort
-            label='The description label is really long so that it will be truncated'
-            dataKey='random'
-            cellClassName={styles.exampleColumn}
-            cellRenderer={
-              (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
-            }
-            flexGrow={1}
-          />
-        </FlexTable>
+        <div>
+          <AutoSizer disableHeight>
+            <FlexTable
+              ref='Table'
+              headerClassName={styles.headerColumn}
+              headerHeight={headerHeight}
+              height={height}
+              noRowsRenderer={this._noRowsRenderer}
+              rowClassName={::this._rowClassName}
+              rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
+              rowGetter={rowGetter}
+              rowsCount={rowsCount}
+              scrollToIndex={scrollToIndex}
+              sort={this._sort}
+              sortBy={sortBy}
+              sortDirection={sortDirection}
+              width={0}
+            >
+              <FlexColumn
+                label='Index'
+                cellDataGetter={
+                  (dataKey, rowData, columnData) => rowData.index
+                }
+                dataKey='index'
+                width={50}
+              />
+              <FlexColumn
+                label='Name'
+                dataKey='name'
+                width={90}
+              />
+              <FlexColumn
+                width={210}
+                disableSort
+                label='The description label is really long so that it will be truncated'
+                dataKey='random'
+                cellClassName={styles.exampleColumn}
+                cellRenderer={
+                  (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
+                }
+                flexGrow={1}
+              />
+            </FlexTable>
+          </AutoSizer>
+        </div>
       </ContentBox>
     )
   }
@@ -196,8 +202,6 @@ export default class TableExample extends Component {
     }
 
     this.setState({ scrollToIndex })
-
-    this.refs.Table.scrollToRow(scrollToIndex)
   }
 
   _rowClassName (index) {

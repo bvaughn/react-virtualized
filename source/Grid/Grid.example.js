@@ -27,7 +27,7 @@ export default class GridExample extends Component {
       rowsCount: 1000,
       scrollToColumn: undefined,
       scrollToRow: undefined,
-      useDynamicRowHeights: false
+      useDynamicRowHeight: false
     }
 
     this._getColumnWidth = this._getColumnWidth.bind(this)
@@ -51,7 +51,7 @@ export default class GridExample extends Component {
       rowsCount,
       scrollToColumn,
       scrollToRow,
-      useDynamicRowHeights
+      useDynamicRowHeight
     } = this.state
 
     return (
@@ -76,7 +76,7 @@ export default class GridExample extends Component {
             <input
               className={styles.checkbox}
               type='checkbox'
-              value={useDynamicRowHeights}
+              value={useDynamicRowHeight}
               onChange={event => this._updateUseDynamicRowHeights(event.target.checked)}
             />
             Use dynamic row height?
@@ -117,6 +117,7 @@ export default class GridExample extends Component {
             value={height}
           />
           <LabeledInput
+            disabled={useDynamicRowHeight}
             label='Row height'
             name='rowHeight'
             onChange={event => this.setState({ rowHeight: parseInt(event.target.value, 10) || 1 })}
@@ -172,7 +173,7 @@ export default class GridExample extends Component {
                     this.refs.HeaderGrid.setScrollPosition({ scrollLeft })
                   }}
                   renderCell={this._renderBodyCell}
-                  rowHeight={useDynamicRowHeights ? this._getRowHeight : rowHeight}
+                  rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
                   rowsCount={rowsCount}
                   scrollToColumn={scrollToColumn}
                   scrollToRow={scrollToRow}
@@ -291,7 +292,7 @@ export default class GridExample extends Component {
 
   _updateUseDynamicRowHeights (value) {
     this.setState({
-      useDynamicRowHeights: value
+      useDynamicRowHeight: value
     })
   }
 
