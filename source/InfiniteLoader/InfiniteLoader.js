@@ -24,6 +24,10 @@ export default class InfiniteLoader extends Component {
       return error
     },
     /**
+     * Height to be passed through to child component.
+     */
+    height: PropTypes.number,
+    /**
      * Function responsible for tracking the loaded state of each row.
      * It should implement the following signature: (index: number): boolean
      */
@@ -45,7 +49,11 @@ export default class InfiniteLoader extends Component {
      * A threshold X means that data will start loading when a user scrolls within X rows.
      * This value defaults to 15.
      */
-    threshold: PropTypes.number
+    threshold: PropTypes.number,
+    /**
+     * Width to be passed through to child component.
+     */
+    width: PropTypes.number
   }
 
   static defaultProps = {
@@ -73,15 +81,17 @@ export default class InfiniteLoader extends Component {
   }
 
   render () {
-    const { children, ...props } = this.props
+    const { children, height, width, ...props } = this.props
 
     let child = React.Children.only(children)
 
     child = React.cloneElement(
       child,
       {
+        height,
         onRowsRendered: this._onRowsRendered,
-        ref: 'VirtualScroll'
+        ref: 'VirtualScroll',
+        width
       }
     )
 

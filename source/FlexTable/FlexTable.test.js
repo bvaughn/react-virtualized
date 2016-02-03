@@ -312,7 +312,7 @@ describe('FlexTable', () => {
         noRowsRenderer: () => <div>No rows!</div>,
         rowsCount: 0
       })
-      const bodyDOMNode = findDOMNode(table.refs.VirtualScroll)
+      const bodyDOMNode = findDOMNode(table.refs.Grid)
       expect(bodyDOMNode.textContent).toEqual('No rows!')
     })
 
@@ -320,7 +320,7 @@ describe('FlexTable', () => {
       const table = renderTable({
         rowsCount: 0
       })
-      const bodyDOMNode = findDOMNode(table.refs.VirtualScroll)
+      const bodyDOMNode = findDOMNode(table.refs.Grid)
       expect(bodyDOMNode.textContent).toEqual('')
     })
   })
