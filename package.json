@@ -3,7 +3,7 @@
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
-  "version": "4.6.3",
+  "version": "4.6.4",
   "scripts": {
     "build": "npm run build:css && npm run build:dist && npm run build:demo",
     "build:css": "postcss --use autoprefixer source/styles.css > styles.css",
@@ -98,7 +98,6 @@
     "postcss-loader": "^0.8.0",
     "react": "^0.14.3",
     "react-addons-test-utils": "^0.14.3",
-    "react-dom": "^0.14.3",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.0.1",
@@ -115,6 +114,7 @@
     "react-pure-render": "^1.0.2"
   },
   "peerDependencies": {
-    "react": "^0.14.0"
+    "react": "^0.14.0",
+    "react-dom": "^0.14.3"
   }
 }

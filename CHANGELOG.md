@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.6.4
+Moved `react-dom` from `dependencies` to `peerDependencies` to fix bad `4.6.3` build.
+
 #### 4.6.3
 Fixed edge-case sizing bug with `FlexTable` headers and always-on scrollbars (see issue #80 for more info).
 
