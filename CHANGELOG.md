@@ -2,7 +2,7 @@ Changelog
 ------------
 
 #### 4.6.6
-Better gaurd against NaN values for `clientWidth` and `offsetWidth` for test environments using PhantomJS.
+Better gaurd against `NaN` values for `clientWidth` and `offsetWidth` for test environments using `jsdom`.
 
 #### 4.6.5
 Added `react-dom` to the Webpack :externals node to avoid including it in the build.
