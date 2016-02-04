@@ -2,6 +2,7 @@
 import cn from 'classnames'
 import FlexColumn from './FlexColumn'
 import React, { Component, PropTypes } from 'react'
+import { findDOMNode } from 'react-dom'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import VirtualScroll from '../VirtualScroll'
 
@@ -117,6 +118,10 @@ export default class FlexTable extends Component {
   constructor (props) {
     super(props)
 
+    this.state = {
+      scrollbarWidth: 0
+    }
+
     this._createRow = this._createRow.bind(this)
   }
 
@@ -144,6 +149,14 @@ export default class FlexTable extends Component {
     this.refs.VirtualScroll.setScrollTop(scrollTop)
   }
 
+  componentDidMount () {
+    this._setScrollbarWidth()
+  }
+
+  componentDidUpdate () {
+    this._setScrollbarWidth()
+  }
+
   render () {
     const {
       className,
@@ -158,6 +171,7 @@ export default class FlexTable extends Component {
       rowsCount,
       verticalPadding
     } = this.props
+    const { scrollbarWidth } = this.state
 
     const availableRowsHeight = height - headerHeight - verticalPadding
 
@@ -177,7 +191,8 @@ export default class FlexTable extends Component {
           <div
             className={cn('FlexTable__headerRow', rowClass)}
             style={{
-              height: headerHeight
+              height: headerHeight,
+              paddingRight: scrollbarWidth
             }}
           >
             {this._getRenderedHeaderRow()}
@@ -339,12 +354,20 @@ export default class FlexTable extends Component {
       this._createHeader(column, columnIndex)
     )
   }
+
   _getRowHeight (rowIndex) {
     const { rowHeight } = this.props
 
     return rowHeight instanceof Function
       ? rowHeight(rowIndex)
       : rowHeight
+  }
+
+  _setScrollbarWidth () {
+    const VirtualScroll = findDOMNode(this.refs.VirtualScroll)
+    const scrollbarWidth = VirtualScroll.offsetWidth - VirtualScroll.clientWidth
+
+    this.setState({ scrollbarWidth })
   }
 }
 
