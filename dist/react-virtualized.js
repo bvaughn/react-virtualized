@@ -1481,7 +1481,7 @@
                 return size;
             }, cellMetadata = [], offset = 0, i = 0; cellCount > i; i++) {
                 var _size = sizeGetter(i);
-                if (null == _size || Number.isNaN(_size)) throw Error("Invalid size returned for cell " + i + " of value " + _size);
+                if (null == _size || isNaN(_size)) throw Error("Invalid size returned for cell " + i + " of value " + _size);
                 cellMetadata[i] = {
                     size: _size,
                     offset: offset

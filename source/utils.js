@@ -208,7 +208,7 @@ export function initCellMetadata ({
   for (var i = 0; i < cellCount; i++) {
     let size = sizeGetter(i)
 
-    if (size == null || Number.isNaN(size)) {
+    if (size == null || isNaN(size)) {
       throw Error(`Invalid size returned for cell ${i} of value ${size}`)
     }
 
