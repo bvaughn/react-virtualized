@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 4.6.5
+Added `react-dom` to the Webpack :externals node to avoid including it in the build.
+This fixes the bad `4.6.3` and `4.6.4` builds. Sorry!
+
 #### 4.6.4
 Moved `react-dom` from `dependencies` to `peerDependencies` to fix bad `4.6.3` build.
 
