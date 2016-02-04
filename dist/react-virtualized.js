@@ -6775,12 +6775,11 @@
 	 * @param {object} nativeEvent Native browser event.
 	 */
             function SyntheticEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEventTarget) {
-                this.dispatchConfig = dispatchConfig, this.dispatchMarker = dispatchMarker, this.nativeEvent = nativeEvent, 
-                this.target = nativeEventTarget, this.currentTarget = nativeEventTarget;
+                this.dispatchConfig = dispatchConfig, this.dispatchMarker = dispatchMarker, this.nativeEvent = nativeEvent;
                 var Interface = this.constructor.Interface;
                 for (var propName in Interface) if (Interface.hasOwnProperty(propName)) {
                     var normalize = Interface[propName];
-                    normalize ? this[propName] = normalize(nativeEvent) : this[propName] = nativeEvent[propName];
+                    normalize ? this[propName] = normalize(nativeEvent) : "target" === propName ? this.target = nativeEventTarget : this[propName] = nativeEvent[propName];
                 }
                 var defaultPrevented = null != nativeEvent.defaultPrevented ? nativeEvent.defaultPrevented : nativeEvent.returnValue === !1;
                 defaultPrevented ? this.isDefaultPrevented = emptyFunction.thatReturnsTrue : this.isDefaultPrevented = emptyFunction.thatReturnsFalse, 
@@ -6788,6 +6787,7 @@
             }
             var PooledClass = __webpack_require__(65), assign = __webpack_require__(48), emptyFunction = __webpack_require__(24), warning = __webpack_require__(34), EventInterface = {
                 type: null,
+                target: null,
                 // currentTarget is set when dispatching; no use in copying it here
                 currentTarget: emptyFunction.thatReturnsNull,
                 eventPhase: null,
@@ -9257,7 +9257,7 @@
                     // invalid types are ignored.
                     return ReactChildren.forEach(props.children, function(child) {
                         null != child && ("string" == typeof child || "number" == typeof child ? content += child : "production" !== process.env.NODE_ENV ? warning(!1, "Only strings and numbers are supported as <option> children.") : void 0);
-                    }), nativeProps.children = content, nativeProps;
+                    }), content && (nativeProps.children = content), nativeProps;
                 }
             };
             module.exports = ReactDOMOption;
@@ -13294,7 +13294,7 @@
 	 * @providesModule ReactVersion
 	 */
         "use strict";
-        module.exports = "0.14.6";
+        module.exports = "0.14.7";
     }, /* 156 */
     /***/
     function(module, exports, __webpack_require__) {
