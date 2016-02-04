@@ -761,7 +761,7 @@
             }, {
                 key: "_setScrollbarWidth",
                 value: function() {
-                    var VirtualScroll = (0, _reactDom.findDOMNode)(this.refs.VirtualScroll), scrollbarWidth = VirtualScroll.offsetWidth - VirtualScroll.clientWidth;
+                    var VirtualScroll = (0, _reactDom.findDOMNode)(this.refs.VirtualScroll), clientWidth = VirtualScroll.clientWidth || 0, offsetWidth = VirtualScroll.offsetWidth || 0, scrollbarWidth = offsetWidth - clientWidth;
                     this.setState({
                         scrollbarWidth: scrollbarWidth
                     });

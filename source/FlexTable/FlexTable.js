@@ -365,7 +365,9 @@ export default class FlexTable extends Component {
 
   _setScrollbarWidth () {
     const VirtualScroll = findDOMNode(this.refs.VirtualScroll)
-    const scrollbarWidth = VirtualScroll.offsetWidth - VirtualScroll.clientWidth
+    const clientWidth = VirtualScroll.clientWidth || 0
+    const offsetWidth = VirtualScroll.offsetWidth || 0
+    const scrollbarWidth = offsetWidth - clientWidth
 
     this.setState({ scrollbarWidth })
   }
