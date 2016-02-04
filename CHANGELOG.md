@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.6.3
+Fixed edge-case sizing bug with `FlexTable` headers and always-on scrollbars (see issue #80 for more info).
+
 #### 4.6.2
 Replaced single occurence of `Number.isNaN` with `isNaN` to avoid IE compatibility issues. Maybe in the future I will add a polyfill dependency but I did not intend to introduce this without a major version bump so I'm removing it.
 
