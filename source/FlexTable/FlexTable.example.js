@@ -133,6 +133,7 @@ export default class TableExample extends Component {
           rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
           rowGetter={rowGetter}
           rowsCount={rowsCount}
+          scrollToIndex={scrollToIndex}
           sort={this._sort}
           sortBy={sortBy}
           sortDirection={sortDirection}
@@ -196,8 +197,6 @@ export default class TableExample extends Component {
     }
 
     this.setState({ scrollToIndex })
-
-    this.refs.Table.scrollToRow(scrollToIndex)
   }
 
   _rowClassName (index) {

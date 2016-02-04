@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.7.0
+Added `scrollToIndex` property to `FlexTable` to be passed through to inner `Grid`.
+
 #### 4.6.6
 Better gaurd against `NaN` values for `clientWidth` and `offsetWidth` for test environments using `jsdom`.
 

@@ -91,6 +91,8 @@ export default class FlexTable extends Component {
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
     /** Number of rows in table. */
     rowsCount: PropTypes.number.isRequired,
+    /** Row index to ensure visible (by forcefully scrolling if necessary) */
+    scrollToIndex: PropTypes.number,
     /**
      * Sort function to be called if a sortable header is clicked.
      * (dataKey: string, sortDirection: SortDirection): void
@@ -169,6 +171,7 @@ export default class FlexTable extends Component {
       rowClassName,
       rowHeight,
       rowsCount,
+      scrollToIndex,
       verticalPadding
     } = this.props
     const { scrollbarWidth } = this.state
@@ -208,6 +211,7 @@ export default class FlexTable extends Component {
           rowHeight={rowHeight}
           rowRenderer={rowRenderer}
           rowsCount={rowsCount}
+          scrollToIndex={scrollToIndex}
         />
       </div>
     )

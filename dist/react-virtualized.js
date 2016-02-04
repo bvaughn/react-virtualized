@@ -595,6 +595,8 @@
                     rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
                     /** Number of rows in table. */
                     rowsCount: _react.PropTypes.number.isRequired,
+                    /** Row index to ensure visible (by forcefully scrolling if necessary) */
+                    scrollToIndex: _react.PropTypes.number,
                     /**
 	       * Sort function to be called if a sortable header is clicked.
 	       * (dataKey: string, sortDirection: SortDirection): void
@@ -659,7 +661,7 @@
             }, {
                 key: "render",
                 value: function() {
-                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, onScroll = _props.onScroll, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, verticalPadding = _props.verticalPadding, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = height - headerHeight - verticalPadding, rowRenderer = function(index) {
+                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, onScroll = _props.onScroll, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, verticalPadding = _props.verticalPadding, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = height - headerHeight - verticalPadding, rowRenderer = function(index) {
                         return _this._createRow(index);
                     }, rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
                     return _react2["default"].createElement("div", {
@@ -678,7 +680,8 @@
                         onScroll: onScroll,
                         rowHeight: rowHeight,
                         rowRenderer: rowRenderer,
-                        rowsCount: rowsCount
+                        rowsCount: rowsCount,
+                        scrollToIndex: scrollToIndex
                     }));
                 }
             }, {
