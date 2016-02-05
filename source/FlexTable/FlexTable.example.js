@@ -50,17 +50,17 @@ export default class TableExample extends Component {
     } = this.state
 
     const { list } = this.props
-    const filteredList = list
-      .sortBy(index => list.getIn([index, sortBy]))
-      .update(list =>
-        sortDirection === SortDirection.DESC
-          ? list.reverse()
-          : list
-      )
+    const sortedList = this._isSortEnabled()
+      ? list
+        .sortBy(index => list.getIn([index, sortBy]))
+        .update(list =>
+          sortDirection === SortDirection.DESC
+            ? list.reverse()
+            : list
+        )
+      : list
 
-    function rowGetter (index) {
-      return filteredList.get(index)
-    }
+    const rowGetter = index => this._getDatum(sortedList, index)
 
     return (
       <ContentBox {...this.props}>
@@ -148,11 +148,13 @@ export default class TableExample extends Component {
                   (dataKey, rowData, columnData) => rowData.index
                 }
                 dataKey='index'
+                disableSort={!this._isSortEnabled()}
                 width={50}
               />
               <FlexColumn
                 label='Name'
                 dataKey='name'
+                disableSort={!this._isSortEnabled()}
                 width={90}
               />
               <FlexColumn
@@ -173,9 +175,21 @@ export default class TableExample extends Component {
     )
   }
 
+  _getDatum (list, index) {
+    return list.get(index % list.size)
+  }
+
   _getRowHeight (index) {
     const { list } = this.props
-    return list.get(index).size
+
+    return this._getDatum(list, index).size
+  }
+
+  _isSortEnabled () {
+    const { list } = this.props
+    const { rowsCount } = this.state
+
+    return rowsCount <= list.size
   }
 
   _noRowsRenderer () {
@@ -187,8 +201,7 @@ export default class TableExample extends Component {
   }
 
   _onRowsCountChange (event) {
-    let rowsCount = parseInt(event.target.value, 10) || 0
-    rowsCount = Math.max(0, Math.min(this.props.list.size, rowsCount))
+    const rowsCount = parseInt(event.target.value, 10) || 0
 
     this.setState({ rowsCount })
   }
