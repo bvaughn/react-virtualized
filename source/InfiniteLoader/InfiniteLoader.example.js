@@ -27,10 +27,18 @@ export default class InfiniteLoaderExample extends Component {
       randomScrollToIndex: null
     }
 
+    this._timeoutIdMap = {}
+
     this._clearData = this._clearData.bind(this)
     this._isRowLoaded = this._isRowLoaded.bind(this)
     this._loadMoreRows = this._loadMoreRows.bind(this)
     this._rowRenderer = this._rowRenderer.bind(this)
+  }
+
+  componentWillUnmount () {
+    Object.keys(this._timeoutIdMap).forEach(timeoutId => {
+      clearTimeout(timeoutId)
+    })
   }
 
   render () {
@@ -109,8 +117,10 @@ export default class InfiniteLoaderExample extends Component {
       loadingRowsCount: loadingRowsCount + increment
     })
 
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       const { loadedRowsCount, loadingRowsCount } = this.state
+
+      delete this._timeoutIdMap[timeoutId]
 
       for (var i = startIndex; i <= stopIndex; i++) {
         loadedRowsMap[i] = STATUS_LOADED
@@ -123,6 +133,8 @@ export default class InfiniteLoaderExample extends Component {
 
       promiseResolver()
     }, 1000 + Math.round(Math.random() * 2000))
+
+    this._timeoutIdMap[timeoutId] = true
 
     let promiseResolver
 

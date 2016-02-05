@@ -137,7 +137,7 @@ export default class GridExample extends Component {
               height={height}
               onScroll={({ scrollLeft, scrollTop }) => this.refs.BodyGrid.setScrollPosition({ scrollTop })}
               renderCell={this._renderLeftSideCell}
-              rowHeight={rowHeight}
+              rowHeight={useDynamicRowHeights ? this._getRowHeight : rowHeight}
               rowsCount={rowsCount}
               width={50}
             />
