@@ -237,14 +237,21 @@
                     this.state), height = _state.height, width = _state.width, childProps = {};
                     disableHeight || (childProps.height = height), disableWidth || (childProps.width = width);
                     var child = _react2["default"].Children.only(children);
-                    return child = _react2["default"].cloneElement(child, childProps), _react2["default"].createElement("div", {
+                    child = _react2["default"].cloneElement(child, childProps);
+                    // Outer div should not force width/height since that may prevent containers from shrinking.
+                    // Inner div overflows and enforces calculated width/height.
+                    // See issue #68 for more information.
+                    var outerStyle = {
+                        overflow: "visible"
+                    }, innerStyle = {};
+                    return disableWidth || (outerStyle.width = 0, innerStyle.width = width), disableHeight || (outerStyle.height = 0, 
+                    innerStyle.height = height), _react2["default"].createElement("div", {
                         ref: this._setRef,
                         className: (0, _classnames2["default"])("AutoSizer", className),
-                        style: {
-                            width: "100%",
-                            height: "100%"
-                        }
-                    }, child);
+                        style: outerStyle
+                    }, _react2["default"].createElement("div", {
+                        style: innerStyle
+                    }, child));
                 }
             }, {
                 key: "_onResize",
