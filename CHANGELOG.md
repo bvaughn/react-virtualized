@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 4.7.1
+Fixed `AutoSizer` bug that caused it to prevent parent flex containers from shrinking in some contexts.
+
 #### 4.7.0
 Added `scrollToIndex` property to `FlexTable` to be passed through to inner `Grid`.
 
