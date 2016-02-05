@@ -64,16 +64,33 @@ export default class AutoSizer extends Component {
     let child = React.Children.only(children)
     child = React.cloneElement(child, childProps)
 
+    // Outer div should not force width/height since that may prevent containers from shrinking.
+    // Inner div overflows and enforces calculated width/height.
+    // See issue #68 for more information.
+    const outerStyle = { overflow: 'visible' }
+    const innerStyle = {}
+
+    if (!disableWidth) {
+      outerStyle.width = 0
+      innerStyle.width = width
+    }
+
+    if (!disableHeight) {
+      outerStyle.height = 0
+      innerStyle.height = height
+    }
+
     return (
       <div
         ref={this._setRef}
         className={cn('AutoSizer', className)}
-        style={{
-          width: '100%',
-          height: '100%'
-        }}
+        style={outerStyle}
       >
-        {child}
+        <div
+          style={innerStyle}
+        >
+          {child}
+        </div>
       </div>
     )
   }
