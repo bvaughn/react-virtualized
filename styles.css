@@ -28,6 +28,10 @@
   width: 100%;
 }
 
+.FlexTable__Grid {
+  overflow-x: hidden;
+}
+
 .FlexTable__headerRow {
   font-weight: 700;
   text-transform: uppercase;

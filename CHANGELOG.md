@@ -1,6 +1,22 @@
 Changelog
 ------------
 
+#### 4.7.0
+Added `scrollToIndex` property to `FlexTable` to be passed through to inner `Grid`.
+
+#### 4.6.6
+Better gaurd against `NaN` values for `clientWidth` and `offsetWidth` for test environments using `jsdom`.
+
+#### 4.6.5
+Added `react-dom` to the Webpack :externals node to avoid including it in the build.
+This fixes the bad `4.6.3` and `4.6.4` builds. Sorry!
+
+#### 4.6.4
+Moved `react-dom` from `dependencies` to `peerDependencies` to fix bad `4.6.3` build.
+
+#### 4.6.3
+Fixed edge-case sizing bug with `FlexTable` headers and always-on scrollbars (see issue #80 for more info).
+
 #### 4.6.2
 Replaced single occurence of `Number.isNaN` with `isNaN` to avoid IE compatibility issues. Maybe in the future I will add a polyfill dependency but I did not intend to introduce this without a major version bump so I'm removing it.
 

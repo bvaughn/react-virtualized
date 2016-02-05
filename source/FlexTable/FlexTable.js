@@ -210,7 +210,7 @@ export default class FlexTable extends Component {
 
         <Grid
           ref='Grid'
-          className={className}
+          className={'FlexTable__Grid'}
           columnWidth={width}
           columnsCount={1}
           height={availableRowsHeight}
@@ -315,6 +315,7 @@ export default class FlexTable extends Component {
       rowClassName,
       rowGetter
     } = this.props
+    const { scrollbarWidth } = this.state
 
     const rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName
 
@@ -334,7 +335,8 @@ export default class FlexTable extends Component {
         className={cn('FlexTable__row', rowClass)}
         onClick={() => onRowClick(rowIndex)}
         style={{
-          height: this._getRowHeight(rowIndex)
+          height: this._getRowHeight(rowIndex),
+          paddingRight: scrollbarWidth
         }}
       >
         {renderedRow}
@@ -381,8 +383,10 @@ export default class FlexTable extends Component {
   }
 
   _setScrollbarWidth () {
-    const VirtualScroll = findDOMNode(this.refs.VirtualScroll)
-    const scrollbarWidth = VirtualScroll.offsetWidth - VirtualScroll.clientWidth
+    const Grid = findDOMNode(this.refs.Grid)
+    const clientWidth = Grid.clientWidth || 0
+    const offsetWidth = Grid.offsetWidth || 0
+    const scrollbarWidth = offsetWidth - clientWidth
 
     this.setState({ scrollbarWidth })
   }

@@ -1,6 +1,6 @@
 !function(root, factory) {
-    "object" == typeof exports && "object" == typeof module ? module.exports = factory(require("react")) : "function" == typeof define && define.amd ? define([ "react" ], factory) : "object" == typeof exports ? exports["react-virtualized"] = factory(require("react")) : root["react-virtualized"] = factory(root.React);
-}(this, function(__WEBPACK_EXTERNAL_MODULE_4__) {
+    "object" == typeof exports && "object" == typeof module ? module.exports = factory(require("react"), require("react-dom")) : "function" == typeof define && define.amd ? define([ "react", "react-dom" ], factory) : "object" == typeof exports ? exports["react-virtualized"] = factory(require("react"), require("react-dom")) : root["react-virtualized"] = factory(root.React, root.ReactDOM);
+}(this, function(__WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_11__) {
     /******/
     return function(modules) {
         /******/
@@ -101,21 +101,21 @@
                 return _FlexTable.SortIndicator;
             }
         });
-        var _Grid = __webpack_require__(19);
+        var _Grid = __webpack_require__(20);
         Object.defineProperty(exports, "Grid", {
             enumerable: !0,
             get: function() {
                 return _Grid.Grid;
             }
         });
-        var _InfiniteLoader = __webpack_require__(21);
+        var _InfiniteLoader = __webpack_require__(22);
         Object.defineProperty(exports, "InfiniteLoader", {
             enumerable: !0,
             get: function() {
                 return _InfiniteLoader.InfiniteLoader;
             }
         });
-        var _VirtualScroll = __webpack_require__(11);
+        var _VirtualScroll = __webpack_require__(12);
         Object.defineProperty(exports, "VirtualScroll", {
             enumerable: !0,
             get: function() {
@@ -505,7 +505,7 @@
             }
         };
         exports.SortIndicator = SortIndicator;
-        var _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(10), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _VirtualScroll = __webpack_require__(11), _VirtualScroll2 = _interopRequireDefault(_VirtualScroll), SortDirection = {
+        var _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(10), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(11), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _VirtualScroll = __webpack_require__(12), _VirtualScroll2 = _interopRequireDefault(_VirtualScroll), SortDirection = {
             /**
 	   * Sort items in ascending order.
 	   * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
@@ -525,7 +525,9 @@
         var FlexTable = function(_Component) {
             function FlexTable(props) {
                 _classCallCheck(this, FlexTable), _get(Object.getPrototypeOf(FlexTable.prototype), "constructor", this).call(this, props), 
-                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this._createRow = this._createRow.bind(this);
+                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
+                    scrollbarWidth: 0
+                }, this._createRow = this._createRow.bind(this);
             }
             /**
 	   * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
@@ -593,6 +595,8 @@
                     rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
                     /** Number of rows in table. */
                     rowsCount: _react.PropTypes.number.isRequired,
+                    /** Row index to ensure visible (by forcefully scrolling if necessary) */
+                    scrollToIndex: _react.PropTypes.number,
                     /**
 	       * Sort function to be called if a sortable header is clicked.
 	       * (dataKey: string, sortDirection: SortDirection): void
@@ -645,9 +649,19 @@
                     this.refs.VirtualScroll.setScrollTop(scrollTop);
                 }
             }, {
+                key: "componentDidMount",
+                value: function() {
+                    this._setScrollbarWidth();
+                }
+            }, {
+                key: "componentDidUpdate",
+                value: function() {
+                    this._setScrollbarWidth();
+                }
+            }, {
                 key: "render",
                 value: function() {
-                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, onScroll = _props.onScroll, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, verticalPadding = _props.verticalPadding, availableRowsHeight = height - headerHeight - verticalPadding, rowRenderer = function(index) {
+                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, onScroll = _props.onScroll, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, verticalPadding = _props.verticalPadding, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = height - headerHeight - verticalPadding, rowRenderer = function(index) {
                         return _this._createRow(index);
                     }, rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
                     return _react2["default"].createElement("div", {
@@ -655,7 +669,8 @@
                     }, !disableHeader && _react2["default"].createElement("div", {
                         className: (0, _classnames2["default"])("FlexTable__headerRow", rowClass),
                         style: {
-                            height: headerHeight
+                            height: headerHeight,
+                            paddingRight: scrollbarWidth
                         }
                     }, this._getRenderedHeaderRow()), _react2["default"].createElement(_VirtualScroll2["default"], {
                         ref: "VirtualScroll",
@@ -665,7 +680,8 @@
                         onScroll: onScroll,
                         rowHeight: rowHeight,
                         rowRenderer: rowRenderer,
-                        rowsCount: rowsCount
+                        rowsCount: rowsCount,
+                        scrollToIndex: scrollToIndex
                     }));
                 }
             }, {
@@ -744,6 +760,14 @@
                 value: function(rowIndex) {
                     var rowHeight = this.props.rowHeight;
                     return rowHeight instanceof Function ? rowHeight(rowIndex) : rowHeight;
+                }
+            }, {
+                key: "_setScrollbarWidth",
+                value: function() {
+                    var VirtualScroll = (0, _reactDom.findDOMNode)(this.refs.VirtualScroll), clientWidth = VirtualScroll.clientWidth || 0, offsetWidth = VirtualScroll.offsetWidth || 0, scrollbarWidth = offsetWidth - clientWidth;
+                    this.setState({
+                        scrollbarWidth: scrollbarWidth
+                    });
                 }
             } ]), FlexTable;
         }(_react.Component);
@@ -866,6 +890,10 @@
         exports["default"] = Column;
     }, /* 11 */
     /***/
+    function(module, exports) {
+        module.exports = __WEBPACK_EXTERNAL_MODULE_11__;
+    }, /* 12 */
+    /***/
     function(module, exports, __webpack_require__) {
         "use strict";
         function _interopRequireDefault(obj) {
@@ -876,11 +904,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _VirtualScroll2 = __webpack_require__(12), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
+        var _VirtualScroll2 = __webpack_require__(13), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
         exports["default"] = _VirtualScroll3["default"];
         var _VirtualScroll4 = _interopRequireDefault(_VirtualScroll2);
         exports.VirtualScroll = _VirtualScroll4["default"];
-    }, /* 12 */
+    }, /* 13 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -935,7 +963,7 @@
                     if (null === parent) return;
                     _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
                 }
-            }, _utils = __webpack_require__(15), _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(16), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), IS_SCROLLING_TIMEOUT = 150, VirtualScroll = function(_Component) {
+            }, _utils = __webpack_require__(16), _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(17), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), IS_SCROLLING_TIMEOUT = 150, VirtualScroll = function(_Component) {
                 function VirtualScroll(props, context) {
                     _classCallCheck(this, VirtualScroll), _get(Object.getPrototypeOf(VirtualScroll.prototype), "constructor", this).call(this, props, context), 
                     this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
@@ -1284,8 +1312,8 @@
                 } ]), VirtualScroll;
             }(_react.Component);
             exports["default"] = VirtualScroll, module.exports = exports["default"];
-        }).call(exports, __webpack_require__(13).setImmediate, __webpack_require__(13).clearImmediate);
-    }, /* 13 */
+        }).call(exports, __webpack_require__(14).setImmediate, __webpack_require__(14).clearImmediate);
+    }, /* 14 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -1293,7 +1321,7 @@
             function Timeout(id, clearFn) {
                 this._id = id, this._clearFn = clearFn;
             }
-            var nextTick = __webpack_require__(14).nextTick, apply = Function.prototype.apply, slice = Array.prototype.slice, immediateIds = {}, nextImmediateId = 0;
+            var nextTick = __webpack_require__(15).nextTick, apply = Function.prototype.apply, slice = Array.prototype.slice, immediateIds = {}, nextImmediateId = 0;
             // DOM APIs, for completeness
             exports.setTimeout = function() {
                 return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
@@ -1326,8 +1354,8 @@
             }, exports.clearImmediate = "function" == typeof clearImmediate ? clearImmediate : function(id) {
                 delete immediateIds[id];
             };
-        }).call(exports, __webpack_require__(13).setImmediate, __webpack_require__(13).clearImmediate);
-    }, /* 14 */
+        }).call(exports, __webpack_require__(14).setImmediate, __webpack_require__(14).clearImmediate);
+    }, /* 15 */
     /***/
     function(module, exports) {
         function cleanUpNextTick() {
@@ -1371,7 +1399,7 @@
         }, process.umask = function() {
             return 0;
         };
-    }, /* 15 */
+    }, /* 16 */
     /***/
     function(module, exports) {
         /**
@@ -1526,10 +1554,10 @@
         exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex, exports.getVisibleCellIndices = getVisibleCellIndices, 
         exports.initCellMetadata = initCellMetadata, exports.updateScrollIndexHelper = updateScrollIndexHelper, 
         findNearestCell.EQUAL_OR_LOWER = 1, findNearestCell.EQUAL_OR_HIGHER = 2;
-    }, /* 16 */
+    }, /* 17 */
     /***/
     function(module, exports, __webpack_require__) {
-        for (var now = __webpack_require__(17), global = "undefined" == typeof window ? {} : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = global["request" + suffix], caf = global["cancel" + suffix] || global["cancelRequest" + suffix], i = 0; i < vendors.length && !raf; i++) raf = global[vendors[i] + "Request" + suffix], 
+        for (var now = __webpack_require__(18), global = "undefined" == typeof window ? {} : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = global["request" + suffix], caf = global["cancel" + suffix] || global["cancelRequest" + suffix], i = 0; i < vendors.length && !raf; i++) raf = global[vendors[i] + "Request" + suffix], 
         caf = global[vendors[i] + "Cancel" + suffix] || global[vendors[i] + "CancelRequest" + suffix];
         // Some versions of FF have rAF but not cAF
         if (!raf || !caf) {
@@ -1569,7 +1597,7 @@
         }, module.exports.cancel = function() {
             caf.apply(global, arguments);
         };
-    }, /* 17 */
+    }, /* 18 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -1590,8 +1618,8 @@
                     return new Date().getTime() - loadTime;
                 }, loadTime = new Date().getTime());
             }).call(this);
-        }).call(exports, __webpack_require__(18));
-    }, /* 18 */
+        }).call(exports, __webpack_require__(19));
+    }, /* 19 */
     /***/
     function(module, exports) {
         function cleanUpNextTick() {
@@ -1635,7 +1663,7 @@
         }, process.umask = function() {
             return 0;
         };
-    }, /* 19 */
+    }, /* 20 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1647,11 +1675,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _Grid2 = __webpack_require__(20), _Grid3 = _interopRequireDefault(_Grid2);
+        var _Grid2 = __webpack_require__(21), _Grid3 = _interopRequireDefault(_Grid2);
         exports["default"] = _Grid3["default"];
         var _Grid4 = _interopRequireDefault(_Grid2);
         exports.Grid = _Grid4["default"];
-    }, /* 20 */
+    }, /* 21 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -1706,7 +1734,7 @@
                     if (null === parent) return;
                     _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
                 }
-            }, _utils = __webpack_require__(15), _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(16), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), IS_SCROLLING_TIMEOUT = 150, Grid = function(_Component) {
+            }, _utils = __webpack_require__(16), _classnames = __webpack_require__(3), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(17), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), IS_SCROLLING_TIMEOUT = 150, Grid = function(_Component) {
                 function Grid(props, context) {
                     _classCallCheck(this, Grid), _get(Object.getPrototypeOf(Grid.prototype), "constructor", this).call(this, props, context), 
                     this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
@@ -2196,8 +2224,8 @@
                 } ]), Grid;
             }(_react.Component);
             exports["default"] = Grid, module.exports = exports["default"];
-        }).call(exports, __webpack_require__(13).setImmediate, __webpack_require__(13).clearImmediate);
-    }, /* 21 */
+        }).call(exports, __webpack_require__(14).setImmediate, __webpack_require__(14).clearImmediate);
+    }, /* 22 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -2209,11 +2237,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _InfiniteLoader2 = __webpack_require__(22), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
+        var _InfiniteLoader2 = __webpack_require__(23), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
         exports["default"] = _InfiniteLoader3["default"];
         var _InfiniteLoader4 = _interopRequireDefault(_InfiniteLoader2);
         exports.InfiniteLoader = _InfiniteLoader4["default"];
-    }, /* 22 */
+    }, /* 23 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -2293,7 +2321,7 @@
             }
         };
         exports.isRangeVisible = isRangeVisible, exports.scanForUnloadedRanges = scanForUnloadedRanges;
-        var _FlexTable = __webpack_require__(8), _FlexTable2 = _interopRequireDefault(_FlexTable), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _VirtualScroll = __webpack_require__(11), _VirtualScroll2 = _interopRequireDefault(_VirtualScroll), InfiniteLoader = function(_Component) {
+        var _FlexTable = __webpack_require__(8), _FlexTable2 = _interopRequireDefault(_FlexTable), _react = __webpack_require__(4), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(5), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _VirtualScroll = __webpack_require__(12), _VirtualScroll2 = _interopRequireDefault(_VirtualScroll), InfiniteLoader = function(_Component) {
             function InfiniteLoader(props) {
                 _classCallCheck(this, InfiniteLoader), _get(Object.getPrototypeOf(InfiniteLoader.prototype), "constructor", this).call(this, props), 
                 this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this._onRowsRendered = this._onRowsRendered.bind(this);
