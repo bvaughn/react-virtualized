@@ -197,13 +197,18 @@ export default class GridExample extends Component {
     }
   }
 
+  _getDatum (index) {
+    const { list } = this.props
+
+    return list.get(index % list.size)
+  }
+
   _getRowClassName (row) {
     return row % 2 === 0 ? styles.evenRow : styles.oddRow
   }
 
   _getRowHeight (index) {
-    const { list } = this.props
-    return list.get(index).size
+    return this._getDatum(index).size
   }
 
   _noContentRenderer () {
@@ -215,9 +220,8 @@ export default class GridExample extends Component {
   }
 
   _renderBodyCell ({ columnIndex, rowIndex }) {
-    const { list } = this.props
     const rowClass = this._getRowClassName(rowIndex)
-    const datum = list.get(rowIndex)
+    const datum = this._getDatum(rowIndex)
 
     let content
 
@@ -271,8 +275,7 @@ export default class GridExample extends Component {
   }
 
   _renderLeftSideCell ({ columnIndex, rowIndex }) {
-    const { list } = this.props
-    const datum = list.get(rowIndex)
+    const datum = this._getDatum(rowIndex)
 
     const classNames = cn(styles.cell, {
       [styles.letterCell]: columnIndex === 0
@@ -296,15 +299,13 @@ export default class GridExample extends Component {
   }
 
   _onColumnsCountChange (event) {
-    let columnsCount = parseInt(event.target.value, 10) || 0
-    columnsCount = Math.max(0, Math.min(this.props.list.size, columnsCount))
+    const columnsCount = parseInt(event.target.value, 10) || 0
 
     this.setState({ columnsCount })
   }
 
   _onRowsCountChange (event) {
-    let rowsCount = parseInt(event.target.value, 10) || 0
-    rowsCount = Math.max(0, Math.min(this.props.list.size, rowsCount))
+    const rowsCount = parseInt(event.target.value, 10) || 0
 
     this.setState({ rowsCount })
   }
