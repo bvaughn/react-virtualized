@@ -2347,6 +2347,10 @@
                         }), error;
                     },
                     /**
+	       * Height to be passed through to child component.
+	       */
+                    height: _react.PropTypes.number,
+                    /**
 	       * Function responsible for tracking the loaded state of each row.
 	       * It should implement the following signature: (index: number): boolean
 	       */
@@ -2368,7 +2372,11 @@
 	       * A threshold X means that data will start loading when a user scrolls within X rows.
 	       * This value defaults to 15.
 	       */
-                    threshold: _react.PropTypes.number
+                    threshold: _react.PropTypes.number,
+                    /**
+	       * Width to be passed through to child component.
+	       */
+                    width: _react.PropTypes.number
                 },
                 enumerable: !0
             }, {
@@ -2395,12 +2403,13 @@
             }, {
                 key: "render",
                 value: function() {
-                    var _props = this.props, children = _props.children, child = (_objectWithoutProperties(_props, [ "children" ]), 
-                    _react2["default"].Children.only(children));
-                    return child = _react2["default"].cloneElement(child, {
-                        onRowsRendered: this._onRowsRendered,
-                        ref: "VirtualScroll"
-                    });
+                    var _props = this.props, children = _props.children, height = _props.height, width = _props.width, child = (_objectWithoutProperties(_props, [ "children", "height", "width" ]), 
+                    _react2["default"].Children.only(children)), childProps = {
+                        ref: "Child",
+                        onRowsRendered: this._onRowsRendered
+                    };
+                    return height >= 0 && (childProps.height = height), width >= 0 && (childProps.width = width), 
+                    _react2["default"].cloneElement(child, childProps);
                 }
             }, {
                 key: "_onRowsRendered",
@@ -2421,7 +2430,7 @@
                                 lastRenderedStopIndex: _this._lastRenderedStopIndex,
                                 startIndex: unloadedRange.startIndex,
                                 stopIndex: unloadedRange.stopIndex
-                            }) && _this.refs.VirtualScroll && _this.refs.VirtualScroll.forceUpdate();
+                            }) && _this.refs.Child && _this.refs.Child.forceUpdate();
                         });
                     }), this._originalOnRowsRendered && this._originalOnRowsRendered({
                         startIndex: startIndex,

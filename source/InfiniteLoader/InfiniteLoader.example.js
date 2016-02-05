@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import Immutable from 'immutable'
+import AutoSizer from '../AutoSizer'
 import InfiniteLoader from './InfiniteLoader'
 import VirtualScroll from '../VirtualScroll'
 import shouldPureComponentUpdate from 'react-pure-render/function'
@@ -73,21 +74,25 @@ export default class InfiniteLoaderExample extends Component {
           </div>
         </ContentBoxParagraph>
 
-        <InfiniteLoader
-          ref='InfiniteLoader'
-          isRowLoaded={this._isRowLoaded}
-          loadMoreRows={this._loadMoreRows}
-          rowsCount={list.size}
-        >
-          <VirtualScroll
-            className={styles.VirtualScroll}
-            height={200}
-            rowsCount={list.size}
-            rowHeight={30}
-            rowRenderer={this._rowRenderer}
-            scrollToIndex={randomScrollToIndex}
-          />
-        </InfiniteLoader>
+        <div>
+          <AutoSizer disableHeight>
+            <InfiniteLoader
+              ref='InfiniteLoader'
+              isRowLoaded={this._isRowLoaded}
+              loadMoreRows={this._loadMoreRows}
+              rowsCount={list.size}
+            >
+              <VirtualScroll
+                className={styles.VirtualScroll}
+                height={200}
+                rowsCount={list.size}
+                rowHeight={30}
+                rowRenderer={this._rowRenderer}
+                scrollToIndex={randomScrollToIndex}
+              />
+            </InfiniteLoader>
+          </AutoSizer>
+        </div>
       </ContentBox>
     )
   }
