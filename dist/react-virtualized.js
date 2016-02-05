@@ -2354,7 +2354,7 @@
 	       * Function responsible for tracking the loaded state of each row.
 	       * It should implement the following signature: (index: number): boolean
 	       */
-                    isRowLoaded: _react.PropTypes.func,
+                    isRowLoaded: _react.PropTypes.func.isRequired,
                     /**
 	       * Callback to be invoked when more rows must be loaded.
 	       * It should implement the following signature: ({ startIndex, stopIndex }): Promise
@@ -2366,13 +2366,13 @@
                     /**
 	       * Number of rows in list; can be arbitrary high number if actual number is unknown.
 	       */
-                    rowsCount: _react.PropTypes.number,
+                    rowsCount: _react.PropTypes.number.isRequired,
                     /**
 	       * Threshold at which to pre-fetch data.
 	       * A threshold X means that data will start loading when a user scrolls within X rows.
 	       * This value defaults to 15.
 	       */
-                    threshold: _react.PropTypes.number,
+                    threshold: _react.PropTypes.number.isRequired,
                     /**
 	       * Width to be passed through to child component.
 	       */
@@ -2382,6 +2382,7 @@
             }, {
                 key: "defaultProps",
                 value: {
+                    rowsCount: 0,
                     threshold: 15
                 },
                 enumerable: !0

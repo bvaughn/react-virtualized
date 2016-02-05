@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 4.8.1
+Updated `InfiniteLoader` to better reflect required properties. (`isRowLoaded`, `rowsCount`, and `threshold` were not marked as required before.)
+
 ### 4.8.0
 Updated `InfiniteLoader` to support being composable within an `AutoSizer` HOC. If either a `width` or `height` attribute are specified on `InfiniteLoader` they will be bundled through to the loader's child component.
 

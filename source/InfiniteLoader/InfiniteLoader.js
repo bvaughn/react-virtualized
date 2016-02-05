@@ -31,7 +31,7 @@ export default class InfiniteLoader extends Component {
      * Function responsible for tracking the loaded state of each row.
      * It should implement the following signature: (index: number): boolean
      */
-    isRowLoaded: PropTypes.func,
+    isRowLoaded: PropTypes.func.isRequired,
     /**
      * Callback to be invoked when more rows must be loaded.
      * It should implement the following signature: ({ startIndex, stopIndex }): Promise
@@ -43,13 +43,13 @@ export default class InfiniteLoader extends Component {
     /**
      * Number of rows in list; can be arbitrary high number if actual number is unknown.
      */
-    rowsCount: PropTypes.number,
+    rowsCount: PropTypes.number.isRequired,
     /**
      * Threshold at which to pre-fetch data.
      * A threshold X means that data will start loading when a user scrolls within X rows.
      * This value defaults to 15.
      */
-    threshold: PropTypes.number,
+    threshold: PropTypes.number.isRequired,
     /**
      * Width to be passed through to child component.
      */
@@ -57,6 +57,7 @@ export default class InfiniteLoader extends Component {
   }
 
   static defaultProps = {
+    rowsCount: 0,
     threshold: 15
   }
 
