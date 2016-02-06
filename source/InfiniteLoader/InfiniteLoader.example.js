@@ -78,14 +78,13 @@ export default class InfiniteLoaderExample extends Component {
           <AutoSizer disableHeight>
             <InfiniteLoader
               ref='InfiniteLoader'
-              height={200}
               isRowLoaded={this._isRowLoaded}
               loadMoreRows={this._loadMoreRows}
               rowsCount={list.size}
             >
               <VirtualScroll
                 className={styles.VirtualScroll}
-                height={0}
+                height={200}
                 rowsCount={list.size}
                 rowHeight={30}
                 rowRenderer={this._rowRenderer}
