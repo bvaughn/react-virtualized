@@ -123,7 +123,6 @@ export default class Grid extends Component {
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onKeyPress = this._onKeyPress.bind(this)
     this._onScroll = this._onScroll.bind(this)
-    this._onWheel = this._onWheel.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
   }
@@ -379,7 +378,6 @@ export default class Grid extends Component {
         className={cn('Grid', className)}
         onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
-        onWheel={this._onWheel}
         tabIndex={0}
         style={{
           height: height,
@@ -473,7 +471,7 @@ export default class Grid extends Component {
   /**
    * Updates the state during the next animation frame.
    * Use this method to avoid multiple renders in a small span of time.
-   * This helps performance for bursty events (like onWheel).
+   * This helps performance for bursty events (like onScroll).
    */
   _setNextState (state) {
     if (this._setNextStateAnimationFrameId) {
@@ -675,23 +673,6 @@ export default class Grid extends Component {
     const totalColumnsWidth = this._getTotalColumnsWidth()
     const scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft)
     const scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop)
-
-    this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
-
-    this._onScrollMemoizer({
-      callback: onScroll,
-      indices: {
-        scrollLeft,
-        scrollTop
-      }
-    })
-  }
-
-  _onWheel (event) {
-    const{ onScroll } = this.props
-
-    const scrollLeft = this.refs.scrollingContainer.scrollLeft
-    const scrollTop = this.refs.scrollingContainer.scrollTop
 
     this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
 

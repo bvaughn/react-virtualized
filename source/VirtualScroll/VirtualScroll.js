@@ -17,7 +17,7 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
  */
-const IS_SCROLLING_TIMEOUT = 150
+const IS_SCROLLING_TIMEOUT = 500
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -91,7 +91,6 @@ export default class VirtualScroll extends Component {
     this._invokeOnRowsRenderedHelper = this._invokeOnRowsRenderedHelper.bind(this)
     this._onKeyPress = this._onKeyPress.bind(this)
     this._onScroll = this._onScroll.bind(this)
-    this._onWheel = this._onWheel.bind(this)
     this._updateScrollTopForScrollToIndex = this._updateScrollTopForScrollToIndex.bind(this)
   }
 
@@ -285,7 +284,6 @@ export default class VirtualScroll extends Component {
         className={cn('VirtualScroll', className)}
         onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
-        onWheel={this._onWheel}
         tabIndex={0}
         style={{
           height: height
@@ -368,7 +366,7 @@ export default class VirtualScroll extends Component {
   /**
    * Updates the state during the next animation frame.
    * Use this method to avoid multiple renders in a small span of time.
-   * This helps performance for bursty events (like onWheel).
+   * This helps performance for bursty events (like onScroll).
    */
   _setNextState (state) {
     if (this._setNextStateAnimationFrameId) {
@@ -508,21 +506,6 @@ export default class VirtualScroll extends Component {
     const { height, onScroll } = this.props
     const totalRowsHeight = this._getTotalRowsHeight()
     const scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop)
-
-    this._setNextStateForScrollHelper({ scrollTop })
-
-    this._onScrollMemoizer({
-      callback: onScroll,
-      indices: {
-        scrollTop
-      }
-    })
-  }
-
-  _onWheel (event) {
-    const{ onScroll } = this.props
-
-    const scrollTop = this.refs.scrollingContainer.scrollTop
 
     this._setNextStateForScrollHelper({ scrollTop })
 
