@@ -15,3 +15,4 @@ Documentation
 
 * [Customizing classes and styles](customizingStyles.md).
 * [Displaying items in reverse order](reverseList.md).
+* [Using AutoSizer](usingAutoSizer.md).
