@@ -11,6 +11,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | noRowsRenderer |  | Function | Callback used to render placeholder content when `rowsCount` is 0 |
 | onRowsRendered |  | Function | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ scrollTop }): void` |
+| overscanRowsCount |  | Number | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
 | rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Signature should look like `(index: number): React.PropTypes.node` |
 | rowsCount | Number | ✓ | Number of rows in list. |
