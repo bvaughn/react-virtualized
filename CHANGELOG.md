@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+### 4.9.0
+`AutoSizer` component now takes padding into consideration before setting the `width` and `height` of its children.
+
 ##### 4.8.1
 Updated `InfiniteLoader` to better reflect required properties. (`isRowLoaded`, `rowsCount`, and `threshold` were not marked as required before.)
 

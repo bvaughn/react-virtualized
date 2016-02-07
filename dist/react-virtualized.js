@@ -256,10 +256,10 @@
             }, {
                 key: "_onResize",
                 value: function() {
-                    var _parentNode$getBoundingClientRect = this._parentNode.getBoundingClientRect(), height = _parentNode$getBoundingClientRect.height, width = _parentNode$getBoundingClientRect.width;
+                    var _parentNode$getBoundingClientRect = this._parentNode.getBoundingClientRect(), height = _parentNode$getBoundingClientRect.height, width = _parentNode$getBoundingClientRect.width, style = getComputedStyle(this._parentNode), paddingLeft = parseInt(style.paddingLeft, 10), paddingRight = parseInt(style.paddingRight, 10), paddingTop = parseInt(style.paddingTop, 10), paddingBottom = parseInt(style.paddingBottom, 10);
                     this.setState({
-                        height: height,
-                        width: width
+                        height: height - paddingTop - paddingBottom,
+                        width: width - paddingLeft - paddingRight
                     });
                 }
             }, {
