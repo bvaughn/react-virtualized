@@ -30,11 +30,25 @@ describe('AutoSizer', () => {
     disableWidth = false,
     foo = 456,
     height = 100,
+    paddingBottom = 0,
+    paddingLeft = 0,
+    paddingRight = 0,
+    paddingTop = 0,
     styleSheet = undefined,
     width = 200
   } = {}) {
+    const style = {
+      boxSizing: 'border-box',
+      height,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      width
+    }
+
     return (
-      <div style={{ height, width }}>
+      <div style={style}>
         <AutoSizer
           disableHeight={disableHeight}
           disableWidth={disableWidth}
@@ -67,6 +81,18 @@ describe('AutoSizer', () => {
     let domNode = findDOMNode(component)
     expect(domNode.textContent).toContain('height:100')
     expect(domNode.textContent).toContain('width:200')
+  })
+
+  it('should account for padding when calculating the available width and height', () => {
+    const component = renderOrUpdateComponent({
+      paddingBottom: 10,
+      paddingLeft: 4,
+      paddingRight: 4,
+      paddingTop: 15
+    })
+    let domNode = findDOMNode(component)
+    expect(domNode.textContent).toContain('height:75')
+    expect(domNode.textContent).toContain('width:192')
   })
 
   it('should not update :width if :disableWidth is true', () => {
