@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import Immutable from 'immutable'
+import AutoSizer from '../AutoSizer'
 import InfiniteLoader from './InfiniteLoader'
 import VirtualScroll from '../VirtualScroll'
 import shouldPureComponentUpdate from 'react-pure-render/function'
@@ -27,10 +28,18 @@ export default class InfiniteLoaderExample extends Component {
       randomScrollToIndex: null
     }
 
+    this._timeoutIdMap = {}
+
     this._clearData = this._clearData.bind(this)
     this._isRowLoaded = this._isRowLoaded.bind(this)
     this._loadMoreRows = this._loadMoreRows.bind(this)
     this._rowRenderer = this._rowRenderer.bind(this)
+  }
+
+  componentWillUnmount () {
+    Object.keys(this._timeoutIdMap).forEach(timeoutId => {
+      clearTimeout(timeoutId)
+    })
   }
 
   render () {
@@ -65,21 +74,23 @@ export default class InfiniteLoaderExample extends Component {
           </div>
         </ContentBoxParagraph>
 
-        <InfiniteLoader
-          ref='InfiniteLoader'
-          isRowLoaded={this._isRowLoaded}
-          loadMoreRows={this._loadMoreRows}
-          rowsCount={list.size}
-        >
-          <VirtualScroll
-            className={styles.VirtualScroll}
-            height={200}
+        <AutoSizer disableHeight>
+          <InfiniteLoader
+            ref='InfiniteLoader'
+            isRowLoaded={this._isRowLoaded}
+            loadMoreRows={this._loadMoreRows}
             rowsCount={list.size}
-            rowHeight={30}
-            rowRenderer={this._rowRenderer}
-            scrollToIndex={randomScrollToIndex}
-          />
-        </InfiniteLoader>
+          >
+            <VirtualScroll
+              className={styles.VirtualScroll}
+              height={200}
+              rowsCount={list.size}
+              rowHeight={30}
+              rowRenderer={this._rowRenderer}
+              scrollToIndex={randomScrollToIndex}
+            />
+          </InfiniteLoader>
+        </AutoSizer>
       </ContentBox>
     )
   }
@@ -109,8 +120,10 @@ export default class InfiniteLoaderExample extends Component {
       loadingRowsCount: loadingRowsCount + increment
     })
 
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       const { loadedRowsCount, loadingRowsCount } = this.state
+
+      delete this._timeoutIdMap[timeoutId]
 
       for (var i = startIndex; i <= stopIndex; i++) {
         loadedRowsMap[i] = STATUS_LOADED
@@ -123,6 +136,8 @@ export default class InfiniteLoaderExample extends Component {
 
       promiseResolver()
     }, 1000 + Math.round(Math.random() * 2000))
+
+    this._timeoutIdMap[timeoutId] = true
 
     let promiseResolver
 

@@ -15,7 +15,11 @@ export default class AutoSizer extends Component {
     /** Component to manage width/height of */
     children: PropTypes.element,
     /** Optional CSS class name */
-    className: PropTypes.string
+    className: PropTypes.string,
+    /** Disable dynamic :height property */
+    disableHeight: PropTypes.bool,
+    /** Disable dynamic :width property */
+    disableWidth: PropTypes.bool
   }
 
   constructor (props) {
@@ -44,22 +48,49 @@ export default class AutoSizer extends Component {
   }
 
   render () {
-    const { children, className, ...props } = this.props
+    const { children, className, disableHeight, disableWidth, ...props } = this.props
     const { height, width } = this.state
 
+    const childProps = {}
+
+    if (!disableHeight) {
+      childProps.height = height
+    }
+
+    if (!disableWidth) {
+      childProps.width = width
+    }
+
     let child = React.Children.only(children)
-    child = React.cloneElement(child, { height, width })
+    child = React.cloneElement(child, childProps)
+
+    // Outer div should not force width/height since that may prevent containers from shrinking.
+    // Inner div overflows and enforces calculated width/height.
+    // See issue #68 for more information.
+    const outerStyle = { overflow: 'visible' }
+    const innerStyle = {}
+
+    if (!disableWidth) {
+      outerStyle.width = 0
+      innerStyle.width = width
+    }
+
+    if (!disableHeight) {
+      outerStyle.height = 0
+      innerStyle.height = height
+    }
 
     return (
       <div
         ref={this._setRef}
         className={cn('AutoSizer', className)}
-        style={{
-          width: '100%',
-          height: '100%'
-        }}
+        style={outerStyle}
       >
-        {child}
+        <div
+          style={innerStyle}
+        >
+          {child}
+        </div>
       </div>
     )
   }
@@ -67,9 +98,15 @@ export default class AutoSizer extends Component {
   _onResize () {
     const { height, width } = this._parentNode.getBoundingClientRect()
 
+    const style = getComputedStyle(this._parentNode)
+    const paddingLeft = parseInt(style.paddingLeft, 10)
+    const paddingRight = parseInt(style.paddingRight, 10)
+    const paddingTop = parseInt(style.paddingTop, 10)
+    const paddingBottom = parseInt(style.paddingBottom, 10)
+
     this.setState({
-      height: height,
-      width: width
+      height: height - paddingTop - paddingBottom,
+      width: width - paddingLeft - paddingRight
     })
   }
 

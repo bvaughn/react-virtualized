@@ -5,6 +5,7 @@ Documentation
 
 * [AutoSizer](AutoSizer.md)
 * [FlexColumn](FlexColumn.md)
+* [Grid](Grid.md)
 * [FlexTable](FlexTable.md)
 * [InfiniteLoader](InfiniteLoader.md)
 * [SortDirection](SortDirection.md)
@@ -14,3 +15,4 @@ Documentation
 
 * [Customizing classes and styles](customizingStyles.md).
 * [Displaying items in reverse order](reverseList.md).
+* [Using AutoSizer](usingAutoSizer.md).

@@ -6,8 +6,10 @@ Decorator component that automatically adjusts the width and height of a single 
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| children | element | ✓ | Element to be parameterized with `width` and `height` properties |
-| className | string |  | Optional CSS class name. |
+| children | PropTypes.Element | ✓ | Element to be parameterized with `width` and `height` properties |
+| className | String |  | Optional CSS class name |
+| disableHeight | Boolean |  | If true the child's `height` property will not be managed |
+| disableWidth | Boolean |  | If true the child's `width` property will not be managed |
 
 ### Class names
 

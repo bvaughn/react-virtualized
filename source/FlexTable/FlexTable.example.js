@@ -19,16 +19,18 @@ export default class TableExample extends Component {
     super(props, context)
 
     this.state = {
+      headerHeight: 30,
+      height: 270,
       overscanRowsCount: 0,
+      rowHeight: 40,
       rowsCount: 1000,
       scrollToIndex: undefined,
       sortBy: 'name',
       sortDirection: SortDirection.ASC,
-      height: 270,
-      headerHeight: 30,
-      rowHeight: 40
+      useDynamicRowHeight: false
     }
 
+    this._getRowHeight = this._getRowHeight.bind(this)
     this._noRowsRenderer = this._noRowsRenderer.bind(this)
     this._onRowsCountChange = this._onRowsCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
@@ -40,25 +42,26 @@ export default class TableExample extends Component {
       headerHeight,
       height,
       overscanRowsCount,
+      rowHeight,
       rowsCount,
       scrollToIndex,
       sortBy,
       sortDirection,
-      rowHeight
+      useDynamicRowHeight
     } = this.state
 
     const { list } = this.props
-    const filteredList = list
-      .sortBy(index => list.getIn([index, sortBy]))
-      .update(list =>
-        sortDirection === SortDirection.DESC
-          ? list.reverse()
-          : list
-      )
+    const sortedList = this._isSortEnabled()
+      ? list
+        .sortBy(index => list.getIn([index, sortBy]))
+        .update(list =>
+          sortDirection === SortDirection.DESC
+            ? list.reverse()
+            : list
+        )
+      : list
 
-    function rowGetter (index) {
-      return filteredList.get(index)
-    }
+    const rowGetter = index => this._getDatum(sortedList, index)
 
     return (
       <ContentBox {...this.props}>
@@ -73,6 +76,18 @@ export default class TableExample extends Component {
           This allows it to have a fixed header scrollable body content.
           It also makes use of <code>VirtualScroll</code> so that large lists of tabular data can be rendered efficiently.
           Adjust its configurable properties below to see how it reacts.
+        </ContentBoxParagraph>
+
+        <ContentBoxParagraph>
+          <label className={styles.checkboxLabel}>
+            <input
+              className={styles.checkbox}
+              type='checkbox'
+              value={useDynamicRowHeight}
+              onChange={event => this._updateUseDynamicRowHeight(event.target.checked)}
+            />
+            Use dynamic row heights?
+          </label>
         </ContentBoxParagraph>
 
         <InputRow>
@@ -124,25 +139,28 @@ export default class TableExample extends Component {
           noRowsRenderer={this._noRowsRenderer}
           overscanRowsCount={overscanRowsCount}
           rowClassName={::this._rowClassName}
-          rowHeight={rowHeight}
+          rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
           rowGetter={rowGetter}
           rowsCount={rowsCount}
+          scrollToIndex={scrollToIndex}
           sort={this._sort}
           sortBy={sortBy}
           sortDirection={sortDirection}
           width={430}
         >
           <FlexColumn
-            label='Index'
+            label='ID'
             cellDataGetter={
               (dataKey, rowData, columnData) => rowData.index
             }
             dataKey='index'
+            disableSort={!this._isSortEnabled()}
             width={50}
           />
           <FlexColumn
             label='Name'
             dataKey='name'
+            disableSort={!this._isSortEnabled()}
             width={90}
           />
           <FlexColumn
@@ -161,6 +179,23 @@ export default class TableExample extends Component {
     )
   }
 
+  _getDatum (list, index) {
+    return list.get(index % list.size)
+  }
+
+  _getRowHeight (index) {
+    const { list } = this.props
+
+    return this._getDatum(list, index).size
+  }
+
+  _isSortEnabled () {
+    const { list } = this.props
+    const { rowsCount } = this.state
+
+    return rowsCount <= list.size
+  }
+
   _noRowsRenderer () {
     return (
       <div className={styles.noRows}>
@@ -170,8 +205,7 @@ export default class TableExample extends Component {
   }
 
   _onRowsCountChange (event) {
-    let rowsCount = parseInt(event.target.value, 10) || 0
-    rowsCount = Math.max(0, Math.min(this.props.list.size, rowsCount))
+    const rowsCount = parseInt(event.target.value, 10) || 0
 
     this.setState({ rowsCount })
   }
@@ -185,8 +219,6 @@ export default class TableExample extends Component {
     }
 
     this.setState({ scrollToIndex })
-
-    this.refs.Table.scrollToRow(scrollToIndex)
   }
 
   _rowClassName (index) {
@@ -199,5 +231,11 @@ export default class TableExample extends Component {
 
   _sort (sortBy, sortDirection) {
     this.setState({ sortBy, sortDirection })
+  }
+
+  _updateUseDynamicRowHeight (value) {
+    this.setState({
+      useDynamicRowHeight: value
+    })
   }
 }

@@ -1,7 +1,6 @@
 import React from 'react'
 import { findDOMNode, render } from 'react-dom'
-import { Simulate } from 'react-addons-test-utils'
-import TestUtils from 'react-addons-test-utils'
+import { renderIntoDocument, Simulate } from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import FlexColumn from './FlexColumn'
 import FlexTable, { SortDirection } from './FlexTable'
@@ -12,9 +11,7 @@ describe('FlexTable', () => {
 
   // Used by the renderOrUpdateTable() helper method
   var node = null
-  beforeEach(() => {
-    node = document.createElement('div')
-  })
+  beforeEach(() => node = document.createElement('div'))
 
   const array = []
   for (var i = 0; i < 100; i++) {
@@ -37,11 +34,11 @@ describe('FlexTable', () => {
   }
 
   function getMarkup ({
-    cellRenderer = undefined,
-    cellDataGetter = undefined,
-    className = undefined,
+    cellRenderer,
+    cellDataGetter,
+    className,
     disableSort = false,
-    headerClassName = undefined,
+    headerClassName,
     headerHeight = 20,
     height = 100,
     noRowsRenderer = undefined,
@@ -53,11 +50,11 @@ describe('FlexTable', () => {
     rowGetter = immutableRowGetter,
     rowHeight = 10,
     rowsCount = list.size,
-    scrollToIndex = undefined,
-    sort = undefined,
-    sortBy = undefined,
-    sortDirection = undefined,
-    styleSheet = undefined,
+    scrollToIndex,
+    sort,
+    sortBy,
+    sortDirection,
+    styleSheet,
     width = 100
   } = {}) {
     return (
@@ -101,7 +98,7 @@ describe('FlexTable', () => {
   }
 
   function renderTable (props) {
-    const flexTable = TestUtils.renderIntoDocument(getMarkup(props))
+    const flexTable = renderIntoDocument(getMarkup(props))
 
     // Allow initial setImmediate() to set :scrollTop
     jasmine.clock().tick()
@@ -110,7 +107,7 @@ describe('FlexTable', () => {
   }
 
   // Use ReactDOM.render for certain tests so that props changes will update the existing component
-  // TestUtils.renderIntoDocument creates a new component/instance each time
+  // renderIntoDocument creates a new component/instance each time
   function renderOrUpdateTable (props) {
     let flexTable = render(getMarkup(props), node)
 
@@ -550,4 +547,7 @@ describe('FlexTable', () => {
       expect(overscanStopIndex).toEqual(14)
     })
   })
+
+  // TODO Add tests for :scrollToRow and :setScrollTop.
+  // This probably requires the creation of an inner test-only class with refs.
 })

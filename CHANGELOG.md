@@ -1,16 +1,86 @@
 Changelog
 ------------
 
-#### 4.1.0
+### 4.9.0
+`AutoSizer` component now takes padding into consideration before setting the `width` and `height` of its children.
+
+##### 4.8.1
+Updated `InfiniteLoader` to better reflect required properties. (`isRowLoaded`, `rowsCount`, and `threshold` were not marked as required before.)
+
+### 4.8.0
+Updated `InfiniteLoader` to support being composable within an `AutoSizer` HOC. If either a `width` or `height` attribute are specified on `InfiniteLoader` they will be bundled through to the loader's child component.
+
+##### 4.7.1
+Fixed `AutoSizer` bug that caused it to prevent parent flex containers from shrinking in some contexts.
+
+### 4.7.0
+Added `scrollToIndex` property to `FlexTable` to be passed through to inner `Grid`.
+
+##### 4.6.6
+Better gaurd against `NaN` values for `clientWidth` and `offsetWidth` for test environments using `jsdom`.
+
+##### 4.6.5
+Added `react-dom` to the Webpack :externals node to avoid including it in the build.
+This fixes the bad `4.6.3` and `4.6.4` builds. Sorry!
+
+##### 4.6.4
+Moved `react-dom` from `dependencies` to `peerDependencies` to fix bad `4.6.3` build.
+
+##### 4.6.3
+Fixed edge-case sizing bug with `FlexTable` headers and always-on scrollbars (see issue #80 for more info).
+
+##### 4.6.2
+Replaced single occurence of `Number.isNaN` with `isNaN` to avoid IE compatibility issues. Maybe in the future I will add a polyfill dependency but I did not intend to introduce this without a major version bump so I'm removing it.
+
+##### 4.6.1
+Removes `event.stopPropagation` since it was unnecessary to prevent keyboard event bubbling, only to prevent the default browser behavior.
+
+### 4.6.0
+Relocated a couple of static style properties from inline style object to exported CSS file for easier customization.
+Added `Grid__cell` and `VirtualScroll__row` classes.
+
+### 4.5.0
+Added `onScroll` callback to `Grid`, `FlexTable`, and `VirtualScroll`.
+Added `scrollToCell` method to `Grid` and `scrollToRow` to `FlexTable`, and `VirtualScroll`.
+
+##### 4.4.3
+Added `-ms-flex` and `-webkit-flex` browser prefixes to `FlexTable` cells.
+
+##### 4.4.2
+Fixed invalid function reference in `Grid` triggered by specifying an initial `scrollToRow` property.
+
+##### 4.4.1
+Fixed distribution to include new `Grid` component as an export.
+
+### 4.4.0
+Added new `Grid` component for virtualizing rows _and_ columns .
+Updated `AutoSizer` component to support managing _only_ `width` or `height` (in addition to both).
+
+##### 4.3.1
+Fixed small CSS property misnaming issue.
+
+### 4.3.0
+`FlexTable` now supports dynamic row-heights (in the same way as `VirtualScroll`).
+
+##### 4.2.1
+Set `VirtualScroll` default style to `width: 100%` to be more inline with default `FlexTable` behavior.
+
+### 4.2.0
+Replaced `React.cloneElement` with wrapper element in order to:
+* Better support for pure function components; (they were not compatible with inline style positioning).
+* Relax the requirement of `rowRenderer` having to specify a `key`.
+* Support `React.PropTypes.node` children (including plain strings, numbers, etc.) instead of just elements.
+
+### 4.1.0
 Added `-webkit-overflow-scrolling: touch` for smoother inertial scrolling on mobile devices.
 
-#### 4.0.2
+##### 4.0.2
 Additional `columnData` parameter passed to `onHeaderClick` callback.
 
-#### 4.0.1
+##### 4.0.1
 Removed an unused dependency on 'inline-style-prefixer' from the `package.json`.
 
-## 4.0.0
+# 4.0.0
 CSS styles have been split into their own, separately loaded stylesheet. This simplifies universal/isomorphic use cases without breaking vendor prefixing. This change means that you'll need to import the following additional file. This only needs to be done once (usually during bootstrapping).
 ```js
 import 'react-virtualized/styles.css';
@@ -32,97 +102,97 @@ Should instead be this:
 </AutoSizer>
 ```
 
-#### 3.1.1
+##### 3.1.1
 New `onHeaderClick` property added to `FlexTable`. Thanks to @olslash for the contribution!
 
-#### 3.1.0
+### 3.1.0
 Added high-order `InfiniteLoader` component to manage just-in-time fetching of data as a user scrolls up or down in a list.
 For more information about this component refer to the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/InfiniteLoader.md).
 
-#### 3.0.1
+##### 3.0.1
 Fixed small NPE when up/down arrow key was used while an empty VirtualScroll was in-focus.
 
-## 3.0.0
+# 3.0.0
 CSS styles have been split into two groups: functional styles (eg. `position`, `overflow`) and presentational styles (eg. `text-transform`, `color`) and both have been converted to inline styles rather than being loaded as CSS. This was done primarily to simplify usage for universal/isomorphic rendering.
 
 For more information on customizing styles refer to the [documentation](https://github.com/bvaughn/react-virtualized/#customizing-styles)...
 
-#### 2.8.0
+### 2.8.0
 Changed `Autosizer` component to support a single child instead of the `ChildComponent` property.
 (For backwards compatibility purposes the `ChildComponent` property will continue to be supported.)
 
-#### 2.7.5
+##### 2.7.5
 Defer loading of element resize code until `componentDidMount` to avoid undefined `document` and `body` references.
 This was breaking server-side rendering.
 
-#### 2.7.4
+##### 2.7.4
 Uglify dist build to remove dead code.
 
-#### 2.7.2 & 2.7.3
+##### 2.7.2 & 2.7.3
 Improved checks for undefined `document` and `window` in hopes of better supporting server-side rendering.
 
-#### 2.7.1
+##### 2.7.1
 Replaced invalid `rowHeight instanceof Number` check with `typeof rowHeight === 'number'` in `VirtualScroll`.
 
-#### 2.7.0
+### 2.7.0
 Moved `onRowsRendered` to `componentDidUpdate` (instead of `render`) to keep `render` free of side-effects.
 Added tests to ensure that the callback is only invoked once per start/stop index pair (and not again unless the indices change).
 
-#### 2.6.2
+##### 2.6.2
 Added check for undefined `document` before accessing `attachEvent` to avoid causing problems with server-side rendering.
 
-#### 2.6.1
+##### 2.6.1
 Cell `title` now only set if rendered cell contents are a string. This fixes issue #35.
 
-#### 2.6.0
+### 2.6.0
 `VirtualScroll` and `FlexTable` now support dynamic row heights by accepting a function as the `rowHeight` property.
 
-#### 2.5.0
+### 2.5.0
 Added `AutoSizer` component for wrapping `FlexTable` or `VirtualScroll` and growing to fill the parent container. This should hopefully simplify usage of these components.
 
-#### 2.4.0
+### 2.4.0
 `FlexTable` and `VirtualScroll` offer new callback property `onRowsRendered` to be invoked with a params object `{ startIndex, stopIndex }` after rows have been rendered.
 
-#### 2.3.0
+### 2.3.0
 `FlexTable`'s `rowClassName` property can now be either a string or a function in order to support dynamic row classes (eg. alternating colors).
 
-#### 2.2.0
+### 2.2.0
 Added `onRowClick` property to `FlexTable`.
 
-#### 2.1.1
+##### 2.1.1
 Fixed a few minor FlexTable font styles to use relative sizes instead of custom ones
 
-#### 2.1.0
+### 2.1.0
 Added optional `noRowsRenderer` property to `VirtualScroll` and `FlexTable`.
 This property can be used to render loading indicators or placeholder content for empty lists.
 
-## 2.0.0
+# 2.0.0
 Set `shouldPureComponentUpdate` on component prototypes instead of instances.
 Dropped half-ass support for React 0.13. This module has always depended on React 0.14 but it was checking in previous versions and trying to be backwards compatible with 0.13. Since that check is no longer in place, this is a major version bump (even though there is no real new functionality being added).
 
-#### 1.0.4
+##### 1.0.4
 Fixed package.json dependencies by moving `classnames`, `raf`, and `react-pure-render` out of `peerDependencies` and into `dependencies`.
 
-#### 1.0.3
+##### 1.0.3
 Same as version 1.0.2; published just to update NPM keyword and description.
 
-#### 1.0.2
+##### 1.0.2
 Removed default row-border styling from FlexTable and added new :rowClassName property.
 
-#### 1.0.1
+##### 1.0.1
 Updated to use ReactDOM.findDOMNode instead of getDOMNode (but added backwards-compatible check for < React v0.14).
 
-## 1.0.0
+# 1.0.0
 Package JSON updated so that "main" entry points to `dist/react-virtualized.js` to provide easier integration for users that don't want Babel/Webpack to have to process their `node_modules` folder.
 
-#### 0.0.4
+##### 0.0.4
 Added keypress scrolling support.
 
-#### 0.0.3
+##### 0.0.3
 Added "main" entry to package.json.
 
-#### 0.0.2
+##### 0.0.2
 Added CSS auto-prefixing to support Safari and other, older browsers.
 
-#### 0.0.1
+##### 0.0.1
 Initial release.

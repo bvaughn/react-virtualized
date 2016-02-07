@@ -121,9 +121,14 @@ export default class VirtualScrollExample extends Component {
     )
   }
 
-  _getRowHeight (index) {
+  _getDatum (index) {
     const { list } = this.props
-    return list.get(index).size
+
+    return list.get(index % list.size)
+  }
+
+  _getRowHeight (index) {
+    return this._getDatum(index).size
   }
 
   _noRowsRenderer () {
@@ -135,10 +140,7 @@ export default class VirtualScrollExample extends Component {
   }
 
   _onRowsCountChange (event) {
-    const { list } = this.props
-
-    let rowsCount = parseInt(event.target.value, 10) || 0
-    rowsCount = Math.max(0, Math.min(list.size, rowsCount))
+    const rowsCount = parseInt(event.target.value, 10) || 0
 
     this.setState({ rowsCount })
   }
@@ -155,13 +157,9 @@ export default class VirtualScrollExample extends Component {
   }
 
   _rowRenderer (index) {
-    const { list } = this.props
-    const { useDynamicRowHeight, virtualScrollRowHeight } = this.state
+    const { useDynamicRowHeight } = this.state
 
-    const datum = list.get(index)
-    const height = useDynamicRowHeight
-      ? datum.size
-      : virtualScrollRowHeight
+    const datum = this._getDatum(index)
 
     let additionalContent
 
@@ -178,9 +176,8 @@ export default class VirtualScrollExample extends Component {
 
     return (
       <div
-        key={index}
         className={styles.row}
-        style={{ height }}
+        style={{ height: '100%' }}
       >
         <div
           className={styles.letter}
@@ -210,7 +207,6 @@ export default class VirtualScrollExample extends Component {
 
   _updateUseDynamicRowHeight (value) {
     this.setState({
-      rowsCount: 100,
       useDynamicRowHeight: value
     })
   }

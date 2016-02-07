@@ -1,6 +1,25 @@
 /* AutoSizer default theme */
 
 .AutoSizer {
+  overflow: hidden;
+}
+
+/* Grid default theme */
+
+.Grid {
+  position: relative;
+  overflow: auto;
+  outline: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.Grid__innerScrollContainer {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.Grid__cell {
+  position: absolute;
 }
 
 /* FlexTable default theme */
@@ -16,8 +35,15 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  flexDirection: row;
-  alignItems: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   overflow: hidden;
 }
 .FlexTable__headerTruncatedText {
@@ -30,8 +56,15 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  flexDirection: row;
-  alignItems: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   overflow: hidden;
 }
 
@@ -54,7 +87,11 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  flexDirection: row;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
   overflow: hidden;
 }
 .FlexTable__sortableHeaderColumn {
@@ -106,9 +143,18 @@
 /* VirtualScroll default theme */
 
 .VirtualScroll {
-  overflow-y: scroll;
+  width: 100%;
+  position: relative;
+  overflow: auto;
+  outline: 0;
   -webkit-overflow-scrolling: touch;
 }
 
-.VirtualScroll_innerScrollContainer {
+.VirtualScroll__innerScrollContainer {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.VirtualScroll__row {
+  position: absolute;
 }

@@ -2,6 +2,7 @@
 import cn from 'classnames'
 import FlexColumn from './FlexColumn'
 import React, { Component, PropTypes } from 'react'
+import { findDOMNode } from 'react-dom'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import VirtualScroll from '../VirtualScroll'
 
@@ -66,11 +67,20 @@ export default class FlexTable extends Component {
      * ({ startIndex, stopIndex }): void
      */
     onRowsRendered: PropTypes.func,
+
+    /**
+     * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+     * This callback can be used to sync scrolling between lists, tables, or grids.
+     * ({ scrollTop }): void
+     */
+    onScroll: PropTypes.func.isRequired,
+
     /**
      * Number of rows to render above/below the visible bounds of the list.
      * These rows can help for smoother scrolling on touch devices.
      */
     overscanRowsCount: PropTypes.number,
+
     /**
      * Optional CSS class to apply to all table rows (including the header row).
      * This property can be a CSS class name (string) or a function that returns a class name.
@@ -82,10 +92,15 @@ export default class FlexTable extends Component {
      * (index: number): any
      */
     rowGetter: PropTypes.func.isRequired,
-    /** Fixed height of table row */
-    rowHeight: PropTypes.number.isRequired,
+    /**
+     * Either a fixed row height (number) or a function that returns the height of a row given its index.
+     * (index: number): number
+     */
+    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
     /** Number of rows in table. */
     rowsCount: PropTypes.number.isRequired,
+    /** Row index to ensure visible (by forcefully scrolling if necessary) */
+    scrollToIndex: PropTypes.number,
     /**
      * Sort function to be called if a sortable header is clicked.
      * (dataKey: string, sortDirection: SortDirection): void
@@ -106,11 +121,16 @@ export default class FlexTable extends Component {
     onHeaderClick: () => null,
     onRowClick: () => null,
     onRowsRendered: () => null,
+    onScroll: () => null,
     verticalPadding: 0
   }
 
   constructor (props) {
     super(props)
+
+    this.state = {
+      scrollbarWidth: 0
+    }
 
     this._createRow = this._createRow.bind(this)
   }
@@ -129,6 +149,24 @@ export default class FlexTable extends Component {
     this.refs.VirtualScroll.scrollToRow(scrollToIndex)
   }
 
+  /**
+   * Set the :scrollTop position within the inner scroll container.
+   * Normally it is best to let FlexTable manage this properties or to use a method like :scrollToRow.
+   * This method enables FlexTable to be scroll-synced to another react-virtualized component though.
+   * It is appropriate to use in that case.
+   */
+  setScrollTop (scrollTop) {
+    this.refs.VirtualScroll.setScrollTop(scrollTop)
+  }
+
+  componentDidMount () {
+    this._setScrollbarWidth()
+  }
+
+  componentDidUpdate () {
+    this._setScrollbarWidth()
+  }
+
   render () {
     const {
       className,
@@ -137,12 +175,15 @@ export default class FlexTable extends Component {
       height,
       noRowsRenderer,
       onRowsRendered,
+      onScroll,
       overscanRowsCount,
       rowClassName,
       rowHeight,
       rowsCount,
+      scrollToIndex,
       verticalPadding
     } = this.props
+    const { scrollbarWidth } = this.state
 
     const availableRowsHeight = height - headerHeight - verticalPadding
 
@@ -162,7 +203,8 @@ export default class FlexTable extends Component {
           <div
             className={cn('FlexTable__headerRow', rowClass)}
             style={{
-              height: headerHeight
+              height: headerHeight,
+              paddingRight: scrollbarWidth
             }}
           >
             {this._getRenderedHeaderRow()}
@@ -174,10 +216,12 @@ export default class FlexTable extends Component {
           height={availableRowsHeight}
           noRowsRenderer={noRowsRenderer}
           onRowsRendered={onRowsRendered}
+          onScroll={onScroll}
           overscanRowsCount={overscanRowsCount}
           rowHeight={rowHeight}
           rowRenderer={rowRenderer}
           rowsCount={rowsCount}
+          scrollToIndex={scrollToIndex}
         />
       </div>
     )
@@ -194,10 +238,7 @@ export default class FlexTable extends Component {
     const cellData = cellDataGetter(dataKey, rowData, columnData)
     const renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData)
 
-    const flex = this._getFlexStyleForColumn(column)
-    const style = {
-      flex // TODO
-    }
+    const style = this._getFlexStyleForColumn(column)
 
     const title = typeof renderedCell === 'string'
       ? renderedCell
@@ -233,10 +274,7 @@ export default class FlexTable extends Component {
         'FlexTable__sortableHeaderColumn': sortEnabled
       }
     )
-    const flex = this._getFlexStyleForColumn(column)
-    const style = {
-      flex // TODO
-    }
+    const style = this._getFlexStyleForColumn(column)
 
     // If this is a sortable header, clicking it should update the table data's sorting.
     const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
@@ -272,8 +310,7 @@ export default class FlexTable extends Component {
       children,
       onRowClick,
       rowClassName,
-      rowGetter,
-      rowHeight
+      rowGetter
     } = this.props
 
     const rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName
@@ -294,7 +331,7 @@ export default class FlexTable extends Component {
         className={cn('FlexTable__row', rowClass)}
         onClick={() => onRowClick(rowIndex)}
         style={{
-          height: rowHeight
+          height: this._getRowHeight(rowIndex)
         }}
       >
         {renderedRow}
@@ -315,7 +352,13 @@ export default class FlexTable extends Component {
         : 'auto'
     )
 
-    return flex.join(' ')
+    const flexValue = flex.join(' ')
+
+    return {
+      flex: flexValue,
+      msFlex: flexValue,
+      WebkitFlex: flexValue
+    }
   }
 
   _getRenderedHeaderRow () {
@@ -324,6 +367,23 @@ export default class FlexTable extends Component {
     return React.Children.map(items, (column, columnIndex) =>
       this._createHeader(column, columnIndex)
     )
+  }
+
+  _getRowHeight (rowIndex) {
+    const { rowHeight } = this.props
+
+    return rowHeight instanceof Function
+      ? rowHeight(rowIndex)
+      : rowHeight
+  }
+
+  _setScrollbarWidth () {
+    const VirtualScroll = findDOMNode(this.refs.VirtualScroll)
+    const clientWidth = VirtualScroll.clientWidth || 0
+    const offsetWidth = VirtualScroll.offsetWidth || 0
+    const scrollbarWidth = offsetWidth - clientWidth
+
+    this.setState({ scrollbarWidth })
   }
 }
 
