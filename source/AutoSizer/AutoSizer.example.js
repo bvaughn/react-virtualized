@@ -62,7 +62,7 @@ export default class AutoSizerExample extends Component {
         }
 
         <div className={styles.AutoSizerWrapper}>
-          <AutoSizer className={styles.AutoSizer}>
+          <AutoSizer>
             <VirtualScroll
               className={styles.VirtualScroll}
               height={0}

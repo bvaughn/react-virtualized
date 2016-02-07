@@ -98,9 +98,15 @@ export default class AutoSizer extends Component {
   _onResize () {
     const { height, width } = this._parentNode.getBoundingClientRect()
 
+    const style = getComputedStyle(this._parentNode)
+    const paddingLeft = parseInt(style.paddingLeft, 10)
+    const paddingRight = parseInt(style.paddingRight, 10)
+    const paddingTop = parseInt(style.paddingTop, 10)
+    const paddingBottom = parseInt(style.paddingBottom, 10)
+
     this.setState({
-      height: height,
-      width: width
+      height: height - paddingTop - paddingBottom,
+      width: width - paddingLeft - paddingRight
     })
   }
 
