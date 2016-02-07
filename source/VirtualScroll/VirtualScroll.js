@@ -17,7 +17,7 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
  */
-const IS_SCROLLING_TIMEOUT = 500
+const IS_SCROLLING_TIMEOUT = 150
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -46,7 +46,7 @@ export default class VirtualScroll extends Component {
      * Number of rows to render above/below the visible bounds of the list.
      * These rows can help for smoother scrolling on touch devices.
      */
-    overscanRowsCount: PropTypes.number,
+    overscanRowsCount: PropTypes.number.isRequired,
     /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
@@ -152,8 +152,8 @@ export default class VirtualScroll extends Component {
 
     // Update scrollTop if appropriate
     updateScrollIndexHelper({
-      cellMetadata: this._cellMetadata,
       cellsCount: rowsCount,
+      cellMetadata: this._cellMetadata,
       cellSize: rowHeight,
       previousCellsCount: prevProps.rowsCount,
       previousCellSize: prevProps.rowHeight,
@@ -234,7 +234,7 @@ export default class VirtualScroll extends Component {
         start,
         stop
       } = getVisibleCellIndices({
-        cellCount: rowsCount,
+        cellsCount: rowsCount,
         cellMetadata: this._cellMetadata,
         containerSize: height,
         currentOffset: scrollTop
@@ -248,8 +248,8 @@ export default class VirtualScroll extends Component {
         overscanStartIndex,
         overscanStopIndex
       } = getOverscanIndices({
-        overscanRowsCount,
-        rowsCount,
+        cellsCount: rowsCount,
+        overscanCellsCount: overscanRowsCount,
         startIndex: start,
         stopIndex: stop
       })
@@ -314,7 +314,7 @@ export default class VirtualScroll extends Component {
     const { rowHeight, rowsCount } = props
 
     this._cellMetadata = initCellMetadata({
-      cellCount: rowsCount,
+      cellsCount: rowsCount,
       size: rowHeight
     })
   }
@@ -346,8 +346,8 @@ export default class VirtualScroll extends Component {
       overscanStartIndex,
       overscanStopIndex
     } = getOverscanIndices({
-      overscanRowsCount,
-      rowsCount,
+      cellsCount: rowsCount,
+      overscanCellsCount: overscanRowsCount,
       startIndex,
       stopIndex
     })
@@ -461,7 +461,7 @@ export default class VirtualScroll extends Component {
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
 
         start = getVisibleCellIndices({
-          cellCount: rowsCount,
+          cellsCount: rowsCount,
           cellMetadata: this._cellMetadata,
           containerSize: height,
           currentOffset: scrollTop
@@ -480,7 +480,7 @@ export default class VirtualScroll extends Component {
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
 
         start = getVisibleCellIndices({
-          cellCount: rowsCount,
+          cellsCount: rowsCount,
           cellMetadata: this._cellMetadata,
           containerSize: height,
           currentOffset: scrollTop

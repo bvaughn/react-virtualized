@@ -2,6 +2,7 @@
 import {
   computeCellMetadataAndUpdateScrollOffsetHelper,
   createCallbackMemoizer,
+  getOverscanIndices,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
@@ -66,6 +67,18 @@ export default class Grid extends Component {
     onSectionRendered: PropTypes.func.isRequired,
 
     /**
+     * Number of columns to render before/after the visible section of the grid.
+     * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
+     */
+    overscanColumnsCount: PropTypes.number.isRequired,
+
+    /**
+     * Number of rows to render above/below the visible section of the grid.
+     * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
+     */
+    overscanRowsCount: PropTypes.number.isRequired,
+
+    /**
      * Responsible for rendering a cell given an row and column index.
      * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
      */
@@ -101,7 +114,9 @@ export default class Grid extends Component {
   static defaultProps = {
     noContentRenderer: () => null,
     onScroll: () => null,
-    onSectionRendered: () => null
+    onSectionRendered: () => null,
+    overscanColumnsCount: 0,
+    overscanRowsCount: 0
   }
 
   constructor (props, context) {
@@ -204,8 +219,8 @@ export default class Grid extends Component {
 
     // Update scrollLeft if appropriate
     updateScrollIndexHelper({
-      cellMetadata: this._columnMetadata,
       cellsCount: columnsCount,
+      cellMetadata: this._columnMetadata,
       cellSize: columnWidth,
       previousCellsCount: prevProps.columnsCount,
       previousCellSize: prevProps.columnWidth,
@@ -219,8 +234,8 @@ export default class Grid extends Component {
 
     // Update scrollTop if appropriate
     updateScrollIndexHelper({
-      cellMetadata: this._rowMetadata,
       cellsCount: rowsCount,
+      cellMetadata: this._rowMetadata,
       cellSize: rowHeight,
       previousCellsCount: prevProps.rowsCount,
       previousCellSize: prevProps.rowHeight,
@@ -304,6 +319,8 @@ export default class Grid extends Component {
       columnsCount,
       height,
       noContentRenderer,
+      overscanColumnsCount,
+      overscanRowsCount,
       renderCell,
       rowsCount,
       width
@@ -319,21 +336,21 @@ export default class Grid extends Component {
 
     // Render only enough columns and rows to cover the visible area of the grid.
     if (height > 0 && width > 0) {
-      const {
+      let {
         start: columnStartIndex,
         stop: columnStopIndex
       } = getVisibleCellIndices({
-        cellCount: columnsCount,
+        cellsCount: columnsCount,
         cellMetadata: this._columnMetadata,
         containerSize: width,
         currentOffset: scrollLeft
       })
 
-      const {
+      let {
         start: rowStartIndex,
         stop: rowStopIndex
       } = getVisibleCellIndices({
-        cellCount: rowsCount,
+        cellsCount: rowsCount,
         cellMetadata: this._rowMetadata,
         containerSize: height,
         currentOffset: scrollTop
@@ -344,6 +361,25 @@ export default class Grid extends Component {
       this._renderedColumnStopIndex = columnStopIndex
       this._renderedRowStartIndex = rowStartIndex
       this._renderedRowStopIndex = rowStopIndex
+
+      const overscanColumnIndices = getOverscanIndices({
+        cellsCount: columnsCount,
+        overscanCellsCount: overscanColumnsCount,
+        startIndex: columnStartIndex,
+        stopIndex: columnStopIndex
+      })
+
+      const overscanRowIndices = getOverscanIndices({
+        cellsCount: rowsCount,
+        overscanCellsCount: overscanRowsCount,
+        startIndex: rowStartIndex,
+        stopIndex: rowStopIndex
+      })
+
+      columnStartIndex = overscanColumnIndices.overscanStartIndex
+      columnStopIndex = overscanColumnIndices.overscanStopIndex
+      rowStartIndex = overscanRowIndices.overscanStartIndex
+      rowStopIndex = overscanRowIndices.overscanStopIndex
 
       for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
         let rowDatum = this._rowMetadata[rowIndex]
@@ -411,11 +447,11 @@ export default class Grid extends Component {
     const { columnsCount, columnWidth, rowHeight, rowsCount } = props
 
     this._columnMetadata = initCellMetadata({
-      cellCount: columnsCount,
+      cellsCount: columnsCount,
       size: columnWidth
     })
     this._rowMetadata = initCellMetadata({
-      cellCount: rowsCount,
+      cellsCount: rowsCount,
       size: rowHeight
     })
   }
@@ -455,13 +491,37 @@ export default class Grid extends Component {
   }
 
   _invokeOnGridRenderedHelper () {
-    const { onSectionRendered } = this.props
+    const { columnsCount, onSectionRendered, overscanColumnsCount, overscanRowsCount, rowsCount } = this.props
+
+    const {
+      overscanStartIndex: columnOverscanStartIndex,
+      overscanStopIndex: columnOverscanStopIndex
+    } = getOverscanIndices({
+      cellsCount: columnsCount,
+      overscanCellsCount: overscanColumnsCount,
+      startIndex: this._renderedColumnStartIndex,
+      stopIndex: this._renderedColumnStopIndex
+    })
+
+    const {
+      overscanStartIndex: rowOverscanStartIndex,
+      overscanStopIndex: rowOverscanStopIndex
+    } = getOverscanIndices({
+      cellsCount: rowsCount,
+      overscanCellsCount: overscanRowsCount,
+      startIndex: this._renderedRowStartIndex,
+      stopIndex: this._renderedRowStopIndex
+    })
 
     this._onGridRenderedMemoizer({
       callback: onSectionRendered,
       indices: {
+        columnOverscanStartIndex,
+        columnOverscanStopIndex,
         columnStartIndex: this._renderedColumnStartIndex,
         columnStopIndex: this._renderedColumnStopIndex,
+        rowOverscanStartIndex,
+        rowOverscanStopIndex,
         rowStartIndex: this._renderedRowStartIndex,
         rowStopIndex: this._renderedRowStopIndex
       }
@@ -589,7 +649,7 @@ export default class Grid extends Component {
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
 
         start = getVisibleCellIndices({
-          cellCount: rowsCount,
+          cellsCount: rowsCount,
           cellMetadata: this._rowMetadata,
           containerSize: height,
           currentOffset: scrollTop
@@ -608,7 +668,7 @@ export default class Grid extends Component {
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
 
         start = getVisibleCellIndices({
-          cellCount: columnsCount,
+          cellsCount: columnsCount,
           cellMetadata: this._columnMetadata,
           containerSize: width,
           currentOffset: scrollLeft
@@ -623,7 +683,7 @@ export default class Grid extends Component {
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
 
         start = getVisibleCellIndices({
-          cellCount: columnsCount,
+          cellsCount: columnsCount,
           cellMetadata: this._columnMetadata,
           containerSize: width,
           currentOffset: scrollLeft
@@ -642,7 +702,7 @@ export default class Grid extends Component {
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
 
         start = getVisibleCellIndices({
-          cellCount: rowsCount,
+          cellsCount: rowsCount,
           cellMetadata: this._rowMetadata,
           containerSize: height,
           currentOffset: scrollTop

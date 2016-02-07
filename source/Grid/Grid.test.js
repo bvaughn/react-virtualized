@@ -22,6 +22,8 @@ describe('Grid', () => {
     noContentRenderer,
     onSectionRendered,
     onScroll,
+    overscanColumnsCount = 0,
+    overscanRowsCount = 0,
     rowHeight = 20,
     rowsCount = NUM_ROWS,
     scrollToColumn,
@@ -45,6 +47,8 @@ describe('Grid', () => {
         noContentRenderer={noContentRenderer}
         onSectionRendered={onSectionRendered}
         onScroll={onScroll}
+        overscanColumnsCount={overscanColumnsCount}
+        overscanRowsCount={overscanRowsCount}
         renderCell={renderCell}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
