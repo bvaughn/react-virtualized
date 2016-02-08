@@ -79,7 +79,7 @@ export default class FlexTable extends Component {
      * Number of rows to render above/below the visible bounds of the list.
      * These rows can help for smoother scrolling on touch devices.
      */
-    overscanRowsCount: PropTypes.number,
+    overscanRowsCount: PropTypes.number.isRequired,
 
     /**
      * Optional CSS class to apply to all table rows (including the header row).
@@ -122,6 +122,7 @@ export default class FlexTable extends Component {
     onRowClick: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
+    overscanRowsCount: 10,
     verticalPadding: 0
   }
 

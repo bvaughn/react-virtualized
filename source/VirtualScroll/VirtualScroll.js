@@ -70,7 +70,7 @@ export default class VirtualScroll extends Component {
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
-    overscanRowsCount: 0
+    overscanRowsCount: 10
   }
 
   constructor (props, context) {

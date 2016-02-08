@@ -116,7 +116,7 @@ export default class Grid extends Component {
     onScroll: () => null,
     onSectionRendered: () => null,
     overscanColumnsCount: 0,
-    overscanRowsCount: 0
+    overscanRowsCount: 10
   }
 
   constructor (props, context) {
