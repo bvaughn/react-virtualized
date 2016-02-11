@@ -116,6 +116,7 @@ export default class FlexTable extends Component {
 
   static defaultProps = {
     disableHeader: false,
+    headerHeight: 0,
     horizontalPadding: 0,
     noRowsRenderer: () => null,
     onHeaderClick: () => null,

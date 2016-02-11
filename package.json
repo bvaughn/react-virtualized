@@ -99,6 +99,7 @@
     "postcss-loader": "^0.8.0",
     "react": "^0.14.3",
     "react-addons-test-utils": "^0.14.3",
+    "react-dom": "^0.14.3",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.0.1",
