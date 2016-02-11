@@ -67,12 +67,20 @@ export default class FlexTable extends Component {
      * ({ startIndex, stopIndex }): void
      */
     onRowsRendered: PropTypes.func,
+
     /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
      * ({ scrollTop }): void
      */
     onScroll: PropTypes.func.isRequired,
+
+    /**
+     * Number of rows to render above/below the visible bounds of the list.
+     * These rows can help for smoother scrolling on touch devices.
+     */
+    overscanRowsCount: PropTypes.number.isRequired,
+
     /**
      * Optional CSS class to apply to all table rows (including the header row).
      * This property can be a CSS class name (string) or a function that returns a class name.
@@ -110,12 +118,14 @@ export default class FlexTable extends Component {
 
   static defaultProps = {
     disableHeader: false,
+    headerHeight: 0,
     horizontalPadding: 0,
     noRowsRenderer: () => null,
     onHeaderClick: () => null,
     onRowClick: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
+    overscanRowsCount: 10,
     verticalPadding: 0
   }
 
@@ -173,6 +183,7 @@ export default class FlexTable extends Component {
       noRowsRenderer,
       onRowsRendered,
       onScroll,
+      overscanRowsCount,
       rowClassName,
       rowHeight,
       rowsCount,
@@ -216,10 +227,13 @@ export default class FlexTable extends Component {
           height={availableRowsHeight}
           noContentRenderer={noRowsRenderer}
           onScroll={onScroll}
-          onSectionRendered={({ rowStartIndex, rowStopIndex }) => onRowsRendered({
+          onSectionRendered={({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) => onRowsRendered({
+            overscanStartIndex: rowOverscanStartIndex,
+            overscanStopIndex: rowOverscanStopIndex,
             startIndex: rowStartIndex,
             stopIndex: rowStopIndex
           })}
+          overscanRowsCount={overscanRowsCount}
           renderCell={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
           rowHeight={rowHeight}
           rowsCount={rowsCount}

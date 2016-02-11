@@ -1,6 +1,7 @@
 import {
   computeCellMetadataAndUpdateScrollOffsetHelper,
   createCallbackMemoizer,
+  getOverscanIndices,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
@@ -21,7 +22,7 @@ function getCellMetadata () {
     30 //  8: 110..110 (max)
   ]
   return initCellMetadata({
-    cellCount: cellSizes.length,
+    cellsCount: cellSizes.length,
     size: index => cellSizes[index]
   })
 }
@@ -131,14 +132,20 @@ describe('computeCellMetadataAndUpdateScrollOffsetHelper', () => {
 describe('createCallbackMemoizer', () => {
   function OnRowsRendered () {
     let numCalls = 0
+    let overscanStartIndex
+    let overscanStopIndex
     let startIndex
     let stopIndex
 
     return {
       numCalls: () => numCalls,
+      overscanStartIndex: () => overscanStartIndex,
+      overscanStopIndex: () => overscanStopIndex,
       startIndex: () => startIndex,
       stopIndex: () => stopIndex,
       update: (params) => {
+        overscanStartIndex = params.overscanStartIndex
+        overscanStopIndex = params.overscanStopIndex
         startIndex = params.startIndex
         stopIndex = params.stopIndex
         numCalls++
@@ -254,6 +261,39 @@ describe('createCallbackMemoizer', () => {
     expect(util.startIndex()).toEqual(1)
     expect(util.stopIndex()).toEqual(2)
   })
+
+  it('should call onRowsRendered if :overscanCellsCount changes', () => {
+    const util = new OnRowsRendered()
+    const helper = createCallbackMemoizer()
+    helper({
+      callback: util.update,
+      indices: {
+        overscanStartIndex: 0,
+        overscanStopIndex: 2,
+        startIndex: 0,
+        stopIndex: 1
+      }
+    })
+    expect(util.numCalls()).toEqual(1)
+    expect(util.startIndex()).toEqual(0)
+    expect(util.stopIndex()).toEqual(1)
+    expect(util.overscanStartIndex()).toEqual(0)
+    expect(util.overscanStopIndex()).toEqual(2)
+    helper({
+      callback: util.update,
+      indices: {
+        overscanStartIndex: 0,
+        overscanStopIndex: 3,
+        startIndex: 0,
+        stopIndex: 1
+      }
+    })
+    expect(util.numCalls()).toEqual(2)
+    expect(util.startIndex()).toEqual(0)
+    expect(util.stopIndex()).toEqual(1)
+    expect(util.overscanStartIndex()).toEqual(0)
+    expect(util.overscanStopIndex()).toEqual(3)
+  })
 })
 
 describe('getUpdatedOffsetForIndex', () => {
@@ -298,7 +338,7 @@ describe('getUpdatedOffsetForIndex', () => {
 describe('getVisibleCellIndices', () => {
   function testHelper (currentOffset, cellMetadata = getCellMetadata()) {
     return getVisibleCellIndices({
-      cellCount: cellMetadata.length,
+      cellsCount: cellMetadata.length,
       cellMetadata,
       containerSize: 50,
       currentOffset
@@ -338,8 +378,8 @@ describe('getVisibleCellIndices', () => {
 
 describe('updateScrollIndexHelper', () => {
   function helper ({
-    cellMetadata = getCellMetadata(),
     cellsCount = 100,
+    cellMetadata = getCellMetadata(),
     cellSize = 10,
     previousCellsCount = 100,
     previousCellSize = 10,
@@ -356,8 +396,8 @@ describe('updateScrollIndexHelper', () => {
     }
 
     updateScrollIndexHelper({
-      cellMetadata,
       cellsCount,
+      cellMetadata,
       cellSize,
       previousCellsCount,
       previousCellSize,
@@ -435,5 +475,44 @@ describe('updateScrollIndexHelper', () => {
       previousSize: 50,
       size: 100
     })).toEqual(false)
+  })
+})
+
+describe('getOverscanIndices', () => {
+  function testHelper (cellsCount, startIndex, stopIndex, overscanCellsCount) {
+    return getOverscanIndices({
+      cellsCount,
+      overscanCellsCount,
+      startIndex,
+      stopIndex
+    })
+  }
+
+  it('should not overscan if :overscanCellsCount is 0', () => {
+    expect(testHelper(100, 10, 20, 0)).toEqual({
+      overscanStartIndex: 10,
+      overscanStopIndex: 20
+    })
+  })
+
+  it('should overscan by the specified :overscanCellsCount', () => {
+    expect(testHelper(100, 10, 20, 10)).toEqual({
+      overscanStartIndex: 0,
+      overscanStopIndex: 30
+    })
+  })
+
+  it('should not overscan beyond the start of the list', () => {
+    expect(testHelper(100, 5, 15, 10)).toEqual({
+      overscanStartIndex: 0,
+      overscanStopIndex: 25
+    })
+  })
+
+  it('should not overscan beyond the end of the list', () => {
+    expect(testHelper(25, 10, 20, 10)).toEqual({
+      overscanStartIndex: 0,
+      overscanStopIndex: 24
+    })
   })
 })

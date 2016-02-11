@@ -22,6 +22,8 @@ describe('Grid', () => {
     noContentRenderer,
     onSectionRendered,
     onScroll,
+    overscanColumnsCount = 0,
+    overscanRowsCount = 0,
     rowHeight = 20,
     rowsCount = NUM_ROWS,
     scrollToColumn,
@@ -45,6 +47,8 @@ describe('Grid', () => {
         noContentRenderer={noContentRenderer}
         onSectionRendered={onSectionRendered}
         onScroll={onScroll}
+        overscanColumnsCount={overscanColumnsCount}
+        overscanRowsCount={overscanRowsCount}
         renderCell={renderCell}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
@@ -354,6 +358,84 @@ describe('Grid', () => {
         scrollTop: 100
       })
       expect(onScrollCalls).toEqual([{ scrollLeft: 0, scrollTop: 100 }])
+    })
+  })
+
+  describe('overscanRowsCount', () => {
+    function createHelper () {
+      let columnOverscanStartIndex, columnOverscanStopIndex, columnStartIndex, columnStopIndex, rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex
+
+      function onSectionRendered (params) {
+        columnOverscanStartIndex = params.columnOverscanStartIndex
+        columnOverscanStopIndex = params.columnOverscanStopIndex
+        columnStartIndex = params.columnStartIndex
+        columnStopIndex = params.columnStopIndex
+        rowOverscanStartIndex = params.rowOverscanStartIndex
+        rowOverscanStopIndex = params.rowOverscanStopIndex
+        rowStartIndex = params.rowStartIndex
+        rowStopIndex = params.rowStopIndex
+      }
+
+      return {
+        columnOverscanStartIndex: () => columnOverscanStartIndex,
+        columnOverscanStopIndex: () => columnOverscanStopIndex,
+        columnStartIndex: () => columnStartIndex,
+        columnStopIndex: () => columnStopIndex,
+        onSectionRendered,
+        rowOverscanStartIndex: () => rowOverscanStartIndex,
+        rowOverscanStopIndex: () => rowOverscanStopIndex,
+        rowStartIndex: () => rowStartIndex,
+        rowStopIndex: () => rowStopIndex
+      }
+    }
+
+    it('should not overscan if disabled', () => {
+      const helper = createHelper()
+      renderGrid({
+        onSectionRendered: helper.onSectionRendered
+      })
+      expect(helper.columnOverscanStartIndex()).toEqual(helper.columnStartIndex())
+      expect(helper.columnOverscanStopIndex()).toEqual(helper.columnStopIndex())
+      expect(helper.rowOverscanStartIndex()).toEqual(helper.rowStartIndex())
+      expect(helper.rowOverscanStopIndex()).toEqual(helper.rowStopIndex())
+    })
+
+    it('should overscan the specified amount', () => {
+      const helper = createHelper()
+      renderGrid({
+        onSectionRendered: helper.onSectionRendered,
+        overscanColumnsCount: 2,
+        overscanRowsCount: 5,
+        scrollToColumn: 25,
+        scrollToRow: 50
+      })
+      expect(helper.columnOverscanStartIndex()).toEqual(20)
+      expect(helper.columnOverscanStopIndex()).toEqual(27)
+      expect(helper.columnStartIndex()).toEqual(22)
+      expect(helper.columnStopIndex()).toEqual(25)
+      expect(helper.rowOverscanStartIndex()).toEqual(41)
+      expect(helper.rowOverscanStopIndex()).toEqual(55)
+      expect(helper.rowStartIndex()).toEqual(46)
+      expect(helper.rowStopIndex()).toEqual(50)
+    })
+
+    it('should not overscan beyond the bounds of the grid', () => {
+      const helper = createHelper()
+      renderGrid({
+        onSectionRendered: helper.onSectionRendered,
+        columnsCount: 6,
+        overscanColumnsCount: 10,
+        overscanRowsCount: 10,
+        rowsCount: 5
+      })
+      expect(helper.columnOverscanStartIndex()).toEqual(0)
+      expect(helper.columnOverscanStopIndex()).toEqual(5)
+      expect(helper.columnStartIndex()).toEqual(0)
+      expect(helper.columnStopIndex()).toEqual(3)
+      expect(helper.rowOverscanStartIndex()).toEqual(0)
+      expect(helper.rowOverscanStopIndex()).toEqual(4)
+      expect(helper.rowStartIndex()).toEqual(0)
+      expect(helper.rowStopIndex()).toEqual(4)
     })
   })
 

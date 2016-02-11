@@ -28,6 +28,11 @@ export default class VirtualScroll extends Component {
      */
     onRowsRendered: PropTypes.func.isRequired,
     /**
+     * Number of rows to render above/below the visible bounds of the list.
+     * These rows can help for smoother scrolling on touch devices.
+     */
+    overscanRowsCount: PropTypes.number.isRequired,
+    /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
      * ({ scrollTop }): void
@@ -51,7 +56,8 @@ export default class VirtualScroll extends Component {
   static defaultProps = {
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
-    onScroll: () => null
+    onScroll: () => null,
+    overscanRowsCount: 10
   }
 
   /**
@@ -75,10 +81,9 @@ export default class VirtualScroll extends Component {
    * See Grid#setScrollPosition
    */
   setScrollTop (scrollTop) {
-    this.refs.Grid.setScrollPosition({
-      scrollLeft: 0,
-      scrollTop
-    })
+    scrollTop = Number.isNaN(scrollTop) ? 0 : scrollTop
+
+    this.setState({ scrollTop })
   }
 
   render () {
@@ -90,6 +95,7 @@ export default class VirtualScroll extends Component {
       onScroll,
       rowHeight,
       rowRenderer,
+      overscanRowsCount,
       rowsCount,
       scrollToIndex,
       width
@@ -106,10 +112,13 @@ export default class VirtualScroll extends Component {
         height={height}
         noContentRenderer={noRowsRenderer}
         onScroll={({ scrollTop }) => onScroll({ scrollTop })}
-        onSectionRendered={({ rowStartIndex, rowStopIndex }) => onRowsRendered({
+        onSectionRendered={({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) => onRowsRendered({
+          overscanStartIndex: rowOverscanStartIndex,
+          overscanStopIndex: rowOverscanStopIndex,
           startIndex: rowStartIndex,
           stopIndex: rowStopIndex
         })}
+        overscanRowsCount={overscanRowsCount}
         renderCell={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
