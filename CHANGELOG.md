@@ -1,6 +1,13 @@
 Changelog
 ------------
 
+### 4.10.0
+`FlexTable` and `VirtualScroll` get a new property, `overscanRowsCount`. `Grid` gets `overscanRowsCount` and `overscanColumnsCount`.
+These properties can be used to reduce visual flicker around the sides of virtualized components when quickly scrolling.
+`overscanRowsCount` defaults to 10 and `overscanColumnsCount` defaults to 0; adjust as necessary based on the size of your lists and cells.
+
+`FlexTable` sets a default value of 0 for `headerHeight` to more gracefully support `disableHeader` use case.
+
 ### 4.9.0
 `AutoSizer` component now takes padding into consideration before setting the `width` and `height` of its children.
 
