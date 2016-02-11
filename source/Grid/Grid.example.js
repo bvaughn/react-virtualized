@@ -23,6 +23,8 @@ export default class GridExample extends Component {
       columnWidth: 100,
       columnsCount: 1000,
       height: 300,
+      overscanColumnsCount: 0,
+      overscanRowsCount: 5,
       rowHeight: 40,
       rowsCount: 1000,
       scrollToColumn: undefined,
@@ -47,6 +49,8 @@ export default class GridExample extends Component {
     const {
       columnsCount,
       height,
+      overscanColumnsCount,
+      overscanRowsCount,
       rowHeight,
       rowsCount,
       scrollToColumn,
@@ -122,6 +126,18 @@ export default class GridExample extends Component {
             onChange={event => this.setState({ rowHeight: parseInt(event.target.value, 10) || 1 })}
             value={rowHeight}
           />
+          <LabeledInput
+            label='Overscan columns'
+            name='overscanColumnsCount'
+            onChange={event => this.setState({ overscanColumnsCount: parseInt(event.target.value, 10) || 0 })}
+            value={overscanColumnsCount}
+          />
+          <LabeledInput
+            label='Overscan rows'
+            name='overscanRowsCount'
+            onChange={event => this.setState({ overscanRowsCount: parseInt(event.target.value, 10) || 0 })}
+            value={overscanRowsCount}
+          />
         </InputRow>
 
         <div className={styles.GridRow}>
@@ -136,6 +152,8 @@ export default class GridExample extends Component {
               columnsCount={1}
               height={height}
               onScroll={({ scrollLeft, scrollTop }) => this.refs.BodyGrid.setScrollPosition({ scrollTop })}
+              overscanColumnsCount={overscanColumnsCount}
+              overscanRowsCount={overscanRowsCount}
               renderCell={this._renderLeftSideCell}
               rowHeight={useDynamicRowHeights ? this._getRowHeight : rowHeight}
               rowsCount={rowsCount}
@@ -151,6 +169,8 @@ export default class GridExample extends Component {
                   columnWidth={this._getColumnWidth}
                   columnsCount={columnsCount}
                   height={rowHeight}
+                  overscanColumnsCount={overscanColumnsCount}
+                  overscanRowsCount={overscanRowsCount}
                   renderCell={this._renderHeaderCell}
                   rowHeight={rowHeight}
                   rowsCount={1}
@@ -171,6 +191,8 @@ export default class GridExample extends Component {
                     this.refs.LeftSideGrid.setScrollPosition({ scrollTop })
                     this.refs.HeaderGrid.setScrollPosition({ scrollLeft })
                   }}
+                  overscanColumnsCount={overscanColumnsCount}
+                  overscanRowsCount={overscanRowsCount}
                   renderCell={this._renderBodyCell}
                   rowHeight={useDynamicRowHeights ? this._getRowHeight : rowHeight}
                   rowsCount={rowsCount}

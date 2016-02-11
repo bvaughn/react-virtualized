@@ -21,6 +21,7 @@ export default class TableExample extends Component {
     this.state = {
       headerHeight: 30,
       height: 270,
+      overscanRowsCount: 0,
       rowHeight: 40,
       rowsCount: 1000,
       scrollToIndex: undefined,
@@ -40,6 +41,7 @@ export default class TableExample extends Component {
     const {
       headerHeight,
       height,
+      overscanRowsCount,
       rowHeight,
       rowsCount,
       scrollToIndex,
@@ -120,6 +122,12 @@ export default class TableExample extends Component {
             onChange={event => this.setState({ headerHeight: parseInt(event.target.value, 10) || 1 })}
             value={headerHeight}
           />
+          <LabeledInput
+            label='Overscan'
+            name='overscanRowsCount'
+            onChange={event => this.setState({ overscanRowsCount: parseInt(event.target.value, 10) || 0 })}
+            value={overscanRowsCount}
+          />
         </InputRow>
 
         <FlexTable
@@ -129,6 +137,7 @@ export default class TableExample extends Component {
           headerHeight={headerHeight}
           height={height}
           noRowsRenderer={this._noRowsRenderer}
+          overscanRowsCount={overscanRowsCount}
           rowClassName={::this._rowClassName}
           rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
           rowGetter={rowGetter}

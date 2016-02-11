@@ -14,6 +14,8 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowsCount` or `columnsCount` is 0: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered: `({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ scrollLeft, scrollTop }): void` |
+| overscanColumnsCount |  | Number | Number of columns to render before/after the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
+| overscanRowsCount |  | Number | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
 | renderCell | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
 | rowsCount | Number | ✓ | Number of rows in grid. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |

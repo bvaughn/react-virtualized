@@ -41,11 +41,12 @@ describe('FlexTable', () => {
     headerClassName,
     headerHeight = 20,
     height = 100,
-    noRowsRenderer,
-    onHeaderClick,
-    onRowClick,
-    onRowsRendered,
-    rowClassName,
+    noRowsRenderer = undefined,
+    onHeaderClick = undefined,
+    onRowClick = undefined,
+    onRowsRendered = undefined,
+    overscanRowsCount = 0,
+    rowClassName = undefined,
     rowGetter = immutableRowGetter,
     rowHeight = 10,
     rowsCount = list.size,
@@ -66,10 +67,12 @@ describe('FlexTable', () => {
         onHeaderClick={onHeaderClick}
         onRowClick={onRowClick}
         onRowsRendered={onRowsRendered}
+        overscanRowsCount={overscanRowsCount}
         rowClassName={rowClassName}
         rowGetter={rowGetter}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
+        scrollToIndex={scrollToIndex}
         sort={sort}
         sortBy={sortBy}
         sortDirection={sortDirection}
@@ -493,6 +496,55 @@ describe('FlexTable', () => {
       expect(node.className).toContain('foo')
       expect(node.querySelectorAll('.bar').length).toEqual(2)
       expect(node.querySelectorAll('.baz').length).toEqual(9)
+    })
+  })
+
+  describe('overscanRowsCount', () => {
+    it('should not overscan by default', () => {
+      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+      renderTable({
+        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params)
+      })
+      expect(overscanStartIndex).toEqual(startIndex)
+      expect(overscanStopIndex).toEqual(stopIndex)
+    })
+
+    it('should overscan the specified amount', () => {
+      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+      renderTable({
+        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+        overscanRowsCount: 10,
+        scrollToIndex: 30
+      })
+      expect(overscanStartIndex).toEqual(13)
+      expect(startIndex).toEqual(23)
+      expect(stopIndex).toEqual(30)
+      expect(overscanStopIndex).toEqual(40)
+    })
+
+    it('should not overscan beyond the start of the list', () => {
+      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+      renderTable({
+        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+        overscanRowsCount: 10
+      })
+      expect(overscanStartIndex).toEqual(0)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(7)
+      expect(overscanStopIndex).toEqual(17)
+    })
+
+    it('should not overscan beyond the end of the list', () => {
+      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+      renderTable({
+        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+        overscanRowsCount: 10,
+        rowsCount: 15
+      })
+      expect(overscanStartIndex).toEqual(0)
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(7)
+      expect(overscanStopIndex).toEqual(14)
     })
   })
 

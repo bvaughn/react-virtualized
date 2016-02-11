@@ -107,6 +107,13 @@ export function findNearestCell ({
 findNearestCell.EQUAL_OR_LOWER = 1
 findNearestCell.EQUAL_OR_HIGHER = 2
 
+export function getOverscanIndices ({ cellsCount, overscanCellsCount, startIndex, stopIndex }) {
+  return {
+    overscanStartIndex: Math.max(0, startIndex - overscanCellsCount),
+    overscanStopIndex: Math.min(cellsCount - 1, stopIndex + overscanCellsCount)
+  }
+}
+
 /**
  * Determines a new offset that ensures a certain cell is visible, given the current offset.
  * If the cell is already visible then the current offset will be returned.
@@ -141,19 +148,19 @@ export function getUpdatedOffsetForIndex ({
 /**
  * Determines the range of cells to display for a given offset in order to fill the specified container.
  *
- * @param cellCount Total number of cells.
+ * @param cellsCount Total number of cells.
  * @param cellMetadata Metadata initially computed by initCellMetadata()
  * @param containerSize Total size (width or height) of the container
  * @param currentOffset Container's current (x or y) offset
  * @return An object containing :start and :stop attributes, each specifying a cell index
  */
 export function getVisibleCellIndices ({
-  cellCount,
+  cellsCount,
   cellMetadata,
   containerSize,
   currentOffset
 }) {
-  if (cellCount === 0) {
+  if (cellsCount === 0) {
     return {}
   }
 
@@ -174,7 +181,7 @@ export function getVisibleCellIndices ({
 
   let stop = start
 
-  while (currentOffset < maxOffset && stop < cellCount - 1) {
+  while (currentOffset < maxOffset && stop < cellsCount - 1) {
     stop++
 
     currentOffset += cellMetadata[stop].size
@@ -190,12 +197,12 @@ export function getVisibleCellIndices ({
  * Initializes metadata for an axis and its cells.
  * This data is used to determine which cells are visible given a container size and scroll position.
  *
- * @param cellCount Total number of cells.
+ * @param cellsCount Total number of cells.
  * @param size Either a fixed size or a function that returns the size for a given given an index.
  * @return Object mapping cell index to cell metadata (size, offset)
  */
 export function initCellMetadata ({
-  cellCount,
+  cellsCount,
   size
 }) {
   const sizeGetter = size instanceof Function
@@ -205,7 +212,7 @@ export function initCellMetadata ({
   const cellMetadata = []
   let offset = 0
 
-  for (var i = 0; i < cellCount; i++) {
+  for (var i = 0; i < cellsCount; i++) {
     let size = sizeGetter(i)
 
     if (size == null || isNaN(size)) {

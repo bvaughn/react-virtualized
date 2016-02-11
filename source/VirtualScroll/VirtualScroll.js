@@ -2,6 +2,7 @@
 import {
   computeCellMetadataAndUpdateScrollOffsetHelper,
   createCallbackMemoizer,
+  getOverscanIndices,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
   initCellMetadata,
@@ -42,6 +43,11 @@ export default class VirtualScroll extends Component {
      */
     onRowsRendered: PropTypes.func.isRequired,
     /**
+     * Number of rows to render above/below the visible bounds of the list.
+     * These rows can help for smoother scrolling on touch devices.
+     */
+    overscanRowsCount: PropTypes.number.isRequired,
+    /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
      * ({ scrollTop }): void
@@ -63,7 +69,8 @@ export default class VirtualScroll extends Component {
   static defaultProps = {
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
-    onScroll: () => null
+    onScroll: () => null,
+    overscanRowsCount: 10
   }
 
   constructor (props, context) {
@@ -84,7 +91,6 @@ export default class VirtualScroll extends Component {
     this._invokeOnRowsRenderedHelper = this._invokeOnRowsRenderedHelper.bind(this)
     this._onKeyPress = this._onKeyPress.bind(this)
     this._onScroll = this._onScroll.bind(this)
-    this._onWheel = this._onWheel.bind(this)
     this._updateScrollTopForScrollToIndex = this._updateScrollTopForScrollToIndex.bind(this)
   }
 
@@ -146,8 +152,8 @@ export default class VirtualScroll extends Component {
 
     // Update scrollTop if appropriate
     updateScrollIndexHelper({
-      cellMetadata: this._cellMetadata,
       cellsCount: rowsCount,
+      cellMetadata: this._cellMetadata,
       cellSize: rowHeight,
       previousCellsCount: prevProps.rowsCount,
       previousCellSize: prevProps.rowHeight,
@@ -210,6 +216,7 @@ export default class VirtualScroll extends Component {
       className,
       height,
       noRowsRenderer,
+      overscanRowsCount,
       rowsCount,
       rowRenderer
     } = this.props
@@ -223,11 +230,11 @@ export default class VirtualScroll extends Component {
 
     // Render only enough rows to cover the visible (vertical) area of the table.
     if (height > 0) {
-      const {
+      let {
         start,
         stop
       } = getVisibleCellIndices({
-        cellCount: rowsCount,
+        cellsCount: rowsCount,
         cellMetadata: this._cellMetadata,
         containerSize: height,
         currentOffset: scrollTop
@@ -236,6 +243,19 @@ export default class VirtualScroll extends Component {
       // Store for onRowsRendered callback in componentDidUpdate
       this._renderedStartIndex = start
       this._renderedStopIndex = stop
+
+      const {
+        overscanStartIndex,
+        overscanStopIndex
+      } = getOverscanIndices({
+        cellsCount: rowsCount,
+        overscanCellsCount: overscanRowsCount,
+        startIndex: start,
+        stopIndex: stop
+      })
+
+      start = overscanStartIndex
+      stop = overscanStopIndex
 
       for (let i = start; i <= stop; i++) {
         let datum = this._cellMetadata[i]
@@ -264,7 +284,6 @@ export default class VirtualScroll extends Component {
         className={cn('VirtualScroll', className)}
         onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
-        onWheel={this._onWheel}
         tabIndex={0}
         style={{
           height: height
@@ -295,7 +314,7 @@ export default class VirtualScroll extends Component {
     const { rowHeight, rowsCount } = props
 
     this._cellMetadata = initCellMetadata({
-      cellCount: rowsCount,
+      cellsCount: rowsCount,
       size: rowHeight
     })
   }
@@ -318,13 +337,28 @@ export default class VirtualScroll extends Component {
   }
 
   _invokeOnRowsRenderedHelper () {
-    const { onRowsRendered } = this.props
+    const { onRowsRendered, overscanRowsCount, rowsCount } = this.props
+
+    const startIndex = this._renderedStartIndex
+    const stopIndex = this._renderedStopIndex
+
+    const {
+      overscanStartIndex,
+      overscanStopIndex
+    } = getOverscanIndices({
+      cellsCount: rowsCount,
+      overscanCellsCount: overscanRowsCount,
+      startIndex,
+      stopIndex
+    })
 
     this._onRowsRenderedMemoizer({
       callback: onRowsRendered,
       indices: {
-        startIndex: this._renderedStartIndex,
-        stopIndex: this._renderedStopIndex
+        overscanStartIndex,
+        overscanStopIndex,
+        startIndex,
+        stopIndex
       }
     })
   }
@@ -332,7 +366,7 @@ export default class VirtualScroll extends Component {
   /**
    * Updates the state during the next animation frame.
    * Use this method to avoid multiple renders in a small span of time.
-   * This helps performance for bursty events (like onWheel).
+   * This helps performance for bursty events (like onScroll).
    */
   _setNextState (state) {
     if (this._setNextStateAnimationFrameId) {
@@ -427,7 +461,7 @@ export default class VirtualScroll extends Component {
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
 
         start = getVisibleCellIndices({
-          cellCount: rowsCount,
+          cellsCount: rowsCount,
           cellMetadata: this._cellMetadata,
           containerSize: height,
           currentOffset: scrollTop
@@ -446,7 +480,7 @@ export default class VirtualScroll extends Component {
         this._stopEvent(event) // Prevent key from also scrolling surrounding window
 
         start = getVisibleCellIndices({
-          cellCount: rowsCount,
+          cellsCount: rowsCount,
           cellMetadata: this._cellMetadata,
           containerSize: height,
           currentOffset: scrollTop
@@ -472,21 +506,6 @@ export default class VirtualScroll extends Component {
     const { height, onScroll } = this.props
     const totalRowsHeight = this._getTotalRowsHeight()
     const scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop)
-
-    this._setNextStateForScrollHelper({ scrollTop })
-
-    this._onScrollMemoizer({
-      callback: onScroll,
-      indices: {
-        scrollTop
-      }
-    })
-  }
-
-  _onWheel (event) {
-    const{ onScroll } = this.props
-
-    const scrollTop = this.refs.scrollingContainer.scrollTop
 
     this._setNextStateForScrollHelper({ scrollTop })
 
