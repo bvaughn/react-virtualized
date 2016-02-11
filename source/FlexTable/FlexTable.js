@@ -44,7 +44,7 @@ export default class FlexTable extends Component {
     /** Optional CSS class to apply to all column headers */
     headerClassName: PropTypes.string,
     /** Fixed height of header row */
-    headerHeight: PropTypes.number,
+    headerHeight: PropTypes.number.isRequired,
     /** Fixed/available height for out DOM element */
     height: PropTypes.number.isRequired,
     /** Horizontal padding of outer DOM element */
