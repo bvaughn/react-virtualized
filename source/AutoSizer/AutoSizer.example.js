@@ -26,11 +26,11 @@ export default class AutoSizerExample extends Component {
 
   render () {
     const { hideDescription } = this.state
-    const { list } = this.props
+    const { list, ...props } = this.props
 
     return (
       <ContentBox
-        {...this.props}
+        {...props}
         style={{
           height: 400
         }}
