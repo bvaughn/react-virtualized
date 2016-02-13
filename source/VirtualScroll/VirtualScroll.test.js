@@ -303,7 +303,11 @@ describe('VirtualScroll', () => {
       }
       list.refs.Grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
       Simulate.scroll(findDOMNode(list), { target })
-      expect(onScrollCalls).toEqual([{ scrollTop: 100 }])
+      expect(onScrollCalls).toEqual([{
+        clientHeight: 100,
+        scrollHeight: 1000,
+        scrollTop: 100
+      }])
     })
   })
 

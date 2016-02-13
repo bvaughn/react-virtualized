@@ -56,7 +56,7 @@ export default class Grid extends Component {
     /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
-     * ({ scrollLeft, scrollTop }): void
+     * ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void
      */
     onScroll: PropTypes.func.isRequired,
 
@@ -737,7 +737,16 @@ export default class Grid extends Component {
     this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
 
     this._onScrollMemoizer({
-      callback: onScroll,
+      callback: ({ scrollLeft, scrollTop }) => {
+        onScroll({
+          clientHeight: height,
+          clientWidth: width,
+          scrollHeight: totalRowsHeight,
+          scrollLeft,
+          scrollTop,
+          scrollWidth: totalColumnsWidth
+        })
+      },
       indices: {
         scrollLeft,
         scrollTop

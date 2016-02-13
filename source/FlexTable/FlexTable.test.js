@@ -45,6 +45,7 @@ describe('FlexTable', () => {
     onHeaderClick = undefined,
     onRowClick = undefined,
     onRowsRendered = undefined,
+    onScroll = undefined,
     overscanRowsCount = 0,
     rowClassName = undefined,
     rowGetter = immutableRowGetter,
@@ -67,6 +68,7 @@ describe('FlexTable', () => {
         onHeaderClick={onHeaderClick}
         onRowClick={onRowClick}
         onRowsRendered={onRowsRendered}
+        onScroll={onScroll}
         overscanRowsCount={overscanRowsCount}
         rowClassName={rowClassName}
         rowGetter={rowGetter}
@@ -545,6 +547,25 @@ describe('FlexTable', () => {
       expect(startIndex).toEqual(0)
       expect(stopIndex).toEqual(7)
       expect(overscanStopIndex).toEqual(14)
+    })
+  })
+
+  describe('onScroll', () => {
+    it('should trigger callback when component scrolls', () => {
+      const onScrollCalls = []
+      const table = renderTable({
+        onScroll: params => onScrollCalls.push(params)
+      })
+      const target = {
+        scrollTop: 100
+      }
+      table.refs.Grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
+      Simulate.scroll(findDOMNode(table.refs.Grid), { target })
+      expect(onScrollCalls).toEqual([{
+        clientHeight: 80,
+        scrollHeight: 1000,
+        scrollTop: 100
+      }])
     })
   })
 

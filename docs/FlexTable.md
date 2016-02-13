@@ -18,7 +18,7 @@ This component expects explicit width, height, and padding parameters.
 | onRowClick |  | Function | Callback invoked when a user clicks on a table row. `(rowIndex: number): void` |
 | onRowsRendered |  | Function | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }): void` |
 | overscanRowsCount |  | Number | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
-| onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ scrollTop }): void` |
+| onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight, scrollHeight, scrollTop }): void` |
 | rowClassName | String or Function |  | CSS class to apply to all table rows (including the header row). This value may be either a static string or a function with the signature `(rowIndex: number): string`. Note that for the header row an index of `-1` is provided. |
 | rowGetter | Function | ✓ | Callback responsible for returning a data row given an index. `(index: int): any` |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |

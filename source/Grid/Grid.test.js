@@ -344,7 +344,14 @@ describe('Grid', () => {
         scrollLeft: 100,
         scrollTop: 0
       })
-      expect(onScrollCalls).toEqual([{ scrollLeft: 100, scrollTop: 0 }])
+      expect(onScrollCalls).toEqual([{
+        clientHeight: 100,
+        clientWidth: 200,
+        scrollHeight: 2000,
+        scrollLeft: 100,
+        scrollTop: 0,
+        scrollWidth: 2500
+      }])
     })
 
     it('should trigger callback when component scrolls horizontally', () => {
@@ -357,7 +364,14 @@ describe('Grid', () => {
         scrollLeft: 0,
         scrollTop: 100
       })
-      expect(onScrollCalls).toEqual([{ scrollLeft: 0, scrollTop: 100 }])
+      expect(onScrollCalls).toEqual([{
+        clientHeight: 100,
+        clientWidth: 200,
+        scrollHeight: 2000,
+        scrollLeft: 0,
+        scrollTop: 100,
+        scrollWidth: 2500
+      }])
     })
   })
 

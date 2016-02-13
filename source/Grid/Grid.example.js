@@ -38,6 +38,7 @@ export default class GridExample extends Component {
     this._noContentRenderer = this._noContentRenderer.bind(this)
     this._onColumnsCountChange = this._onColumnsCountChange.bind(this)
     this._onRowsCountChange = this._onRowsCountChange.bind(this)
+    this._onScroll = this._onScroll.bind(this)
     this._onScrollToColumnChange = this._onScrollToColumnChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._renderBodyCell = this._renderBodyCell.bind(this)
@@ -152,7 +153,6 @@ export default class GridExample extends Component {
               columnWidth={50}
               columnsCount={1}
               height={height}
-              onScroll={({ scrollLeft, scrollTop }) => this.refs.BodyGrid.setScrollPosition({ scrollTop })}
               overscanColumnsCount={overscanColumnsCount}
               overscanRowsCount={overscanRowsCount}
               renderCell={this._renderLeftSideCell}
@@ -188,10 +188,7 @@ export default class GridExample extends Component {
                   columnsCount={columnsCount}
                   height={height}
                   noContentRenderer={this._noContentRenderer}
-                  onScroll={({ scrollLeft, scrollTop }) => {
-                    this.refs.LeftSideGrid.setScrollPosition({ scrollTop })
-                    this.refs.HeaderGrid.setScrollPosition({ scrollLeft })
-                  }}
+                  onScroll={this._onScroll}
                   overscanColumnsCount={overscanColumnsCount}
                   overscanRowsCount={overscanRowsCount}
                   renderCell={this._renderBodyCell}
@@ -207,6 +204,11 @@ export default class GridExample extends Component {
         </div>
       </ContentBox>
     )
+  }
+
+  _onScroll ({ scrollLeft, scrollTop }) {
+    this.refs.LeftSideGrid.setScrollPosition({ scrollTop })
+    this.refs.HeaderGrid.setScrollPosition({ scrollLeft })
   }
 
   _getColumnWidth (index) {

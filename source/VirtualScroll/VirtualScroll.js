@@ -35,7 +35,7 @@ export default class VirtualScroll extends Component {
     /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
-     * ({ scrollTop }): void
+     * ({ clientHeight, scrollHeight, scrollTop }): void
      */
     onScroll: PropTypes.func.isRequired,
     /**
@@ -111,7 +111,7 @@ export default class VirtualScroll extends Component {
         columnsCount={1}
         height={height}
         noContentRenderer={noRowsRenderer}
-        onScroll={({ scrollTop }) => onScroll({ scrollTop })}
+        onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
         onSectionRendered={({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) => onRowsRendered({
           overscanStartIndex: rowOverscanStartIndex,
           overscanStopIndex: rowOverscanStopIndex,
