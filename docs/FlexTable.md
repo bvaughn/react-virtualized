@@ -13,7 +13,6 @@ This component expects explicit width, height, and padding parameters.
 | headerClassName | String |  | CSS class to apply to all column headers |
 | headerHeight | Number | ✓ | Fixed height of header row |
 | height | Number | ✓ | Fixed/available height for out DOM element |
-| horizontalPadding | Number |  | Horizontal padding of outer DOM element |
 | noRowsRenderer |  | Function | Callback used to render placeholder content when :rowsCount is 0 |
 | onHeaderClick |  | Function | Callback invoked when a user clicks on a table header. `(dataKey: string, columnData: any): void` |
 | onRowClick |  | Function | Callback invoked when a user clicks on a table row. `(rowIndex: number): void` |
@@ -28,7 +27,6 @@ This component expects explicit width, height, and padding parameters.
 | sort | Function |  | Sort function to be called if a sortable header is clicked. `(dataKey: string, sortDirection: SortDirection): void` |
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
-| verticalPadding | Number |  | Vertical padding of outer DOM element |
 
 ### Public Methods
 

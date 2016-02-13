@@ -47,8 +47,6 @@ export default class FlexTable extends Component {
     headerHeight: PropTypes.number.isRequired,
     /** Fixed/available height for out DOM element */
     height: PropTypes.number.isRequired,
-    /** Horizontal padding of outer DOM element */
-    horizontalPadding: PropTypes.number,
     /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
     noRowsRenderer: PropTypes.func,
     /**
@@ -110,8 +108,6 @@ export default class FlexTable extends Component {
     sortBy: PropTypes.string,
     /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
     sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
-    /** Vertical padding of outer DOM element */
-    verticalPadding: PropTypes.number,
     /** Width of list */
     width: PropTypes.number.isRequired
   }
@@ -119,14 +115,12 @@ export default class FlexTable extends Component {
   static defaultProps = {
     disableHeader: false,
     headerHeight: 0,
-    horizontalPadding: 0,
     noRowsRenderer: () => null,
     onHeaderClick: () => null,
     onRowClick: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
-    overscanRowsCount: 10,
-    verticalPadding: 0
+    overscanRowsCount: 10
   }
 
   constructor (props) {
@@ -188,12 +182,11 @@ export default class FlexTable extends Component {
       rowHeight,
       rowsCount,
       scrollToIndex,
-      verticalPadding,
       width
     } = this.props
     const { scrollbarWidth } = this.state
 
-    const availableRowsHeight = height - headerHeight - verticalPadding
+    const availableRowsHeight = height - headerHeight
 
     // This row-renderer wrapper function is necessary in order to trigger re-render when the
     // sort-by or sort-direction have changed (else Grid will not see any props changes)
