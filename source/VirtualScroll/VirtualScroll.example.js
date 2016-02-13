@@ -38,6 +38,8 @@ export default class VirtualScrollExample extends Component {
   }
 
   render () {
+    const { list, ...props } = this.props
+
     const {
       overscanRowsCount,
       rowsCount,
@@ -48,7 +50,7 @@ export default class VirtualScrollExample extends Component {
     } = this.state
 
     return (
-      <ContentBox {...this.props}>
+      <ContentBox {...props}>
         <ContentBoxHeader
           text='VirtualScroll'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'

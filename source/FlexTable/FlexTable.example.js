@@ -51,7 +51,7 @@ export default class TableExample extends Component {
       useDynamicRowHeight
     } = this.state
 
-    const { list } = this.props
+    const { list, ...props } = this.props
     const sortedList = this._isSortEnabled()
       ? list
         .sortBy(index => list.getIn([index, sortBy]))
@@ -65,7 +65,7 @@ export default class TableExample extends Component {
     const rowGetter = index => this._getDatum(sortedList, index)
 
     return (
-      <ContentBox {...this.props}>
+      <ContentBox {...props}>
         <ContentBoxHeader
           text='FlexTable'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/FlexTable.example.js'
