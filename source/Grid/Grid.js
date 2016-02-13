@@ -393,8 +393,7 @@ export default class Grid extends Component {
               key={`row:${rowIndex}, column:${columnIndex}`}
               className='Grid__cell'
               style={{
-                left: columnDatum.offset,
-                top: rowDatum.offset,
+                transform: `translate(${columnDatum.offset}px, ${rowDatum.offset}px)`,
                 height: this._getRowHeight(rowIndex),
                 width: this._getColumnWidth(columnIndex)
               }}
