@@ -5,8 +5,6 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import AutoSizer from '../AutoSizer'
 import Grid from './Grid'
-import ScrollSync from '../ScrollSync'
-import VirtualScroll from '../VirtualScroll'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import cn from 'classnames'
 import styles from './Grid.example.css'
@@ -43,7 +41,7 @@ export default class GridExample extends Component {
     this._onScrollToColumnChange = this._onScrollToColumnChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._renderBodyCell = this._renderBodyCell.bind(this)
-    this._renderHeaderCell = this._renderHeaderCell.bind(this)
+    this._renderCell = this._renderCell.bind(this)
     this._renderLeftSideCell = this._renderLeftSideCell.bind(this)
   }
 
@@ -72,11 +70,7 @@ export default class GridExample extends Component {
 
         <ContentBoxParagraph>
           Renders tabular data with virtualization along the vertical and horizontal axes.
-          Row heights and column widths must be known ahead of time and specified as properties.
-        </ContentBoxParagraph>
-
-        <ContentBoxParagraph>
-          This example also shows 3 <code>Grid</code> components with synchronized scrolling to demonstrate fixed headers and columns.
+          Row heights and column widths must be calculated ahead of time and specified as a fixed size or returned by a getter function.
         </ContentBoxParagraph>
 
         <ContentBoxParagraph>
@@ -145,65 +139,21 @@ export default class GridExample extends Component {
           />
         </InputRow>
 
-        <ScrollSync>
-          {({ onScroll, scrollLeft, scrollTop }) => (
-            <div className={styles.GridRow}>
-              <div
-                className={styles.LeftSideGridContainer}
-                style={{ marginTop: rowHeight }}
-              >
-                <VirtualScroll
-                  className={styles.LeftSideGrid}
-                  height={height}
-                  overscanRowsCount={overscanRowsCount}
-                  rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
-                  rowRenderer={this._renderLeftSideCell}
-                  rowsCount={rowsCount}
-                  scrollTop={scrollTop}
-                  width={50}
-                />
-              </div>
-              <div className={styles.GridColumn}>
-                <div>
-                  <AutoSizer disableHeight>
-                    <Grid
-                      className={styles.HeaderGrid}
-                      columnWidth={this._getColumnWidth}
-                      columnsCount={columnsCount}
-                      height={rowHeight}
-                      overscanColumnsCount={overscanColumnsCount}
-                      renderCell={this._renderHeaderCell}
-                      rowHeight={rowHeight}
-                      rowsCount={1}
-                      scrollLeft={scrollLeft}
-                      width={0}
-                    />
-                  </AutoSizer>
-                </div>
-                <div>
-                  <AutoSizer disableHeight>
-                    <Grid
-                      className={styles.BodyGrid}
-                      columnWidth={this._getColumnWidth}
-                      columnsCount={columnsCount}
-                      height={height}
-                      noContentRenderer={this._noContentRenderer}
-                      onScroll={onScroll}
-                      overscanColumnsCount={overscanColumnsCount}
-                      overscanRowsCount={overscanRowsCount}
-                      renderCell={this._renderBodyCell}
-                      rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
-                      rowsCount={rowsCount}
-                      scrollToColumn={scrollToColumn}
-                      scrollToRow={scrollToRow}
-                      width={0}
-                    />
-                  </AutoSizer>
-                </div>
-              </div>
-            </div>
-          )}
-        </ScrollSync>
+        <AutoSizer disableHeight>
+          <Grid
+            className={styles.BodyGrid}
+            columnWidth={this._getColumnWidth}
+            columnsCount={columnsCount}
+            height={height}
+            overscanColumnsCount={overscanColumnsCount}
+            renderCell={this._renderCell}
+            rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
+            rowsCount={rowsCount}
+            scrollToColumn={scrollToColumn}
+            scrollToRow={scrollToRow}
+            width={0}
+          />
+        </AutoSizer>
       </ContentBox>
     )
   }
@@ -211,8 +161,10 @@ export default class GridExample extends Component {
   _getColumnWidth (index) {
     switch (index) {
       case 0:
-        return 100
+        return 50
       case 1:
+        return 100
+      case 2:
         return 300
       default:
         return 50
@@ -248,10 +200,10 @@ export default class GridExample extends Component {
     let content
 
     switch (columnIndex) {
-      case 0:
+      case 1:
         content = datum.name
         break
-      case 1:
+      case 2:
         content = datum.random
         break
       default:
@@ -270,33 +222,15 @@ export default class GridExample extends Component {
     )
   }
 
-  _renderHeaderCell ({ columnIndex, rowIndex }) {
-    let content
-
-    switch (columnIndex) {
-      case 0:
-        content = 'Name'
-        break
-      case 1:
-        content = 'Lorem Ipsum'
-        break
-      default:
-        content = `C${columnIndex}`
-        break
+  _renderCell ({ columnIndex, rowIndex }) {
+    if (columnIndex === 0) {
+      return this._renderLeftSideCell({ columnIndex, rowIndex })
+    } else {
+      return this._renderBodyCell({ columnIndex, rowIndex })
     }
-
-    const classNames = cn(styles.headerCell, {
-      [styles.centeredCell]: columnIndex > 2
-    })
-
-    return (
-      <div className={classNames}>
-        {content}
-      </div>
-    )
   }
 
-  _renderLeftSideCell (rowIndex) {
+  _renderLeftSideCell ({ rowIndex }) {
     const datum = this._getDatum(rowIndex)
 
     const classNames = cn(styles.cell, styles.letterCell)
