@@ -18,37 +18,50 @@ export default class VirtualScroll extends Component {
   static propTypes = {
     /** Optional CSS class name */
     className: PropTypes.string,
+
     /** Height constraint for list (determines how many actual rows are rendered) */
     height: PropTypes.number.isRequired,
+
     /** Optional renderer to be used in place of rows when rowsCount is 0 */
     noRowsRenderer: PropTypes.func.isRequired,
+
     /**
      * Callback invoked with information about the slice of rows that were just rendered.
      * ({ startIndex, stopIndex }): void
      */
     onRowsRendered: PropTypes.func.isRequired,
+
     /**
      * Number of rows to render above/below the visible bounds of the list.
      * These rows can help for smoother scrolling on touch devices.
      */
     overscanRowsCount: PropTypes.number.isRequired,
+
     /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
      * ({ clientHeight, scrollHeight, scrollTop }): void
      */
     onScroll: PropTypes.func.isRequired,
+
     /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * (index: number): number
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+
     /** Responsbile for rendering a row given an index */
     rowRenderer: PropTypes.func.isRequired,
+
     /** Number of rows in list. */
     rowsCount: PropTypes.number.isRequired,
+
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
+
+    /** Vertical offset. */
+    scrollTop: PropTypes.number,
+
     /** Width of list */
     width: PropTypes.number.isRequired
   }
@@ -58,6 +71,20 @@ export default class VirtualScroll extends Component {
     onRowsRendered: () => null,
     onScroll: () => null,
     overscanRowsCount: 10
+  }
+
+  componentDidMount () {
+    const { scrollTop } = this.props
+
+    if (scrollTop >= 0) {
+      this.setScrollTop(scrollTop)
+    }
+  }
+
+  componentWillUpdate (nextProps, nextState) {
+    if (nextProps.scrollTop !== this.props.scrollTop) {
+      this.setScrollTop(nextProps.scrollTop)
+    }
   }
 
   /**
@@ -81,9 +108,10 @@ export default class VirtualScroll extends Component {
    * See Grid#setScrollPosition
    */
   setScrollTop (scrollTop) {
-    scrollTop = Number.isNaN(scrollTop) ? 0 : scrollTop
-
-    this.setState({ scrollTop })
+    this.refs.Grid.setScrollPosition({
+      scrollLeft: 0,
+      scrollTop
+    })
   }
 
   render () {

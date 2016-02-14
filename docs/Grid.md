@@ -19,8 +19,10 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | renderCell | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
 | rowsCount | Number | ✓ | Number of rows in grid. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
+| scrollLeft | Number |  | Horizontal offset |
 | scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary) |
 | scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
+| scrollTop | Number |  | Vertical offset |
 | width | Number | ✓ | Width of Grid; this property determines the number of visible (vs virtualized) columns. |
 
 ### Public Methods

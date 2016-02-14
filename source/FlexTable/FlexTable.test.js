@@ -52,10 +52,10 @@ describe('FlexTable', () => {
     rowHeight = 10,
     rowsCount = list.size,
     scrollToIndex,
+    scrollTop,
     sort,
     sortBy,
     sortDirection,
-    styleSheet,
     width = 100
   } = {}) {
     return (
@@ -75,10 +75,10 @@ describe('FlexTable', () => {
         rowHeight={rowHeight}
         rowsCount={rowsCount}
         scrollToIndex={scrollToIndex}
+        scrollTop={scrollTop}
         sort={sort}
         sortBy={sortBy}
         sortDirection={sortDirection}
-        styleSheet={styleSheet}
         width={width}
       >
         <FlexColumn
@@ -468,6 +468,35 @@ describe('FlexTable', () => {
       })
       expect(startIndex).toEqual(undefined)
       expect(stopIndex).toEqual(undefined)
+    })
+  })
+
+  describe(':scrollTop property', () => {
+    it('should render correctly when an initial :scrollTop property is specified', () => {
+      let startIndex, stopIndex
+      renderTable({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params),
+        scrollTop: 80
+      })
+      expect(startIndex).toEqual(8)
+      expect(stopIndex).toEqual(15)
+    })
+
+    it('should render correctly when :scrollTop property is updated', () => {
+      let startIndex, stopIndex
+
+      renderOrUpdateTable({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params)
+      })
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(7)
+
+      renderOrUpdateTable({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params),
+        scrollTop: 80
+      })
+      expect(startIndex).toEqual(8)
+      expect(stopIndex).toEqual(15)
     })
   })
 
