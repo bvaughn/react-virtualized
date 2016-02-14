@@ -63,3 +63,44 @@ The FlexTable component supports the following static class names
 | FlexTable__sortableHeaderColumn | Applied to header columns that are sortable |
 | FlexTable__sortableHeaderIcon | SVG sort indicator |
 | FlexTable__truncatedColumnText | Element within table column responsible for truncating text |
+
+### Examples
+
+Below is a very basic `FlexTable` example. This table has only 2 columns, each containing a simple string. Both have a fixed width and neither is sortable. [See here](source/FlexTable/FlexTable.example.js) for a more full-featured example including custom cell renderers, sortable headers, and more.
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { FlexTable, FlexColumn } from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
+
+// Table data as a array of objects
+const list = [
+  { name: 'Brian Vaughn', description: 'Software engineer' }
+  // And so on...
+];
+
+// Render your table
+ReactDOM.render(
+  <FlexTable
+    width={300}
+    height={300}
+    headerHeight={20}
+    rowHeight={30}
+    rowsCount={list.length}
+    rowGetter={index => list[index]}
+  >
+    <FlexColumn
+      label='Name'
+      dataKey='name'
+      width={100}
+    />
+    <FlexColumn
+      width={200}
+      label='Description'
+      dataKey='description'
+    />
+  </FlexTable>,
+  document.getElementById('example')
+);
+```

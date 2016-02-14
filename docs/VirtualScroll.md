@@ -47,3 +47,38 @@ The VirtualScroll component supports the following static class names
 | VirtualScroll | Main (outer) element |
 | VirtualScroll__innerScrollContainer | Inner element on which virtual items are positioned |
 | VirtualScroll__row | Individual row |
+
+### Examples
+
+Below is a simple `VirtualScroll` example. Each row in the virtualized list is rendered through the use of a `rowRenderer` function for performance reasons. This function must return an element with a unique `key` and must fit within the specified `rowHeight`.
+
+**Note** that it is very important that rows do not have vertical overflow.
+It would make scrolling the list difficult (as individual items will intercept the scroll events).
+For this reason it is recommended that your rows use a style like `overflow-y: hidden`.)
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { VirtualScroll } from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
+
+// List data as an array of strings
+const list = [
+  'Brian Vaughn'
+  // And so on...
+];
+
+// Render your list
+ReactDOM.render(
+  <VirtualScroll
+    width={300}
+    height={300}
+    rowsCount={list.length}
+    rowHeight={20}
+    rowRenderer={
+      index => list[index] // Could also be a DOM element
+    }
+  />,
+  document.getElementById('example')
+);
+```

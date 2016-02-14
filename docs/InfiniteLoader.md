@@ -21,24 +21,50 @@ The child function is passed the following named parameters:
 | onRowsRendered | Function | This function should be passed as the child's `onRowsRendered` property. It informs the loader when the user is scrolling. |
 | registerChild | Function | This function should be set as the child's `ref` property. It enables a set of rows to be refreshed once their data has finished loading. |
 
-### Example
+### Examples
 
-This example uses `InfiniteLoader` to prefetch rows in a virtual list as a user scrolls.
+This example uses `InfiniteLoader` to prefetch rows in a `VirtualScroll` list as a user scrolls.
 
 ```js
-import { InfiniteLoader, VirtualScroll } from 'react-virtualized'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { InfiniteLoader, VirtualScroll } from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
 
-function render (props) {
-  return (
-    <InfiniteLoader {...infiniteLoaderProps}>
-      {({ onRowsRendered, registerChild }) => (
-        <VirtualScroll
-          ref={registerChild}
-          onRowsRendered={onRowsRendered}
-          {...virtualScrollProps}
-        />
-      )}
-    </InfiniteLoader>
-  )
+const list = {};
+
+function isRowLoaded (index) {
+  return !!list[index];
 }
+
+function loadMoreRows ({ startIndex, stopIndex }) {
+  return fetch(`path/to/api?startIndex=${startIndex}&stopIndex=${stopIndex}`)
+    .then(response => {
+      // Store response data in list...
+    })
+}
+
+// Render your list
+ReactDOM.render(
+  <InfiniteLoader
+    isRowLoaded={isRowLoaded}
+    loadMoreRows={loadMoreRows}
+    rowsCount={remoteRowsCount}
+  >
+    {({ onRowsRendered, registerChild }) => (
+      <VirtualScroll
+        ref={registerChild}
+        width={300}
+        height={200}
+        onRowsRendered={onRowsRendered}
+        rowsCount={list.length}
+        rowHeight={20}
+        rowRenderer={
+          index => list[index] // Could also be a DOM element
+        }
+      />
+    )}
+  </InfiniteLoader>,
+  document.getElementById('example')
+);
 ```

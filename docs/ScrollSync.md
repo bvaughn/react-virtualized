@@ -18,7 +18,7 @@ The child function is passed the following named parameters:
 | scrollLeft | Number | The current left scroll offset. |
 | scrollTop | Number | The current top scroll offset. |
 
-### Example
+### Examples
 
 This example uses `ScrollSync` to create a fixed row of columns to go along with a scrollable grid.
 
