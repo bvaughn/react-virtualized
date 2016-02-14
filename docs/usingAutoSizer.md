@@ -31,15 +31,21 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
 </ContentBox>
 ```
 
-#### Using AutoSizer with InfiniteScroller
-One of the main goals of the version 5 release is to enable react-virtualized HOCs to be nested in any order. However at the current time, using an `AutoSizer` with an `InfiniteLoader` should be done like this:
+#### Using AutoSizer with InfiniteLoader
+`AutoScroller` can be used within other react-virtualized HOCs such as `InfiniteLoader` or `ScrollSync` like so:
 
 ```html
-<AutoSizer>
-  <InfiniteLoader {...props}>
-    <VirtualScroll {...props}/>
-  </InfiniteLoader>
-</AutoSizer>
+<InfiniteLoader {...infiniteLoaderProps}>
+  {({ onRowsRendered, registerChild }) => (
+    <AutoSizer>
+      <VirtualScroll
+        ref={registerChild}
+        onRowsRendered={onRowsRendered}
+        {...virtualScrollProps}
+      />
+    </AutoSizer>
+  )}
+</InfiniteLoader>
 ```
 
 You can see an example of just such a thing [here](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader).

@@ -74,24 +74,27 @@ export default class InfiniteLoaderExample extends Component {
           </div>
         </ContentBoxParagraph>
 
-        <AutoSizer disableHeight>
-          <InfiniteLoader
-            ref='InfiniteLoader'
-            isRowLoaded={this._isRowLoaded}
-            loadMoreRows={this._loadMoreRows}
-            rowsCount={list.size}
-          >
-            <VirtualScroll
-              className={styles.VirtualScroll}
-              height={200}
-              rowsCount={list.size}
-              rowHeight={30}
-              rowRenderer={this._rowRenderer}
-              scrollToIndex={randomScrollToIndex}
-              width={0}
-            />
-          </InfiniteLoader>
-        </AutoSizer>
+        <InfiniteLoader
+          isRowLoaded={this._isRowLoaded}
+          loadMoreRows={this._loadMoreRows}
+          rowsCount={list.size}
+        >
+          {({ onRowsRendered, registerChild }) => (
+            <AutoSizer disableHeight>
+              <VirtualScroll
+                ref={registerChild}
+                className={styles.VirtualScroll}
+                height={200}
+                onRowsRendered={onRowsRendered}
+                rowsCount={list.size}
+                rowHeight={30}
+                rowRenderer={this._rowRenderer}
+                scrollToIndex={randomScrollToIndex}
+                width={0}
+              />
+            </AutoSizer>
+          )}
+        </InfiniteLoader>
       </ContentBox>
     )
   }
