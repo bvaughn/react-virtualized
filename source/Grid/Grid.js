@@ -95,10 +95,16 @@ export default class Grid extends Component {
      */
     rowsCount: PropTypes.number.isRequired,
 
+    /** Horizontal offset. */
+    scrollLeft: PropTypes.number,
+
     /**
      * Column index to ensure visible (by forcefully scrolling if necessary)
      */
     scrollToColumn: PropTypes.number,
+
+    /** Vertical offset. */
+    scrollTop: PropTypes.number,
 
     /**
      * Row index to ensure visible (by forcefully scrolling if necessary)
@@ -189,7 +195,15 @@ export default class Grid extends Component {
   }
 
   componentDidMount () {
-    const { scrollToColumn, scrollToRow } = this.props
+    const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
+
+    if (scrollLeft >= 0) {
+      this.setState({ scrollLeft })
+    }
+
+    if (scrollTop >= 0) {
+      this.setState({ scrollTop })
+    }
 
     if (scrollToColumn >= 0 || scrollToRow >= 0) {
       // Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
@@ -259,9 +273,11 @@ export default class Grid extends Component {
     if (this._disablePointerEventsTimeoutId) {
       clearTimeout(this._disablePointerEventsTimeoutId)
     }
+
     if (this._setImmediateId) {
       clearImmediate(this._setImmediateId)
     }
+
     if (this._setNextStateAnimationFrameId) {
       raf.cancel(this._setNextStateAnimationFrameId)
     }
@@ -280,6 +296,14 @@ export default class Grid extends Component {
       nextState.scrollTop !== 0
     ) {
       this.setState({ scrollTop: 0 })
+    }
+
+    if (nextProps.scrollLeft !== this.props.scrollLeft) {
+      this.setState({ scrollLeft: nextProps.scrollLeft })
+    }
+
+    if (nextProps.scrollTop !== this.props.scrollTop) {
+      this.setState({ scrollTop: nextProps.scrollTop })
     }
 
     computeCellMetadataAndUpdateScrollOffsetHelper({

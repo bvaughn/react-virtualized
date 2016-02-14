@@ -27,8 +27,8 @@ describe('VirtualScroll', () => {
     overscanRowsCount = 0,
     rowHeight = 10,
     rowsCount = list.size,
-    scrollToIndex,
-    styleSheet,
+    scrollToIndex = undefined,
+    scrollTop = undefined,
     width = 100
   } = {}) {
     function rowRenderer (index) {
@@ -54,7 +54,7 @@ describe('VirtualScroll', () => {
         rowRenderer={rowRenderer}
         rowsCount={rowsCount}
         scrollToIndex={scrollToIndex}
-        styleSheet={styleSheet}
+        scrollTop={scrollTop}
         width={width}
       />
     )
@@ -228,6 +228,35 @@ describe('VirtualScroll', () => {
       })
       expect(startIndex).toEqual(undefined)
       expect(stopIndex).toEqual(undefined)
+    })
+  })
+
+  describe(':scrollTop property', () => {
+    it('should render correctly when an initial :scrollTop property is specified', () => {
+      let startIndex, stopIndex
+      renderList({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params),
+        scrollTop: 100
+      })
+      expect(startIndex).toEqual(10)
+      expect(stopIndex).toEqual(19)
+    })
+
+    it('should render correctly when :scrollTop property is updated', () => {
+      let startIndex, stopIndex
+
+      renderOrUpdateList({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params)
+      })
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(9)
+
+      renderOrUpdateList({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params),
+        scrollTop: 100
+      })
+      expect(startIndex).toEqual(10)
+      expect(stopIndex).toEqual(19)
     })
   })
 

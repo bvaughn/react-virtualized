@@ -16,6 +16,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Signature should look like `(index: number): React.PropTypes.node` |
 | rowsCount | Number | ✓ | Number of rows in list. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
+| scrollTop | Number |  | Vertical offset |
 
 ### Public Methods
 

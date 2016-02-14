@@ -5,6 +5,8 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import AutoSizer from '../AutoSizer'
 import Grid from './Grid'
+import ScrollSync from '../ScrollSync'
+import VirtualScroll from '../VirtualScroll'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import cn from 'classnames'
 import styles from './Grid.example.css'
@@ -38,7 +40,6 @@ export default class GridExample extends Component {
     this._noContentRenderer = this._noContentRenderer.bind(this)
     this._onColumnsCountChange = this._onColumnsCountChange.bind(this)
     this._onRowsCountChange = this._onRowsCountChange.bind(this)
-    this._onScroll = this._onScroll.bind(this)
     this._onScrollToColumnChange = this._onScrollToColumnChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._renderBodyCell = this._renderBodyCell.bind(this)
@@ -144,73 +145,67 @@ export default class GridExample extends Component {
           />
         </InputRow>
 
-        <div className={styles.GridRow}>
-          <div
-            className={styles.LeftSideGridContainer}
-            style={{ marginTop: rowHeight }}
-          >
-            <Grid
-              ref='LeftSideGrid'
-              className={styles.LeftSideGrid}
-              columnWidth={50}
-              columnsCount={1}
-              height={height}
-              overscanColumnsCount={overscanColumnsCount}
-              overscanRowsCount={overscanRowsCount}
-              renderCell={this._renderLeftSideCell}
-              rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
-              rowsCount={rowsCount}
-              width={50}
-            />
-          </div>
-          <div className={styles.GridColumn}>
-            <div>
-              <AutoSizer disableHeight>
-                <Grid
-                  ref='HeaderGrid'
-                  className={styles.HeaderGrid}
-                  columnWidth={this._getColumnWidth}
-                  columnsCount={columnsCount}
-                  height={rowHeight}
-                  overscanColumnsCount={overscanColumnsCount}
-                  overscanRowsCount={overscanRowsCount}
-                  renderCell={this._renderHeaderCell}
-                  rowHeight={rowHeight}
-                  rowsCount={1}
-                  width={0}
-                />
-              </AutoSizer>
-            </div>
-            <div>
-              <AutoSizer disableHeight>
-                <Grid
-                  ref='BodyGrid'
-                  className={styles.BodyGrid}
-                  columnWidth={this._getColumnWidth}
-                  columnsCount={columnsCount}
+        <ScrollSync>
+          {({ onScroll, scrollLeft, scrollTop }) => (
+            <div className={styles.GridRow}>
+              <div
+                className={styles.LeftSideGridContainer}
+                style={{ marginTop: rowHeight }}
+              >
+                <VirtualScroll
+                  className={styles.LeftSideGrid}
                   height={height}
-                  noContentRenderer={this._noContentRenderer}
-                  onScroll={this._onScroll}
-                  overscanColumnsCount={overscanColumnsCount}
                   overscanRowsCount={overscanRowsCount}
-                  renderCell={this._renderBodyCell}
                   rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
+                  rowRenderer={this._renderLeftSideCell}
                   rowsCount={rowsCount}
-                  scrollToColumn={scrollToColumn}
-                  scrollToRow={scrollToRow}
-                  width={0}
+                  scrollTop={scrollTop}
+                  width={50}
                 />
-              </AutoSizer>
+              </div>
+              <div className={styles.GridColumn}>
+                <div>
+                  <AutoSizer disableHeight>
+                    <Grid
+                      className={styles.HeaderGrid}
+                      columnWidth={this._getColumnWidth}
+                      columnsCount={columnsCount}
+                      height={rowHeight}
+                      overscanColumnsCount={overscanColumnsCount}
+                      renderCell={this._renderHeaderCell}
+                      rowHeight={rowHeight}
+                      rowsCount={1}
+                      scrollLeft={scrollLeft}
+                      width={0}
+                    />
+                  </AutoSizer>
+                </div>
+                <div>
+                  <AutoSizer disableHeight>
+                    <Grid
+                      className={styles.BodyGrid}
+                      columnWidth={this._getColumnWidth}
+                      columnsCount={columnsCount}
+                      height={height}
+                      noContentRenderer={this._noContentRenderer}
+                      onScroll={onScroll}
+                      overscanColumnsCount={overscanColumnsCount}
+                      overscanRowsCount={overscanRowsCount}
+                      renderCell={this._renderBodyCell}
+                      rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
+                      rowsCount={rowsCount}
+                      scrollToColumn={scrollToColumn}
+                      scrollToRow={scrollToRow}
+                      width={0}
+                    />
+                  </AutoSizer>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          )}
+        </ScrollSync>
       </ContentBox>
     )
-  }
-
-  _onScroll ({ scrollLeft, scrollTop }) {
-    this.refs.LeftSideGrid.setScrollPosition({ scrollTop })
-    this.refs.HeaderGrid.setScrollPosition({ scrollLeft })
   }
 
   _getColumnWidth (index) {
@@ -301,12 +296,10 @@ export default class GridExample extends Component {
     )
   }
 
-  _renderLeftSideCell ({ columnIndex, rowIndex }) {
+  _renderLeftSideCell (rowIndex) {
     const datum = this._getDatum(rowIndex)
 
-    const classNames = cn(styles.cell, {
-      [styles.letterCell]: columnIndex === 0
-    })
+    const classNames = cn(styles.cell, styles.letterCell)
     const style = { backgroundColor: datum.color }
 
     return (
@@ -338,7 +331,7 @@ export default class GridExample extends Component {
   }
 
   _onScrollToColumnChange (event) {
-    const { columnsCount, scrollToRow } = this.state
+    const { columnsCount } = this.state
     let scrollToColumn = Math.min(columnsCount - 1, parseInt(event.target.value, 10))
 
     if (isNaN(scrollToColumn)) {
@@ -346,12 +339,10 @@ export default class GridExample extends Component {
     }
 
     this.setState({ scrollToColumn })
-
-    this.refs.BodyGrid.scrollToCell({ scrollToColumn, scrollToRow })
   }
 
   _onScrollToRowChange (event) {
-    const { scrollToColumn, rowsCount } = this.state
+    const { rowsCount } = this.state
     let scrollToRow = Math.min(rowsCount - 1, parseInt(event.target.value, 10))
 
     if (isNaN(scrollToRow)) {
@@ -359,7 +350,5 @@ export default class GridExample extends Component {
     }
 
     this.setState({ scrollToRow })
-
-    this.refs.BodyGrid.scrollToCell({ scrollToColumn, scrollToRow })
   }
 }

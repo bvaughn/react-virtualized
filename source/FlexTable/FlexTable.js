@@ -37,29 +37,37 @@ export default class FlexTable extends Component {
         }
       }
     },
+
     /** Optional CSS class name */
     className: PropTypes.string,
+
     /** Disable rendering the header at all */
     disableHeader: PropTypes.bool,
+
     /** Optional CSS class to apply to all column headers */
     headerClassName: PropTypes.string,
+
     /** Fixed height of header row */
     headerHeight: PropTypes.number.isRequired,
+
     /** Fixed/available height for out DOM element */
     height: PropTypes.number.isRequired,
+
     /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
     noRowsRenderer: PropTypes.func,
+
     /**
     * Optional callback when a column's header is clicked.
     * (dataKey: string): void
     */
     onHeaderClick: PropTypes.func,
+
     /**
      * Callback invoked when a user clicks on a table row.
      * (rowIndex: number): void
      */
-
     onRowClick: PropTypes.func,
+
     /**
      * Callback invoked with information about the slice of rows that were just rendered.
      * ({ startIndex, stopIndex }): void
@@ -85,29 +93,40 @@ export default class FlexTable extends Component {
      * If a function is provided its signature should be: (rowIndex: number): string
      */
     rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
     /**
      * Callback responsible for returning a data row given an index.
      * (index: number): any
      */
     rowGetter: PropTypes.func.isRequired,
+
     /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * (index: number): number
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+
     /** Number of rows in table. */
     rowsCount: PropTypes.number.isRequired,
+
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
+
+    /** Vertical offset. */
+    scrollTop: PropTypes.number,
+
     /**
      * Sort function to be called if a sortable header is clicked.
      * (dataKey: string, sortDirection: SortDirection): void
      */
     sort: PropTypes.func,
+
     /** FlexTable data is currently sorted by this :dataKey (if it is sorted at all) */
     sortBy: PropTypes.string,
+
     /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
     sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
+
     /** Width of list */
     width: PropTypes.number.isRequired
   }
@@ -161,11 +180,23 @@ export default class FlexTable extends Component {
   }
 
   componentDidMount () {
+    const { scrollTop } = this.props
+
+    if (scrollTop >= 0) {
+      this.setScrollTop(scrollTop)
+    }
+
     this._setScrollbarWidth()
   }
 
   componentDidUpdate () {
     this._setScrollbarWidth()
+  }
+
+  componentWillUpdate (nextProps, nextState) {
+    if (nextProps.scrollTop !== this.props.scrollTop) {
+      this.setScrollTop(nextProps.scrollTop)
+    }
   }
 
   render () {
