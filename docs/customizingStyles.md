@@ -1,7 +1,7 @@
 Customizing Classes and Styles
 ---------------
 
-React virtual CSS styles are split into split into their own, separately loaded stylesheet in order to simplify universal/isomorphic usage while also enabling styles to be customized. This stylesheet should be imported somewhere (usually during bootstrapping) like so:
+React virtual CSS styles are split into their own, separately loaded stylesheet in order to simplify universal/isomorphic usage while also enabling styles to be customized. This stylesheet should be imported somewhere (usually during bootstrapping) like so:
 
 ```js
 import 'react-virtualized/styles.css';
