@@ -1,5 +1,4 @@
 /** @flow */
-import cn from 'classnames'
 import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 
@@ -14,10 +13,10 @@ export default class AutoSizer extends Component {
   static propTypes = {
     /** Component to manage width/height of */
     children: PropTypes.element,
-    /** Optional CSS class name */
-    className: PropTypes.string,
+
     /** Disable dynamic :height property */
     disableHeight: PropTypes.bool,
+
     /** Disable dynamic :width property */
     disableWidth: PropTypes.bool
   }
@@ -48,7 +47,7 @@ export default class AutoSizer extends Component {
   }
 
   render () {
-    const { children, className, disableHeight, disableWidth, ...props } = this.props
+    const { children, disableHeight, disableWidth, ...props } = this.props
     const { height, width } = this.state
 
     const childProps = {}
@@ -83,7 +82,6 @@ export default class AutoSizer extends Component {
     return (
       <div
         ref={this._setRef}
-        className={cn('AutoSizer', className)}
         style={outerStyle}
       >
         <div
