@@ -68,7 +68,7 @@ class Application extends Component {
             />
             <NavLink
               text='Documentation'
-              url='https://github.com/bvaughn/react-virtualized/tree/master/docs'
+              url='https://github.com/bvaughn/react-virtualized/tree/master/docs#documentation'
             />
             <NavLink
               text='Issues'
