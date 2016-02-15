@@ -51,7 +51,7 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
         <VirtualScroll
           ref={registerChild}
           width={width}
-          height={heigth}
+          height={height}
           onRowsRendered={onRowsRendered}
           {...virtualScrollProps}
         />
