@@ -83,39 +83,41 @@ export default class GridExample extends Component {
                 />
               </div>
               <div className={styles.GridColumn}>
-                <div>
-                  <AutoSizer disableHeight>
-                    <Grid
-                      className={styles.HeaderGrid}
-                      columnWidth={columnWidth}
-                      columnsCount={columnsCount}
-                      height={rowHeight}
-                      overscanColumnsCount={overscanColumnsCount}
-                      renderCell={this._renderHeaderCell}
-                      rowHeight={rowHeight}
-                      rowsCount={1}
-                      scrollLeft={scrollLeft}
-                      width={0}
-                    />
-                  </AutoSizer>
-                </div>
-                <div>
-                  <AutoSizer disableHeight>
-                    <Grid
-                      className={styles.BodyGrid}
-                      columnWidth={columnWidth}
-                      columnsCount={columnsCount}
-                      height={height}
-                      onScroll={onScroll}
-                      overscanColumnsCount={overscanColumnsCount}
-                      overscanRowsCount={overscanRowsCount}
-                      renderCell={this._renderBodyCell}
-                      rowHeight={rowHeight}
-                      rowsCount={rowsCount}
-                      width={0}
-                    />
-                  </AutoSizer>
-                </div>
+                <AutoSizer disableHeight>
+                  {({ width }) => (
+                    <div>
+                      <div>
+                        <Grid
+                          className={styles.HeaderGrid}
+                          columnWidth={columnWidth}
+                          columnsCount={columnsCount}
+                          height={rowHeight}
+                          overscanColumnsCount={overscanColumnsCount}
+                          renderCell={this._renderHeaderCell}
+                          rowHeight={rowHeight}
+                          rowsCount={1}
+                          scrollLeft={scrollLeft}
+                          width={width}
+                        />
+                      </div>
+                      <div>
+                        <Grid
+                          className={styles.BodyGrid}
+                          columnWidth={columnWidth}
+                          columnsCount={columnsCount}
+                          height={height}
+                          onScroll={onScroll}
+                          overscanColumnsCount={overscanColumnsCount}
+                          overscanRowsCount={overscanRowsCount}
+                          renderCell={this._renderBodyCell}
+                          rowHeight={rowHeight}
+                          rowsCount={rowsCount}
+                          width={width}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </AutoSizer>
               </div>
             </div>
           )}

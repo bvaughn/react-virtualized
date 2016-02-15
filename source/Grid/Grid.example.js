@@ -140,19 +140,21 @@ export default class GridExample extends Component {
         </InputRow>
 
         <AutoSizer disableHeight>
-          <Grid
-            className={styles.BodyGrid}
-            columnWidth={this._getColumnWidth}
-            columnsCount={columnsCount}
-            height={height}
-            overscanColumnsCount={overscanColumnsCount}
-            renderCell={this._renderCell}
-            rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
-            rowsCount={rowsCount}
-            scrollToColumn={scrollToColumn}
-            scrollToRow={scrollToRow}
-            width={0}
-          />
+          {({ width }) => (
+            <Grid
+              className={styles.BodyGrid}
+              columnWidth={this._getColumnWidth}
+              columnsCount={columnsCount}
+              height={height}
+              overscanColumnsCount={overscanColumnsCount}
+              renderCell={this._renderCell}
+              rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
+              rowsCount={rowsCount}
+              scrollToColumn={scrollToColumn}
+              scrollToRow={scrollToRow}
+              width={width}
+            />
+          )}
         </AutoSizer>
       </ContentBox>
     )

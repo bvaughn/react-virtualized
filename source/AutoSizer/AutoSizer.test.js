@@ -25,7 +25,6 @@ describe('AutoSizer', () => {
 
   function getMarkup ({
     bar = 123,
-    className = undefined,
     disableHeight = false,
     disableWidth = false,
     foo = 456,
@@ -34,7 +33,6 @@ describe('AutoSizer', () => {
     paddingLeft = 0,
     paddingRight = 0,
     paddingTop = 0,
-    styleSheet = undefined,
     width = 200
   } = {}) {
     const style = {
@@ -49,16 +47,15 @@ describe('AutoSizer', () => {
 
     return (
       <div style={style}>
-        <AutoSizer
-          disableHeight={disableHeight}
-          disableWidth={disableWidth}
-          className={className}
-          styleSheet={styleSheet}
-        >
-          <ChildComponent
-            bar={bar}
-            foo={foo}
-          />
+        <AutoSizer>
+          {({ height, width }) => (
+            <ChildComponent
+              width={disableWidth ? undefined : width}
+              height={disableHeight ? undefined : height}
+              bar={bar}
+              foo={foo}
+            />
+          )}
         </AutoSizer>
       </div>
     )

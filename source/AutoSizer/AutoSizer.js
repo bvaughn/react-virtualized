@@ -11,8 +11,12 @@ export default class AutoSizer extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate
 
   static propTypes = {
-    /** Component to manage width/height of */
-    children: PropTypes.element,
+    /**
+     * Function respondible for rendering children.
+     * This function should implement the following signature:
+     * ({ height, width }) => PropTypes.element
+     */
+    children: PropTypes.func.isRequired,
 
     /** Disable dynamic :height property */
     disableHeight: PropTypes.bool,
@@ -47,36 +51,20 @@ export default class AutoSizer extends Component {
   }
 
   render () {
-    const { children, disableHeight, disableWidth, ...props } = this.props
+    const { children, disableHeight, disableWidth } = this.props
     const { height, width } = this.state
 
-    const childProps = {}
-
-    if (!disableHeight) {
-      childProps.height = height
-    }
-
-    if (!disableWidth) {
-      childProps.width = width
-    }
-
-    let child = React.Children.only(children)
-    child = React.cloneElement(child, childProps)
-
     // Outer div should not force width/height since that may prevent containers from shrinking.
-    // Inner div overflows and enforces calculated width/height.
+    // Inner component should overflow and use calculated width/height.
     // See issue #68 for more information.
     const outerStyle = { overflow: 'visible' }
-    const innerStyle = {}
-
-    if (!disableWidth) {
-      outerStyle.width = 0
-      innerStyle.width = width
-    }
 
     if (!disableHeight) {
       outerStyle.height = 0
-      innerStyle.height = height
+    }
+
+    if (!disableWidth) {
+      outerStyle.width = 0
     }
 
     return (
@@ -84,11 +72,7 @@ export default class AutoSizer extends Component {
         ref={this._setRef}
         style={outerStyle}
       >
-        <div
-          style={innerStyle}
-        >
-          {child}
-        </div>
+        {children({ height, width })}
       </div>
     )
   }

@@ -6,7 +6,7 @@ High-order component that automatically adjusts the width and height of a single
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| children | PropTypes.Element | ✓ | Element to be parameterized with `width` and `height` properties |
+| children | PropTypes.Element | ✓ | Function respondible for rendering children. This function should implement the following signature: `({ height, width }) => PropTypes.element` |
 | disableHeight | Boolean |  | If true the child's `height` property will not be managed |
 | disableWidth | Boolean |  | If true the child's `width` property will not be managed |
 
@@ -31,20 +31,18 @@ const list = [
 // Render your list
 ReactDOM.render(
   <AutoSizer>
-    <VirtualScroll
-      width={0}
-      height={0}
-      rowsCount={list.length}
-      rowHeight={20}
-      rowRenderer={
-        index => list[index] // Could also be a DOM element
-      }
-    />
+    {({ height, width }) => (
+      <VirtualScroll
+        width={width}
+        height={height}
+        rowsCount={list.length}
+        rowHeight={20}
+        rowRenderer={
+          index => list[index] // Could also be a DOM element
+        }
+      />
+    )}
   </AutoSizer>,
   document.getElementById('example')
 );
 ```
-
-Note that in this example we initialize `width` and `height` to 0.
-This is because these propertie sare required and React will warn in dev mode if we don't specify them.
-However the `AutoSizer` component will override them with the appropriate dimensions once rendered.

@@ -111,18 +111,20 @@ export default class VirtualScrollExample extends Component {
 
         <div>
           <AutoSizer disableHeight>
-            <VirtualScroll
-              ref='VirtualScroll'
-              className={styles.VirtualScroll}
-              height={virtualScrollHeight}
-              overscanRowsCount={overscanRowsCount}
-              noRowsRenderer={this._noRowsRenderer}
-              rowsCount={rowsCount}
-              rowHeight={useDynamicRowHeight ? this._getRowHeight : virtualScrollRowHeight}
-              rowRenderer={this._rowRenderer}
-              scrollToIndex={scrollToIndex}
-              width={200}
-            />
+            {({ width }) => (
+              <VirtualScroll
+                ref='VirtualScroll'
+                className={styles.VirtualScroll}
+                height={virtualScrollHeight}
+                overscanRowsCount={overscanRowsCount}
+                noRowsRenderer={this._noRowsRenderer}
+                rowsCount={rowsCount}
+                rowHeight={useDynamicRowHeight ? this._getRowHeight : virtualScrollRowHeight}
+                rowRenderer={this._rowRenderer}
+                scrollToIndex={scrollToIndex}
+                width={width}
+              />
+            )}
           </AutoSizer>
         </div>
       </ContentBox>

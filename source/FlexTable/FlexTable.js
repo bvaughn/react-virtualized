@@ -236,7 +236,8 @@ export default class FlexTable extends Component {
             className={cn('FlexTable__headerRow', rowClass)}
             style={{
               height: headerHeight,
-              paddingRight: scrollbarWidth
+              paddingRight: scrollbarWidth,
+              width: width
             }}
           >
             {this._getRenderedHeaderRow()}

@@ -10,10 +10,13 @@ You can use `AutoSizer` to control only one dimension of its child component usi
 
 ```html
 <AutoSizer disableHeight>
-  <Component
-    height={200}
-    {...props}
-  />
+  {({ width }) => (
+    <Component
+      height={200}
+      width={width}
+      {...props}
+    />
+  )}
 </AutoSizer>
 ```
 
@@ -25,7 +28,13 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
   <!-- Other children... -->
   <div style={{ flex: '1 1 auto' }}>
     <AutoSizer>
-      <Component {...props} />
+      {({ height, width }) => (
+        <Component
+          width={width}
+          height={height}
+          {...props}
+        />
+      )}
     </AutoSizer>
   </div>
 </ContentBox>
@@ -38,11 +47,15 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
 <InfiniteLoader {...infiniteLoaderProps}>
   {({ onRowsRendered, registerChild }) => (
     <AutoSizer>
-      <VirtualScroll
-        ref={registerChild}
-        onRowsRendered={onRowsRendered}
-        {...virtualScrollProps}
-      />
+      {({ height, width }) => (
+        <VirtualScroll
+          ref={registerChild}
+          width={width}
+          height={heigth}
+          onRowsRendered={onRowsRendered}
+          {...virtualScrollProps}
+        />
+      )}
     </AutoSizer>
   )}
 </InfiniteLoader>

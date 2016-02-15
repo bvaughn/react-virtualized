@@ -9,7 +9,7 @@ import FlexTable, { SortDirection } from './FlexTable'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import styles from './FlexTable.example.css'
 
-export default class TableExample extends Component {
+export default class FlexTableExample extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate
 
   static propTypes = {
@@ -134,50 +134,52 @@ export default class TableExample extends Component {
 
         <div>
           <AutoSizer disableHeight>
-            <FlexTable
-              ref='Table'
-              headerClassName={styles.headerColumn}
-              headerHeight={headerHeight}
-              height={height}
-              noRowsRenderer={this._noRowsRenderer}
-              overscanRowsCount={overscanRowsCount}
-              rowClassName={::this._rowClassName}
-              rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
-              rowGetter={rowGetter}
-              rowsCount={rowsCount}
-              scrollToIndex={scrollToIndex}
-              sort={this._sort}
-              sortBy={sortBy}
-              sortDirection={sortDirection}
-              width={0}
-            >
-              <FlexColumn
-                label='Index'
-                cellDataGetter={
-                  (dataKey, rowData, columnData) => rowData.index
-                }
-                dataKey='index'
-                disableSort={!this._isSortEnabled()}
-                width={50}
-              />
-              <FlexColumn
-                label='Name'
-                dataKey='name'
-                disableSort={!this._isSortEnabled()}
-                width={90}
-              />
-              <FlexColumn
-                width={210}
-                disableSort
-                label='The description label is really long so that it will be truncated'
-                dataKey='random'
-                cellClassName={styles.exampleColumn}
-                cellRenderer={
-                  (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
-                }
-                flexGrow={1}
-              />
-            </FlexTable>
+            {({ width }) => (
+              <FlexTable
+                ref='Table'
+                headerClassName={styles.headerColumn}
+                headerHeight={headerHeight}
+                height={height}
+                noRowsRenderer={this._noRowsRenderer}
+                overscanRowsCount={overscanRowsCount}
+                rowClassName={::this._rowClassName}
+                rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
+                rowGetter={rowGetter}
+                rowsCount={rowsCount}
+                scrollToIndex={scrollToIndex}
+                sort={this._sort}
+                sortBy={sortBy}
+                sortDirection={sortDirection}
+                width={width}
+              >
+                <FlexColumn
+                  label='Index'
+                  cellDataGetter={
+                    (dataKey, rowData, columnData) => rowData.index
+                  }
+                  dataKey='index'
+                  disableSort={!this._isSortEnabled()}
+                  width={50}
+                />
+                <FlexColumn
+                  label='Name'
+                  dataKey='name'
+                  disableSort={!this._isSortEnabled()}
+                  width={90}
+                />
+                <FlexColumn
+                  width={210}
+                  disableSort
+                  label='The description label is really long so that it will be truncated'
+                  dataKey='random'
+                  cellClassName={styles.exampleColumn}
+                  cellRenderer={
+                    (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
+                  }
+                  flexGrow={1}
+                />
+              </FlexTable>
+            )}
           </AutoSizer>
         </div>
       </ContentBox>

@@ -19,7 +19,6 @@
 /* FlexTable default theme */
 
 .FlexTable {
-  width: 100%;
 }
 
 .FlexTable__Grid {
@@ -92,7 +91,6 @@
 /* VirtualScroll default theme */
 
 .VirtualScroll {
-  width: 100%;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
