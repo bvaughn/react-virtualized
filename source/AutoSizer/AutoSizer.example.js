@@ -63,13 +63,16 @@ export default class AutoSizerExample extends Component {
 
         <div className={styles.AutoSizerWrapper}>
           <AutoSizer>
-            <VirtualScroll
-              className={styles.VirtualScroll}
-              height={0}
-              rowsCount={list.size}
-              rowHeight={30}
-              rowRenderer={this._rowRenderer}
-            />
+            {({ width, height }) => (
+              <VirtualScroll
+                className={styles.VirtualScroll}
+                height={height}
+                rowsCount={list.size}
+                rowHeight={30}
+                rowRenderer={this._rowRenderer}
+                width={width}
+              />
+            )}
           </AutoSizer>
         </div>
       </ContentBox>

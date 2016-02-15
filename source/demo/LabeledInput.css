@@ -11,11 +11,8 @@
 
 .Label {
   display: inline-block;
-  width: 70px;
+  width: 100%;
   box-sizing: border-box;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .Input {
   appearance: none;
@@ -49,4 +46,5 @@
 .InputRow {
   display: flex;
   flex-direction: row;
+  align-items: flex-end;
 }

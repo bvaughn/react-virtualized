@@ -3,12 +3,13 @@ import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
+import AutoSizer from '../AutoSizer'
 import FlexColumn from './FlexColumn'
 import FlexTable, { SortDirection } from './FlexTable'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import styles from './FlexTable.example.css'
 
-export default class TableExample extends Component {
+export default class FlexTableExample extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate
 
   static propTypes = {
@@ -111,6 +112,7 @@ export default class TableExample extends Component {
             value={height}
           />
           <LabeledInput
+            disabled={useDynamicRowHeight}
             label='Row height'
             name='rowHeight'
             onChange={event => this.setState({ rowHeight: parseInt(event.target.value, 10) || 1 })}
@@ -130,51 +132,56 @@ export default class TableExample extends Component {
           />
         </InputRow>
 
-        <FlexTable
-          ref='Table'
-          className={styles.FlexTable}
-          headerClassName={styles.headerColumn}
-          headerHeight={headerHeight}
-          height={height}
-          noRowsRenderer={this._noRowsRenderer}
-          overscanRowsCount={overscanRowsCount}
-          rowClassName={::this._rowClassName}
-          rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
-          rowGetter={rowGetter}
-          rowsCount={rowsCount}
-          scrollToIndex={scrollToIndex}
-          sort={this._sort}
-          sortBy={sortBy}
-          sortDirection={sortDirection}
-          width={430}
-        >
-          <FlexColumn
-            label='ID'
-            cellDataGetter={
-              (dataKey, rowData, columnData) => rowData.index
-            }
-            dataKey='index'
-            disableSort={!this._isSortEnabled()}
-            width={50}
-          />
-          <FlexColumn
-            label='Name'
-            dataKey='name'
-            disableSort={!this._isSortEnabled()}
-            width={90}
-          />
-          <FlexColumn
-            width={210}
-            disableSort
-            label='The description label is really long so that it will be truncated'
-            dataKey='random'
-            cellClassName={styles.exampleColumn}
-            cellRenderer={
-              (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
-            }
-            flexGrow={1}
-          />
-        </FlexTable>
+        <div>
+          <AutoSizer disableHeight>
+            {({ width }) => (
+              <FlexTable
+                ref='Table'
+                headerClassName={styles.headerColumn}
+                headerHeight={headerHeight}
+                height={height}
+                noRowsRenderer={this._noRowsRenderer}
+                overscanRowsCount={overscanRowsCount}
+                rowClassName={::this._rowClassName}
+                rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
+                rowGetter={rowGetter}
+                rowsCount={rowsCount}
+                scrollToIndex={scrollToIndex}
+                sort={this._sort}
+                sortBy={sortBy}
+                sortDirection={sortDirection}
+                width={width}
+              >
+                <FlexColumn
+                  label='Index'
+                  cellDataGetter={
+                    (dataKey, rowData, columnData) => rowData.index
+                  }
+                  dataKey='index'
+                  disableSort={!this._isSortEnabled()}
+                  width={50}
+                />
+                <FlexColumn
+                  label='Name'
+                  dataKey='name'
+                  disableSort={!this._isSortEnabled()}
+                  width={90}
+                />
+                <FlexColumn
+                  width={210}
+                  disableSort
+                  label='The description label is really long so that it will be truncated'
+                  dataKey='random'
+                  cellClassName={styles.exampleColumn}
+                  cellRenderer={
+                    (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
+                  }
+                  flexGrow={1}
+                />
+              </FlexTable>
+            )}
+          </AutoSizer>
+        </div>
       </ContentBox>
     )
   }

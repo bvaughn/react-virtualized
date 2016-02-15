@@ -1,9 +1,3 @@
-/* AutoSizer default theme */
-
-.AutoSizer {
-  overflow: hidden;
-}
-
 /* Grid default theme */
 
 .Grid {
@@ -25,7 +19,10 @@
 /* FlexTable default theme */
 
 .FlexTable {
-  width: 100%;
+}
+
+.FlexTable__Grid {
+  overflow-x: hidden;
 }
 
 .FlexTable__headerRow {
@@ -94,9 +91,9 @@
 /* VirtualScroll default theme */
 
 .VirtualScroll {
-  width: 100%;
   position: relative;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   outline: 0;
   -webkit-overflow-scrolling: touch;
 }

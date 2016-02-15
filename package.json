@@ -3,15 +3,21 @@
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
-  "version": "4.10.0",
+  "version": "5.0.0",
+  "homepage": "https://github.com/bvaughn/react-virtualized",
+  "main": "dist/react-virtualized.js",
+  "jsnext:main": "es/index.js",
+  "license": "MIT",
   "scripts": {
-    "build": "npm run build:css && npm run build:dist && npm run build:demo",
+    "build": "npm run build:css && npm run build:es && npm run build:demo && npm run build:umd",
     "build:css": "postcss --use autoprefixer source/styles.css > styles.css",
     "build:demo": "npm run clean:demo && NODE_ENV=production webpack --config webpack.config.demo.js -p --bail",
-    "build:dist": "npm run clean:dist && NODE_ENV=production webpack --config webpack.config.dist.js --bail",
-    "clean": "npm run clean:demo && npm run clean:dist",
+    "build:es": "BABEL_ENV=es babel source --out-dir es",
+    "build:umd": "npm run clean:umd && NODE_ENV=production webpack --config webpack.config.umd.js --bail",
+    "clean": "npm run clean:demo && npm run clean:es && npm run clean:umd",
     "clean:demo": "rimraf build",
-    "clean:dist": "rimraf dist",
+    "clean:es": "rimraf es",
+    "clean:umd": "rimraf dist",
     "deploy": "gh-pages -d build",
     "lint": "standard",
     "prebuild": "npm run lint",
@@ -41,16 +47,14 @@
     "flex",
     "flexbox"
   ],
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/bvaughn/react-virtualized/issues"
   },
-  "homepage": "https://github.com/bvaughn/react-virtualized",
-  "main": "dist/react-virtualized.js",
   "standard": {
     "parser": "babel-eslint",
     "ignore": [
       "dist",
+      "es",
       "source/vendor"
     ],
     "global": [

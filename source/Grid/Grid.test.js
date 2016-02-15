@@ -26,8 +26,10 @@ describe('Grid', () => {
     overscanRowsCount = 0,
     rowHeight = 20,
     rowsCount = NUM_ROWS,
+    scrollLeft = undefined,
     scrollToColumn,
     scrollToRow,
+    scrollTop = undefined,
     width = 200
   } = {}) {
     function renderCell ({ columnIndex, rowIndex }) {
@@ -52,8 +54,10 @@ describe('Grid', () => {
         renderCell={renderCell}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
+        scrollLeft={scrollLeft}
         scrollToColumn={scrollToColumn}
         scrollToRow={scrollToRow}
+        scrollTop={scrollTop}
         width={width}
       />
     )
@@ -315,6 +319,43 @@ describe('Grid', () => {
     })
   })
 
+  describe(':scrollLeft and :scrollTop properties', () => {
+    it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
+      let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex
+      renderGrid({
+        onSectionRendered: params => ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex } = params),
+        scrollLeft: 250,
+        scrollTop: 100
+      })
+      expect(rowStartIndex).toEqual(5)
+      expect(rowStopIndex).toEqual(9)
+      expect(columnStartIndex).toEqual(5)
+      expect(columnStopIndex).toEqual(8)
+    })
+
+    it('should render correctly when :scrollLeft and :scrollTop properties are updated', () => {
+      let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex
+
+      renderOrUpdateGrid({
+        onSectionRendered: params => ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex } = params)
+      })
+      expect(rowStartIndex).toEqual(0)
+      expect(rowStopIndex).toEqual(4)
+      expect(columnStartIndex).toEqual(0)
+      expect(columnStopIndex).toEqual(3)
+
+      renderOrUpdateGrid({
+        onSectionRendered: params => ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex } = params),
+        scrollLeft: 250,
+        scrollTop: 100
+      })
+      expect(rowStartIndex).toEqual(5)
+      expect(rowStopIndex).toEqual(9)
+      expect(columnStartIndex).toEqual(5)
+      expect(columnStopIndex).toEqual(8)
+    })
+  })
+
   describe('styles and classeNames', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(renderGrid())
@@ -344,7 +385,14 @@ describe('Grid', () => {
         scrollLeft: 100,
         scrollTop: 0
       })
-      expect(onScrollCalls).toEqual([{ scrollLeft: 100, scrollTop: 0 }])
+      expect(onScrollCalls).toEqual([{
+        clientHeight: 100,
+        clientWidth: 200,
+        scrollHeight: 2000,
+        scrollLeft: 100,
+        scrollTop: 0,
+        scrollWidth: 2500
+      }])
     })
 
     it('should trigger callback when component scrolls horizontally', () => {
@@ -357,7 +405,14 @@ describe('Grid', () => {
         scrollLeft: 0,
         scrollTop: 100
       })
-      expect(onScrollCalls).toEqual([{ scrollLeft: 0, scrollTop: 100 }])
+      expect(onScrollCalls).toEqual([{
+        clientHeight: 100,
+        clientWidth: 200,
+        scrollHeight: 2000,
+        scrollLeft: 0,
+        scrollTop: 100,
+        scrollWidth: 2500
+      }])
     })
   })
 

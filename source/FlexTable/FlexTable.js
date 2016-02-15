@@ -4,7 +4,7 @@ import FlexColumn from './FlexColumn'
 import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import shouldPureComponentUpdate from 'react-pure-render/function'
-import VirtualScroll from '../VirtualScroll'
+import Grid from '../Grid'
 
 export const SortDirection = {
   /**
@@ -37,31 +37,37 @@ export default class FlexTable extends Component {
         }
       }
     },
+
     /** Optional CSS class name */
     className: PropTypes.string,
+
     /** Disable rendering the header at all */
     disableHeader: PropTypes.bool,
+
     /** Optional CSS class to apply to all column headers */
     headerClassName: PropTypes.string,
+
     /** Fixed height of header row */
     headerHeight: PropTypes.number.isRequired,
+
     /** Fixed/available height for out DOM element */
     height: PropTypes.number.isRequired,
-    /** Horizontal padding of outer DOM element */
-    horizontalPadding: PropTypes.number,
+
     /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
     noRowsRenderer: PropTypes.func,
+
     /**
     * Optional callback when a column's header is clicked.
     * (dataKey: string): void
     */
     onHeaderClick: PropTypes.func,
+
     /**
      * Callback invoked when a user clicks on a table row.
      * (rowIndex: number): void
      */
-
     onRowClick: PropTypes.func,
+
     /**
      * Callback invoked with information about the slice of rows that were just rendered.
      * ({ startIndex, stopIndex }): void
@@ -71,7 +77,7 @@ export default class FlexTable extends Component {
     /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
-     * ({ scrollTop }): void
+     * ({ clientHeight, scrollHeight, scrollTop }): void
      */
     onScroll: PropTypes.func.isRequired,
 
@@ -87,44 +93,53 @@ export default class FlexTable extends Component {
      * If a function is provided its signature should be: (rowIndex: number): string
      */
     rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
     /**
      * Callback responsible for returning a data row given an index.
      * (index: number): any
      */
     rowGetter: PropTypes.func.isRequired,
+
     /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * (index: number): number
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+
     /** Number of rows in table. */
     rowsCount: PropTypes.number.isRequired,
+
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
+
+    /** Vertical offset. */
+    scrollTop: PropTypes.number,
+
     /**
      * Sort function to be called if a sortable header is clicked.
      * (dataKey: string, sortDirection: SortDirection): void
      */
     sort: PropTypes.func,
+
     /** FlexTable data is currently sorted by this :dataKey (if it is sorted at all) */
     sortBy: PropTypes.string,
+
     /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
     sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
-    /** Vertical padding of outer DOM element */
-    verticalPadding: PropTypes.number
+
+    /** Width of list */
+    width: PropTypes.number.isRequired
   }
 
   static defaultProps = {
     disableHeader: false,
     headerHeight: 0,
-    horizontalPadding: 0,
     noRowsRenderer: () => null,
     onHeaderClick: () => null,
     onRowClick: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
-    overscanRowsCount: 10,
-    verticalPadding: 0
+    overscanRowsCount: 10
   }
 
   constructor (props) {
@@ -138,35 +153,50 @@ export default class FlexTable extends Component {
   }
 
   /**
-   * See VirtualScroll#recomputeRowHeights
+   * See Grid#recomputeGridSize
    */
   recomputeRowHeights () {
-    this.refs.VirtualScroll.recomputeRowHeights()
+    this.refs.Grid.recomputeGridSize()
   }
 
   /**
-   * See VirtualScroll#scrollToRow
+   * See Grid#scrollToIndex
    */
   scrollToRow (scrollToIndex) {
-    this.refs.VirtualScroll.scrollToRow(scrollToIndex)
+    this.refs.Grid.scrollToCell({
+      scrollToColumn: 0,
+      scrollToRow: scrollToIndex
+    })
   }
 
   /**
-   * Set the :scrollTop position within the inner scroll container.
-   * Normally it is best to let FlexTable manage this properties or to use a method like :scrollToRow.
-   * This method enables FlexTable to be scroll-synced to another react-virtualized component though.
-   * It is appropriate to use in that case.
+   * See Grid#setScrollPosition
    */
   setScrollTop (scrollTop) {
-    this.refs.VirtualScroll.setScrollTop(scrollTop)
+    this.refs.Grid.setScrollPosition({
+      scrollLeft: 0,
+      scrollTop
+    })
   }
 
   componentDidMount () {
+    const { scrollTop } = this.props
+
+    if (scrollTop >= 0) {
+      this.setScrollTop(scrollTop)
+    }
+
     this._setScrollbarWidth()
   }
 
   componentDidUpdate () {
     this._setScrollbarWidth()
+  }
+
+  componentWillUpdate (nextProps, nextState) {
+    if (nextProps.scrollTop !== this.props.scrollTop) {
+      this.setScrollTop(nextProps.scrollTop)
+    }
   }
 
   render () {
@@ -183,14 +213,14 @@ export default class FlexTable extends Component {
       rowHeight,
       rowsCount,
       scrollToIndex,
-      verticalPadding
+      width
     } = this.props
     const { scrollbarWidth } = this.state
 
-    const availableRowsHeight = height - headerHeight - verticalPadding
+    const availableRowsHeight = height - headerHeight
 
     // This row-renderer wrapper function is necessary in order to trigger re-render when the
-    // sort-by or sort-direction have changed (else VirtualScroll will not see any props changes)
+    // sort-by or sort-direction have changed (else Grid will not see any props changes)
     const rowRenderer = index => {
       return this._createRow(index)
     }
@@ -206,24 +236,34 @@ export default class FlexTable extends Component {
             className={cn('FlexTable__headerRow', rowClass)}
             style={{
               height: headerHeight,
-              paddingRight: scrollbarWidth
+              paddingRight: scrollbarWidth,
+              width: width
             }}
           >
             {this._getRenderedHeaderRow()}
           </div>
         )}
 
-        <VirtualScroll
-          ref='VirtualScroll'
+        <Grid
+          ref='Grid'
+          className={'FlexTable__Grid'}
+          columnWidth={width}
+          columnsCount={1}
           height={availableRowsHeight}
-          noRowsRenderer={noRowsRenderer}
-          onRowsRendered={onRowsRendered}
-          onScroll={onScroll}
+          noContentRenderer={noRowsRenderer}
+          onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
+          onSectionRendered={({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) => onRowsRendered({
+            overscanStartIndex: rowOverscanStartIndex,
+            overscanStopIndex: rowOverscanStopIndex,
+            startIndex: rowStartIndex,
+            stopIndex: rowStopIndex
+          })}
           overscanRowsCount={overscanRowsCount}
+          renderCell={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
           rowHeight={rowHeight}
-          rowRenderer={rowRenderer}
           rowsCount={rowsCount}
-          scrollToIndex={scrollToIndex}
+          scrollToRow={scrollToIndex}
+          width={width}
         />
       </div>
     )
@@ -314,6 +354,7 @@ export default class FlexTable extends Component {
       rowClassName,
       rowGetter
     } = this.props
+    const { scrollbarWidth } = this.state
 
     const rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName
 
@@ -333,7 +374,8 @@ export default class FlexTable extends Component {
         className={cn('FlexTable__row', rowClass)}
         onClick={() => onRowClick(rowIndex)}
         style={{
-          height: this._getRowHeight(rowIndex)
+          height: this._getRowHeight(rowIndex),
+          paddingRight: scrollbarWidth
         }}
       >
         {renderedRow}
@@ -380,9 +422,9 @@ export default class FlexTable extends Component {
   }
 
   _setScrollbarWidth () {
-    const VirtualScroll = findDOMNode(this.refs.VirtualScroll)
-    const clientWidth = VirtualScroll.clientWidth || 0
-    const offsetWidth = VirtualScroll.offsetWidth || 0
+    const Grid = findDOMNode(this.refs.Grid)
+    const clientWidth = Grid.clientWidth || 0
+    const offsetWidth = Grid.offsetWidth || 0
     const scrollbarWidth = offsetWidth - clientWidth
 
     this.setState({ scrollbarWidth })

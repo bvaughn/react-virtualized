@@ -34,10 +34,10 @@ describe('InfiniteLoader', () => {
 
   function getMarkup ({
     height = 100,
-    onRowsRendered = undefined,
     rowHeight = 20,
     rowsCount = 100,
-    threshold = 10
+    threshold = 10,
+    width = 200
   } = {}) {
     return (
       <InfiniteLoader
@@ -46,13 +46,17 @@ describe('InfiniteLoader', () => {
         rowsCount={rowsCount}
         threshold={threshold}
       >
-        <VirtualScroll
-          height={height}
-          onRowsRendered={onRowsRendered}
-          rowHeight={rowHeight}
-          rowRenderer={index => <div key={index}/>}
-          rowsCount={rowsCount}
-        />
+        {({ onRowsRendered, registerChild }) => (
+          <VirtualScroll
+            ref={registerChild}
+            height={height}
+            onRowsRendered={onRowsRendered}
+            rowHeight={rowHeight}
+            rowRenderer={index => <div key={index}/>}
+            rowsCount={rowsCount}
+            width={width}
+          />
+        )}
       </InfiniteLoader>
     )
   }
@@ -74,14 +78,6 @@ describe('InfiniteLoader', () => {
   it('should call :loadMoreRows for unloaded rows within the threshold', () => {
     renderOrUpdateComponent()
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 14 }])
-  })
-
-  it('should not override the specified :onRowsRendered', () => {
-    const onRowsRenderedCalls = []
-    renderOrUpdateComponent({
-      onRowsRendered: params => onRowsRenderedCalls.push(params)
-    })
-    expect(onRowsRenderedCalls.length).toEqual(1)
   })
 })
 

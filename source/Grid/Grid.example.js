@@ -29,7 +29,7 @@ export default class GridExample extends Component {
       rowsCount: 1000,
       scrollToColumn: undefined,
       scrollToRow: undefined,
-      useDynamicRowHeights: false
+      useDynamicRowHeight: false
     }
 
     this._getColumnWidth = this._getColumnWidth.bind(this)
@@ -41,7 +41,7 @@ export default class GridExample extends Component {
     this._onScrollToColumnChange = this._onScrollToColumnChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._renderBodyCell = this._renderBodyCell.bind(this)
-    this._renderHeaderCell = this._renderHeaderCell.bind(this)
+    this._renderCell = this._renderCell.bind(this)
     this._renderLeftSideCell = this._renderLeftSideCell.bind(this)
   }
 
@@ -57,7 +57,7 @@ export default class GridExample extends Component {
       rowsCount,
       scrollToColumn,
       scrollToRow,
-      useDynamicRowHeights
+      useDynamicRowHeight
     } = this.state
 
     return (
@@ -70,11 +70,7 @@ export default class GridExample extends Component {
 
         <ContentBoxParagraph>
           Renders tabular data with virtualization along the vertical and horizontal axes.
-          Row heights and column widths must be known ahead of time and specified as properties.
-        </ContentBoxParagraph>
-
-        <ContentBoxParagraph>
-          This example also shows 3 <code>Grid</code> components with synchronized scrolling to demonstrate fixed headers and columns.
+          Row heights and column widths must be calculated ahead of time and specified as a fixed size or returned by a getter function.
         </ContentBoxParagraph>
 
         <ContentBoxParagraph>
@@ -82,7 +78,7 @@ export default class GridExample extends Component {
             <input
               className={styles.checkbox}
               type='checkbox'
-              value={useDynamicRowHeights}
+              value={useDynamicRowHeight}
               onChange={event => this._updateUseDynamicRowHeights(event.target.checked)}
             />
             Use dynamic row height?
@@ -123,6 +119,7 @@ export default class GridExample extends Component {
             value={height}
           />
           <LabeledInput
+            disabled={useDynamicRowHeight}
             label='Row height'
             name='rowHeight'
             onChange={event => this.setState({ rowHeight: parseInt(event.target.value, 10) || 1 })}
@@ -142,70 +139,23 @@ export default class GridExample extends Component {
           />
         </InputRow>
 
-        <div className={styles.GridRow}>
-          <div
-            className={styles.LeftSideGridContainer}
-            style={{ marginTop: rowHeight }}
-          >
+        <AutoSizer disableHeight>
+          {({ width }) => (
             <Grid
-              ref='LeftSideGrid'
-              className={styles.LeftSideGrid}
-              columnWidth={50}
-              columnsCount={1}
+              className={styles.BodyGrid}
+              columnWidth={this._getColumnWidth}
+              columnsCount={columnsCount}
               height={height}
-              onScroll={({ scrollLeft, scrollTop }) => this.refs.BodyGrid.setScrollPosition({ scrollTop })}
               overscanColumnsCount={overscanColumnsCount}
-              overscanRowsCount={overscanRowsCount}
-              renderCell={this._renderLeftSideCell}
-              rowHeight={useDynamicRowHeights ? this._getRowHeight : rowHeight}
+              renderCell={this._renderCell}
+              rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
               rowsCount={rowsCount}
-              width={50}
+              scrollToColumn={scrollToColumn}
+              scrollToRow={scrollToRow}
+              width={width}
             />
-          </div>
-          <div className={styles.GridColumn}>
-            <div>
-              <AutoSizer disableHeight>
-                <Grid
-                  ref='HeaderGrid'
-                  className={styles.HeaderGrid}
-                  columnWidth={this._getColumnWidth}
-                  columnsCount={columnsCount}
-                  height={rowHeight}
-                  overscanColumnsCount={overscanColumnsCount}
-                  overscanRowsCount={overscanRowsCount}
-                  renderCell={this._renderHeaderCell}
-                  rowHeight={rowHeight}
-                  rowsCount={1}
-                  width={0}
-                />
-              </AutoSizer>
-            </div>
-            <div>
-              <AutoSizer disableHeight>
-                <Grid
-                  ref='BodyGrid'
-                  className={styles.BodyGrid}
-                  columnWidth={this._getColumnWidth}
-                  columnsCount={columnsCount}
-                  height={height}
-                  noContentRenderer={this._noContentRenderer}
-                  onScroll={({ scrollLeft, scrollTop }) => {
-                    this.refs.LeftSideGrid.setScrollPosition({ scrollTop })
-                    this.refs.HeaderGrid.setScrollPosition({ scrollLeft })
-                  }}
-                  overscanColumnsCount={overscanColumnsCount}
-                  overscanRowsCount={overscanRowsCount}
-                  renderCell={this._renderBodyCell}
-                  rowHeight={useDynamicRowHeights ? this._getRowHeight : rowHeight}
-                  rowsCount={rowsCount}
-                  scrollToColumn={scrollToColumn}
-                  scrollToRow={scrollToRow}
-                  width={0}
-                />
-              </AutoSizer>
-            </div>
-          </div>
-        </div>
+          )}
+        </AutoSizer>
       </ContentBox>
     )
   }
@@ -213,8 +163,10 @@ export default class GridExample extends Component {
   _getColumnWidth (index) {
     switch (index) {
       case 0:
-        return 100
+        return 50
       case 1:
+        return 100
+      case 2:
         return 300
       default:
         return 50
@@ -250,10 +202,10 @@ export default class GridExample extends Component {
     let content
 
     switch (columnIndex) {
-      case 0:
+      case 1:
         content = datum.name
         break
-      case 1:
+      case 2:
         content = datum.random
         break
       default:
@@ -272,38 +224,18 @@ export default class GridExample extends Component {
     )
   }
 
-  _renderHeaderCell ({ columnIndex, rowIndex }) {
-    let content
-
-    switch (columnIndex) {
-      case 0:
-        content = 'Name'
-        break
-      case 1:
-        content = 'Lorem Ipsum'
-        break
-      default:
-        content = `C${columnIndex}`
-        break
+  _renderCell ({ columnIndex, rowIndex }) {
+    if (columnIndex === 0) {
+      return this._renderLeftSideCell({ columnIndex, rowIndex })
+    } else {
+      return this._renderBodyCell({ columnIndex, rowIndex })
     }
-
-    const classNames = cn(styles.headerCell, {
-      [styles.centeredCell]: columnIndex > 2
-    })
-
-    return (
-      <div className={classNames}>
-        {content}
-      </div>
-    )
   }
 
-  _renderLeftSideCell ({ columnIndex, rowIndex }) {
+  _renderLeftSideCell ({ rowIndex }) {
     const datum = this._getDatum(rowIndex)
 
-    const classNames = cn(styles.cell, {
-      [styles.letterCell]: columnIndex === 0
-    })
+    const classNames = cn(styles.cell, styles.letterCell)
     const style = { backgroundColor: datum.color }
 
     return (
@@ -318,7 +250,7 @@ export default class GridExample extends Component {
 
   _updateUseDynamicRowHeights (value) {
     this.setState({
-      useDynamicRowHeights: value
+      useDynamicRowHeight: value
     })
   }
 
@@ -335,7 +267,7 @@ export default class GridExample extends Component {
   }
 
   _onScrollToColumnChange (event) {
-    const { columnsCount, scrollToRow } = this.state
+    const { columnsCount } = this.state
     let scrollToColumn = Math.min(columnsCount - 1, parseInt(event.target.value, 10))
 
     if (isNaN(scrollToColumn)) {
@@ -343,12 +275,10 @@ export default class GridExample extends Component {
     }
 
     this.setState({ scrollToColumn })
-
-    this.refs.BodyGrid.scrollToCell({ scrollToColumn, scrollToRow })
   }
 
   _onScrollToRowChange (event) {
-    const { scrollToColumn, rowsCount } = this.state
+    const { rowsCount } = this.state
     let scrollToRow = Math.min(rowsCount - 1, parseInt(event.target.value, 10))
 
     if (isNaN(scrollToRow)) {
@@ -356,7 +286,5 @@ export default class GridExample extends Component {
     }
 
     this.setState({ scrollToRow })
-
-    this.refs.BodyGrid.scrollToCell({ scrollToColumn, scrollToRow })
   }
 }

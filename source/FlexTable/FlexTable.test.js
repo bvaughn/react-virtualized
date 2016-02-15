@@ -45,16 +45,17 @@ describe('FlexTable', () => {
     onHeaderClick = undefined,
     onRowClick = undefined,
     onRowsRendered = undefined,
+    onScroll = undefined,
     overscanRowsCount = 0,
     rowClassName = undefined,
     rowGetter = immutableRowGetter,
     rowHeight = 10,
     rowsCount = list.size,
     scrollToIndex,
+    scrollTop,
     sort,
     sortBy,
     sortDirection,
-    styleSheet,
     width = 100
   } = {}) {
     return (
@@ -67,16 +68,17 @@ describe('FlexTable', () => {
         onHeaderClick={onHeaderClick}
         onRowClick={onRowClick}
         onRowsRendered={onRowsRendered}
+        onScroll={onScroll}
         overscanRowsCount={overscanRowsCount}
         rowClassName={rowClassName}
         rowGetter={rowGetter}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
         scrollToIndex={scrollToIndex}
+        scrollTop={scrollTop}
         sort={sort}
         sortBy={sortBy}
         sortDirection={sortDirection}
-        styleSheet={styleSheet}
         width={width}
       >
         <FlexColumn
@@ -315,7 +317,7 @@ describe('FlexTable', () => {
         noRowsRenderer: () => <div>No rows!</div>,
         rowsCount: 0
       })
-      const bodyDOMNode = findDOMNode(table.refs.VirtualScroll)
+      const bodyDOMNode = findDOMNode(table.refs.Grid)
       expect(bodyDOMNode.textContent).toEqual('No rows!')
     })
 
@@ -323,7 +325,7 @@ describe('FlexTable', () => {
       const table = renderTable({
         rowsCount: 0
       })
-      const bodyDOMNode = findDOMNode(table.refs.VirtualScroll)
+      const bodyDOMNode = findDOMNode(table.refs.Grid)
       expect(bodyDOMNode.textContent).toEqual('')
     })
   })
@@ -469,6 +471,35 @@ describe('FlexTable', () => {
     })
   })
 
+  describe(':scrollTop property', () => {
+    it('should render correctly when an initial :scrollTop property is specified', () => {
+      let startIndex, stopIndex
+      renderTable({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params),
+        scrollTop: 80
+      })
+      expect(startIndex).toEqual(8)
+      expect(stopIndex).toEqual(15)
+    })
+
+    it('should render correctly when :scrollTop property is updated', () => {
+      let startIndex, stopIndex
+
+      renderOrUpdateTable({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params)
+      })
+      expect(startIndex).toEqual(0)
+      expect(stopIndex).toEqual(7)
+
+      renderOrUpdateTable({
+        onRowsRendered: params => ({ startIndex, stopIndex } = params),
+        scrollTop: 80
+      })
+      expect(startIndex).toEqual(8)
+      expect(stopIndex).toEqual(15)
+    })
+  })
+
   describe('styles and classeNames', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(renderTable({
@@ -545,6 +576,25 @@ describe('FlexTable', () => {
       expect(startIndex).toEqual(0)
       expect(stopIndex).toEqual(7)
       expect(overscanStopIndex).toEqual(14)
+    })
+  })
+
+  describe('onScroll', () => {
+    it('should trigger callback when component scrolls', () => {
+      const onScrollCalls = []
+      const table = renderTable({
+        onScroll: params => onScrollCalls.push(params)
+      })
+      const target = {
+        scrollTop: 100
+      }
+      table.refs.Grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
+      Simulate.scroll(findDOMNode(table.refs.Grid), { target })
+      expect(onScrollCalls).toEqual([{
+        clientHeight: 80,
+        scrollHeight: 1000,
+        scrollTop: 100
+      }])
     })
   })
 

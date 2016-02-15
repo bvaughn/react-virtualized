@@ -15,6 +15,14 @@
           }]
         }
       }
+    },
+    "es": {
+      ignore: [
+        "*.example.js",
+        "*.test.js",
+        "source/demo",
+        "source/tests.js"
+      ]
     }
   }
 }

@@ -1,37 +1,32 @@
 /** @flow */
-import FlexTable from '../FlexTable'
-import React, { Component, PropTypes } from 'react'
+import { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
-import VirtualScroll from '../VirtualScroll'
 
 /**
  * Higher-order component that manages lazy-loading for "infinite" data.
- * This component decorates a FlexTable or VirtualScroll and prefetches rows as a user scrolls to J.I.T. load data.
+ * This component decorates a virtual component and just-in-time prefetches rows as a user scrolls.
  * It is intended as a convenience component; fork it if you'd like finer-grained control over data-loading.
  */
 export default class InfiniteLoader extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate
 
   static propTypes = {
-    /** Children must be either FlexTable or VirtualScroll */
-    children (props, propName, componentName) {
-      let error
-      React.Children.forEach(props.children, child => {
-        if (!(child.type === FlexTable || child.type === VirtualScroll)) {
-          error = new Error(`InfiniteLoader only accepts children of types FlexTable or VirtualScroll not ${child.type}`)
-        }
-      })
-      return error
-    },
     /**
-     * Height to be passed through to child component.
+     * Function respondible for rendering a virtualized component.
+     * This function should implement the following signature:
+     * ({ onRowsRendered, registerChild }) => PropTypes.element
+     *
+     * The specified :onRowsRendered function should be passed through to the child's :onRowsRendered property.
+     * The :registerChild callback should be set as the virtualized component's :ref.
      */
-    height: PropTypes.number,
+    children: PropTypes.func.isRequired,
+
     /**
      * Function responsible for tracking the loaded state of each row.
      * It should implement the following signature: (index: number): boolean
      */
     isRowLoaded: PropTypes.func.isRequired,
+
     /**
      * Callback to be invoked when more rows must be loaded.
      * It should implement the following signature: ({ startIndex, stopIndex }): Promise
@@ -40,20 +35,18 @@ export default class InfiniteLoader extends Component {
      * This callback may be called multiple times in reaction to a single scroll event.
      */
     loadMoreRows: PropTypes.func.isRequired,
+
     /**
      * Number of rows in list; can be arbitrary high number if actual number is unknown.
      */
     rowsCount: PropTypes.number.isRequired,
+
     /**
      * Threshold at which to pre-fetch data.
      * A threshold X means that data will start loading when a user scrolls within X rows.
      * This value defaults to 15.
      */
-    threshold: PropTypes.number.isRequired,
-    /**
-     * Width to be passed through to child component.
-     */
-    width: PropTypes.number
+    threshold: PropTypes.number.isRequired
   }
 
   static defaultProps = {
@@ -61,45 +54,20 @@ export default class InfiniteLoader extends Component {
     threshold: 15
   }
 
-  constructor (props) {
-    super(props)
+  constructor (props, context) {
+    super(props, context)
 
     this._onRowsRendered = this._onRowsRendered.bind(this)
-  }
-
-  componentDidReceiveProps (previousProps) {
-    const { children } = this.props
-    if (previousProps.children !== children) {
-      let child = React.Children.only(children)
-      this._originalOnRowsRendered = child.props.onRowsRendered
-    }
-  }
-
-  componentWillMount () {
-    const { children } = this.props
-    let child = React.Children.only(children)
-    this._originalOnRowsRendered = child.props.onRowsRendered
+    this._registerChild = this._registerChild.bind(this)
   }
 
   render () {
-    const { children, height, width, ...props } = this.props
+    const { children } = this.props
 
-    let child = React.Children.only(children)
-
-    const childProps = {
-      ref: 'Child',
-      onRowsRendered: this._onRowsRendered
-    }
-
-    if (height >= 0) {
-      childProps.height = height
-    }
-
-    if (width >= 0) {
-      childProps.width = width
-    }
-
-    return React.cloneElement(child, childProps)
+    return children({
+      onRowsRendered: this._onRowsRendered,
+      registerChild: this._registerChild
+    })
   }
 
   _onRowsRendered ({ startIndex, stopIndex }) {
@@ -118,7 +86,8 @@ export default class InfiniteLoader extends Component {
       let promise = loadMoreRows(unloadedRange)
       if (promise) {
         promise.then(() => {
-          // Refresh the visible rows if any of them have just been loaded
+          // Refresh the visible rows if any of them have just been loaded.
+          // Otherwise they will remain in their unloaded visual state.
           if (
             isRangeVisible({
               lastRenderedStartIndex: this._lastRenderedStartIndex,
@@ -127,18 +96,17 @@ export default class InfiniteLoader extends Component {
               stopIndex: unloadedRange.stopIndex
             })
           ) {
-            // In case the component has been unmounted since the range was loaded
-            if (this.refs.Child) {
-              this.refs.Child.forceUpdate()
+            if (this._registeredChild) {
+              this._registeredChild.forceUpdate()
             }
           }
         })
       }
     })
+  }
 
-    if (this._originalOnRowsRendered) {
-      this._originalOnRowsRendered({ startIndex, stopIndex })
-    }
+  _registerChild (registeredChild) {
+    this._registeredChild = registeredChild
   }
 }
 

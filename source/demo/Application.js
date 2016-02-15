@@ -6,6 +6,7 @@ import Immutable from 'immutable'
 import InfiniteLoaderExample from '../InfiniteLoader/InfiniteLoader.example'
 import NavLink from './NavLink'
 import React, { Component } from 'react'
+import ScrollSyncExample from '../ScrollSync/ScrollSync.example'
 import styles from './Application.css'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
 import { generateRandomList } from './utils'
@@ -13,7 +14,7 @@ import { render } from 'react-dom'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import '../../styles.css'
 
-const COMPONENTS = ['AutoSizer', 'Grid', 'FlexTable', 'InfiniteLoader', 'VirtualScroll']
+const COMPONENTS = ['AutoSizer', 'Grid', 'FlexTable', 'InfiniteLoader', 'ScrollSync', 'VirtualScroll']
 
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
@@ -67,7 +68,7 @@ class Application extends Component {
             />
             <NavLink
               text='Documentation'
-              url='https://github.com/bvaughn/react-virtualized/tree/master/docs'
+              url='https://github.com/bvaughn/react-virtualized/tree/master/docs#documentation'
             />
             <NavLink
               text='Issues'
@@ -108,6 +109,12 @@ class Application extends Component {
           }
           {activeComponent === 'InfiniteLoader' &&
             <InfiniteLoaderExample
+              className={styles.column}
+              list={list}
+            />
+          }
+          {activeComponent === 'ScrollSync' &&
+            <ScrollSyncExample
               className={styles.column}
               list={list}
             />

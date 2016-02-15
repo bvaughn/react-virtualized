@@ -13,14 +13,16 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | height | Number | ✓ | Height of Grid; this property determines the number of visible (vs virtualized) rows. |
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowsCount` or `columnsCount` is 0: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered: `({ columnOverscanStartIndex, columnOverscanStopIndex, columnStartIndex, columnStopIndex, rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }): void` |
-| onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ scrollLeft, scrollTop }): void` |
+| onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void` |
 | overscanColumnsCount |  | Number | Number of columns to render before/after the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
 | overscanRowsCount |  | Number | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
 | renderCell | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
 | rowsCount | Number | ✓ | Number of rows in grid. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
+| scrollLeft | Number |  | Horizontal offset |
 | scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary) |
 | scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
+| scrollTop | Number |  | Vertical offset |
 | width | Number | ✓ | Width of Grid; this property determines the number of visible (vs virtualized) columns. |
 
 ### Public Methods
@@ -55,3 +57,34 @@ The Grid component supports the following static class names
 | Grid | Main (outer) element |
 | Grid__innerScrollContainer | Inner scrollable area |
 | Grid__cell | Individual cell |
+
+### Examples
+
+Below is a very basic `Grid` example. The grid displays an array of objects with fixed row and column sizes. (Dynamic sizes are also supported but this example is intended to be basic.) [See here](source/Grid/Grid.example.js) for a more full-featured example with dynamic cell sizes and more.
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Grid } from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
+
+// Grid data as an array of arrays
+const list = [
+  ['Brian Vaughn', 'Software Engineer', 'Sunnyvale', 'CA', 94086 /* ... */ ]
+  // And so on...
+];
+
+// Render your grid
+ReactDOM.render(
+  <Grid
+    width={300}
+    height={300}
+    columnWidth={100}
+    rowHeight={30}
+    columnsCount={list.length}
+    rowsCount={list.length}
+    renderCell={({ columnIndex, rowIndex }) => list[rowIndex][columnIndex]}
+  />,
+  document.getElementById('example')
+);
+```

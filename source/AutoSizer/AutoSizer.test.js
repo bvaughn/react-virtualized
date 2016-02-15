@@ -25,7 +25,6 @@ describe('AutoSizer', () => {
 
   function getMarkup ({
     bar = 123,
-    className = undefined,
     disableHeight = false,
     disableWidth = false,
     foo = 456,
@@ -34,7 +33,6 @@ describe('AutoSizer', () => {
     paddingLeft = 0,
     paddingRight = 0,
     paddingTop = 0,
-    styleSheet = undefined,
     width = 200
   } = {}) {
     const style = {
@@ -49,23 +47,22 @@ describe('AutoSizer', () => {
 
     return (
       <div style={style}>
-        <AutoSizer
-          disableHeight={disableHeight}
-          disableWidth={disableWidth}
-          className={className}
-          styleSheet={styleSheet}
-        >
-          <ChildComponent
-            bar={bar}
-            foo={foo}
-          />
+        <AutoSizer>
+          {({ height, width }) => (
+            <ChildComponent
+              width={disableWidth ? undefined : width}
+              height={disableHeight ? undefined : height}
+              bar={bar}
+              foo={foo}
+            />
+          )}
         </AutoSizer>
       </div>
     )
   }
 
   function renderOrUpdateComponent (props) {
-    let rendered = render(getMarkup(props), node)
+    const rendered = render(getMarkup(props), node)
 
     return findDOMNode(rendered)
   }
@@ -78,7 +75,7 @@ describe('AutoSizer', () => {
 
   it('should set the correct initial width and height of ChildComponent or React child', () => {
     const component = renderOrUpdateComponent()
-    let domNode = findDOMNode(component)
+    const domNode = findDOMNode(component)
     expect(domNode.textContent).toContain('height:100')
     expect(domNode.textContent).toContain('width:200')
   })
@@ -90,35 +87,23 @@ describe('AutoSizer', () => {
       paddingRight: 4,
       paddingTop: 15
     })
-    let domNode = findDOMNode(component)
+    const domNode = findDOMNode(component)
     expect(domNode.textContent).toContain('height:75')
     expect(domNode.textContent).toContain('width:192')
   })
 
   it('should not update :width if :disableWidth is true', () => {
     const component = renderOrUpdateComponent({ disableWidth: true })
-    let domNode = findDOMNode(component)
+    const domNode = findDOMNode(component)
     expect(domNode.textContent).toContain('height:100')
     expect(domNode.textContent).toContain('width:undefined')
   })
 
   it('should not update :height if :disableHeight is true', () => {
     const component = renderOrUpdateComponent({ disableHeight: true })
-    let domNode = findDOMNode(component)
+    const domNode = findDOMNode(component)
     expect(domNode.textContent).toContain('height:undefined')
     expect(domNode.textContent).toContain('width:200')
-  })
-
-  describe('styles and classeNames', () => {
-    it('should use the expected global CSS classNames', () => {
-      const node = renderOrUpdateComponent()
-      expect(node.querySelector('.AutoSizer')).toBeTruthy()
-    })
-
-    it('should use a custom :className if specified', () => {
-      const node = renderOrUpdateComponent({ className: 'foo' })
-      expect(node.querySelector('.AutoSizer').className).toContain('foo')
-    })
   })
 
   // TODO It would be nice to test that resize events update the width/height

@@ -4,6 +4,7 @@
 import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
 import styles from './VirtualScroll.example.css'
+import AutoSizer from '../AutoSizer'
 import VirtualScroll from './VirtualScroll'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
@@ -108,17 +109,24 @@ export default class VirtualScrollExample extends Component {
           />
         </InputRow>
 
-        <VirtualScroll
-          ref='VirtualScroll'
-          className={styles.VirtualScroll}
-          height={virtualScrollHeight}
-          noRowsRenderer={this._noRowsRenderer}
-          overscanRowsCount={overscanRowsCount}
-          rowsCount={rowsCount}
-          rowHeight={useDynamicRowHeight ? this._getRowHeight : virtualScrollRowHeight}
-          rowRenderer={this._rowRenderer}
-          scrollToIndex={scrollToIndex}
-        />
+        <div>
+          <AutoSizer disableHeight>
+            {({ width }) => (
+              <VirtualScroll
+                ref='VirtualScroll'
+                className={styles.VirtualScroll}
+                height={virtualScrollHeight}
+                overscanRowsCount={overscanRowsCount}
+                noRowsRenderer={this._noRowsRenderer}
+                rowsCount={rowsCount}
+                rowHeight={useDynamicRowHeight ? this._getRowHeight : virtualScrollRowHeight}
+                rowRenderer={this._rowRenderer}
+                scrollToIndex={scrollToIndex}
+                width={width}
+              />
+            )}
+          </AutoSizer>
+        </div>
       </ContentBox>
     )
   }

@@ -10,10 +10,13 @@ You can use `AutoSizer` to control only one dimension of its child component usi
 
 ```html
 <AutoSizer disableHeight>
-  <Component
-    height={200}
-    {...props}
-  />
+  {({ width }) => (
+    <Component
+      height={200}
+      width={width}
+      {...props}
+    />
+  )}
 </AutoSizer>
 ```
 
@@ -25,21 +28,37 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
   <!-- Other children... -->
   <div style={{ flex: '1 1 auto' }}>
     <AutoSizer>
-      <Component {...props} />
+      {({ height, width }) => (
+        <Component
+          width={width}
+          height={height}
+          {...props}
+        />
+      )}
     </AutoSizer>
   </div>
 </ContentBox>
 ```
 
-#### Using AutoSizer with InfiniteScroller
-One of the main goals of the version 5 release is to enable react-virtualized HOCs to be nested in any order. However at the current time, using an `AutoSizer` with an `InfiniteLoader` should be done like this:
+#### Using AutoSizer with InfiniteLoader
+`AutoScroller` can be used within other react-virtualized HOCs such as `InfiniteLoader` or `ScrollSync` like so:
 
 ```html
-<AutoSizer>
-  <InfiniteLoader {...props}>
-    <VirtualScroll {...props}/>
-  </InfiniteLoader>
-</AutoSizer>
+<InfiniteLoader {...infiniteLoaderProps}>
+  {({ onRowsRendered, registerChild }) => (
+    <AutoSizer>
+      {({ height, width }) => (
+        <VirtualScroll
+          ref={registerChild}
+          width={width}
+          height={heigth}
+          onRowsRendered={onRowsRendered}
+          {...virtualScrollProps}
+        />
+      )}
+    </AutoSizer>
+  )}
+</InfiniteLoader>
 ```
 
 You can see an example of just such a thing [here](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader).

@@ -1,6 +1,26 @@
 Changelog
 ------------
 
+# 5.0.0
+
+Version 5 includes the following changes.
+(For more background information refer to the [Version 5 Roadmap wiki page](https://github.com/bvaughn/react-virtualized/wiki/Version-5-Roadmap).)
+At a high-level the purpose of this release is to make HOCs more easily composible in order to support a wider variety of them in the future.
+A secondary goal was to cut redundant code from `VirtualScroll` and rely more heavily on the base `Grid` component.
+
+###### Backwards-incompatible changes
+* Refactored `FlexTable` and `VirtualScroll` to be HOCs that use `Grid` internally. This change makes `width` a required attribute for all virtualized components. A simple upgrade strategy is to use the `AutoSizer` HOC (learn more [here](docs/AutoSizer.md)).
+* Changed globally exported library name (for use with vanilla `<script>` tags) to `window.ReactVirtualized` instead of `window["react-virtualized"]` (see [issue #86](https://github.com/bvaughn/react-virtualized/issues/86)).
+* Removed `horizontalPadding` and `verticalPadding` properties from `FlexTable`. These properties were redundant. Such padding should be the responsibility of the parent container and taken into consideration by the injected `width` and `height`.
+* Refactored `InfiniteLoader` and `AutoSizer` to require function children so as to be more easily composable with each other and new HOCs like `ScrollSync` (learn more [here](docs/usingAutoSizer.md#using-autosizer-with-infiniteloader)).
+* `AutoSizer` no longer supports a `className` property or uses the global 'AutoSizer' class.
+
+###### Backwards-compatible changes
+* Added ES6 module and `jsnext:main` target to enable tree-shaking support.
+* Updated `onScroll` property to specific total scrollable area so that offsets can be converted into percentages if desired (learn more [here](docs/README.md)).
+* Replaced `top` / `left` cell positioning with `transform: translate()` for small performance gains. (This may become configurable in the future if any negative impact on performance is noticed.)
+* Created `ScrollSync` HOC for synchronizing scrolling between two or more virtualized components (learn more [here](docs/ScrollSync.md)).
+
 ### 4.10.0
 `FlexTable` and `VirtualScroll` get a new property, `overscanRowsCount`. `Grid` gets `overscanRowsCount` and `overscanColumnsCount`.
 These properties can be used to reduce visual flicker around the sides of virtualized components when quickly scrolling.

@@ -8,6 +8,7 @@ Documentation
 * [Grid](Grid.md)
 * [FlexTable](FlexTable.md)
 * [InfiniteLoader](InfiniteLoader.md)
+* [ScrollSync](ScrollSync.md)
 * [SortDirection](SortDirection.md)
 * [VirtualScroll](VirtualScroll.md)
 

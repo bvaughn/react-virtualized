@@ -13,22 +13,21 @@ This component expects explicit width, height, and padding parameters.
 | headerClassName | String |  | CSS class to apply to all column headers |
 | headerHeight | Number | ✓ | Fixed height of header row |
 | height | Number | ✓ | Fixed/available height for out DOM element |
-| horizontalPadding | Number |  | Horizontal padding of outer DOM element |
 | noRowsRenderer |  | Function | Callback used to render placeholder content when :rowsCount is 0 |
 | onHeaderClick |  | Function | Callback invoked when a user clicks on a table header. `(dataKey: string, columnData: any): void` |
 | onRowClick |  | Function | Callback invoked when a user clicks on a table row. `(rowIndex: number): void` |
 | onRowsRendered |  | Function | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }): void` |
 | overscanRowsCount |  | Number | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
-| onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ scrollTop }): void` |
+| onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight, scrollHeight, scrollTop }): void` |
 | rowClassName | String or Function |  | CSS class to apply to all table rows (including the header row). This value may be either a static string or a function with the signature `(rowIndex: number): string`. Note that for the header row an index of `-1` is provided. |
 | rowGetter | Function | ✓ | Callback responsible for returning a data row given an index. `(index: int): any` |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
 | rowsCount | Number | ✓ | Number of rows in table. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
+| scrollTop | Number |  | Vertical offset |
 | sort | Function |  | Sort function to be called if a sortable header is clicked. `(dataKey: string, sortDirection: SortDirection): void` |
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
-| verticalPadding | Number |  | Vertical padding of outer DOM element |
 
 ### Public Methods
 
@@ -64,3 +63,44 @@ The FlexTable component supports the following static class names
 | FlexTable__sortableHeaderColumn | Applied to header columns that are sortable |
 | FlexTable__sortableHeaderIcon | SVG sort indicator |
 | FlexTable__truncatedColumnText | Element within table column responsible for truncating text |
+
+### Examples
+
+Below is a very basic `FlexTable` example. This table has only 2 columns, each containing a simple string. Both have a fixed width and neither is sortable. [See here](source/FlexTable/FlexTable.example.js) for a more full-featured example including custom cell renderers, sortable headers, and more.
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { FlexTable, FlexColumn } from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
+
+// Table data as a array of objects
+const list = [
+  { name: 'Brian Vaughn', description: 'Software engineer' }
+  // And so on...
+];
+
+// Render your table
+ReactDOM.render(
+  <FlexTable
+    width={300}
+    height={300}
+    headerHeight={20}
+    rowHeight={30}
+    rowsCount={list.length}
+    rowGetter={index => list[index]}
+  >
+    <FlexColumn
+      label='Name'
+      dataKey='name'
+      width={100}
+    />
+    <FlexColumn
+      width={200}
+      label='Description'
+      dataKey='description'
+    />
+  </FlexTable>,
+  document.getElementById('example')
+);
+```
