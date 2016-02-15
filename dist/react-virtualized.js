@@ -1277,13 +1277,14 @@
                                 var columnDatum = this._columnMetadata[columnIndex], child = renderCell({
                                     columnIndex: columnIndex,
                                     rowIndex: rowIndex
-                                });
+                                }), transform = "translate(" + columnDatum.offset + "px, " + rowDatum.offset + "px)";
                                 child = _react2["default"].createElement("div", {
                                     key: "row:" + rowIndex + ", column:" + columnIndex,
                                     className: "Grid__cell",
                                     style: {
-                                        transform: "translate(" + columnDatum.offset + "px, " + rowDatum.offset + "px)",
+                                        transform: transform,
                                         height: this._getRowHeight(rowIndex),
+                                        WebkitTransform: transform,
                                         width: this._getColumnWidth(columnIndex)
                                     }
                                 }, child), childrenToDisplay.push(child);

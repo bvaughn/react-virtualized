@@ -466,6 +466,7 @@ var Grid = (function (_Component) {
           for (var columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
             var columnDatum = this._columnMetadata[columnIndex];
             var child = renderCell({ columnIndex: columnIndex, rowIndex: rowIndex });
+            var transform = 'translate(' + columnDatum.offset + 'px, ' + rowDatum.offset + 'px)';
 
             child = _react2['default'].createElement(
               'div',
@@ -473,8 +474,9 @@ var Grid = (function (_Component) {
                 key: 'row:' + rowIndex + ', column:' + columnIndex,
                 className: 'Grid__cell',
                 style: {
-                  transform: 'translate(' + columnDatum.offset + 'px, ' + rowDatum.offset + 'px)',
+                  transform: transform,
                   height: this._getRowHeight(rowIndex),
+                  WebkitTransform: transform,
                   width: this._getColumnWidth(columnIndex)
                 }
               },

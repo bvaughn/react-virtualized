@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 5.0.1
+
+Added `webkit-transform` style to `Grid` cells for iOS 8 support.
+
 # 5.0.0
 
 Version 5 includes the following changes.

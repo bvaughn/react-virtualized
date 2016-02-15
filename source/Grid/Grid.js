@@ -411,14 +411,16 @@ export default class Grid extends Component {
         for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
           let columnDatum = this._columnMetadata[columnIndex]
           let child = renderCell({ columnIndex, rowIndex })
+          let transform = `translate(${columnDatum.offset}px, ${rowDatum.offset}px)`
 
           child = (
             <div
               key={`row:${rowIndex}, column:${columnIndex}`}
               className='Grid__cell'
               style={{
-                transform: `translate(${columnDatum.offset}px, ${rowDatum.offset}px)`,
+                transform,
                 height: this._getRowHeight(rowIndex),
+                WebkitTransform: transform,
                 width: this._getColumnWidth(columnIndex)
               }}
             >
