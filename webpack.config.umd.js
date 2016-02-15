@@ -10,7 +10,7 @@ module.exports = {
   output: {
     path: 'dist',
     filename: '[name].js',
-    libraryTarget: 'commonjs',
+    libraryTarget: 'umd',
     library: 'ReactVirtualized'
   },
   externals: {
