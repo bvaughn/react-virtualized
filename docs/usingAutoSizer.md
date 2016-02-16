@@ -41,7 +41,7 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
 ```
 
 #### Using AutoSizer with InfiniteLoader
-`AutoScroller` can be used within other react-virtualized HOCs such as `InfiniteLoader` or `ScrollSync` like so:
+`AutoSizer` can be used within other react-virtualized HOCs such as `InfiniteLoader` or `ScrollSync` like so:
 
 ```html
 <InfiniteLoader {...infiniteLoaderProps}>
