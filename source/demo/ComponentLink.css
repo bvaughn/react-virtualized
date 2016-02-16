@@ -1,6 +1,6 @@
 .ComponentLink {
   display: inline-block;
-  padding: 1em;
+  padding: .75em;
   color: #bdbdbd;
   cursor: pointer;
   font-size: .8rem;
@@ -13,15 +13,15 @@
   color: #fff;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 500px) {
   .ComponentLink {
-    padding: .5em;
     font-size: .75rem;
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 400px) {
   .ComponentLink {
+    padding: .5em;
     font-size: .5rem;
   }
 }

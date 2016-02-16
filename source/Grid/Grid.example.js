@@ -146,6 +146,7 @@ export default class GridExample extends Component {
               columnWidth={this._getColumnWidth}
               columnsCount={columnsCount}
               height={height}
+              noContentRenderer={this._noContentRenderer}
               overscanColumnsCount={overscanColumnsCount}
               renderCell={this._renderCell}
               rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}

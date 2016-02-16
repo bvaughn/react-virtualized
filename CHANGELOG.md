@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+### 5.1.0
+Added `ColumnSizer` high-order component for auto-calculating column widths for `Grid` cells.
+
 #### 5.0.1
 
 Added `webkit-transform` style to `Grid` cells for iOS 8 support.

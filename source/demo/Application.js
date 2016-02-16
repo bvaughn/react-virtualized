@@ -1,4 +1,5 @@
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
+import ColumnSizerExample from '../ColumnSizer/ColumnSizer.example'
 import ComponentLink from './ComponentLink'
 import GridExample from '../Grid/Grid.example'
 import FlexTableExample from '../FlexTable/FlexTable.example'
@@ -14,7 +15,8 @@ import { render } from 'react-dom'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import '../../styles.css'
 
-const COMPONENTS = ['AutoSizer', 'Grid', 'FlexTable', 'InfiniteLoader', 'ScrollSync', 'VirtualScroll']
+const COMPONENTS = ['Grid', 'FlexTable', 'VirtualScroll']
+const HIGH_ORDER_COMPONENTS = ['AutoSizer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync']
 
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
@@ -27,7 +29,7 @@ class Application extends Component {
 
     // Support deep links to specific components
     const matches = window.location.search.match('component=(.+)')
-    const activeComponent = matches && COMPONENTS.includes(matches[1])
+    const activeComponent = matches && (COMPONENTS.includes(matches[1]) || HIGH_ORDER_COMPONENTS.includes(matches[1]))
       ? matches[1]
       : 'VirtualScroll'
 
@@ -86,11 +88,28 @@ class Application extends Component {
               />
             ))}
           </ul>
+
+          <ul className={styles.HighOrderComponentList}>
+            {HIGH_ORDER_COMPONENTS.map(component => (
+              <ComponentLink
+                key={component}
+                activeComponent={activeComponent}
+                component={component}
+                setActiveComponent={setActiveComponent}
+              />
+            ))}
+          </ul>
         </div>
 
         <div className={styles.row}>
           {activeComponent === 'AutoSizer' &&
             <AutoSizerExample
+              className={styles.column}
+              list={list}
+            />
+          }
+          {activeComponent === 'ColumnSizer' &&
+            <ColumnSizerExample
               className={styles.column}
               list={list}
             />

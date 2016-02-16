@@ -62,14 +62,20 @@ a {
   text-align: center;
 }
 
-.ComponentList {
+.ComponentList,
+.HighOrderComponentList {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+.ComponentList {
   background-color: #272727;
+}
+.HighOrderComponentList {
+  background-color: #111;
 }
 
 .demo {
