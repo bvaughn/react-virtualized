@@ -1,6 +1,6 @@
 !function(root, factory) {
     "object" == typeof exports && "object" == typeof module ? module.exports = factory(require("react"), require("react-dom")) : "function" == typeof define && define.amd ? define([ "react", "react-dom" ], factory) : "object" == typeof exports ? exports.ReactVirtualized = factory(require("react"), require("react-dom")) : root.ReactVirtualized = factory(root.React, root.ReactDOM);
-}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_11__) {
+}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_21__) {
     /******/
     return function(modules) {
         /******/
@@ -79,7 +79,14 @@
                 return _AutoSizer.AutoSizer;
             }
         });
-        var _FlexTable = __webpack_require__(7);
+        var _ColumnSizer = __webpack_require__(7);
+        Object.defineProperty(exports, "ColumnSizer", {
+            enumerable: !0,
+            get: function() {
+                return _ColumnSizer.ColumnSizer;
+            }
+        });
+        var _FlexTable = __webpack_require__(18);
         Object.defineProperty(exports, "FlexTable", {
             enumerable: !0,
             get: function() {
@@ -101,28 +108,28 @@
                 return _FlexTable.SortIndicator;
             }
         });
-        var _Grid = __webpack_require__(12);
+        var _Grid = __webpack_require__(9);
         Object.defineProperty(exports, "Grid", {
             enumerable: !0,
             get: function() {
                 return _Grid.Grid;
             }
         });
-        var _InfiniteLoader = __webpack_require__(20);
+        var _InfiniteLoader = __webpack_require__(22);
         Object.defineProperty(exports, "InfiniteLoader", {
             enumerable: !0,
             get: function() {
                 return _InfiniteLoader.InfiniteLoader;
             }
         });
-        var _ScrollSync = __webpack_require__(22);
+        var _ScrollSync = __webpack_require__(24);
         Object.defineProperty(exports, "ScrollSync", {
             enumerable: !0,
             get: function() {
                 return _ScrollSync.ScrollSync;
             }
         });
-        var _VirtualScroll = __webpack_require__(24);
+        var _VirtualScroll = __webpack_require__(26);
         Object.defineProperty(exports, "VirtualScroll", {
             enumerable: !0,
             get: function() {
@@ -389,22 +396,10 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _FlexTable2 = __webpack_require__(8), _FlexTable3 = _interopRequireDefault(_FlexTable2);
-        exports["default"] = _FlexTable3["default"];
-        var _FlexTable4 = _interopRequireDefault(_FlexTable2);
-        exports.FlexTable = _FlexTable4["default"], Object.defineProperty(exports, "SortDirection", {
-            enumerable: !0,
-            get: function() {
-                return _FlexTable2.SortDirection;
-            }
-        }), Object.defineProperty(exports, "SortIndicator", {
-            enumerable: !0,
-            get: function() {
-                return _FlexTable2.SortIndicator;
-            }
-        });
-        var _FlexColumn2 = __webpack_require__(10), _FlexColumn3 = _interopRequireDefault(_FlexColumn2);
-        exports.FlexColumn = _FlexColumn3["default"];
+        var _ColumnSizer2 = __webpack_require__(8), _ColumnSizer3 = _interopRequireDefault(_ColumnSizer2);
+        exports["default"] = _ColumnSizer3["default"];
+        var _ColumnSizer4 = _interopRequireDefault(_ColumnSizer2);
+        exports.ColumnSizer = _ColumnSizer4["default"];
     }, /* 8 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -428,26 +423,6 @@
                 }
             }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
         }
-        function SortIndicator(_ref4) {
-            var sortDirection = _ref4.sortDirection, classNames = (0, _classnames2["default"])("FlexTable__sortableHeaderIcon", {
-                "FlexTable__sortableHeaderIcon--ASC": sortDirection === SortDirection.ASC,
-                "FlexTable__sortableHeaderIcon--DESC": sortDirection === SortDirection.DESC
-            });
-            return _react2["default"].createElement("svg", {
-                className: classNames,
-                width: 18,
-                height: 18,
-                viewBox: "0 0 24 24",
-                xmlns: "http://www.w3.org/2000/svg"
-            }, sortDirection === SortDirection.ASC ? _react2["default"].createElement("path", {
-                d: "M7 14l5-5 5 5z"
-            }) : _react2["default"].createElement("path", {
-                d: "M7 10l5 5 5-5z"
-            }), _react2["default"].createElement("path", {
-                d: "M0 0h24v24H0z",
-                fill: "none"
-            }));
-        }
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
@@ -478,466 +453,65 @@
                 if (null === parent) return;
                 _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
             }
-        };
-        exports.SortIndicator = SortIndicator;
-        var _classnames = __webpack_require__(9), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(10), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(11), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _Grid = __webpack_require__(12), _Grid2 = _interopRequireDefault(_Grid), SortDirection = {
-            /**
-	   * Sort items in ascending order.
-	   * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
-	   */
-            ASC: "ASC",
-            /**
-	   * Sort items in descending order.
-	   * This means arranging from the highest value to the lowest (e.g. z-a, 9-0).
-	   */
-            DESC: "DESC"
-        };
-        exports.SortDirection = SortDirection;
-        /**
-	 * Table component with fixed headers and virtualized rows for improved performance with large data sets.
-	 * This component expects explicit width, height, and padding parameters.
-	 */
-        var FlexTable = function(_Component) {
-            function FlexTable(props) {
-                _classCallCheck(this, FlexTable), _get(Object.getPrototypeOf(FlexTable.prototype), "constructor", this).call(this, props), 
-                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
-                    scrollbarWidth: 0
-                }, this._createRow = this._createRow.bind(this);
+        }, _react = __webpack_require__(3), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = function(_Component) {
+            function ColumnSizer(props, context) {
+                _classCallCheck(this, ColumnSizer), _get(Object.getPrototypeOf(ColumnSizer.prototype), "constructor", this).call(this, props, context), 
+                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this._registerChild = this._registerChild.bind(this);
             }
-            /**
-	   * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
-	   */
-            /**
-	   * See Grid#recomputeGridSize
-	   */
-            return _inherits(FlexTable, _Component), _createClass(FlexTable, null, [ {
+            return _inherits(ColumnSizer, _Component), _createClass(ColumnSizer, null, [ {
                 key: "propTypes",
                 value: {
-                    /** One or more FlexColumns describing the data displayed in this row */
-                    children: function children(props, propName, componentName) {
-                        for (var children = _react2["default"].Children.toArray(props.children), i = 0; i < children.length; i++) if (children[i].type !== _FlexColumn2["default"]) return new Error("FlexTable only accepts children of type FlexColumn");
-                    },
-                    /** Optional CSS class name */
-                    className: _react.PropTypes.string,
-                    /** Disable rendering the header at all */
-                    disableHeader: _react.PropTypes.bool,
-                    /** Optional CSS class to apply to all column headers */
-                    headerClassName: _react.PropTypes.string,
-                    /** Fixed height of header row */
-                    headerHeight: _react.PropTypes.number.isRequired,
-                    /** Fixed/available height for out DOM element */
-                    height: _react.PropTypes.number.isRequired,
-                    /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
-                    noRowsRenderer: _react.PropTypes.func,
                     /**
-	      * Optional callback when a column's header is clicked.
-	      * (dataKey: string): void
-	      */
-                    onHeaderClick: _react.PropTypes.func,
-                    /**
-	       * Callback invoked when a user clicks on a table row.
-	       * (rowIndex: number): void
+	       * Function respondible for rendering a virtualized Grid.
+	       * This function should implement the following signature:
+	       * ({ adjustedWidth, getColumnWidth, registerChild }) => PropTypes.element
+	       *
+	       * The specified :getColumnWidth function should be passed to the Grid's :columnWidth property.
+	       * The :registerChild should be passed to the Grid's :ref property.
+	       * The :adjustedWidth property is optional; it reflects the lesser of the overall width or the width of all columns.
 	       */
-                    onRowClick: _react.PropTypes.func,
-                    /**
-	       * Callback invoked with information about the slice of rows that were just rendered.
-	       * ({ startIndex, stopIndex }): void
-	       */
-                    onRowsRendered: _react.PropTypes.func,
-                    /**
-	       * Callback invoked whenever the scroll offset changes within the inner scrollable region.
-	       * This callback can be used to sync scrolling between lists, tables, or grids.
-	       * ({ clientHeight, scrollHeight, scrollTop }): void
-	       */
-                    onScroll: _react.PropTypes.func.isRequired,
-                    /**
-	       * Number of rows to render above/below the visible bounds of the list.
-	       * These rows can help for smoother scrolling on touch devices.
-	       */
-                    overscanRowsCount: _react.PropTypes.number.isRequired,
-                    /**
-	       * Optional CSS class to apply to all table rows (including the header row).
-	       * This property can be a CSS class name (string) or a function that returns a class name.
-	       * If a function is provided its signature should be: (rowIndex: number): string
-	       */
-                    rowClassName: _react.PropTypes.oneOfType([ _react.PropTypes.string, _react.PropTypes.func ]),
-                    /**
-	       * Callback responsible for returning a data row given an index.
-	       * (index: number): any
-	       */
-                    rowGetter: _react.PropTypes.func.isRequired,
-                    /**
-	       * Either a fixed row height (number) or a function that returns the height of a row given its index.
-	       * (index: number): number
-	       */
-                    rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
-                    /** Number of rows in table. */
-                    rowsCount: _react.PropTypes.number.isRequired,
-                    /** Row index to ensure visible (by forcefully scrolling if necessary) */
-                    scrollToIndex: _react.PropTypes.number,
-                    /** Vertical offset. */
-                    scrollTop: _react.PropTypes.number,
-                    /**
-	       * Sort function to be called if a sortable header is clicked.
-	       * (dataKey: string, sortDirection: SortDirection): void
-	       */
-                    sort: _react.PropTypes.func,
-                    /** FlexTable data is currently sorted by this :dataKey (if it is sorted at all) */
-                    sortBy: _react.PropTypes.string,
-                    /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
-                    sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ]),
-                    /** Width of list */
+                    children: _react.PropTypes.func.isRequired,
+                    /** Optional maximum allowed column width */
+                    columnMaxWidth: _react.PropTypes.number,
+                    /** Optional minimum allowed column width */
+                    columnMinWidth: _react.PropTypes.number,
+                    /** Number of columns in Grid or FlexTable child */
+                    columnsCount: _react.PropTypes.number.isRequired,
+                    /** Width of Grid or FlexTable child */
                     width: _react.PropTypes.number.isRequired
                 },
                 enumerable: !0
-            }, {
-                key: "defaultProps",
-                value: {
-                    disableHeader: !1,
-                    headerHeight: 0,
-                    noRowsRenderer: function() {
-                        return null;
-                    },
-                    onHeaderClick: function() {
-                        return null;
-                    },
-                    onRowClick: function() {
-                        return null;
-                    },
-                    onRowsRendered: function() {
-                        return null;
-                    },
-                    onScroll: function() {
-                        return null;
-                    },
-                    overscanRowsCount: 10
-                },
-                enumerable: !0
-            } ]), _createClass(FlexTable, [ {
-                key: "recomputeRowHeights",
-                value: function() {
-                    this.refs.Grid.recomputeGridSize();
-                }
-            }, {
-                key: "scrollToRow",
-                value: function(scrollToIndex) {
-                    this.refs.Grid.scrollToCell({
-                        scrollToColumn: 0,
-                        scrollToRow: scrollToIndex
-                    });
-                }
-            }, {
-                key: "setScrollTop",
-                value: function(scrollTop) {
-                    this.refs.Grid.setScrollPosition({
-                        scrollLeft: 0,
-                        scrollTop: scrollTop
-                    });
-                }
-            }, {
-                key: "componentDidMount",
-                value: function() {
-                    var scrollTop = this.props.scrollTop;
-                    scrollTop >= 0 && this.setScrollTop(scrollTop), this._setScrollbarWidth();
-                }
-            }, {
+            } ]), _createClass(ColumnSizer, [ {
                 key: "componentDidUpdate",
-                value: function() {
-                    this._setScrollbarWidth();
-                }
-            }, {
-                key: "componentWillUpdate",
-                value: function(nextProps, nextState) {
-                    nextProps.scrollTop !== this.props.scrollTop && this.setScrollTop(nextProps.scrollTop);
+                value: function(prevProps, prevState) {
+                    var _props = this.props, columnMaxWidth = _props.columnMaxWidth, columnMinWidth = _props.columnMinWidth, columnsCount = _props.columnsCount, width = _props.width;
+                    (columnMaxWidth !== prevProps.columnMaxWidth || columnMinWidth !== prevProps.columnMinWidth || columnsCount !== prevProps.columnsCount || width !== prevProps.width) && this._registeredChild && this._registeredChild.recomputeGridSize();
                 }
             }, {
                 key: "render",
                 value: function() {
-                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, onScroll = _props.onScroll, overscanRowsCount = _props.overscanRowsCount, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, width = _props.width, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = height - headerHeight, rowRenderer = function(index) {
-                        return _this._createRow(index);
-                    }, rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
-                    return _react2["default"].createElement("div", {
-                        className: (0, _classnames2["default"])("FlexTable", className)
-                    }, !disableHeader && _react2["default"].createElement("div", {
-                        className: (0, _classnames2["default"])("FlexTable__headerRow", rowClass),
-                        style: {
-                            height: headerHeight,
-                            paddingRight: scrollbarWidth,
-                            width: width
-                        }
-                    }, this._getRenderedHeaderRow()), _react2["default"].createElement(_Grid2["default"], {
-                        ref: "Grid",
-                        className: "FlexTable__Grid",
-                        columnWidth: width,
-                        columnsCount: 1,
-                        height: availableRowsHeight,
-                        noContentRenderer: noRowsRenderer,
-                        onScroll: function(_ref) {
-                            var clientHeight = _ref.clientHeight, scrollHeight = _ref.scrollHeight, scrollTop = _ref.scrollTop;
-                            return onScroll({
-                                clientHeight: clientHeight,
-                                scrollHeight: scrollHeight,
-                                scrollTop: scrollTop
-                            });
+                    var _props2 = this.props, children = _props2.children, columnMaxWidth = _props2.columnMaxWidth, columnMinWidth = _props2.columnMinWidth, columnsCount = _props2.columnsCount, width = _props2.width, safeColumnMinWidth = columnMinWidth || 1, safeColumnMaxWidth = columnMaxWidth ? Math.min(columnMaxWidth, width) : width, columnWidth = width / columnsCount;
+                    columnWidth = Math.max(safeColumnMinWidth, columnWidth), columnWidth = Math.min(safeColumnMaxWidth, columnWidth), 
+                    columnWidth = Math.floor(columnWidth);
+                    var adjustedWidth = Math.min(width, columnWidth * columnsCount);
+                    return children({
+                        adjustedWidth: adjustedWidth,
+                        getColumnWidth: function() {
+                            return columnWidth;
                         },
-                        onSectionRendered: function(_ref2) {
-                            var rowOverscanStartIndex = _ref2.rowOverscanStartIndex, rowOverscanStopIndex = _ref2.rowOverscanStopIndex, rowStartIndex = _ref2.rowStartIndex, rowStopIndex = _ref2.rowStopIndex;
-                            return onRowsRendered({
-                                overscanStartIndex: rowOverscanStartIndex,
-                                overscanStopIndex: rowOverscanStopIndex,
-                                startIndex: rowStartIndex,
-                                stopIndex: rowStopIndex
-                            });
-                        },
-                        overscanRowsCount: overscanRowsCount,
-                        renderCell: function(_ref3) {
-                            var rowIndex = (_ref3.columnIndex, _ref3.rowIndex);
-                            return rowRenderer(rowIndex);
-                        },
-                        rowHeight: rowHeight,
-                        rowsCount: rowsCount,
-                        scrollToRow: scrollToIndex,
-                        width: width
-                    }));
-                }
-            }, {
-                key: "_createColumn",
-                value: function(column, columnIndex, rowData, rowIndex) {
-                    var _column$props = column.props, cellClassName = _column$props.cellClassName, cellDataGetter = _column$props.cellDataGetter, columnData = _column$props.columnData, dataKey = _column$props.dataKey, cellRenderer = _column$props.cellRenderer, cellData = cellDataGetter(dataKey, rowData, columnData), renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData), style = this._getFlexStyleForColumn(column), title = "string" == typeof renderedCell ? renderedCell : null;
-                    return _react2["default"].createElement("div", {
-                        key: "Row" + rowIndex + "-Col" + columnIndex,
-                        className: (0, _classnames2["default"])("FlexTable__rowColumn", cellClassName),
-                        style: style
-                    }, _react2["default"].createElement("div", {
-                        className: "FlexTable__truncatedColumnText",
-                        title: title
-                    }, renderedCell));
-                }
-            }, {
-                key: "_createHeader",
-                value: function(column, columnIndex) {
-                    var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, columnData = _column$props2.columnData, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, classNames = (0, 
-                    _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
-                        FlexTable__sortableHeaderColumn: sortEnabled
-                    }), style = this._getFlexStyleForColumn(column), newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC, onClick = function() {
-                        sortEnabled && sort(dataKey, newSortDirection), onHeaderClick(dataKey, columnData);
-                    };
-                    return _react2["default"].createElement("div", {
-                        key: "Header-Col" + columnIndex,
-                        className: classNames,
-                        style: style,
-                        onClick: onClick
-                    }, _react2["default"].createElement("div", {
-                        className: "FlexTable__headerTruncatedText",
-                        title: label
-                    }, label), showSortIndicator && _react2["default"].createElement(SortIndicator, {
-                        sortDirection: sortDirection
-                    }));
-                }
-            }, {
-                key: "_createRow",
-                value: function(rowIndex) {
-                    var _this2 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, scrollbarWidth = this.state.scrollbarWidth, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
-                        return _this2._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
-                    });
-                    return _react2["default"].createElement("div", {
-                        key: rowIndex,
-                        className: (0, _classnames2["default"])("FlexTable__row", rowClass),
-                        onClick: function() {
-                            return onRowClick(rowIndex);
-                        },
-                        style: {
-                            height: this._getRowHeight(rowIndex),
-                            paddingRight: scrollbarWidth
-                        }
-                    }, renderedRow);
-                }
-            }, {
-                key: "_getFlexStyleForColumn",
-                value: function(column) {
-                    var flex = [];
-                    flex.push(column.props.flexGrow), flex.push(column.props.flexShrink), flex.push(column.props.width ? column.props.width + "px" : "auto");
-                    var flexValue = flex.join(" ");
-                    return {
-                        flex: flexValue,
-                        msFlex: flexValue,
-                        WebkitFlex: flexValue
-                    };
-                }
-            }, {
-                key: "_getRenderedHeaderRow",
-                value: function() {
-                    var _this3 = this, _props4 = this.props, children = _props4.children, disableHeader = _props4.disableHeader, items = disableHeader ? [] : children;
-                    return _react2["default"].Children.map(items, function(column, columnIndex) {
-                        return _this3._createHeader(column, columnIndex);
+                        registerChild: this._registerChild
                     });
                 }
             }, {
-                key: "_getRowHeight",
-                value: function(rowIndex) {
-                    var rowHeight = this.props.rowHeight;
-                    return rowHeight instanceof Function ? rowHeight(rowIndex) : rowHeight;
+                key: "_registerChild",
+                value: function(child) {
+                    if (null !== child && !(child instanceof _Grid2["default"])) throw Error("Unexpected child type registered; only Grid children are supported.");
+                    this._registeredChild = child, this._registeredChild && this._registeredChild.recomputeGridSize();
                 }
-            }, {
-                key: "_setScrollbarWidth",
-                value: function() {
-                    var Grid = (0, _reactDom.findDOMNode)(this.refs.Grid), clientWidth = Grid.clientWidth || 0, offsetWidth = Grid.offsetWidth || 0, scrollbarWidth = offsetWidth - clientWidth;
-                    this.setState({
-                        scrollbarWidth: scrollbarWidth
-                    });
-                }
-            } ]), FlexTable;
+            } ]), ColumnSizer;
         }(_react.Component);
-        exports["default"] = FlexTable, SortIndicator.propTypes = {
-            sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ])
-        };
+        exports["default"] = ColumnSizer, module.exports = exports["default"];
     }, /* 9 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
-        /*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-        /* global define */
-        !function() {
-            "use strict";
-            function classNames() {
-                for (var classes = [], i = 0; i < arguments.length; i++) {
-                    var arg = arguments[i];
-                    if (arg) {
-                        var argType = typeof arg;
-                        if ("string" === argType || "number" === argType) classes.push(arg); else if (Array.isArray(arg)) classes.push(classNames.apply(null, arg)); else if ("object" === argType) for (var key in arg) hasOwn.call(arg, key) && arg[key] && classes.push(key);
-                    }
-                }
-                return classes.join(" ");
-            }
-            var hasOwn = {}.hasOwnProperty;
-            "undefined" != typeof module && module.exports ? module.exports = classNames : (__WEBPACK_AMD_DEFINE_ARRAY__ = [], 
-            __WEBPACK_AMD_DEFINE_RESULT__ = function() {
-                return classNames;
-            }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), !(void 0 !== __WEBPACK_AMD_DEFINE_RESULT__ && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)));
-        }();
-    }, /* 10 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        "use strict";
-        function _classCallCheck(instance, Constructor) {
-            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
-        }
-        function _inherits(subClass, superClass) {
-            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-            subClass.prototype = Object.create(superClass && superClass.prototype, {
-                constructor: {
-                    value: subClass,
-                    enumerable: !1,
-                    writable: !0,
-                    configurable: !0
-                }
-            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
-        }
-        /**
-	 * Default cell renderer that displays an attribute as a simple string
-	 * You should override the column's cellRenderer if your data is some other type of object.
-	 */
-        function defaultCellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
-            return null === cellData || void 0 === cellData ? "" : String(cellData);
-        }
-        /**
-	 * Default accessor for returning a cell value for a given attribute.
-	 * This function expects to operate on either a vanilla Object or an Immutable Map.
-	 * You should override the column's cellDataGetter if your data is some other type of object.
-	 */
-        function defaultCellDataGetter(dataKey, rowData, columnData) {
-            return rowData.get instanceof Function ? rowData.get(dataKey) : rowData[dataKey];
-        }
-        Object.defineProperty(exports, "__esModule", {
-            value: !0
-        });
-        var _createClass = function() {
-            function defineProperties(target, props) {
-                for (var i = 0; i < props.length; i++) {
-                    var descriptor = props[i];
-                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
-                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
-                }
-            }
-            return function(Constructor, protoProps, staticProps) {
-                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
-                Constructor;
-            };
-        }(), _get = function(_x, _x2, _x3) {
-            for (var _again = !0; _again; ) {
-                var object = _x, property = _x2, receiver = _x3;
-                _again = !1, null === object && (object = Function.prototype);
-                var desc = Object.getOwnPropertyDescriptor(object, property);
-                if (void 0 !== desc) {
-                    if ("value" in desc) return desc.value;
-                    var getter = desc.get;
-                    if (void 0 === getter) return;
-                    return getter.call(receiver);
-                }
-                var parent = Object.getPrototypeOf(object);
-                if (null === parent) return;
-                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
-            }
-        };
-        exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter;
-        var _react = __webpack_require__(3), Column = function(_Component) {
-            function Column() {
-                _classCallCheck(this, Column), _get(Object.getPrototypeOf(Column.prototype), "constructor", this).apply(this, arguments);
-            }
-            return _inherits(Column, _Component), _createClass(Column, null, [ {
-                key: "defaultProps",
-                value: {
-                    cellDataGetter: defaultCellDataGetter,
-                    cellRenderer: defaultCellRenderer,
-                    flexGrow: 0,
-                    flexShrink: 1
-                },
-                enumerable: !0
-            }, {
-                key: "propTypes",
-                value: {
-                    /** Optional CSS class to apply to cell */
-                    cellClassName: _react.PropTypes.string,
-                    /**
-	       * Callback responsible for returning a cell's data, given its :dataKey
-	       * (dataKey: string, rowData: any): any
-	       */
-                    cellDataGetter: _react.PropTypes.func,
-                    /**
-	       * Callback responsible for rendering a cell's contents.
-	       * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
-	       */
-                    cellRenderer: _react.PropTypes.func,
-                    /** Optional additional data passed to this column's :cellDataGetter */
-                    columnData: _react.PropTypes.object,
-                    /** Uniquely identifies the row-data attribute correspnding to this cell */
-                    dataKey: _react.PropTypes.any.isRequired,
-                    /** If sort is enabled for the table at large, disable it for this column */
-                    disableSort: _react.PropTypes.bool,
-                    /** Flex grow style; defaults to 0 */
-                    flexGrow: _react.PropTypes.number,
-                    /** Flex shrink style; defaults to 1 */
-                    flexShrink: _react.PropTypes.number,
-                    /** Optional CSS class to apply to this column's header */
-                    headerClassName: _react.PropTypes.string,
-                    /** Header label for this column */
-                    label: _react.PropTypes.string,
-                    /** Optional fixed width for this column */
-                    width: _react.PropTypes.number
-                },
-                enumerable: !0
-            } ]), Column;
-        }(_react.Component);
-        exports["default"] = Column;
-    }, /* 11 */
-    /***/
-    function(module, exports) {
-        module.exports = __WEBPACK_EXTERNAL_MODULE_11__;
-    }, /* 12 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -949,11 +523,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _Grid2 = __webpack_require__(13), _Grid3 = _interopRequireDefault(_Grid2);
+        var _Grid2 = __webpack_require__(10), _Grid3 = _interopRequireDefault(_Grid2);
         exports["default"] = _Grid3["default"];
         var _Grid4 = _interopRequireDefault(_Grid2);
         exports.Grid = _Grid4["default"];
-    }, /* 13 */
+    }, /* 10 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -1008,7 +582,7 @@
                     if (null === parent) return;
                     _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
                 }
-            }, _utils = __webpack_require__(16), _classnames = __webpack_require__(9), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(17), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), IS_SCROLLING_TIMEOUT = 150, Grid = function(_Component) {
+            }, _utils = __webpack_require__(13), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(15), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), IS_SCROLLING_TIMEOUT = 150, Grid = function(_Component) {
                 function Grid(props, context) {
                     _classCallCheck(this, Grid), _get(Object.getPrototypeOf(Grid.prototype), "constructor", this).call(this, props, context), 
                     this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
@@ -1545,8 +1119,8 @@
                 } ]), Grid;
             }(_react.Component);
             exports["default"] = Grid, module.exports = exports["default"];
-        }).call(exports, __webpack_require__(14).setImmediate, __webpack_require__(14).clearImmediate);
-    }, /* 14 */
+        }).call(exports, __webpack_require__(11).setImmediate, __webpack_require__(11).clearImmediate);
+    }, /* 11 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -1554,7 +1128,7 @@
             function Timeout(id, clearFn) {
                 this._id = id, this._clearFn = clearFn;
             }
-            var nextTick = __webpack_require__(15).nextTick, apply = Function.prototype.apply, slice = Array.prototype.slice, immediateIds = {}, nextImmediateId = 0;
+            var nextTick = __webpack_require__(12).nextTick, apply = Function.prototype.apply, slice = Array.prototype.slice, immediateIds = {}, nextImmediateId = 0;
             // DOM APIs, for completeness
             exports.setTimeout = function() {
                 return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
@@ -1587,8 +1161,8 @@
             }, exports.clearImmediate = "function" == typeof clearImmediate ? clearImmediate : function(id) {
                 delete immediateIds[id];
             };
-        }).call(exports, __webpack_require__(14).setImmediate, __webpack_require__(14).clearImmediate);
-    }, /* 15 */
+        }).call(exports, __webpack_require__(11).setImmediate, __webpack_require__(11).clearImmediate);
+    }, /* 12 */
     /***/
     function(module, exports) {
         function cleanUpNextTick() {
@@ -1632,7 +1206,7 @@
         }, process.umask = function() {
             return 0;
         };
-    }, /* 16 */
+    }, /* 13 */
     /***/
     function(module, exports) {
         /**
@@ -1795,10 +1369,38 @@
         exports.getVisibleCellIndices = getVisibleCellIndices, exports.initCellMetadata = initCellMetadata, 
         exports.updateScrollIndexHelper = updateScrollIndexHelper, findNearestCell.EQUAL_OR_LOWER = 1, 
         findNearestCell.EQUAL_OR_HIGHER = 2;
-    }, /* 17 */
+    }, /* 14 */
     /***/
     function(module, exports, __webpack_require__) {
-        for (var now = __webpack_require__(18), global = "undefined" == typeof window ? {} : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = global["request" + suffix], caf = global["cancel" + suffix] || global["cancelRequest" + suffix], i = 0; i < vendors.length && !raf; i++) raf = global[vendors[i] + "Request" + suffix], 
+        var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+        /*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+        /* global define */
+        !function() {
+            "use strict";
+            function classNames() {
+                for (var classes = [], i = 0; i < arguments.length; i++) {
+                    var arg = arguments[i];
+                    if (arg) {
+                        var argType = typeof arg;
+                        if ("string" === argType || "number" === argType) classes.push(arg); else if (Array.isArray(arg)) classes.push(classNames.apply(null, arg)); else if ("object" === argType) for (var key in arg) hasOwn.call(arg, key) && arg[key] && classes.push(key);
+                    }
+                }
+                return classes.join(" ");
+            }
+            var hasOwn = {}.hasOwnProperty;
+            "undefined" != typeof module && module.exports ? module.exports = classNames : (__WEBPACK_AMD_DEFINE_ARRAY__ = [], 
+            __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+                return classNames;
+            }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), !(void 0 !== __WEBPACK_AMD_DEFINE_RESULT__ && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)));
+        }();
+    }, /* 15 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        for (var now = __webpack_require__(16), global = "undefined" == typeof window ? {} : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = global["request" + suffix], caf = global["cancel" + suffix] || global["cancelRequest" + suffix], i = 0; i < vendors.length && !raf; i++) raf = global[vendors[i] + "Request" + suffix], 
         caf = global[vendors[i] + "Cancel" + suffix] || global[vendors[i] + "CancelRequest" + suffix];
         // Some versions of FF have rAF but not cAF
         if (!raf || !caf) {
@@ -1838,7 +1440,7 @@
         }, module.exports.cancel = function() {
             caf.apply(global, arguments);
         };
-    }, /* 18 */
+    }, /* 16 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -1859,8 +1461,8 @@
                     return new Date().getTime() - loadTime;
                 }, loadTime = new Date().getTime());
             }).call(this);
-        }).call(exports, __webpack_require__(19));
-    }, /* 19 */
+        }).call(exports, __webpack_require__(17));
+    }, /* 17 */
     /***/
     function(module, exports) {
         function cleanUpNextTick() {
@@ -1904,7 +1506,7 @@
         }, process.umask = function() {
             return 0;
         };
-    }, /* 20 */
+    }, /* 18 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1916,11 +1518,543 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _InfiniteLoader2 = __webpack_require__(21), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
+        var _FlexTable2 = __webpack_require__(19), _FlexTable3 = _interopRequireDefault(_FlexTable2);
+        exports["default"] = _FlexTable3["default"];
+        var _FlexTable4 = _interopRequireDefault(_FlexTable2);
+        exports.FlexTable = _FlexTable4["default"], Object.defineProperty(exports, "SortDirection", {
+            enumerable: !0,
+            get: function() {
+                return _FlexTable2.SortDirection;
+            }
+        }), Object.defineProperty(exports, "SortIndicator", {
+            enumerable: !0,
+            get: function() {
+                return _FlexTable2.SortIndicator;
+            }
+        });
+        var _FlexColumn2 = __webpack_require__(20), _FlexColumn3 = _interopRequireDefault(_FlexColumn2);
+        exports.FlexColumn = _FlexColumn3["default"];
+    }, /* 19 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _inherits(subClass, superClass) {
+            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+            subClass.prototype = Object.create(superClass && superClass.prototype, {
+                constructor: {
+                    value: subClass,
+                    enumerable: !1,
+                    writable: !0,
+                    configurable: !0
+                }
+            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
+        }
+        function SortIndicator(_ref4) {
+            var sortDirection = _ref4.sortDirection, classNames = (0, _classnames2["default"])("FlexTable__sortableHeaderIcon", {
+                "FlexTable__sortableHeaderIcon--ASC": sortDirection === SortDirection.ASC,
+                "FlexTable__sortableHeaderIcon--DESC": sortDirection === SortDirection.DESC
+            });
+            return _react2["default"].createElement("svg", {
+                className: classNames,
+                width: 18,
+                height: 18,
+                viewBox: "0 0 24 24",
+                xmlns: "http://www.w3.org/2000/svg"
+            }, sortDirection === SortDirection.ASC ? _react2["default"].createElement("path", {
+                d: "M7 14l5-5 5 5z"
+            }) : _react2["default"].createElement("path", {
+                d: "M7 10l5 5 5-5z"
+            }), _react2["default"].createElement("path", {
+                d: "M0 0h24v24H0z",
+                fill: "none"
+            }));
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), _get = function(_x, _x2, _x3) {
+            for (var _again = !0; _again; ) {
+                var object = _x, property = _x2, receiver = _x3;
+                _again = !1, null === object && (object = Function.prototype);
+                var desc = Object.getOwnPropertyDescriptor(object, property);
+                if (void 0 !== desc) {
+                    if ("value" in desc) return desc.value;
+                    var getter = desc.get;
+                    if (void 0 === getter) return;
+                    return getter.call(receiver);
+                }
+                var parent = Object.getPrototypeOf(object);
+                if (null === parent) return;
+                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
+            }
+        };
+        exports.SortIndicator = SortIndicator;
+        var _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(20), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(21), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), SortDirection = {
+            /**
+	   * Sort items in ascending order.
+	   * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
+	   */
+            ASC: "ASC",
+            /**
+	   * Sort items in descending order.
+	   * This means arranging from the highest value to the lowest (e.g. z-a, 9-0).
+	   */
+            DESC: "DESC"
+        };
+        exports.SortDirection = SortDirection;
+        /**
+	 * Table component with fixed headers and virtualized rows for improved performance with large data sets.
+	 * This component expects explicit width, height, and padding parameters.
+	 */
+        var FlexTable = function(_Component) {
+            function FlexTable(props) {
+                _classCallCheck(this, FlexTable), _get(Object.getPrototypeOf(FlexTable.prototype), "constructor", this).call(this, props), 
+                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
+                    scrollbarWidth: 0
+                }, this._createRow = this._createRow.bind(this);
+            }
+            /**
+	   * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
+	   */
+            /**
+	   * See Grid#recomputeGridSize
+	   */
+            return _inherits(FlexTable, _Component), _createClass(FlexTable, null, [ {
+                key: "propTypes",
+                value: {
+                    /** One or more FlexColumns describing the data displayed in this row */
+                    children: function children(props, propName, componentName) {
+                        for (var children = _react2["default"].Children.toArray(props.children), i = 0; i < children.length; i++) if (children[i].type !== _FlexColumn2["default"]) return new Error("FlexTable only accepts children of type FlexColumn");
+                    },
+                    /** Optional CSS class name */
+                    className: _react.PropTypes.string,
+                    /** Disable rendering the header at all */
+                    disableHeader: _react.PropTypes.bool,
+                    /** Optional CSS class to apply to all column headers */
+                    headerClassName: _react.PropTypes.string,
+                    /** Fixed height of header row */
+                    headerHeight: _react.PropTypes.number.isRequired,
+                    /** Fixed/available height for out DOM element */
+                    height: _react.PropTypes.number.isRequired,
+                    /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
+                    noRowsRenderer: _react.PropTypes.func,
+                    /**
+	      * Optional callback when a column's header is clicked.
+	      * (dataKey: string): void
+	      */
+                    onHeaderClick: _react.PropTypes.func,
+                    /**
+	       * Callback invoked when a user clicks on a table row.
+	       * (rowIndex: number): void
+	       */
+                    onRowClick: _react.PropTypes.func,
+                    /**
+	       * Callback invoked with information about the slice of rows that were just rendered.
+	       * ({ startIndex, stopIndex }): void
+	       */
+                    onRowsRendered: _react.PropTypes.func,
+                    /**
+	       * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+	       * This callback can be used to sync scrolling between lists, tables, or grids.
+	       * ({ clientHeight, scrollHeight, scrollTop }): void
+	       */
+                    onScroll: _react.PropTypes.func.isRequired,
+                    /**
+	       * Number of rows to render above/below the visible bounds of the list.
+	       * These rows can help for smoother scrolling on touch devices.
+	       */
+                    overscanRowsCount: _react.PropTypes.number.isRequired,
+                    /**
+	       * Optional CSS class to apply to all table rows (including the header row).
+	       * This property can be a CSS class name (string) or a function that returns a class name.
+	       * If a function is provided its signature should be: (rowIndex: number): string
+	       */
+                    rowClassName: _react.PropTypes.oneOfType([ _react.PropTypes.string, _react.PropTypes.func ]),
+                    /**
+	       * Callback responsible for returning a data row given an index.
+	       * (index: number): any
+	       */
+                    rowGetter: _react.PropTypes.func.isRequired,
+                    /**
+	       * Either a fixed row height (number) or a function that returns the height of a row given its index.
+	       * (index: number): number
+	       */
+                    rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
+                    /** Number of rows in table. */
+                    rowsCount: _react.PropTypes.number.isRequired,
+                    /** Row index to ensure visible (by forcefully scrolling if necessary) */
+                    scrollToIndex: _react.PropTypes.number,
+                    /** Vertical offset. */
+                    scrollTop: _react.PropTypes.number,
+                    /**
+	       * Sort function to be called if a sortable header is clicked.
+	       * (dataKey: string, sortDirection: SortDirection): void
+	       */
+                    sort: _react.PropTypes.func,
+                    /** FlexTable data is currently sorted by this :dataKey (if it is sorted at all) */
+                    sortBy: _react.PropTypes.string,
+                    /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
+                    sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ]),
+                    /** Width of list */
+                    width: _react.PropTypes.number.isRequired
+                },
+                enumerable: !0
+            }, {
+                key: "defaultProps",
+                value: {
+                    disableHeader: !1,
+                    headerHeight: 0,
+                    noRowsRenderer: function() {
+                        return null;
+                    },
+                    onHeaderClick: function() {
+                        return null;
+                    },
+                    onRowClick: function() {
+                        return null;
+                    },
+                    onRowsRendered: function() {
+                        return null;
+                    },
+                    onScroll: function() {
+                        return null;
+                    },
+                    overscanRowsCount: 10
+                },
+                enumerable: !0
+            } ]), _createClass(FlexTable, [ {
+                key: "recomputeRowHeights",
+                value: function() {
+                    this.refs.Grid.recomputeGridSize();
+                }
+            }, {
+                key: "scrollToRow",
+                value: function(scrollToIndex) {
+                    this.refs.Grid.scrollToCell({
+                        scrollToColumn: 0,
+                        scrollToRow: scrollToIndex
+                    });
+                }
+            }, {
+                key: "setScrollTop",
+                value: function(scrollTop) {
+                    this.refs.Grid.setScrollPosition({
+                        scrollLeft: 0,
+                        scrollTop: scrollTop
+                    });
+                }
+            }, {
+                key: "componentDidMount",
+                value: function() {
+                    var scrollTop = this.props.scrollTop;
+                    scrollTop >= 0 && this.setScrollTop(scrollTop), this._setScrollbarWidth();
+                }
+            }, {
+                key: "componentDidUpdate",
+                value: function() {
+                    this._setScrollbarWidth();
+                }
+            }, {
+                key: "componentWillUpdate",
+                value: function(nextProps, nextState) {
+                    nextProps.scrollTop !== this.props.scrollTop && this.setScrollTop(nextProps.scrollTop);
+                }
+            }, {
+                key: "render",
+                value: function() {
+                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, onScroll = _props.onScroll, overscanRowsCount = _props.overscanRowsCount, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, width = _props.width, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = height - headerHeight, rowRenderer = function(index) {
+                        return _this._createRow(index);
+                    }, rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
+                    return _react2["default"].createElement("div", {
+                        className: (0, _classnames2["default"])("FlexTable", className)
+                    }, !disableHeader && _react2["default"].createElement("div", {
+                        className: (0, _classnames2["default"])("FlexTable__headerRow", rowClass),
+                        style: {
+                            height: headerHeight,
+                            paddingRight: scrollbarWidth,
+                            width: width
+                        }
+                    }, this._getRenderedHeaderRow()), _react2["default"].createElement(_Grid2["default"], {
+                        ref: "Grid",
+                        className: "FlexTable__Grid",
+                        columnWidth: width,
+                        columnsCount: 1,
+                        height: availableRowsHeight,
+                        noContentRenderer: noRowsRenderer,
+                        onScroll: function(_ref) {
+                            var clientHeight = _ref.clientHeight, scrollHeight = _ref.scrollHeight, scrollTop = _ref.scrollTop;
+                            return onScroll({
+                                clientHeight: clientHeight,
+                                scrollHeight: scrollHeight,
+                                scrollTop: scrollTop
+                            });
+                        },
+                        onSectionRendered: function(_ref2) {
+                            var rowOverscanStartIndex = _ref2.rowOverscanStartIndex, rowOverscanStopIndex = _ref2.rowOverscanStopIndex, rowStartIndex = _ref2.rowStartIndex, rowStopIndex = _ref2.rowStopIndex;
+                            return onRowsRendered({
+                                overscanStartIndex: rowOverscanStartIndex,
+                                overscanStopIndex: rowOverscanStopIndex,
+                                startIndex: rowStartIndex,
+                                stopIndex: rowStopIndex
+                            });
+                        },
+                        overscanRowsCount: overscanRowsCount,
+                        renderCell: function(_ref3) {
+                            var rowIndex = (_ref3.columnIndex, _ref3.rowIndex);
+                            return rowRenderer(rowIndex);
+                        },
+                        rowHeight: rowHeight,
+                        rowsCount: rowsCount,
+                        scrollToRow: scrollToIndex,
+                        width: width
+                    }));
+                }
+            }, {
+                key: "_createColumn",
+                value: function(column, columnIndex, rowData, rowIndex) {
+                    var _column$props = column.props, cellClassName = _column$props.cellClassName, cellDataGetter = _column$props.cellDataGetter, columnData = _column$props.columnData, dataKey = _column$props.dataKey, cellRenderer = _column$props.cellRenderer, cellData = cellDataGetter(dataKey, rowData, columnData), renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData), style = this._getFlexStyleForColumn(column), title = "string" == typeof renderedCell ? renderedCell : null;
+                    return _react2["default"].createElement("div", {
+                        key: "Row" + rowIndex + "-Col" + columnIndex,
+                        className: (0, _classnames2["default"])("FlexTable__rowColumn", cellClassName),
+                        style: style
+                    }, _react2["default"].createElement("div", {
+                        className: "FlexTable__truncatedColumnText",
+                        title: title
+                    }, renderedCell));
+                }
+            }, {
+                key: "_createHeader",
+                value: function(column, columnIndex) {
+                    var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, columnData = _column$props2.columnData, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, classNames = (0, 
+                    _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
+                        FlexTable__sortableHeaderColumn: sortEnabled
+                    }), style = this._getFlexStyleForColumn(column), newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC, onClick = function() {
+                        sortEnabled && sort(dataKey, newSortDirection), onHeaderClick(dataKey, columnData);
+                    };
+                    return _react2["default"].createElement("div", {
+                        key: "Header-Col" + columnIndex,
+                        className: classNames,
+                        style: style,
+                        onClick: onClick
+                    }, _react2["default"].createElement("div", {
+                        className: "FlexTable__headerTruncatedText",
+                        title: label
+                    }, label), showSortIndicator && _react2["default"].createElement(SortIndicator, {
+                        sortDirection: sortDirection
+                    }));
+                }
+            }, {
+                key: "_createRow",
+                value: function(rowIndex) {
+                    var _this2 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, scrollbarWidth = this.state.scrollbarWidth, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
+                        return _this2._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
+                    });
+                    return _react2["default"].createElement("div", {
+                        key: rowIndex,
+                        className: (0, _classnames2["default"])("FlexTable__row", rowClass),
+                        onClick: function() {
+                            return onRowClick(rowIndex);
+                        },
+                        style: {
+                            height: this._getRowHeight(rowIndex),
+                            paddingRight: scrollbarWidth
+                        }
+                    }, renderedRow);
+                }
+            }, {
+                key: "_getFlexStyleForColumn",
+                value: function(column) {
+                    var flex = [];
+                    flex.push(column.props.flexGrow), flex.push(column.props.flexShrink), flex.push(column.props.width ? column.props.width + "px" : "auto");
+                    var flexValue = flex.join(" ");
+                    return {
+                        flex: flexValue,
+                        msFlex: flexValue,
+                        WebkitFlex: flexValue
+                    };
+                }
+            }, {
+                key: "_getRenderedHeaderRow",
+                value: function() {
+                    var _this3 = this, _props4 = this.props, children = _props4.children, disableHeader = _props4.disableHeader, items = disableHeader ? [] : children;
+                    return _react2["default"].Children.map(items, function(column, columnIndex) {
+                        return _this3._createHeader(column, columnIndex);
+                    });
+                }
+            }, {
+                key: "_getRowHeight",
+                value: function(rowIndex) {
+                    var rowHeight = this.props.rowHeight;
+                    return rowHeight instanceof Function ? rowHeight(rowIndex) : rowHeight;
+                }
+            }, {
+                key: "_setScrollbarWidth",
+                value: function() {
+                    var Grid = (0, _reactDom.findDOMNode)(this.refs.Grid), clientWidth = Grid.clientWidth || 0, offsetWidth = Grid.offsetWidth || 0, scrollbarWidth = offsetWidth - clientWidth;
+                    this.setState({
+                        scrollbarWidth: scrollbarWidth
+                    });
+                }
+            } ]), FlexTable;
+        }(_react.Component);
+        exports["default"] = FlexTable, SortIndicator.propTypes = {
+            sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ])
+        };
+    }, /* 20 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _inherits(subClass, superClass) {
+            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+            subClass.prototype = Object.create(superClass && superClass.prototype, {
+                constructor: {
+                    value: subClass,
+                    enumerable: !1,
+                    writable: !0,
+                    configurable: !0
+                }
+            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
+        }
+        /**
+	 * Default cell renderer that displays an attribute as a simple string
+	 * You should override the column's cellRenderer if your data is some other type of object.
+	 */
+        function defaultCellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
+            return null === cellData || void 0 === cellData ? "" : String(cellData);
+        }
+        /**
+	 * Default accessor for returning a cell value for a given attribute.
+	 * This function expects to operate on either a vanilla Object or an Immutable Map.
+	 * You should override the column's cellDataGetter if your data is some other type of object.
+	 */
+        function defaultCellDataGetter(dataKey, rowData, columnData) {
+            return rowData.get instanceof Function ? rowData.get(dataKey) : rowData[dataKey];
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), _get = function(_x, _x2, _x3) {
+            for (var _again = !0; _again; ) {
+                var object = _x, property = _x2, receiver = _x3;
+                _again = !1, null === object && (object = Function.prototype);
+                var desc = Object.getOwnPropertyDescriptor(object, property);
+                if (void 0 !== desc) {
+                    if ("value" in desc) return desc.value;
+                    var getter = desc.get;
+                    if (void 0 === getter) return;
+                    return getter.call(receiver);
+                }
+                var parent = Object.getPrototypeOf(object);
+                if (null === parent) return;
+                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
+            }
+        };
+        exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter;
+        var _react = __webpack_require__(3), Column = function(_Component) {
+            function Column() {
+                _classCallCheck(this, Column), _get(Object.getPrototypeOf(Column.prototype), "constructor", this).apply(this, arguments);
+            }
+            return _inherits(Column, _Component), _createClass(Column, null, [ {
+                key: "defaultProps",
+                value: {
+                    cellDataGetter: defaultCellDataGetter,
+                    cellRenderer: defaultCellRenderer,
+                    flexGrow: 0,
+                    flexShrink: 1
+                },
+                enumerable: !0
+            }, {
+                key: "propTypes",
+                value: {
+                    /** Optional CSS class to apply to cell */
+                    cellClassName: _react.PropTypes.string,
+                    /**
+	       * Callback responsible for returning a cell's data, given its :dataKey
+	       * (dataKey: string, rowData: any): any
+	       */
+                    cellDataGetter: _react.PropTypes.func,
+                    /**
+	       * Callback responsible for rendering a cell's contents.
+	       * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
+	       */
+                    cellRenderer: _react.PropTypes.func,
+                    /** Optional additional data passed to this column's :cellDataGetter */
+                    columnData: _react.PropTypes.object,
+                    /** Uniquely identifies the row-data attribute correspnding to this cell */
+                    dataKey: _react.PropTypes.any.isRequired,
+                    /** If sort is enabled for the table at large, disable it for this column */
+                    disableSort: _react.PropTypes.bool,
+                    /** Flex grow style; defaults to 0 */
+                    flexGrow: _react.PropTypes.number,
+                    /** Flex shrink style; defaults to 1 */
+                    flexShrink: _react.PropTypes.number,
+                    /** Optional CSS class to apply to this column's header */
+                    headerClassName: _react.PropTypes.string,
+                    /** Header label for this column */
+                    label: _react.PropTypes.string,
+                    /** Optional fixed width for this column */
+                    width: _react.PropTypes.number
+                },
+                enumerable: !0
+            } ]), Column;
+        }(_react.Component);
+        exports["default"] = Column;
+    }, /* 21 */
+    /***/
+    function(module, exports) {
+        module.exports = __WEBPACK_EXTERNAL_MODULE_21__;
+    }, /* 22 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _InfiniteLoader2 = __webpack_require__(23), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
         exports["default"] = _InfiniteLoader3["default"];
         var _InfiniteLoader4 = _interopRequireDefault(_InfiniteLoader2);
         exports.InfiniteLoader = _InfiniteLoader4["default"];
-    }, /* 21 */
+    }, /* 23 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -2089,7 +2223,7 @@
             } ]), InfiniteLoader;
         }(_react.Component);
         exports["default"] = InfiniteLoader;
-    }, /* 22 */
+    }, /* 24 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -2101,11 +2235,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _ScrollSync2 = __webpack_require__(23), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
+        var _ScrollSync2 = __webpack_require__(25), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
         exports["default"] = _ScrollSync3["default"];
         var _ScrollSync4 = _interopRequireDefault(_ScrollSync2);
         exports.ScrollSync = _ScrollSync4["default"];
-    }, /* 23 */
+    }, /* 25 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -2199,7 +2333,7 @@
             } ]), ScrollSync;
         }(_react.Component);
         exports["default"] = ScrollSync, module.exports = exports["default"];
-    }, /* 24 */
+    }, /* 26 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -2211,11 +2345,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _VirtualScroll2 = __webpack_require__(25), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
+        var _VirtualScroll2 = __webpack_require__(27), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
         exports["default"] = _VirtualScroll3["default"];
         var _VirtualScroll4 = _interopRequireDefault(_VirtualScroll2);
         exports.VirtualScroll = _VirtualScroll4["default"];
-    }, /* 25 */
+    }, /* 27 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -2268,7 +2402,7 @@
                 if (null === parent) return;
                 _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
             }
-        }, _Grid = __webpack_require__(12), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(9), _classnames2 = _interopRequireDefault(_classnames), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), VirtualScroll = function(_Component) {
+        }, _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), VirtualScroll = function(_Component) {
             function VirtualScroll() {
                 _classCallCheck(this, VirtualScroll), _get(Object.getPrototypeOf(VirtualScroll.prototype), "constructor", this).apply(this, arguments), 
                 this.shouldComponentUpdate = _reactPureRenderFunction2["default"];

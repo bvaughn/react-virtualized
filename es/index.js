@@ -13,6 +13,15 @@ Object.defineProperty(exports, 'AutoSizer', {
   }
 });
 
+var _ColumnSizer = require('./ColumnSizer');
+
+Object.defineProperty(exports, 'ColumnSizer', {
+  enumerable: true,
+  get: function get() {
+    return _ColumnSizer.ColumnSizer;
+  }
+});
+
 var _FlexTable = require('./FlexTable');
 
 Object.defineProperty(exports, 'FlexTable', {
