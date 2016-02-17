@@ -224,10 +224,17 @@ export default class Grid extends Component {
 
     // Make sure any changes to :scrollLeft or :scrollTop get applied
     if (
-      (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft) ||
-      (scrollTop >= 0 && scrollTop !== prevState.scrollTop)
+      scrollLeft >= 0 &&
+      scrollLeft !== prevState.scrollLeft &&
+      scrollLeft !== this.refs.scrollingContainer.scrollLeft
     ) {
       this.refs.scrollingContainer.scrollLeft = scrollLeft
+    }
+    if (
+      scrollTop >= 0 &&
+      scrollTop !== prevState.scrollTop &&
+      scrollTop !== this.refs.scrollingContainer.scrollTop
+    ) {
       this.refs.scrollingContainer.scrollTop = scrollTop
     }
 

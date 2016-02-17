@@ -735,8 +735,9 @@
                     value: function(prevProps, prevState) {
                         var _props2 = this.props, columnsCount = _props2.columnsCount, columnWidth = _props2.columnWidth, height = _props2.height, rowHeight = _props2.rowHeight, rowsCount = _props2.rowsCount, scrollToColumn = _props2.scrollToColumn, scrollToRow = _props2.scrollToRow, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollTop = _state.scrollTop;
                         // Make sure any changes to :scrollLeft or :scrollTop get applied
-                        (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft || scrollTop >= 0 && scrollTop !== prevState.scrollTop) && (this.refs.scrollingContainer.scrollLeft = scrollLeft, 
-                        this.refs.scrollingContainer.scrollTop = scrollTop), // Update scrollLeft if appropriate
+                        scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft && (this.refs.scrollingContainer.scrollLeft = scrollLeft), 
+                        scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop && (this.refs.scrollingContainer.scrollTop = scrollTop), 
+                        // Update scrollLeft if appropriate
                         (0, _utils.updateScrollIndexHelper)({
                             cellsCount: columnsCount,
                             cellMetadata: this._columnMetadata,
