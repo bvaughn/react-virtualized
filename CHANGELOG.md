@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 5.1.1
+Marked `FlexColumn` `width` property as required since ommitting this property can lead to uneven column layouts.
+
 ### 5.1.0
 Added `ColumnSizer` high-order component for auto-calculating column widths for `Grid` cells.
 

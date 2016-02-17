@@ -475,12 +475,7 @@ var FlexTable = (function (_Component) {
   }, {
     key: '_getFlexStyleForColumn',
     value: function _getFlexStyleForColumn(column) {
-      var flex = [];
-      flex.push(column.props.flexGrow);
-      flex.push(column.props.flexShrink);
-      flex.push(column.props.width ? column.props.width + 'px' : 'auto');
-
-      var flexValue = flex.join(' ');
+      var flexValue = column.props.flexGrow + ' ' + column.props.flexShrink + ' ' + column.props.width + 'px';
 
       return {
         flex: flexValue,

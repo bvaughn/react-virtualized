@@ -1400,46 +1400,53 @@
     }, /* 15 */
     /***/
     function(module, exports, __webpack_require__) {
-        for (var now = __webpack_require__(16), global = "undefined" == typeof window ? {} : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = global["request" + suffix], caf = global["cancel" + suffix] || global["cancelRequest" + suffix], i = 0; i < vendors.length && !raf; i++) raf = global[vendors[i] + "Request" + suffix], 
-        caf = global[vendors[i] + "Cancel" + suffix] || global[vendors[i] + "CancelRequest" + suffix];
-        // Some versions of FF have rAF but not cAF
-        if (!raf || !caf) {
-            var last = 0, id = 0, queue = [], frameDuration = 1e3 / 60;
-            raf = function(callback) {
-                if (0 === queue.length) {
-                    var _now = now(), next = Math.max(0, frameDuration - (_now - last));
-                    last = next + _now, setTimeout(function() {
-                        var cp = queue.slice(0);
-                        // Clear queue here to prevent
-                        // callbacks from appending listeners
-                        // to the current frame's queue
-                        queue.length = 0;
-                        for (var i = 0; i < cp.length; i++) if (!cp[i].cancelled) try {
-                            cp[i].callback(last);
-                        } catch (e) {
-                            setTimeout(function() {
-                                throw e;
-                            }, 0);
-                        }
-                    }, Math.round(next));
-                }
-                return queue.push({
-                    handle: ++id,
-                    callback: callback,
-                    cancelled: !1
-                }), id;
-            }, caf = function(handle) {
-                for (var i = 0; i < queue.length; i++) queue[i].handle === handle && (queue[i].cancelled = !0);
+        /* WEBPACK VAR INJECTION */
+        (function(global) {
+            for (var now = __webpack_require__(16), root = "undefined" == typeof window ? global : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = root["request" + suffix], caf = root["cancel" + suffix] || root["cancelRequest" + suffix], i = 0; !raf && i < vendors.length; i++) raf = root[vendors[i] + "Request" + suffix], 
+            caf = root[vendors[i] + "Cancel" + suffix] || root[vendors[i] + "CancelRequest" + suffix];
+            // Some versions of FF have rAF but not cAF
+            if (!raf || !caf) {
+                var last = 0, id = 0, queue = [], frameDuration = 1e3 / 60;
+                raf = function(callback) {
+                    if (0 === queue.length) {
+                        var _now = now(), next = Math.max(0, frameDuration - (_now - last));
+                        last = next + _now, setTimeout(function() {
+                            var cp = queue.slice(0);
+                            // Clear queue here to prevent
+                            // callbacks from appending listeners
+                            // to the current frame's queue
+                            queue.length = 0;
+                            for (var i = 0; i < cp.length; i++) if (!cp[i].cancelled) try {
+                                cp[i].callback(last);
+                            } catch (e) {
+                                setTimeout(function() {
+                                    throw e;
+                                }, 0);
+                            }
+                        }, Math.round(next));
+                    }
+                    return queue.push({
+                        handle: ++id,
+                        callback: callback,
+                        cancelled: !1
+                    }), id;
+                }, caf = function(handle) {
+                    for (var i = 0; i < queue.length; i++) queue[i].handle === handle && (queue[i].cancelled = !0);
+                };
+            }
+            module.exports = function(fn) {
+                // Wrap in a new function to prevent
+                // `cancel` potentially being assigned
+                // to the native rAF function
+                return raf.call(root, fn);
+            }, module.exports.cancel = function() {
+                caf.apply(root, arguments);
+            }, module.exports.polyfill = function() {
+                root.requestAnimationFrame = raf, root.cancelAnimationFrame = caf;
             };
-        }
-        module.exports = function(fn) {
-            // Wrap in a new function to prevent
-            // `cancel` potentially being assigned
-            // to the native rAF function
-            return raf.call(global, fn);
-        }, module.exports.cancel = function() {
-            caf.apply(global, arguments);
-        };
+        }).call(exports, function() {
+            return this;
+        }());
     }, /* 16 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -1884,9 +1891,7 @@
             }, {
                 key: "_getFlexStyleForColumn",
                 value: function(column) {
-                    var flex = [];
-                    flex.push(column.props.flexGrow), flex.push(column.props.flexShrink), flex.push(column.props.width ? column.props.width + "px" : "auto");
-                    var flexValue = flex.join(" ");
+                    var flexValue = column.props.flexGrow + " " + column.props.flexShrink + " " + column.props.width + "px";
                     return {
                         flex: flexValue,
                         msFlex: flexValue,
@@ -2028,7 +2033,7 @@
                     /** Header label for this column */
                     label: _react.PropTypes.string,
                     /** Optional fixed width for this column */
-                    width: _react.PropTypes.number
+                    width: _react.PropTypes.number.isRequired
                 },
                 enumerable: !0
             } ]), Column;

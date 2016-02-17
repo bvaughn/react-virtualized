@@ -96,7 +96,7 @@ var Column = (function (_Component) {
       /** Header label for this column */
       label: _react.PropTypes.string,
       /** Optional fixed width for this column */
-      width: _react.PropTypes.number
+      width: _react.PropTypes.number.isRequired
     },
     enumerable: true
   }]);
