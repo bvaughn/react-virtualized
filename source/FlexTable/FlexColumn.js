@@ -76,6 +76,6 @@ export default class Column extends Component {
     /** Header label for this column */
     label: PropTypes.string,
     /** Optional fixed width for this column */
-    width: PropTypes.number
+    width: PropTypes.number.isRequired
   }
 }

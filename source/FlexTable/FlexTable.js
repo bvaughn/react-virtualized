@@ -387,16 +387,7 @@ export default class FlexTable extends Component {
    * Determines the flex-shrink, flex-grow, and width values for a cell (header or column).
    */
   _getFlexStyleForColumn (column) {
-    const flex = []
-    flex.push(column.props.flexGrow)
-    flex.push(column.props.flexShrink)
-    flex.push(
-      column.props.width
-        ? `${column.props.width}px`
-        : 'auto'
-    )
-
-    const flexValue = flex.join(' ')
+    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${column.props.width}px`
 
     return {
       flex: flexValue,
