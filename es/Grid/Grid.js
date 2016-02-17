@@ -282,15 +282,19 @@ var Grid = (function (_Component) {
       var scrollToRow = _props2.scrollToRow;
       var width = _props2.width;
       var _state = this.state;
+      var isScrolling = _state.isScrolling;
       var scrollLeft = _state.scrollLeft;
       var scrollTop = _state.scrollTop;
 
       // Make sure any changes to :scrollLeft or :scrollTop get applied
-      if (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft) {
-        this.refs.scrollingContainer.scrollLeft = scrollLeft;
-      }
-      if (scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop) {
-        this.refs.scrollingContainer.scrollTop = scrollTop;
+      // Don't re-apply while a scroll is in progress; this causes slow scrolling for certain OS/browser combinations (eg. Windows and Firefox)
+      if (!isScrolling) {
+        if (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft) {
+          this.refs.scrollingContainer.scrollLeft = scrollLeft;
+        }
+        if (scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop) {
+          this.refs.scrollingContainer.scrollTop = scrollTop;
+        }
       }
 
       // Update scrollLeft if appropriate

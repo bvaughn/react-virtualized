@@ -4,7 +4,6 @@
   position: relative;
   overflow: auto;
   outline: 0;
-  scroll-behavior: smooth; /* Improves mouse wheel scroll speed for Firefox on Windows */
   -webkit-overflow-scrolling: touch;
 }
 

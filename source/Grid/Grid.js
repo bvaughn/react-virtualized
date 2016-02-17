@@ -220,22 +220,25 @@ export default class Grid extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     const { columnsCount, columnWidth, height, rowHeight, rowsCount, scrollToColumn, scrollToRow, width } = this.props
-    const { scrollLeft, scrollTop } = this.state
+    const { isScrolling, scrollLeft, scrollTop } = this.state
 
     // Make sure any changes to :scrollLeft or :scrollTop get applied
-    if (
-      scrollLeft >= 0 &&
-      scrollLeft !== prevState.scrollLeft &&
-      scrollLeft !== this.refs.scrollingContainer.scrollLeft
-    ) {
-      this.refs.scrollingContainer.scrollLeft = scrollLeft
-    }
-    if (
-      scrollTop >= 0 &&
-      scrollTop !== prevState.scrollTop &&
-      scrollTop !== this.refs.scrollingContainer.scrollTop
-    ) {
-      this.refs.scrollingContainer.scrollTop = scrollTop
+    // Don't re-apply while a scroll is in progress; this causes slow scrolling for certain OS/browser combinations (eg. Windows and Firefox)
+    if (!isScrolling) {
+      if (
+        scrollLeft >= 0 &&
+        scrollLeft !== prevState.scrollLeft &&
+        scrollLeft !== this.refs.scrollingContainer.scrollLeft
+      ) {
+        this.refs.scrollingContainer.scrollLeft = scrollLeft
+      }
+      if (
+        scrollTop >= 0 &&
+        scrollTop !== prevState.scrollTop &&
+        scrollTop !== this.refs.scrollingContainer.scrollTop
+      ) {
+        this.refs.scrollingContainer.scrollTop = scrollTop
+      }
     }
 
     // Update scrollLeft if appropriate
