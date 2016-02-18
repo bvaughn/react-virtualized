@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * Detect Element Resize.
 * Forked in order to guard against unsafe 'window' and 'document' references.
@@ -9,8 +11,6 @@
 **/
 
 // Check `document` and `window` in case of server-side rendering
-'use strict';
-
 var _window;
 if (typeof window !== 'undefined') {
   _window = window;
@@ -24,21 +24,21 @@ var attachEvent = typeof document !== 'undefined' && document.attachEvent;
 var stylesCreated = false;
 
 if (!attachEvent) {
-  var requestFrame = (function () {
+  var requestFrame = function () {
     var raf = _window.requestAnimationFrame || _window.mozRequestAnimationFrame || _window.webkitRequestAnimationFrame || function (fn) {
       return _window.setTimeout(fn, 20);
     };
     return function (fn) {
       return raf(fn);
     };
-  })();
+  }();
 
-  var cancelFrame = (function () {
+  var cancelFrame = function () {
     var cancel = _window.cancelAnimationFrame || _window.mozCancelAnimationFrame || _window.webkitCancelAnimationFrame || _window.clearTimeout;
     return function (id) {
       return cancel(id);
     };
-  })();
+  }();
 
   var resetTriggers = function resetTriggers(element) {
     var triggers = element.__resizeTriggers__,

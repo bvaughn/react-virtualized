@@ -1,3 +1,16 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.computeCellMetadataAndUpdateScrollOffsetHelper = computeCellMetadataAndUpdateScrollOffsetHelper;
+exports.createCallbackMemoizer = createCallbackMemoizer;
+exports.findNearestCell = findNearestCell;
+exports.getOverscanIndices = getOverscanIndices;
+exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex;
+exports.getVisibleCellIndices = getVisibleCellIndices;
+exports.initCellMetadata = initCellMetadata;
+exports.updateScrollIndexHelper = updateScrollIndexHelper;
 /**
  * Helper method that determines when to recalculate row or column metadata.
  *
@@ -12,20 +25,6 @@
  * @param scrollToIndex Scroll-to-index
  * @param updateScrollOffsetForScrollToIndex Callback to invoke if the scroll position should be recalculated
  */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.computeCellMetadataAndUpdateScrollOffsetHelper = computeCellMetadataAndUpdateScrollOffsetHelper;
-exports.createCallbackMemoizer = createCallbackMemoizer;
-exports.findNearestCell = findNearestCell;
-exports.getOverscanIndices = getOverscanIndices;
-exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex;
-exports.getVisibleCellIndices = getVisibleCellIndices;
-exports.initCellMetadata = initCellMetadata;
-exports.updateScrollIndexHelper = updateScrollIndexHelper;
-
 function computeCellMetadataAndUpdateScrollOffsetHelper(_ref) {
   var cellsCount = _ref.cellsCount;
   var cellSize = _ref.cellSize;
@@ -54,7 +53,6 @@ function computeCellMetadataAndUpdateScrollOffsetHelper(_ref) {
 /**
  * Helper utility that updates the specified callback whenever any of the specified indices have changed.
  */
-
 function createCallbackMemoizer() {
   var requireAllKeys = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
@@ -83,7 +81,6 @@ function createCallbackMemoizer() {
 /**
  * Binary search function inspired by react-infinite.
  */
-
 function findNearestCell(_ref3) {
   var cellMetadata = _ref3.cellMetadata;
   var mode = _ref3.mode;
@@ -142,7 +139,6 @@ function getOverscanIndices(_ref4) {
  * @param targetIndex Index of target cell
  * @return Offset to use to ensure the specified cell is visible
  */
-
 function getUpdatedOffsetForIndex(_ref5) {
   var cellMetadata = _ref5.cellMetadata;
   var containerSize = _ref5.containerSize;
@@ -172,7 +168,6 @@ function getUpdatedOffsetForIndex(_ref5) {
  * @param currentOffset Container's current (x or y) offset
  * @return An object containing :start and :stop attributes, each specifying a cell index
  */
-
 function getVisibleCellIndices(_ref6) {
   var cellsCount = _ref6.cellsCount;
   var cellMetadata = _ref6.cellMetadata;
@@ -220,7 +215,6 @@ function getVisibleCellIndices(_ref6) {
  * @param size Either a fixed size or a function that returns the size for a given given an index.
  * @return Object mapping cell index to cell metadata (size, offset)
  */
-
 function initCellMetadata(_ref7) {
   var cellsCount = _ref7.cellsCount;
   var size = _ref7.size;
@@ -265,7 +259,6 @@ function initCellMetadata(_ref7) {
  * @param size Width or height of the virtualized container
  * @param updateScrollIndexCallback Callback to invoke with an optional scroll-to-index override
  */
-
 function updateScrollIndexHelper(_ref8) {
   var cellMetadata = _ref8.cellMetadata;
   var cellsCount = _ref8.cellsCount;

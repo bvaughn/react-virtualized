@@ -1,17 +1,15 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+exports.Grid = exports.default = undefined;
 
 var _Grid2 = require('./Grid');
 
 var _Grid3 = _interopRequireDefault(_Grid2);
 
-exports['default'] = _Grid3['default'];
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _Grid4 = _interopRequireDefault(_Grid2);
-
-exports.Grid = _Grid4['default'];
+exports.default = _Grid3.default;
+exports.Grid = _Grid3.default;
