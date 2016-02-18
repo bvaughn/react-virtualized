@@ -42,6 +42,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var IS_SCROLLING_TIMEOUT = 150;
 
 /**
+ * Controls whether the Grid updates the DOM element's scrollLeft/scrollTop based on the current state or just observes it.
+ * This prevents Grid from interrupting mouse-wheel animations (see issue #2).
+ */
+var SCROLL_POSITION_CHANGE_REASONS = {
+  OBSERVED: 'observed',
+  REQUESTED: 'requested'
+};
+
+/**
  * Renders tabular data with virtualization along the vertical and horizontal axes.
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
@@ -121,18 +130,20 @@ var Grid = (_temp = _class = function (_Component) {
       var scrollLeft = _ref2.scrollLeft;
       var scrollTop = _ref2.scrollTop;
 
-      var props = {};
+      var newState = {
+        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+      };
 
       if (scrollLeft >= 0) {
-        props.scrollLeft = scrollLeft;
+        newState.scrollLeft = scrollLeft;
       }
 
       if (scrollTop >= 0) {
-        props.scrollTop = scrollTop;
+        newState.scrollTop = scrollTop;
       }
 
       if (scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft || scrollTop >= 0 && scrollTop !== this.state.scrollTop) {
-        this.setState(props);
+        this.setState(newState);
       }
     }
   }, {
@@ -147,12 +158,8 @@ var Grid = (_temp = _class = function (_Component) {
       var scrollToRow = _props.scrollToRow;
 
 
-      if (scrollLeft >= 0) {
-        this.setState({ scrollLeft: scrollLeft });
-      }
-
-      if (scrollTop >= 0) {
-        this.setState({ scrollTop: scrollTop });
+      if (scrollLeft >= 0 || scrollTop >= 0) {
+        this.setScrollPosition({ scrollLeft: scrollLeft, scrollTop: scrollTop });
       }
 
       if (scrollToColumn >= 0 || scrollToRow >= 0) {
@@ -180,14 +187,17 @@ var Grid = (_temp = _class = function (_Component) {
       var scrollToRow = _props2.scrollToRow;
       var width = _props2.width;
       var _state = this.state;
-      var isScrolling = _state.isScrolling;
       var scrollLeft = _state.scrollLeft;
+      var scrollPositionChangeReason = _state.scrollPositionChangeReason;
       var scrollTop = _state.scrollTop;
 
-      // Make sure any changes to :scrollLeft or :scrollTop get applied
-      // Don't re-apply while a scroll is in progress; this causes slow scrolling for certain OS/browser combinations (eg. Windows and Firefox)
+      // Make sure requested changes to :scrollLeft or :scrollTop get applied.
+      // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
+      // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
+      // So we only set these when we require an adjustment of the scroll position.
+      // See issue #2 for more information.
 
-      if (!isScrolling) {
+      if (scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
         if (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft) {
           this.refs.scrollingContainer.scrollLeft = scrollLeft;
         }
@@ -253,19 +263,19 @@ var Grid = (_temp = _class = function (_Component) {
     key: 'componentWillUpdate',
     value: function componentWillUpdate(nextProps, nextState) {
       if (nextProps.columnsCount === 0 && nextState.scrollLeft !== 0) {
-        this.setState({ scrollLeft: 0 });
+        this.setScrollPosition({ scrollLeft: 0 });
       }
 
       if (nextProps.rowsCount === 0 && nextState.scrollTop !== 0) {
-        this.setState({ scrollTop: 0 });
+        this.setScrollPosition({ scrollTop: 0 });
       }
 
       if (nextProps.scrollLeft !== this.props.scrollLeft) {
-        this.setState({ scrollLeft: nextProps.scrollLeft });
+        this.setScrollPosition({ scrollLeft: nextProps.scrollLeft });
       }
 
       if (nextProps.scrollTop !== this.props.scrollTop) {
-        this.setState({ scrollTop: nextProps.scrollTop });
+        this.setScrollPosition({ scrollTop: nextProps.scrollTop });
       }
 
       (0, _utils.computeCellMetadataAndUpdateScrollOffsetHelper)({
@@ -446,6 +456,29 @@ var Grid = (_temp = _class = function (_Component) {
         size: rowHeight
       });
     }
+
+    /**
+     * Sets an :isScrolling flag for a small window of time.
+     * This flag is used to disable pointer events on the scrollable portion of the Grid.
+     * This prevents jerky/stuttery mouse-wheel scrolling.
+     */
+
+  }, {
+    key: '_enablePointerEventsAfterDelay',
+    value: function _enablePointerEventsAfterDelay() {
+      var _this3 = this;
+
+      if (this._disablePointerEventsTimeoutId) {
+        clearTimeout(this._disablePointerEventsTimeoutId);
+      }
+
+      this._disablePointerEventsTimeoutId = setTimeout(function () {
+        _this3._disablePointerEventsTimeoutId = null;
+        _this3.setState({
+          isScrolling: false
+        });
+      }, IS_SCROLLING_TIMEOUT);
+    }
   }, {
     key: '_getColumnWidth',
     value: function _getColumnWidth(index) {
@@ -537,67 +570,21 @@ var Grid = (_temp = _class = function (_Component) {
   }, {
     key: '_setNextState',
     value: function _setNextState(state) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this._setNextStateAnimationFrameId) {
         _raf2.default.cancel(this._setNextStateAnimationFrameId);
       }
 
       this._setNextStateAnimationFrameId = (0, _raf2.default)(function () {
-        _this3._setNextStateAnimationFrameId = null;
-        _this3.setState(state);
-      });
-    }
-  }, {
-    key: '_setNextStateForScrollHelper',
-    value: function _setNextStateForScrollHelper(_ref3) {
-      var scrollLeft = _ref3.scrollLeft;
-      var scrollTop = _ref3.scrollTop;
-
-      // Certain devices (like Apple touchpad) rapid-fire duplicate events.
-      // Don't force a re-render if this is the case.
-      if (this.state.scrollLeft === scrollLeft && this.state.scrollTop === scrollTop) {
-        return;
-      }
-
-      // Prevent pointer events from interrupting a smooth scroll
-      this._temporarilyDisablePointerEvents();
-
-      // The mouse may move faster then the animation frame does.
-      // Use requestAnimationFrame to avoid over-updating.
-      this._setNextState({
-        isScrolling: true,
-        scrollLeft: scrollLeft,
-        scrollTop: scrollTop
+        _this4._setNextStateAnimationFrameId = null;
+        _this4.setState(state);
       });
     }
   }, {
     key: '_stopEvent',
     value: function _stopEvent(event) {
       event.preventDefault();
-    }
-
-    /**
-     * Sets an :isScrolling flag for a small window of time.
-     * This flag is used to disable pointer events on the scrollable portion of the Grid.
-     * This prevents jerky/stuttery mouse-wheel scrolling.
-     */
-
-  }, {
-    key: '_temporarilyDisablePointerEvents',
-    value: function _temporarilyDisablePointerEvents() {
-      var _this4 = this;
-
-      if (this._disablePointerEventsTimeoutId) {
-        clearTimeout(this._disablePointerEventsTimeoutId);
-      }
-
-      this._disablePointerEventsTimeoutId = setTimeout(function () {
-        _this4._disablePointerEventsTimeoutId = null;
-        _this4.setState({
-          isScrolling: false
-        });
-      }, IS_SCROLLING_TIMEOUT);
     }
   }, {
     key: '_updateScrollLeftForScrollToColumn',
@@ -617,7 +604,9 @@ var Grid = (_temp = _class = function (_Component) {
         });
 
         if (scrollLeft !== calculatedScrollLeft) {
-          this.setState({ scrollLeft: calculatedScrollLeft });
+          this.setScrollPosition({
+            scrollLeft: calculatedScrollLeft
+          });
         }
       }
     }
@@ -639,7 +628,9 @@ var Grid = (_temp = _class = function (_Component) {
         });
 
         if (scrollTop !== calculatedScrollTop) {
-          this.setState({ scrollTop: calculatedScrollTop });
+          this.setScrollPosition({
+            scrollTop: calculatedScrollTop
+          });
         }
       }
     }
@@ -681,7 +672,7 @@ var Grid = (_temp = _class = function (_Component) {
           datum = this._rowMetadata[start];
           newScrollTop = Math.min(this._getTotalRowsHeight() - height, scrollTop + datum.size);
 
-          this.setState({
+          this.setScrollPosition({
             scrollTop: newScrollTop
           });
           break;
@@ -712,7 +703,7 @@ var Grid = (_temp = _class = function (_Component) {
           datum = this._columnMetadata[start];
           newScrollLeft = Math.min(this._getTotalColumnsWidth() - width, scrollLeft + datum.size);
 
-          this.setState({
+          this.setScrollPosition({
             scrollLeft: newScrollLeft
           });
           break;
@@ -743,6 +734,9 @@ var Grid = (_temp = _class = function (_Component) {
         return;
       }
 
+      // Prevent pointer events from interrupting a smooth scroll
+      this._enablePointerEventsAfterDelay();
+
       // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
       // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
       // This causes a series of rapid renders that is slow for long lists.
@@ -757,12 +751,23 @@ var Grid = (_temp = _class = function (_Component) {
       var scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft);
       var scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
 
-      this._setNextStateForScrollHelper({ scrollLeft: scrollLeft, scrollTop: scrollTop });
+      // Certain devices (like Apple touchpad) rapid-fire duplicate events.
+      // Don't force a re-render if this is the case.
+      // The mouse may move faster then the animation frame does.
+      // Use requestAnimationFrame to avoid over-updating.
+      if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
+        this._setNextState({
+          isScrolling: true,
+          scrollLeft: scrollLeft,
+          scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
+          scrollTop: scrollTop
+        });
+      }
 
       this._onScrollMemoizer({
-        callback: function callback(_ref4) {
-          var scrollLeft = _ref4.scrollLeft;
-          var scrollTop = _ref4.scrollTop;
+        callback: function callback(_ref3) {
+          var scrollLeft = _ref3.scrollLeft;
+          var scrollTop = _ref3.scrollTop;
 
           onScroll({
             clientHeight: height,
