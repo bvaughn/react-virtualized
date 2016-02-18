@@ -3,24 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _redboxReact2 = require('redbox-react');
-
-var _redboxReact3 = _interopRequireDefault(_redboxReact2);
-
-var _reactTransformCatchErrors3 = require('react-transform-catch-errors');
-
-var _reactTransformCatchErrors4 = _interopRequireDefault(_reactTransformCatchErrors3);
-
-var _react2 = require('react');
-
-var _react3 = _interopRequireDefault(_react2);
-
-var _reactTransformHmr3 = require('react-transform-hmr');
-
-var _reactTransformHmr4 = _interopRequireDefault(_reactTransformHmr3);
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -36,6 +19,10 @@ var _raf = require('raf');
 
 var _raf2 = _interopRequireDefault(_raf);
 
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
 var _function = require('react-pure-render/function');
 
 var _function2 = _interopRequireDefault(_function);
@@ -48,32 +35,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _components = {
-  Grid: {
-    displayName: 'Grid'
-  }
-};
-
-var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-  filename: 'source/Grid/Grid.js',
-  components: _components,
-  locals: [module],
-  imports: [_react3.default]
-});
-
-var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-  filename: 'source/Grid/Grid.js',
-  components: _components,
-  locals: [],
-  imports: [_react3.default, _redboxReact3.default]
-});
-
-function _wrapComponent(id) {
-  return function (Component) {
-    return _reactTransformHmr2(_reactTransformCatchErrors2(Component, id), id);
-  };
-}
-
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
@@ -84,8 +45,7 @@ var IS_SCROLLING_TIMEOUT = 150;
  * Renders tabular data with virtualization along the vertical and horizontal axes.
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
-
-var Grid = _wrapComponent('Grid')((_temp = _class = function (_Component) {
+var Grid = (_temp = _class = function (_Component) {
   _inherits(Grid, _Component);
 
   function Grid(props, context) {
@@ -109,41 +69,11 @@ var Grid = _wrapComponent('Grid')((_temp = _class = function (_Component) {
 
     // Bind functions to instance so they don't lose context when passed around
     _this._computeGridMetadata = _this._computeGridMetadata.bind(_this);
-
-    if (!(typeof _this._computeGridMetadata === 'function')) {
-      throw new TypeError('Value of "this._computeGridMetadata" violates contract.\n\nExpected:\n(any) => any\n\nGot:\n' + _inspect(_this._computeGridMetadata));
-    }
-
     _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this);
-
-    if (!(typeof _this._invokeOnGridRenderedHelper === 'function')) {
-      throw new TypeError('Value of "this._invokeOnGridRenderedHelper" violates contract.\n\nExpected:\n() => any\n\nGot:\n' + _inspect(_this._invokeOnGridRenderedHelper));
-    }
-
     _this._onKeyPress = _this._onKeyPress.bind(_this);
-
-    if (!(typeof _this._onKeyPress === 'function')) {
-      throw new TypeError('Value of "this._onKeyPress" violates contract.\n\nExpected:\n(any) => any\n\nGot:\n' + _inspect(_this._onKeyPress));
-    }
-
     _this._onScroll = _this._onScroll.bind(_this);
-
-    if (!(typeof _this._onScroll === 'function')) {
-      throw new TypeError('Value of "this._onScroll" violates contract.\n\nExpected:\n(any) => any\n\nGot:\n' + _inspect(_this._onScroll));
-    }
-
     _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this);
-
-    if (!(typeof _this._updateScrollLeftForScrollToColumn === 'function')) {
-      throw new TypeError('Value of "this._updateScrollLeftForScrollToColumn" violates contract.\n\nExpected:\n(any) => any\n\nGot:\n' + _inspect(_this._updateScrollLeftForScrollToColumn));
-    }
-
     _this._updateScrollTopForScrollToRow = _this._updateScrollTopForScrollToRow.bind(_this);
-
-    if (!(typeof _this._updateScrollTopForScrollToRow === 'function')) {
-      throw new TypeError('Value of "this._updateScrollTopForScrollToRow" violates contract.\n\nExpected:\n(any) => any\n\nGot:\n' + _inspect(_this._updateScrollTopForScrollToRow));
-    }
-
     return _this;
   }
 
@@ -439,7 +369,7 @@ var Grid = _wrapComponent('Grid')((_temp = _class = function (_Component) {
             var child = renderCell({ columnIndex: columnIndex, rowIndex: rowIndex });
             var transform = 'translate(' + columnDatum.offset + 'px, ' + rowDatum.offset + 'px)';
 
-            child = _react3.default.createElement(
+            child = _react2.default.createElement(
               'div',
               {
                 key: 'row:' + rowIndex + ', column:' + columnIndex,
@@ -459,7 +389,7 @@ var Grid = _wrapComponent('Grid')((_temp = _class = function (_Component) {
         }
       }
 
-      return _react3.default.createElement(
+      return _react2.default.createElement(
         'div',
         {
           ref: 'scrollingContainer',
@@ -472,7 +402,7 @@ var Grid = _wrapComponent('Grid')((_temp = _class = function (_Component) {
             width: width
           }
         },
-        childrenToDisplay.length > 0 && _react3.default.createElement(
+        childrenToDisplay.length > 0 && _react2.default.createElement(
           'div',
           {
             className: 'Grid__innerScrollContainer',
@@ -846,95 +776,95 @@ var Grid = _wrapComponent('Grid')((_temp = _class = function (_Component) {
   }]);
 
   return Grid;
-}(_react2.Component), _class.propTypes = {
+}(_react.Component), _class.propTypes = {
   /**
    * Optional custom CSS class name to attach to root Grid element.
    */
-  className: _react2.PropTypes.string,
+  className: _react.PropTypes.string,
 
   /**
    * Number of columns in grid.
    */
-  columnsCount: _react2.PropTypes.number.isRequired,
+  columnsCount: _react.PropTypes.number.isRequired,
 
   /**
    * Either a fixed column width (number) or a function that returns the width of a column given its index.
    * Should implement the following interface: (index: number): number
    */
-  columnWidth: _react2.PropTypes.oneOfType([_react2.PropTypes.number, _react2.PropTypes.func]).isRequired,
+  columnWidth: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
 
   /**
    * Height of Grid; this property determines the number of visible (vs virtualized) rows.
    */
-  height: _react2.PropTypes.number.isRequired,
+  height: _react.PropTypes.number.isRequired,
 
   /**
    * Optional renderer to be used in place of rows when either :rowsCount or :columnsCount is 0.
    */
-  noContentRenderer: _react2.PropTypes.func.isRequired,
+  noContentRenderer: _react.PropTypes.func.isRequired,
 
   /**
    * Callback invoked whenever the scroll offset changes within the inner scrollable region.
    * This callback can be used to sync scrolling between lists, tables, or grids.
    * ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void
    */
-  onScroll: _react2.PropTypes.func.isRequired,
+  onScroll: _react.PropTypes.func.isRequired,
 
   /**
    * Callback invoked with information about the section of the Grid that was just rendered.
    * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
    */
-  onSectionRendered: _react2.PropTypes.func.isRequired,
+  onSectionRendered: _react.PropTypes.func.isRequired,
 
   /**
    * Number of columns to render before/after the visible section of the grid.
    * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
    */
-  overscanColumnsCount: _react2.PropTypes.number.isRequired,
+  overscanColumnsCount: _react.PropTypes.number.isRequired,
 
   /**
    * Number of rows to render above/below the visible section of the grid.
    * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
    */
-  overscanRowsCount: _react2.PropTypes.number.isRequired,
+  overscanRowsCount: _react.PropTypes.number.isRequired,
 
   /**
    * Responsible for rendering a cell given an row and column index.
    * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
    */
-  renderCell: _react2.PropTypes.func.isRequired,
+  renderCell: _react.PropTypes.func.isRequired,
 
   /**
    * Either a fixed row height (number) or a function that returns the height of a row given its index.
    * Should implement the following interface: (index: number): number
    */
-  rowHeight: _react2.PropTypes.oneOfType([_react2.PropTypes.number, _react2.PropTypes.func]).isRequired,
+  rowHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
 
   /**
    * Number of rows in grid.
    */
-  rowsCount: _react2.PropTypes.number.isRequired,
+  rowsCount: _react.PropTypes.number.isRequired,
 
   /** Horizontal offset. */
-  scrollLeft: _react2.PropTypes.number,
+  scrollLeft: _react.PropTypes.number,
 
   /**
    * Column index to ensure visible (by forcefully scrolling if necessary)
    */
-  scrollToColumn: _react2.PropTypes.number,
+  scrollToColumn: _react.PropTypes.number,
 
   /** Vertical offset. */
-  scrollTop: _react2.PropTypes.number,
+  scrollTop: _react.PropTypes.number,
 
   /**
    * Row index to ensure visible (by forcefully scrolling if necessary)
    */
-  scrollToRow: _react2.PropTypes.number,
+  scrollToRow: _react.PropTypes.number,
 
   /**
    * Width of Grid; this property determines the number of visible (vs virtualized) columns.
    */
-  width: _react2.PropTypes.number.isRequired
+  width: _react.PropTypes.number.isRequired
 }, _class.defaultProps = {
   noContentRenderer: function noContentRenderer() {
     return null;
@@ -947,50 +877,5 @@ var Grid = _wrapComponent('Grid')((_temp = _class = function (_Component) {
   },
   overscanColumnsCount: 0,
   overscanRowsCount: 10
-}, _temp));
-
+}, _temp);
 exports.default = Grid;
-
-function _inspect(input) {
-  if (input === null) {
-    return 'null';
-  } else if (input === undefined) {
-    return 'void';
-  } else if (typeof input === 'string' || typeof input === 'number' || typeof input === 'boolean') {
-    return typeof input === 'undefined' ? 'undefined' : _typeof(input);
-  } else if (Array.isArray(input)) {
-    if (input.length > 0) {
-      var first = _inspect(input[0]);
-
-      if (input.every(function (item) {
-        return _inspect(item) === first;
-      })) {
-        return first.trim() + '[]';
-      } else {
-        return '[' + input.map(_inspect).join(', ') + ']';
-      }
-    } else {
-      return 'Array';
-    }
-  } else {
-    var keys = Object.keys(input);
-
-    if (!keys.length) {
-      if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
-        return input.constructor.name;
-      } else {
-        return 'Object';
-      }
-    }
-
-    var entries = keys.map(function (key) {
-      return (/^([A-Z_$][A-Z0-9_$]*)$/i.test(key) ? key : JSON.stringify(key)) + ': ' + _inspect(input[key]) + ';';
-    }).join('\n  ');
-
-    if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
-      return input.constructor.name + ' {\n  ' + entries + '\n}';
-    } else {
-      return '{ ' + entries + '\n}';
-    }
-  }
-}

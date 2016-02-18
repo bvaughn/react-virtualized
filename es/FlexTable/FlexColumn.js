@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 var _class, _temp;
 
 exports.defaultCellRenderer = defaultCellRenderer;
@@ -25,26 +23,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * You should override the column's cellRenderer if your data is some other type of object.
  */
 function defaultCellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
-  function _ref(_id) {
-    if (!(typeof _id === 'string')) {
-      throw new TypeError('Function "defaultCellRenderer" return value violates contract.\n\nExpected:\nstring\n\nGot:\n' + _inspect(_id));
-    }
-
-    return _id;
-  }
-
-  if (!(typeof cellDataKey === 'string')) {
-    throw new TypeError('Value of argument "cellDataKey" violates contract.\n\nExpected:\nstring\n\nGot:\n' + _inspect(cellDataKey));
-  }
-
-  if (!(typeof rowIndex === 'number')) {
-    throw new TypeError('Value of argument "rowIndex" violates contract.\n\nExpected:\nnumber\n\nGot:\n' + _inspect(rowIndex));
-  }
-
   if (cellData === null || cellData === undefined) {
-    return _ref('');
+    return '';
   } else {
-    return _ref(String(cellData));
+    return String(cellData);
   }
 }
 
@@ -54,10 +36,6 @@ function defaultCellRenderer(cellData, cellDataKey, rowData, rowIndex, columnDat
  * You should override the column's cellDataGetter if your data is some other type of object.
  */
 function defaultCellDataGetter(dataKey, rowData, columnData) {
-  if (!(typeof dataKey === 'string')) {
-    throw new TypeError('Value of argument "dataKey" violates contract.\n\nExpected:\nstring\n\nGot:\n' + _inspect(dataKey));
-  }
-
   if (rowData.get instanceof Function) {
     return rowData.get(dataKey);
   } else {
@@ -118,47 +96,3 @@ var Column = (_temp = _class = function (_Component) {
   width: _react.PropTypes.number.isRequired
 }, _temp);
 exports.default = Column;
-
-function _inspect(input) {
-  if (input === null) {
-    return 'null';
-  } else if (input === undefined) {
-    return 'void';
-  } else if (typeof input === 'string' || typeof input === 'number' || typeof input === 'boolean') {
-    return typeof input === 'undefined' ? 'undefined' : _typeof(input);
-  } else if (Array.isArray(input)) {
-    if (input.length > 0) {
-      var first = _inspect(input[0]);
-
-      if (input.every(function (item) {
-        return _inspect(item) === first;
-      })) {
-        return first.trim() + '[]';
-      } else {
-        return '[' + input.map(_inspect).join(', ') + ']';
-      }
-    } else {
-      return 'Array';
-    }
-  } else {
-    var keys = Object.keys(input);
-
-    if (!keys.length) {
-      if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
-        return input.constructor.name;
-      } else {
-        return 'Object';
-      }
-    }
-
-    var entries = keys.map(function (key) {
-      return (/^([A-Z_$][A-Z0-9_$]*)$/i.test(key) ? key : JSON.stringify(key)) + ': ' + _inspect(input[key]) + ';';
-    }).join('\n  ');
-
-    if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
-      return input.constructor.name + ' {\n  ' + entries + '\n}';
-    } else {
-      return '{ ' + entries + '\n}';
-    }
-  }
-}

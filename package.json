@@ -12,7 +12,7 @@
     "build": "npm run build:css && npm run build:es && npm run build:demo && npm run build:umd",
     "build:css": "postcss --use autoprefixer source/styles.css > styles.css",
     "build:demo": "npm run clean:demo && NODE_ENV=production webpack --config webpack.config.demo.js -p --bail",
-    "build:es": "BABEL_ENV=es npm run clean:es && babel source --out-dir es --ignore *.example.js,*.test.js,source/demo/,source/tests.js",
+    "build:es": "npm run clean:es && NODE_ENV=production BABEL_ENV=es babel source --out-dir es --ignore *.example.js,*.test.js,source/demo/,source/tests.js",
     "build:umd": "npm run clean:umd && NODE_ENV=production webpack --config webpack.config.umd.js --bail",
     "clean": "npm run clean:demo && npm run clean:es && npm run clean:umd",
     "clean:demo": "rimraf build",
@@ -49,46 +49,6 @@
   ],
   "bugs": {
     "url": "https://github.com/bvaughn/react-virtualized/issues"
-  },
-  "babel": {
-    "env": {
-      "development": {
-        "plugins": [
-          "typecheck",
-          [
-            "react-transform",
-            {
-              "transforms": [
-                {
-                  "transform": "react-transform-hmr",
-                  "imports": [
-                    "react"
-                  ],
-                  "locals": [
-                    "module"
-                  ]
-                },
-                {
-                  "transform": "react-transform-catch-errors",
-                  "imports": [
-                    "react",
-                    "redbox-react"
-                  ]
-                }
-              ]
-            }
-          ]
-        ]
-      }
-    },
-    "plugins": [
-      "transform-decorators-legacy"
-    ],
-    "presets": [
-      "es2015",
-      "react",
-      "stage-0"
-    ]
   },
   "standard": {
     "parser": "babel-eslint",

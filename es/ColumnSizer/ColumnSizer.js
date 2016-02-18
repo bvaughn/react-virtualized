@@ -3,28 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _redboxReact2 = require('redbox-react');
-
-var _redboxReact3 = _interopRequireDefault(_redboxReact2);
-
-var _reactTransformCatchErrors3 = require('react-transform-catch-errors');
-
-var _reactTransformCatchErrors4 = _interopRequireDefault(_reactTransformCatchErrors3);
-
-var _react2 = require('react');
-
-var _react3 = _interopRequireDefault(_react2);
-
-var _reactTransformHmr3 = require('react-transform-hmr');
-
-var _reactTransformHmr4 = _interopRequireDefault(_reactTransformHmr3);
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _class, _temp;
+
+var _react = require('react');
 
 var _function = require('react-pure-render/function');
 
@@ -42,37 +27,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _components = {
-  ColumnSizer: {
-    displayName: 'ColumnSizer'
-  }
-};
-
-var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-  filename: 'source/ColumnSizer/ColumnSizer.js',
-  components: _components,
-  locals: [module],
-  imports: [_react3.default]
-});
-
-var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-  filename: 'source/ColumnSizer/ColumnSizer.js',
-  components: _components,
-  locals: [],
-  imports: [_react3.default, _redboxReact3.default]
-});
-
-function _wrapComponent(id) {
-  return function (Component) {
-    return _reactTransformHmr2(_reactTransformCatchErrors2(Component, id), id);
-  };
-}
-
 /**
  * High-order component that auto-calculates column-widths for `Grid` cells.
  */
-
-var ColumnSizer = _wrapComponent('ColumnSizer')((_temp = _class = function (_Component) {
+var ColumnSizer = (_temp = _class = function (_Component) {
   _inherits(ColumnSizer, _Component);
 
   function ColumnSizer(props, context) {
@@ -84,11 +42,6 @@ var ColumnSizer = _wrapComponent('ColumnSizer')((_temp = _class = function (_Com
 
 
     _this._registerChild = _this._registerChild.bind(_this);
-
-    if (!(typeof _this._registerChild === 'function')) {
-      throw new TypeError('Value of "this._registerChild" violates contract.\n\nExpected:\n(any) => any\n\nGot:\n' + _inspect(_this._registerChild));
-    }
-
     return _this;
   }
 
@@ -154,7 +107,7 @@ var ColumnSizer = _wrapComponent('ColumnSizer')((_temp = _class = function (_Com
   }]);
 
   return ColumnSizer;
-}(_react2.Component), _class.propTypes = {
+}(_react.Component), _class.propTypes = {
   /**
    * Function respondible for rendering a virtualized Grid.
    * This function should implement the following signature:
@@ -164,63 +117,18 @@ var ColumnSizer = _wrapComponent('ColumnSizer')((_temp = _class = function (_Com
    * The :registerChild should be passed to the Grid's :ref property.
    * The :adjustedWidth property is optional; it reflects the lesser of the overall width or the width of all columns.
    */
-  children: _react2.PropTypes.func.isRequired,
+  children: _react.PropTypes.func.isRequired,
 
   /** Optional maximum allowed column width */
-  columnMaxWidth: _react2.PropTypes.number,
+  columnMaxWidth: _react.PropTypes.number,
 
   /** Optional minimum allowed column width */
-  columnMinWidth: _react2.PropTypes.number,
+  columnMinWidth: _react.PropTypes.number,
 
   /** Number of columns in Grid or FlexTable child */
-  columnsCount: _react2.PropTypes.number.isRequired,
+  columnsCount: _react.PropTypes.number.isRequired,
 
   /** Width of Grid or FlexTable child */
-  width: _react2.PropTypes.number.isRequired
-}, _temp));
-
+  width: _react.PropTypes.number.isRequired
+}, _temp);
 exports.default = ColumnSizer;
-
-function _inspect(input) {
-  if (input === null) {
-    return 'null';
-  } else if (input === undefined) {
-    return 'void';
-  } else if (typeof input === 'string' || typeof input === 'number' || typeof input === 'boolean') {
-    return typeof input === 'undefined' ? 'undefined' : _typeof(input);
-  } else if (Array.isArray(input)) {
-    if (input.length > 0) {
-      var first = _inspect(input[0]);
-
-      if (input.every(function (item) {
-        return _inspect(item) === first;
-      })) {
-        return first.trim() + '[]';
-      } else {
-        return '[' + input.map(_inspect).join(', ') + ']';
-      }
-    } else {
-      return 'Array';
-    }
-  } else {
-    var keys = Object.keys(input);
-
-    if (!keys.length) {
-      if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
-        return input.constructor.name;
-      } else {
-        return 'Object';
-      }
-    }
-
-    var entries = keys.map(function (key) {
-      return (/^([A-Z_$][A-Z0-9_$]*)$/i.test(key) ? key : JSON.stringify(key)) + ': ' + _inspect(input[key]) + ';';
-    }).join('\n  ');
-
-    if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
-      return input.constructor.name + ' {\n  ' + entries + '\n}';
-    } else {
-      return '{ ' + entries + '\n}';
-    }
-  }
-}
