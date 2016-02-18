@@ -1,26 +1,68 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _redboxReact2 = require('redbox-react');
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _redboxReact3 = _interopRequireDefault(_redboxReact2);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _reactTransformCatchErrors3 = require('react-transform-catch-errors');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _reactTransformCatchErrors4 = _interopRequireDefault(_reactTransformCatchErrors3);
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+var _react2 = require('react');
 
-var _react = require('react');
+var _react3 = _interopRequireDefault(_react2);
 
-var _react2 = _interopRequireDefault(_react);
+var _reactTransformHmr3 = require('react-transform-hmr');
 
-var _reactPureRenderFunction = require('react-pure-render/function');
+var _reactTransformHmr4 = _interopRequireDefault(_reactTransformHmr3);
 
-var _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class, _temp;
+
+var _function = require('react-pure-render/function');
+
+var _function2 = _interopRequireDefault(_function);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+  AutoSizer: {
+    displayName: 'AutoSizer'
+  }
+};
+
+var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
+  filename: 'source/AutoSizer/AutoSizer.js',
+  components: _components,
+  locals: [module],
+  imports: [_react3.default]
+});
+
+var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
+  filename: 'source/AutoSizer/AutoSizer.js',
+  components: _components,
+  locals: [],
+  imports: [_react3.default, _redboxReact3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformHmr2(_reactTransformCatchErrors2(Component, id), id);
+  };
+}
 
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
@@ -28,50 +70,35 @@ var _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction)
  * All other properties will be passed through to the child component.
  */
 
-var AutoSizer = (function (_Component) {
+var AutoSizer = _wrapComponent('AutoSizer')((_temp = _class = function (_Component) {
   _inherits(AutoSizer, _Component);
-
-  _createClass(AutoSizer, null, [{
-    key: 'propTypes',
-    value: {
-      /**
-       * Function respondible for rendering children.
-       * This function should implement the following signature:
-       * ({ height, width }) => PropTypes.element
-       */
-      children: _react.PropTypes.func.isRequired,
-
-      /** Disable dynamic :height property */
-      disableHeight: _react.PropTypes.bool,
-
-      /** Disable dynamic :width property */
-      disableWidth: _react.PropTypes.bool,
-
-      /** Callback to be invoked on-resize: ({ height, width }) */
-      onResize: _react.PropTypes.func.isRequired
-    },
-    enumerable: true
-  }, {
-    key: 'defaultProps',
-    value: {
-      onResize: function onResize() {}
-    },
-    enumerable: true
-  }]);
 
   function AutoSizer(props) {
     _classCallCheck(this, AutoSizer);
 
-    _get(Object.getPrototypeOf(AutoSizer.prototype), 'constructor', this).call(this, props);
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AutoSizer).call(this, props));
 
-    this.shouldComponentUpdate = _reactPureRenderFunction2['default'];
-    this.state = {
+    _this.shouldComponentUpdate = _function2.default;
+
+
+    _this.state = {
       height: 0,
       width: 0
     };
 
-    this._onResize = this._onResize.bind(this);
-    this._setRef = this._setRef.bind(this);
+    _this._onResize = _this._onResize.bind(_this);
+
+    if (!(typeof _this._onResize === 'function')) {
+      throw new TypeError('Value of "this._onResize" violates contract.\n\nExpected:\n() => any\n\nGot:\n' + _inspect(_this._onResize));
+    }
+
+    _this._setRef = _this._setRef.bind(_this);
+
+    if (!(typeof _this._setRef === 'function')) {
+      throw new TypeError('Value of "this._setRef" violates contract.\n\nExpected:\n(any) => any\n\nGot:\n' + _inspect(_this._setRef));
+    }
+
+    return _this;
   }
 
   _createClass(AutoSizer, [{
@@ -103,6 +130,7 @@ var AutoSizer = (function (_Component) {
       // Outer div should not force width/height since that may prevent containers from shrinking.
       // Inner component should overflow and use calculated width/height.
       // See issue #68 for more information.
+
       var outerStyle = { overflow: 'visible' };
 
       if (!disableHeight) {
@@ -113,7 +141,7 @@ var AutoSizer = (function (_Component) {
         outerStyle.width = 0;
       }
 
-      return _react2['default'].createElement(
+      return _react3.default.createElement(
         'div',
         {
           ref: this._setRef,
@@ -127,10 +155,11 @@ var AutoSizer = (function (_Component) {
     value: function _onResize() {
       var onResize = this.props.onResize;
 
-      var _parentNode$getBoundingClientRect = this._parentNode.getBoundingClientRect();
+      var _parentNode$getBoundi = this._parentNode.getBoundingClientRect();
 
-      var height = _parentNode$getBoundingClientRect.height;
-      var width = _parentNode$getBoundingClientRect.width;
+      var height = _parentNode$getBoundi.height;
+      var width = _parentNode$getBoundi.width;
+
 
       var style = getComputedStyle(this._parentNode);
       var paddingLeft = parseInt(style.paddingLeft, 10);
@@ -154,7 +183,68 @@ var AutoSizer = (function (_Component) {
   }]);
 
   return AutoSizer;
-})(_react.Component);
+}(_react2.Component), _class.propTypes = {
+  /**
+   * Function respondible for rendering children.
+   * This function should implement the following signature:
+   * ({ height, width }) => PropTypes.element
+   */
+  children: _react2.PropTypes.func.isRequired,
 
-exports['default'] = AutoSizer;
-module.exports = exports['default'];
+  /** Disable dynamic :height property */
+  disableHeight: _react2.PropTypes.bool,
+
+  /** Disable dynamic :width property */
+  disableWidth: _react2.PropTypes.bool,
+
+  /** Callback to be invoked on-resize: ({ height, width }) */
+  onResize: _react2.PropTypes.func.isRequired
+}, _class.defaultProps = {
+  onResize: function onResize() {}
+}, _temp));
+
+exports.default = AutoSizer;
+
+function _inspect(input) {
+  if (input === null) {
+    return 'null';
+  } else if (input === undefined) {
+    return 'void';
+  } else if (typeof input === 'string' || typeof input === 'number' || typeof input === 'boolean') {
+    return typeof input === 'undefined' ? 'undefined' : _typeof(input);
+  } else if (Array.isArray(input)) {
+    if (input.length > 0) {
+      var first = _inspect(input[0]);
+
+      if (input.every(function (item) {
+        return _inspect(item) === first;
+      })) {
+        return first.trim() + '[]';
+      } else {
+        return '[' + input.map(_inspect).join(', ') + ']';
+      }
+    } else {
+      return 'Array';
+    }
+  } else {
+    var keys = Object.keys(input);
+
+    if (!keys.length) {
+      if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
+        return input.constructor.name;
+      } else {
+        return 'Object';
+      }
+    }
+
+    var entries = keys.map(function (key) {
+      return (/^([A-Z_$][A-Z0-9_$]*)$/i.test(key) ? key : JSON.stringify(key)) + ': ' + _inspect(input[key]) + ';';
+    }).join('\n  ');
+
+    if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
+      return input.constructor.name + ' {\n  ' + entries + '\n}';
+    } else {
+      return '{ ' + entries + '\n}';
+    }
+  }
+}
