@@ -106,5 +106,7 @@ describe('AutoSizer', () => {
     expect(domNode.textContent).toContain('width:200')
   })
 
-  // TODO It would be nice to test that resize events update the width/height
+  // TODO It would be nice to test the following (if I could trigger /vendor/detectElementResize event)
+  // The :onResize callback
+  // That resize events update the width/height
 })
