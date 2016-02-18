@@ -45,7 +45,16 @@ var AutoSizer = (function (_Component) {
       disableHeight: _react.PropTypes.bool,
 
       /** Disable dynamic :width property */
-      disableWidth: _react.PropTypes.bool
+      disableWidth: _react.PropTypes.bool,
+
+      /** Callback to be invoked on-resize: ({ height, width }) */
+      onResize: _react.PropTypes.func.isRequired
+    },
+    enumerable: true
+  }, {
+    key: 'defaultProps',
+    value: {
+      onResize: function onResize() {}
     },
     enumerable: true
   }]);
@@ -116,6 +125,8 @@ var AutoSizer = (function (_Component) {
   }, {
     key: '_onResize',
     value: function _onResize() {
+      var onResize = this.props.onResize;
+
       var _parentNode$getBoundingClientRect = this._parentNode.getBoundingClientRect();
 
       var height = _parentNode$getBoundingClientRect.height;
@@ -131,6 +142,8 @@ var AutoSizer = (function (_Component) {
         height: height - paddingTop - paddingBottom,
         width: width - paddingLeft - paddingRight
       });
+
+      onResize({ height: height, width: width });
     }
   }, {
     key: '_setRef',

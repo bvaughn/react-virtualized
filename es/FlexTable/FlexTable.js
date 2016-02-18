@@ -477,11 +477,21 @@ var FlexTable = (function (_Component) {
     value: function _getFlexStyleForColumn(column) {
       var flexValue = column.props.flexGrow + ' ' + column.props.flexShrink + ' ' + column.props.width + 'px';
 
-      return {
+      var style = {
         flex: flexValue,
         msFlex: flexValue,
         WebkitFlex: flexValue
       };
+
+      if (column.props.maxWidth) {
+        style.maxWidth = column.props.maxWidth;
+      }
+
+      if (column.props.minWidth) {
+        style.minWidth = column.props.minWidth;
+      }
+
+      return style;
     }
   }, {
     key: '_getRenderedHeaderRow',

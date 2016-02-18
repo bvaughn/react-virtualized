@@ -225,7 +225,15 @@
                     /** Disable dynamic :height property */
                     disableHeight: _react.PropTypes.bool,
                     /** Disable dynamic :width property */
-                    disableWidth: _react.PropTypes.bool
+                    disableWidth: _react.PropTypes.bool,
+                    /** Callback to be invoked on-resize: ({ height, width }) */
+                    onResize: _react.PropTypes.func.isRequired
+                },
+                enumerable: !0
+            }, {
+                key: "defaultProps",
+                value: {
+                    onResize: function() {}
                 },
                 enumerable: !0
             } ]), _createClass(AutoSizer, [ {
@@ -259,10 +267,13 @@
             }, {
                 key: "_onResize",
                 value: function() {
-                    var _parentNode$getBoundingClientRect = this._parentNode.getBoundingClientRect(), height = _parentNode$getBoundingClientRect.height, width = _parentNode$getBoundingClientRect.width, style = getComputedStyle(this._parentNode), paddingLeft = parseInt(style.paddingLeft, 10), paddingRight = parseInt(style.paddingRight, 10), paddingTop = parseInt(style.paddingTop, 10), paddingBottom = parseInt(style.paddingBottom, 10);
+                    var onResize = this.props.onResize, _parentNode$getBoundingClientRect = this._parentNode.getBoundingClientRect(), height = _parentNode$getBoundingClientRect.height, width = _parentNode$getBoundingClientRect.width, style = getComputedStyle(this._parentNode), paddingLeft = parseInt(style.paddingLeft, 10), paddingRight = parseInt(style.paddingRight, 10), paddingTop = parseInt(style.paddingTop, 10), paddingBottom = parseInt(style.paddingBottom, 10);
                     this.setState({
                         height: height - paddingTop - paddingBottom,
                         width: width - paddingLeft - paddingRight
+                    }), onResize({
+                        height: height,
+                        width: width
                     });
                 }
             }, {
@@ -1891,12 +1902,13 @@
             }, {
                 key: "_getFlexStyleForColumn",
                 value: function(column) {
-                    var flexValue = column.props.flexGrow + " " + column.props.flexShrink + " " + column.props.width + "px";
-                    return {
+                    var flexValue = column.props.flexGrow + " " + column.props.flexShrink + " " + column.props.width + "px", style = {
                         flex: flexValue,
                         msFlex: flexValue,
                         WebkitFlex: flexValue
                     };
+                    return column.props.maxWidth && (style.maxWidth = column.props.maxWidth), column.props.minWidth && (style.minWidth = column.props.minWidth), 
+                    style;
                 }
             }, {
                 key: "_getRenderedHeaderRow",
@@ -2032,7 +2044,11 @@
                     headerClassName: _react.PropTypes.string,
                     /** Header label for this column */
                     label: _react.PropTypes.string,
-                    /** Optional fixed width for this column */
+                    /** Maximum width of column; this property will only be used if :flexGrow is > 0. */
+                    maxWidth: _react.PropTypes.number,
+                    /** Minimum width of column. */
+                    minWidth: _react.PropTypes.number,
+                    /** Flex basis (width) for this column; This value can grow or shrink based on :flexGrow and :flexShrink properties. */
                     width: _react.PropTypes.number.isRequired
                 },
                 enumerable: !0

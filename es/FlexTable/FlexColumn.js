@@ -95,7 +95,11 @@ var Column = (function (_Component) {
       headerClassName: _react.PropTypes.string,
       /** Header label for this column */
       label: _react.PropTypes.string,
-      /** Optional fixed width for this column */
+      /** Maximum width of column; this property will only be used if :flexGrow is > 0. */
+      maxWidth: _react.PropTypes.number,
+      /** Minimum width of column. */
+      minWidth: _react.PropTypes.number,
+      /** Flex basis (width) for this column; This value can grow or shrink based on :flexGrow and :flexShrink properties. */
       width: _react.PropTypes.number.isRequired
     },
     enumerable: true
