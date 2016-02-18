@@ -147,11 +147,9 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
+        }), exports.AutoSizer = exports["default"] = void 0;
         var _AutoSizer2 = __webpack_require__(2), _AutoSizer3 = _interopRequireDefault(_AutoSizer2);
-        exports["default"] = _AutoSizer3["default"];
-        var _AutoSizer4 = _interopRequireDefault(_AutoSizer2);
-        exports.AutoSizer = _AutoSizer4["default"];
+        exports["default"] = _AutoSizer3["default"], exports.AutoSizer = _AutoSizer3["default"];
     }, /* 2 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -163,6 +161,10 @@
         }
         function _classCallCheck(instance, Constructor) {
             if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
         }
         function _inherits(subClass, superClass) {
             if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -177,8 +179,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
-        var _createClass = function() {
+        }), exports["default"] = void 0;
+        var _class, _temp, _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -190,45 +192,17 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _get = function(_x, _x2, _x3) {
-            for (var _again = !0; _again; ) {
-                var object = _x, property = _x2, receiver = _x3;
-                _again = !1, null === object && (object = Function.prototype);
-                var desc = Object.getOwnPropertyDescriptor(object, property);
-                if (void 0 !== desc) {
-                    if ("value" in desc) return desc.value;
-                    var getter = desc.get;
-                    if (void 0 === getter) return;
-                    return getter.call(receiver);
-                }
-                var parent = Object.getPrototypeOf(object);
-                if (null === parent) return;
-                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
-            }
-        }, _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), AutoSizer = function(_Component) {
+        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), AutoSizer = (_temp = _class = function(_Component) {
             function AutoSizer(props) {
-                _classCallCheck(this, AutoSizer), _get(Object.getPrototypeOf(AutoSizer.prototype), "constructor", this).call(this, props), 
-                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
+                _classCallCheck(this, AutoSizer);
+                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AutoSizer).call(this, props));
+                return _this.shouldComponentUpdate = _function2["default"], _this.state = {
                     height: 0,
                     width: 0
-                }, this._onResize = this._onResize.bind(this), this._setRef = this._setRef.bind(this);
+                }, _this._onResize = _this._onResize.bind(_this), _this._setRef = _this._setRef.bind(_this), 
+                _this;
             }
-            return _inherits(AutoSizer, _Component), _createClass(AutoSizer, null, [ {
-                key: "propTypes",
-                value: {
-                    /**
-	       * Function respondible for rendering children.
-	       * This function should implement the following signature:
-	       * ({ height, width }) => PropTypes.element
-	       */
-                    children: _react.PropTypes.func.isRequired,
-                    /** Disable dynamic :height property */
-                    disableHeight: _react.PropTypes.bool,
-                    /** Disable dynamic :width property */
-                    disableWidth: _react.PropTypes.bool
-                },
-                enumerable: !0
-            } ]), _createClass(AutoSizer, [ {
+            return _inherits(AutoSizer, _Component), _createClass(AutoSizer, [ {
                 key: "componentDidMount",
                 value: function() {
                     // Defer requiring resize handler in order to support server-side rendering.
@@ -259,10 +233,13 @@
             }, {
                 key: "_onResize",
                 value: function() {
-                    var _parentNode$getBoundingClientRect = this._parentNode.getBoundingClientRect(), height = _parentNode$getBoundingClientRect.height, width = _parentNode$getBoundingClientRect.width, style = getComputedStyle(this._parentNode), paddingLeft = parseInt(style.paddingLeft, 10), paddingRight = parseInt(style.paddingRight, 10), paddingTop = parseInt(style.paddingTop, 10), paddingBottom = parseInt(style.paddingBottom, 10);
+                    var onResize = this.props.onResize, _parentNode$getBoundi = this._parentNode.getBoundingClientRect(), height = _parentNode$getBoundi.height, width = _parentNode$getBoundi.width, style = getComputedStyle(this._parentNode), paddingLeft = parseInt(style.paddingLeft, 10), paddingRight = parseInt(style.paddingRight, 10), paddingTop = parseInt(style.paddingTop, 10), paddingBottom = parseInt(style.paddingBottom, 10);
                     this.setState({
                         height: height - paddingTop - paddingBottom,
                         width: width - paddingLeft - paddingRight
+                    }), onResize({
+                        height: height,
+                        width: width
                     });
                 }
             }, {
@@ -272,8 +249,15 @@
                     this._parentNode = autoSizer && autoSizer.parentNode;
                 }
             } ]), AutoSizer;
-        }(_react.Component);
-        exports["default"] = AutoSizer, module.exports = exports["default"];
+        }(_react.Component), _class.propTypes = {
+            children: _react.PropTypes.func.isRequired,
+            disableHeight: _react.PropTypes.bool,
+            disableWidth: _react.PropTypes.bool,
+            onResize: _react.PropTypes.func.isRequired
+        }, _class.defaultProps = {
+            onResize: function() {}
+        }, _temp);
+        exports["default"] = AutoSizer;
     }, /* 3 */
     /***/
     function(module, exports) {
@@ -309,6 +293,7 @@
     }, /* 6 */
     /***/
     function(module, exports) {
+        "use strict";
         /**
 	* Detect Element Resize.
 	* Forked in order to guard against unsafe 'window' and 'document' references.
@@ -319,7 +304,6 @@
 	* version: 0.5.3
 	**/
         // Check `document` and `window` in case of server-side rendering
-        "use strict";
         var _window;
         _window = "undefined" != typeof window ? window : "undefined" != typeof self ? self : void 0;
         var attachEvent = "undefined" != typeof document && document.attachEvent, stylesCreated = !1;
@@ -395,11 +379,9 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
+        }), exports.ColumnSizer = exports["default"] = void 0;
         var _ColumnSizer2 = __webpack_require__(8), _ColumnSizer3 = _interopRequireDefault(_ColumnSizer2);
-        exports["default"] = _ColumnSizer3["default"];
-        var _ColumnSizer4 = _interopRequireDefault(_ColumnSizer2);
-        exports.ColumnSizer = _ColumnSizer4["default"];
+        exports["default"] = _ColumnSizer3["default"], exports.ColumnSizer = _ColumnSizer3["default"];
     }, /* 8 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -411,6 +393,10 @@
         }
         function _classCallCheck(instance, Constructor) {
             if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
         }
         function _inherits(subClass, superClass) {
             if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -425,8 +411,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
-        var _createClass = function() {
+        }), exports["default"] = void 0;
+        var _class, _temp, _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -438,50 +424,14 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _get = function(_x, _x2, _x3) {
-            for (var _again = !0; _again; ) {
-                var object = _x, property = _x2, receiver = _x3;
-                _again = !1, null === object && (object = Function.prototype);
-                var desc = Object.getOwnPropertyDescriptor(object, property);
-                if (void 0 !== desc) {
-                    if ("value" in desc) return desc.value;
-                    var getter = desc.get;
-                    if (void 0 === getter) return;
-                    return getter.call(receiver);
-                }
-                var parent = Object.getPrototypeOf(object);
-                if (null === parent) return;
-                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
-            }
-        }, _react = __webpack_require__(3), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = function(_Component) {
+        }(), _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = (_temp = _class = function(_Component) {
             function ColumnSizer(props, context) {
-                _classCallCheck(this, ColumnSizer), _get(Object.getPrototypeOf(ColumnSizer.prototype), "constructor", this).call(this, props, context), 
-                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this._registerChild = this._registerChild.bind(this);
+                _classCallCheck(this, ColumnSizer);
+                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ColumnSizer).call(this, props, context));
+                return _this.shouldComponentUpdate = _function2["default"], _this._registerChild = _this._registerChild.bind(_this), 
+                _this;
             }
-            return _inherits(ColumnSizer, _Component), _createClass(ColumnSizer, null, [ {
-                key: "propTypes",
-                value: {
-                    /**
-	       * Function respondible for rendering a virtualized Grid.
-	       * This function should implement the following signature:
-	       * ({ adjustedWidth, getColumnWidth, registerChild }) => PropTypes.element
-	       *
-	       * The specified :getColumnWidth function should be passed to the Grid's :columnWidth property.
-	       * The :registerChild should be passed to the Grid's :ref property.
-	       * The :adjustedWidth property is optional; it reflects the lesser of the overall width or the width of all columns.
-	       */
-                    children: _react.PropTypes.func.isRequired,
-                    /** Optional maximum allowed column width */
-                    columnMaxWidth: _react.PropTypes.number,
-                    /** Optional minimum allowed column width */
-                    columnMinWidth: _react.PropTypes.number,
-                    /** Number of columns in Grid or FlexTable child */
-                    columnsCount: _react.PropTypes.number.isRequired,
-                    /** Width of Grid or FlexTable child */
-                    width: _react.PropTypes.number.isRequired
-                },
-                enumerable: !0
-            } ]), _createClass(ColumnSizer, [ {
+            return _inherits(ColumnSizer, _Component), _createClass(ColumnSizer, [ {
                 key: "componentDidUpdate",
                 value: function(prevProps, prevState) {
                     var _props = this.props, columnMaxWidth = _props.columnMaxWidth, columnMinWidth = _props.columnMinWidth, columnsCount = _props.columnsCount, width = _props.width;
@@ -509,8 +459,14 @@
                     this._registeredChild = child, this._registeredChild && this._registeredChild.recomputeGridSize();
                 }
             } ]), ColumnSizer;
-        }(_react.Component);
-        exports["default"] = ColumnSizer, module.exports = exports["default"];
+        }(_react.Component), _class.propTypes = {
+            children: _react.PropTypes.func.isRequired,
+            columnMaxWidth: _react.PropTypes.number,
+            columnMinWidth: _react.PropTypes.number,
+            columnsCount: _react.PropTypes.number.isRequired,
+            width: _react.PropTypes.number.isRequired
+        }, _temp);
+        exports["default"] = ColumnSizer;
     }, /* 9 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -522,11 +478,9 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
+        }), exports.Grid = exports["default"] = void 0;
         var _Grid2 = __webpack_require__(10), _Grid3 = _interopRequireDefault(_Grid2);
-        exports["default"] = _Grid3["default"];
-        var _Grid4 = _interopRequireDefault(_Grid2);
-        exports.Grid = _Grid4["default"];
+        exports["default"] = _Grid3["default"], exports.Grid = _Grid3["default"];
     }, /* 10 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -541,6 +495,10 @@
             function _classCallCheck(instance, Constructor) {
                 if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
             }
+            function _possibleConstructorReturn(self, call) {
+                if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+                return !call || "object" != typeof call && "function" != typeof call ? self : call;
+            }
             function _inherits(subClass, superClass) {
                 if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
                 subClass.prototype = Object.create(superClass && superClass.prototype, {
@@ -554,8 +512,8 @@
             }
             Object.defineProperty(exports, "__esModule", {
                 value: !0
-            });
-            var _createClass = function() {
+            }), exports["default"] = void 0;
+            var _class, _temp, _createClass = function() {
                 function defineProperties(target, props) {
                     for (var i = 0; i < props.length; i++) {
                         var descriptor = props[i];
@@ -567,136 +525,31 @@
                     return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                     Constructor;
                 };
-            }(), _get = function(_x, _x2, _x3) {
-                for (var _again = !0; _again; ) {
-                    var object = _x, property = _x2, receiver = _x3;
-                    _again = !1, null === object && (object = Function.prototype);
-                    var desc = Object.getOwnPropertyDescriptor(object, property);
-                    if (void 0 !== desc) {
-                        if ("value" in desc) return desc.value;
-                        var getter = desc.get;
-                        if (void 0 === getter) return;
-                        return getter.call(receiver);
-                    }
-                    var parent = Object.getPrototypeOf(object);
-                    if (null === parent) return;
-                    _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
-                }
-            }, _utils = __webpack_require__(13), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(15), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), IS_SCROLLING_TIMEOUT = 150, Grid = function(_Component) {
+            }(), _utils = __webpack_require__(13), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(15), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), IS_SCROLLING_TIMEOUT = 150, Grid = (_temp = _class = function(_Component) {
                 function Grid(props, context) {
-                    _classCallCheck(this, Grid), _get(Object.getPrototypeOf(Grid.prototype), "constructor", this).call(this, props, context), 
-                    this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
+                    _classCallCheck(this, Grid);
+                    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Grid).call(this, props, context));
+                    // Invokes onSectionRendered callback only when start/stop row or column indices change
+                    // Bind functions to instance so they don't lose context when passed around
+                    return _this.shouldComponentUpdate = _function2["default"], _this.state = {
                         computeGridMetadataOnNextUpdate: !1,
                         isScrolling: !1,
                         scrollLeft: 0,
                         scrollTop: 0
-                    }, // Invokes onSectionRendered callback only when start/stop row or column indices change
-                    this._onGridRenderedMemoizer = (0, _utils.createCallbackMemoizer)(), this._onScrollMemoizer = (0, 
-                    _utils.createCallbackMemoizer)(!1), // Bind functions to instance so they don't lose context when passed around
-                    this._computeGridMetadata = this._computeGridMetadata.bind(this), this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this), 
-                    this._onKeyPress = this._onKeyPress.bind(this), this._onScroll = this._onScroll.bind(this), 
-                    this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this), 
-                    this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this);
+                    }, _this._onGridRenderedMemoizer = (0, _utils.createCallbackMemoizer)(), _this._onScrollMemoizer = (0, 
+                    _utils.createCallbackMemoizer)(!1), _this._computeGridMetadata = _this._computeGridMetadata.bind(_this), 
+                    _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this), 
+                    _this._onKeyPress = _this._onKeyPress.bind(_this), _this._onScroll = _this._onScroll.bind(_this), 
+                    _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this), 
+                    _this._updateScrollTopForScrollToRow = _this._updateScrollTopForScrollToRow.bind(_this), 
+                    _this;
                 }
                 /**
 	   * Forced recompute of row heights and column widths.
 	   * This function should be called if dynamic column or row sizes have changed but nothing else has.
 	   * Since Grid only receives :columnsCount and :rowsCount it has no way of detecting when the underlying data changes.
 	   */
-                return _inherits(Grid, _Component), _createClass(Grid, null, [ {
-                    key: "propTypes",
-                    value: {
-                        /**
-	       * Optional custom CSS class name to attach to root Grid element.
-	       */
-                        className: _react.PropTypes.string,
-                        /**
-	       * Number of columns in grid.
-	       */
-                        columnsCount: _react.PropTypes.number.isRequired,
-                        /**
-	       * Either a fixed column width (number) or a function that returns the width of a column given its index.
-	       * Should implement the following interface: (index: number): number
-	       */
-                        columnWidth: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
-                        /**
-	       * Height of Grid; this property determines the number of visible (vs virtualized) rows.
-	       */
-                        height: _react.PropTypes.number.isRequired,
-                        /**
-	       * Optional renderer to be used in place of rows when either :rowsCount or :columnsCount is 0.
-	       */
-                        noContentRenderer: _react.PropTypes.func.isRequired,
-                        /**
-	       * Callback invoked whenever the scroll offset changes within the inner scrollable region.
-	       * This callback can be used to sync scrolling between lists, tables, or grids.
-	       * ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void
-	       */
-                        onScroll: _react.PropTypes.func.isRequired,
-                        /**
-	       * Callback invoked with information about the section of the Grid that was just rendered.
-	       * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
-	       */
-                        onSectionRendered: _react.PropTypes.func.isRequired,
-                        /**
-	       * Number of columns to render before/after the visible section of the grid.
-	       * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
-	       */
-                        overscanColumnsCount: _react.PropTypes.number.isRequired,
-                        /**
-	       * Number of rows to render above/below the visible section of the grid.
-	       * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
-	       */
-                        overscanRowsCount: _react.PropTypes.number.isRequired,
-                        /**
-	       * Responsible for rendering a cell given an row and column index.
-	       * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
-	       */
-                        renderCell: _react.PropTypes.func.isRequired,
-                        /**
-	       * Either a fixed row height (number) or a function that returns the height of a row given its index.
-	       * Should implement the following interface: (index: number): number
-	       */
-                        rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
-                        /**
-	       * Number of rows in grid.
-	       */
-                        rowsCount: _react.PropTypes.number.isRequired,
-                        /** Horizontal offset. */
-                        scrollLeft: _react.PropTypes.number,
-                        /**
-	       * Column index to ensure visible (by forcefully scrolling if necessary)
-	       */
-                        scrollToColumn: _react.PropTypes.number,
-                        /** Vertical offset. */
-                        scrollTop: _react.PropTypes.number,
-                        /**
-	       * Row index to ensure visible (by forcefully scrolling if necessary)
-	       */
-                        scrollToRow: _react.PropTypes.number,
-                        /**
-	       * Width of Grid; this property determines the number of visible (vs virtualized) columns.
-	       */
-                        width: _react.PropTypes.number.isRequired
-                    },
-                    enumerable: !0
-                }, {
-                    key: "defaultProps",
-                    value: {
-                        noContentRenderer: function() {
-                            return null;
-                        },
-                        onScroll: function() {
-                            return null;
-                        },
-                        onSectionRendered: function() {
-                            return null;
-                        },
-                        overscanColumnsCount: 0,
-                        overscanRowsCount: 10
-                    },
-                    enumerable: !0
-                } ]), _createClass(Grid, [ {
+                return _inherits(Grid, _Component), _createClass(Grid, [ {
                     key: "recomputeGridSize",
                     value: function() {
                         this.setState({
@@ -719,14 +572,14 @@
                 }, {
                     key: "componentDidMount",
                     value: function() {
-                        var _this = this, _props = this.props, scrollLeft = _props.scrollLeft, scrollToColumn = _props.scrollToColumn, scrollTop = _props.scrollTop, scrollToRow = _props.scrollToRow;
+                        var _this2 = this, _props = this.props, scrollLeft = _props.scrollLeft, scrollToColumn = _props.scrollToColumn, scrollTop = _props.scrollTop, scrollToRow = _props.scrollToRow;
                         scrollLeft >= 0 && this.setState({
                             scrollLeft: scrollLeft
                         }), scrollTop >= 0 && this.setState({
                             scrollTop: scrollTop
                         }), (scrollToColumn >= 0 || scrollToRow >= 0) && (// Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
                         this._setImmediateId = setImmediate(function() {
-                            _this._setImmediateId = null, _this._updateScrollLeftForScrollToColumn(), _this._updateScrollTopForScrollToRow();
+                            _this2._setImmediateId = null, _this2._updateScrollLeftForScrollToColumn(), _this2._updateScrollTopForScrollToRow();
                         })), // Update onRowsRendered callback
                         this._invokeOnGridRenderedHelper();
                     }
@@ -821,18 +674,18 @@
                         var _props3 = this.props, className = _props3.className, columnsCount = _props3.columnsCount, height = _props3.height, noContentRenderer = _props3.noContentRenderer, overscanColumnsCount = _props3.overscanColumnsCount, overscanRowsCount = _props3.overscanRowsCount, renderCell = _props3.renderCell, rowsCount = _props3.rowsCount, width = _props3.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = [];
                         // Render only enough columns and rows to cover the visible area of the grid.
                         if (height > 0 && width > 0) {
-                            var _getVisibleCellIndices = (0, _utils.getVisibleCellIndices)({
+                            var _getVisibleCellIndice = (0, _utils.getVisibleCellIndices)({
                                 cellsCount: columnsCount,
                                 cellMetadata: this._columnMetadata,
                                 containerSize: width,
                                 currentOffset: scrollLeft
-                            }), columnStartIndex = _getVisibleCellIndices.start, columnStopIndex = _getVisibleCellIndices.stop, _getVisibleCellIndices2 = (0, 
+                            }), columnStartIndex = _getVisibleCellIndice.start, columnStopIndex = _getVisibleCellIndice.stop, _getVisibleCellIndice2 = (0, 
                             _utils.getVisibleCellIndices)({
                                 cellsCount: rowsCount,
                                 cellMetadata: this._rowMetadata,
                                 containerSize: height,
                                 currentOffset: scrollTop
-                            }), rowStartIndex = _getVisibleCellIndices2.start, rowStopIndex = _getVisibleCellIndices2.stop;
+                            }), rowStartIndex = _getVisibleCellIndice2.start, rowStopIndex = _getVisibleCellIndice2.stop;
                             // Store for :onSectionRendered callback in componentDidUpdate
                             this._renderedColumnStartIndex = columnStartIndex, this._renderedColumnStopIndex = columnStopIndex, 
                             this._renderedRowStartIndex = rowStartIndex, this._renderedRowStopIndex = rowStopIndex;
@@ -958,10 +811,10 @@
                 }, {
                     key: "_setNextState",
                     value: function(state) {
-                        var _this2 = this;
+                        var _this3 = this;
                         this._setNextStateAnimationFrameId && _raf2["default"].cancel(this._setNextStateAnimationFrameId), 
                         this._setNextStateAnimationFrameId = (0, _raf2["default"])(function() {
-                            _this2._setNextStateAnimationFrameId = null, _this2.setState(state);
+                            _this3._setNextStateAnimationFrameId = null, _this3.setState(state);
                         });
                     }
                 }, {
@@ -987,10 +840,10 @@
                 }, {
                     key: "_temporarilyDisablePointerEvents",
                     value: function() {
-                        var _this3 = this;
+                        var _this4 = this;
                         this._disablePointerEventsTimeoutId && clearTimeout(this._disablePointerEventsTimeoutId), 
                         this._disablePointerEventsTimeoutId = setTimeout(function() {
-                            _this3._disablePointerEventsTimeoutId = null, _this3.setState({
+                            _this4._disablePointerEventsTimeoutId = null, _this4.setState({
                                 isScrolling: !1
                             });
                         }, IS_SCROLLING_TIMEOUT);
@@ -1119,8 +972,38 @@
                         }
                     }
                 } ]), Grid;
-            }(_react.Component);
-            exports["default"] = Grid, module.exports = exports["default"];
+            }(_react.Component), _class.propTypes = {
+                className: _react.PropTypes.string,
+                columnsCount: _react.PropTypes.number.isRequired,
+                columnWidth: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
+                height: _react.PropTypes.number.isRequired,
+                noContentRenderer: _react.PropTypes.func.isRequired,
+                onScroll: _react.PropTypes.func.isRequired,
+                onSectionRendered: _react.PropTypes.func.isRequired,
+                overscanColumnsCount: _react.PropTypes.number.isRequired,
+                overscanRowsCount: _react.PropTypes.number.isRequired,
+                renderCell: _react.PropTypes.func.isRequired,
+                rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
+                rowsCount: _react.PropTypes.number.isRequired,
+                scrollLeft: _react.PropTypes.number,
+                scrollToColumn: _react.PropTypes.number,
+                scrollTop: _react.PropTypes.number,
+                scrollToRow: _react.PropTypes.number,
+                width: _react.PropTypes.number.isRequired
+            }, _class.defaultProps = {
+                noContentRenderer: function() {
+                    return null;
+                },
+                onScroll: function() {
+                    return null;
+                },
+                onSectionRendered: function() {
+                    return null;
+                },
+                overscanColumnsCount: 0,
+                overscanRowsCount: 10
+            }, _temp);
+            exports["default"] = Grid;
         }).call(exports, __webpack_require__(11).setImmediate, __webpack_require__(11).clearImmediate);
     }, /* 11 */
     /***/
@@ -1211,6 +1094,7 @@
     }, /* 13 */
     /***/
     function(module, exports) {
+        "use strict";
         /**
 	 * Helper method that determines when to recalculate row or column metadata.
 	 *
@@ -1225,7 +1109,6 @@
 	 * @param scrollToIndex Scroll-to-index
 	 * @param updateScrollOffsetForScrollToIndex Callback to invoke if the scroll position should be recalculated
 	 */
-        "use strict";
         function computeCellMetadataAndUpdateScrollOffsetHelper(_ref) {
             var cellsCount = _ref.cellsCount, cellSize = _ref.cellSize, computeMetadataCallback = _ref.computeMetadataCallback, computeMetadataCallbackProps = _ref.computeMetadataCallbackProps, computeMetadataOnNextUpdate = _ref.computeMetadataOnNextUpdate, nextCellsCount = _ref.nextCellsCount, nextCellSize = _ref.nextCellSize, nextScrollToIndex = _ref.nextScrollToIndex, scrollToIndex = _ref.scrollToIndex, updateScrollOffsetForScrollToIndex = _ref.updateScrollOffsetForScrollToIndex;
             // Don't compare cell sizes if they are functions because inline functions would cause infinite loops.
@@ -1526,11 +1409,9 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
-        var _FlexTable2 = __webpack_require__(19), _FlexTable3 = _interopRequireDefault(_FlexTable2);
-        exports["default"] = _FlexTable3["default"];
-        var _FlexTable4 = _interopRequireDefault(_FlexTable2);
-        exports.FlexTable = _FlexTable4["default"], Object.defineProperty(exports, "SortDirection", {
+        }), exports.FlexColumn = exports.SortIndicator = exports.SortDirection = exports.FlexTable = exports["default"] = void 0;
+        var _FlexTable2 = __webpack_require__(19);
+        Object.defineProperty(exports, "SortDirection", {
             enumerable: !0,
             get: function() {
                 return _FlexTable2.SortDirection;
@@ -1541,7 +1422,8 @@
                 return _FlexTable2.SortIndicator;
             }
         });
-        var _FlexColumn2 = __webpack_require__(20), _FlexColumn3 = _interopRequireDefault(_FlexColumn2);
+        var _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(20), _FlexColumn3 = _interopRequireDefault(_FlexColumn2);
+        exports["default"] = _FlexTable3["default"], exports.FlexTable = _FlexTable3["default"], 
         exports.FlexColumn = _FlexColumn3["default"];
     }, /* 19 */
     /***/
@@ -1554,6 +1436,10 @@
         }
         function _classCallCheck(instance, Constructor) {
             if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
         }
         function _inherits(subClass, superClass) {
             if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -1588,8 +1474,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
-        var _createClass = function() {
+        }), exports["default"] = exports.SortDirection = void 0;
+        var _class, _temp, _initialiseProps, _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -1601,24 +1487,9 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _get = function(_x, _x2, _x3) {
-            for (var _again = !0; _again; ) {
-                var object = _x, property = _x2, receiver = _x3;
-                _again = !1, null === object && (object = Function.prototype);
-                var desc = Object.getOwnPropertyDescriptor(object, property);
-                if (void 0 !== desc) {
-                    if ("value" in desc) return desc.value;
-                    var getter = desc.get;
-                    if (void 0 === getter) return;
-                    return getter.call(receiver);
-                }
-                var parent = Object.getPrototypeOf(object);
-                if (null === parent) return;
-                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
-            }
-        };
+        }();
         exports.SortIndicator = SortIndicator;
-        var _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(20), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(21), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), SortDirection = {
+        var _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(20), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(21), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), SortDirection = exports.SortDirection = {
             /**
 	   * Sort items in ascending order.
 	   * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
@@ -1629,129 +1500,18 @@
 	   * This means arranging from the highest value to the lowest (e.g. z-a, 9-0).
 	   */
             DESC: "DESC"
-        };
-        exports.SortDirection = SortDirection;
-        /**
-	 * Table component with fixed headers and virtualized rows for improved performance with large data sets.
-	 * This component expects explicit width, height, and padding parameters.
-	 */
-        var FlexTable = function(_Component) {
+        }, FlexTable = (_temp = _class = function(_Component) {
             function FlexTable(props) {
-                _classCallCheck(this, FlexTable), _get(Object.getPrototypeOf(FlexTable.prototype), "constructor", this).call(this, props), 
-                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
+                _classCallCheck(this, FlexTable);
+                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
+                return _initialiseProps.call(_this), _this.state = {
                     scrollbarWidth: 0
-                }, this._createRow = this._createRow.bind(this);
+                }, _this._createRow = _this._createRow.bind(_this), _this;
             }
-            /**
-	   * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
-	   */
             /**
 	   * See Grid#recomputeGridSize
 	   */
-            return _inherits(FlexTable, _Component), _createClass(FlexTable, null, [ {
-                key: "propTypes",
-                value: {
-                    /** One or more FlexColumns describing the data displayed in this row */
-                    children: function children(props, propName, componentName) {
-                        for (var children = _react2["default"].Children.toArray(props.children), i = 0; i < children.length; i++) if (children[i].type !== _FlexColumn2["default"]) return new Error("FlexTable only accepts children of type FlexColumn");
-                    },
-                    /** Optional CSS class name */
-                    className: _react.PropTypes.string,
-                    /** Disable rendering the header at all */
-                    disableHeader: _react.PropTypes.bool,
-                    /** Optional CSS class to apply to all column headers */
-                    headerClassName: _react.PropTypes.string,
-                    /** Fixed height of header row */
-                    headerHeight: _react.PropTypes.number.isRequired,
-                    /** Fixed/available height for out DOM element */
-                    height: _react.PropTypes.number.isRequired,
-                    /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
-                    noRowsRenderer: _react.PropTypes.func,
-                    /**
-	      * Optional callback when a column's header is clicked.
-	      * (dataKey: string): void
-	      */
-                    onHeaderClick: _react.PropTypes.func,
-                    /**
-	       * Callback invoked when a user clicks on a table row.
-	       * (rowIndex: number): void
-	       */
-                    onRowClick: _react.PropTypes.func,
-                    /**
-	       * Callback invoked with information about the slice of rows that were just rendered.
-	       * ({ startIndex, stopIndex }): void
-	       */
-                    onRowsRendered: _react.PropTypes.func,
-                    /**
-	       * Callback invoked whenever the scroll offset changes within the inner scrollable region.
-	       * This callback can be used to sync scrolling between lists, tables, or grids.
-	       * ({ clientHeight, scrollHeight, scrollTop }): void
-	       */
-                    onScroll: _react.PropTypes.func.isRequired,
-                    /**
-	       * Number of rows to render above/below the visible bounds of the list.
-	       * These rows can help for smoother scrolling on touch devices.
-	       */
-                    overscanRowsCount: _react.PropTypes.number.isRequired,
-                    /**
-	       * Optional CSS class to apply to all table rows (including the header row).
-	       * This property can be a CSS class name (string) or a function that returns a class name.
-	       * If a function is provided its signature should be: (rowIndex: number): string
-	       */
-                    rowClassName: _react.PropTypes.oneOfType([ _react.PropTypes.string, _react.PropTypes.func ]),
-                    /**
-	       * Callback responsible for returning a data row given an index.
-	       * (index: number): any
-	       */
-                    rowGetter: _react.PropTypes.func.isRequired,
-                    /**
-	       * Either a fixed row height (number) or a function that returns the height of a row given its index.
-	       * (index: number): number
-	       */
-                    rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
-                    /** Number of rows in table. */
-                    rowsCount: _react.PropTypes.number.isRequired,
-                    /** Row index to ensure visible (by forcefully scrolling if necessary) */
-                    scrollToIndex: _react.PropTypes.number,
-                    /** Vertical offset. */
-                    scrollTop: _react.PropTypes.number,
-                    /**
-	       * Sort function to be called if a sortable header is clicked.
-	       * (dataKey: string, sortDirection: SortDirection): void
-	       */
-                    sort: _react.PropTypes.func,
-                    /** FlexTable data is currently sorted by this :dataKey (if it is sorted at all) */
-                    sortBy: _react.PropTypes.string,
-                    /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
-                    sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ]),
-                    /** Width of list */
-                    width: _react.PropTypes.number.isRequired
-                },
-                enumerable: !0
-            }, {
-                key: "defaultProps",
-                value: {
-                    disableHeader: !1,
-                    headerHeight: 0,
-                    noRowsRenderer: function() {
-                        return null;
-                    },
-                    onHeaderClick: function() {
-                        return null;
-                    },
-                    onRowClick: function() {
-                        return null;
-                    },
-                    onRowsRendered: function() {
-                        return null;
-                    },
-                    onScroll: function() {
-                        return null;
-                    },
-                    overscanRowsCount: 10
-                },
-                enumerable: !0
-            } ]), _createClass(FlexTable, [ {
+            return _inherits(FlexTable, _Component), _createClass(FlexTable, [ {
                 key: "recomputeRowHeights",
                 value: function() {
                     this.refs.Grid.recomputeGridSize();
@@ -1791,8 +1551,8 @@
             }, {
                 key: "render",
                 value: function() {
-                    var _this = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, onScroll = _props.onScroll, overscanRowsCount = _props.overscanRowsCount, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, width = _props.width, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = height - headerHeight, rowRenderer = function(index) {
-                        return _this._createRow(index);
+                    var _this2 = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, _onScroll = _props.onScroll, overscanRowsCount = _props.overscanRowsCount, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, width = _props.width, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = height - headerHeight, rowRenderer = function(index) {
+                        return _this2._createRow(index);
                     }, rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
                     return _react2["default"].createElement("div", {
                         className: (0, _classnames2["default"])("FlexTable", className)
@@ -1812,7 +1572,7 @@
                         noContentRenderer: noRowsRenderer,
                         onScroll: function(_ref) {
                             var clientHeight = _ref.clientHeight, scrollHeight = _ref.scrollHeight, scrollTop = _ref.scrollTop;
-                            return onScroll({
+                            return _onScroll({
                                 clientHeight: clientHeight,
                                 scrollHeight: scrollHeight,
                                 scrollTop: scrollTop
@@ -1875,8 +1635,8 @@
             }, {
                 key: "_createRow",
                 value: function(rowIndex) {
-                    var _this2 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, scrollbarWidth = this.state.scrollbarWidth, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
-                        return _this2._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
+                    var _this3 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, scrollbarWidth = this.state.scrollbarWidth, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
+                        return _this3._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
                     });
                     return _react2["default"].createElement("div", {
                         key: rowIndex,
@@ -1893,19 +1653,20 @@
             }, {
                 key: "_getFlexStyleForColumn",
                 value: function(column) {
-                    var flexValue = column.props.flexGrow + " " + column.props.flexShrink + " " + column.props.width + "px";
-                    return {
+                    var flexValue = column.props.flexGrow + " " + column.props.flexShrink + " " + column.props.width + "px", style = {
                         flex: flexValue,
                         msFlex: flexValue,
                         WebkitFlex: flexValue
                     };
+                    return column.props.maxWidth && (style.maxWidth = column.props.maxWidth), column.props.minWidth && (style.minWidth = column.props.minWidth), 
+                    style;
                 }
             }, {
                 key: "_getRenderedHeaderRow",
                 value: function() {
-                    var _this3 = this, _props4 = this.props, children = _props4.children, disableHeader = _props4.disableHeader, items = disableHeader ? [] : children;
+                    var _this4 = this, _props4 = this.props, children = _props4.children, disableHeader = _props4.disableHeader, items = disableHeader ? [] : children;
                     return _react2["default"].Children.map(items, function(column, columnIndex) {
-                        return _this3._createHeader(column, columnIndex);
+                        return _this4._createHeader(column, columnIndex);
                     });
                 }
             }, {
@@ -1923,7 +1684,56 @@
                     });
                 }
             } ]), FlexTable;
-        }(_react.Component);
+        }(_react.Component), _class.propTypes = {
+            children: function children(props, propName, componentName) {
+                for (var children = _react2["default"].Children.toArray(props.children), i = 0; i < children.length; i++) if (children[i].type !== _FlexColumn2["default"]) return new Error("FlexTable only accepts children of type FlexColumn");
+            },
+            className: _react.PropTypes.string,
+            disableHeader: _react.PropTypes.bool,
+            headerClassName: _react.PropTypes.string,
+            headerHeight: _react.PropTypes.number.isRequired,
+            height: _react.PropTypes.number.isRequired,
+            noRowsRenderer: _react.PropTypes.func,
+            onHeaderClick: _react.PropTypes.func,
+            onRowClick: _react.PropTypes.func,
+            onRowsRendered: _react.PropTypes.func,
+            onScroll: _react.PropTypes.func.isRequired,
+            overscanRowsCount: _react.PropTypes.number.isRequired,
+            rowClassName: _react.PropTypes.oneOfType([ _react.PropTypes.string, _react.PropTypes.func ]),
+            rowGetter: _react.PropTypes.func.isRequired,
+            rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
+            rowsCount: _react.PropTypes.number.isRequired,
+            scrollToIndex: _react.PropTypes.number,
+            scrollTop: _react.PropTypes.number,
+            sort: _react.PropTypes.func,
+            sortBy: _react.PropTypes.string,
+            sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ]),
+            width: _react.PropTypes.number.isRequired
+        }, _class.defaultProps = {
+            disableHeader: !1,
+            headerHeight: 0,
+            noRowsRenderer: function() {
+                return null;
+            },
+            onHeaderClick: function() {
+                return null;
+            },
+            onRowClick: function() {
+                return null;
+            },
+            onRowsRendered: function() {
+                return null;
+            },
+            onScroll: function() {
+                return null;
+            },
+            overscanRowsCount: 10
+        }, _initialiseProps = function() {
+            this.shouldComponentUpdate = _function2["default"];
+        }, _temp);
+        /**
+	 * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
+	 */
         exports["default"] = FlexTable, SortIndicator.propTypes = {
             sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ])
         };
@@ -1933,6 +1743,10 @@
         "use strict";
         function _classCallCheck(instance, Constructor) {
             if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
         }
         function _inherits(subClass, superClass) {
             if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -1962,84 +1776,34 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
-        var _createClass = function() {
-            function defineProperties(target, props) {
-                for (var i = 0; i < props.length; i++) {
-                    var descriptor = props[i];
-                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
-                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
-                }
-            }
-            return function(Constructor, protoProps, staticProps) {
-                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
-                Constructor;
-            };
-        }(), _get = function(_x, _x2, _x3) {
-            for (var _again = !0; _again; ) {
-                var object = _x, property = _x2, receiver = _x3;
-                _again = !1, null === object && (object = Function.prototype);
-                var desc = Object.getOwnPropertyDescriptor(object, property);
-                if (void 0 !== desc) {
-                    if ("value" in desc) return desc.value;
-                    var getter = desc.get;
-                    if (void 0 === getter) return;
-                    return getter.call(receiver);
-                }
-                var parent = Object.getPrototypeOf(object);
-                if (null === parent) return;
-                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
-            }
-        };
+        }), exports["default"] = void 0;
+        var _class, _temp;
         exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter;
-        var _react = __webpack_require__(3), Column = function(_Component) {
+        var _react = __webpack_require__(3), Column = (_temp = _class = function(_Component) {
             function Column() {
-                _classCallCheck(this, Column), _get(Object.getPrototypeOf(Column.prototype), "constructor", this).apply(this, arguments);
+                return _classCallCheck(this, Column), _possibleConstructorReturn(this, Object.getPrototypeOf(Column).apply(this, arguments));
             }
-            return _inherits(Column, _Component), _createClass(Column, null, [ {
-                key: "defaultProps",
-                value: {
-                    cellDataGetter: defaultCellDataGetter,
-                    cellRenderer: defaultCellRenderer,
-                    flexGrow: 0,
-                    flexShrink: 1
-                },
-                enumerable: !0
-            }, {
-                key: "propTypes",
-                value: {
-                    /** Optional CSS class to apply to cell */
-                    cellClassName: _react.PropTypes.string,
-                    /**
-	       * Callback responsible for returning a cell's data, given its :dataKey
-	       * (dataKey: string, rowData: any): any
-	       */
-                    cellDataGetter: _react.PropTypes.func,
-                    /**
-	       * Callback responsible for rendering a cell's contents.
-	       * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
-	       */
-                    cellRenderer: _react.PropTypes.func,
-                    /** Optional additional data passed to this column's :cellDataGetter */
-                    columnData: _react.PropTypes.object,
-                    /** Uniquely identifies the row-data attribute correspnding to this cell */
-                    dataKey: _react.PropTypes.any.isRequired,
-                    /** If sort is enabled for the table at large, disable it for this column */
-                    disableSort: _react.PropTypes.bool,
-                    /** Flex grow style; defaults to 0 */
-                    flexGrow: _react.PropTypes.number,
-                    /** Flex shrink style; defaults to 1 */
-                    flexShrink: _react.PropTypes.number,
-                    /** Optional CSS class to apply to this column's header */
-                    headerClassName: _react.PropTypes.string,
-                    /** Header label for this column */
-                    label: _react.PropTypes.string,
-                    /** Optional fixed width for this column */
-                    width: _react.PropTypes.number.isRequired
-                },
-                enumerable: !0
-            } ]), Column;
-        }(_react.Component);
+            return _inherits(Column, _Component), Column;
+        }(_react.Component), _class.defaultProps = {
+            cellDataGetter: defaultCellDataGetter,
+            cellRenderer: defaultCellRenderer,
+            flexGrow: 0,
+            flexShrink: 1
+        }, _class.propTypes = {
+            cellClassName: _react.PropTypes.string,
+            cellDataGetter: _react.PropTypes.func,
+            cellRenderer: _react.PropTypes.func,
+            columnData: _react.PropTypes.object,
+            dataKey: _react.PropTypes.any.isRequired,
+            disableSort: _react.PropTypes.bool,
+            flexGrow: _react.PropTypes.number,
+            flexShrink: _react.PropTypes.number,
+            headerClassName: _react.PropTypes.string,
+            label: _react.PropTypes.string,
+            maxWidth: _react.PropTypes.number,
+            minWidth: _react.PropTypes.number,
+            width: _react.PropTypes.number.isRequired
+        }, _temp);
         exports["default"] = Column;
     }, /* 21 */
     /***/
@@ -2056,11 +1820,9 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
+        }), exports.InfiniteLoader = exports["default"] = void 0;
         var _InfiniteLoader2 = __webpack_require__(23), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
-        exports["default"] = _InfiniteLoader3["default"];
-        var _InfiniteLoader4 = _interopRequireDefault(_InfiniteLoader2);
-        exports.InfiniteLoader = _InfiniteLoader4["default"];
+        exports["default"] = _InfiniteLoader3["default"], exports.InfiniteLoader = _InfiniteLoader3["default"];
     }, /* 23 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -2072,6 +1834,10 @@
         }
         function _classCallCheck(instance, Constructor) {
             if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
         }
         function _inherits(subClass, superClass) {
             if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -2106,8 +1872,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
-        var _createClass = function() {
+        }), exports["default"] = void 0;
+        var _class, _temp, _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -2119,77 +1885,16 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _get = function(_x, _x2, _x3) {
-            for (var _again = !0; _again; ) {
-                var object = _x, property = _x2, receiver = _x3;
-                _again = !1, null === object && (object = Function.prototype);
-                var desc = Object.getOwnPropertyDescriptor(object, property);
-                if (void 0 !== desc) {
-                    if ("value" in desc) return desc.value;
-                    var getter = desc.get;
-                    if (void 0 === getter) return;
-                    return getter.call(receiver);
-                }
-                var parent = Object.getPrototypeOf(object);
-                if (null === parent) return;
-                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
-            }
-        };
+        }();
         exports.isRangeVisible = isRangeVisible, exports.scanForUnloadedRanges = scanForUnloadedRanges;
-        var _react = __webpack_require__(3), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), InfiniteLoader = function(_Component) {
+        var _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), InfiniteLoader = (_temp = _class = function(_Component) {
             function InfiniteLoader(props, context) {
-                _classCallCheck(this, InfiniteLoader), _get(Object.getPrototypeOf(InfiniteLoader.prototype), "constructor", this).call(this, props, context), 
-                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this._onRowsRendered = this._onRowsRendered.bind(this), 
-                this._registerChild = this._registerChild.bind(this);
+                _classCallCheck(this, InfiniteLoader);
+                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InfiniteLoader).call(this, props, context));
+                return _this.shouldComponentUpdate = _function2["default"], _this._onRowsRendered = _this._onRowsRendered.bind(_this), 
+                _this._registerChild = _this._registerChild.bind(_this), _this;
             }
-            /**
-	   * Determines if the specified start/stop range is visible based on the most recently rendered range.
-	   */
-            return _inherits(InfiniteLoader, _Component), _createClass(InfiniteLoader, null, [ {
-                key: "propTypes",
-                value: {
-                    /**
-	       * Function respondible for rendering a virtualized component.
-	       * This function should implement the following signature:
-	       * ({ onRowsRendered, registerChild }) => PropTypes.element
-	       *
-	       * The specified :onRowsRendered function should be passed through to the child's :onRowsRendered property.
-	       * The :registerChild callback should be set as the virtualized component's :ref.
-	       */
-                    children: _react.PropTypes.func.isRequired,
-                    /**
-	       * Function responsible for tracking the loaded state of each row.
-	       * It should implement the following signature: (index: number): boolean
-	       */
-                    isRowLoaded: _react.PropTypes.func.isRequired,
-                    /**
-	       * Callback to be invoked when more rows must be loaded.
-	       * It should implement the following signature: ({ startIndex, stopIndex }): Promise
-	       * The returned Promise should be resolved once row data has finished loading.
-	       * It will be used to determine when to refresh the list with the newly-loaded data.
-	       * This callback may be called multiple times in reaction to a single scroll event.
-	       */
-                    loadMoreRows: _react.PropTypes.func.isRequired,
-                    /**
-	       * Number of rows in list; can be arbitrary high number if actual number is unknown.
-	       */
-                    rowsCount: _react.PropTypes.number.isRequired,
-                    /**
-	       * Threshold at which to pre-fetch data.
-	       * A threshold X means that data will start loading when a user scrolls within X rows.
-	       * This value defaults to 15.
-	       */
-                    threshold: _react.PropTypes.number.isRequired
-                },
-                enumerable: !0
-            }, {
-                key: "defaultProps",
-                value: {
-                    rowsCount: 0,
-                    threshold: 15
-                },
-                enumerable: !0
-            } ]), _createClass(InfiniteLoader, [ {
+            return _inherits(InfiniteLoader, _Component), _createClass(InfiniteLoader, [ {
                 key: "render",
                 value: function() {
                     var children = this.props.children;
@@ -2201,7 +1906,7 @@
             }, {
                 key: "_onRowsRendered",
                 value: function(_ref) {
-                    var _this = this, startIndex = _ref.startIndex, stopIndex = _ref.stopIndex, _props = this.props, isRowLoaded = _props.isRowLoaded, loadMoreRows = _props.loadMoreRows, rowsCount = _props.rowsCount, threshold = _props.threshold;
+                    var _this2 = this, startIndex = _ref.startIndex, stopIndex = _ref.stopIndex, _props = this.props, isRowLoaded = _props.isRowLoaded, loadMoreRows = _props.loadMoreRows, rowsCount = _props.rowsCount, threshold = _props.threshold;
                     this._lastRenderedStartIndex = startIndex, this._lastRenderedStopIndex = stopIndex;
                     var unloadedRanges = scanForUnloadedRanges({
                         isRowLoaded: isRowLoaded,
@@ -2214,11 +1919,11 @@
                             // Refresh the visible rows if any of them have just been loaded.
                             // Otherwise they will remain in their unloaded visual state.
                             isRangeVisible({
-                                lastRenderedStartIndex: _this._lastRenderedStartIndex,
-                                lastRenderedStopIndex: _this._lastRenderedStopIndex,
+                                lastRenderedStartIndex: _this2._lastRenderedStartIndex,
+                                lastRenderedStopIndex: _this2._lastRenderedStopIndex,
                                 startIndex: unloadedRange.startIndex,
                                 stopIndex: unloadedRange.stopIndex
-                            }) && _this._registeredChild && _this._registeredChild.forceUpdate();
+                            }) && _this2._registeredChild && _this2._registeredChild.forceUpdate();
                         });
                     });
                 }
@@ -2228,7 +1933,19 @@
                     this._registeredChild = registeredChild;
                 }
             } ]), InfiniteLoader;
-        }(_react.Component);
+        }(_react.Component), _class.propTypes = {
+            children: _react.PropTypes.func.isRequired,
+            isRowLoaded: _react.PropTypes.func.isRequired,
+            loadMoreRows: _react.PropTypes.func.isRequired,
+            rowsCount: _react.PropTypes.number.isRequired,
+            threshold: _react.PropTypes.number.isRequired
+        }, _class.defaultProps = {
+            rowsCount: 0,
+            threshold: 15
+        }, _temp);
+        /**
+	 * Determines if the specified start/stop range is visible based on the most recently rendered range.
+	 */
         exports["default"] = InfiniteLoader;
     }, /* 24 */
     /***/
@@ -2241,11 +1958,9 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
+        }), exports.ScrollSync = exports["default"] = void 0;
         var _ScrollSync2 = __webpack_require__(25), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
-        exports["default"] = _ScrollSync3["default"];
-        var _ScrollSync4 = _interopRequireDefault(_ScrollSync2);
-        exports.ScrollSync = _ScrollSync4["default"];
+        exports["default"] = _ScrollSync3["default"], exports.ScrollSync = _ScrollSync3["default"];
     }, /* 25 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -2257,6 +1972,10 @@
         }
         function _classCallCheck(instance, Constructor) {
             if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
         }
         function _inherits(subClass, superClass) {
             if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -2271,8 +1990,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
-        var _createClass = function() {
+        }), exports["default"] = void 0;
+        var _class, _temp, _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -2284,41 +2003,16 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _get = function(_x, _x2, _x3) {
-            for (var _again = !0; _again; ) {
-                var object = _x, property = _x2, receiver = _x3;
-                _again = !1, null === object && (object = Function.prototype);
-                var desc = Object.getOwnPropertyDescriptor(object, property);
-                if (void 0 !== desc) {
-                    if ("value" in desc) return desc.value;
-                    var getter = desc.get;
-                    if (void 0 === getter) return;
-                    return getter.call(receiver);
-                }
-                var parent = Object.getPrototypeOf(object);
-                if (null === parent) return;
-                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
-            }
-        }, _react = __webpack_require__(3), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), ScrollSync = function(_Component) {
+        }(), _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), ScrollSync = (_temp = _class = function(_Component) {
             function ScrollSync(props, context) {
-                _classCallCheck(this, ScrollSync), _get(Object.getPrototypeOf(ScrollSync.prototype), "constructor", this).call(this, props, context), 
-                this.shouldComponentUpdate = _reactPureRenderFunction2["default"], this.state = {
+                _classCallCheck(this, ScrollSync);
+                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScrollSync).call(this, props, context));
+                return _this.shouldComponentUpdate = _function2["default"], _this.state = {
                     scrollLeft: 0,
                     scrollTop: 0
-                }, this._onScroll = this._onScroll.bind(this);
+                }, _this._onScroll = _this._onScroll.bind(_this), _this;
             }
-            return _inherits(ScrollSync, _Component), _createClass(ScrollSync, null, [ {
-                key: "propTypes",
-                value: {
-                    /**
-	       * Function respondible for rendering 2 or more virtualized components.
-	       * This function should implement the following signature:
-	       * ({ onScroll, scrollLeft, scrollTop }) => PropTypes.element
-	       */
-                    children: _react.PropTypes.func.isRequired
-                },
-                enumerable: !0
-            } ]), _createClass(ScrollSync, [ {
+            return _inherits(ScrollSync, _Component), _createClass(ScrollSync, [ {
                 key: "render",
                 value: function() {
                     var children = this.props.children, _state = this.state, scrollLeft = _state.scrollLeft, scrollTop = _state.scrollTop;
@@ -2338,8 +2032,10 @@
                     });
                 }
             } ]), ScrollSync;
-        }(_react.Component);
-        exports["default"] = ScrollSync, module.exports = exports["default"];
+        }(_react.Component), _class.propTypes = {
+            children: _react.PropTypes.func.isRequired
+        }, _temp);
+        exports["default"] = ScrollSync;
     }, /* 26 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -2351,11 +2047,9 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
+        }), exports.VirtualScroll = exports["default"] = void 0;
         var _VirtualScroll2 = __webpack_require__(27), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
-        exports["default"] = _VirtualScroll3["default"];
-        var _VirtualScroll4 = _interopRequireDefault(_VirtualScroll2);
-        exports.VirtualScroll = _VirtualScroll4["default"];
+        exports["default"] = _VirtualScroll3["default"], exports.VirtualScroll = _VirtualScroll3["default"];
     }, /* 27 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -2367,6 +2061,10 @@
         }
         function _classCallCheck(instance, Constructor) {
             if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
         }
         function _inherits(subClass, superClass) {
             if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -2381,8 +2079,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        });
-        var _createClass = function() {
+        }), exports["default"] = void 0;
+        var _class, _temp2, _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -2394,25 +2092,13 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _get = function(_x, _x2, _x3) {
-            for (var _again = !0; _again; ) {
-                var object = _x, property = _x2, receiver = _x3;
-                _again = !1, null === object && (object = Function.prototype);
-                var desc = Object.getOwnPropertyDescriptor(object, property);
-                if (void 0 !== desc) {
-                    if ("value" in desc) return desc.value;
-                    var getter = desc.get;
-                    if (void 0 === getter) return;
-                    return getter.call(receiver);
-                }
-                var parent = Object.getPrototypeOf(object);
-                if (null === parent) return;
-                _x = parent, _x2 = property, _x3 = receiver, _again = !0, desc = parent = void 0;
-            }
-        }, _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _reactPureRenderFunction = __webpack_require__(4), _reactPureRenderFunction2 = _interopRequireDefault(_reactPureRenderFunction), VirtualScroll = function(_Component) {
+        }(), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), VirtualScroll = (_temp2 = _class = function(_Component) {
             function VirtualScroll() {
-                _classCallCheck(this, VirtualScroll), _get(Object.getPrototypeOf(VirtualScroll.prototype), "constructor", this).apply(this, arguments), 
-                this.shouldComponentUpdate = _reactPureRenderFunction2["default"];
+                var _Object$getPrototypeO, _temp, _this, _ret;
+                _classCallCheck(this, VirtualScroll);
+                for (var _len = arguments.length, args = Array(_len), _key = 0; _len > _key; _key++) args[_key] = arguments[_key];
+                return _temp = _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(VirtualScroll)).call.apply(_Object$getPrototypeO, [ this ].concat(args))), 
+                _this.shouldComponentUpdate = _function2["default"], _ret = _temp, _possibleConstructorReturn(_this, _ret);
             }
             return _inherits(VirtualScroll, _Component), _createClass(VirtualScroll, [ {
                 key: "componentDidMount",
@@ -2449,7 +2135,7 @@
             }, {
                 key: "render",
                 value: function() {
-                    var _props = this.props, className = _props.className, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, onScroll = _props.onScroll, rowHeight = _props.rowHeight, rowRenderer = _props.rowRenderer, overscanRowsCount = _props.overscanRowsCount, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, width = _props.width, classNames = (0, 
+                    var _props = this.props, className = _props.className, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, _onScroll = _props.onScroll, rowHeight = _props.rowHeight, rowRenderer = _props.rowRenderer, overscanRowsCount = _props.overscanRowsCount, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, width = _props.width, classNames = (0, 
                     _classnames2["default"])("VirtualScroll", className);
                     return _react2["default"].createElement(_Grid2["default"], {
                         ref: "Grid",
@@ -2460,7 +2146,7 @@
                         noContentRenderer: noRowsRenderer,
                         onScroll: function(_ref) {
                             var clientHeight = _ref.clientHeight, scrollHeight = _ref.scrollHeight, scrollTop = _ref.scrollTop;
-                            return onScroll({
+                            return _onScroll({
                                 clientHeight: clientHeight,
                                 scrollHeight: scrollHeight,
                                 scrollTop: scrollTop
@@ -2486,66 +2172,33 @@
                         width: width
                     });
                 }
-            } ], [ {
-                key: "propTypes",
-                value: {
-                    /** Optional CSS class name */
-                    className: _react.PropTypes.string,
-                    /** Height constraint for list (determines how many actual rows are rendered) */
-                    height: _react.PropTypes.number.isRequired,
-                    /** Optional renderer to be used in place of rows when rowsCount is 0 */
-                    noRowsRenderer: _react.PropTypes.func.isRequired,
-                    /**
-	       * Callback invoked with information about the slice of rows that were just rendered.
-	       * ({ startIndex, stopIndex }): void
-	       */
-                    onRowsRendered: _react.PropTypes.func.isRequired,
-                    /**
-	       * Number of rows to render above/below the visible bounds of the list.
-	       * These rows can help for smoother scrolling on touch devices.
-	       */
-                    overscanRowsCount: _react.PropTypes.number.isRequired,
-                    /**
-	       * Callback invoked whenever the scroll offset changes within the inner scrollable region.
-	       * This callback can be used to sync scrolling between lists, tables, or grids.
-	       * ({ clientHeight, scrollHeight, scrollTop }): void
-	       */
-                    onScroll: _react.PropTypes.func.isRequired,
-                    /**
-	       * Either a fixed row height (number) or a function that returns the height of a row given its index.
-	       * (index: number): number
-	       */
-                    rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
-                    /** Responsbile for rendering a row given an index */
-                    rowRenderer: _react.PropTypes.func.isRequired,
-                    /** Number of rows in list. */
-                    rowsCount: _react.PropTypes.number.isRequired,
-                    /** Row index to ensure visible (by forcefully scrolling if necessary) */
-                    scrollToIndex: _react.PropTypes.number,
-                    /** Vertical offset. */
-                    scrollTop: _react.PropTypes.number,
-                    /** Width of list */
-                    width: _react.PropTypes.number.isRequired
-                },
-                enumerable: !0
-            }, {
-                key: "defaultProps",
-                value: {
-                    noRowsRenderer: function() {
-                        return null;
-                    },
-                    onRowsRendered: function() {
-                        return null;
-                    },
-                    onScroll: function() {
-                        return null;
-                    },
-                    overscanRowsCount: 10
-                },
-                enumerable: !0
             } ]), VirtualScroll;
-        }(_react.Component);
-        exports["default"] = VirtualScroll, module.exports = exports["default"];
+        }(_react.Component), _class.propTypes = {
+            className: _react.PropTypes.string,
+            height: _react.PropTypes.number.isRequired,
+            noRowsRenderer: _react.PropTypes.func.isRequired,
+            onRowsRendered: _react.PropTypes.func.isRequired,
+            overscanRowsCount: _react.PropTypes.number.isRequired,
+            onScroll: _react.PropTypes.func.isRequired,
+            rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
+            rowRenderer: _react.PropTypes.func.isRequired,
+            rowsCount: _react.PropTypes.number.isRequired,
+            scrollToIndex: _react.PropTypes.number,
+            scrollTop: _react.PropTypes.number,
+            width: _react.PropTypes.number.isRequired
+        }, _class.defaultProps = {
+            noRowsRenderer: function() {
+                return null;
+            },
+            onRowsRendered: function() {
+                return null;
+            },
+            onScroll: function() {
+                return null;
+            },
+            overscanRowsCount: 10
+        }, _temp2);
+        exports["default"] = VirtualScroll;
     } ]);
 });
 //# sourceMappingURL=react-virtualized.js.map

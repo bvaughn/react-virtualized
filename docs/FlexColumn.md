@@ -16,7 +16,9 @@ Describes the header and cell contents of a table column
 | flexShrink | Number |  | Flex shrink style; defaults to 1 |
 | headerClassName | String |  | CSS class to apply to this column's header |
 | label | String |  | Header label for this column |
-| width | Number |  | Fixed width for this column |
+| maxWidth | Number |  | Maximum width of column; this property will only be used if :flexGrow is greater than 0 |
+| minWidth | Number |  | Minimum width of column |
+| width | Number | ✓ | Flex basis (width) for this column; This value can grow or shrink based on `flexGrow` and `flexShrink` properties |
 
 #### cellDataGetter
 

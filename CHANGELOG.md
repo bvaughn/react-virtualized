@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+### 5.2.0
+Added optional `onResize` callback property to `AutoSizer`. This method is invoked any time the `AutoSizer` detects a resize. It is passed `width` and `height` named parameters.
+
+Added optional `minWidth` and `maxWidth` properties to `FlexColumn` to enable greater flexibility with regard to table-column layout.
+
 ##### 5.1.1
 Marked `FlexColumn` `width` property as required since ommitting this property can lead to uneven column layouts.
 
