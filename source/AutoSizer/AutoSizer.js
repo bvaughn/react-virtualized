@@ -22,7 +22,14 @@ export default class AutoSizer extends Component {
     disableHeight: PropTypes.bool,
 
     /** Disable dynamic :width property */
-    disableWidth: PropTypes.bool
+    disableWidth: PropTypes.bool,
+
+    /** Callback to be invoked on-resize: ({ height, width }) */
+    onResize: PropTypes.func.isRequired
+  }
+
+  static defaultProps = {
+    onResize: () => {}
   }
 
   constructor (props) {
@@ -78,6 +85,7 @@ export default class AutoSizer extends Component {
   }
 
   _onResize () {
+    const { onResize } = this.props
     const { height, width } = this._parentNode.getBoundingClientRect()
 
     const style = getComputedStyle(this._parentNode)
@@ -90,6 +98,8 @@ export default class AutoSizer extends Component {
       height: height - paddingTop - paddingBottom,
       width: width - paddingLeft - paddingRight
     })
+
+    onResize({ height, width })
   }
 
   _setRef (autoSizer) {
