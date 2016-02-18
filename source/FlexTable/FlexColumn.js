@@ -75,7 +75,7 @@ export default class Column extends Component {
     headerClassName: PropTypes.string,
     /** Header label for this column */
     label: PropTypes.string,
-    /** Optional fixed width for this column */
+    /** Flex basis (width) for this column; This value can grow or shrink based on :flexGrow and :flexShrink properties. */
     width: PropTypes.number.isRequired
   }
 }
