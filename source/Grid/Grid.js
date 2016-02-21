@@ -435,7 +435,6 @@ export default class Grid extends Component {
 
           child = (
             <div
-              key={`row:${rowIndex}, column:${columnIndex}`}
               className='Grid__cell'
               style={{
                 transform,
