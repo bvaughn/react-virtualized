@@ -11,9 +11,9 @@
   "scripts": {
     "build": "npm run build:css && npm run build:es && npm run build:demo && npm run build:umd",
     "build:css": "postcss --use autoprefixer source/styles.css > styles.css",
-    "build:demo": "npm run clean:demo && NODE_ENV=production webpack --config webpack.config.demo.js -p --bail",
-    "build:es": "npm run clean:es && NODE_ENV=production BABEL_ENV=es babel source --out-dir es --ignore *.example.js,*.test.js,source/demo/,source/tests.js",
-    "build:umd": "npm run clean:umd && NODE_ENV=production webpack --config webpack.config.umd.js --bail",
+    "build:demo": "npm run clean:demo && cross-env NODE_ENV=production webpack --config webpack.config.demo.js -p --bail",
+    "build:es": "npm run clean:es && cross-env NODE_ENV=production BABEL_ENV=es babel source --out-dir es --ignore *.example.js,*.test.js,source/demo/,source/tests.js",
+    "build:umd": "npm run clean:umd && cross-env NODE_ENV=production webpack --config webpack.config.umd.js --bail",
     "clean": "npm run clean:demo && npm run clean:es && npm run clean:umd",
     "clean:demo": "rimraf build",
     "clean:es": "rimraf es",
@@ -25,7 +25,7 @@
     "prepublish": "npm run build",
     "start": "webpack-dev-server --hot --inline --config webpack.config.dev.js",
     "test": "npm run lint && npm run test:unit",
-    "test:unit": "NODE_ENV=test karma start",
+    "test:unit": "cross-env NODE_ENV=test karma start",
     "watch": "watch 'clear && npm run lint -s && npm run test -s' source"
   },
   "repository": {
@@ -85,6 +85,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "bluebird": "^3.0.5",
+    "cross-env": "^1.0.7",
     "css-loader": "^0.23.0",
     "express": "^4.13.3",
     "extract-text-webpack-plugin": "^1.0.1",
