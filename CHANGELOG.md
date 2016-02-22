@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+### 5.2.1
+Fixes long-standing slow wheel scrolling issue that affected certain browsers such as Firefox (see issue #2). Big thanks to James Long (@jlongster), Markus Stange ‏(@mstange), and Dan Abramov (@gaearon) ‏for their help with this fix.
+
 ### 5.2.0
 Added optional `onResize` callback property to `AutoSizer`. This method is invoked any time the `AutoSizer` detects a resize. It is passed `width` and `height` named parameters.
 
