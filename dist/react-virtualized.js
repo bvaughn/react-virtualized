@@ -709,13 +709,13 @@
                             });
                             columnStartIndex = overscanColumnIndices.overscanStartIndex, columnStopIndex = overscanColumnIndices.overscanStopIndex, 
                             rowStartIndex = overscanRowIndices.overscanStartIndex, rowStopIndex = overscanRowIndices.overscanStopIndex;
-                            for (var rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
+                            for (var key = 0, rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
                                 var columnDatum = this._columnMetadata[columnIndex], child = renderCell({
                                     columnIndex: columnIndex,
                                     rowIndex: rowIndex
                                 }), transform = "translate(" + columnDatum.offset + "px, " + rowDatum.offset + "px)";
                                 child = _react2["default"].createElement("div", {
-                                    key: "row:" + rowIndex + ", column:" + columnIndex,
+                                    key: ++key,
                                     className: "Grid__cell",
                                     style: {
                                         transform: transform,

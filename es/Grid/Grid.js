@@ -377,6 +377,8 @@ var Grid = (_temp = _class = function (_Component) {
         rowStartIndex = overscanRowIndices.overscanStartIndex;
         rowStopIndex = overscanRowIndices.overscanStopIndex;
 
+        var key = 0;
+
         for (var rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
           var rowDatum = this._rowMetadata[rowIndex];
 
@@ -388,7 +390,7 @@ var Grid = (_temp = _class = function (_Component) {
             child = _react2.default.createElement(
               'div',
               {
-                key: 'row:' + rowIndex + ', column:' + columnIndex,
+                key: ++key,
                 className: 'Grid__cell',
                 style: {
                   transform: transform,
