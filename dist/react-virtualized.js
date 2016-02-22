@@ -525,7 +525,10 @@
                     return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                     Constructor;
                 };
-            }(), _utils = __webpack_require__(13), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(15), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), IS_SCROLLING_TIMEOUT = 150, Grid = (_temp = _class = function(_Component) {
+            }(), _utils = __webpack_require__(13), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(15), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
+                OBSERVED: "observed",
+                REQUESTED: "requested"
+            }, Grid = (_temp = _class = function(_Component) {
                 function Grid(props, context) {
                     _classCallCheck(this, Grid);
                     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Grid).call(this, props, context));
@@ -565,17 +568,18 @@
                 }, {
                     key: "setScrollPosition",
                     value: function(_ref2) {
-                        var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop, props = {};
-                        scrollLeft >= 0 && (props.scrollLeft = scrollLeft), scrollTop >= 0 && (props.scrollTop = scrollTop), 
-                        (scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft || scrollTop >= 0 && scrollTop !== this.state.scrollTop) && this.setState(props);
+                        var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop, newState = {
+                            scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+                        };
+                        scrollLeft >= 0 && (newState.scrollLeft = scrollLeft), scrollTop >= 0 && (newState.scrollTop = scrollTop), 
+                        (scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft || scrollTop >= 0 && scrollTop !== this.state.scrollTop) && this.setState(newState);
                     }
                 }, {
                     key: "componentDidMount",
                     value: function() {
                         var _this2 = this, _props = this.props, scrollLeft = _props.scrollLeft, scrollToColumn = _props.scrollToColumn, scrollTop = _props.scrollTop, scrollToRow = _props.scrollToRow;
-                        scrollLeft >= 0 && this.setState({
-                            scrollLeft: scrollLeft
-                        }), scrollTop >= 0 && this.setState({
+                        (scrollLeft >= 0 || scrollTop >= 0) && this.setScrollPosition({
+                            scrollLeft: scrollLeft,
                             scrollTop: scrollTop
                         }), (scrollToColumn >= 0 || scrollToRow >= 0) && (// Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
                         this._setImmediateId = setImmediate(function() {
@@ -586,10 +590,15 @@
                 }, {
                     key: "componentDidUpdate",
                     value: function(prevProps, prevState) {
-                        var _props2 = this.props, columnsCount = _props2.columnsCount, columnWidth = _props2.columnWidth, height = _props2.height, rowHeight = _props2.rowHeight, rowsCount = _props2.rowsCount, scrollToColumn = _props2.scrollToColumn, scrollToRow = _props2.scrollToRow, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollTop = _state.scrollTop;
-                        // Make sure any changes to :scrollLeft or :scrollTop get applied
-                        (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft || scrollTop >= 0 && scrollTop !== prevState.scrollTop) && (this.refs.scrollingContainer.scrollLeft = scrollLeft, 
-                        this.refs.scrollingContainer.scrollTop = scrollTop), // Update scrollLeft if appropriate
+                        var _props2 = this.props, columnsCount = _props2.columnsCount, columnWidth = _props2.columnWidth, height = _props2.height, rowHeight = _props2.rowHeight, rowsCount = _props2.rowsCount, scrollToColumn = _props2.scrollToColumn, scrollToRow = _props2.scrollToRow, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollPositionChangeReason = _state.scrollPositionChangeReason, scrollTop = _state.scrollTop;
+                        // Make sure requested changes to :scrollLeft or :scrollTop get applied.
+                        // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
+                        // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
+                        // So we only set these when we require an adjustment of the scroll position.
+                        // See issue #2 for more information.
+                        scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED && (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft && (this.refs.scrollingContainer.scrollLeft = scrollLeft), 
+                        scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop && (this.refs.scrollingContainer.scrollTop = scrollTop)), 
+                        // Update scrollLeft if appropriate
                         (0, _utils.updateScrollIndexHelper)({
                             cellsCount: columnsCount,
                             cellMetadata: this._columnMetadata,
@@ -632,13 +641,13 @@
                 }, {
                     key: "componentWillUpdate",
                     value: function(nextProps, nextState) {
-                        0 === nextProps.columnsCount && 0 !== nextState.scrollLeft && this.setState({
+                        0 === nextProps.columnsCount && 0 !== nextState.scrollLeft && this.setScrollPosition({
                             scrollLeft: 0
-                        }), 0 === nextProps.rowsCount && 0 !== nextState.scrollTop && this.setState({
+                        }), 0 === nextProps.rowsCount && 0 !== nextState.scrollTop && this.setScrollPosition({
                             scrollTop: 0
-                        }), nextProps.scrollLeft !== this.props.scrollLeft && this.setState({
+                        }), nextProps.scrollLeft !== this.props.scrollLeft && this.setScrollPosition({
                             scrollLeft: nextProps.scrollLeft
-                        }), nextProps.scrollTop !== this.props.scrollTop && this.setState({
+                        }), nextProps.scrollTop !== this.props.scrollTop && this.setScrollPosition({
                             scrollTop: nextProps.scrollTop
                         }), (0, _utils.computeCellMetadataAndUpdateScrollOffsetHelper)({
                             cellsCount: this.props.columnsCount,
@@ -700,13 +709,13 @@
                             });
                             columnStartIndex = overscanColumnIndices.overscanStartIndex, columnStopIndex = overscanColumnIndices.overscanStopIndex, 
                             rowStartIndex = overscanRowIndices.overscanStartIndex, rowStopIndex = overscanRowIndices.overscanStopIndex;
-                            for (var rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
+                            for (var key = 0, rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
                                 var columnDatum = this._columnMetadata[columnIndex], child = renderCell({
                                     columnIndex: columnIndex,
                                     rowIndex: rowIndex
                                 }), transform = "translate(" + columnDatum.offset + "px, " + rowDatum.offset + "px)";
                                 child = _react2["default"].createElement("div", {
-                                    key: "row:" + rowIndex + ", column:" + columnIndex,
+                                    key: ++key,
                                     className: "Grid__cell",
                                     style: {
                                         transform: transform,
@@ -749,6 +758,17 @@
                             cellsCount: rowsCount,
                             size: rowHeight
                         });
+                    }
+                }, {
+                    key: "_enablePointerEventsAfterDelay",
+                    value: function() {
+                        var _this3 = this;
+                        this._disablePointerEventsTimeoutId && clearTimeout(this._disablePointerEventsTimeoutId), 
+                        this._disablePointerEventsTimeoutId = setTimeout(function() {
+                            _this3._disablePointerEventsTimeoutId = null, _this3.setState({
+                                isScrolling: !1
+                            });
+                        }, IS_SCROLLING_TIMEOUT);
                     }
                 }, {
                     key: "_getColumnWidth",
@@ -809,42 +829,16 @@
                 }, {
                     key: "_setNextState",
                     value: function(state) {
-                        var _this3 = this;
+                        var _this4 = this;
                         this._setNextStateAnimationFrameId && _raf2["default"].cancel(this._setNextStateAnimationFrameId), 
                         this._setNextStateAnimationFrameId = (0, _raf2["default"])(function() {
-                            _this3._setNextStateAnimationFrameId = null, _this3.setState(state);
+                            _this4._setNextStateAnimationFrameId = null, _this4.setState(state);
                         });
-                    }
-                }, {
-                    key: "_setNextStateForScrollHelper",
-                    value: function(_ref3) {
-                        var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop;
-                        // Certain devices (like Apple touchpad) rapid-fire duplicate events.
-                        // Don't force a re-render if this is the case.
-                        (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) && (// Prevent pointer events from interrupting a smooth scroll
-                        this._temporarilyDisablePointerEvents(), // The mouse may move faster then the animation frame does.
-                        // Use requestAnimationFrame to avoid over-updating.
-                        this._setNextState({
-                            isScrolling: !0,
-                            scrollLeft: scrollLeft,
-                            scrollTop: scrollTop
-                        }));
                     }
                 }, {
                     key: "_stopEvent",
                     value: function(event) {
                         event.preventDefault();
-                    }
-                }, {
-                    key: "_temporarilyDisablePointerEvents",
-                    value: function() {
-                        var _this4 = this;
-                        this._disablePointerEventsTimeoutId && clearTimeout(this._disablePointerEventsTimeoutId), 
-                        this._disablePointerEventsTimeoutId = setTimeout(function() {
-                            _this4._disablePointerEventsTimeoutId = null, _this4.setState({
-                                isScrolling: !1
-                            });
-                        }, IS_SCROLLING_TIMEOUT);
                     }
                 }, {
                     key: "_updateScrollLeftForScrollToColumn",
@@ -857,7 +851,7 @@
                                 currentOffset: scrollLeft,
                                 targetIndex: scrollToColumn
                             });
-                            scrollLeft !== calculatedScrollLeft && this.setState({
+                            scrollLeft !== calculatedScrollLeft && this.setScrollPosition({
                                 scrollLeft: calculatedScrollLeft
                             });
                         }
@@ -873,7 +867,7 @@
                                 currentOffset: scrollTop,
                                 targetIndex: scrollToRow
                             });
-                            scrollTop !== calculatedScrollTop && this.setState({
+                            scrollTop !== calculatedScrollTop && this.setScrollPosition({
                                 scrollTop: calculatedScrollTop
                             });
                         }
@@ -891,7 +885,7 @@
                                 containerSize: height,
                                 currentOffset: scrollTop
                             }).start, datum = this._rowMetadata[start], newScrollTop = Math.min(this._getTotalRowsHeight() - height, scrollTop + datum.size), 
-                            this.setState({
+                            this.setScrollPosition({
                                 scrollTop: newScrollTop
                             });
                             break;
@@ -917,7 +911,7 @@
                                 containerSize: width,
                                 currentOffset: scrollLeft
                             }).start, datum = this._columnMetadata[start], newScrollLeft = Math.min(this._getTotalColumnsWidth() - width, scrollLeft + datum.size), 
-                            this.setState({
+                            this.setScrollPosition({
                                 scrollLeft: newScrollLeft
                             });
                             break;
@@ -942,17 +936,25 @@
                         // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
                         // See issue #404 for more information.
                         if (event.target === this.refs.scrollingContainer) {
+                            // Prevent pointer events from interrupting a smooth scroll
+                            this._enablePointerEventsAfterDelay();
                             // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
                             // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
                             // This causes a series of rapid renders that is slow for long lists.
                             // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
                             var _props6 = this.props, height = _props6.height, onScroll = _props6.onScroll, width = _props6.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
-                            this._setNextStateForScrollHelper({
+                            // Certain devices (like Apple touchpad) rapid-fire duplicate events.
+                            // Don't force a re-render if this is the case.
+                            // The mouse may move faster then the animation frame does.
+                            // Use requestAnimationFrame to avoid over-updating.
+                            (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) && this._setNextState({
+                                isScrolling: !0,
                                 scrollLeft: scrollLeft,
+                                scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
                                 scrollTop: scrollTop
                             }), this._onScrollMemoizer({
-                                callback: function(_ref4) {
-                                    var scrollLeft = _ref4.scrollLeft, scrollTop = _ref4.scrollTop;
+                                callback: function(_ref3) {
+                                    var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop;
                                     onScroll({
                                         clientHeight: height,
                                         clientWidth: width,

@@ -20,6 +20,15 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
 const IS_SCROLLING_TIMEOUT = 150
 
 /**
+ * Controls whether the Grid updates the DOM element's scrollLeft/scrollTop based on the current state or just observes it.
+ * This prevents Grid from interrupting mouse-wheel animations (see issue #2).
+ */
+const SCROLL_POSITION_CHANGE_REASONS = {
+  OBSERVED: 'observed',
+  REQUESTED: 'requested'
+}
+
+/**
  * Renders tabular data with virtualization along the vertical and horizontal axes.
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
@@ -176,33 +185,31 @@ export default class Grid extends Component {
    * It is appropriate to use in that case.
    */
   setScrollPosition ({ scrollLeft, scrollTop }) {
-    const props = {}
+    const newState = {
+      scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+    }
 
     if (scrollLeft >= 0) {
-      props.scrollLeft = scrollLeft
+      newState.scrollLeft = scrollLeft
     }
 
     if (scrollTop >= 0) {
-      props.scrollTop = scrollTop
+      newState.scrollTop = scrollTop
     }
 
     if (
       scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft ||
       scrollTop >= 0 && scrollTop !== this.state.scrollTop
     ) {
-      this.setState(props)
+      this.setState(newState)
     }
   }
 
   componentDidMount () {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
 
-    if (scrollLeft >= 0) {
-      this.setState({ scrollLeft })
-    }
-
-    if (scrollTop >= 0) {
-      this.setState({ scrollTop })
+    if (scrollLeft >= 0 || scrollTop >= 0) {
+      this.setScrollPosition({ scrollLeft, scrollTop })
     }
 
     if (scrollToColumn >= 0 || scrollToRow >= 0) {
@@ -220,15 +227,28 @@ export default class Grid extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     const { columnsCount, columnWidth, height, rowHeight, rowsCount, scrollToColumn, scrollToRow, width } = this.props
-    const { scrollLeft, scrollTop } = this.state
+    const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
-    // Make sure any changes to :scrollLeft or :scrollTop get applied
-    if (
-      (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft) ||
-      (scrollTop >= 0 && scrollTop !== prevState.scrollTop)
-    ) {
-      this.refs.scrollingContainer.scrollLeft = scrollLeft
-      this.refs.scrollingContainer.scrollTop = scrollTop
+    // Make sure requested changes to :scrollLeft or :scrollTop get applied.
+    // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
+    // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
+    // So we only set these when we require an adjustment of the scroll position.
+    // See issue #2 for more information.
+    if (scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
+      if (
+        scrollLeft >= 0 &&
+        scrollLeft !== prevState.scrollLeft &&
+        scrollLeft !== this.refs.scrollingContainer.scrollLeft
+      ) {
+        this.refs.scrollingContainer.scrollLeft = scrollLeft
+      }
+      if (
+        scrollTop >= 0 &&
+        scrollTop !== prevState.scrollTop &&
+        scrollTop !== this.refs.scrollingContainer.scrollTop
+      ) {
+        this.refs.scrollingContainer.scrollTop = scrollTop
+      }
     }
 
     // Update scrollLeft if appropriate
@@ -288,22 +308,22 @@ export default class Grid extends Component {
       nextProps.columnsCount === 0 &&
       nextState.scrollLeft !== 0
     ) {
-      this.setState({ scrollLeft: 0 })
+      this.setScrollPosition({ scrollLeft: 0 })
     }
 
     if (
       nextProps.rowsCount === 0 &&
       nextState.scrollTop !== 0
     ) {
-      this.setState({ scrollTop: 0 })
+      this.setScrollPosition({ scrollTop: 0 })
     }
 
     if (nextProps.scrollLeft !== this.props.scrollLeft) {
-      this.setState({ scrollLeft: nextProps.scrollLeft })
+      this.setScrollPosition({ scrollLeft: nextProps.scrollLeft })
     }
 
     if (nextProps.scrollTop !== this.props.scrollTop) {
-      this.setState({ scrollTop: nextProps.scrollTop })
+      this.setScrollPosition({ scrollTop: nextProps.scrollTop })
     }
 
     computeCellMetadataAndUpdateScrollOffsetHelper({
@@ -405,6 +425,8 @@ export default class Grid extends Component {
       rowStartIndex = overscanRowIndices.overscanStartIndex
       rowStopIndex = overscanRowIndices.overscanStopIndex
 
+      let key = 0
+
       for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
         let rowDatum = this._rowMetadata[rowIndex]
 
@@ -415,7 +437,7 @@ export default class Grid extends Component {
 
           child = (
             <div
-              key={`row:${rowIndex}, column:${columnIndex}`}
+              key={++key}
               className='Grid__cell'
               style={{
                 transform,
@@ -479,6 +501,24 @@ export default class Grid extends Component {
       cellsCount: rowsCount,
       size: rowHeight
     })
+  }
+
+  /**
+   * Sets an :isScrolling flag for a small window of time.
+   * This flag is used to disable pointer events on the scrollable portion of the Grid.
+   * This prevents jerky/stuttery mouse-wheel scrolling.
+   */
+  _enablePointerEventsAfterDelay () {
+    if (this._disablePointerEventsTimeoutId) {
+      clearTimeout(this._disablePointerEventsTimeoutId)
+    }
+
+    this._disablePointerEventsTimeoutId = setTimeout(() => {
+      this._disablePointerEventsTimeoutId = null
+      this.setState({
+        isScrolling: false
+      })
+    }, IS_SCROLLING_TIMEOUT)
   }
 
   _getColumnWidth (index) {
@@ -569,48 +609,8 @@ export default class Grid extends Component {
     })
   }
 
-  _setNextStateForScrollHelper ({ scrollLeft, scrollTop }) {
-    // Certain devices (like Apple touchpad) rapid-fire duplicate events.
-    // Don't force a re-render if this is the case.
-    if (
-      this.state.scrollLeft === scrollLeft &&
-      this.state.scrollTop === scrollTop
-    ) {
-      return
-    }
-
-    // Prevent pointer events from interrupting a smooth scroll
-    this._temporarilyDisablePointerEvents()
-
-    // The mouse may move faster then the animation frame does.
-    // Use requestAnimationFrame to avoid over-updating.
-    this._setNextState({
-      isScrolling: true,
-      scrollLeft,
-      scrollTop
-    })
-  }
-
   _stopEvent (event) {
     event.preventDefault()
-  }
-
-  /**
-   * Sets an :isScrolling flag for a small window of time.
-   * This flag is used to disable pointer events on the scrollable portion of the Grid.
-   * This prevents jerky/stuttery mouse-wheel scrolling.
-   */
-  _temporarilyDisablePointerEvents () {
-    if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId)
-    }
-
-    this._disablePointerEventsTimeoutId = setTimeout(() => {
-      this._disablePointerEventsTimeoutId = null
-      this.setState({
-        isScrolling: false
-      })
-    }, IS_SCROLLING_TIMEOUT)
   }
 
   _updateScrollLeftForScrollToColumn (scrollToColumnOverride) {
@@ -630,7 +630,9 @@ export default class Grid extends Component {
       })
 
       if (scrollLeft !== calculatedScrollLeft) {
-        this.setState({ scrollLeft: calculatedScrollLeft })
+        this.setScrollPosition({
+          scrollLeft: calculatedScrollLeft
+        })
       }
     }
   }
@@ -652,7 +654,9 @@ export default class Grid extends Component {
       })
 
       if (scrollTop !== calculatedScrollTop) {
-        this.setState({ scrollTop: calculatedScrollTop })
+        this.setScrollPosition({
+          scrollTop: calculatedScrollTop
+        })
       }
     }
   }
@@ -685,7 +689,7 @@ export default class Grid extends Component {
           scrollTop + datum.size
         )
 
-        this.setState({
+        this.setScrollPosition({
           scrollTop: newScrollTop
         })
         break
@@ -719,7 +723,7 @@ export default class Grid extends Component {
           scrollLeft + datum.size
         )
 
-        this.setState({
+        this.setScrollPosition({
           scrollLeft: newScrollLeft
         })
         break
@@ -749,6 +753,9 @@ export default class Grid extends Component {
       return
     }
 
+    // Prevent pointer events from interrupting a smooth scroll
+    this._enablePointerEventsAfterDelay()
+
     // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
     // This causes a series of rapid renders that is slow for long lists.
@@ -759,7 +766,21 @@ export default class Grid extends Component {
     const scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft)
     const scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop)
 
-    this._setNextStateForScrollHelper({ scrollLeft, scrollTop })
+    // Certain devices (like Apple touchpad) rapid-fire duplicate events.
+    // Don't force a re-render if this is the case.
+    // The mouse may move faster then the animation frame does.
+    // Use requestAnimationFrame to avoid over-updating.
+    if (
+      this.state.scrollLeft !== scrollLeft ||
+      this.state.scrollTop !== scrollTop
+    ) {
+      this._setNextState({
+        isScrolling: true,
+        scrollLeft,
+        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
+        scrollTop
+      })
+    }
 
     this._onScrollMemoizer({
       callback: ({ scrollLeft, scrollTop }) => {

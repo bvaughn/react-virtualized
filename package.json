@@ -3,7 +3,7 @@
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "homepage": "https://github.com/bvaughn/react-virtualized",
   "main": "dist/react-virtualized.js",
   "jsnext:main": "es/index.js",
