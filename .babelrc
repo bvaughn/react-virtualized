@@ -41,6 +41,7 @@
       ]
     },
     "production": {
+      "comments": false,
       "presets": [
         "es2015",
         "react",
