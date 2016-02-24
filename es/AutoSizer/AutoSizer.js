@@ -1,44 +1,22 @@
-'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _class, _temp;
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _function = require('react-pure-render/function');
-
-var _function2 = _interopRequireDefault(_function);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+import React, { Component, PropTypes } from 'react';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
  * Child component should not be declared as a child but should rather be specified by a `ChildComponent` property.
  * All other properties will be passed through to the child component.
  */
-var AutoSizer = (_temp = _class = function (_Component) {
-  _inherits(AutoSizer, _Component);
+
+var AutoSizer = function (_Component) {
+  babelHelpers.inherits(AutoSizer, _Component);
 
   function AutoSizer(props) {
-    _classCallCheck(this, AutoSizer);
+    babelHelpers.classCallCheck(this, AutoSizer);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AutoSizer).call(this, props));
+    var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(AutoSizer).call(this, props));
 
-    _this.shouldComponentUpdate = _function2.default;
+    _this.shouldComponentUpdate = shouldPureComponentUpdate;
 
 
     _this.state = {
@@ -51,7 +29,7 @@ var AutoSizer = (_temp = _class = function (_Component) {
     return _this;
   }
 
-  _createClass(AutoSizer, [{
+  babelHelpers.createClass(AutoSizer, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
       // Defer requiring resize handler in order to support server-side rendering.
@@ -91,7 +69,7 @@ var AutoSizer = (_temp = _class = function (_Component) {
         outerStyle.width = 0;
       }
 
-      return _react2.default.createElement(
+      return React.createElement(
         'div',
         {
           ref: this._setRef,
@@ -131,25 +109,27 @@ var AutoSizer = (_temp = _class = function (_Component) {
       this._parentNode = autoSizer && autoSizer.parentNode;
     }
   }]);
-
   return AutoSizer;
-}(_react.Component), _class.propTypes = {
+}(Component);
+
+AutoSizer.propTypes = {
   /**
    * Function respondible for rendering children.
    * This function should implement the following signature:
    * ({ height, width }) => PropTypes.element
    */
-  children: _react.PropTypes.func.isRequired,
+  children: PropTypes.func.isRequired,
 
   /** Disable dynamic :height property */
-  disableHeight: _react.PropTypes.bool,
+  disableHeight: PropTypes.bool,
 
   /** Disable dynamic :width property */
-  disableWidth: _react.PropTypes.bool,
+  disableWidth: PropTypes.bool,
 
   /** Callback to be invoked on-resize: ({ height, width }) */
-  onResize: _react.PropTypes.func.isRequired
-}, _class.defaultProps = {
+  onResize: PropTypes.func.isRequired
+};
+AutoSizer.defaultProps = {
   onResize: function onResize() {}
-}, _temp);
-exports.default = AutoSizer;
+};
+export default AutoSizer;

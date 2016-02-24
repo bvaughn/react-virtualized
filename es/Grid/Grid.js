@@ -1,39 +1,9 @@
-'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _class, _temp;
-
-var _utils = require('../utils');
-
-var _classnames = require('classnames');
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
-var _raf = require('raf');
-
-var _raf2 = _interopRequireDefault(_raf);
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _function = require('react-pure-render/function');
-
-var _function2 = _interopRequireDefault(_function);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+import { computeCellMetadataAndUpdateScrollOffsetHelper, createCallbackMemoizer, getOverscanIndices, getUpdatedOffsetForIndex, getVisibleCellIndices, initCellMetadata, updateScrollIndexHelper } from '../utils';
+import cn from 'classnames';
+import raf from 'raf';
+import React, { Component, PropTypes } from 'react';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -54,15 +24,16 @@ var SCROLL_POSITION_CHANGE_REASONS = {
  * Renders tabular data with virtualization along the vertical and horizontal axes.
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
-var Grid = (_temp = _class = function (_Component) {
-  _inherits(Grid, _Component);
+
+var Grid = function (_Component) {
+  babelHelpers.inherits(Grid, _Component);
 
   function Grid(props, context) {
-    _classCallCheck(this, Grid);
+    babelHelpers.classCallCheck(this, Grid);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Grid).call(this, props, context));
+    var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Grid).call(this, props, context));
 
-    _this.shouldComponentUpdate = _function2.default;
+    _this.shouldComponentUpdate = shouldPureComponentUpdate;
 
 
     _this.state = {
@@ -73,8 +44,8 @@ var Grid = (_temp = _class = function (_Component) {
     };
 
     // Invokes onSectionRendered callback only when start/stop row or column indices change
-    _this._onGridRenderedMemoizer = (0, _utils.createCallbackMemoizer)();
-    _this._onScrollMemoizer = (0, _utils.createCallbackMemoizer)(false);
+    _this._onGridRenderedMemoizer = createCallbackMemoizer();
+    _this._onScrollMemoizer = createCallbackMemoizer(false);
 
     // Bind functions to instance so they don't lose context when passed around
     _this._computeGridMetadata = _this._computeGridMetadata.bind(_this);
@@ -93,7 +64,7 @@ var Grid = (_temp = _class = function (_Component) {
    */
 
 
-  _createClass(Grid, [{
+  babelHelpers.createClass(Grid, [{
     key: 'recomputeGridSize',
     value: function recomputeGridSize() {
       this.setState({
@@ -207,7 +178,7 @@ var Grid = (_temp = _class = function (_Component) {
       }
 
       // Update scrollLeft if appropriate
-      (0, _utils.updateScrollIndexHelper)({
+      updateScrollIndexHelper({
         cellsCount: columnsCount,
         cellMetadata: this._columnMetadata,
         cellSize: columnWidth,
@@ -222,7 +193,7 @@ var Grid = (_temp = _class = function (_Component) {
       });
 
       // Update scrollTop if appropriate
-      (0, _utils.updateScrollIndexHelper)({
+      updateScrollIndexHelper({
         cellsCount: rowsCount,
         cellMetadata: this._rowMetadata,
         cellSize: rowHeight,
@@ -256,7 +227,7 @@ var Grid = (_temp = _class = function (_Component) {
       }
 
       if (this._setNextStateAnimationFrameId) {
-        _raf2.default.cancel(this._setNextStateAnimationFrameId);
+        raf.cancel(this._setNextStateAnimationFrameId);
       }
     }
   }, {
@@ -278,7 +249,7 @@ var Grid = (_temp = _class = function (_Component) {
         this.setScrollPosition({ scrollTop: nextProps.scrollTop });
       }
 
-      (0, _utils.computeCellMetadataAndUpdateScrollOffsetHelper)({
+      computeCellMetadataAndUpdateScrollOffsetHelper({
         cellsCount: this.props.columnsCount,
         cellSize: this.props.columnWidth,
         computeMetadataCallback: this._computeGridMetadata,
@@ -291,7 +262,7 @@ var Grid = (_temp = _class = function (_Component) {
         updateScrollOffsetForScrollToIndex: this._updateScrollLeftForScrollToColumn
       });
 
-      (0, _utils.computeCellMetadataAndUpdateScrollOffsetHelper)({
+      computeCellMetadataAndUpdateScrollOffsetHelper({
         cellsCount: this.props.rowsCount,
         cellSize: this.props.rowHeight,
         computeMetadataCallback: this._computeGridMetadata,
@@ -331,7 +302,7 @@ var Grid = (_temp = _class = function (_Component) {
 
       // Render only enough columns and rows to cover the visible area of the grid.
       if (height > 0 && width > 0) {
-        var _getVisibleCellIndice = (0, _utils.getVisibleCellIndices)({
+        var _getVisibleCellIndice = getVisibleCellIndices({
           cellsCount: columnsCount,
           cellMetadata: this._columnMetadata,
           containerSize: width,
@@ -341,7 +312,7 @@ var Grid = (_temp = _class = function (_Component) {
         var columnStartIndex = _getVisibleCellIndice.start;
         var columnStopIndex = _getVisibleCellIndice.stop;
 
-        var _getVisibleCellIndice2 = (0, _utils.getVisibleCellIndices)({
+        var _getVisibleCellIndice2 = getVisibleCellIndices({
           cellsCount: rowsCount,
           cellMetadata: this._rowMetadata,
           containerSize: height,
@@ -358,14 +329,14 @@ var Grid = (_temp = _class = function (_Component) {
         this._renderedRowStartIndex = rowStartIndex;
         this._renderedRowStopIndex = rowStopIndex;
 
-        var overscanColumnIndices = (0, _utils.getOverscanIndices)({
+        var overscanColumnIndices = getOverscanIndices({
           cellsCount: columnsCount,
           overscanCellsCount: overscanColumnsCount,
           startIndex: columnStartIndex,
           stopIndex: columnStopIndex
         });
 
-        var overscanRowIndices = (0, _utils.getOverscanIndices)({
+        var overscanRowIndices = getOverscanIndices({
           cellsCount: rowsCount,
           overscanCellsCount: overscanRowsCount,
           startIndex: rowStartIndex,
@@ -387,7 +358,7 @@ var Grid = (_temp = _class = function (_Component) {
             var child = renderCell({ columnIndex: columnIndex, rowIndex: rowIndex });
             var transform = 'translate(' + columnDatum.offset + 'px, ' + rowDatum.offset + 'px)';
 
-            child = _react2.default.createElement(
+            child = React.createElement(
               'div',
               {
                 key: ++key,
@@ -407,11 +378,11 @@ var Grid = (_temp = _class = function (_Component) {
         }
       }
 
-      return _react2.default.createElement(
+      return React.createElement(
         'div',
         {
           ref: 'scrollingContainer',
-          className: (0, _classnames2.default)('Grid', className),
+          className: cn('Grid', className),
           onKeyDown: this._onKeyPress,
           onScroll: this._onScroll,
           tabIndex: 0,
@@ -420,7 +391,7 @@ var Grid = (_temp = _class = function (_Component) {
             width: width
           }
         },
-        childrenToDisplay.length > 0 && _react2.default.createElement(
+        childrenToDisplay.length > 0 && React.createElement(
           'div',
           {
             className: 'Grid__innerScrollContainer',
@@ -449,11 +420,11 @@ var Grid = (_temp = _class = function (_Component) {
       var rowsCount = props.rowsCount;
 
 
-      this._columnMetadata = (0, _utils.initCellMetadata)({
+      this._columnMetadata = initCellMetadata({
         cellsCount: columnsCount,
         size: columnWidth
       });
-      this._rowMetadata = (0, _utils.initCellMetadata)({
+      this._rowMetadata = initCellMetadata({
         cellsCount: rowsCount,
         size: rowHeight
       });
@@ -527,7 +498,7 @@ var Grid = (_temp = _class = function (_Component) {
       var overscanRowsCount = _props4.overscanRowsCount;
       var rowsCount = _props4.rowsCount;
 
-      var _getOverscanIndices = (0, _utils.getOverscanIndices)({
+      var _getOverscanIndices = getOverscanIndices({
         cellsCount: columnsCount,
         overscanCellsCount: overscanColumnsCount,
         startIndex: this._renderedColumnStartIndex,
@@ -537,7 +508,7 @@ var Grid = (_temp = _class = function (_Component) {
       var columnOverscanStartIndex = _getOverscanIndices.overscanStartIndex;
       var columnOverscanStopIndex = _getOverscanIndices.overscanStopIndex;
 
-      var _getOverscanIndices2 = (0, _utils.getOverscanIndices)({
+      var _getOverscanIndices2 = getOverscanIndices({
         cellsCount: rowsCount,
         overscanCellsCount: overscanRowsCount,
         startIndex: this._renderedRowStartIndex,
@@ -575,10 +546,10 @@ var Grid = (_temp = _class = function (_Component) {
       var _this4 = this;
 
       if (this._setNextStateAnimationFrameId) {
-        _raf2.default.cancel(this._setNextStateAnimationFrameId);
+        raf.cancel(this._setNextStateAnimationFrameId);
       }
 
-      this._setNextStateAnimationFrameId = (0, _raf2.default)(function () {
+      this._setNextStateAnimationFrameId = raf(function () {
         _this4._setNextStateAnimationFrameId = null;
         _this4.setState(state);
       });
@@ -598,7 +569,7 @@ var Grid = (_temp = _class = function (_Component) {
 
 
       if (scrollToColumn >= 0) {
-        var calculatedScrollLeft = (0, _utils.getUpdatedOffsetForIndex)({
+        var calculatedScrollLeft = getUpdatedOffsetForIndex({
           cellMetadata: this._columnMetadata,
           containerSize: width,
           currentOffset: scrollLeft,
@@ -622,7 +593,7 @@ var Grid = (_temp = _class = function (_Component) {
 
 
       if (scrollToRow >= 0) {
-        var calculatedScrollTop = (0, _utils.getUpdatedOffsetForIndex)({
+        var calculatedScrollTop = getUpdatedOffsetForIndex({
           cellMetadata: this._rowMetadata,
           containerSize: height,
           currentOffset: scrollTop,
@@ -665,7 +636,7 @@ var Grid = (_temp = _class = function (_Component) {
         case 'ArrowDown':
           this._stopEvent(event); // Prevent key from also scrolling surrounding window
 
-          start = (0, _utils.getVisibleCellIndices)({
+          start = getVisibleCellIndices({
             cellsCount: rowsCount,
             cellMetadata: this._rowMetadata,
             containerSize: height,
@@ -681,7 +652,7 @@ var Grid = (_temp = _class = function (_Component) {
         case 'ArrowLeft':
           this._stopEvent(event); // Prevent key from also scrolling surrounding window
 
-          start = (0, _utils.getVisibleCellIndices)({
+          start = getVisibleCellIndices({
             cellsCount: columnsCount,
             cellMetadata: this._columnMetadata,
             containerSize: width,
@@ -696,7 +667,7 @@ var Grid = (_temp = _class = function (_Component) {
         case 'ArrowRight':
           this._stopEvent(event); // Prevent key from also scrolling surrounding window
 
-          start = (0, _utils.getVisibleCellIndices)({
+          start = getVisibleCellIndices({
             cellsCount: columnsCount,
             cellMetadata: this._columnMetadata,
             containerSize: width,
@@ -712,7 +683,7 @@ var Grid = (_temp = _class = function (_Component) {
         case 'ArrowUp':
           this._stopEvent(event); // Prevent key from also scrolling surrounding window
 
-          start = (0, _utils.getVisibleCellIndices)({
+          start = getVisibleCellIndices({
             cellsCount: rowsCount,
             cellMetadata: this._rowMetadata,
             containerSize: height,
@@ -787,98 +758,100 @@ var Grid = (_temp = _class = function (_Component) {
       });
     }
   }]);
-
   return Grid;
-}(_react.Component), _class.propTypes = {
+}(Component);
+
+Grid.propTypes = {
   /**
    * Optional custom CSS class name to attach to root Grid element.
    */
-  className: _react.PropTypes.string,
+  className: PropTypes.string,
 
   /**
    * Number of columns in grid.
    */
-  columnsCount: _react.PropTypes.number.isRequired,
+  columnsCount: PropTypes.number.isRequired,
 
   /**
    * Either a fixed column width (number) or a function that returns the width of a column given its index.
    * Should implement the following interface: (index: number): number
    */
-  columnWidth: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
+  columnWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
   /**
    * Height of Grid; this property determines the number of visible (vs virtualized) rows.
    */
-  height: _react.PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
 
   /**
    * Optional renderer to be used in place of rows when either :rowsCount or :columnsCount is 0.
    */
-  noContentRenderer: _react.PropTypes.func.isRequired,
+  noContentRenderer: PropTypes.func.isRequired,
 
   /**
    * Callback invoked whenever the scroll offset changes within the inner scrollable region.
    * This callback can be used to sync scrolling between lists, tables, or grids.
    * ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void
    */
-  onScroll: _react.PropTypes.func.isRequired,
+  onScroll: PropTypes.func.isRequired,
 
   /**
    * Callback invoked with information about the section of the Grid that was just rendered.
    * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
    */
-  onSectionRendered: _react.PropTypes.func.isRequired,
+  onSectionRendered: PropTypes.func.isRequired,
 
   /**
    * Number of columns to render before/after the visible section of the grid.
    * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
    */
-  overscanColumnsCount: _react.PropTypes.number.isRequired,
+  overscanColumnsCount: PropTypes.number.isRequired,
 
   /**
    * Number of rows to render above/below the visible section of the grid.
    * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
    */
-  overscanRowsCount: _react.PropTypes.number.isRequired,
+  overscanRowsCount: PropTypes.number.isRequired,
 
   /**
    * Responsible for rendering a cell given an row and column index.
    * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
    */
-  renderCell: _react.PropTypes.func.isRequired,
+  renderCell: PropTypes.func.isRequired,
 
   /**
    * Either a fixed row height (number) or a function that returns the height of a row given its index.
    * Should implement the following interface: (index: number): number
    */
-  rowHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
+  rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
   /**
    * Number of rows in grid.
    */
-  rowsCount: _react.PropTypes.number.isRequired,
+  rowsCount: PropTypes.number.isRequired,
 
   /** Horizontal offset. */
-  scrollLeft: _react.PropTypes.number,
+  scrollLeft: PropTypes.number,
 
   /**
    * Column index to ensure visible (by forcefully scrolling if necessary)
    */
-  scrollToColumn: _react.PropTypes.number,
+  scrollToColumn: PropTypes.number,
 
   /** Vertical offset. */
-  scrollTop: _react.PropTypes.number,
+  scrollTop: PropTypes.number,
 
   /**
    * Row index to ensure visible (by forcefully scrolling if necessary)
    */
-  scrollToRow: _react.PropTypes.number,
+  scrollToRow: PropTypes.number,
 
   /**
    * Width of Grid; this property determines the number of visible (vs virtualized) columns.
    */
-  width: _react.PropTypes.number.isRequired
-}, _class.defaultProps = {
+  width: PropTypes.number.isRequired
+};
+Grid.defaultProps = {
   noContentRenderer: function noContentRenderer() {
     return null;
   },
@@ -890,5 +863,5 @@ var Grid = (_temp = _class = function (_Component) {
   },
   overscanColumnsCount: 0,
   overscanRowsCount: 10
-}, _temp);
-exports.default = Grid;
+};
+export default Grid;

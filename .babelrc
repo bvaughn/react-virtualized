@@ -26,15 +26,38 @@
             ]
           }
         ]
+      ],
+      "presets": [
+        "es2015",
+        "react",
+        "stage-0"
+      ]
+    },
+    "es": {
+      "presets": [
+        "es2015-rollup",
+        "react",
+        "stage-0"
+      ]
+    },
+    "production": {
+      "comments": false,
+      "presets": [
+        "es2015",
+        "react",
+        "stage-0"
+      ]
+    },
+    "test": {
+      "comments": false,
+      "presets": [
+        "es2015",
+        "react",
+        "stage-0"
       ]
     }
   },
   "plugins": [
     "transform-decorators-legacy"
-  ],
-  "presets": [
-    "es2015",
-    "react",
-    "stage-0"
   ]
 }

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
 * Detect Element Resize.
 * Forked in order to guard against unsafe 'window' and 'document' references.
@@ -17,7 +15,7 @@ if (typeof window !== 'undefined') {
 } else if (typeof self !== 'undefined') {
   _window = self;
 } else {
-  _window = undefined;
+  _window = this;
 }
 
 var attachEvent = typeof document !== 'undefined' && document.attachEvent;

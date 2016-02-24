@@ -1,45 +1,22 @@
-'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _class, _temp;
-
-exports.isRangeVisible = isRangeVisible;
-exports.scanForUnloadedRanges = scanForUnloadedRanges;
-
-var _react = require('react');
-
-var _function = require('react-pure-render/function');
-
-var _function2 = _interopRequireDefault(_function);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+import { Component, PropTypes } from 'react';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
 /**
  * Higher-order component that manages lazy-loading for "infinite" data.
  * This component decorates a virtual component and just-in-time prefetches rows as a user scrolls.
  * It is intended as a convenience component; fork it if you'd like finer-grained control over data-loading.
  */
-var InfiniteLoader = (_temp = _class = function (_Component) {
-  _inherits(InfiniteLoader, _Component);
+
+var InfiniteLoader = function (_Component) {
+  babelHelpers.inherits(InfiniteLoader, _Component);
 
   function InfiniteLoader(props, context) {
-    _classCallCheck(this, InfiniteLoader);
+    babelHelpers.classCallCheck(this, InfiniteLoader);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InfiniteLoader).call(this, props, context));
+    var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(InfiniteLoader).call(this, props, context));
 
-    _this.shouldComponentUpdate = _function2.default;
+    _this.shouldComponentUpdate = shouldPureComponentUpdate;
 
 
     _this._onRowsRendered = _this._onRowsRendered.bind(_this);
@@ -47,7 +24,7 @@ var InfiniteLoader = (_temp = _class = function (_Component) {
     return _this;
   }
 
-  _createClass(InfiniteLoader, [{
+  babelHelpers.createClass(InfiniteLoader, [{
     key: 'render',
     value: function render() {
       var children = this.props.children;
@@ -107,9 +84,15 @@ var InfiniteLoader = (_temp = _class = function (_Component) {
       this._registeredChild = registeredChild;
     }
   }]);
-
   return InfiniteLoader;
-}(_react.Component), _class.propTypes = {
+}(Component);
+
+/**
+ * Determines if the specified start/stop range is visible based on the most recently rendered range.
+ */
+
+
+InfiniteLoader.propTypes = {
   /**
    * Function respondible for rendering a virtualized component.
    * This function should implement the following signature:
@@ -118,13 +101,13 @@ var InfiniteLoader = (_temp = _class = function (_Component) {
    * The specified :onRowsRendered function should be passed through to the child's :onRowsRendered property.
    * The :registerChild callback should be set as the virtualized component's :ref.
    */
-  children: _react.PropTypes.func.isRequired,
+  children: PropTypes.func.isRequired,
 
   /**
    * Function responsible for tracking the loaded state of each row.
    * It should implement the following signature: (index: number): boolean
    */
-  isRowLoaded: _react.PropTypes.func.isRequired,
+  isRowLoaded: PropTypes.func.isRequired,
 
   /**
    * Callback to be invoked when more rows must be loaded.
@@ -133,30 +116,26 @@ var InfiniteLoader = (_temp = _class = function (_Component) {
    * It will be used to determine when to refresh the list with the newly-loaded data.
    * This callback may be called multiple times in reaction to a single scroll event.
    */
-  loadMoreRows: _react.PropTypes.func.isRequired,
+  loadMoreRows: PropTypes.func.isRequired,
 
   /**
    * Number of rows in list; can be arbitrary high number if actual number is unknown.
    */
-  rowsCount: _react.PropTypes.number.isRequired,
+  rowsCount: PropTypes.number.isRequired,
 
   /**
    * Threshold at which to pre-fetch data.
    * A threshold X means that data will start loading when a user scrolls within X rows.
    * This value defaults to 15.
    */
-  threshold: _react.PropTypes.number.isRequired
-}, _class.defaultProps = {
+  threshold: PropTypes.number.isRequired
+};
+InfiniteLoader.defaultProps = {
   rowsCount: 0,
   threshold: 15
-}, _temp);
-
-/**
- * Determines if the specified start/stop range is visible based on the most recently rendered range.
- */
-
-exports.default = InfiniteLoader;
-function isRangeVisible(_ref2) {
+};
+export default InfiniteLoader;
+export function isRangeVisible(_ref2) {
   var lastRenderedStartIndex = _ref2.lastRenderedStartIndex;
   var lastRenderedStopIndex = _ref2.lastRenderedStopIndex;
   var startIndex = _ref2.startIndex;
@@ -168,7 +147,7 @@ function isRangeVisible(_ref2) {
 /**
  * Returns all of the ranges within a larger range that contain unloaded rows.
  */
-function scanForUnloadedRanges(_ref3) {
+export function scanForUnloadedRanges(_ref3) {
   var isRowLoaded = _ref3.isRowLoaded;
   var startIndex = _ref3.startIndex;
   var stopIndex = _ref3.stopIndex;

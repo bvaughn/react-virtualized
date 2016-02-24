@@ -1,37 +1,8 @@
-'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _class, _temp2;
-
-var _Grid = require('../Grid');
-
-var _Grid2 = _interopRequireDefault(_Grid);
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _classnames = require('classnames');
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
-var _function = require('react-pure-render/function');
-
-var _function2 = _interopRequireDefault(_function);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+import Grid from '../Grid';
+import React, { Component, PropTypes } from 'react';
+import cn from 'classnames';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -41,24 +12,25 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  *
  * This component renders a virtualized list of elements with either fixed or dynamic heights.
  */
-var VirtualScroll = (_temp2 = _class = function (_Component) {
-  _inherits(VirtualScroll, _Component);
+
+var VirtualScroll = function (_Component) {
+  babelHelpers.inherits(VirtualScroll, _Component);
 
   function VirtualScroll() {
     var _Object$getPrototypeO;
 
     var _temp, _this, _ret;
 
-    _classCallCheck(this, VirtualScroll);
+    babelHelpers.classCallCheck(this, VirtualScroll);
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(VirtualScroll)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _function2.default, _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_this = babelHelpers.possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(VirtualScroll)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = shouldPureComponentUpdate, _temp), babelHelpers.possibleConstructorReturn(_this, _ret);
   }
 
-  _createClass(VirtualScroll, [{
+  babelHelpers.createClass(VirtualScroll, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
       var scrollTop = this.props.scrollTop;
@@ -128,9 +100,9 @@ var VirtualScroll = (_temp2 = _class = function (_Component) {
       var width = _props.width;
 
 
-      var classNames = (0, _classnames2.default)('VirtualScroll', className);
+      var classNames = cn('VirtualScroll', className);
 
-      return _react2.default.createElement(_Grid2.default, {
+      return React.createElement(Grid, {
         ref: 'Grid',
         className: classNames,
         columnWidth: width,
@@ -168,58 +140,60 @@ var VirtualScroll = (_temp2 = _class = function (_Component) {
       });
     }
   }]);
-
   return VirtualScroll;
-}(_react.Component), _class.propTypes = {
+}(Component);
+
+VirtualScroll.propTypes = {
   /** Optional CSS class name */
-  className: _react.PropTypes.string,
+  className: PropTypes.string,
 
   /** Height constraint for list (determines how many actual rows are rendered) */
-  height: _react.PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
 
   /** Optional renderer to be used in place of rows when rowsCount is 0 */
-  noRowsRenderer: _react.PropTypes.func.isRequired,
+  noRowsRenderer: PropTypes.func.isRequired,
 
   /**
    * Callback invoked with information about the slice of rows that were just rendered.
    * ({ startIndex, stopIndex }): void
    */
-  onRowsRendered: _react.PropTypes.func.isRequired,
+  onRowsRendered: PropTypes.func.isRequired,
 
   /**
    * Number of rows to render above/below the visible bounds of the list.
    * These rows can help for smoother scrolling on touch devices.
    */
-  overscanRowsCount: _react.PropTypes.number.isRequired,
+  overscanRowsCount: PropTypes.number.isRequired,
 
   /**
    * Callback invoked whenever the scroll offset changes within the inner scrollable region.
    * This callback can be used to sync scrolling between lists, tables, or grids.
    * ({ clientHeight, scrollHeight, scrollTop }): void
    */
-  onScroll: _react.PropTypes.func.isRequired,
+  onScroll: PropTypes.func.isRequired,
 
   /**
    * Either a fixed row height (number) or a function that returns the height of a row given its index.
    * (index: number): number
    */
-  rowHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
+  rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
   /** Responsbile for rendering a row given an index */
-  rowRenderer: _react.PropTypes.func.isRequired,
+  rowRenderer: PropTypes.func.isRequired,
 
   /** Number of rows in list. */
-  rowsCount: _react.PropTypes.number.isRequired,
+  rowsCount: PropTypes.number.isRequired,
 
   /** Row index to ensure visible (by forcefully scrolling if necessary) */
-  scrollToIndex: _react.PropTypes.number,
+  scrollToIndex: PropTypes.number,
 
   /** Vertical offset. */
-  scrollTop: _react.PropTypes.number,
+  scrollTop: PropTypes.number,
 
   /** Width of list */
-  width: _react.PropTypes.number.isRequired
-}, _class.defaultProps = {
+  width: PropTypes.number.isRequired
+};
+VirtualScroll.defaultProps = {
   noRowsRenderer: function noRowsRenderer() {
     return null;
   },
@@ -230,5 +204,5 @@ var VirtualScroll = (_temp2 = _class = function (_Component) {
     return null;
   },
   overscanRowsCount: 10
-}, _temp2);
-exports.default = VirtualScroll;
+};
+export default VirtualScroll;

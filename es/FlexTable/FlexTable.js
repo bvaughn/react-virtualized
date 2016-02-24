@@ -1,47 +1,12 @@
-'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = exports.SortDirection = undefined;
+import cn from 'classnames';
+import FlexColumn from './FlexColumn';
+import React, { Component, PropTypes } from 'react';
+import { findDOMNode } from 'react-dom';
+import shouldPureComponentUpdate from 'react-pure-render/function';
+import Grid from '../Grid';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _class, _temp, _initialiseProps;
-
-exports.SortIndicator = SortIndicator;
-
-var _classnames = require('classnames');
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
-var _FlexColumn = require('./FlexColumn');
-
-var _FlexColumn2 = _interopRequireDefault(_FlexColumn);
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = require('react-dom');
-
-var _function = require('react-pure-render/function');
-
-var _function2 = _interopRequireDefault(_function);
-
-var _Grid = require('../Grid');
-
-var _Grid2 = _interopRequireDefault(_Grid);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SortDirection = exports.SortDirection = {
+export var SortDirection = {
   /**
    * Sort items in ascending order.
    * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
@@ -59,13 +24,14 @@ var SortDirection = exports.SortDirection = {
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
  * This component expects explicit width, height, and padding parameters.
  */
-var FlexTable = (_temp = _class = function (_Component) {
-  _inherits(FlexTable, _Component);
+
+var FlexTable = function (_Component) {
+  babelHelpers.inherits(FlexTable, _Component);
 
   function FlexTable(props) {
-    _classCallCheck(this, FlexTable);
+    babelHelpers.classCallCheck(this, FlexTable);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
+    var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
 
     _initialiseProps.call(_this);
 
@@ -82,7 +48,7 @@ var FlexTable = (_temp = _class = function (_Component) {
    */
 
 
-  _createClass(FlexTable, [{
+  babelHelpers.createClass(FlexTable, [{
     key: 'recomputeRowHeights',
     value: function recomputeRowHeights() {
       this.refs.Grid.recomputeGridSize();
@@ -169,15 +135,15 @@ var FlexTable = (_temp = _class = function (_Component) {
 
       var rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
 
-      return _react2.default.createElement(
+      return React.createElement(
         'div',
         {
-          className: (0, _classnames2.default)('FlexTable', className)
+          className: cn('FlexTable', className)
         },
-        !disableHeader && _react2.default.createElement(
+        !disableHeader && React.createElement(
           'div',
           {
-            className: (0, _classnames2.default)('FlexTable__headerRow', rowClass),
+            className: cn('FlexTable__headerRow', rowClass),
             style: {
               height: headerHeight,
               paddingRight: scrollbarWidth,
@@ -186,7 +152,7 @@ var FlexTable = (_temp = _class = function (_Component) {
           },
           this._getRenderedHeaderRow()
         ),
-        _react2.default.createElement(_Grid2.default, {
+        React.createElement(Grid, {
           ref: 'Grid',
           className: 'FlexTable__Grid',
           columnWidth: width,
@@ -241,14 +207,14 @@ var FlexTable = (_temp = _class = function (_Component) {
 
       var title = typeof renderedCell === 'string' ? renderedCell : null;
 
-      return _react2.default.createElement(
+      return React.createElement(
         'div',
         {
           key: 'Row' + rowIndex + '-Col' + columnIndex,
-          className: (0, _classnames2.default)('FlexTable__rowColumn', cellClassName),
+          className: cn('FlexTable__rowColumn', cellClassName),
           style: style
         },
-        _react2.default.createElement(
+        React.createElement(
           'div',
           {
             className: 'FlexTable__truncatedColumnText',
@@ -276,7 +242,7 @@ var FlexTable = (_temp = _class = function (_Component) {
       var showSortIndicator = sortBy === dataKey;
       var sortEnabled = !disableSort && sort;
 
-      var classNames = (0, _classnames2.default)('FlexTable__headerColumn', headerClassName, column.props.headerClassName, {
+      var classNames = cn('FlexTable__headerColumn', headerClassName, column.props.headerClassName, {
         'FlexTable__sortableHeaderColumn': sortEnabled
       });
       var style = this._getFlexStyleForColumn(column);
@@ -288,7 +254,7 @@ var FlexTable = (_temp = _class = function (_Component) {
         onHeaderClick(dataKey, columnData);
       };
 
-      return _react2.default.createElement(
+      return React.createElement(
         'div',
         {
           key: 'Header-Col' + columnIndex,
@@ -296,7 +262,7 @@ var FlexTable = (_temp = _class = function (_Component) {
           style: style,
           onClick: onClick
         },
-        _react2.default.createElement(
+        React.createElement(
           'div',
           {
             className: 'FlexTable__headerTruncatedText',
@@ -304,7 +270,7 @@ var FlexTable = (_temp = _class = function (_Component) {
           },
           label
         ),
-        showSortIndicator && _react2.default.createElement(SortIndicator, { sortDirection: sortDirection })
+        showSortIndicator && React.createElement(SortIndicator, { sortDirection: sortDirection })
       );
     }
   }, {
@@ -322,15 +288,15 @@ var FlexTable = (_temp = _class = function (_Component) {
 
       var rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName;
 
-      var renderedRow = _react2.default.Children.map(children, function (column, columnIndex) {
+      var renderedRow = React.Children.map(children, function (column, columnIndex) {
         return _this3._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
       });
 
-      return _react2.default.createElement(
+      return React.createElement(
         'div',
         {
           key: rowIndex,
-          className: (0, _classnames2.default)('FlexTable__row', rowClass),
+          className: cn('FlexTable__row', rowClass),
           onClick: function onClick() {
             return onRowClick(rowIndex);
           },
@@ -378,7 +344,7 @@ var FlexTable = (_temp = _class = function (_Component) {
       var disableHeader = _props4.disableHeader;
 
       var items = disableHeader ? [] : children;
-      return _react2.default.Children.map(items, function (column, columnIndex) {
+      return React.Children.map(items, function (column, columnIndex) {
         return _this4._createHeader(column, columnIndex);
       });
     }
@@ -393,7 +359,7 @@ var FlexTable = (_temp = _class = function (_Component) {
   }, {
     key: '_setScrollbarWidth',
     value: function _setScrollbarWidth() {
-      var Grid = (0, _reactDom.findDOMNode)(this.refs.Grid);
+      var Grid = findDOMNode(this.refs.Grid);
       var clientWidth = Grid.clientWidth || 0;
       var offsetWidth = Grid.offsetWidth || 0;
       var scrollbarWidth = offsetWidth - clientWidth;
@@ -401,111 +367,118 @@ var FlexTable = (_temp = _class = function (_Component) {
       this.setState({ scrollbarWidth: scrollbarWidth });
     }
   }]);
-
   return FlexTable;
-}(_react.Component), _class.propTypes = {
+}(Component);
+
+/**
+ * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
+ */
+
+
+FlexTable.propTypes = {
   /** One or more FlexColumns describing the data displayed in this row */
   children: function children(props, propName, componentName) {
-    var children = _react2.default.Children.toArray(props.children);
+    var children = React.Children.toArray(props.children);
     for (var i = 0; i < children.length; i++) {
-      if (children[i].type !== _FlexColumn2.default) {
+      if (children[i].type !== FlexColumn) {
         return new Error('FlexTable only accepts children of type FlexColumn');
       }
     }
   },
 
   /** Optional CSS class name */
-  className: _react.PropTypes.string,
+  className: PropTypes.string,
 
   /** Disable rendering the header at all */
-  disableHeader: _react.PropTypes.bool,
+  disableHeader: PropTypes.bool,
 
   /** Optional CSS class to apply to all column headers */
-  headerClassName: _react.PropTypes.string,
+  headerClassName: PropTypes.string,
 
   /** Fixed height of header row */
-  headerHeight: _react.PropTypes.number.isRequired,
+  headerHeight: PropTypes.number.isRequired,
 
   /** Fixed/available height for out DOM element */
-  height: _react.PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
 
   /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
-  noRowsRenderer: _react.PropTypes.func,
+  noRowsRenderer: PropTypes.func,
 
   /**
   * Optional callback when a column's header is clicked.
   * (dataKey: string): void
   */
-  onHeaderClick: _react.PropTypes.func,
+  onHeaderClick: PropTypes.func,
 
   /**
    * Callback invoked when a user clicks on a table row.
    * (rowIndex: number): void
    */
-  onRowClick: _react.PropTypes.func,
+  onRowClick: PropTypes.func,
 
   /**
    * Callback invoked with information about the slice of rows that were just rendered.
    * ({ startIndex, stopIndex }): void
    */
-  onRowsRendered: _react.PropTypes.func,
+  onRowsRendered: PropTypes.func,
 
   /**
    * Callback invoked whenever the scroll offset changes within the inner scrollable region.
    * This callback can be used to sync scrolling between lists, tables, or grids.
    * ({ clientHeight, scrollHeight, scrollTop }): void
    */
-  onScroll: _react.PropTypes.func.isRequired,
+  onScroll: PropTypes.func.isRequired,
 
   /**
    * Number of rows to render above/below the visible bounds of the list.
    * These rows can help for smoother scrolling on touch devices.
    */
-  overscanRowsCount: _react.PropTypes.number.isRequired,
+  overscanRowsCount: PropTypes.number.isRequired,
 
   /**
    * Optional CSS class to apply to all table rows (including the header row).
    * This property can be a CSS class name (string) or a function that returns a class name.
    * If a function is provided its signature should be: (rowIndex: number): string
    */
-  rowClassName: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.func]),
+  rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
   /**
    * Callback responsible for returning a data row given an index.
    * (index: number): any
    */
-  rowGetter: _react.PropTypes.func.isRequired,
+  rowGetter: PropTypes.func.isRequired,
 
   /**
    * Either a fixed row height (number) or a function that returns the height of a row given its index.
    * (index: number): number
    */
-  rowHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
+  rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
   /** Number of rows in table. */
-  rowsCount: _react.PropTypes.number.isRequired,
+  rowsCount: PropTypes.number.isRequired,
 
   /** Row index to ensure visible (by forcefully scrolling if necessary) */
-  scrollToIndex: _react.PropTypes.number,
+  scrollToIndex: PropTypes.number,
 
   /** Vertical offset. */
-  scrollTop: _react.PropTypes.number,
+  scrollTop: PropTypes.number,
 
   /**
    * Sort function to be called if a sortable header is clicked.
    * (dataKey: string, sortDirection: SortDirection): void
    */
-  sort: _react.PropTypes.func,
+  sort: PropTypes.func,
 
   /** FlexTable data is currently sorted by this :dataKey (if it is sorted at all) */
-  sortBy: _react.PropTypes.string,
+  sortBy: PropTypes.string,
 
   /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
-  sortDirection: _react.PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
+  sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
 
   /** Width of list */
-  width: _react.PropTypes.number.isRequired
-}, _class.defaultProps = {
+  width: PropTypes.number.isRequired
+};
+FlexTable.defaultProps = {
   disableHeader: false,
   headerHeight: 0,
   noRowsRenderer: function noRowsRenderer() {
@@ -524,24 +497,22 @@ var FlexTable = (_temp = _class = function (_Component) {
     return null;
   },
   overscanRowsCount: 10
-}, _initialiseProps = function _initialiseProps() {
-  this.shouldComponentUpdate = _function2.default;
-}, _temp);
+};
 
-/**
- * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
- */
+var _initialiseProps = function _initialiseProps() {
+  this.shouldComponentUpdate = shouldPureComponentUpdate;
+};
 
-exports.default = FlexTable;
-function SortIndicator(_ref4) {
+export default FlexTable;
+export function SortIndicator(_ref4) {
   var sortDirection = _ref4.sortDirection;
 
-  var classNames = (0, _classnames2.default)('FlexTable__sortableHeaderIcon', {
+  var classNames = cn('FlexTable__sortableHeaderIcon', {
     'FlexTable__sortableHeaderIcon--ASC': sortDirection === SortDirection.ASC,
     'FlexTable__sortableHeaderIcon--DESC': sortDirection === SortDirection.DESC
   });
 
-  return _react2.default.createElement(
+  return React.createElement(
     'svg',
     {
       className: classNames,
@@ -550,10 +521,10 @@ function SortIndicator(_ref4) {
       viewBox: '0 0 24 24',
       xmlns: 'http://www.w3.org/2000/svg'
     },
-    sortDirection === SortDirection.ASC ? _react2.default.createElement('path', { d: 'M7 14l5-5 5 5z' }) : _react2.default.createElement('path', { d: 'M7 10l5 5 5-5z' }),
-    _react2.default.createElement('path', { d: 'M0 0h24v24H0z', fill: 'none' })
+    sortDirection === SortDirection.ASC ? React.createElement('path', { d: 'M7 14l5-5 5 5z' }) : React.createElement('path', { d: 'M7 10l5 5 5-5z' }),
+    React.createElement('path', { d: 'M0 0h24v24H0z', fill: 'none' })
   );
 }
 SortIndicator.propTypes = {
-  sortDirection: _react.PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
+  sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
 };

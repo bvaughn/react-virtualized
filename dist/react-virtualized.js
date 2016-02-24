@@ -179,8 +179,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports["default"] = void 0;
-        var _class, _temp, _createClass = function() {
+        });
+        var _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -192,7 +192,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), AutoSizer = (_temp = _class = function(_Component) {
+        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), AutoSizer = function(_Component) {
             function AutoSizer(props) {
                 _classCallCheck(this, AutoSizer);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AutoSizer).call(this, props));
@@ -205,8 +205,6 @@
             return _inherits(AutoSizer, _Component), _createClass(AutoSizer, [ {
                 key: "componentDidMount",
                 value: function() {
-                    // Defer requiring resize handler in order to support server-side rendering.
-                    // See issue #41
                     this._detectElementResize = __webpack_require__(6), this._detectElementResize.addResizeListener(this._parentNode, this._onResize), 
                     this._onResize();
                 }
@@ -245,19 +243,18 @@
             }, {
                 key: "_setRef",
                 value: function(autoSizer) {
-                    // In case the component has been unmounted
                     this._parentNode = autoSizer && autoSizer.parentNode;
                 }
             } ]), AutoSizer;
-        }(_react.Component), _class.propTypes = {
+        }(_react.Component);
+        AutoSizer.propTypes = {
             children: _react.PropTypes.func.isRequired,
             disableHeight: _react.PropTypes.bool,
             disableWidth: _react.PropTypes.bool,
             onResize: _react.PropTypes.func.isRequired
-        }, _class.defaultProps = {
+        }, AutoSizer.defaultProps = {
             onResize: function() {}
-        }, _temp);
-        exports["default"] = AutoSizer;
+        }, exports["default"] = AutoSizer;
     }, /* 3 */
     /***/
     function(module, exports) {
@@ -294,16 +291,6 @@
     /***/
     function(module, exports) {
         "use strict";
-        /**
-	* Detect Element Resize.
-	* Forked in order to guard against unsafe 'window' and 'document' references.
-	*
-	* https://github.com/sdecima/javascript-detect-element-resize
-	* Sebastian Decima
-	*
-	* version: 0.5.3
-	**/
-        // Check `document` and `window` in case of server-side rendering
         var _window;
         _window = "undefined" != typeof window ? window : "undefined" != typeof self ? self : void 0;
         var attachEvent = "undefined" != typeof document && document.attachEvent, stylesCreated = !1;
@@ -345,7 +332,6 @@
         }
         var createStyles = function() {
             if (!stylesCreated) {
-                //opacity:0 works around a chrome bug https://code.google.com/p/chromium/issues/detail?id=286360
                 var css = (animationKeyframes ? animationKeyframes : "") + ".resize-triggers { " + (animationStyle ? animationStyle : "") + 'visibility: hidden; opacity: 0; } .resize-triggers, .resize-triggers > div, .contract-trigger:before { content: " "; display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; } .resize-triggers > div { background: #eee; overflow: auto; } .contract-trigger:before { width: 200%; height: 200%; }', head = document.head || document.getElementsByTagName("head")[0], style = document.createElement("style");
                 style.type = "text/css", style.styleSheet ? style.styleSheet.cssText = css : style.appendChild(document.createTextNode(css)), 
                 head.appendChild(style), stylesCreated = !0;
@@ -355,7 +341,6 @@
             createStyles(), element.__resizeLast__ = {}, element.__resizeListeners__ = [], (element.__resizeTriggers__ = document.createElement("div")).className = "resize-triggers", 
             element.__resizeTriggers__.innerHTML = '<div class="expand-trigger"><div></div></div><div class="contract-trigger"></div>', 
             element.appendChild(element.__resizeTriggers__), resetTriggers(element), element.addEventListener("scroll", scrollListener, !0), 
-            /* Listen for a css animation to detect element display/re-attach */
             animationstartevent && element.__resizeTriggers__.addEventListener(animationstartevent, function(e) {
                 e.animationName == animationName && resetTriggers(element);
             })), element.__resizeListeners__.push(fn));
@@ -411,8 +396,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports["default"] = void 0;
-        var _class, _temp, _createClass = function() {
+        });
+        var _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -424,7 +409,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = (_temp = _class = function(_Component) {
+        }(), _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = function(_Component) {
             function ColumnSizer(props, context) {
                 _classCallCheck(this, ColumnSizer);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ColumnSizer).call(this, props, context));
@@ -435,7 +420,7 @@
                 key: "componentDidUpdate",
                 value: function(prevProps, prevState) {
                     var _props = this.props, columnMaxWidth = _props.columnMaxWidth, columnMinWidth = _props.columnMinWidth, columnsCount = _props.columnsCount, width = _props.width;
-                    (columnMaxWidth !== prevProps.columnMaxWidth || columnMinWidth !== prevProps.columnMinWidth || columnsCount !== prevProps.columnsCount || width !== prevProps.width) && this._registeredChild && this._registeredChild.recomputeGridSize();
+                    columnMaxWidth === prevProps.columnMaxWidth && columnMinWidth === prevProps.columnMinWidth && columnsCount === prevProps.columnsCount && width === prevProps.width || this._registeredChild && this._registeredChild.recomputeGridSize();
                 }
             }, {
                 key: "render",
@@ -459,14 +444,14 @@
                     this._registeredChild = child, this._registeredChild && this._registeredChild.recomputeGridSize();
                 }
             } ]), ColumnSizer;
-        }(_react.Component), _class.propTypes = {
+        }(_react.Component);
+        ColumnSizer.propTypes = {
             children: _react.PropTypes.func.isRequired,
             columnMaxWidth: _react.PropTypes.number,
             columnMinWidth: _react.PropTypes.number,
             columnsCount: _react.PropTypes.number.isRequired,
             width: _react.PropTypes.number.isRequired
-        }, _temp);
-        exports["default"] = ColumnSizer;
+        }, exports["default"] = ColumnSizer;
     }, /* 9 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -512,8 +497,8 @@
             }
             Object.defineProperty(exports, "__esModule", {
                 value: !0
-            }), exports["default"] = void 0;
-            var _class, _temp, _createClass = function() {
+            });
+            var _createClass = function() {
                 function defineProperties(target, props) {
                     for (var i = 0; i < props.length; i++) {
                         var descriptor = props[i];
@@ -528,12 +513,10 @@
             }(), _utils = __webpack_require__(13), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(15), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
                 OBSERVED: "observed",
                 REQUESTED: "requested"
-            }, Grid = (_temp = _class = function(_Component) {
+            }, Grid = function(_Component) {
                 function Grid(props, context) {
                     _classCallCheck(this, Grid);
                     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Grid).call(this, props, context));
-                    // Invokes onSectionRendered callback only when start/stop row or column indices change
-                    // Bind functions to instance so they don't lose context when passed around
                     return _this.shouldComponentUpdate = _function2["default"], _this.state = {
                         computeGridMetadataOnNextUpdate: !1,
                         isScrolling: !1,
@@ -547,11 +530,6 @@
                     _this._updateScrollTopForScrollToRow = _this._updateScrollTopForScrollToRow.bind(_this), 
                     _this;
                 }
-                /**
-	   * Forced recompute of row heights and column widths.
-	   * This function should be called if dynamic column or row sizes have changed but nothing else has.
-	   * Since Grid only receives :columnsCount and :rowsCount it has no way of detecting when the underlying data changes.
-	   */
                 return _inherits(Grid, _Component), _createClass(Grid, [ {
                     key: "recomputeGridSize",
                     value: function() {
@@ -581,24 +559,16 @@
                         (scrollLeft >= 0 || scrollTop >= 0) && this.setScrollPosition({
                             scrollLeft: scrollLeft,
                             scrollTop: scrollTop
-                        }), (scrollToColumn >= 0 || scrollToRow >= 0) && (// Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
-                        this._setImmediateId = setImmediate(function() {
+                        }), (scrollToColumn >= 0 || scrollToRow >= 0) && (this._setImmediateId = setImmediate(function() {
                             _this2._setImmediateId = null, _this2._updateScrollLeftForScrollToColumn(), _this2._updateScrollTopForScrollToRow();
-                        })), // Update onRowsRendered callback
-                        this._invokeOnGridRenderedHelper();
+                        })), this._invokeOnGridRenderedHelper();
                     }
                 }, {
                     key: "componentDidUpdate",
                     value: function(prevProps, prevState) {
                         var _props2 = this.props, columnsCount = _props2.columnsCount, columnWidth = _props2.columnWidth, height = _props2.height, rowHeight = _props2.rowHeight, rowsCount = _props2.rowsCount, scrollToColumn = _props2.scrollToColumn, scrollToRow = _props2.scrollToRow, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollPositionChangeReason = _state.scrollPositionChangeReason, scrollTop = _state.scrollTop;
-                        // Make sure requested changes to :scrollLeft or :scrollTop get applied.
-                        // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
-                        // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
-                        // So we only set these when we require an adjustment of the scroll position.
-                        // See issue #2 for more information.
                         scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED && (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft && (this.refs.scrollingContainer.scrollLeft = scrollLeft), 
                         scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop && (this.refs.scrollingContainer.scrollTop = scrollTop)), 
-                        // Update scrollLeft if appropriate
                         (0, _utils.updateScrollIndexHelper)({
                             cellsCount: columnsCount,
                             cellMetadata: this._columnMetadata,
@@ -611,8 +581,7 @@
                             scrollToIndex: scrollToColumn,
                             size: width,
                             updateScrollIndexCallback: this._updateScrollLeftForScrollToColumn
-                        }), // Update scrollTop if appropriate
-                        (0, _utils.updateScrollIndexHelper)({
+                        }), (0, _utils.updateScrollIndexHelper)({
                             cellsCount: rowsCount,
                             cellMetadata: this._rowMetadata,
                             cellSize: rowHeight,
@@ -624,8 +593,7 @@
                             scrollToIndex: scrollToRow,
                             size: height,
                             updateScrollIndexCallback: this._updateScrollTopForScrollToRow
-                        }), // Update onRowsRendered callback if start/stop indices have changed
-                        this._invokeOnGridRenderedHelper();
+                        }), this._invokeOnGridRenderedHelper();
                     }
                 }, {
                     key: "componentWillMount",
@@ -679,7 +647,6 @@
                     key: "render",
                     value: function() {
                         var _props3 = this.props, className = _props3.className, columnsCount = _props3.columnsCount, height = _props3.height, noContentRenderer = _props3.noContentRenderer, overscanColumnsCount = _props3.overscanColumnsCount, overscanRowsCount = _props3.overscanRowsCount, renderCell = _props3.renderCell, rowsCount = _props3.rowsCount, width = _props3.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = [];
-                        // Render only enough columns and rows to cover the visible area of the grid.
                         if (height > 0 && width > 0) {
                             var _getVisibleCellIndice = (0, _utils.getVisibleCellIndices)({
                                 cellsCount: columnsCount,
@@ -693,7 +660,6 @@
                                 containerSize: height,
                                 currentOffset: scrollTop
                             }), rowStartIndex = _getVisibleCellIndice2.start, rowStopIndex = _getVisibleCellIndice2.stop;
-                            // Store for :onSectionRendered callback in componentDidUpdate
                             this._renderedColumnStartIndex = columnStartIndex, this._renderedColumnStopIndex = columnStopIndex, 
                             this._renderedRowStartIndex = rowStartIndex, this._renderedRowStopIndex = rowStopIndex;
                             var overscanColumnIndices = (0, _utils.getOverscanIndices)({
@@ -878,8 +844,7 @@
                         var _props5 = this.props, columnsCount = _props5.columnsCount, height = _props5.height, rowsCount = _props5.rowsCount, width = _props5.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop, start = void 0, datum = void 0, newScrollLeft = void 0, newScrollTop = void 0;
                         if (0 !== columnsCount && 0 !== rowsCount) switch (event.key) {
                           case "ArrowDown":
-                            this._stopEvent(event), // Prevent key from also scrolling surrounding window
-                            start = (0, _utils.getVisibleCellIndices)({
+                            this._stopEvent(event), start = (0, _utils.getVisibleCellIndices)({
                                 cellsCount: rowsCount,
                                 cellMetadata: this._rowMetadata,
                                 containerSize: height,
@@ -891,8 +856,7 @@
                             break;
 
                           case "ArrowLeft":
-                            this._stopEvent(event), // Prevent key from also scrolling surrounding window
-                            start = (0, _utils.getVisibleCellIndices)({
+                            this._stopEvent(event), start = (0, _utils.getVisibleCellIndices)({
                                 cellsCount: columnsCount,
                                 cellMetadata: this._columnMetadata,
                                 containerSize: width,
@@ -904,8 +868,7 @@
                             break;
 
                           case "ArrowRight":
-                            this._stopEvent(event), // Prevent key from also scrolling surrounding window
-                            start = (0, _utils.getVisibleCellIndices)({
+                            this._stopEvent(event), start = (0, _utils.getVisibleCellIndices)({
                                 cellsCount: columnsCount,
                                 cellMetadata: this._columnMetadata,
                                 containerSize: width,
@@ -917,8 +880,7 @@
                             break;
 
                           case "ArrowUp":
-                            this._stopEvent(event), // Prevent key from also scrolling surrounding window
-                            start = (0, _utils.getVisibleCellIndices)({
+                            this._stopEvent(event), start = (0, _utils.getVisibleCellIndices)({
                                 cellsCount: rowsCount,
                                 cellMetadata: this._rowMetadata,
                                 containerSize: height,
@@ -932,22 +894,10 @@
                 }, {
                     key: "_onScroll",
                     value: function(event) {
-                        // In certain edge-cases React dispatches an onScroll event with an invalid target.scrollLeft / target.scrollTop.
-                        // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
-                        // See issue #404 for more information.
                         if (event.target === this.refs.scrollingContainer) {
-                            // Prevent pointer events from interrupting a smooth scroll
                             this._enablePointerEventsAfterDelay();
-                            // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
-                            // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
-                            // This causes a series of rapid renders that is slow for long lists.
-                            // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
                             var _props6 = this.props, height = _props6.height, onScroll = _props6.onScroll, width = _props6.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
-                            // Certain devices (like Apple touchpad) rapid-fire duplicate events.
-                            // Don't force a re-render if this is the case.
-                            // The mouse may move faster then the animation frame does.
-                            // Use requestAnimationFrame to avoid over-updating.
-                            (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) && this._setNextState({
+                            this.state.scrollLeft === scrollLeft && this.state.scrollTop === scrollTop || this._setNextState({
                                 isScrolling: !0,
                                 scrollLeft: scrollLeft,
                                 scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
@@ -972,7 +922,8 @@
                         }
                     }
                 } ]), Grid;
-            }(_react.Component), _class.propTypes = {
+            }(_react.Component);
+            Grid.propTypes = {
                 className: _react.PropTypes.string,
                 columnsCount: _react.PropTypes.number.isRequired,
                 columnWidth: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
@@ -990,7 +941,7 @@
                 scrollTop: _react.PropTypes.number,
                 scrollToRow: _react.PropTypes.number,
                 width: _react.PropTypes.number.isRequired
-            }, _class.defaultProps = {
+            }, Grid.defaultProps = {
                 noContentRenderer: function() {
                     return null;
                 },
@@ -1002,8 +953,7 @@
                 },
                 overscanColumnsCount: 0,
                 overscanRowsCount: 10
-            }, _temp);
-            exports["default"] = Grid;
+            }, exports["default"] = Grid;
         }).call(exports, __webpack_require__(11).setImmediate, __webpack_require__(11).clearImmediate);
     }, /* 11 */
     /***/
@@ -1095,32 +1045,11 @@
     /***/
     function(module, exports) {
         "use strict";
-        /**
-	 * Helper method that determines when to recalculate row or column metadata.
-	 *
-	 * @param cellsCount Number of rows or columns in the current axis
-	 * @param cellsSize Width or height of cells for the current axis
-	 * @param computeMetadataCallback Method to invoke if cell metadata should be recalculated
-	 * @param computeMetadataCallbackProps Parameters to pass to :computeMetadataCallback
-	 * @param computeMetadataOnNextUpdate Flag specifying that metadata should be recalculated
-	 * @param nextCellsCount Newly updated number of rows or columns in the current axis
-	 * @param nextCellsSize Newly updated width or height of cells for the current axis
-	 * @param nextScrollToIndex Newly updated scroll-to-index
-	 * @param scrollToIndex Scroll-to-index
-	 * @param updateScrollOffsetForScrollToIndex Callback to invoke if the scroll position should be recalculated
-	 */
         function computeCellMetadataAndUpdateScrollOffsetHelper(_ref) {
             var cellsCount = _ref.cellsCount, cellSize = _ref.cellSize, computeMetadataCallback = _ref.computeMetadataCallback, computeMetadataCallbackProps = _ref.computeMetadataCallbackProps, computeMetadataOnNextUpdate = _ref.computeMetadataOnNextUpdate, nextCellsCount = _ref.nextCellsCount, nextCellSize = _ref.nextCellSize, nextScrollToIndex = _ref.nextScrollToIndex, scrollToIndex = _ref.scrollToIndex, updateScrollOffsetForScrollToIndex = _ref.updateScrollOffsetForScrollToIndex;
-            // Don't compare cell sizes if they are functions because inline functions would cause infinite loops.
-            // In that event users should use the manual recompute methods to inform of changes.
             (computeMetadataOnNextUpdate || cellsCount !== nextCellsCount || ("number" == typeof cellSize || "number" == typeof nextCellSize) && cellSize !== nextCellSize) && (computeMetadataCallback(computeMetadataCallbackProps), 
-            // Updated cell metadata may have hidden the previous scrolled-to item.
-            // In this case we should also update the scrollTop to ensure it stays visible.
             scrollToIndex >= 0 && scrollToIndex === nextScrollToIndex && updateScrollOffsetForScrollToIndex());
         }
-        /**
-	 * Helper utility that updates the specified callback whenever any of the specified indices have changed.
-	 */
         function createCallbackMemoizer() {
             var requireAllKeys = arguments.length <= 0 || void 0 === arguments[0] ? !0 : arguments[0], cachedIndices = {};
             return function(_ref2) {
@@ -1132,11 +1061,7 @@
                 cachedIndices = indices, allInitialized && indexChanged && callback(indices);
             };
         }
-        /**
-	 * Binary search function inspired by react-infinite.
-	 */
         function findNearestCell(_ref3) {
-            // TODO Add better guards here against NaN offset
             for (var cellMetadata = _ref3.cellMetadata, mode = _ref3.mode, offset = _ref3.offset, high = cellMetadata.length - 1, low = 0, middle = void 0, currentOffset = void 0; high >= low; ) {
                 if (middle = low + Math.floor((high - low) / 2), currentOffset = cellMetadata[middle].offset, 
                 currentOffset === offset) return middle;
@@ -1151,17 +1076,6 @@
                 overscanStopIndex: Math.min(cellsCount - 1, stopIndex + overscanCellsCount)
             };
         }
-        /**
-	 * Determines a new offset that ensures a certain cell is visible, given the current offset.
-	 * If the cell is already visible then the current offset will be returned.
-	 * If the current offset is too great or small, it will be adjusted just enough to ensure the specified index is visible.
-	 *
-	 * @param cellMetadata Metadata initially computed by initCellMetadata()
-	 * @param containerSize Total size (width or height) of the container
-	 * @param currentOffset Container's current (x or y) offset
-	 * @param targetIndex Index of target cell
-	 * @return Offset to use to ensure the specified cell is visible
-	 */
         function getUpdatedOffsetForIndex(_ref5) {
             var cellMetadata = _ref5.cellMetadata, containerSize = _ref5.containerSize, currentOffset = _ref5.currentOffset, targetIndex = _ref5.targetIndex;
             if (0 === cellMetadata.length) return 0;
@@ -1169,15 +1083,6 @@
             var datum = cellMetadata[targetIndex], maxOffset = datum.offset, minOffset = maxOffset - containerSize + datum.size, newOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
             return newOffset;
         }
-        /**
-	 * Determines the range of cells to display for a given offset in order to fill the specified container.
-	 *
-	 * @param cellsCount Total number of cells.
-	 * @param cellMetadata Metadata initially computed by initCellMetadata()
-	 * @param containerSize Total size (width or height) of the container
-	 * @param currentOffset Container's current (x or y) offset
-	 * @return An object containing :start and :stop attributes, each specifying a cell index
-	 */
         function getVisibleCellIndices(_ref6) {
             var cellsCount = _ref6.cellsCount, cellMetadata = _ref6.cellMetadata, containerSize = _ref6.containerSize, currentOffset = _ref6.currentOffset;
             if (0 === cellsCount) return {};
@@ -1195,14 +1100,6 @@
                 stop: stop
             };
         }
-        /**
-	 * Initializes metadata for an axis and its cells.
-	 * This data is used to determine which cells are visible given a container size and scroll position.
-	 *
-	 * @param cellsCount Total number of cells.
-	 * @param size Either a fixed size or a function that returns the size for a given given an index.
-	 * @return Object mapping cell index to cell metadata (size, offset)
-	 */
         function initCellMetadata(_ref7) {
             for (var cellsCount = _ref7.cellsCount, size = _ref7.size, sizeGetter = size instanceof Function ? size : function(index) {
                 return size;
@@ -1216,25 +1113,8 @@
             }
             return cellMetadata;
         }
-        /**
-	 * Helper function that determines when to update scroll offsets to ensure that a scroll-to-index remains visible.
-	 *
-	 * @param cellMetadata Metadata initially computed by initCellMetadata()
-	 * @param cellsCount Number of rows or columns in the current axis
-	 * @param cellsSize Width or height of cells for the current axis
-	 * @param previousCellsCount Previous number of rows or columns
-	 * @param previousCellsSize Previous width or height of cells
-	 * @param previousScrollToIndex Previous scroll-to-index
-	 * @param previousSize Previous width or height of the virtualized container
-	 * @param scrollOffset Current scrollLeft or scrollTop
-	 * @param scrollToIndex Scroll-to-index
-	 * @param size Width or height of the virtualized container
-	 * @param updateScrollIndexCallback Callback to invoke with an optional scroll-to-index override
-	 */
         function updateScrollIndexHelper(_ref8) {
             var cellMetadata = _ref8.cellMetadata, cellsCount = _ref8.cellsCount, cellSize = _ref8.cellSize, previousCellsCount = _ref8.previousCellsCount, previousCellSize = _ref8.previousCellSize, previousScrollToIndex = _ref8.previousScrollToIndex, previousSize = _ref8.previousSize, scrollOffset = _ref8.scrollOffset, scrollToIndex = _ref8.scrollToIndex, size = _ref8.size, updateScrollIndexCallback = _ref8.updateScrollIndexCallback, hasScrollToIndex = scrollToIndex >= 0 && cellsCount > scrollToIndex, sizeHasChanged = size !== previousSize || !previousCellSize || "number" == typeof cellSize && cellSize !== previousCellSize;
-            // If we have a new scroll target OR if height/row-height has changed,
-            // We should ensure that the scroll target is visible.
             if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== previousScrollToIndex)) updateScrollIndexCallback(); else if (!hasScrollToIndex && (previousSize > size || previousCellsCount > cellsCount)) {
                 var calculatedScrollOffset = getUpdatedOffsetForIndex({
                     cellMetadata: cellMetadata,
@@ -1242,7 +1122,6 @@
                     currentOffset: scrollOffset,
                     targetIndex: cellsCount - 1
                 });
-                // Only adjust the scroll position if we've scrolled below the last set of rows.
                 scrollOffset > calculatedScrollOffset && updateScrollIndexCallback(cellsCount - 1);
             }
         }
@@ -1474,8 +1353,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports["default"] = exports.SortDirection = void 0;
-        var _class, _temp, _initialiseProps, _createClass = function() {
+        }), exports.SortDirection = void 0;
+        var _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -1490,17 +1369,9 @@
         }();
         exports.SortIndicator = SortIndicator;
         var _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(20), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(21), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), SortDirection = exports.SortDirection = {
-            /**
-	   * Sort items in ascending order.
-	   * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
-	   */
             ASC: "ASC",
-            /**
-	   * Sort items in descending order.
-	   * This means arranging from the highest value to the lowest (e.g. z-a, 9-0).
-	   */
             DESC: "DESC"
-        }, FlexTable = (_temp = _class = function(_Component) {
+        }, FlexTable = function(_Component) {
             function FlexTable(props) {
                 _classCallCheck(this, FlexTable);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
@@ -1508,9 +1379,6 @@
                     scrollbarWidth: 0
                 }, _this._createRow = _this._createRow.bind(_this), _this;
             }
-            /**
-	   * See Grid#recomputeGridSize
-	   */
             return _inherits(FlexTable, _Component), _createClass(FlexTable, [ {
                 key: "recomputeRowHeights",
                 value: function() {
@@ -1684,7 +1552,8 @@
                     });
                 }
             } ]), FlexTable;
-        }(_react.Component), _class.propTypes = {
+        }(_react.Component);
+        FlexTable.propTypes = {
             children: function children(props, propName, componentName) {
                 for (var children = _react2["default"].Children.toArray(props.children), i = 0; i < children.length; i++) if (children[i].type !== _FlexColumn2["default"]) return new Error("FlexTable only accepts children of type FlexColumn");
             },
@@ -1709,7 +1578,7 @@
             sortBy: _react.PropTypes.string,
             sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ]),
             width: _react.PropTypes.number.isRequired
-        }, _class.defaultProps = {
+        }, FlexTable.defaultProps = {
             disableHeader: !1,
             headerHeight: 0,
             noRowsRenderer: function() {
@@ -1728,12 +1597,10 @@
                 return null;
             },
             overscanRowsCount: 10
-        }, _initialiseProps = function() {
+        };
+        var _initialiseProps = function() {
             this.shouldComponentUpdate = _function2["default"];
-        }, _temp);
-        /**
-	 * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
-	 */
+        };
         exports["default"] = FlexTable, SortIndicator.propTypes = {
             sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ])
         };
@@ -1759,37 +1626,27 @@
                 }
             }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
         }
-        /**
-	 * Default cell renderer that displays an attribute as a simple string
-	 * You should override the column's cellRenderer if your data is some other type of object.
-	 */
         function defaultCellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
             return null === cellData || void 0 === cellData ? "" : String(cellData);
         }
-        /**
-	 * Default accessor for returning a cell value for a given attribute.
-	 * This function expects to operate on either a vanilla Object or an Immutable Map.
-	 * You should override the column's cellDataGetter if your data is some other type of object.
-	 */
         function defaultCellDataGetter(dataKey, rowData, columnData) {
             return rowData.get instanceof Function ? rowData.get(dataKey) : rowData[dataKey];
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports["default"] = void 0;
-        var _class, _temp;
-        exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter;
-        var _react = __webpack_require__(3), Column = (_temp = _class = function(_Component) {
+        }), exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter;
+        var _react = __webpack_require__(3), Column = function(_Component) {
             function Column() {
                 return _classCallCheck(this, Column), _possibleConstructorReturn(this, Object.getPrototypeOf(Column).apply(this, arguments));
             }
             return _inherits(Column, _Component), Column;
-        }(_react.Component), _class.defaultProps = {
+        }(_react.Component);
+        Column.defaultProps = {
             cellDataGetter: defaultCellDataGetter,
             cellRenderer: defaultCellRenderer,
             flexGrow: 0,
             flexShrink: 1
-        }, _class.propTypes = {
+        }, Column.propTypes = {
             cellClassName: _react.PropTypes.string,
             cellDataGetter: _react.PropTypes.func,
             cellRenderer: _react.PropTypes.func,
@@ -1803,8 +1660,7 @@
             maxWidth: _react.PropTypes.number,
             minWidth: _react.PropTypes.number,
             width: _react.PropTypes.number.isRequired
-        }, _temp);
-        exports["default"] = Column;
+        }, exports["default"] = Column;
     }, /* 21 */
     /***/
     function(module, exports) {
@@ -1854,9 +1710,6 @@
             var lastRenderedStartIndex = _ref2.lastRenderedStartIndex, lastRenderedStopIndex = _ref2.lastRenderedStopIndex, startIndex = _ref2.startIndex, stopIndex = _ref2.stopIndex;
             return !(startIndex > lastRenderedStopIndex || lastRenderedStartIndex > stopIndex);
         }
-        /**
-	 * Returns all of the ranges within a larger range that contain unloaded rows.
-	 */
         function scanForUnloadedRanges(_ref3) {
             for (var isRowLoaded = _ref3.isRowLoaded, startIndex = _ref3.startIndex, stopIndex = _ref3.stopIndex, unloadedRanges = [], rangeStartIndex = null, rangeStopIndex = null, i = startIndex; stopIndex >= i; i++) {
                 var loaded = isRowLoaded(i);
@@ -1872,8 +1725,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports["default"] = void 0;
-        var _class, _temp, _createClass = function() {
+        });
+        var _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -1887,7 +1740,7 @@
             };
         }();
         exports.isRangeVisible = isRangeVisible, exports.scanForUnloadedRanges = scanForUnloadedRanges;
-        var _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), InfiniteLoader = (_temp = _class = function(_Component) {
+        var _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), InfiniteLoader = function(_Component) {
             function InfiniteLoader(props, context) {
                 _classCallCheck(this, InfiniteLoader);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InfiniteLoader).call(this, props, context));
@@ -1916,8 +1769,6 @@
                     unloadedRanges.forEach(function(unloadedRange) {
                         var promise = loadMoreRows(unloadedRange);
                         promise && promise.then(function() {
-                            // Refresh the visible rows if any of them have just been loaded.
-                            // Otherwise they will remain in their unloaded visual state.
                             isRangeVisible({
                                 lastRenderedStartIndex: _this2._lastRenderedStartIndex,
                                 lastRenderedStopIndex: _this2._lastRenderedStopIndex,
@@ -1933,20 +1784,17 @@
                     this._registeredChild = registeredChild;
                 }
             } ]), InfiniteLoader;
-        }(_react.Component), _class.propTypes = {
+        }(_react.Component);
+        InfiniteLoader.propTypes = {
             children: _react.PropTypes.func.isRequired,
             isRowLoaded: _react.PropTypes.func.isRequired,
             loadMoreRows: _react.PropTypes.func.isRequired,
             rowsCount: _react.PropTypes.number.isRequired,
             threshold: _react.PropTypes.number.isRequired
-        }, _class.defaultProps = {
+        }, InfiniteLoader.defaultProps = {
             rowsCount: 0,
             threshold: 15
-        }, _temp);
-        /**
-	 * Determines if the specified start/stop range is visible based on the most recently rendered range.
-	 */
-        exports["default"] = InfiniteLoader;
+        }, exports["default"] = InfiniteLoader;
     }, /* 24 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -1990,8 +1838,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports["default"] = void 0;
-        var _class, _temp, _createClass = function() {
+        });
+        var _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -2003,7 +1851,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), ScrollSync = (_temp = _class = function(_Component) {
+        }(), _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), ScrollSync = function(_Component) {
             function ScrollSync(props, context) {
                 _classCallCheck(this, ScrollSync);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScrollSync).call(this, props, context));
@@ -2032,10 +1880,10 @@
                     });
                 }
             } ]), ScrollSync;
-        }(_react.Component), _class.propTypes = {
+        }(_react.Component);
+        ScrollSync.propTypes = {
             children: _react.PropTypes.func.isRequired
-        }, _temp);
-        exports["default"] = ScrollSync;
+        }, exports["default"] = ScrollSync;
     }, /* 26 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -2079,8 +1927,8 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports["default"] = void 0;
-        var _class, _temp2, _createClass = function() {
+        });
+        var _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -2092,7 +1940,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), VirtualScroll = (_temp2 = _class = function(_Component) {
+        }(), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), VirtualScroll = function(_Component) {
             function VirtualScroll() {
                 var _Object$getPrototypeO, _temp, _this, _ret;
                 _classCallCheck(this, VirtualScroll);
@@ -2173,7 +2021,8 @@
                     });
                 }
             } ]), VirtualScroll;
-        }(_react.Component), _class.propTypes = {
+        }(_react.Component);
+        VirtualScroll.propTypes = {
             className: _react.PropTypes.string,
             height: _react.PropTypes.number.isRequired,
             noRowsRenderer: _react.PropTypes.func.isRequired,
@@ -2186,7 +2035,7 @@
             scrollToIndex: _react.PropTypes.number,
             scrollTop: _react.PropTypes.number,
             width: _react.PropTypes.number.isRequired
-        }, _class.defaultProps = {
+        }, VirtualScroll.defaultProps = {
             noRowsRenderer: function() {
                 return null;
             },
@@ -2197,8 +2046,7 @@
                 return null;
             },
             overscanRowsCount: 10
-        }, _temp2);
-        exports["default"] = VirtualScroll;
+        }, exports["default"] = VirtualScroll;
     } ]);
 });
 //# sourceMappingURL=react-virtualized.js.map
