@@ -425,8 +425,6 @@ export default class Grid extends Component {
       rowStartIndex = overscanRowIndices.overscanStartIndex
       rowStopIndex = overscanRowIndices.overscanStopIndex
 
-      let key = 0
-
       for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
         let rowDatum = this._rowMetadata[rowIndex]
 
@@ -437,7 +435,7 @@ export default class Grid extends Component {
 
           child = (
             <div
-              key={++key}
+              key={rowIndex + '_' + columnIndex}
               className='Grid__cell'
               style={{
                 transform,
