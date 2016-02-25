@@ -679,14 +679,14 @@
                                 var columnDatum = this._columnMetadata[columnIndex], child = renderCell({
                                     columnIndex: columnIndex,
                                     rowIndex: rowIndex
-                                }), transform = "translate(" + columnDatum.offset + "px, " + rowDatum.offset + "px)";
+                                });
                                 child = _react2["default"].createElement("div", {
                                     key: ++key,
                                     className: "Grid__cell",
                                     style: {
-                                        transform: transform,
                                         height: this._getRowHeight(rowIndex),
-                                        WebkitTransform: transform,
+                                        left: columnDatum.offset + "px",
+                                        top: rowDatum.offset + "px",
                                         width: this._getColumnWidth(columnIndex)
                                     }
                                 }, child), childrenToDisplay.push(child);
