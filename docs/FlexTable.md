@@ -28,6 +28,7 @@ This component expects explicit width, height, and padding parameters.
 | sort | Function |  | Sort function to be called if a sortable header is clicked. `(dataKey: string, sortDirection: SortDirection): void` |
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
+| width | Number | ✓ | Width of the table |
 
 ### Public Methods
 

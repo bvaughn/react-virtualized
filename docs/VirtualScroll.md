@@ -17,6 +17,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | rowsCount | Number | ✓ | Number of rows in list. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
+| width | Number | ✓ | Width of the list |
 
 ### Public Methods
 
