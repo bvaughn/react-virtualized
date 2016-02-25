@@ -1,11 +1,14 @@
 Changelog
 ------------
 
-### 5.2.2
+##### 5.2.3
+Reverted `transform: translate` positioning to old `top` / `left` positioning to address performance concerns reported via PR #124 and issue #94.
+
+##### 5.2.2
 Updated ES6 module build to be Rollup-friendly by way of `es2015-rollup` Babel preset.
 Also cleaned up NPM package to suppress unnecessary files (via new `.npmignore`).
 
-### 5.2.1
+##### 5.2.1
 Fixes long-standing slow wheel scrolling issue that affected certain browsers such as Firefox (see issue #2). Big thanks to James Long (@jlongster), Markus Stange ‏(@mstange), and Dan Abramov (@gaearon) ‏for their help with this fix.
 
 ### 5.2.0
