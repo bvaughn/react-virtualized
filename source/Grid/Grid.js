@@ -20,15 +20,6 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
 const IS_SCROLLING_TIMEOUT = 150
 
 /**
- * Controls whether the Grid updates the DOM element's scrollLeft/scrollTop based on the current state or just observes it.
- * This prevents Grid from interrupting mouse-wheel animations (see issue #2).
- */
-const SCROLL_POSITION_CHANGE_REASONS = {
-  OBSERVED: 'observed',
-  REQUESTED: 'requested'
-}
-
-/**
  * Renders tabular data with virtualization along the vertical and horizontal axes.
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
@@ -186,7 +177,7 @@ export default class Grid extends Component {
    */
   setScrollPosition ({ scrollLeft, scrollTop }) {
     const newState = {
-      scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+      scrollEventIsCancelable: false
     }
 
     if (scrollLeft >= 0) {
@@ -227,14 +218,14 @@ export default class Grid extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     const { columnsCount, columnWidth, height, rowHeight, rowsCount, scrollToColumn, scrollToRow, width } = this.props
-    const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
+    const { scrollLeft, scrollEventIsCancelable, scrollTop } = this.state
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
-    // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
+    // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations if the scroll event is cancelable,
     // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
     // So we only set these when we require an adjustment of the scroll position.
     // See issue #2 for more information.
-    if (scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
+    if (!scrollEventIsCancelable) {
       if (
         scrollLeft >= 0 &&
         scrollLeft !== prevState.scrollLeft &&
@@ -425,8 +416,6 @@ export default class Grid extends Component {
       rowStartIndex = overscanRowIndices.overscanStartIndex
       rowStopIndex = overscanRowIndices.overscanStopIndex
 
-      let key = 0
-
       for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
         let rowDatum = this._rowMetadata[rowIndex]
 
@@ -436,7 +425,7 @@ export default class Grid extends Component {
 
           child = (
             <div
-              key={++key}
+              key={rowIndex + '_' + columnIndex}
               className='Grid__cell'
               style={{
                 height: this._getRowHeight(rowIndex),
@@ -776,7 +765,7 @@ export default class Grid extends Component {
       this._setNextState({
         isScrolling: true,
         scrollLeft,
-        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
+        scrollEventIsCancelable: event.cancelable,
         scrollTop
       })
     }
