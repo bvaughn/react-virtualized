@@ -55,6 +55,7 @@
     "ignore": [
       "dist",
       "es",
+      "playground",
       "source/vendor"
     ],
     "global": [
