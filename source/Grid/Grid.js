@@ -430,10 +430,9 @@ export default class Grid extends Component {
 
         for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
           let columnDatum = this._columnMetadata[columnIndex]
-          let child = renderCell({ columnIndex, rowIndex })
+          let renderedCell = renderCell({ columnIndex, rowIndex })
           let key = `${rowIndex}-${columnIndex}`
-
-          child = (
+          let child = (
             <div
               key={key}
               className='Grid__cell'
@@ -444,7 +443,7 @@ export default class Grid extends Component {
                 width: this._getColumnWidth(columnIndex)
               }}
             >
-              {child}
+              {renderedCell}
             </div>
           )
 
@@ -779,6 +778,12 @@ export default class Grid extends Component {
       const scrollPositionChangeReason = event.cancelable
         ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED
         : SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+
+      if (!this.state.isScrolling) {
+        this.setState({
+          isScrolling: true
+        })
+      }
 
       this._setNextState({
         isScrolling: true,

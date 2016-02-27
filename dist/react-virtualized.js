@@ -676,11 +676,10 @@
                             columnStartIndex = overscanColumnIndices.overscanStartIndex, columnStopIndex = overscanColumnIndices.overscanStopIndex, 
                             rowStartIndex = overscanRowIndices.overscanStartIndex, rowStopIndex = overscanRowIndices.overscanStopIndex;
                             for (var rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
-                                var columnDatum = this._columnMetadata[columnIndex], child = renderCell({
+                                var columnDatum = this._columnMetadata[columnIndex], renderedCell = renderCell({
                                     columnIndex: columnIndex,
                                     rowIndex: rowIndex
-                                }), key = rowIndex + "-" + columnIndex;
-                                child = _react2["default"].createElement("div", {
+                                }), key = rowIndex + "-" + columnIndex, child = _react2["default"].createElement("div", {
                                     key: key,
                                     className: "Grid__cell",
                                     style: {
@@ -689,7 +688,8 @@
                                         top: rowDatum.offset + "px",
                                         width: this._getColumnWidth(columnIndex)
                                     }
-                                }, child), childrenToDisplay.push(child);
+                                }, renderedCell);
+                                childrenToDisplay.push(child);
                             }
                         }
                         return _react2["default"].createElement("div", {
@@ -899,7 +899,9 @@
                             var _props6 = this.props, height = _props6.height, onScroll = _props6.onScroll, width = _props6.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
                             if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
                                 var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
-                                this._setNextState({
+                                this.state.isScrolling || this.setState({
+                                    isScrolling: !0
+                                }), this._setNextState({
                                     isScrolling: !0,
                                     scrollLeft: scrollLeft,
                                     scrollPositionChangeReason: scrollPositionChangeReason,
