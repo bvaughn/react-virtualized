@@ -8,7 +8,7 @@ module.exports = {
     'react-virtualized': './source/index.js'
   },
   output: {
-    path: 'dist',
+    path: 'dist/umd',
     filename: '[name].js',
     libraryTarget: 'umd',
     library: 'ReactVirtualized'
