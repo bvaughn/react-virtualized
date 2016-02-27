@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 5.2.4
+Changed `Grid` child `key` attributes again to reduce the number of elements created as a result of scrolling.
+This dramatically improves perforamance without introducing any known regressions.
+Thanks to @cesarandreu for consulting on this release.
+
 ##### 5.2.3
 Reverted `transform: translate` positioning to old `top` / `left` positioning to address performance concerns reported via PR #124 and issue #94.
 
