@@ -425,18 +425,16 @@ export default class Grid extends Component {
       rowStartIndex = overscanRowIndices.overscanStartIndex
       rowStopIndex = overscanRowIndices.overscanStopIndex
 
-      let key = 0
-
       for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
         let rowDatum = this._rowMetadata[rowIndex]
 
         for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
           let columnDatum = this._columnMetadata[columnIndex]
-          let child = renderCell({ columnIndex, rowIndex })
-
-          child = (
+          let renderedCell = renderCell({ columnIndex, rowIndex })
+          let key = `${rowIndex}-${columnIndex}`
+          let child = (
             <div
-              key={++key}
+              key={key}
               className='Grid__cell'
               style={{
                 height: this._getRowHeight(rowIndex),
@@ -445,7 +443,7 @@ export default class Grid extends Component {
                 width: this._getColumnWidth(columnIndex)
               }}
             >
-              {child}
+              {renderedCell}
             </div>
           )
 
@@ -773,10 +771,24 @@ export default class Grid extends Component {
       this.state.scrollLeft !== scrollLeft ||
       this.state.scrollTop !== scrollTop
     ) {
+      // Browsers with cancelable scroll events (eg. Firefox) interrupt scrolling animations if scrollTop/scrollLeft is set.
+      // Other browsers (eg. Safari) don't scroll as well without the help under certain conditions (DOM or style changes during scrolling).
+      // All things considered, this seems to be the best current work around that I'm aware of.
+      // For more information see https://github.com/bvaughn/react-virtualized/pull/124
+      const scrollPositionChangeReason = event.cancelable
+        ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED
+        : SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+
+      if (!this.state.isScrolling) {
+        this.setState({
+          isScrolling: true
+        })
+      }
+
       this._setNextState({
         isScrolling: true,
         scrollLeft,
-        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
+        scrollPositionChangeReason,
         scrollTop
       })
     }

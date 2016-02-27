@@ -348,19 +348,17 @@ var Grid = function (_Component) {
         rowStartIndex = overscanRowIndices.overscanStartIndex;
         rowStopIndex = overscanRowIndices.overscanStopIndex;
 
-        var key = 0;
-
         for (var rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
           var rowDatum = this._rowMetadata[rowIndex];
 
           for (var columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
             var columnDatum = this._columnMetadata[columnIndex];
-            var child = renderCell({ columnIndex: columnIndex, rowIndex: rowIndex });
-
-            child = React.createElement(
+            var renderedCell = renderCell({ columnIndex: columnIndex, rowIndex: rowIndex });
+            var key = rowIndex + '-' + columnIndex;
+            var child = React.createElement(
               'div',
               {
-                key: ++key,
+                key: key,
                 className: 'Grid__cell',
                 style: {
                   height: this._getRowHeight(rowIndex),
@@ -369,7 +367,7 @@ var Grid = function (_Component) {
                   width: this._getColumnWidth(columnIndex)
                 }
               },
-              child
+              renderedCell
             );
 
             childrenToDisplay.push(child);
@@ -728,10 +726,22 @@ var Grid = function (_Component) {
       // The mouse may move faster then the animation frame does.
       // Use requestAnimationFrame to avoid over-updating.
       if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
+        // Browsers with cancelable scroll events (eg. Firefox) interrupt scrolling animations if scrollTop/scrollLeft is set.
+        // Other browsers (eg. Safari) don't scroll as well without the help under certain conditions (DOM or style changes during scrolling).
+        // All things considered, this seems to be the best current work around that I'm aware of.
+        // For more information see https://github.com/bvaughn/react-virtualized/pull/124
+        var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
+
+        if (!this.state.isScrolling) {
+          this.setState({
+            isScrolling: true
+          });
+        }
+
         this._setNextState({
           isScrolling: true,
           scrollLeft: scrollLeft,
-          scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
+          scrollPositionChangeReason: scrollPositionChangeReason,
           scrollTop: scrollTop
         });
       }
