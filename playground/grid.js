@@ -3,7 +3,7 @@ function renderCell (params) {
   return React.DOM.input({
     className: 'input',
     onChange: function () {},
-    value: `column:${params.columnIndex}, row:${params.rowIndex}`
+    defaultValue: `column:${params.columnIndex}, row:${params.rowIndex}`
   })
 }
 
