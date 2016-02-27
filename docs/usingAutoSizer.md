@@ -37,7 +37,7 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
       )}
     </AutoSizer>
   </div>
-</ContentBox>
+</div>
 ```
 
 #### Using AutoSizer with InfiniteLoader
