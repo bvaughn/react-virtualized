@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+### 5.3.0
+Separated CommonJS and UMD builds and pointed package.json's `main` target at the CommonJS build.
+Also moved the ES6 modules build from `/es` to `/dist/es` to reduce the amount of clutter in the packaged dir.
+
 ##### 5.2.4
 Changed `Grid` child `key` attributes again to reduce the number of elements created as a result of scrolling.
 This dramatically improves perforamance without introducing any known regressions.
