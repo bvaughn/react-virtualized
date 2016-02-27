@@ -348,19 +348,18 @@ var Grid = function (_Component) {
         rowStartIndex = overscanRowIndices.overscanStartIndex;
         rowStopIndex = overscanRowIndices.overscanStopIndex;
 
-        var key = 0;
-
         for (var rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
           var rowDatum = this._rowMetadata[rowIndex];
 
           for (var columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
             var columnDatum = this._columnMetadata[columnIndex];
             var child = renderCell({ columnIndex: columnIndex, rowIndex: rowIndex });
+            var key = rowIndex + '-' + columnIndex;
 
             child = React.createElement(
               'div',
               {
-                key: ++key,
+                key: key,
                 className: 'Grid__cell',
                 style: {
                   height: this._getRowHeight(rowIndex),
@@ -728,10 +727,12 @@ var Grid = function (_Component) {
       // The mouse may move faster then the animation frame does.
       // Use requestAnimationFrame to avoid over-updating.
       if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
+        var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
+
         this._setNextState({
           isScrolling: true,
           scrollLeft: scrollLeft,
-          scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
+          scrollPositionChangeReason: scrollPositionChangeReason,
           scrollTop: scrollTop
         });
       }

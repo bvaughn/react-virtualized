@@ -675,13 +675,13 @@
                             });
                             columnStartIndex = overscanColumnIndices.overscanStartIndex, columnStopIndex = overscanColumnIndices.overscanStopIndex, 
                             rowStartIndex = overscanRowIndices.overscanStartIndex, rowStopIndex = overscanRowIndices.overscanStopIndex;
-                            for (var key = 0, rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
+                            for (var rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
                                 var columnDatum = this._columnMetadata[columnIndex], child = renderCell({
                                     columnIndex: columnIndex,
                                     rowIndex: rowIndex
-                                });
+                                }), key = rowIndex + "-" + columnIndex;
                                 child = _react2["default"].createElement("div", {
-                                    key: ++key,
+                                    key: key,
                                     className: "Grid__cell",
                                     style: {
                                         height: this._getRowHeight(rowIndex),
@@ -897,12 +897,16 @@
                         if (event.target === this.refs.scrollingContainer) {
                             this._enablePointerEventsAfterDelay();
                             var _props6 = this.props, height = _props6.height, onScroll = _props6.onScroll, width = _props6.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
-                            this.state.scrollLeft === scrollLeft && this.state.scrollTop === scrollTop || this._setNextState({
-                                isScrolling: !0,
-                                scrollLeft: scrollLeft,
-                                scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
-                                scrollTop: scrollTop
-                            }), this._onScrollMemoizer({
+                            if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
+                                var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
+                                this._setNextState({
+                                    isScrolling: !0,
+                                    scrollLeft: scrollLeft,
+                                    scrollPositionChangeReason: scrollPositionChangeReason,
+                                    scrollTop: scrollTop
+                                });
+                            }
+                            this._onScrollMemoizer({
                                 callback: function(_ref3) {
                                     var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop;
                                     onScroll({
