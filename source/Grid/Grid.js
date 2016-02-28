@@ -452,6 +452,21 @@ export default class Grid extends Component {
       }
     }
 
+    const gridStyle = {
+      height: height,
+      width: width
+    }
+
+    const totalColumnsWidth = this._getTotalColumnsWidth()
+    const totalRowsHeight = this._getTotalRowsHeight()
+
+    // Force browser to hide scrollbars when we know they aren't necessary.
+    // Otherwise once scrollbars appear they may not disappear again.
+    // For more info see issue #116
+    if (totalColumnsWidth <= width && totalRowsHeight <= height) {
+      gridStyle.overflow = 'hidden'
+    }
+
     return (
       <div
         ref='scrollingContainer'
@@ -459,19 +474,16 @@ export default class Grid extends Component {
         onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
         tabIndex={0}
-        style={{
-          height: height,
-          width: width
-        }}
+        style={gridStyle}
       >
         {childrenToDisplay.length > 0 &&
           <div
             className='Grid__innerScrollContainer'
             style={{
-              width: this._getTotalColumnsWidth(),
-              height: this._getTotalRowsHeight(),
-              maxWidth: this._getTotalColumnsWidth(),
-              maxHeight: this._getTotalRowsHeight(),
+              width: totalColumnsWidth,
+              height: totalRowsHeight,
+              maxWidth: totalColumnsWidth,
+              maxHeight: totalRowsHeight,
               pointerEvents: isScrolling ? 'none' : 'auto'
             }}
           >
