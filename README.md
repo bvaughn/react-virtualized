@@ -23,9 +23,10 @@ Documentation
 API documentation available [here](docs/README.md).
 
 There are also a couple of how-to guides:
-* [Customizing classes and styles](docs/customizingStyles.md).
-* [Displaying items in reverse order](docs/reverseList.md).
-* [Using AutoSizer](docs/usingAutoSizer.md).
+* [Customizing classes and styles](docs/customizingStyles.md)
+* [Displaying items in reverse order](docs/reverseList.md)
+* [Using AutoSizer](docs/usingAutoSizer.md)
+* [Creating an infinite-loading list](docs/creatingAnInfiniteLoadingList.md)
 
 Examples
 ---------------
