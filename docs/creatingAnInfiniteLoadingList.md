@@ -30,6 +30,15 @@ function MyComponent ({
   // Every row is loaded except for our loading indicator row.
   const isRowLoaded (index) => !hasNextPage || index < list.size
 
+  // Render a list item or a loading indicator.
+  const rowRenderer = (index) => {
+    if (!isRowLoaded(index)) {
+      return 'Loading...'
+    } else {
+      return list.getIn([index, 'name'])
+    }
+  }
+
   return (
     <InfiniteLoader
       isRowLoaded={isRowLoaded}
@@ -40,6 +49,7 @@ function MyComponent ({
         <VirtualScroll
           ref={registerChild}
           onRowsRendered={onRowsRendered}
+          rowRenderer={rowRenderer}
           {...otherProps}
         />
       )}
