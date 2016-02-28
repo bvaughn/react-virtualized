@@ -692,23 +692,25 @@
                                 childrenToDisplay.push(child);
                             }
                         }
-                        return _react2["default"].createElement("div", {
+                        var gridStyle = {
+                            height: height,
+                            width: width
+                        }, totalColumnsWidth = this._getTotalColumnsWidth(), totalRowsHeight = this._getTotalRowsHeight();
+                        return width >= totalColumnsWidth && height >= totalRowsHeight && (gridStyle.overflow = "hidden"), 
+                        _react2["default"].createElement("div", {
                             ref: "scrollingContainer",
                             className: (0, _classnames2["default"])("Grid", className),
                             onKeyDown: this._onKeyPress,
                             onScroll: this._onScroll,
                             tabIndex: 0,
-                            style: {
-                                height: height,
-                                width: width
-                            }
+                            style: gridStyle
                         }, childrenToDisplay.length > 0 && _react2["default"].createElement("div", {
                             className: "Grid__innerScrollContainer",
                             style: {
-                                width: this._getTotalColumnsWidth(),
-                                height: this._getTotalRowsHeight(),
-                                maxWidth: this._getTotalColumnsWidth(),
-                                maxHeight: this._getTotalRowsHeight(),
+                                width: totalColumnsWidth,
+                                height: totalRowsHeight,
+                                maxWidth: totalColumnsWidth,
+                                maxHeight: totalRowsHeight,
                                 pointerEvents: isScrolling ? "none" : "auto"
                             }
                         }, childrenToDisplay), 0 === childrenToDisplay.length && noContentRenderer());

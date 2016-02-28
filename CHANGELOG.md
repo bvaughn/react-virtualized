@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 5.3.1
+Fixed edge-case where always-on scrollbars were not hidden once shown (see issue #116).
+
 ### 5.3.0
 Separated CommonJS and UMD builds and pointed package.json's `main` target at the CommonJS build.
 Also moved the ES6 modules build from `/es` to `/dist/es` to reduce the amount of clutter in the packaged dir.

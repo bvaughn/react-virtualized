@@ -402,6 +402,21 @@ var Grid = function (_Component) {
         }
       }
 
+      var gridStyle = {
+        height: height,
+        width: width
+      };
+
+      var totalColumnsWidth = this._getTotalColumnsWidth();
+      var totalRowsHeight = this._getTotalRowsHeight();
+
+      // Force browser to hide scrollbars when we know they aren't necessary.
+      // Otherwise once scrollbars appear they may not disappear again.
+      // For more info see issue #116
+      if (totalColumnsWidth <= width && totalRowsHeight <= height) {
+        gridStyle.overflow = 'hidden';
+      }
+
       return _react2.default.createElement(
         'div',
         {
@@ -410,20 +425,17 @@ var Grid = function (_Component) {
           onKeyDown: this._onKeyPress,
           onScroll: this._onScroll,
           tabIndex: 0,
-          style: {
-            height: height,
-            width: width
-          }
+          style: gridStyle
         },
         childrenToDisplay.length > 0 && _react2.default.createElement(
           'div',
           {
             className: 'Grid__innerScrollContainer',
             style: {
-              width: this._getTotalColumnsWidth(),
-              height: this._getTotalRowsHeight(),
-              maxWidth: this._getTotalColumnsWidth(),
-              maxHeight: this._getTotalRowsHeight(),
+              width: totalColumnsWidth,
+              height: totalRowsHeight,
+              maxWidth: totalColumnsWidth,
+              maxHeight: totalRowsHeight,
               pointerEvents: isScrolling ? 'none' : 'auto'
             }
           },
