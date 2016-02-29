@@ -77,7 +77,7 @@ var App = React.createClass({
           ReactVirtualized.VirtualScroll,
           {
             height: params.height,
-            overscanRowsCount: 0,
+            overscanRowsCount: 10,
             ref: setRef,
             rowHeight: rowHeight,
             rowRenderer: renderCell,
