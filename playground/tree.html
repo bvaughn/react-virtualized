@@ -15,21 +15,23 @@
     * {
       box-sizing: border-box;
     }
-    .root, .child {
+    ul {
+       margin: 0;
+       list-style: none;
+    }
+    li {
+    }
+    .item {
       height: 20px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-    }
-    .root {
-      cursor: pointer;
-    }
-    .child {
-      padding-left: 40px;
+      white-space: pre;
+      user-select: none;
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-with-addons.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-with-addons.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.min.js"></script>
   <script src="../dist/umd/react-virtualized.js"></script>
 </head>
 <body>
