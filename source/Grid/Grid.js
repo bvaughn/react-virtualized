@@ -11,6 +11,7 @@ import {
 import cn from 'classnames'
 import raf from 'raf'
 import React, { Component, PropTypes } from 'react'
+import { findDOMNode } from 'react-dom'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 
 /**
@@ -141,7 +142,8 @@ export default class Grid extends Component {
       computeGridMetadataOnNextUpdate: false,
       isScrolling: false,
       scrollLeft: 0,
-      scrollTop: 0
+      scrollTop: 0,
+      scrollbarWidth: 0
     }
 
     // Invokes onSectionRendered callback only when start/stop row or column indices change
@@ -223,6 +225,8 @@ export default class Grid extends Component {
 
     // Update onRowsRendered callback
     this._invokeOnGridRenderedHelper()
+
+    this._setScrollbarWidth()
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -283,6 +287,8 @@ export default class Grid extends Component {
 
     // Update onRowsRendered callback if start/stop indices have changed
     this._invokeOnGridRenderedHelper()
+
+    this._setScrollbarWidth()
   }
 
   componentWillMount () {
@@ -532,10 +538,11 @@ export default class Grid extends Component {
 
   _getColumnWidth (index) {
     const { columnWidth } = this.props
+    const { scrollbarWidth } = this.state
 
     return columnWidth instanceof Function
-      ? columnWidth(index)
-      : columnWidth
+      ? columnWidth(index) - scrollbarWidth
+      : columnWidth - scrollbarWidth
   }
 
   _getRowHeight (index) {
@@ -552,7 +559,7 @@ export default class Grid extends Component {
     }
 
     const datum = this._columnMetadata[this._columnMetadata.length - 1]
-    return datum.offset + datum.size
+    return (datum.offset + datum.size) - this.state.scrollbarWidth
   }
 
   _getTotalRowsHeight () {
@@ -668,6 +675,15 @@ export default class Grid extends Component {
         })
       }
     }
+  }
+
+  _setScrollbarWidth () {
+    const Grid = findDOMNode(this.refs.scrollingContainer)
+    const clientWidth = Grid.clientWidth || 0
+    const offsetWidth = Grid.offsetWidth || 0
+    const scrollbarWidth = offsetWidth - clientWidth
+
+    this.setState({ scrollbarWidth })
   }
 
   /* ---------------------------- Event handlers ---------------------------- */
