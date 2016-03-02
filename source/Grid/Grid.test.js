@@ -100,6 +100,18 @@ describe('Grid', () => {
     })
   })
 
+  describe('hide scrollbars based on number of children rendered', () => {
+    it('should set overflow-x on Grid container if columns <= available space', () => {
+      const node = findDOMNode(renderGrid({ columnsCount: 4 }))
+      expect(node.style.overflowX).toEqual('hidden')
+    })
+
+    it('should set overflow-y on Grid container if rows <= available space', () => {
+      const node = findDOMNode(renderGrid({ rowsCount: 5 }))
+      expect(node.style.overflowY).toEqual('hidden')
+    })
+  })
+
   /** Tests scrolling via initial props */
   describe(':scrollToColumn and :scrollToRow', () => {
     it('should scroll to the left', () => {
