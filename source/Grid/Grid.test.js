@@ -100,15 +100,25 @@ describe('Grid', () => {
     })
   })
 
-  describe('hide scrollbars based on number of children rendered', () => {
-    it('should set overflow-x on Grid container if columns <= available space', () => {
+  describe('shows and hides scrollbars based on rendered content', () => {
+    it('should set overflowX:hidden on scroll-container if columns fit within the available width', () => {
       const node = findDOMNode(renderGrid({ columnsCount: 4 }))
       expect(node.style.overflowX).toEqual('hidden')
     })
 
-    it('should set overflow-y on Grid container if rows <= available space', () => {
+    it('should leave overflowX:auto on scroll-container if columns require more than the available width', () => {
+      const node = findDOMNode(renderGrid({ columnsCount: 25 }))
+      expect(node.style.overflowX).not.toEqual('hidden')
+    })
+
+    it('should set overflowY:hidden on scroll-container if rows fit within the available height', () => {
       const node = findDOMNode(renderGrid({ rowsCount: 5 }))
       expect(node.style.overflowY).toEqual('hidden')
+    })
+
+    it('should leave overflowY:auto on scroll-container if rows require more than the available height', () => {
+      const node = findDOMNode(renderGrid({ rowsCount: 25 }))
+      expect(node.style.overflowY).not.toEqual('hidden')
     })
   })
 

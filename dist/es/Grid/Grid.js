@@ -386,8 +386,12 @@ var Grid = function (_Component) {
       // Force browser to hide scrollbars when we know they aren't necessary.
       // Otherwise once scrollbars appear they may not disappear again.
       // For more info see issue #116
-      if (totalColumnsWidth <= width && totalRowsHeight <= height) {
-        gridStyle.overflow = 'hidden';
+      if (totalColumnsWidth <= width) {
+        gridStyle.overflowX = 'hidden';
+      }
+
+      if (totalRowsHeight <= height) {
+        gridStyle.overflowY = 'hidden';
       }
 
       return React.createElement(

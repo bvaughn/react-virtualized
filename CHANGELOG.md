@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 5.3.2
+Decoupled x/y axes in `Grid` when determining whether or not to enable overflow.
+This results in more robustly handling issues like the one reported in PR #133.
+It also comes with the small cost of partially obscuring a small part of cells (the area used by a scrollbar).
+
 ##### 5.3.1
 Fixed edge-case where always-on scrollbars were not hidden once shown (see issue #116).
 

@@ -696,7 +696,7 @@
                             height: height,
                             width: width
                         }, totalColumnsWidth = this._getTotalColumnsWidth(), totalRowsHeight = this._getTotalRowsHeight();
-                        return width >= totalColumnsWidth && height >= totalRowsHeight && (gridStyle.overflow = "hidden"), 
+                        return width >= totalColumnsWidth && (gridStyle.overflowX = "hidden"), height >= totalRowsHeight && (gridStyle.overflowY = "hidden"), 
                         _react2["default"].createElement("div", {
                             ref: "scrollingContainer",
                             className: (0, _classnames2["default"])("Grid", className),
