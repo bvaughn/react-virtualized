@@ -5,20 +5,7 @@ import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import Grid from '../Grid'
-
-export const SortDirection = {
-  /**
-   * Sort items in ascending order.
-   * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
-   */
-  ASC: 'ASC',
-
-  /**
-   * Sort items in descending order.
-   * This means arranging from the highest value to the lowest (e.g. z-a, 9-0).
-   */
-  DESC: 'DESC'
-}
+import SortDirection from './SortDirection'
 
 /**
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.

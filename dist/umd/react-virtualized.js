@@ -1,6 +1,6 @@
 !function(root, factory) {
     "object" == typeof exports && "object" == typeof module ? module.exports = factory(require("react"), require("react-dom")) : "function" == typeof define && define.amd ? define([ "react", "react-dom" ], factory) : "object" == typeof exports ? exports.ReactVirtualized = factory(require("react"), require("react-dom")) : root.ReactVirtualized = factory(root.React, root.ReactDOM);
-}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_21__) {
+}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_23__) {
     /******/
     return function(modules) {
         /******/
@@ -115,21 +115,21 @@
                 return _Grid.Grid;
             }
         });
-        var _InfiniteLoader = __webpack_require__(22);
+        var _InfiniteLoader = __webpack_require__(24);
         Object.defineProperty(exports, "InfiniteLoader", {
             enumerable: !0,
             get: function() {
                 return _InfiniteLoader.InfiniteLoader;
             }
         });
-        var _ScrollSync = __webpack_require__(24);
+        var _ScrollSync = __webpack_require__(26);
         Object.defineProperty(exports, "ScrollSync", {
             enumerable: !0,
             get: function() {
                 return _ScrollSync.ScrollSync;
             }
         });
-        var _VirtualScroll = __webpack_require__(26);
+        var _VirtualScroll = __webpack_require__(28);
         Object.defineProperty(exports, "VirtualScroll", {
             enumerable: !0,
             get: function() {
@@ -1296,22 +1296,11 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports.FlexColumn = exports.SortIndicator = exports.SortDirection = exports.FlexTable = exports["default"] = void 0;
-        var _FlexTable2 = __webpack_require__(19);
-        Object.defineProperty(exports, "SortDirection", {
-            enumerable: !0,
-            get: function() {
-                return _FlexTable2.SortDirection;
-            }
-        }), Object.defineProperty(exports, "SortIndicator", {
-            enumerable: !0,
-            get: function() {
-                return _FlexTable2.SortIndicator;
-            }
-        });
-        var _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(20), _FlexColumn3 = _interopRequireDefault(_FlexColumn2);
+        }), exports.SortIndicator = exports.SortDirection = exports.FlexColumn = exports.FlexTable = exports["default"] = void 0;
+        var _FlexTable2 = __webpack_require__(19), _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(20), _FlexColumn3 = _interopRequireDefault(_FlexColumn2), _SortDirection2 = __webpack_require__(22), _SortDirection3 = _interopRequireDefault(_SortDirection2), _SortIndicator2 = __webpack_require__(21), _SortIndicator3 = _interopRequireDefault(_SortIndicator2);
         exports["default"] = _FlexTable3["default"], exports.FlexTable = _FlexTable3["default"], 
-        exports.FlexColumn = _FlexColumn3["default"];
+        exports.FlexColumn = _FlexColumn3["default"], exports.SortDirection = _SortDirection3["default"], 
+        exports.SortIndicator = _SortIndicator3["default"];
     }, /* 19 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -1339,29 +1328,9 @@
                 }
             }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
         }
-        function SortIndicator(_ref4) {
-            var sortDirection = _ref4.sortDirection, classNames = (0, _classnames2["default"])("FlexTable__sortableHeaderIcon", {
-                "FlexTable__sortableHeaderIcon--ASC": sortDirection === SortDirection.ASC,
-                "FlexTable__sortableHeaderIcon--DESC": sortDirection === SortDirection.DESC
-            });
-            return _react2["default"].createElement("svg", {
-                className: classNames,
-                width: 18,
-                height: 18,
-                viewBox: "0 0 24 24",
-                xmlns: "http://www.w3.org/2000/svg"
-            }, sortDirection === SortDirection.ASC ? _react2["default"].createElement("path", {
-                d: "M7 14l5-5 5 5z"
-            }) : _react2["default"].createElement("path", {
-                d: "M7 10l5 5 5-5z"
-            }), _react2["default"].createElement("path", {
-                d: "M0 0h24v24H0z",
-                fill: "none"
-            }));
-        }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports.SortDirection = void 0;
+        });
         var _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
@@ -1374,12 +1343,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }();
-        exports.SortIndicator = SortIndicator;
-        var _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(20), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(21), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), SortDirection = exports.SortDirection = {
-            ASC: "ASC",
-            DESC: "DESC"
-        }, FlexTable = function(_Component) {
+        }(), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(20), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(23), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), _SortDirection = __webpack_require__(22), _SortDirection2 = _interopRequireDefault(_SortDirection), FlexTable = function(_Component) {
             function FlexTable(props) {
                 _classCallCheck(this, FlexTable);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
@@ -1490,23 +1454,25 @@
             }, {
                 key: "_createHeader",
                 value: function(column, columnIndex) {
-                    var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, label = _column$props2.label, columnData = _column$props2.columnData, showSortIndicator = sortBy === dataKey, sortEnabled = !disableSort && sort, classNames = (0, 
+                    var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, headerRenderer = _column$props2.headerRenderer, label = _column$props2.label, columnData = _column$props2.columnData, sortEnabled = !disableSort && sort, classNames = (0, 
                     _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
                         FlexTable__sortableHeaderColumn: sortEnabled
-                    }), style = this._getFlexStyleForColumn(column), newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC, onClick = function() {
+                    }), style = this._getFlexStyleForColumn(column), newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2["default"].DESC ? _SortDirection2["default"].ASC : _SortDirection2["default"].DESC, onClick = function() {
                         sortEnabled && sort(dataKey, newSortDirection), onHeaderClick(dataKey, columnData);
-                    };
+                    }, renderedHeader = headerRenderer({
+                        columnData: columnData,
+                        dataKey: dataKey,
+                        disableSort: disableSort,
+                        label: label,
+                        sortBy: sortBy,
+                        sortDirection: sortDirection
+                    });
                     return _react2["default"].createElement("div", {
                         key: "Header-Col" + columnIndex,
                         className: classNames,
                         style: style,
                         onClick: onClick
-                    }, _react2["default"].createElement("div", {
-                        className: "FlexTable__headerTruncatedText",
-                        title: label
-                    }, label), showSortIndicator && _react2["default"].createElement(SortIndicator, {
-                        sortDirection: sortDirection
-                    }));
+                    }, renderedHeader);
                 }
             }, {
                 key: "_createRow",
@@ -1541,8 +1507,8 @@
                 key: "_getRenderedHeaderRow",
                 value: function() {
                     var _this4 = this, _props4 = this.props, children = _props4.children, disableHeader = _props4.disableHeader, items = disableHeader ? [] : children;
-                    return _react2["default"].Children.map(items, function(column, columnIndex) {
-                        return _this4._createHeader(column, columnIndex);
+                    return _react2["default"].Children.map(items, function(column, index) {
+                        return _this4._createHeader(column, index);
                     });
                 }
             }, {
@@ -1584,7 +1550,7 @@
             scrollTop: _react.PropTypes.number,
             sort: _react.PropTypes.func,
             sortBy: _react.PropTypes.string,
-            sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ]),
+            sortDirection: _react.PropTypes.oneOf([ _SortDirection2["default"].ASC, _SortDirection2["default"].DESC ]),
             width: _react.PropTypes.number.isRequired
         }, FlexTable.defaultProps = {
             disableHeader: !1,
@@ -1609,13 +1575,16 @@
         var _initialiseProps = function() {
             this.shouldComponentUpdate = _function2["default"];
         };
-        exports["default"] = FlexTable, SortIndicator.propTypes = {
-            sortDirection: _react.PropTypes.oneOf([ SortDirection.ASC, SortDirection.DESC ])
-        };
+        exports["default"] = FlexTable;
     }, /* 20 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
         function _classCallCheck(instance, Constructor) {
             if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
         }
@@ -1640,10 +1609,22 @@
         function defaultCellDataGetter(dataKey, rowData, columnData) {
             return rowData.get instanceof Function ? rowData.get(dataKey) : rowData[dataKey];
         }
+        function defaultHeaderRenderer(_ref) {
+            var dataKey = (_ref.columnData, _ref.dataKey), label = (_ref.disableSort, _ref.label), sortBy = _ref.sortBy, sortDirection = _ref.sortDirection, showSortIndicator = sortBy === dataKey, children = [ _react2["default"].createElement("div", {
+                className: "FlexTable__headerTruncatedText",
+                key: "label",
+                title: label
+            }, label) ];
+            return showSortIndicator && children.push(_react2["default"].createElement(_SortIndicator2["default"], {
+                key: "SortIndicator",
+                sortDirection: sortDirection
+            })), children;
+        }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter;
-        var _react = __webpack_require__(3), Column = function(_Component) {
+        }), exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter, 
+        exports.defaultHeaderRenderer = defaultHeaderRenderer;
+        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _SortIndicator = __webpack_require__(21), _SortIndicator2 = _interopRequireDefault(_SortIndicator), Column = function(_Component) {
             function Column() {
                 return _classCallCheck(this, Column), _possibleConstructorReturn(this, Object.getPrototypeOf(Column).apply(this, arguments));
             }
@@ -1653,7 +1634,8 @@
             cellDataGetter: defaultCellDataGetter,
             cellRenderer: defaultCellRenderer,
             flexGrow: 0,
-            flexShrink: 1
+            flexShrink: 1,
+            headerRenderer: defaultHeaderRenderer
         }, Column.propTypes = {
             cellClassName: _react.PropTypes.string,
             cellDataGetter: _react.PropTypes.func,
@@ -1664,6 +1646,7 @@
             flexGrow: _react.PropTypes.number,
             flexShrink: _react.PropTypes.number,
             headerClassName: _react.PropTypes.string,
+            headerRenderer: _react.PropTypes.func.isRequired,
             label: _react.PropTypes.string,
             maxWidth: _react.PropTypes.number,
             minWidth: _react.PropTypes.number,
@@ -1671,9 +1654,57 @@
         }, exports["default"] = Column;
     }, /* 21 */
     /***/
-    function(module, exports) {
-        module.exports = __WEBPACK_EXTERNAL_MODULE_21__;
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function SortIndicator(_ref) {
+            var sortDirection = _ref.sortDirection, classNames = (0, _classnames2["default"])("FlexTable__sortableHeaderIcon", {
+                "FlexTable__sortableHeaderIcon--ASC": sortDirection === _SortDirection2["default"].ASC,
+                "FlexTable__sortableHeaderIcon--DESC": sortDirection === _SortDirection2["default"].DESC
+            });
+            return _react2["default"].createElement("svg", {
+                className: classNames,
+                width: 18,
+                height: 18,
+                viewBox: "0 0 24 24",
+                xmlns: "http://www.w3.org/2000/svg"
+            }, sortDirection === _SortDirection2["default"].ASC ? _react2["default"].createElement("path", {
+                d: "M7 14l5-5 5 5z"
+            }) : _react2["default"].createElement("path", {
+                d: "M7 10l5 5 5-5z"
+            }), _react2["default"].createElement("path", {
+                d: "M0 0h24v24H0z",
+                fill: "none"
+            }));
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = SortIndicator;
+        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _SortDirection = __webpack_require__(22), _SortDirection2 = _interopRequireDefault(_SortDirection);
+        SortIndicator.propTypes = {
+            sortDirection: _react.PropTypes.oneOf([ _SortDirection2["default"].ASC, _SortDirection2["default"].DESC ])
+        };
     }, /* 22 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var SortDirection = {
+            ASC: "ASC",
+            DESC: "DESC"
+        };
+        exports["default"] = SortDirection;
+    }, /* 23 */
+    /***/
+    function(module, exports) {
+        module.exports = __WEBPACK_EXTERNAL_MODULE_23__;
+    }, /* 24 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1685,9 +1716,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.InfiniteLoader = exports["default"] = void 0;
-        var _InfiniteLoader2 = __webpack_require__(23), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
+        var _InfiniteLoader2 = __webpack_require__(25), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
         exports["default"] = _InfiniteLoader3["default"], exports.InfiniteLoader = _InfiniteLoader3["default"];
-    }, /* 23 */
+    }, /* 25 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1803,7 +1834,7 @@
             rowsCount: 0,
             threshold: 15
         }, exports["default"] = InfiniteLoader;
-    }, /* 24 */
+    }, /* 26 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1815,9 +1846,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.ScrollSync = exports["default"] = void 0;
-        var _ScrollSync2 = __webpack_require__(25), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
+        var _ScrollSync2 = __webpack_require__(27), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
         exports["default"] = _ScrollSync3["default"], exports.ScrollSync = _ScrollSync3["default"];
-    }, /* 25 */
+    }, /* 27 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1892,7 +1923,7 @@
         ScrollSync.propTypes = {
             children: _react.PropTypes.func.isRequired
         }, exports["default"] = ScrollSync;
-    }, /* 26 */
+    }, /* 28 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1904,9 +1935,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.VirtualScroll = exports["default"] = void 0;
-        var _VirtualScroll2 = __webpack_require__(27), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
+        var _VirtualScroll2 = __webpack_require__(29), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
         exports["default"] = _VirtualScroll3["default"], exports.VirtualScroll = _VirtualScroll3["default"];
-    }, /* 27 */
+    }, /* 29 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";

@@ -3,7 +3,8 @@ import { findDOMNode, render } from 'react-dom'
 import { renderIntoDocument, Simulate } from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import FlexColumn from './FlexColumn'
-import FlexTable, { SortDirection } from './FlexTable'
+import FlexTable from './FlexTable'
+import SortDirection from './SortDirection'
 
 describe('FlexTable', () => {
   beforeAll(() => jasmine.clock().install())

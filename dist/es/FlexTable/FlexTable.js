@@ -5,20 +5,7 @@ import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import Grid from '../Grid';
-
-export var SortDirection = {
-  /**
-   * Sort items in ascending order.
-   * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
-   */
-  ASC: 'ASC',
-
-  /**
-   * Sort items in descending order.
-   * This means arranging from the highest value to the lowest (e.g. z-a, 9-0).
-   */
-  DESC: 'DESC'
-};
+import SortDirection from './SortDirection';
 
 /**
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
@@ -236,10 +223,10 @@ var FlexTable = function (_Component) {
       var _column$props2 = column.props;
       var dataKey = _column$props2.dataKey;
       var disableSort = _column$props2.disableSort;
+      var headerRenderer = _column$props2.headerRenderer;
       var label = _column$props2.label;
       var columnData = _column$props2.columnData;
 
-      var showSortIndicator = sortBy === dataKey;
       var sortEnabled = !disableSort && sort;
 
       var classNames = cn('FlexTable__headerColumn', headerClassName, column.props.headerClassName, {
@@ -254,6 +241,15 @@ var FlexTable = function (_Component) {
         onHeaderClick(dataKey, columnData);
       };
 
+      var renderedHeader = headerRenderer({
+        columnData: columnData,
+        dataKey: dataKey,
+        disableSort: disableSort,
+        label: label,
+        sortBy: sortBy,
+        sortDirection: sortDirection
+      });
+
       return React.createElement(
         'div',
         {
@@ -262,15 +258,7 @@ var FlexTable = function (_Component) {
           style: style,
           onClick: onClick
         },
-        React.createElement(
-          'div',
-          {
-            className: 'FlexTable__headerTruncatedText',
-            title: label
-          },
-          label
-        ),
-        showSortIndicator && React.createElement(SortIndicator, { sortDirection: sortDirection })
+        renderedHeader
       );
     }
   }, {
@@ -344,8 +332,9 @@ var FlexTable = function (_Component) {
       var disableHeader = _props4.disableHeader;
 
       var items = disableHeader ? [] : children;
-      return React.Children.map(items, function (column, columnIndex) {
-        return _this4._createHeader(column, columnIndex);
+
+      return React.Children.map(items, function (column, index) {
+        return _this4._createHeader(column, index);
       });
     }
   }, {
@@ -369,11 +358,6 @@ var FlexTable = function (_Component) {
   }]);
   return FlexTable;
 }(Component);
-
-/**
- * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
- */
-
 
 FlexTable.propTypes = {
   /** One or more FlexColumns describing the data displayed in this row */
@@ -504,27 +488,3 @@ var _initialiseProps = function _initialiseProps() {
 };
 
 export default FlexTable;
-export function SortIndicator(_ref4) {
-  var sortDirection = _ref4.sortDirection;
-
-  var classNames = cn('FlexTable__sortableHeaderIcon', {
-    'FlexTable__sortableHeaderIcon--ASC': sortDirection === SortDirection.ASC,
-    'FlexTable__sortableHeaderIcon--DESC': sortDirection === SortDirection.DESC
-  });
-
-  return React.createElement(
-    'svg',
-    {
-      className: classNames,
-      width: 18,
-      height: 18,
-      viewBox: '0 0 24 24',
-      xmlns: 'http://www.w3.org/2000/svg'
-    },
-    sortDirection === SortDirection.ASC ? React.createElement('path', { d: 'M7 14l5-5 5 5z' }) : React.createElement('path', { d: 'M7 10l5 5 5-5z' }),
-    React.createElement('path', { d: 'M0 0h24v24H0z', fill: 'none' })
-  );
-}
-SortIndicator.propTypes = {
-  sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
-};

@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+### 5.4.0
+Added optional `headerRenderer` property to `FlexColumn` to enable custom `FlexTable` header cells.
+
 ##### 5.3.2
 Decoupled x/y axes in `Grid` when determining whether or not to enable overflow.
 This results in more robustly handling issues like the one reported in PR #133.

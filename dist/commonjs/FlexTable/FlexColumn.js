@@ -5,8 +5,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.defaultCellRenderer = defaultCellRenderer;
 exports.defaultCellDataGetter = defaultCellDataGetter;
+exports.defaultHeaderRenderer = defaultHeaderRenderer;
 
 var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _SortIndicator = require('./SortIndicator');
+
+var _SortIndicator2 = _interopRequireDefault(_SortIndicator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -40,6 +49,38 @@ function defaultCellDataGetter(dataKey, rowData, columnData) {
 }
 
 /**
+ * Default table header renderer.
+ */
+function defaultHeaderRenderer(_ref) {
+  var columnData = _ref.columnData;
+  var dataKey = _ref.dataKey;
+  var disableSort = _ref.disableSort;
+  var label = _ref.label;
+  var sortBy = _ref.sortBy;
+  var sortDirection = _ref.sortDirection;
+
+  var showSortIndicator = sortBy === dataKey;
+  var children = [_react2.default.createElement(
+    'div',
+    {
+      className: 'FlexTable__headerTruncatedText',
+      key: 'label',
+      title: label
+    },
+    label
+  )];
+
+  if (showSortIndicator) {
+    children.push(_react2.default.createElement(_SortIndicator2.default, {
+      key: 'SortIndicator',
+      sortDirection: sortDirection
+    }));
+  }
+
+  return children;
+}
+
+/**
  * Describes the header and cell contents of a table column.
  */
 
@@ -59,39 +100,58 @@ Column.defaultProps = {
   cellDataGetter: defaultCellDataGetter,
   cellRenderer: defaultCellRenderer,
   flexGrow: 0,
-  flexShrink: 1
+  flexShrink: 1,
+  headerRenderer: defaultHeaderRenderer
 };
 Column.propTypes = {
   /** Optional CSS class to apply to cell */
   cellClassName: _react.PropTypes.string,
+
   /**
    * Callback responsible for returning a cell's data, given its :dataKey
    * (dataKey: string, rowData: any): any
    */
   cellDataGetter: _react.PropTypes.func,
+
   /**
    * Callback responsible for rendering a cell's contents.
    * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
    */
   cellRenderer: _react.PropTypes.func,
+
   /** Optional additional data passed to this column's :cellDataGetter */
   columnData: _react.PropTypes.object,
+
   /** Uniquely identifies the row-data attribute correspnding to this cell */
   dataKey: _react.PropTypes.any.isRequired,
+
   /** If sort is enabled for the table at large, disable it for this column */
   disableSort: _react.PropTypes.bool,
+
   /** Flex grow style; defaults to 0 */
   flexGrow: _react.PropTypes.number,
+
   /** Flex shrink style; defaults to 1 */
   flexShrink: _react.PropTypes.number,
+
   /** Optional CSS class to apply to this column's header */
   headerClassName: _react.PropTypes.string,
+
+  /**
+   * Optional callback responsible for rendering a column header contents.
+   * ({ columnData: object, dataKey: string, disableSort: boolean, label: string, sortBy: string, sortDirection: string }): PropTypes.node
+   */
+  headerRenderer: _react.PropTypes.func.isRequired,
+
   /** Header label for this column */
   label: _react.PropTypes.string,
+
   /** Maximum width of column; this property will only be used if :flexGrow is > 0. */
   maxWidth: _react.PropTypes.number,
+
   /** Minimum width of column. */
   minWidth: _react.PropTypes.number,
+
   /** Flex basis (width) for this column; This value can grow or shrink based on :flexGrow and :flexShrink properties. */
   width: _react.PropTypes.number.isRequired
 };

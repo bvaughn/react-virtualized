@@ -3,11 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SortDirection = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-exports.SortIndicator = SortIndicator;
 
 var _classnames = require('classnames');
 
@@ -31,6 +28,10 @@ var _Grid = require('../Grid');
 
 var _Grid2 = _interopRequireDefault(_Grid);
 
+var _SortDirection = require('./SortDirection');
+
+var _SortDirection2 = _interopRequireDefault(_SortDirection);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -38,20 +39,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SortDirection = exports.SortDirection = {
-  /**
-   * Sort items in ascending order.
-   * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
-   */
-  ASC: 'ASC',
-
-  /**
-   * Sort items in descending order.
-   * This means arranging from the highest value to the lowest (e.g. z-a, 9-0).
-   */
-  DESC: 'DESC'
-};
 
 /**
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
@@ -269,10 +256,10 @@ var FlexTable = function (_Component) {
       var _column$props2 = column.props;
       var dataKey = _column$props2.dataKey;
       var disableSort = _column$props2.disableSort;
+      var headerRenderer = _column$props2.headerRenderer;
       var label = _column$props2.label;
       var columnData = _column$props2.columnData;
 
-      var showSortIndicator = sortBy === dataKey;
       var sortEnabled = !disableSort && sort;
 
       var classNames = (0, _classnames2.default)('FlexTable__headerColumn', headerClassName, column.props.headerClassName, {
@@ -281,11 +268,20 @@ var FlexTable = function (_Component) {
       var style = this._getFlexStyleForColumn(column);
 
       // If this is a sortable header, clicking it should update the table data's sorting.
-      var newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC;
+      var newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2.default.DESC ? _SortDirection2.default.ASC : _SortDirection2.default.DESC;
       var onClick = function onClick() {
         sortEnabled && sort(dataKey, newSortDirection);
         onHeaderClick(dataKey, columnData);
       };
+
+      var renderedHeader = headerRenderer({
+        columnData: columnData,
+        dataKey: dataKey,
+        disableSort: disableSort,
+        label: label,
+        sortBy: sortBy,
+        sortDirection: sortDirection
+      });
 
       return _react2.default.createElement(
         'div',
@@ -295,15 +291,7 @@ var FlexTable = function (_Component) {
           style: style,
           onClick: onClick
         },
-        _react2.default.createElement(
-          'div',
-          {
-            className: 'FlexTable__headerTruncatedText',
-            title: label
-          },
-          label
-        ),
-        showSortIndicator && _react2.default.createElement(SortIndicator, { sortDirection: sortDirection })
+        renderedHeader
       );
     }
   }, {
@@ -377,8 +365,9 @@ var FlexTable = function (_Component) {
       var disableHeader = _props4.disableHeader;
 
       var items = disableHeader ? [] : children;
-      return _react2.default.Children.map(items, function (column, columnIndex) {
-        return _this4._createHeader(column, columnIndex);
+
+      return _react2.default.Children.map(items, function (column, index) {
+        return _this4._createHeader(column, index);
       });
     }
   }, {
@@ -403,11 +392,6 @@ var FlexTable = function (_Component) {
 
   return FlexTable;
 }(_react.Component);
-
-/**
- * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
- */
-
 
 FlexTable.propTypes = {
   /** One or more FlexColumns describing the data displayed in this row */
@@ -507,7 +491,7 @@ FlexTable.propTypes = {
   sortBy: _react.PropTypes.string,
 
   /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
-  sortDirection: _react.PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
+  sortDirection: _react.PropTypes.oneOf([_SortDirection2.default.ASC, _SortDirection2.default.DESC]),
 
   /** Width of list */
   width: _react.PropTypes.number.isRequired
@@ -538,27 +522,3 @@ var _initialiseProps = function _initialiseProps() {
 };
 
 exports.default = FlexTable;
-function SortIndicator(_ref4) {
-  var sortDirection = _ref4.sortDirection;
-
-  var classNames = (0, _classnames2.default)('FlexTable__sortableHeaderIcon', {
-    'FlexTable__sortableHeaderIcon--ASC': sortDirection === SortDirection.ASC,
-    'FlexTable__sortableHeaderIcon--DESC': sortDirection === SortDirection.DESC
-  });
-
-  return _react2.default.createElement(
-    'svg',
-    {
-      className: classNames,
-      width: 18,
-      height: 18,
-      viewBox: '0 0 24 24',
-      xmlns: 'http://www.w3.org/2000/svg'
-    },
-    sortDirection === SortDirection.ASC ? _react2.default.createElement('path', { d: 'M7 14l5-5 5 5z' }) : _react2.default.createElement('path', { d: 'M7 10l5 5 5-5z' }),
-    _react2.default.createElement('path', { d: 'M0 0h24v24H0z', fill: 'none' })
-  );
-}
-SortIndicator.propTypes = {
-  sortDirection: _react.PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
-};

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import cn from 'classnames'
-import { SortDirection } from './FlexTable'
+import SortDirection from './SortDirection'
 
 /**
  * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
