@@ -304,8 +304,7 @@ export default class FlexTable extends Component {
 
   _createHeader (column, columnIndex) {
     const { headerClassName, onHeaderClick, sort, sortBy, sortDirection } = this.props
-    const { dataKey, disableSort, label, columnData } = column.props
-    const showSortIndicator = sortBy === dataKey
+    const { dataKey, disableSort, headerRenderer, label, columnData } = column.props
     const sortEnabled = !disableSort && sort
 
     const classNames = cn(
@@ -327,6 +326,15 @@ export default class FlexTable extends Component {
       onHeaderClick(dataKey, columnData)
     }
 
+    const renderedHeader = headerRenderer({
+      columnData,
+      dataKey,
+      disableSort,
+      label,
+      sortBy,
+      sortDirection
+    })
+
     return (
       <div
         key={`Header-Col${columnIndex}`}
@@ -334,15 +342,7 @@ export default class FlexTable extends Component {
         style={style}
         onClick={onClick}
       >
-        <div
-          className='FlexTable__headerTruncatedText'
-          title={label}
-        >
-          {label}
-        </div>
-        {showSortIndicator &&
-          <SortIndicator sortDirection={sortDirection} />
-        }
+        {renderedHeader}
       </div>
     )
   }
@@ -409,8 +409,9 @@ export default class FlexTable extends Component {
   _getRenderedHeaderRow () {
     const { children, disableHeader } = this.props
     const items = disableHeader ? [] : children
-    return React.Children.map(items, (column, columnIndex) =>
-      this._createHeader(column, columnIndex)
+
+    return React.Children.map(items, (column, index) =>
+      this._createHeader(column, index)
     )
   }
 
@@ -430,33 +431,4 @@ export default class FlexTable extends Component {
 
     this.setState({ scrollbarWidth })
   }
-}
-
-/**
- * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
- */
-export function SortIndicator ({ sortDirection }) {
-  const classNames = cn('FlexTable__sortableHeaderIcon', {
-    'FlexTable__sortableHeaderIcon--ASC': sortDirection === SortDirection.ASC,
-    'FlexTable__sortableHeaderIcon--DESC': sortDirection === SortDirection.DESC
-  })
-
-  return (
-    <svg
-      className={classNames}
-      width={18}
-      height={18}
-      viewBox='0 0 24 24'
-      xmlns='http://www.w3.org/2000/svg'
-    >
-      {sortDirection === SortDirection.ASC
-        ? <path d='M7 14l5-5 5 5z'/>
-        : <path d='M7 10l5 5 5-5z'/>
-      }
-      <path d='M0 0h24v24H0z' fill='none'/>
-    </svg>
-  )
-}
-SortIndicator.propTypes = {
-  sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
 }

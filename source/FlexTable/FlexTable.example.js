@@ -6,6 +6,7 @@ import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import AutoSizer from '../AutoSizer'
 import FlexColumn from './FlexColumn'
 import FlexTable, { SortDirection } from './FlexTable'
+import SortIndicator from './SortIndicator'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import styles from './FlexTable.example.css'
 
@@ -32,6 +33,7 @@ export default class FlexTableExample extends Component {
     }
 
     this._getRowHeight = this._getRowHeight.bind(this)
+    this._headerRenderer = this._headerRenderer.bind(this)
     this._noRowsRenderer = this._noRowsRenderer.bind(this)
     this._onRowsCountChange = this._onRowsCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
@@ -162,9 +164,9 @@ export default class FlexTableExample extends Component {
                   width={50}
                 />
                 <FlexColumn
-                  label='Name'
                   dataKey='name'
                   disableSort={!this._isSortEnabled()}
+                  headerRenderer={this._headerRenderer}
                   width={90}
                 />
                 <FlexColumn
@@ -194,6 +196,24 @@ export default class FlexTableExample extends Component {
     const { list } = this.props
 
     return this._getDatum(list, index).size
+  }
+
+  _headerRenderer ({
+    columnData,
+    dataKey,
+    disableSort,
+    label,
+    sortBy,
+    sortDirection
+  }) {
+    return (
+      <div>
+        Full Name
+        {sortBy === dataKey &&
+          <SortIndicator sortDirection={sortDirection}/>
+        }
+      </div>
+    )
   }
 
   _isSortEnabled () {
