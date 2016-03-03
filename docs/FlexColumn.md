@@ -15,6 +15,7 @@ Describes the header and cell contents of a table column
 | flexGrow | Number |  | Flex grow style; defaults to 0 |
 | flexShrink | Number |  | Flex shrink style; defaults to 1 |
 | headerClassName | String |  | CSS class to apply to this column's header |
+| headerRenderer | Function |  | Optional callback responsible for rendering a column's header column. [Learn more](#headerrenderer) |
 | label | String |  | Header label for this column |
 | maxWidth | Number |  | Maximum width of column; this property will only be used if :flexGrow is greater than 0 |
 | minWidth | Number |  | Minimum width of column |
@@ -44,3 +45,15 @@ function (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, co
 
 A defdault `cellRenderer` is provided that displays an attribute as a simple string
 You should override this default method if your data is some other type of object or requires custom formatting.
+
+#### headerRenderer
+
+Callback responsible for rendering a cell's header column.
+It should implement the following signature:
+
+```javascript
+function ({ columnData: any, dataKey: string, disableSort: boolean, label: string, sortBy: string, sortDirection: SortDirection }): element
+```
+
+A defdault `headerRenderer` is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
+You should override this default method if you want to customize the appearance of table columns.

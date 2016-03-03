@@ -37,9 +37,11 @@ describe('FlexTable', () => {
     cellRenderer,
     cellDataGetter,
     className,
+    columnData = { data: 123 },
     disableSort = false,
     headerClassName,
     headerHeight = 20,
+    headerRenderer = undefined,
     height = 100,
     noRowsRenderer = undefined,
     onHeaderClick = undefined,
@@ -84,10 +86,11 @@ describe('FlexTable', () => {
         <FlexColumn
           label='Name'
           dataKey='name'
-          columnData={ {data: 123} }
+          columnData={columnData}
           width={50}
           cellRenderer={cellRenderer}
           cellDataGetter={cellDataGetter}
+          headerRenderer={headerRenderer}
           disableSort={disableSort}
         />
         <FlexColumn
@@ -308,6 +311,74 @@ describe('FlexTable', () => {
       const {dataKey, newSortDirection} = sortCalls[0]
       expect(dataKey).toEqual('name')
       expect(newSortDirection).toEqual(SortDirection.ASC)
+    })
+  })
+
+  describe('headerRenderer', () => {
+    it('should render a custom header if one is provided', () => {
+      const columnData = { foo: 'foo', bar: 'bar' }
+      const headerRendererCalls = []
+      const table = renderTable({
+        columnData,
+        headerRenderer: (params) => {
+          headerRendererCalls.push(params)
+          return 'custom header'
+        },
+        sortBy: 'name',
+        sortDirection: SortDirection.ASC
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
+
+      expect(nameColumn.textContent).toContain('custom header')
+      expect(headerRendererCalls.length).toEqual(1)
+
+      const headerRendererCall = headerRendererCalls[0]
+      expect(headerRendererCalls.length).toEqual(1)
+      expect(headerRendererCall.columnData).toEqual(columnData)
+      expect(headerRendererCall.dataKey).toEqual('name')
+      expect(headerRendererCall.disableSort).toEqual(false)
+      expect(headerRendererCall.label).toEqual('Name')
+      expect(headerRendererCall.sortBy).toEqual('name')
+      expect(headerRendererCall.sortDirection).toEqual(SortDirection.ASC)
+    })
+
+    it('should honor sort for custom headers', () => {
+      const sortCalls = []
+      const table = renderTable({
+        headerRenderer: (params) => 'custom header',
+        sort: (sortKey, sortDirection) => sortCalls.push([sortKey, sortDirection]),
+        sortBy: 'name',
+        sortDirection: SortDirection.ASC
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
+
+      Simulate.click(nameColumn)
+
+      expect(sortCalls.length).toEqual(1)
+      const sortCall = sortCalls[0]
+      expect(sortCall[0]).toEqual('name')
+      expect(sortCall[1]).toEqual(SortDirection.DESC)
+    })
+
+    it('should honor :onHeaderClick for custom header', () => {
+      const columnData = { foo: 'foo', bar: 'bar' }
+      const onHeaderClickCalls = []
+      const table = renderTable({
+        columnData,
+        headerRenderer: (params) => 'custom header',
+        onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push([dataKey, columnData])
+      })
+      const tableDOMNode = findDOMNode(table)
+      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
+
+      Simulate.click(nameColumn)
+
+      expect(onHeaderClickCalls.length).toEqual(1)
+      const onHeaderClickCall = onHeaderClickCalls[0]
+      expect(onHeaderClickCall[0]).toEqual('name')
+      expect(onHeaderClickCall[1]).toEqual(columnData)
     })
   })
 
