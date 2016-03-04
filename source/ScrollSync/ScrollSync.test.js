@@ -2,9 +2,16 @@ import React from 'react'
 import { findDOMNode, render } from 'react-dom'
 import ScrollSync from './ScrollSync'
 
-function ChildComponent ({ scrollLeft, scrollTop }) {
+function ChildComponent ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) {
   return (
-    <div>{`scrollLeft:${scrollLeft}, scrollTop:${scrollTop}`}</div>
+    <div>
+      {`clientHeight:${clientHeight}`}
+      {`clientWidth:${clientWidth}`}
+      {`scrollHeight:${scrollHeight}`}
+      {`scrollLeft:${scrollLeft}`}
+      {`scrollTop:${scrollTop}`}
+      {`scrollWidth:${scrollWidth}`}
+    </div>
   )
 }
 
@@ -29,16 +36,24 @@ describe('ScrollSync', () => {
   it('should pass through an initial value of 0 for :scrollLeft and :scrollTop', () => {
     const component = renderOrUpdateComponent(
       <ScrollSync>
-        {({ onScroll, scrollLeft, scrollTop }) => (
+        {({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => (
           <ChildComponent
+            clientHeight={clientHeight}
+            clientWidth={clientWidth}
+            scrollHeight={scrollHeight}
             scrollLeft={scrollLeft}
             scrollTop={scrollTop}
+            scrollWidth={scrollWidth}
           />
         )}
       </ScrollSync>
     )
+    expect(findDOMNode(component).textContent).toContain('clientHeight:0')
+    expect(findDOMNode(component).textContent).toContain('clientWidth:0')
+    expect(findDOMNode(component).textContent).toContain('scrollHeight:0')
     expect(findDOMNode(component).textContent).toContain('scrollLeft:0')
     expect(findDOMNode(component).textContent).toContain('scrollTop:0')
+    expect(findDOMNode(component).textContent).toContain('scrollWidth:0')
   })
 
   it('should update :scrollLeft and :scrollTop when :onScroll is called', () => {
@@ -51,8 +66,19 @@ describe('ScrollSync', () => {
         }}
       </ScrollSync>
     )
-    onScroll({ scrollLeft: 100, scrollTop: 200 })
-    expect(findDOMNode(component).textContent).toContain('scrollLeft:100')
-    expect(findDOMNode(component).textContent).toContain('scrollTop:200')
+    onScroll({
+      clientHeight: 400,
+      clientWidth: 200,
+      scrollHeight: 1000,
+      scrollLeft: 50,
+      scrollTop: 100,
+      scrollWidth: 500
+    })
+    expect(findDOMNode(component).textContent).toContain('clientHeight:400')
+    expect(findDOMNode(component).textContent).toContain('clientWidth:200')
+    expect(findDOMNode(component).textContent).toContain('scrollHeight:1000')
+    expect(findDOMNode(component).textContent).toContain('scrollLeft:50')
+    expect(findDOMNode(component).textContent).toContain('scrollTop:100')
+    expect(findDOMNode(component).textContent).toContain('scrollWidth:500')
   })
 })

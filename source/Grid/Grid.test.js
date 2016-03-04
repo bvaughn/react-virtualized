@@ -397,22 +397,19 @@ describe('Grid', () => {
       Simulate.scroll(findDOMNode(grid), { target })
     }
 
-    it('should trigger callback when component scrolls horizontally', () => {
+    it('should trigger callback when component is mounted', () => {
       const onScrollCalls = []
-      const grid = renderGrid({
-        onScroll: params => onScrollCalls.push(params)
-      })
-      helper({
-        grid,
-        scrollLeft: 100,
-        scrollTop: 0
+      renderGrid({
+        onScroll: params => onScrollCalls.push(params),
+        scrollLeft: 50,
+        scrollTop: 100
       })
       expect(onScrollCalls).toEqual([{
         clientHeight: 100,
         clientWidth: 200,
         scrollHeight: 2000,
-        scrollLeft: 100,
-        scrollTop: 0,
+        scrollLeft: 50,
+        scrollTop: 100,
         scrollWidth: 2500
       }])
     })
@@ -424,17 +421,39 @@ describe('Grid', () => {
       })
       helper({
         grid,
+        scrollLeft: 100,
+        scrollTop: 0
+      })
+      expect(onScrollCalls.length).toEqual(2)
+      expect(onScrollCalls[1]).toEqual({
+        clientHeight: 100,
+        clientWidth: 200,
+        scrollHeight: 2000,
+        scrollLeft: 100,
+        scrollTop: 0,
+        scrollWidth: 2500
+      })
+    })
+
+    it('should trigger callback when component scrolls vertically', () => {
+      const onScrollCalls = []
+      const grid = renderGrid({
+        onScroll: params => onScrollCalls.push(params)
+      })
+      helper({
+        grid,
         scrollLeft: 0,
         scrollTop: 100
       })
-      expect(onScrollCalls).toEqual([{
+      expect(onScrollCalls.length).toEqual(2)
+      expect(onScrollCalls[1]).toEqual({
         clientHeight: 100,
         clientWidth: 200,
         scrollHeight: 2000,
         scrollLeft: 0,
         scrollTop: 100,
         scrollWidth: 2500
-      }])
+      })
     })
   })
 
