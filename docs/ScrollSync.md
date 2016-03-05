@@ -14,9 +14,13 @@ The child function is passed the following named parameters:
 
 | Parameter | Type | Description |
 |:---|:---|:---:|
+| clientHeight | Number | Height of the visible portion of the `Grid` (or other scroll-synced component) |
+| clientWidth | Number | Width of the visible portion of the `Grid` (or other scroll-synced component) |
 | onScroll | Function | This function should be passed through to at least one of the virtualized child components. Updates to it will trigger updates to the scroll ofset parameters which will in turn update the other virtualized children. |
-| scrollLeft | Number | The current left scroll offset. |
-| scrollTop | Number | The current top scroll offset. |
+| scrollHeight | Number | Total height of all rows in the `Grid` (or other scroll-synced component) |
+| scrollLeft | Number | The current scroll-left offset. |
+| scrollTop | Number | The current scroll-top offset. |
+| scrollWidth | Number | Total width of all rows in the `Grid` (or other scroll-synced component) |
 
 ### Examples
 
@@ -28,7 +32,7 @@ import { Grid, ScrollSync, VirtualScroll } from 'react-virtualized'
 function render (props) {
   return (
     <ScrollSync>
-      {({ onScroll, scrollLeft, scrollTop }) => (
+      {({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => (
         <div className='Table'>
           <div className='LeftColumn'>
             <VirtualScroll

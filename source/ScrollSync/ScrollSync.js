@@ -20,8 +20,12 @@ export default class ScrollSync extends Component {
     super(props, context)
 
     this.state = {
+      clientHeight: 0,
+      clientWidth: 0,
+      scrollHeight: 0,
       scrollLeft: 0,
-      scrollTop: 0
+      scrollTop: 0,
+      scrollWidth: 0
     }
 
     this._onScroll = this._onScroll.bind(this)
@@ -29,16 +33,20 @@ export default class ScrollSync extends Component {
 
   render () {
     const { children } = this.props
-    const { scrollLeft, scrollTop } = this.state
+    const { clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth } = this.state
 
     return children({
+      clientHeight,
+      clientWidth,
       onScroll: this._onScroll,
+      scrollHeight,
       scrollLeft,
-      scrollTop
+      scrollTop,
+      scrollWidth
     })
   }
 
-  _onScroll ({ scrollLeft, scrollTop }) {
-    this.setState({ scrollLeft, scrollTop })
+  _onScroll ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) {
+    this.setState({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth })
   }
 }

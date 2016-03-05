@@ -22,12 +22,12 @@ export default class GridExample extends Component {
 
     this.state = {
       columnWidth: 75,
-      columnsCount: 1000,
+      columnsCount: 50,
       height: 300,
       overscanColumnsCount: 0,
       overscanRowsCount: 5,
       rowHeight: 40,
-      rowsCount: 1000
+      rowsCount: 100
     }
 
     this._renderBodyCell = this._renderBodyCell.bind(this)
@@ -62,65 +62,86 @@ export default class GridExample extends Component {
 
         <ContentBoxParagraph>
           This example shows two <code>Grid</code>s and one <code>VirtualScroll</code> configured to mimic a spreadsheet with a fixed header and first column.
+          It also shows how a scroll callback can be used to control UI properties such as background color.
         </ContentBoxParagraph>
 
         <ScrollSync>
-          {({ onScroll, scrollLeft, scrollTop }) => (
-            <div className={styles.GridRow}>
-              <div
-                className={styles.LeftSideGridContainer}
-                style={{ marginTop: rowHeight }}
-              >
-                <VirtualScroll
-                  className={styles.LeftSideGrid}
-                  height={height}
-                  overscanRowsCount={overscanRowsCount}
-                  rowHeight={rowHeight}
-                  rowRenderer={this._renderLeftSideCell}
-                  rowsCount={rowsCount}
-                  scrollTop={scrollTop}
-                  width={columnWidth}
-                />
-              </div>
-              <div className={styles.GridColumn}>
-                <AutoSizer disableHeight>
-                  {({ width }) => (
-                    <div>
+          {({ clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => {
+            const x = scrollLeft / (scrollWidth - clientWidth)
+            const y = scrollTop / (scrollHeight - clientHeight)
+
+            const leftBackgroundColor = fadeBetweenRGB([65, 65, 65], [0, 0, 0], y)
+            const leftColor = `#ffffff`
+
+            const topBackgroundColor = fadeBetweenRGB([77, 182, 172], [23, 146, 135], x)
+            const topColor = `#ffffff`
+
+            return (
+              <div className={styles.GridRow}>
+                <div
+                  className={styles.LeftSideGridContainer}
+                  style={{
+                    backgroundColor: leftBackgroundColor,
+                    color: leftColor,
+                    marginTop: rowHeight
+                  }}
+                >
+                  <VirtualScroll
+                    className={styles.LeftSideGrid}
+                    height={height}
+                    overscanRowsCount={overscanRowsCount}
+                    rowHeight={rowHeight}
+                    rowRenderer={this._renderLeftSideCell}
+                    rowsCount={rowsCount}
+                    scrollTop={scrollTop}
+                    width={columnWidth}
+                  />
+                </div>
+                <div className={styles.GridColumn}>
+                  <AutoSizer disableHeight>
+                    {({ width }) => (
                       <div>
-                        <Grid
-                          className={styles.HeaderGrid}
-                          columnWidth={columnWidth}
-                          columnsCount={columnsCount}
-                          height={rowHeight}
-                          overscanColumnsCount={overscanColumnsCount}
-                          renderCell={this._renderHeaderCell}
-                          rowHeight={rowHeight}
-                          rowsCount={1}
-                          scrollLeft={scrollLeft}
-                          width={width}
-                        />
+                        <div style={{
+                          backgroundColor: topBackgroundColor,
+                          color: topColor,
+                          height: rowHeight,
+                          width
+                        }}>
+                          <Grid
+                            className={styles.HeaderGrid}
+                            columnWidth={columnWidth}
+                            columnsCount={columnsCount}
+                            height={rowHeight}
+                            overscanColumnsCount={overscanColumnsCount}
+                            renderCell={this._renderHeaderCell}
+                            rowHeight={rowHeight}
+                            rowsCount={1}
+                            scrollLeft={scrollLeft}
+                            width={width}
+                          />
+                        </div>
+                        <div>
+                          <Grid
+                            className={styles.BodyGrid}
+                            columnWidth={columnWidth}
+                            columnsCount={columnsCount}
+                            height={height}
+                            onScroll={onScroll}
+                            overscanColumnsCount={overscanColumnsCount}
+                            overscanRowsCount={overscanRowsCount}
+                            renderCell={this._renderBodyCell}
+                            rowHeight={rowHeight}
+                            rowsCount={rowsCount}
+                            width={width}
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <Grid
-                          className={styles.BodyGrid}
-                          columnWidth={columnWidth}
-                          columnsCount={columnsCount}
-                          height={height}
-                          onScroll={onScroll}
-                          overscanColumnsCount={overscanColumnsCount}
-                          overscanRowsCount={overscanRowsCount}
-                          renderCell={this._renderBodyCell}
-                          rowHeight={rowHeight}
-                          rowsCount={rowsCount}
-                          width={width}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </AutoSizer>
+                    )}
+                  </AutoSizer>
+                </div>
               </div>
-            </div>
-          )}
+            )
+          }}
         </ScrollSync>
       </ContentBox>
     )
@@ -156,4 +177,12 @@ export default class GridExample extends Component {
       </div>
     )
   }
+}
+
+function fadeBetweenRGB (rgbFrom, rgbTo, amount) {
+  const r = Math.round(rgbFrom[0] + (rgbTo[0] - rgbFrom[0]) * amount)
+  const g = Math.round(rgbFrom[1] + (rgbTo[1] - rgbFrom[1]) * amount)
+  const b = Math.round(rgbFrom[2] + (rgbTo[2] - rgbFrom[2]) * amount)
+
+  return `rgb(${r}, ${g}, ${b})`
 }
