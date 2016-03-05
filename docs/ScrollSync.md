@@ -13,7 +13,7 @@ High order component that simplifies the process of synchronizing scrolling betw
 The child function is passed the following named parameters:
 
 | Parameter | Type | Description |
-|:---|:---|:---:|
+|:---|:---|:---|
 | clientHeight | Number | Height of the visible portion of the `Grid` (or other scroll-synced component) |
 | clientWidth | Number | Width of the visible portion of the `Grid` (or other scroll-synced component) |
 | onScroll | Function | This function should be passed through to at least one of the virtualized child components. Updates to it will trigger updates to the scroll ofset parameters which will in turn update the other virtualized children. |
