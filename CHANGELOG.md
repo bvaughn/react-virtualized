@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+### 5.5.0
+`ScrollSync` passes additional parameters to child function in order to enable more complex scroll-driven UI changes.
+
 ### 5.4.0
 Added optional `headerRenderer` property to `FlexColumn` to enable custom `FlexTable` header cells.
 

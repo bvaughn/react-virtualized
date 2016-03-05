@@ -561,7 +561,12 @@
                             scrollTop: scrollTop
                         }), (scrollToColumn >= 0 || scrollToRow >= 0) && (this._setImmediateId = setImmediate(function() {
                             _this2._setImmediateId = null, _this2._updateScrollLeftForScrollToColumn(), _this2._updateScrollTopForScrollToRow();
-                        })), this._invokeOnGridRenderedHelper();
+                        })), this._invokeOnGridRenderedHelper(), this._invokeOnScrollMemoizer({
+                            scrollLeft: scrollLeft || 0,
+                            scrollTop: scrollTop || 0,
+                            totalColumnsWidth: this._getTotalColumnsWidth(),
+                            totalRowsHeight: this._getTotalRowsHeight()
+                        });
                     }
                 }, {
                     key: "componentDidUpdate",
@@ -795,6 +800,28 @@
                         });
                     }
                 }, {
+                    key: "_invokeOnScrollMemoizer",
+                    value: function(_ref3) {
+                        var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop, totalColumnsWidth = _ref3.totalColumnsWidth, totalRowsHeight = _ref3.totalRowsHeight, _props5 = this.props, height = _props5.height, onScroll = _props5.onScroll, width = _props5.width;
+                        this._onScrollMemoizer({
+                            callback: function(_ref4) {
+                                var scrollLeft = _ref4.scrollLeft, scrollTop = _ref4.scrollTop;
+                                onScroll({
+                                    clientHeight: height,
+                                    clientWidth: width,
+                                    scrollHeight: totalRowsHeight,
+                                    scrollLeft: scrollLeft,
+                                    scrollTop: scrollTop,
+                                    scrollWidth: totalColumnsWidth
+                                });
+                            },
+                            indices: {
+                                scrollLeft: scrollLeft,
+                                scrollTop: scrollTop
+                            }
+                        });
+                    }
+                }, {
                     key: "_setNextState",
                     value: function(state) {
                         var _this4 = this;
@@ -843,7 +870,7 @@
                 }, {
                     key: "_onKeyPress",
                     value: function(event) {
-                        var _props5 = this.props, columnsCount = _props5.columnsCount, height = _props5.height, rowsCount = _props5.rowsCount, width = _props5.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop, start = void 0, datum = void 0, newScrollLeft = void 0, newScrollTop = void 0;
+                        var _props6 = this.props, columnsCount = _props6.columnsCount, height = _props6.height, rowsCount = _props6.rowsCount, width = _props6.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop, start = void 0, datum = void 0, newScrollLeft = void 0, newScrollTop = void 0;
                         if (0 !== columnsCount && 0 !== rowsCount) switch (event.key) {
                           case "ArrowDown":
                             this._stopEvent(event), start = (0, _utils.getVisibleCellIndices)({
@@ -898,7 +925,7 @@
                     value: function(event) {
                         if (event.target === this.refs.scrollingContainer) {
                             this._enablePointerEventsAfterDelay();
-                            var _props6 = this.props, height = _props6.height, onScroll = _props6.onScroll, width = _props6.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
+                            var _props7 = this.props, height = _props7.height, width = _props7.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
                             if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
                                 var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
                                 this.state.isScrolling || this.setState({
@@ -910,22 +937,11 @@
                                     scrollTop: scrollTop
                                 });
                             }
-                            this._onScrollMemoizer({
-                                callback: function(_ref3) {
-                                    var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop;
-                                    onScroll({
-                                        clientHeight: height,
-                                        clientWidth: width,
-                                        scrollHeight: totalRowsHeight,
-                                        scrollLeft: scrollLeft,
-                                        scrollTop: scrollTop,
-                                        scrollWidth: totalColumnsWidth
-                                    });
-                                },
-                                indices: {
-                                    scrollLeft: scrollLeft,
-                                    scrollTop: scrollTop
-                                }
+                            this._invokeOnScrollMemoizer({
+                                scrollLeft: scrollLeft,
+                                scrollTop: scrollTop,
+                                totalColumnsWidth: totalColumnsWidth,
+                                totalRowsHeight: totalRowsHeight
                             });
                         }
                     }
@@ -1895,27 +1911,39 @@
                 _classCallCheck(this, ScrollSync);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScrollSync).call(this, props, context));
                 return _this.shouldComponentUpdate = _function2["default"], _this.state = {
+                    clientHeight: 0,
+                    clientWidth: 0,
+                    scrollHeight: 0,
                     scrollLeft: 0,
-                    scrollTop: 0
+                    scrollTop: 0,
+                    scrollWidth: 0
                 }, _this._onScroll = _this._onScroll.bind(_this), _this;
             }
             return _inherits(ScrollSync, _Component), _createClass(ScrollSync, [ {
                 key: "render",
                 value: function() {
-                    var children = this.props.children, _state = this.state, scrollLeft = _state.scrollLeft, scrollTop = _state.scrollTop;
+                    var children = this.props.children, _state = this.state, clientHeight = _state.clientHeight, clientWidth = _state.clientWidth, scrollHeight = _state.scrollHeight, scrollLeft = _state.scrollLeft, scrollTop = _state.scrollTop, scrollWidth = _state.scrollWidth;
                     return children({
+                        clientHeight: clientHeight,
+                        clientWidth: clientWidth,
                         onScroll: this._onScroll,
+                        scrollHeight: scrollHeight,
                         scrollLeft: scrollLeft,
-                        scrollTop: scrollTop
+                        scrollTop: scrollTop,
+                        scrollWidth: scrollWidth
                     });
                 }
             }, {
                 key: "_onScroll",
                 value: function(_ref) {
-                    var scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop;
+                    var clientHeight = _ref.clientHeight, clientWidth = _ref.clientWidth, scrollHeight = _ref.scrollHeight, scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop, scrollWidth = _ref.scrollWidth;
                     this.setState({
+                        clientHeight: clientHeight,
+                        clientWidth: clientWidth,
+                        scrollHeight: scrollHeight,
                         scrollLeft: scrollLeft,
-                        scrollTop: scrollTop
+                        scrollTop: scrollTop,
+                        scrollWidth: scrollWidth
                     });
                 }
             } ]), ScrollSync;

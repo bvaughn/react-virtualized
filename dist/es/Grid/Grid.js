@@ -144,6 +144,14 @@ var Grid = function (_Component) {
 
       // Update onRowsRendered callback
       this._invokeOnGridRenderedHelper();
+
+      // Initialize onScroll callback
+      this._invokeOnScrollMemoizer({
+        scrollLeft: scrollLeft || 0,
+        scrollTop: scrollTop || 0,
+        totalColumnsWidth: this._getTotalColumnsWidth(),
+        totalRowsHeight: this._getTotalRowsHeight()
+      });
     }
   }, {
     key: 'componentDidUpdate',
@@ -546,6 +554,39 @@ var Grid = function (_Component) {
         }
       });
     }
+  }, {
+    key: '_invokeOnScrollMemoizer',
+    value: function _invokeOnScrollMemoizer(_ref3) {
+      var scrollLeft = _ref3.scrollLeft;
+      var scrollTop = _ref3.scrollTop;
+      var totalColumnsWidth = _ref3.totalColumnsWidth;
+      var totalRowsHeight = _ref3.totalRowsHeight;
+      var _props5 = this.props;
+      var height = _props5.height;
+      var onScroll = _props5.onScroll;
+      var width = _props5.width;
+
+
+      this._onScrollMemoizer({
+        callback: function callback(_ref4) {
+          var scrollLeft = _ref4.scrollLeft;
+          var scrollTop = _ref4.scrollTop;
+
+          onScroll({
+            clientHeight: height,
+            clientWidth: width,
+            scrollHeight: totalRowsHeight,
+            scrollLeft: scrollLeft,
+            scrollTop: scrollTop,
+            scrollWidth: totalColumnsWidth
+          });
+        },
+        indices: {
+          scrollLeft: scrollLeft,
+          scrollTop: scrollTop
+        }
+      });
+    }
 
     /**
      * Updates the state during the next animation frame.
@@ -626,11 +667,11 @@ var Grid = function (_Component) {
   }, {
     key: '_onKeyPress',
     value: function _onKeyPress(event) {
-      var _props5 = this.props;
-      var columnsCount = _props5.columnsCount;
-      var height = _props5.height;
-      var rowsCount = _props5.rowsCount;
-      var width = _props5.width;
+      var _props6 = this.props;
+      var columnsCount = _props6.columnsCount;
+      var height = _props6.height;
+      var rowsCount = _props6.rowsCount;
+      var width = _props6.width;
       var _state3 = this.state;
       var scrollLeft = _state3.scrollLeft;
       var scrollTop = _state3.scrollTop;
@@ -727,10 +768,9 @@ var Grid = function (_Component) {
       // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
       // This causes a series of rapid renders that is slow for long lists.
       // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-      var _props6 = this.props;
-      var height = _props6.height;
-      var onScroll = _props6.onScroll;
-      var width = _props6.width;
+      var _props7 = this.props;
+      var height = _props7.height;
+      var width = _props7.width;
 
       var totalRowsHeight = this._getTotalRowsHeight();
       var totalColumnsWidth = this._getTotalColumnsWidth();
@@ -762,25 +802,7 @@ var Grid = function (_Component) {
         });
       }
 
-      this._onScrollMemoizer({
-        callback: function callback(_ref3) {
-          var scrollLeft = _ref3.scrollLeft;
-          var scrollTop = _ref3.scrollTop;
-
-          onScroll({
-            clientHeight: height,
-            clientWidth: width,
-            scrollHeight: totalRowsHeight,
-            scrollLeft: scrollLeft,
-            scrollTop: scrollTop,
-            scrollWidth: totalColumnsWidth
-          });
-        },
-        indices: {
-          scrollLeft: scrollLeft,
-          scrollTop: scrollTop
-        }
-      });
+      this._invokeOnScrollMemoizer({ scrollLeft: scrollLeft, scrollTop: scrollTop, totalColumnsWidth: totalColumnsWidth, totalRowsHeight: totalRowsHeight });
     }
   }]);
   return Grid;

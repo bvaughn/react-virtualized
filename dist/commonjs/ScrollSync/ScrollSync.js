@@ -36,8 +36,12 @@ var ScrollSync = function (_Component) {
 
 
     _this.state = {
+      clientHeight: 0,
+      clientWidth: 0,
+      scrollHeight: 0,
       scrollLeft: 0,
-      scrollTop: 0
+      scrollTop: 0,
+      scrollWidth: 0
     };
 
     _this._onScroll = _this._onScroll.bind(_this);
@@ -49,23 +53,35 @@ var ScrollSync = function (_Component) {
     value: function render() {
       var children = this.props.children;
       var _state = this.state;
+      var clientHeight = _state.clientHeight;
+      var clientWidth = _state.clientWidth;
+      var scrollHeight = _state.scrollHeight;
       var scrollLeft = _state.scrollLeft;
       var scrollTop = _state.scrollTop;
+      var scrollWidth = _state.scrollWidth;
 
 
       return children({
+        clientHeight: clientHeight,
+        clientWidth: clientWidth,
         onScroll: this._onScroll,
+        scrollHeight: scrollHeight,
         scrollLeft: scrollLeft,
-        scrollTop: scrollTop
+        scrollTop: scrollTop,
+        scrollWidth: scrollWidth
       });
     }
   }, {
     key: '_onScroll',
     value: function _onScroll(_ref) {
+      var clientHeight = _ref.clientHeight;
+      var clientWidth = _ref.clientWidth;
+      var scrollHeight = _ref.scrollHeight;
       var scrollLeft = _ref.scrollLeft;
       var scrollTop = _ref.scrollTop;
+      var scrollWidth = _ref.scrollWidth;
 
-      this.setState({ scrollLeft: scrollLeft, scrollTop: scrollTop });
+      this.setState({ clientHeight: clientHeight, clientWidth: clientWidth, scrollHeight: scrollHeight, scrollLeft: scrollLeft, scrollTop: scrollTop, scrollWidth: scrollWidth });
     }
   }]);
 
