@@ -17,7 +17,6 @@
 .HeaderGrid {
   width: 100%;
   overflow: hidden !important;
-  background-color: #fafafa;
 }
 .BodyGrid {
   width: 100%;
@@ -43,6 +42,5 @@
 }
 .headerCell,
 .leftCell {
-  background-color: #fafafa;
   font-weight: bold;
 }
