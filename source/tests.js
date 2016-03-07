@@ -1,3 +1,21 @@
+var jsdom = require('jsdom').jsdom
+
+var exposedProperties = ['window', 'navigator', 'document']
+
+global.document = jsdom('')
+global.window = document.defaultView
+
+Object.keys(document.defaultView).forEach((property) => {
+  if (typeof global[property] === 'undefined') {
+    exposedProperties.push(property)
+    global[property] = document.defaultView[property]
+  }
+})
+
+global.navigator = {
+  userAgent: 'node.js'
+}
+
 // Overwrite global.Promise with Bluebird
 // Replace the scheduler with setImmediate so we can write sync tests
 import Bluebird from 'bluebird'
@@ -11,6 +29,9 @@ global.Promise = Bluebird
 // Polyfill a full ES6 environment
 import 'babel-polyfill'
 
-// Reference: https://github.com/webpack/karma-webpack#alternative-usage
-const tests = require.context('.', true, /\.test\.(js|jsx)$/)
-tests.keys().forEach(tests)
+var glob = require('glob')
+glob('source/**/*.test.js', {}, function (data, files) {
+  files.forEach(function (file) {
+    require(file.replace('source/', './'))
+  })
+})

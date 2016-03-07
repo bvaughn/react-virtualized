@@ -1,3 +1,4 @@
+import test from 'tape'
 import {
   computeCellMetadataAndUpdateScrollOffsetHelper,
   createCallbackMemoizer,
@@ -27,492 +28,520 @@ function getCellMetadata () {
   })
 }
 
-describe('computeCellMetadataAndUpdateScrollOffsetHelper', () => {
-  function helper ({
-    cellsCount = 100,
-    cellSize = 10,
-    computeMetadataCallbackProps = {},
-    computeMetadataOnNextUpdate = false,
-    nextCellsCount = 100,
-    nextCellSize = 10,
+function computeCellMetadataAndUpdateScrollOffsetHelper_helper ({
+  cellsCount = 100,
+  cellSize = 10,
+  computeMetadataCallbackProps = {},
+  computeMetadataOnNextUpdate = false,
+  nextCellsCount = 100,
+  nextCellSize = 10,
+  nextScrollToIndex,
+  scrollToIndex
+} = {}) {
+  const computeMetadataCallbackCalls = []
+  const updateScrollOffsetForScrollToIndexCalls = []
+
+  computeCellMetadataAndUpdateScrollOffsetHelper({
+    cellsCount,
+    cellSize,
+    computeMetadataCallback: params => computeMetadataCallbackCalls.push(params),
+    computeMetadataCallbackProps,
+    computeMetadataOnNextUpdate,
+    nextCellsCount,
+    nextCellSize,
     nextScrollToIndex,
-    scrollToIndex
-  } = {}) {
-    const computeMetadataCallbackCalls = []
-    const updateScrollOffsetForScrollToIndexCalls = []
-
-    computeCellMetadataAndUpdateScrollOffsetHelper({
-      cellsCount,
-      cellSize,
-      computeMetadataCallback: params => computeMetadataCallbackCalls.push(params),
-      computeMetadataCallbackProps,
-      computeMetadataOnNextUpdate,
-      nextCellsCount,
-      nextCellSize,
-      nextScrollToIndex,
-      scrollToIndex,
-      updateScrollOffsetForScrollToIndex: params => updateScrollOffsetForScrollToIndexCalls.push(params)
-    })
-
-    return {
-      computeMetadataCallbackCalls,
-      updateScrollOffsetForScrollToIndexCalls
-    }
-  }
-
-  it('should call :computeMetadataCallback if :computeMetadataOnNextUpdate is true', () => {
-    const { computeMetadataCallbackCalls } = helper({ computeMetadataOnNextUpdate: true })
-    expect(computeMetadataCallbackCalls.length).toEqual(1)
-  })
-
-  it('should pass the specified :computeMetadataCallbackProps to :computeMetadataCallback', () => {
-    const params = { foo: 'bar' }
-    const { computeMetadataCallbackCalls } = helper({
-      computeMetadataCallbackProps: params,
-      computeMetadataOnNextUpdate: true
-    })
-    expect(computeMetadataCallbackCalls).toEqual([params])
-  })
-
-  it('should call :computeMetadataCallback if :cellsCount has changed', () => {
-    const { computeMetadataCallbackCalls } = helper({
-      cellsCount: 100,
-      nextCellsCount: 200
-    })
-    expect(computeMetadataCallbackCalls.length).toEqual(1)
-  })
-
-  it('should call :computeMetadataCallback if numeric :cellSize has changed', () => {
-    const { computeMetadataCallbackCalls } = helper({
-      cellSize: 10,
-      nextCellSize: 20
-    })
-    expect(computeMetadataCallbackCalls.length).toEqual(1)
-  })
-
-  it('should not call :computeMetadataCallback if :cellSize callback has changed', () => {
-    const { computeMetadataCallbackCalls } = helper({
-      cellSize: () => {},
-      nextCellSize: () => {}
-    })
-    expect(computeMetadataCallbackCalls.length).toEqual(0)
-  })
-
-  it('should call :updateScrollOffsetForScrollToIndex if metadata has changed and :scrollToIndex has not', () => {
-    const { updateScrollOffsetForScrollToIndexCalls } = helper({
-      computeMetadataOnNextUpdate: true,
-      scrollToIndex: 10,
-      nextScrollToIndex: 10
-    })
-    expect(updateScrollOffsetForScrollToIndexCalls.length).toEqual(1)
-  })
-
-  it('should not call :updateScrollOffsetForScrollToIndex if :scrollToIndex is not specified', () => {
-    const { updateScrollOffsetForScrollToIndexCalls } = helper({
-      computeMetadataOnNextUpdate: true
-    })
-    expect(updateScrollOffsetForScrollToIndexCalls.length).toEqual(0)
-  })
-
-  it('should not call :updateScrollOffsetForScrollToIndex if :scrollToIndex has also changed', () => {
-    const { updateScrollOffsetForScrollToIndexCalls } = helper({
-      computeMetadataOnNextUpdate: true,
-      scrollToIndex: 10,
-      nextScrollToIndex: 20
-    })
-    expect(updateScrollOffsetForScrollToIndexCalls.length).toEqual(0)
-  })
-
-  it('should not call :computeMetadataCallback if the above conditions are not true', () => {
-    const { computeMetadataCallbackCalls } = helper()
-    expect(computeMetadataCallbackCalls.length).toEqual(0)
-  })
-})
-
-describe('createCallbackMemoizer', () => {
-  function OnRowsRendered () {
-    let numCalls = 0
-    let overscanStartIndex
-    let overscanStopIndex
-    let startIndex
-    let stopIndex
-
-    return {
-      numCalls: () => numCalls,
-      overscanStartIndex: () => overscanStartIndex,
-      overscanStopIndex: () => overscanStopIndex,
-      startIndex: () => startIndex,
-      stopIndex: () => stopIndex,
-      update: (params) => {
-        overscanStartIndex = params.overscanStartIndex
-        overscanStopIndex = params.overscanStopIndex
-        startIndex = params.startIndex
-        stopIndex = params.stopIndex
-        numCalls++
-      }
-    }
-  }
-
-  it('should not call onRowsRendered if startIndex or stopIndex are invalid', () => {
-    const util = new OnRowsRendered()
-    const helper = createCallbackMemoizer()
-    helper({
-      callback: util.update,
-      indices: {
-        startIndex: 0,
-        stopIndex: undefined
-      }
-    })
-    expect(util.numCalls()).toEqual(0)
-    helper({
-      callback: util.update,
-      indices: {
-        startIndex: undefined,
-        stopIndex: 0
-      }
-    })
-    expect(util.numCalls()).toEqual(0)
-  })
-
-  it('should call onRowsRendered if startIndex and stopIndex are valid', () => {
-    const util = new OnRowsRendered()
-    const helper = createCallbackMemoizer()
-    helper({
-      callback: util.update,
-      indices: {
-        startIndex: 0,
-        stopIndex: 1
-      }
-    })
-    expect(util.numCalls()).toEqual(1)
-    expect(util.startIndex()).toEqual(0)
-    expect(util.stopIndex()).toEqual(1)
-  })
-
-  it('should call onRowsRendered if startIndex and stopIndex are invalid but :requireAllKeys is false', () => {
-    const util = new OnRowsRendered()
-    const helper = createCallbackMemoizer(false)
-    helper({
-      callback: util.update,
-      indices: {
-        startIndex: undefined,
-        stopIndex: 1
-      }
-    })
-    expect(util.numCalls()).toEqual(1)
-    expect(util.startIndex()).toEqual(undefined)
-    expect(util.stopIndex()).toEqual(1)
-  })
-
-  it('should not call onRowsRendered if startIndex or stopIndex have not changed', () => {
-    const util = new OnRowsRendered()
-    const helper = createCallbackMemoizer()
-    helper({
-      callback: util.update,
-      indices: {
-        startIndex: 0,
-        stopIndex: 1
-      }
-    })
-    expect(util.numCalls()).toEqual(1)
-    expect(util.startIndex()).toEqual(0)
-    expect(util.stopIndex()).toEqual(1)
-    helper({
-      callback: util.update,
-      indices: {
-        startIndex: 0,
-        stopIndex: 1
-      }
-    })
-    expect(util.numCalls()).toEqual(1)
-  })
-
-  it('should not call onRowsRendered if startIndex or stopIndex have changed', () => {
-    const util = new OnRowsRendered()
-    const helper = createCallbackMemoizer()
-    helper({
-      callback: util.update,
-      indices: {
-        startIndex: 0,
-        stopIndex: 1
-      }
-    })
-    expect(util.numCalls()).toEqual(1)
-    expect(util.startIndex()).toEqual(0)
-    expect(util.stopIndex()).toEqual(1)
-    helper({
-      callback: util.update,
-      indices: {
-        startIndex: 1,
-        stopIndex: 1
-      }
-    })
-    expect(util.numCalls()).toEqual(2)
-    expect(util.startIndex()).toEqual(1)
-    expect(util.stopIndex()).toEqual(1)
-    helper({
-      callback: util.update,
-      indices: {
-        startIndex: 1,
-        stopIndex: 2
-      }
-    })
-    expect(util.numCalls()).toEqual(3)
-    expect(util.startIndex()).toEqual(1)
-    expect(util.stopIndex()).toEqual(2)
-  })
-
-  it('should call onRowsRendered if :overscanCellsCount changes', () => {
-    const util = new OnRowsRendered()
-    const helper = createCallbackMemoizer()
-    helper({
-      callback: util.update,
-      indices: {
-        overscanStartIndex: 0,
-        overscanStopIndex: 2,
-        startIndex: 0,
-        stopIndex: 1
-      }
-    })
-    expect(util.numCalls()).toEqual(1)
-    expect(util.startIndex()).toEqual(0)
-    expect(util.stopIndex()).toEqual(1)
-    expect(util.overscanStartIndex()).toEqual(0)
-    expect(util.overscanStopIndex()).toEqual(2)
-    helper({
-      callback: util.update,
-      indices: {
-        overscanStartIndex: 0,
-        overscanStopIndex: 3,
-        startIndex: 0,
-        stopIndex: 1
-      }
-    })
-    expect(util.numCalls()).toEqual(2)
-    expect(util.startIndex()).toEqual(0)
-    expect(util.stopIndex()).toEqual(1)
-    expect(util.overscanStartIndex()).toEqual(0)
-    expect(util.overscanStopIndex()).toEqual(3)
-  })
-})
-
-describe('getUpdatedOffsetForIndex', () => {
-  function testHelper (targetIndex, currentOffset, cellMetadata = getCellMetadata()) {
-    return getUpdatedOffsetForIndex({
-      cellMetadata,
-      containerSize: 50,
-      currentOffset,
-      targetIndex
-    })
-  }
-
-  it('should scroll to the beginning', () => {
-    expect(testHelper(0, 100)).toEqual(0)
-  })
-
-  it('should scroll forward to the middle', () => {
-    expect(testHelper(4, 0)).toEqual(20)
-  })
-
-  it('should scroll backward to the middle', () => {
-    expect(testHelper(2, 100)).toEqual(30)
-  })
-
-  it('should not scroll if an item is already visible', () => {
-    expect(testHelper(2, 20)).toEqual(20)
-  })
-
-  it('should scroll to the end', () => {
-    expect(testHelper(8, 0)).toEqual(110)
-  })
-
-  it('should not scroll too far backward', () => {
-    expect(testHelper(-5, 0)).toEqual(0)
-  })
-
-  it('should not scroll too far forward', () => {
-    expect(testHelper(105, 0)).toEqual(110)
-  })
-})
-
-describe('getVisibleCellIndices', () => {
-  function testHelper (currentOffset, cellMetadata = getCellMetadata()) {
-    return getVisibleCellIndices({
-      cellsCount: cellMetadata.length,
-      cellMetadata,
-      containerSize: 50,
-      currentOffset
-    })
-  }
-
-  it('should handle unscrolled', () => {
-    const { start, stop } = testHelper(0)
-    expect(start).toEqual(0)
-    expect(stop).toEqual(3)
-  })
-
-  it('should handle scrolled to the middle', () => {
-    const { start, stop } = testHelper(50)
-    expect(start).toEqual(3)
-    expect(stop).toEqual(5)
-  })
-
-  it('should handle scrolled to the end', () => {
-    const { start, stop } = testHelper(110)
-    expect(start).toEqual(6)
-    expect(stop).toEqual(8)
-  })
-
-  it('should handle scrolled past the end', () => {
-    const { start, stop } = testHelper(200)
-    expect(start).toEqual(8) // TODO Should this actually be 6?
-    expect(stop).toEqual(8)
-  })
-
-  it('should handle scrolled past the beginning', () => {
-    const { start, stop } = testHelper(-50)
-    expect(start).toEqual(0)
-    expect(stop).toEqual(3)
-  })
-})
-
-describe('updateScrollIndexHelper', () => {
-  function helper ({
-    cellsCount = 100,
-    cellMetadata = getCellMetadata(),
-    cellSize = 10,
-    previousCellsCount = 100,
-    previousCellSize = 10,
-    previousScrollToIndex,
-    previousSize = 50,
-    scrollOffset = 0,
     scrollToIndex,
-    size = 50
-  } = {}) {
-    let updateScrollIndexCallbackCalled = false
+    updateScrollOffsetForScrollToIndex: params => updateScrollOffsetForScrollToIndexCalls.push(params)
+  })
 
-    function updateScrollIndexCallback (params) {
-      updateScrollIndexCallbackCalled = true
-    }
-
-    updateScrollIndexHelper({
-      cellsCount,
-      cellMetadata,
-      cellSize,
-      previousCellsCount,
-      previousCellSize,
-      previousScrollToIndex,
-      previousSize,
-      scrollOffset,
-      scrollToIndex,
-      size,
-      updateScrollIndexCallback
-    })
-
-    return updateScrollIndexCallbackCalled
+  return {
+    computeMetadataCallbackCalls,
+    updateScrollOffsetForScrollToIndexCalls
   }
+}
 
-  it('should not call :updateScrollIndexCallback if there is no :scrollToIndex and size has not changed', () => {
-    expect(helper()).toEqual(false)
-  })
-
-  it('should not call :updateScrollIndexCallback if an invalid :scrollToIndex has been specified', () => {
-    expect(helper({
-      size: 100,
-      previousSize: 50,
-      scrollToIndex: -1
-    })).toEqual(false)
-  })
-
-  it('should call :updateScrollIndexCallback if there is a :scrollToIndex and :size has changed', () => {
-    expect(helper({
-      size: 100,
-      previousSize: 50,
-      scrollToIndex: 10
-    })).toEqual(true)
-  })
-
-  it('should call :updateScrollIndexCallback if there is a :scrollToIndex and :cellSize has changed', () => {
-    expect(helper({
-      cellSize: 15,
-      previousCellSize: 20,
-      scrollToIndex: 10
-    })).toEqual(true)
-  })
-
-  it('should call :updateScrollIndexCallback if previous :scrollToIndex has changed', () => {
-    expect(helper({
-      previousScrollToIndex: 20,
-      scrollToIndex: 10
-    })).toEqual(true)
-  })
-
-  it('should call :updateScrollIndexCallback if :cellsCount has been reduced past the current scroll offset', () => {
-    expect(helper({
-      cellsCount: 50,
-      previousCellsCount: 100,
-      scrollOffset: 510
-    })).toEqual(true)
-  })
-
-  it('should call :updateScrollIndexCallback if there is no :scrollToIndex but :size has been reduced', () => {
-    expect(helper({
-      previousSize: 100,
-      scrollOffset: 510,
-      size: 50
-    })).toEqual(true)
-  })
-
-  it('should not call :updateScrollIndexCallback if there is no :scrollToIndex but :cellsCount has been increased', () => {
-    expect(helper({
-      cellsCount: 100,
-      previousCellsCount: 50
-    })).toEqual(false)
-  })
-
-  it('should not call :updateScrollIndexCallback if there is no :scrollToIndex but :size has been increased', () => {
-    expect(helper({
-      previousSize: 50,
-      size: 100
-    })).toEqual(false)
-  })
+test('computeCellMetadataAndUpdateScrollOffsetHelper should call :computeMetadataCallback if :computeMetadataOnNextUpdate is true', (assert) => {
+  const { computeMetadataCallbackCalls } = computeCellMetadataAndUpdateScrollOffsetHelper_helper({ computeMetadataOnNextUpdate: true })
+  assert.equal(computeMetadataCallbackCalls.length, 1)
+  assert.end()
 })
 
-describe('getOverscanIndices', () => {
-  function testHelper (cellsCount, startIndex, stopIndex, overscanCellsCount) {
-    return getOverscanIndices({
-      cellsCount,
-      overscanCellsCount,
-      startIndex,
-      stopIndex
-    })
+test('computeCellMetadataAndUpdateScrollOffsetHelper should pass the specified :computeMetadataCallbackProps to :computeMetadataCallback', (assert) => {
+  const params = { foo: 'bar' }
+  const { computeMetadataCallbackCalls } = computeCellMetadataAndUpdateScrollOffsetHelper_helper({
+    computeMetadataCallbackProps: params,
+    computeMetadataOnNextUpdate: true
+  })
+  assert.deepEqual(computeMetadataCallbackCalls, [params])
+  assert.end()
+})
+
+test('computeCellMetadataAndUpdateScrollOffsetHelper should call :computeMetadataCallback if :cellsCount has changed', (assert) => {
+  const { computeMetadataCallbackCalls } = computeCellMetadataAndUpdateScrollOffsetHelper_helper({
+    cellsCount: 100,
+    nextCellsCount: 200
+  })
+  assert.equal(computeMetadataCallbackCalls.length, 1)
+  assert.end()
+})
+
+test('computeCellMetadataAndUpdateScrollOffsetHelper should call :computeMetadataCallback if numeric :cellSize has changed', (assert) => {
+  const { computeMetadataCallbackCalls } = computeCellMetadataAndUpdateScrollOffsetHelper_helper({
+    cellSize: 10,
+    nextCellSize: 20
+  })
+  assert.equal(computeMetadataCallbackCalls.length, 1)
+  assert.end()
+})
+
+test('computeCellMetadataAndUpdateScrollOffsetHelper should not call :computeMetadataCallback if :cellSize callback has changed', (assert) => {
+  const { computeMetadataCallbackCalls } = computeCellMetadataAndUpdateScrollOffsetHelper_helper({
+    cellSize: () => {},
+    nextCellSize: () => {}
+  })
+  assert.equal(computeMetadataCallbackCalls.length, 0)
+  assert.end()
+})
+
+test('computeCellMetadataAndUpdateScrollOffsetHelper should call :updateScrollOffsetForScrollToIndex if metadata has changed and :scrollToIndex has not', (assert) => {
+  const { updateScrollOffsetForScrollToIndexCalls } = computeCellMetadataAndUpdateScrollOffsetHelper_helper({
+    computeMetadataOnNextUpdate: true,
+    scrollToIndex: 10,
+    nextScrollToIndex: 10
+  })
+  assert.equal(updateScrollOffsetForScrollToIndexCalls.length, 1)
+  assert.end()
+})
+
+test('computeCellMetadataAndUpdateScrollOffsetHelper should not call :updateScrollOffsetForScrollToIndex if :scrollToIndex is not specified', (assert) => {
+  const { updateScrollOffsetForScrollToIndexCalls } = computeCellMetadataAndUpdateScrollOffsetHelper_helper({
+    computeMetadataOnNextUpdate: true
+  })
+  assert.equal(updateScrollOffsetForScrollToIndexCalls.length, 0)
+  assert.end()
+})
+
+test('computeCellMetadataAndUpdateScrollOffsetHelper should not call :updateScrollOffsetForScrollToIndex if :scrollToIndex has also changed', (assert) => {
+  const { updateScrollOffsetForScrollToIndexCalls } = computeCellMetadataAndUpdateScrollOffsetHelper_helper({
+    computeMetadataOnNextUpdate: true,
+    scrollToIndex: 10,
+    nextScrollToIndex: 20
+  })
+  assert.equal(updateScrollOffsetForScrollToIndexCalls.length, 0)
+  assert.end()
+})
+
+test('computeCellMetadataAndUpdateScrollOffsetHelper should not call :computeMetadataCallback if the above conditions are not true', (assert) => {
+  const { computeMetadataCallbackCalls } = computeCellMetadataAndUpdateScrollOffsetHelper_helper()
+  assert.equal(computeMetadataCallbackCalls.length, 0)
+  assert.end()
+})
+
+function OnRowsRendered () {
+  let numCalls = 0
+  let overscanStartIndex
+  let overscanStopIndex
+  let startIndex
+  let stopIndex
+
+  return {
+    numCalls: () => numCalls,
+    overscanStartIndex: () => overscanStartIndex,
+    overscanStopIndex: () => overscanStopIndex,
+    startIndex: () => startIndex,
+    stopIndex: () => stopIndex,
+    update: (params) => {
+      overscanStartIndex = params.overscanStartIndex
+      overscanStopIndex = params.overscanStopIndex
+      startIndex = params.startIndex
+      stopIndex = params.stopIndex
+      numCalls++
+    }
+  }
+}
+
+test('createCallbackMemoizer should not call onRowsRendered if startIndex or stopIndex are invalid', (assert) => {
+  const util = new OnRowsRendered()
+  const helper = createCallbackMemoizer()
+  helper({
+    callback: util.update,
+    indices: {
+      startIndex: 0,
+      stopIndex: undefined
+    }
+  })
+  assert.equal(util.numCalls(), 0)
+  helper({
+    callback: util.update,
+    indices: {
+      startIndex: undefined,
+      stopIndex: 0
+    }
+  })
+  assert.equal(util.numCalls(), 0)
+  assert.end()
+})
+
+test('createCallbackMemoizer should call onRowsRendered if startIndex and stopIndex are valid', (assert) => {
+  const util = new OnRowsRendered()
+  const helper = createCallbackMemoizer()
+  helper({
+    callback: util.update,
+    indices: {
+      startIndex: 0,
+      stopIndex: 1
+    }
+  })
+  assert.equal(util.numCalls(), 1)
+  assert.equal(util.startIndex(), 0)
+  assert.equal(util.stopIndex(), 1)
+  assert.end()
+})
+
+test('createCallbackMemoizer should call onRowsRendered if startIndex and stopIndex are invalid but :requireAllKeys is false', (assert) => {
+  const util = new OnRowsRendered()
+  const helper = createCallbackMemoizer(false)
+  helper({
+    callback: util.update,
+    indices: {
+      startIndex: undefined,
+      stopIndex: 1
+    }
+  })
+  assert.equal(util.numCalls(), 1)
+  assert.equal(util.startIndex(), undefined)
+  assert.equal(util.stopIndex(), 1)
+  assert.end()
+})
+
+test('createCallbackMemoizer should not call onRowsRendered if startIndex or stopIndex have not changed', (assert) => {
+  const util = new OnRowsRendered()
+  const helper = createCallbackMemoizer()
+  helper({
+    callback: util.update,
+    indices: {
+      startIndex: 0,
+      stopIndex: 1
+    }
+  })
+  assert.equal(util.numCalls(), 1)
+  assert.equal(util.startIndex(), 0)
+  assert.equal(util.stopIndex(), 1)
+  helper({
+    callback: util.update,
+    indices: {
+      startIndex: 0,
+      stopIndex: 1
+    }
+  })
+  assert.equal(util.numCalls(), 1)
+  assert.end()
+})
+
+test('createCallbackMemoizer should not call onRowsRendered if startIndex or stopIndex have changed', (assert) => {
+  const util = new OnRowsRendered()
+  const helper = createCallbackMemoizer()
+  helper({
+    callback: util.update,
+    indices: {
+      startIndex: 0,
+      stopIndex: 1
+    }
+  })
+  assert.equal(util.numCalls(), 1)
+  assert.equal(util.startIndex(), 0)
+  assert.equal(util.stopIndex(), 1)
+  helper({
+    callback: util.update,
+    indices: {
+      startIndex: 1,
+      stopIndex: 1
+    }
+  })
+  assert.equal(util.numCalls(), 2)
+  assert.equal(util.startIndex(), 1)
+  assert.equal(util.stopIndex(), 1)
+  helper({
+    callback: util.update,
+    indices: {
+      startIndex: 1,
+      stopIndex: 2
+    }
+  })
+  assert.equal(util.numCalls(), 3)
+  assert.equal(util.startIndex(), 1)
+  assert.equal(util.stopIndex(), 2)
+  assert.end()
+})
+
+test('createCallbackMemoizer should call onRowsRendered if :overscanCellsCount changes', (assert) => {
+  const util = new OnRowsRendered()
+  const helper = createCallbackMemoizer()
+  helper({
+    callback: util.update,
+    indices: {
+      overscanStartIndex: 0,
+      overscanStopIndex: 2,
+      startIndex: 0,
+      stopIndex: 1
+    }
+  })
+  assert.equal(util.numCalls(), 1)
+  assert.equal(util.startIndex(), 0)
+  assert.equal(util.stopIndex(), 1)
+  assert.equal(util.overscanStartIndex(), 0)
+  assert.equal(util.overscanStopIndex(), 2)
+  helper({
+    callback: util.update,
+    indices: {
+      overscanStartIndex: 0,
+      overscanStopIndex: 3,
+      startIndex: 0,
+      stopIndex: 1
+    }
+  })
+  assert.equal(util.numCalls(), 2)
+  assert.equal(util.startIndex(), 0)
+  assert.equal(util.stopIndex(), 1)
+  assert.equal(util.overscanStartIndex(), 0)
+  assert.equal(util.overscanStopIndex(), 3)
+  assert.end()
+})
+
+function getUpdatedOffsetForIndex_helper (targetIndex, currentOffset, cellMetadata = getCellMetadata()) {
+  return getUpdatedOffsetForIndex({
+    cellMetadata,
+    containerSize: 50,
+    currentOffset,
+    targetIndex
+  })
+}
+
+test('getUpdatedOffsetForIndex should scroll to the beginning', (assert) => {
+  assert.equal(getUpdatedOffsetForIndex_helper(0, 100), 0)
+  assert.end()
+})
+
+test('getUpdatedOffsetForIndex should scroll forward to the middle', (assert) => {
+  assert.equal(getUpdatedOffsetForIndex_helper(4, 0), 20)
+  assert.end()
+})
+
+test('getUpdatedOffsetForIndex should scroll backward to the middle', (assert) => {
+  assert.equal(getUpdatedOffsetForIndex_helper(2, 100), 30)
+  assert.end()
+})
+
+test('getUpdatedOffsetForIndex should not scroll if an item is already visible', (assert) => {
+  assert.equal(getUpdatedOffsetForIndex_helper(2, 20), 20)
+  assert.end()
+})
+
+test('getUpdatedOffsetForIndex should scroll to the end', (assert) => {
+  assert.equal(getUpdatedOffsetForIndex_helper(8, 0), 110)
+  assert.end()
+})
+
+test('getUpdatedOffsetForIndex should not scroll too far backward', (assert) => {
+  assert.equal(getUpdatedOffsetForIndex_helper(-5, 0), 0)
+  assert.end()
+})
+
+test('getUpdatedOffsetForIndex should not scroll too far forward', (assert) => {
+  assert.equal(getUpdatedOffsetForIndex_helper(105, 0), 110)
+  assert.end()
+})
+
+function getVisibleCellIndices_helper (currentOffset, cellMetadata = getCellMetadata()) {
+  return getVisibleCellIndices({
+    cellsCount: cellMetadata.length,
+    cellMetadata,
+    containerSize: 50,
+    currentOffset
+  })
+}
+
+test('getVisibleCellIndices should handle unscrolled', (assert) => {
+  const { start, stop } = getVisibleCellIndices_helper(0)
+  assert.equal(start, 0)
+  assert.equal(stop, 3)
+  assert.end()
+})
+
+test('getVisibleCellIndices should handle scrolled to the middle', (assert) => {
+  const { start, stop } = getVisibleCellIndices_helper(50)
+  assert.equal(start, 3)
+  assert.equal(stop, 5)
+  assert.end()
+})
+
+test('getVisibleCellIndices should handle scrolled to the end', (assert) => {
+  const { start, stop } = getVisibleCellIndices_helper(110)
+  assert.equal(start, 6)
+  assert.equal(stop, 8)
+  assert.end()
+})
+
+test('getVisibleCellIndices should handle scrolled past the end', (assert) => {
+  const { start, stop } = getVisibleCellIndices_helper(200)
+  assert.equal(start, 8) // TODO Should this actually be 6?
+  assert.equal(stop, 8)
+  assert.end()
+})
+
+test('getVisibleCellIndices should handle scrolled past the beginning', (assert) => {
+  const { start, stop } = getVisibleCellIndices_helper(-50)
+  assert.equal(start, 0)
+  assert.equal(stop, 3)
+  assert.end()
+})
+
+function updateScrollIndexHelper_helper ({
+  cellsCount = 100,
+  cellMetadata = getCellMetadata(),
+  cellSize = 10,
+  previousCellsCount = 100,
+  previousCellSize = 10,
+  previousScrollToIndex,
+  previousSize = 50,
+  scrollOffset = 0,
+  scrollToIndex,
+  size = 50
+} = {}) {
+  let updateScrollIndexCallbackCalled = false
+
+  function updateScrollIndexCallback (params) {
+    updateScrollIndexCallbackCalled = true
   }
 
-  it('should not overscan if :overscanCellsCount is 0', () => {
-    expect(testHelper(100, 10, 20, 0)).toEqual({
-      overscanStartIndex: 10,
-      overscanStopIndex: 20
-    })
+  updateScrollIndexHelper({
+    cellsCount,
+    cellMetadata,
+    cellSize,
+    previousCellsCount,
+    previousCellSize,
+    previousScrollToIndex,
+    previousSize,
+    scrollOffset,
+    scrollToIndex,
+    size,
+    updateScrollIndexCallback
   })
 
-  it('should overscan by the specified :overscanCellsCount', () => {
-    expect(testHelper(100, 10, 20, 10)).toEqual({
-      overscanStartIndex: 0,
-      overscanStopIndex: 30
-    })
-  })
+  return updateScrollIndexCallbackCalled
+}
 
-  it('should not overscan beyond the start of the list', () => {
-    expect(testHelper(100, 5, 15, 10)).toEqual({
-      overscanStartIndex: 0,
-      overscanStopIndex: 25
-    })
-  })
+test('updateScrollIndexHelper should not call :updateScrollIndexCallback if there is no :scrollToIndex and size has not changed', (assert) => {
+  assert.equal(updateScrollIndexHelper_helper(), false)
+  assert.end()
+})
 
-  it('should not overscan beyond the end of the list', () => {
-    expect(testHelper(25, 10, 20, 10)).toEqual({
-      overscanStartIndex: 0,
-      overscanStopIndex: 24
-    })
+test('updateScrollIndexHelper should not call :updateScrollIndexCallback if an invalid :scrollToIndex has been specified', (assert) => {
+  assert.notOk(updateScrollIndexHelper_helper({
+    size: 100,
+    previousSize: 50,
+    scrollToIndex: -1
+  }))
+  assert.end()
+})
+
+test('updateScrollIndexHelper should call :updateScrollIndexCallback if there is a :scrollToIndex and :size has changed', (assert) => {
+  assert.ok(updateScrollIndexHelper_helper({
+    size: 100,
+    previousSize: 50,
+    scrollToIndex: 10
+  }))
+  assert.end()
+})
+
+test('updateScrollIndexHelper should call :updateScrollIndexCallback if there is a :scrollToIndex and :cellSize has changed', (assert) => {
+  assert.ok(updateScrollIndexHelper_helper({
+    cellSize: 15,
+    previousCellSize: 20,
+    scrollToIndex: 10
+  }))
+  assert.end()
+})
+
+test('updateScrollIndexHelper should call :updateScrollIndexCallback if previous :scrollToIndex has changed', (assert) => {
+  assert.ok(updateScrollIndexHelper_helper({
+    previousScrollToIndex: 20,
+    scrollToIndex: 10
+  }))
+  assert.end()
+})
+
+test('updateScrollIndexHelper should call :updateScrollIndexCallback if :cellsCount has been reduced past the current scroll offset', (assert) => {
+  assert.ok(updateScrollIndexHelper_helper({
+    cellsCount: 50,
+    previousCellsCount: 100,
+    scrollOffset: 510
+  }))
+  assert.end()
+})
+
+test('updateScrollIndexHelper should call :updateScrollIndexCallback if there is no :scrollToIndex but :size has been reduced', (assert) => {
+  assert.ok(updateScrollIndexHelper_helper({
+    previousSize: 100,
+    scrollOffset: 510,
+    size: 50
+  }))
+  assert.end()
+})
+
+test('updateScrollIndexHelper should not call :updateScrollIndexCallback if there is no :scrollToIndex but :cellsCount has been increased', (assert) => {
+  assert.notOk(updateScrollIndexHelper_helper({
+    cellsCount: 100,
+    previousCellsCount: 50
+  }))
+  assert.end()
+})
+
+test('updateScrollIndexHelper should not call :updateScrollIndexCallback if there is no :scrollToIndex but :size has been increased', (assert) => {
+  assert.notOk(updateScrollIndexHelper_helper({
+    previousSize: 50,
+    size: 100
+  }))
+  assert.end()
+})
+
+function getOverscanIndices_helper (cellsCount, startIndex, stopIndex, overscanCellsCount) {
+  return getOverscanIndices({
+    cellsCount,
+    overscanCellsCount,
+    startIndex,
+    stopIndex
   })
+}
+
+test('getOverscanIndices should not overscan if :overscanCellsCount is 0', (assert) => {
+  assert.deepEqual(getOverscanIndices_helper(100, 10, 20, 0), {
+    overscanStartIndex: 10,
+    overscanStopIndex: 20
+  })
+  assert.end()
+})
+
+test('getOverscanIndices should overscan by the specified :overscanCellsCount', (assert) => {
+  assert.deepEqual(getOverscanIndices_helper(100, 10, 20, 10), {
+    overscanStartIndex: 0,
+    overscanStopIndex: 30
+  })
+  assert.end()
+})
+
+test('getOverscanIndices should not overscan beyond the start of the list', (assert) => {
+  assert.deepEqual(getOverscanIndices_helper(100, 5, 15, 10), {
+    overscanStartIndex: 0,
+    overscanStopIndex: 25
+  })
+  assert.end()
+})
+
+test('getOverscanIndices should not overscan beyond the end of the list', (assert) => {
+  assert.deepEqual(getOverscanIndices_helper(25, 10, 20, 10), {
+    overscanStartIndex: 0,
+    overscanStopIndex: 24
+  })
+  assert.end()
 })

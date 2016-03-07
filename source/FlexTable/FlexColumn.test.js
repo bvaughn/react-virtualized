@@ -1,32 +1,31 @@
 import Immutable from 'immutable'
 import { defaultCellDataGetter, defaultCellRenderer } from './FlexColumn'
+import test from 'tape'
 
-describe('Column', () => {
-  const map = Immutable.Map({
-    foo: 'Foo',
-    bar: 1
-  })
+const map = Immutable.Map({
+  foo: 'Foo',
+  bar: 1
+})
 
-  describe('defaultCellDataGetter', () => {
-    it('should return a value for specified attributes', () => {
-      expect(defaultCellDataGetter('foo', map)).toEqual('Foo')
-      expect(defaultCellDataGetter('bar', map)).toEqual(1)
-    })
+test('Column defaultCellDataGetter() should return a value for specified attributes', (assert) => {
+  assert.equal(defaultCellDataGetter('foo', map), 'Foo')
+  assert.equal(defaultCellDataGetter('bar', map), 1)
+  assert.end()
+})
 
-    it('should return undefined for missing attributes', () => {
-      expect(defaultCellDataGetter('baz', map)).toEqual(undefined)
-    })
-  })
+test('Column defaultCellDataGetter() should return undefined for missing attributes', (assert) => {
+  assert.equal(defaultCellDataGetter('baz', map), undefined)
+  assert.end()
+})
 
-  describe('defaultCellRenderer', () => {
-    it('should render a value for specified attributes', () => {
-      expect(defaultCellRenderer('Foo', 'foo', map, 0)).toEqual('Foo')
-      expect(defaultCellRenderer(1, 'bar', map, 0)).toEqual('1')
-    })
+test('Column defaultCellRenderer() should render a value for specified attributes', (assert) => {
+  assert.equal(defaultCellRenderer('Foo', 'foo', map, 0), 'Foo')
+  assert.equal(defaultCellRenderer(1, 'bar', map, 0), '1')
+  assert.end()
+})
 
-    it('should render empty string for null or missing attributes', () => {
-      expect(defaultCellRenderer(null, 'baz', map, 0)).toEqual('')
-      expect(defaultCellRenderer(undefined, 'baz', map, 0)).toEqual('')
-    })
-  })
+test('Column defaultCellRenderer() should render empty string for null or missing attributes', (assert) => {
+  assert.equal(defaultCellRenderer(null, 'baz', map, 0), '')
+  assert.equal(defaultCellRenderer(undefined, 'baz', map, 0), '')
+  assert.end()
 })
