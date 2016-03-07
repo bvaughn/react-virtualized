@@ -27,7 +27,7 @@
     "prepublish": "npm run build",
     "start": "webpack-dev-server --hot --inline --config webpack.config.dev.js",
     "test": "npm run lint && npm run test:unit",
-    "test:unit": "cross-env NODE_ENV=test karma start",
+    "test:unit": "cross-env NODE_ENV=test babel-node source/tests.js | tap-spec",
     "watch": "watch 'clear && npm run lint -s && npm run test -s' source"
   },
   "repository": {
@@ -60,17 +60,7 @@
       "source/vendor"
     ],
     "global": [
-      "afterAll",
-      "afterEach",
-      "beforeAll",
-      "beforeEach",
-      "describe",
-      "expect",
-      "fdescribe",
-      "fit",
-      "it",
-      "getComputedStyle",
-      "jasmine"
+      "getComputedStyle"
     ]
   },
   "devDependencies": {
@@ -90,23 +80,22 @@
     "bluebird": "^3.0.5",
     "cross-env": "^1.0.7",
     "css-loader": "^0.23.0",
+    "enzyme": "^2.0.0",
     "express": "^4.13.3",
     "extract-text-webpack-plugin": "^1.0.1",
+    "faucet": "0.0.1",
     "file-loader": "^0.8.5",
     "fs-extra": "^0.26.2",
     "gh-pages": "^0.6.0",
+    "glob": "^7.0.3",
     "html-webpack-plugin": "^1.7.0",
     "immutable": "^3.7.5",
-    "jasmine": "^2.3.2",
-    "jasmine-core": "^2.3.4",
+    "jsdom": "^8.1.0",
     "karma": "^0.13.15",
-    "karma-jasmine": "^0.3.6",
     "karma-junit-reporter": "^0.3.8",
-    "karma-phantomjs-launcher": "^0.2.1",
     "karma-sourcemap-loader": "^0.3.6",
     "karma-spec-reporter": "0.0.23",
     "karma-webpack": "^1.7.0",
-    "phantomjs": "^1.9.19",
     "postcss": "^5.0.14",
     "postcss-cli": "^2.3.3",
     "postcss-loader": "^0.8.0",
@@ -119,6 +108,7 @@
     "rimraf": "^2.4.3",
     "standard": "^5.4.1",
     "style-loader": "^0.13.0",
+    "tape": "^4.5.0",
     "watch": "^0.16.0",
     "webpack": "^1.9.6",
     "webpack-dev-server": "^1.14.0"

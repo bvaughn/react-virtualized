@@ -1,688 +1,650 @@
 import React from 'react'
-import { findDOMNode, render } from 'react-dom'
-import { renderIntoDocument, Simulate } from 'react-addons-test-utils'
+import test from 'tape'
+import { mount } from 'enzyme'
 import Immutable from 'immutable'
 import FlexColumn from './FlexColumn'
 import FlexTable from './FlexTable'
 import SortDirection from './SortDirection'
 
-describe('FlexTable', () => {
-  beforeAll(() => jasmine.clock().install())
-  afterAll(() => jasmine.clock().uninstall())
-
-  // Used by the renderOrUpdateTable() helper method
-  var node = null
-  beforeEach(() => node = document.createElement('div'))
-
-  const array = []
-  for (var i = 0; i < 100; i++) {
-    array.push({
-      id: i,
-      name: `Name ${i}`,
-      email: `user-${i}@treasure-data.com`
-    })
-  }
-  const list = Immutable.fromJS(array)
-
-  // Works with an Immutable List of Maps
-  function immutableRowGetter (index) {
-    return list.get(index)
-  }
-
-  // Works with an Array of Objects
-  function vanillaRowGetter (index) {
-    return array[index]
-  }
-
-  function getMarkup ({
-    cellRenderer,
-    cellDataGetter,
-    className,
-    columnData = { data: 123 },
-    disableSort = false,
-    headerClassName,
-    headerHeight = 20,
-    headerRenderer = undefined,
-    height = 100,
-    noRowsRenderer = undefined,
-    onHeaderClick = undefined,
-    onRowClick = undefined,
-    onRowsRendered = undefined,
-    onScroll = undefined,
-    overscanRowsCount = 0,
-    rowClassName = undefined,
-    rowGetter = immutableRowGetter,
-    rowHeight = 10,
-    rowsCount = list.size,
-    scrollToIndex,
-    scrollTop,
-    sort,
-    sortBy,
-    sortDirection,
-    width = 100
-  } = {}) {
-    return (
-      <FlexTable
-        className={className}
-        headerClassName={headerClassName}
-        headerHeight={headerHeight}
-        height={height}
-        noRowsRenderer={noRowsRenderer}
-        onHeaderClick={onHeaderClick}
-        onRowClick={onRowClick}
-        onRowsRendered={onRowsRendered}
-        onScroll={onScroll}
-        overscanRowsCount={overscanRowsCount}
-        rowClassName={rowClassName}
-        rowGetter={rowGetter}
-        rowHeight={rowHeight}
-        rowsCount={rowsCount}
-        scrollToIndex={scrollToIndex}
-        scrollTop={scrollTop}
-        sort={sort}
-        sortBy={sortBy}
-        sortDirection={sortDirection}
-        width={width}
-      >
-        <FlexColumn
-          label='Name'
-          dataKey='name'
-          columnData={columnData}
-          width={50}
-          cellRenderer={cellRenderer}
-          cellDataGetter={cellDataGetter}
-          headerRenderer={headerRenderer}
-          disableSort={disableSort}
-        />
-        <FlexColumn
-          label='Email'
-          dataKey='email'
-          width={50}
-        />
-      </FlexTable>
-    )
-  }
-
-  function renderTable (props) {
-    const flexTable = renderIntoDocument(getMarkup(props))
-
-    // Allow initial setImmediate() to set :scrollTop
-    jasmine.clock().tick()
-
-    return flexTable
-  }
-
-  // Use ReactDOM.render for certain tests so that props changes will update the existing component
-  // renderIntoDocument creates a new component/instance each time
-  function renderOrUpdateTable (props) {
-    let flexTable = render(getMarkup(props), node)
-
-    // Allow initial setImmediate() to set :scrollTop
-    jasmine.clock().tick()
-
-    return findDOMNode(flexTable)
-  }
-
-  // Maybe test FlexTable.propTypes.children directly
-  it('should not accept non-FlexColumn children', () => {
-    const result = FlexTable.propTypes.children({ children: <div/> }, 'children', 'FlexTable')
-    expect(result instanceof Error).toEqual(true)
+const array = []
+for (var i = 0; i < 100; i++) {
+  array.push({
+    id: i,
+    name: `Name ${i}`,
+    email: `user-${i}@treasure-data.com`
   })
+}
+const list = Immutable.fromJS(array)
 
-  describe('initial rendering', () => {
-    // Ensure that both Immutable Lists of Maps and Arrays of Objects are supported
-    const useImmutable = [true, false]
-    useImmutable.forEach(useImmutable => {
-      it('should render the correct number of rows', () => {
-        const table = renderTable({
-          rowGetter: useImmutable ? immutableRowGetter : vanillaRowGetter
-        })
-        const tableDOMNode = findDOMNode(table)
+// Works with an Immutable List of Maps
+const immutableRowGetter = (index) => list.get(index)
 
-        // 100px height should fit 1 header (20px) and 8 rows (10px each) -
-        expect(tableDOMNode.querySelectorAll('.FlexTable__headerRow').length).toEqual(1)
-        expect(tableDOMNode.querySelectorAll('.FlexTable__row').length).toEqual(8)
-      })
+// Works with an Array of Objects
+const vanillaRowGetter = (index) => array[index]
 
-      it('should render the expected headers', () => {
-        const table = renderTable({
-          rowGetter: useImmutable ? immutableRowGetter : vanillaRowGetter
-        })
-        const tableDOMNode = findDOMNode(table)
-        const columns = tableDOMNode.querySelectorAll('.FlexTable__headerColumn')
+function getMarkup ({
+  cellRenderer,
+  cellDataGetter,
+  className,
+  columnData = { data: 123 },
+  disableSort = false,
+  headerClassName,
+  headerHeight = 20,
+  headerRenderer = undefined,
+  height = 100,
+  noRowsRenderer = undefined,
+  onHeaderClick = undefined,
+  onRowClick = undefined,
+  onRowsRendered = undefined,
+  onScroll = undefined,
+  overscanRowsCount = 0,
+  rowClassName = undefined,
+  rowGetter = immutableRowGetter,
+  rowHeight = 10,
+  rowsCount = list.size,
+  scrollToIndex,
+  scrollTop,
+  sort,
+  sortBy,
+  sortDirection,
+  width = 100
+} = {}) {
+  return (
+    <FlexTable
+      className={className}
+      headerClassName={headerClassName}
+      headerHeight={headerHeight}
+      height={height}
+      noRowsRenderer={noRowsRenderer}
+      onHeaderClick={onHeaderClick}
+      onRowClick={onRowClick}
+      onRowsRendered={onRowsRendered}
+      onScroll={onScroll}
+      overscanRowsCount={overscanRowsCount}
+      rowClassName={rowClassName}
+      rowGetter={rowGetter}
+      rowHeight={rowHeight}
+      rowsCount={rowsCount}
+      scrollToIndex={scrollToIndex}
+      scrollTop={scrollTop}
+      sort={sort}
+      sortBy={sortBy}
+      sortDirection={sortDirection}
+      width={width}
+    >
+      <FlexColumn
+        label='Name'
+        dataKey='name'
+        columnData={columnData}
+        width={50}
+        cellRenderer={cellRenderer}
+        cellDataGetter={cellDataGetter}
+        headerRenderer={headerRenderer}
+        disableSort={disableSort}
+      />
+      <FlexColumn
+        label='Email'
+        dataKey='email'
+        width={50}
+      />
+    </FlexTable>
+  )
+}
 
-        expect(columns.length).toEqual(2)
-        expect(columns[0].textContent).toEqual('Name')
-        expect(columns[1].textContent).toEqual('Email')
-      })
+function getHeaderColumn (mounted, columnIndex) {
+  return mounted
+    .find('.FlexTable__headerRow').at(0)
+    .find('.FlexTable__headerColumn').at(columnIndex)
+}
 
-      it('should render the expected rows and columns', () => {
-        const table = renderTable({
-          rowGetter: useImmutable ? immutableRowGetter : vanillaRowGetter,
-          headerHeight: 10,
-          rowHeight: 20,
-          height: 50
-        })
-        const tableDOMNode = findDOMNode(table)
-        const rows = tableDOMNode.querySelectorAll('.FlexTable__row')
-        expect(rows.length).toEqual(2)
-
-        for (let index = 0; index < rows.length; index++) {
-          let row = rows[index]
-          let rowData = list.get(index)
-          let columns = row.querySelectorAll('.FlexTable__rowColumn')
-          expect(columns.length).toEqual(2)
-          expect(columns[0].textContent).toEqual(rowData.get('name'))
-          expect(columns[1].textContent).toEqual(rowData.get('email'))
-        }
-      })
-    })
-  })
-
-  describe('custom getter functions', () => {
-    it('should use a custom cellDataGetter if specified', () => {
-      const table = renderTable({
-        cellDataGetter: (dataKey, rowData, columnData) => `Custom ${dataKey} for row ${rowData.get('id')}`
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumns = tableDOMNode.querySelectorAll('.FlexTable__rowColumn:first-of-type')
-
-      for (let index = 0; index < nameColumns.length; index++) {
-        let nameColumn = nameColumns[index]
-        expect(nameColumn.textContent).toEqual(`Custom name for row ${index}`)
-      }
-    })
-
-    it('should use a custom cellRenderer if specified', () => {
-      const table = renderTable({
-        cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => `Custom ${cellData}`
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumns = tableDOMNode.querySelectorAll('.FlexTable__rowColumn:first-of-type')
-
-      for (let index = 0; index < nameColumns.length; index++) {
-        let nameColumn = nameColumns[index]
-        let rowData = list.get(index)
-        expect(nameColumn.textContent).toEqual(`Custom ${rowData.get('name')}`)
-      }
-    })
-
-    it('should set the rendered cell content as the cell :title if it is a string', () => {
-      const table = renderTable({
-        cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => 'Custom'
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelector('.FlexTable__rowColumn:first-of-type')
-      expect(nameColumn.children[0].getAttribute('title')).toContain('Custom')
-    })
-
-    it('should not set a cell :title if the rendered cell content is not a string', () => {
-      const table = renderTable({
-        cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => <div>Custom</div>
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelector('.FlexTable__rowColumn:first-of-type')
-      expect(nameColumn.children[0].getAttribute('title')).toEqual(null)
-    })
-  })
-
-  describe('sorting', () => {
-    it('should not render sort indicators if no sort function is provided', () => {
-      const table = renderTable()
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelectorAll('.FlexTable__headerColumn:first-of-type')
-
-      expect(nameColumn.className).not.toContain('FlexTable__sortableHeaderColumn')
-    })
-
-    it('should not render sort indicators for non-sortable columns', () => {
-      const table = renderTable({
-        disableSort: true,
-        sort: () => {}
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelectorAll('.FlexTable__headerColumn:first-of-type')
-
-      expect(nameColumn.className).not.toContain('FlexTable__sortableHeaderColumn')
-      expect(tableDOMNode.querySelectorAll('.FlexTable__sortableHeaderColumn').length).toEqual(1) // Email only
-    })
-
-    it('should render sortable column headers as sortable', () => {
-      const table = renderTable({
-        sort: () => {}
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
-
-      expect(nameColumn.className).toContain('FlexTable__sortableHeaderColumn')
-      expect(tableDOMNode.querySelectorAll('.FlexTable__sortableHeaderColumn').length).toEqual(2) // Email and Name
-    })
-
-    it('should render the correct sort indicator by the current sort-by column', () => {
-      const sortDirections = [SortDirection.ASC, SortDirection.DESC]
-      sortDirections.forEach(sortDirection => {
-        const table = renderTable({
-          sort: () => {},
-          sortBy: 'name',
-          sortDirection
-        })
-        const tableDOMNode = findDOMNode(table)
-        const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
-
-        expect(nameColumn.querySelector('.FlexTable__sortableHeaderIcon')).not.toEqual(null)
-        expect(nameColumn.querySelector(`.FlexTable__sortableHeaderIcon--${sortDirection}`)).not.toEqual(null)
-      })
-    })
-
-    it('should call sort with the correct arguments when the current sort-by column header is clicked', () => {
-      const sortDirections = [SortDirection.ASC, SortDirection.DESC]
-      sortDirections.forEach(sortDirection => {
-        const sortCalls = []
-        const table = renderTable({
-          sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
-          sortBy: 'name',
-          sortDirection
-        })
-        const tableDOMNode = findDOMNode(table)
-        const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
-
-        Simulate.click(nameColumn)
-        expect(sortCalls.length).toEqual(1)
-
-        const {dataKey, newSortDirection} = sortCalls[0]
-        const expectedSortDirection = sortDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
-        expect(dataKey).toEqual('name')
-        expect(newSortDirection).toEqual(expectedSortDirection)
-      })
-    })
-
-    it('should call sort with the correct arguments when a new sort-by column header is clicked', () => {
-      const sortCalls = []
-      const table = renderTable({
-        sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
-        sortBy: 'email',
-        sortDirection: SortDirection.ASC
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
-
-      Simulate.click(nameColumn)
-      expect(sortCalls.length).toEqual(1)
-
-      const {dataKey, newSortDirection} = sortCalls[0]
-      expect(dataKey).toEqual('name')
-      expect(newSortDirection).toEqual(SortDirection.ASC)
-    })
-  })
-
-  describe('headerRenderer', () => {
-    it('should render a custom header if one is provided', () => {
-      const columnData = { foo: 'foo', bar: 'bar' }
-      const headerRendererCalls = []
-      const table = renderTable({
-        columnData,
-        headerRenderer: (params) => {
-          headerRendererCalls.push(params)
-          return 'custom header'
-        },
-        sortBy: 'name',
-        sortDirection: SortDirection.ASC
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
-
-      expect(nameColumn.textContent).toContain('custom header')
-      expect(headerRendererCalls.length).toEqual(1)
-
-      const headerRendererCall = headerRendererCalls[0]
-      expect(headerRendererCalls.length).toEqual(1)
-      expect(headerRendererCall.columnData).toEqual(columnData)
-      expect(headerRendererCall.dataKey).toEqual('name')
-      expect(headerRendererCall.disableSort).toEqual(false)
-      expect(headerRendererCall.label).toEqual('Name')
-      expect(headerRendererCall.sortBy).toEqual('name')
-      expect(headerRendererCall.sortDirection).toEqual(SortDirection.ASC)
-    })
-
-    it('should honor sort for custom headers', () => {
-      const sortCalls = []
-      const table = renderTable({
-        headerRenderer: (params) => 'custom header',
-        sort: (sortKey, sortDirection) => sortCalls.push([sortKey, sortDirection]),
-        sortBy: 'name',
-        sortDirection: SortDirection.ASC
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
-
-      Simulate.click(nameColumn)
-
-      expect(sortCalls.length).toEqual(1)
-      const sortCall = sortCalls[0]
-      expect(sortCall[0]).toEqual('name')
-      expect(sortCall[1]).toEqual(SortDirection.DESC)
-    })
-
-    it('should honor :onHeaderClick for custom header', () => {
-      const columnData = { foo: 'foo', bar: 'bar' }
-      const onHeaderClickCalls = []
-      const table = renderTable({
-        columnData,
-        headerRenderer: (params) => 'custom header',
-        onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push([dataKey, columnData])
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
-
-      Simulate.click(nameColumn)
-
-      expect(onHeaderClickCalls.length).toEqual(1)
-      const onHeaderClickCall = onHeaderClickCalls[0]
-      expect(onHeaderClickCall[0]).toEqual('name')
-      expect(onHeaderClickCall[1]).toEqual(columnData)
-    })
-  })
-
-  describe('noRowsRenderer', () => {
-    it('should call :noRowsRenderer if :rowsCount is 0', () => {
-      const table = renderTable({
-        noRowsRenderer: () => <div>No rows!</div>,
-        rowsCount: 0
-      })
-      const bodyDOMNode = findDOMNode(table.refs.Grid)
-      expect(bodyDOMNode.textContent).toEqual('No rows!')
-    })
-
-    it('should render an empty body if :rowsCount is 0 and there is no :noRowsRenderer', () => {
-      const table = renderTable({
-        rowsCount: 0
-      })
-      const bodyDOMNode = findDOMNode(table.refs.Grid)
-      expect(bodyDOMNode.textContent).toEqual('')
-    })
-  })
-
-  describe('onHeaderClick', () => {
-    it('should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is disabled', () => {
-      let onHeaderClickCalls = []
-      const table = renderTable({
-        disableSort: true,
-        onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push({dataKey, columnData})
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
-
-      Simulate.click(nameColumn)
-      expect(onHeaderClickCalls.length).toEqual(1)
-      expect(onHeaderClickCalls[0].dataKey).toEqual('name')
-      expect(onHeaderClickCalls[0].columnData.data).toEqual(123)
-    })
-
-    it('should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is enabled', () => {
-      let onHeaderClickCalls = []
-      const table = renderTable({
-        disableSort: false,
-        onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push({dataKey, columnData})
-      })
-      const tableDOMNode = findDOMNode(table)
-      const nameColumn = tableDOMNode.querySelector('.FlexTable__headerColumn:first-of-type')
-
-      Simulate.click(nameColumn)
-      expect(onHeaderClickCalls.length).toEqual(1)
-      expect(onHeaderClickCalls[0].dataKey).toEqual('name')
-      expect(onHeaderClickCalls[0].columnData.data).toEqual(123)
-    })
-  })
-
-  describe('onRowClick', () => {
-    it('should call :onRowClick with the correct :rowIndex when a row is clicked', () => {
-      const onRowClickCalls = []
-      const table = renderTable({
-        onRowClick: index => onRowClickCalls.push(index)
-      })
-      const tableDOMNode = findDOMNode(table)
-      const rows = tableDOMNode.querySelectorAll('.FlexTable__row')
-      Simulate.click(rows[0])
-      Simulate.click(rows[3])
-      expect(onRowClickCalls).toEqual([0, 3])
-    })
-  })
-
-  describe('rowClassName', () => {
-    it('should render a static classname given :rowClassName as a string', () => {
-      const staticClassName = 'staticClass'
-      const table = renderTable({
-        rowClassName: staticClassName
-      })
-      const tableDOMNode = findDOMNode(table)
-      const rows = tableDOMNode.querySelectorAll('.FlexTable__row')
-      for (let index = 0; index < rows.length; index++) {
-        let row = rows[index]
-        expect(row.className).toContain(staticClassName)
-      }
-    })
-
-    it('should render dynamic classname given :rowClassName as a function', () => {
-      const table = renderTable({
-        rowClassName: rowIndex => rowIndex % 2 === 0 ? 'even' : 'odd'
-      })
-      const tableDOMNode = findDOMNode(table)
-      const rows = tableDOMNode.querySelectorAll('.FlexTable__row')
-      for (let index = 0; index < rows.length; index++) {
-        let row = rows[index]
-        if (index % 2 === 0) {
-          expect(row.className).toContain('even')
-          expect(row.className).not.toContain('odd')
-        } else {
-          expect(row.className).toContain('odd')
-          expect(row.className).not.toContain('even')
-        }
-      }
-    })
-  })
-
-  describe('onRowsRendered', () => {
-    it('should call :onRowsRendered at least one row is rendered', () => {
-      let startIndex, stopIndex
-      renderTable({
-        onRowsRendered: params => ({ startIndex, stopIndex } = params)
-      })
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(7)
-    })
-
-    it('should not call :onRowsRendered unless the start or stop indices have changed', () => {
-      let numCalls = 0
-      let startIndex
-      let stopIndex
-      const onRowsRendered = params => {
-        startIndex = params.startIndex
-        stopIndex = params.stopIndex
-        numCalls++
-      }
-      renderOrUpdateTable({ onRowsRendered })
-      expect(numCalls).toEqual(1)
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(7)
-      renderOrUpdateTable({ onRowsRendered })
-      expect(numCalls).toEqual(1)
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(7)
-    })
-
-    it('should call :onRowsRendered if the start or stop indices have changed', () => {
-      let numCalls = 0
-      let startIndex
-      let stopIndex
-      const onRowsRendered = params => {
-        startIndex = params.startIndex
-        stopIndex = params.stopIndex
-        numCalls++
-      }
-      renderOrUpdateTable({ onRowsRendered })
-      expect(numCalls).toEqual(1)
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(7)
-      renderOrUpdateTable({
-        height: 50,
-        onRowsRendered
-      })
-      expect(numCalls).toEqual(2)
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(2)
-    })
-
-    it('should not call :onRowsRendered if no rows are rendered', () => {
-      let startIndex, stopIndex
-      renderTable({
-        height: 0,
-        onRowsRendered: params => ({ startIndex, stopIndex } = params)
-      })
-      expect(startIndex).toEqual(undefined)
-      expect(stopIndex).toEqual(undefined)
-    })
-  })
-
-  describe(':scrollTop property', () => {
-    it('should render correctly when an initial :scrollTop property is specified', () => {
-      let startIndex, stopIndex
-      renderTable({
-        onRowsRendered: params => ({ startIndex, stopIndex } = params),
-        scrollTop: 80
-      })
-      expect(startIndex).toEqual(8)
-      expect(stopIndex).toEqual(15)
-    })
-
-    it('should render correctly when :scrollTop property is updated', () => {
-      let startIndex, stopIndex
-
-      renderOrUpdateTable({
-        onRowsRendered: params => ({ startIndex, stopIndex } = params)
-      })
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(7)
-
-      renderOrUpdateTable({
-        onRowsRendered: params => ({ startIndex, stopIndex } = params),
-        scrollTop: 80
-      })
-      expect(startIndex).toEqual(8)
-      expect(stopIndex).toEqual(15)
-    })
-  })
-
-  describe('styles and classeNames', () => {
-    it('should use the expected global CSS classNames', () => {
-      const node = findDOMNode(renderTable({
-        sort: () => {},
-        sortBy: 'name',
-        sortDirection: SortDirection.ASC
-      }))
-      expect(node.className).toEqual('FlexTable')
-      expect(node.querySelector('.FlexTable__headerRow')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__rowColumn')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__truncatedColumnText')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__headerColumn')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__headerTruncatedText')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__row')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__sortableHeaderColumn')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__sortableHeaderIcon')).toBeTruthy()
-    })
-
-    it('should use a custom :className if specified', () => {
-      const node = findDOMNode(renderTable({
-        className: 'foo',
-        headerClassName: 'bar',
-        rowClassName: 'baz'
-      }))
-      expect(node.className).toContain('foo')
-      expect(node.querySelectorAll('.bar').length).toEqual(2)
-      expect(node.querySelectorAll('.baz').length).toEqual(9)
-    })
-  })
-
-  describe('overscanRowsCount', () => {
-    it('should not overscan by default', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
-      renderTable({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params)
-      })
-      expect(overscanStartIndex).toEqual(startIndex)
-      expect(overscanStopIndex).toEqual(stopIndex)
-    })
-
-    it('should overscan the specified amount', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
-      renderTable({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowsCount: 10,
-        scrollToIndex: 30
-      })
-      expect(overscanStartIndex).toEqual(13)
-      expect(startIndex).toEqual(23)
-      expect(stopIndex).toEqual(30)
-      expect(overscanStopIndex).toEqual(40)
-    })
-
-    it('should not overscan beyond the start of the list', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
-      renderTable({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowsCount: 10
-      })
-      expect(overscanStartIndex).toEqual(0)
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(7)
-      expect(overscanStopIndex).toEqual(17)
-    })
-
-    it('should not overscan beyond the end of the list', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
-      renderTable({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowsCount: 10,
-        rowsCount: 15
-      })
-      expect(overscanStartIndex).toEqual(0)
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(7)
-      expect(overscanStopIndex).toEqual(14)
-    })
-  })
-
-  describe('onScroll', () => {
-    it('should trigger callback when component initially mounts', () => {
-      const onScrollCalls = []
-      renderTable({
-        onScroll: params => onScrollCalls.push(params)
-      })
-      expect(onScrollCalls).toEqual([{
-        clientHeight: 80,
-        scrollHeight: 1000,
-        scrollTop: 0
-      }])
-    })
-
-    it('should trigger callback when component scrolls', () => {
-      const onScrollCalls = []
-      const table = renderTable({
-        onScroll: params => onScrollCalls.push(params)
-      })
-      const target = {
-        scrollTop: 100
-      }
-      table.refs.Grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
-      Simulate.scroll(findDOMNode(table.refs.Grid), { target })
-      expect(onScrollCalls.length).toEqual(2)
-      expect(onScrollCalls[1]).toEqual({
-        clientHeight: 80,
-        scrollHeight: 1000,
-        scrollTop: 100
-      })
-    })
-  })
-
-  // TODO Add tests for :scrollToRow and :setScrollTop.
-  // This probably requires the creation of an inner test-only class with refs.
+// Maybe test FlexTable.propTypes.children directly
+test('FlexTable should not accept non-FlexColumn children', (assert) => {
+  const result = FlexTable.propTypes.children({ children: <div/> }, 'children', 'FlexTable')
+  assert.ok(result instanceof Error)
+  assert.end()
 })
+
+// Ensure that both Immutable Lists of Maps and Arrays of Objects are supported
+const useImmutable = [true, false]
+useImmutable.forEach(useImmutable => {
+  test('FlexTable initial rendering should render the correct number of rows', (assert) => {
+    const mounted = mount(getMarkup({
+      rowGetter: useImmutable ? immutableRowGetter : vanillaRowGetter
+    }))
+
+    // 100px height should fit 1 header (20px) and 8 rows (10px each) -
+    assert.equal(mounted.find('.FlexTable__headerRow').length, 1)
+    assert.equal(mounted.find('.FlexTable__row').length, 8)
+    assert.end()
+  })
+
+  test('FlexTable initial rendering should render the expected headers', (assert) => {
+    const mounted = mount(getMarkup({
+      rowGetter: useImmutable ? immutableRowGetter : vanillaRowGetter
+    }))
+    const columns = mounted.find('.FlexTable__headerColumn')
+
+    assert.equal(columns.length, 2)
+    assert.equal(columns.at(0).text(), 'Name')
+    assert.equal(columns.at(1).text(), 'Email')
+    assert.end()
+  })
+
+  test('FlexTable initial rendering should render the expected rows and columns', (assert) => {
+    const mounted = mount(getMarkup({
+      rowGetter: useImmutable ? immutableRowGetter : vanillaRowGetter,
+      headerHeight: 10,
+      rowHeight: 20,
+      height: 50
+    }))
+    const rows = mounted.find('.FlexTable__row')
+    assert.equal(rows.length, 2)
+
+    for (let index = 0; index < rows.length; index++) {
+      let row = rows.at(index)
+      let rowData = list.get(index)
+      let columns = row.find('.FlexTable__rowColumn')
+      assert.equal(columns.length, 2)
+      assert.equal(columns.at(0).text(), rowData.get('name'))
+      assert.equal(columns.at(1).text(), rowData.get('email'))
+    }
+
+    assert.end()
+  })
+}) // forEach Immutable vs Array
+
+test('FlexTable should use a custom cellDataGetter if specified', (assert) => {
+  const mounted = mount(getMarkup({
+    cellDataGetter: (dataKey, rowData, columnData) => `Custom ${dataKey} for row ${rowData.get('id')}`
+  }))
+  mounted.find('.FlexTable__row').forEach(
+    (row, index) => {
+      const text = row.find('.FlexTable__rowColumn').at(0).text()
+      assert.equal(text, `Custom name for row ${index}`)
+    }
+  )
+  assert.end()
+})
+
+test('FlexTable should use a custom cellRenderer if specified', (assert) => {
+  const mounted = mount(getMarkup({
+    cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => `Custom ${cellData}`
+  }))
+  mounted.find('.FlexTable__row').forEach(
+    (row, index) => {
+      let rowData = list.get(index)
+      const text = row.find('.FlexTable__rowColumn').at(0).text()
+      assert.equal(text, `Custom ${rowData.get('name')}`)
+    }
+  )
+  assert.end()
+})
+
+test('FlexTable should set the rendered cell content as the cell :title if it is a string', (assert) => {
+  const mounted = mount(getMarkup({
+    cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => 'Custom'
+  }))
+  const row = mounted.find('.FlexTable__row').at(0)
+  const nameColumn = row.find('.FlexTable__rowColumn').at(0)
+  assert.ok(nameColumn.children().at(0).prop('title').includes('Custom'))
+  assert.end()
+})
+
+test('FlexTable should not set a cell :title if the rendered cell content is not a string', (assert) => {
+  const mounted = mount(getMarkup({
+    cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => <div>Custom</div>
+  }))
+  const row = mounted.find('.FlexTable__row').at(0)
+  const nameColumn = row.find('.FlexTable__rowColumn').at(0)
+  assert.equal(nameColumn.children().at(0).prop('title'), null)
+  assert.end()
+})
+
+test('FlexTable should not render sort indicators if no sort function is provided', (assert) => {
+  const mounted = mount(getMarkup())
+  const nameColumn = getHeaderColumn(mounted, 0)
+  assert.ok(!nameColumn.hasClass('FlexTable__sortableHeaderColumn'))
+  assert.end()
+})
+
+test('FlexTable should not render sort indicators for non-sortable columns', (assert) => {
+  const mounted = mount(getMarkup({
+    disableSort: true,
+    sort: () => {}
+  }))
+  const nameColumn = getHeaderColumn(mounted, 0)
+  assert.ok(!nameColumn.hasClass('FlexTable__sortableHeaderColumn'))
+  const emailColumn = getHeaderColumn(mounted, 1)
+  assert.ok(emailColumn.hasClass('FlexTable__sortableHeaderColumn'))
+  assert.end()
+})
+
+test('FlexTable should render sortable column headers as sortable', (assert) => {
+  const mounted = mount(getMarkup({
+    sort: () => {}
+  }))
+  const nameColumn = getHeaderColumn(mounted, 0)
+  assert.ok(nameColumn.hasClass('FlexTable__sortableHeaderColumn'))
+  const emailColumn = getHeaderColumn(mounted, 1)
+  assert.ok(emailColumn.hasClass('FlexTable__sortableHeaderColumn'))
+  assert.end()
+})
+
+test('FlexTable should render the correct sort indicator by the current sort-by column', (assert) => {
+  const sortDirections = [SortDirection.ASC, SortDirection.DESC]
+  sortDirections.forEach(sortDirection => {
+    const mounted = mount(getMarkup({
+      sort: () => {},
+      sortBy: 'name',
+      sortDirection
+    }))
+    const nameColumn = getHeaderColumn(mounted, 0)
+    assert.ok(nameColumn.find('.FlexTable__sortableHeaderIcon').length > 0)
+    assert.ok(nameColumn.find(`.FlexTable__sortableHeaderIcon--${sortDirection}`).length > 0)
+  })
+  assert.end()
+})
+
+test('FlexTable should call sort with the correct arguments when the current sort-by column header is clicked', (assert) => {
+  const sortDirections = [SortDirection.ASC, SortDirection.DESC]
+  sortDirections.forEach(sortDirection => {
+    const sortCalls = []
+    const mounted = mount(getMarkup({
+      sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
+      sortBy: 'name',
+      sortDirection
+    }))
+    const nameColumn = getHeaderColumn(mounted, 0)
+
+    nameColumn.simulate('click')
+    assert.equal(sortCalls.length, 1)
+
+    const {dataKey, newSortDirection} = sortCalls[0]
+    const expectedSortDirection = sortDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+    assert.equal(dataKey, 'name')
+    assert.equal(newSortDirection, expectedSortDirection)
+  })
+  assert.end()
+})
+
+test('FlexTable should call sort with the correct arguments when a new sort-by column header is clicked', (assert) => {
+  const sortCalls = []
+  const mounted = mount(getMarkup({
+    sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
+    sortBy: 'email',
+    sortDirection: SortDirection.ASC
+  }))
+  const nameColumn = getHeaderColumn(mounted, 0)
+  nameColumn.simulate('click')
+  assert.equal(sortCalls.length, 1)
+
+  const {dataKey, newSortDirection} = sortCalls[0]
+  assert.equal(dataKey, 'name')
+  assert.equal(newSortDirection, SortDirection.ASC)
+  assert.end()
+})
+
+test('FlexTable should render a custom header if one is provided', (assert) => {
+  const columnData = { foo: 'foo', bar: 'bar' }
+  const headerRendererCalls = []
+  const mounted = mount(getMarkup({
+    columnData,
+    headerRenderer: (params) => {
+      headerRendererCalls.push(params)
+      return 'custom header'
+    },
+    sortBy: 'name',
+    sortDirection: SortDirection.ASC
+  }))
+  const nameColumn = getHeaderColumn(mounted, 0)
+  assert.ok(nameColumn.text().includes('custom header'))
+  assert.equal(headerRendererCalls.length, 1)
+
+  const headerRendererCall = headerRendererCalls[0]
+  assert.equal(headerRendererCalls.length, 1)
+  assert.equal(headerRendererCall.columnData, columnData)
+  assert.equal(headerRendererCall.dataKey, 'name')
+  assert.equal(headerRendererCall.disableSort, false)
+  assert.equal(headerRendererCall.label, 'Name')
+  assert.equal(headerRendererCall.sortBy, 'name')
+  assert.equal(headerRendererCall.sortDirection, SortDirection.ASC)
+  assert.end()
+})
+
+test('FlexTable should honor sort for custom headers', (assert) => {
+  const sortCalls = []
+  const mounted = mount(getMarkup({
+    headerRenderer: (params) => 'custom header',
+    sort: (sortKey, sortDirection) => sortCalls.push([sortKey, sortDirection]),
+    sortBy: 'name',
+    sortDirection: SortDirection.ASC
+  }))
+  const nameColumn = getHeaderColumn(mounted, 0)
+  nameColumn.simulate('click')
+
+  assert.equal(sortCalls.length, 1)
+  const sortCall = sortCalls[0]
+  assert.equal(sortCall[0], 'name')
+  assert.equal(sortCall[1], SortDirection.DESC)
+  assert.end()
+})
+
+test('FlexTable should honor :onHeaderClick for custom header', (assert) => {
+  const columnData = { foo: 'foo', bar: 'bar' }
+  const onHeaderClickCalls = []
+  const mounted = mount(getMarkup({
+    columnData,
+    headerRenderer: (params) => 'custom header',
+    onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push([dataKey, columnData])
+  }))
+  const nameColumn = getHeaderColumn(mounted, 0)
+  nameColumn.simulate('click')
+
+  assert.equal(onHeaderClickCalls.length, 1)
+  const onHeaderClickCall = onHeaderClickCalls[0]
+  assert.equal(onHeaderClickCall[0], 'name')
+  assert.equal(onHeaderClickCall[1], columnData)
+  assert.end()
+})
+
+test('FlexTable should call :noRowsRenderer if :rowsCount is 0', (assert) => {
+  const mounted = mount(getMarkup({
+    noRowsRenderer: () => <div>No rows!</div>,
+    rowsCount: 0
+  }))
+  assert.equal(mounted.find('.FlexTable__Grid').at(0).text(), 'No rows!')
+  assert.end()
+})
+
+test('FlexTable should render an empty body if :rowsCount is 0 and there is no :noRowsRenderer', (assert) => {
+  const mounted = mount(getMarkup({
+    rowsCount: 0
+  }))
+  assert.equal(mounted.find('.FlexTable__Grid').at(0).text(), '')
+  assert.end()
+})
+
+test('FlexTable should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is disabled', (assert) => {
+  let onHeaderClickCalls = []
+  const mounted = mount(getMarkup({
+    disableSort: true,
+    onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push({dataKey, columnData})
+  }))
+  const nameColumn = getHeaderColumn(mounted, 0)
+  nameColumn.simulate('click')
+  assert.equal(onHeaderClickCalls.length, 1)
+  assert.equal(onHeaderClickCalls[0].dataKey, 'name')
+  assert.equal(onHeaderClickCalls[0].columnData.data, 123)
+  assert.end()
+})
+
+test('FlexTable should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is enabled', (assert) => {
+  let onHeaderClickCalls = []
+  const mounted = mount(getMarkup({
+    disableSort: false,
+    onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push({dataKey, columnData})
+  }))
+  const nameColumn = getHeaderColumn(mounted, 0)
+  nameColumn.simulate('click')
+  assert.equal(onHeaderClickCalls.length, 1)
+  assert.equal(onHeaderClickCalls[0].dataKey, 'name')
+  assert.equal(onHeaderClickCalls[0].columnData.data, 123)
+  assert.end()
+})
+
+test('FlexTable should call :onRowClick with the correct :rowIndex when a row is clicked', (assert) => {
+  const onRowClickCalls = []
+  const mounted = mount(getMarkup({
+    onRowClick: index => onRowClickCalls.push(index)
+  }))
+  const rows = mounted.find('.FlexTable__row')
+  rows.at(0).simulate('click')
+  rows.at(3).simulate('click')
+  assert.deepEqual(onRowClickCalls, [0, 3])
+  assert.end()
+})
+
+test('FlexTable should render a static classname given :rowClassName as a string', (assert) => {
+  const staticClassName = 'staticClass'
+  const mounted = mount(getMarkup({
+    rowClassName: staticClassName
+  }))
+  const rows = mounted.find('.FlexTable__row')
+  for (let index = 0; index < rows.length; index++) {
+    let row = rows.at(index)
+    assert.ok(row.hasClass(staticClassName))
+  }
+  assert.end()
+})
+
+test('FlexTable should render dynamic classname given :rowClassName as a function', (assert) => {
+  const mounted = mount(getMarkup({
+    rowClassName: rowIndex => rowIndex % 2 === 0 ? 'even' : 'odd'
+  }))
+  const rows = mounted.find('.FlexTable__row')
+  for (let index = 0; index < rows.length; index++) {
+    let row = rows.at(index)
+    if (index % 2 === 0) {
+      assert.ok(row.hasClass('even'))
+      assert.ok(!row.hasClass('odd'))
+    } else {
+      assert.ok(row.hasClass('odd'))
+      assert.ok(!row.hasClass('even'))
+    }
+  }
+  assert.end()
+})
+
+test('FlexTable should call :onRowsRendered at least one row is rendered', (assert) => {
+  let startIndex, stopIndex
+  mount(getMarkup({
+    onRowsRendered: params => ({ startIndex, stopIndex } = params)
+  }))
+  assert.equal(startIndex, 0)
+  assert.equal(stopIndex, 7)
+  assert.end()
+})
+
+test('FlexTable should not call :onRowsRendered unless the start or stop indices have changed', (assert) => {
+  let numCalls = 0
+  let startIndex
+  let stopIndex
+  const onRowsRendered = params => {
+    startIndex = params.startIndex
+    stopIndex = params.stopIndex
+    numCalls++
+  }
+  const mounted = mount(getMarkup({ onRowsRendered }))
+  assert.equal(numCalls, 1)
+  assert.equal(startIndex, 0)
+  assert.equal(stopIndex, 7)
+  mounted.setProps({ onRowsRendered })
+  assert.equal(numCalls, 1)
+  assert.equal(startIndex, 0)
+  assert.equal(stopIndex, 7)
+  assert.end()
+})
+
+test('FlexTable should call :onRowsRendered if the start or stop indices have changed', (assert) => {
+  let numCalls = 0
+  let startIndex
+  let stopIndex
+  const onRowsRendered = params => {
+    startIndex = params.startIndex
+    stopIndex = params.stopIndex
+    numCalls++
+  }
+  const mounted = mount(getMarkup({ onRowsRendered }))
+  assert.equal(numCalls, 1)
+  assert.equal(startIndex, 0)
+  assert.equal(stopIndex, 7)
+  mounted.setProps({
+    height: 50,
+    onRowsRendered
+  })
+  assert.equal(numCalls, 2)
+  assert.equal(startIndex, 0)
+  assert.equal(stopIndex, 2)
+  assert.end()
+})
+
+test('FlexTable should not call :onRowsRendered if no rows are rendered', (assert) => {
+  let startIndex, stopIndex
+  mount(getMarkup({
+    height: 0,
+    onRowsRendered: params => ({ startIndex, stopIndex } = params)
+  }))
+  assert.equal(startIndex, undefined)
+  assert.equal(stopIndex, undefined)
+  assert.end()
+})
+
+test('FlexTable should render correctly when an initial :scrollTop property is specified', (assert) => {
+  let startIndex, stopIndex
+  mount(getMarkup({
+    onRowsRendered: params => ({ startIndex, stopIndex } = params),
+    scrollTop: 80
+  }))
+  assert.equal(startIndex, 8)
+  assert.equal(stopIndex, 15)
+  assert.end()
+})
+
+test('FlexTable should render correctly when :scrollTop property is updated', (assert) => {
+  let startIndex, stopIndex
+
+  const mounted = mount(getMarkup({
+    onRowsRendered: params => ({ startIndex, stopIndex } = params)
+  }))
+  assert.equal(startIndex, 0)
+  assert.equal(stopIndex, 7)
+
+  mounted.setProps({
+    onRowsRendered: params => ({ startIndex, stopIndex } = params),
+    scrollTop: 80
+  })
+  assert.equal(startIndex, 8)
+  assert.equal(stopIndex, 15)
+  assert.end()
+})
+
+// Enzyme does not reliably match class names on root element
+// See https://github.com/airbnb/enzyme/issues/134
+function safeHasClass (mounted, className) {
+  const regExp = new RegExp(`class="[^"]*${className}[^"]*"`)
+  return !!mounted.html().match(regExp)
+}
+
+test('FlexTable should use the expected global CSS classNames', (assert) => {
+  const node = mount(getMarkup({
+    sort: () => {},
+    sortBy: 'name',
+    sortDirection: SortDirection.ASC
+  }))
+  assert.ok(safeHasClass(node, 'FlexTable'), 'element uses default class "FlexTable"')
+  assert.ok(node.find('.FlexTable__headerRow').length)
+  assert.ok(node.find('.FlexTable__rowColumn').length)
+  assert.ok(node.find('.FlexTable__truncatedColumnText').length)
+  assert.ok(node.find('.FlexTable__headerColumn').length)
+  assert.ok(node.find('.FlexTable__headerTruncatedText').length)
+  assert.ok(node.find('.FlexTable__row').length)
+  assert.ok(node.find('.FlexTable__sortableHeaderColumn').length)
+  assert.ok(node.find('.FlexTable__sortableHeaderIcon').length)
+  assert.end()
+})
+
+test('FlexTable should use a custom :className if specified', (assert) => {
+  const node = mount(getMarkup({
+    className: 'foo',
+    headerClassName: 'bar',
+    rowClassName: 'baz'
+  }))
+  assert.ok(safeHasClass(node, 'foo'), 'element uses class "foo"')
+  assert.equal(node.find('.bar').length, 2)
+  assert.equal(node.find('.baz').length, 9)
+  assert.end()
+})
+
+test('FlexTable should not overscan by default', (assert) => {
+  let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+  mount(getMarkup({
+    onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params)
+  }))
+  assert.equal(overscanStartIndex, startIndex)
+  assert.equal(overscanStopIndex, stopIndex)
+  assert.end()
+})
+
+test('FlexTable should overscan the specified amount', (assert) => {
+  let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+  mount(getMarkup({
+    onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+    overscanRowsCount: 10,
+    scrollToIndex: 30
+  }))
+  assert.equal(overscanStartIndex, 13)
+  assert.equal(startIndex, 23)
+  assert.equal(stopIndex, 30)
+  assert.equal(overscanStopIndex, 40)
+  assert.end()
+})
+
+test('FlexTable should not overscan beyond the start of the list', (assert) => {
+  let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+  mount(getMarkup({
+    onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+    overscanRowsCount: 10
+  }))
+  assert.equal(overscanStartIndex, 0)
+  assert.equal(startIndex, 0)
+  assert.equal(stopIndex, 7)
+  assert.equal(overscanStopIndex, 17)
+  assert.end()
+})
+
+test('FlexTable should not overscan beyond the end of the list', (assert) => {
+  let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+  mount(getMarkup({
+    onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+    overscanRowsCount: 10,
+    rowsCount: 15
+  }))
+  assert.equal(overscanStartIndex, 0)
+  assert.equal(startIndex, 0)
+  assert.equal(stopIndex, 7)
+  assert.equal(overscanStopIndex, 14)
+  assert.end()
+})
+
+test('FlexTable should trigger callback when component initially mounts', (assert) => {
+  const onScrollCalls = []
+  mount(getMarkup({
+    onScroll: params => onScrollCalls.push(params)
+  }))
+  assert.deepEqual(onScrollCalls, [{
+    clientHeight: 80,
+    scrollHeight: 1000,
+    scrollTop: 0
+  }])
+  assert.end()
+})
+
+/* TODO This test causes Tape to hang
+test('FlexTable should trigger callback when component scrolls', (assert) => {
+  const onScrollCalls = []
+  mount(getMarkup({
+    onScroll: params => onScrollCalls.push(params)
+  }))
+  list.simulate('scroll', { target: { scrollTop: 100 } })
+  assert.equal(onScrollCalls.length, 2)
+  assert.deepEqual(onScrollCalls[1], {
+    clientHeight: 80,
+    scrollHeight: 1000,
+    scrollTop: 100
+  })
+  assert.end()
+})
+*/
+
+// TODO Add tests for :scrollToRow and :setScrollTop.
+// This probably requires the creation of an inner test-only class with refs.

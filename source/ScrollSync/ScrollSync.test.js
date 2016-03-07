@@ -1,6 +1,7 @@
 import React from 'react'
-import { findDOMNode, render } from 'react-dom'
 import ScrollSync from './ScrollSync'
+import test from 'tape'
+import { mount } from 'enzyme'
 
 function ChildComponent ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) {
   return (
@@ -15,70 +16,53 @@ function ChildComponent ({ clientHeight, clientWidth, scrollHeight, scrollLeft, 
   )
 }
 
-describe('ScrollSync', () => {
-  // Used by the renderOrUpdateComponent() helper method
-  // Unless we attach the node to body, getBoundingClientRect() won't work
-  var node = null
-  beforeEach(() => {
-    node = document.createElement('div')
-    document.body.appendChild(node)
-  })
-  afterEach(() => {
-    document.body.removeChild(node)
-  })
+test('ScrollSync should pass through an initial value of 0 for :scrollLeft and :scrollTop', (assert) => {
+  const component = mount(
+    <ScrollSync>
+      {({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => (
+        <ChildComponent
+          clientHeight={clientHeight}
+          clientWidth={clientWidth}
+          scrollHeight={scrollHeight}
+          scrollLeft={scrollLeft}
+          scrollTop={scrollTop}
+          scrollWidth={scrollWidth}
+        />
+      )}
+    </ScrollSync>
+  )
+  assert.ok(component.text().includes('clientHeight:0'))
+  assert.ok(component.text().includes('clientWidth:0'))
+  assert.ok(component.text().includes('scrollHeight:0'))
+  assert.ok(component.text().includes('scrollLeft:0'))
+  assert.ok(component.text().includes('scrollTop:0'))
+  assert.ok(component.text().includes('scrollWidth:0'))
+  assert.end()
+})
 
-  function renderOrUpdateComponent (markup) {
-    let rendered = render(markup, node)
-
-    return findDOMNode(rendered)
-  }
-
-  it('should pass through an initial value of 0 for :scrollLeft and :scrollTop', () => {
-    const component = renderOrUpdateComponent(
-      <ScrollSync>
-        {({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => (
-          <ChildComponent
-            clientHeight={clientHeight}
-            clientWidth={clientWidth}
-            scrollHeight={scrollHeight}
-            scrollLeft={scrollLeft}
-            scrollTop={scrollTop}
-            scrollWidth={scrollWidth}
-          />
-        )}
-      </ScrollSync>
-    )
-    expect(findDOMNode(component).textContent).toContain('clientHeight:0')
-    expect(findDOMNode(component).textContent).toContain('clientWidth:0')
-    expect(findDOMNode(component).textContent).toContain('scrollHeight:0')
-    expect(findDOMNode(component).textContent).toContain('scrollLeft:0')
-    expect(findDOMNode(component).textContent).toContain('scrollTop:0')
-    expect(findDOMNode(component).textContent).toContain('scrollWidth:0')
+test('ScrollSync should update :scrollLeft and :scrollTop when :onScroll is called', (assert) => {
+  let onScroll
+  const component = mount(
+    <ScrollSync>
+      {(params) => {
+        onScroll = params.onScroll
+        return <ChildComponent {...params}/>
+      }}
+    </ScrollSync>
+  )
+  onScroll({
+    clientHeight: 400,
+    clientWidth: 200,
+    scrollHeight: 1000,
+    scrollLeft: 50,
+    scrollTop: 100,
+    scrollWidth: 500
   })
-
-  it('should update :scrollLeft and :scrollTop when :onScroll is called', () => {
-    let onScroll
-    const component = renderOrUpdateComponent(
-      <ScrollSync>
-        {(params) => {
-          onScroll = params.onScroll
-          return <ChildComponent {...params}/>
-        }}
-      </ScrollSync>
-    )
-    onScroll({
-      clientHeight: 400,
-      clientWidth: 200,
-      scrollHeight: 1000,
-      scrollLeft: 50,
-      scrollTop: 100,
-      scrollWidth: 500
-    })
-    expect(findDOMNode(component).textContent).toContain('clientHeight:400')
-    expect(findDOMNode(component).textContent).toContain('clientWidth:200')
-    expect(findDOMNode(component).textContent).toContain('scrollHeight:1000')
-    expect(findDOMNode(component).textContent).toContain('scrollLeft:50')
-    expect(findDOMNode(component).textContent).toContain('scrollTop:100')
-    expect(findDOMNode(component).textContent).toContain('scrollWidth:500')
-  })
+  assert.ok(component.text().includes('clientHeight:400'))
+  assert.ok(component.text().includes('clientWidth:200'))
+  assert.ok(component.text().includes('scrollHeight:1000'))
+  assert.ok(component.text().includes('scrollLeft:50'))
+  assert.ok(component.text().includes('scrollTop:100'))
+  assert.ok(component.text().includes('scrollWidth:500'))
+  assert.end()
 })
