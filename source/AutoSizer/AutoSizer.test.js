@@ -1,5 +1,6 @@
 import React from 'react'
-import { findDOMNode, render } from 'react-dom'
+import { findDOMNode } from 'react-dom'
+import { render } from '../TestUtils'
 import AutoSizer from './AutoSizer'
 
 function ChildComponent ({ height, width, foo, bar }) {
@@ -9,20 +10,6 @@ function ChildComponent ({ height, width, foo, bar }) {
 }
 
 describe('AutoSizer', () => {
-  beforeAll(() => jasmine.clock().install())
-  afterAll(() => jasmine.clock().uninstall())
-
-  // Used by the renderOrUpdateComponent() helper method
-  // Unless we attach the node to body, getBoundingClientRect() won't work
-  var node = null
-  beforeEach(() => {
-    node = document.createElement('div')
-    document.body.appendChild(node)
-  })
-  afterEach(() => {
-    document.body.removeChild(node)
-  })
-
   function getMarkup ({
     bar = 123,
     disableHeight = false,
@@ -61,49 +48,39 @@ describe('AutoSizer', () => {
     )
   }
 
-  function renderOrUpdateComponent (props) {
-    const rendered = render(getMarkup(props), node)
-
-    return findDOMNode(rendered)
-  }
-
   it('should relay properties to ChildComponent or React child', () => {
-    const component = renderOrUpdateComponent()
-    expect(findDOMNode(component).textContent).toContain('foo:456')
-    expect(findDOMNode(component).textContent).toContain('bar:123')
+    const rendered = findDOMNode(render(getMarkup()))
+    expect(rendered.textContent).toContain('foo:456')
+    expect(rendered.textContent).toContain('bar:123')
   })
 
   it('should set the correct initial width and height of ChildComponent or React child', () => {
-    const component = renderOrUpdateComponent()
-    const domNode = findDOMNode(component)
-    expect(domNode.textContent).toContain('height:100')
-    expect(domNode.textContent).toContain('width:200')
+    const rendered = findDOMNode(render(getMarkup()))
+    expect(rendered.textContent).toContain('height:100')
+    expect(rendered.textContent).toContain('width:200')
   })
 
   it('should account for padding when calculating the available width and height', () => {
-    const component = renderOrUpdateComponent({
+    const rendered = findDOMNode(render(getMarkup({
       paddingBottom: 10,
       paddingLeft: 4,
       paddingRight: 4,
       paddingTop: 15
-    })
-    const domNode = findDOMNode(component)
-    expect(domNode.textContent).toContain('height:75')
-    expect(domNode.textContent).toContain('width:192')
+    })))
+    expect(rendered.textContent).toContain('height:75')
+    expect(rendered.textContent).toContain('width:192')
   })
 
   it('should not update :width if :disableWidth is true', () => {
-    const component = renderOrUpdateComponent({ disableWidth: true })
-    const domNode = findDOMNode(component)
-    expect(domNode.textContent).toContain('height:100')
-    expect(domNode.textContent).toContain('width:undefined')
+    const rendered = findDOMNode(render(getMarkup({ disableWidth: true })))
+    expect(rendered.textContent).toContain('height:100')
+    expect(rendered.textContent).toContain('width:undefined')
   })
 
   it('should not update :height if :disableHeight is true', () => {
-    const component = renderOrUpdateComponent({ disableHeight: true })
-    const domNode = findDOMNode(component)
-    expect(domNode.textContent).toContain('height:undefined')
-    expect(domNode.textContent).toContain('width:200')
+    const rendered = findDOMNode(render(getMarkup({ disableHeight: true })))
+    expect(rendered.textContent).toContain('height:undefined')
+    expect(rendered.textContent).toContain('width:200')
   })
 
   // TODO It would be nice to test the following (if I could trigger /vendor/detectElementResize event)
