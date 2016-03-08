@@ -213,12 +213,8 @@ export default class Grid extends Component {
     }
 
     if (scrollToColumn >= 0 || scrollToRow >= 0) {
-      // Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
-      this._setImmediateId = setImmediate(() => {
-        this._setImmediateId = null
-        this._updateScrollLeftForScrollToColumn()
-        this._updateScrollTopForScrollToRow()
-      })
+      this._updateScrollLeftForScrollToColumn()
+      this._updateScrollTopForScrollToRow()
     }
 
     // Update onRowsRendered callback
@@ -300,10 +296,6 @@ export default class Grid extends Component {
   componentWillUnmount () {
     if (this._disablePointerEventsTimeoutId) {
       clearTimeout(this._disablePointerEventsTimeoutId)
-    }
-
-    if (this._setImmediateId) {
-      clearImmediate(this._setImmediateId)
     }
 
     if (this._setNextStateAnimationFrameId) {

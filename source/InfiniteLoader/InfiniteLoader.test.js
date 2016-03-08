@@ -1,18 +1,9 @@
 import InfiniteLoader, { isRangeVisible, scanForUnloadedRanges } from './InfiniteLoader'
 import React from 'react'
 import VirtualScroll from '../VirtualScroll'
-import { findDOMNode, render } from 'react-dom'
+import { render } from '../TestUtils'
 
 describe('InfiniteLoader', () => {
-  beforeAll(() => jasmine.clock().install())
-  afterAll(() => jasmine.clock().uninstall())
-
-  // Used by the renderOrUpdateComponent() helper method
-  var node = null
-  beforeEach(() => {
-    node = document.createElement('div')
-  })
-
   let isRowLoadedCalls = []
   let isRowLoadedMap = {}
   let loadMoreRowsCalls = []
@@ -61,22 +52,13 @@ describe('InfiniteLoader', () => {
     )
   }
 
-  function renderOrUpdateComponent (props) {
-    const component = findDOMNode(render(getMarkup(props), node))
-
-    // Allow initial setImmediate() to set :scrollTop
-    jasmine.clock().tick()
-
-    return component
-  }
-
   it('should call :isRowLoaded for all rows within the threshold each time a range of rows are rendered', () => {
-    renderOrUpdateComponent()
+    render(getMarkup())
     expect(isRowLoadedCalls).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
   })
 
   it('should call :loadMoreRows for unloaded rows within the threshold', () => {
-    renderOrUpdateComponent()
+    render(getMarkup())
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 14 }])
   })
 })
