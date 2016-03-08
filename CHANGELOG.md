@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 5.5.1
+Removed unnecessary `setImmediate` in `Grid` initialization code.
+This prevents a possible edge-case runtime error when a `Grid` is mounted and then removed before `setImmediate` is invoked.
+
 ### 5.5.0
 `ScrollSync` passes additional parameters to child function in order to enable more complex scroll-driven UI changes.
 

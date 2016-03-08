@@ -120,8 +120,6 @@ var Grid = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
-
       var _props = this.props;
       var scrollLeft = _props.scrollLeft;
       var scrollToColumn = _props.scrollToColumn;
@@ -134,12 +132,8 @@ var Grid = function (_Component) {
       }
 
       if (scrollToColumn >= 0 || scrollToRow >= 0) {
-        // Without setImmediate() the initial scrollingContainer.scrollTop assignment doesn't work
-        this._setImmediateId = setImmediate(function () {
-          _this2._setImmediateId = null;
-          _this2._updateScrollLeftForScrollToColumn();
-          _this2._updateScrollTopForScrollToRow();
-        });
+        this._updateScrollLeftForScrollToColumn();
+        this._updateScrollTopForScrollToRow();
       }
 
       // Update onRowsRendered callback
@@ -228,10 +222,6 @@ var Grid = function (_Component) {
     value: function componentWillUnmount() {
       if (this._disablePointerEventsTimeoutId) {
         clearTimeout(this._disablePointerEventsTimeoutId);
-      }
-
-      if (this._setImmediateId) {
-        clearImmediate(this._setImmediateId);
       }
 
       if (this._setNextStateAnimationFrameId) {
@@ -460,15 +450,15 @@ var Grid = function (_Component) {
   }, {
     key: '_enablePointerEventsAfterDelay',
     value: function _enablePointerEventsAfterDelay() {
-      var _this3 = this;
+      var _this2 = this;
 
       if (this._disablePointerEventsTimeoutId) {
         clearTimeout(this._disablePointerEventsTimeoutId);
       }
 
       this._disablePointerEventsTimeoutId = setTimeout(function () {
-        _this3._disablePointerEventsTimeoutId = null;
-        _this3.setState({
+        _this2._disablePointerEventsTimeoutId = null;
+        _this2.setState({
           isScrolling: false
         });
       }, IS_SCROLLING_TIMEOUT);
@@ -597,15 +587,15 @@ var Grid = function (_Component) {
   }, {
     key: '_setNextState',
     value: function _setNextState(state) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (this._setNextStateAnimationFrameId) {
         raf.cancel(this._setNextStateAnimationFrameId);
       }
 
       this._setNextStateAnimationFrameId = raf(function () {
-        _this4._setNextStateAnimationFrameId = null;
-        _this4.setState(state);
+        _this3._setNextStateAnimationFrameId = null;
+        _this3.setState(state);
       });
     }
   }, {
