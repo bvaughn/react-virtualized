@@ -365,7 +365,7 @@ describe('getVisibleCellIndices', () => {
 
   it('should handle scrolled past the end', () => {
     const { start, stop } = testHelper(200)
-    expect(start).toEqual(8) // TODO Should this actually be 6?
+    expect(start).toEqual(6)
     expect(stop).toEqual(8)
   })
 

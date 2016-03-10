@@ -164,11 +164,15 @@ export function getVisibleCellIndices ({
     return {}
   }
 
-  currentOffset = Math.max(0, currentOffset)
-
-  const maxOffset = currentOffset + containerSize
-
   // TODO Add better guards here against NaN offset
+
+  const lastDatum = cellMetadata[cellMetadata.length - 1]
+  const totalCellSize = lastDatum.offset + lastDatum.size
+
+  // Ensure offset is within reasonable bounds
+  currentOffset = Math.max(0, Math.min(totalCellSize - containerSize, currentOffset))
+
+  const maxOffset = Math.min(totalCellSize, currentOffset + containerSize)
 
   let start = findNearestCell({
     cellMetadata,
