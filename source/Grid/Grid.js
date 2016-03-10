@@ -380,55 +380,50 @@ export default class Grid extends Component {
 
     // Render only enough columns and rows to cover the visible area of the grid.
     if (height > 0 && width > 0) {
-      let {
-        start: columnStartIndex,
-        stop: columnStopIndex
-      } = getVisibleCellIndices({
+      const visibleColumnIndices = getVisibleCellIndices({
         cellsCount: columnsCount,
         cellMetadata: this._columnMetadata,
         containerSize: width,
         currentOffset: scrollLeft
       })
 
-      let {
-        start: rowStartIndex,
-        stop: rowStopIndex
-      } = getVisibleCellIndices({
+      const visibleRowIndices = getVisibleCellIndices({
         cellsCount: rowsCount,
         cellMetadata: this._rowMetadata,
         containerSize: height,
         currentOffset: scrollTop
       })
 
-      // Store for :onSectionRendered callback in componentDidUpdate
-      this._renderedColumnStartIndex = columnStartIndex
-      this._renderedColumnStopIndex = columnStopIndex
-      this._renderedRowStartIndex = rowStartIndex
-      this._renderedRowStopIndex = rowStopIndex
+      // Store for _invokeOnGridRenderedHelper()
+      this._renderedColumnStartIndex = visibleColumnIndices.start
+      this._renderedColumnStopIndex = visibleColumnIndices.stop
+      this._renderedRowStartIndex = visibleRowIndices.start
+      this._renderedRowStopIndex = visibleRowIndices.stop
 
       const overscanColumnIndices = getOverscanIndices({
         cellsCount: columnsCount,
         overscanCellsCount: overscanColumnsCount,
-        startIndex: columnStartIndex,
-        stopIndex: columnStopIndex
+        startIndex: this._renderedColumnStartIndex,
+        stopIndex: this._renderedColumnStopIndex
       })
 
       const overscanRowIndices = getOverscanIndices({
         cellsCount: rowsCount,
         overscanCellsCount: overscanRowsCount,
-        startIndex: rowStartIndex,
-        stopIndex: rowStopIndex
+        startIndex: this._renderedRowStartIndex,
+        stopIndex: this._renderedRowStopIndex
       })
 
-      columnStartIndex = overscanColumnIndices.overscanStartIndex
-      columnStopIndex = overscanColumnIndices.overscanStopIndex
-      rowStartIndex = overscanRowIndices.overscanStartIndex
-      rowStopIndex = overscanRowIndices.overscanStopIndex
+      // Store for _invokeOnGridRenderedHelper()
+      this._columnStartIndex = overscanColumnIndices.overscanStartIndex
+      this._columnStopIndex = overscanColumnIndices.overscanStopIndex
+      this._rowStartIndex = overscanRowIndices.overscanStartIndex
+      this._rowStopIndex = overscanRowIndices.overscanStopIndex
 
-      for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
+      for (let rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) {
         let rowDatum = this._rowMetadata[rowIndex]
 
-        for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
+        for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
           let columnDatum = this._columnMetadata[columnIndex]
           let renderedCell = renderCell({ columnIndex, rowIndex })
           let key = `${rowIndex}-${columnIndex}`
@@ -569,37 +564,17 @@ export default class Grid extends Component {
   }
 
   _invokeOnGridRenderedHelper () {
-    const { columnsCount, onSectionRendered, overscanColumnsCount, overscanRowsCount, rowsCount } = this.props
-
-    const {
-      overscanStartIndex: columnOverscanStartIndex,
-      overscanStopIndex: columnOverscanStopIndex
-    } = getOverscanIndices({
-      cellsCount: columnsCount,
-      overscanCellsCount: overscanColumnsCount,
-      startIndex: this._renderedColumnStartIndex,
-      stopIndex: this._renderedColumnStopIndex
-    })
-
-    const {
-      overscanStartIndex: rowOverscanStartIndex,
-      overscanStopIndex: rowOverscanStopIndex
-    } = getOverscanIndices({
-      cellsCount: rowsCount,
-      overscanCellsCount: overscanRowsCount,
-      startIndex: this._renderedRowStartIndex,
-      stopIndex: this._renderedRowStopIndex
-    })
+    const { onSectionRendered } = this.props
 
     this._onGridRenderedMemoizer({
       callback: onSectionRendered,
       indices: {
-        columnOverscanStartIndex,
-        columnOverscanStopIndex,
+        columnOverscanStartIndex: this._columnStartIndex,
+        columnOverscanStopIndex: this._columnStopIndex,
         columnStartIndex: this._renderedColumnStartIndex,
         columnStopIndex: this._renderedColumnStopIndex,
-        rowOverscanStartIndex,
-        rowOverscanStopIndex,
+        rowOverscanStartIndex: this._rowStartIndex,
+        rowOverscanStopIndex: this._rowStopIndex,
         rowStartIndex: this._renderedRowStartIndex,
         rowStopIndex: this._renderedRowStopIndex
       }
@@ -641,10 +616,6 @@ export default class Grid extends Component {
       this._setNextStateAnimationFrameId = null
       this.setState(state)
     })
-  }
-
-  _stopEvent (event) {
-    event.preventDefault()
   }
 
   _updateScrollLeftForScrollToColumn (scrollToColumnOverride) {
@@ -701,7 +672,7 @@ export default class Grid extends Component {
     const { columnsCount, height, rowsCount, width } = this.props
     const { scrollLeft, scrollTop } = this.state
 
-    let start, datum, newScrollLeft, newScrollTop
+    let datum, newScrollLeft, newScrollTop
 
     if (columnsCount === 0 || rowsCount === 0) {
       return
@@ -709,15 +680,9 @@ export default class Grid extends Component {
 
     switch (event.key) {
       case 'ArrowDown':
-        this._stopEvent(event) // Prevent key from also scrolling surrounding window
+        event.preventDefault() // Prevent key from also scrolling surrounding window
 
-        start = getVisibleCellIndices({
-          cellsCount: rowsCount,
-          cellMetadata: this._rowMetadata,
-          containerSize: height,
-          currentOffset: scrollTop
-        }).start
-        datum = this._rowMetadata[start]
+        datum = this._rowMetadata[this._renderedRowStartIndex]
         newScrollTop = Math.min(
           this._getTotalRowsHeight() - height,
           scrollTop + datum.size
@@ -728,30 +693,17 @@ export default class Grid extends Component {
         })
         break
       case 'ArrowLeft':
-        this._stopEvent(event) // Prevent key from also scrolling surrounding window
-
-        start = getVisibleCellIndices({
-          cellsCount: columnsCount,
-          cellMetadata: this._columnMetadata,
-          containerSize: width,
-          currentOffset: scrollLeft
-        }).start
+        event.preventDefault() // Prevent key from also scrolling surrounding window
 
         this.scrollToCell({
-          scrollToColumn: Math.max(0, start - 1),
+          scrollToColumn: Math.max(0, this._renderedColumnStartIndex - 1),
           scrollToRow: this.props.scrollToRow
         })
         break
       case 'ArrowRight':
-        this._stopEvent(event) // Prevent key from also scrolling surrounding window
+        event.preventDefault() // Prevent key from also scrolling surrounding window
 
-        start = getVisibleCellIndices({
-          cellsCount: columnsCount,
-          cellMetadata: this._columnMetadata,
-          containerSize: width,
-          currentOffset: scrollLeft
-        }).start
-        datum = this._columnMetadata[start]
+        datum = this._columnMetadata[this._renderedColumnStartIndex]
         newScrollLeft = Math.min(
           this._getTotalColumnsWidth() - width,
           scrollLeft + datum.size
@@ -762,18 +714,11 @@ export default class Grid extends Component {
         })
         break
       case 'ArrowUp':
-        this._stopEvent(event) // Prevent key from also scrolling surrounding window
-
-        start = getVisibleCellIndices({
-          cellsCount: rowsCount,
-          cellMetadata: this._rowMetadata,
-          containerSize: height,
-          currentOffset: scrollTop
-        }).start
+        event.preventDefault() // Prevent key from also scrolling surrounding window
 
         this.scrollToCell({
           scrollToColumn: this.props.scrollToColumn,
-          scrollToRow: Math.max(0, start - 1)
+          scrollToRow: Math.max(0, this._renderedRowStartIndex - 1)
         })
         break
     }
