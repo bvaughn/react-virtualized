@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 5.5.2
+Removed two unnecessary method calls in `Grid` and replaced them with cached properties. Should offer a minor performance boost.
+Added better bounds-checking to util function `getVisibleCellIndices()`
+
 ##### 5.5.1
 Removed unnecessary `setImmediate` in `Grid` initialization code.
 This prevents a possible edge-case runtime error when a `Grid` is mounted and then removed before `setImmediate` is invoked.

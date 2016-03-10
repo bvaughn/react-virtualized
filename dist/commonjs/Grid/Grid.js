@@ -327,56 +327,50 @@ var Grid = function (_Component) {
 
       // Render only enough columns and rows to cover the visible area of the grid.
       if (height > 0 && width > 0) {
-        var _getVisibleCellIndice = (0, _utils.getVisibleCellIndices)({
+        var visibleColumnIndices = (0, _utils.getVisibleCellIndices)({
           cellsCount: columnsCount,
           cellMetadata: this._columnMetadata,
           containerSize: width,
           currentOffset: scrollLeft
         });
 
-        var columnStartIndex = _getVisibleCellIndice.start;
-        var columnStopIndex = _getVisibleCellIndice.stop;
-
-        var _getVisibleCellIndice2 = (0, _utils.getVisibleCellIndices)({
+        var visibleRowIndices = (0, _utils.getVisibleCellIndices)({
           cellsCount: rowsCount,
           cellMetadata: this._rowMetadata,
           containerSize: height,
           currentOffset: scrollTop
         });
 
-        var rowStartIndex = _getVisibleCellIndice2.start;
-        var rowStopIndex = _getVisibleCellIndice2.stop;
-
-        // Store for :onSectionRendered callback in componentDidUpdate
-
-        this._renderedColumnStartIndex = columnStartIndex;
-        this._renderedColumnStopIndex = columnStopIndex;
-        this._renderedRowStartIndex = rowStartIndex;
-        this._renderedRowStopIndex = rowStopIndex;
+        // Store for _invokeOnGridRenderedHelper()
+        this._renderedColumnStartIndex = visibleColumnIndices.start;
+        this._renderedColumnStopIndex = visibleColumnIndices.stop;
+        this._renderedRowStartIndex = visibleRowIndices.start;
+        this._renderedRowStopIndex = visibleRowIndices.stop;
 
         var overscanColumnIndices = (0, _utils.getOverscanIndices)({
           cellsCount: columnsCount,
           overscanCellsCount: overscanColumnsCount,
-          startIndex: columnStartIndex,
-          stopIndex: columnStopIndex
+          startIndex: this._renderedColumnStartIndex,
+          stopIndex: this._renderedColumnStopIndex
         });
 
         var overscanRowIndices = (0, _utils.getOverscanIndices)({
           cellsCount: rowsCount,
           overscanCellsCount: overscanRowsCount,
-          startIndex: rowStartIndex,
-          stopIndex: rowStopIndex
+          startIndex: this._renderedRowStartIndex,
+          stopIndex: this._renderedRowStopIndex
         });
 
-        columnStartIndex = overscanColumnIndices.overscanStartIndex;
-        columnStopIndex = overscanColumnIndices.overscanStopIndex;
-        rowStartIndex = overscanRowIndices.overscanStartIndex;
-        rowStopIndex = overscanRowIndices.overscanStopIndex;
+        // Store for _invokeOnGridRenderedHelper()
+        this._columnStartIndex = overscanColumnIndices.overscanStartIndex;
+        this._columnStopIndex = overscanColumnIndices.overscanStopIndex;
+        this._rowStartIndex = overscanRowIndices.overscanStartIndex;
+        this._rowStopIndex = overscanRowIndices.overscanStopIndex;
 
-        for (var rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
+        for (var rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) {
           var rowDatum = this._rowMetadata[rowIndex];
 
-          for (var columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
+          for (var columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
             var columnDatum = this._columnMetadata[columnIndex];
             var renderedCell = renderCell({ columnIndex: columnIndex, rowIndex: rowIndex });
             var key = rowIndex + '-' + columnIndex;
@@ -529,43 +523,18 @@ var Grid = function (_Component) {
   }, {
     key: '_invokeOnGridRenderedHelper',
     value: function _invokeOnGridRenderedHelper() {
-      var _props4 = this.props;
-      var columnsCount = _props4.columnsCount;
-      var onSectionRendered = _props4.onSectionRendered;
-      var overscanColumnsCount = _props4.overscanColumnsCount;
-      var overscanRowsCount = _props4.overscanRowsCount;
-      var rowsCount = _props4.rowsCount;
-
-      var _getOverscanIndices = (0, _utils.getOverscanIndices)({
-        cellsCount: columnsCount,
-        overscanCellsCount: overscanColumnsCount,
-        startIndex: this._renderedColumnStartIndex,
-        stopIndex: this._renderedColumnStopIndex
-      });
-
-      var columnOverscanStartIndex = _getOverscanIndices.overscanStartIndex;
-      var columnOverscanStopIndex = _getOverscanIndices.overscanStopIndex;
-
-      var _getOverscanIndices2 = (0, _utils.getOverscanIndices)({
-        cellsCount: rowsCount,
-        overscanCellsCount: overscanRowsCount,
-        startIndex: this._renderedRowStartIndex,
-        stopIndex: this._renderedRowStopIndex
-      });
-
-      var rowOverscanStartIndex = _getOverscanIndices2.overscanStartIndex;
-      var rowOverscanStopIndex = _getOverscanIndices2.overscanStopIndex;
+      var onSectionRendered = this.props.onSectionRendered;
 
 
       this._onGridRenderedMemoizer({
         callback: onSectionRendered,
         indices: {
-          columnOverscanStartIndex: columnOverscanStartIndex,
-          columnOverscanStopIndex: columnOverscanStopIndex,
+          columnOverscanStartIndex: this._columnStartIndex,
+          columnOverscanStopIndex: this._columnStopIndex,
           columnStartIndex: this._renderedColumnStartIndex,
           columnStopIndex: this._renderedColumnStopIndex,
-          rowOverscanStartIndex: rowOverscanStartIndex,
-          rowOverscanStopIndex: rowOverscanStopIndex,
+          rowOverscanStartIndex: this._rowStartIndex,
+          rowOverscanStopIndex: this._rowStopIndex,
           rowStartIndex: this._renderedRowStartIndex,
           rowStopIndex: this._renderedRowStopIndex
         }
@@ -578,10 +547,10 @@ var Grid = function (_Component) {
       var scrollTop = _ref3.scrollTop;
       var totalColumnsWidth = _ref3.totalColumnsWidth;
       var totalRowsHeight = _ref3.totalRowsHeight;
-      var _props5 = this.props;
-      var height = _props5.height;
-      var onScroll = _props5.onScroll;
-      var width = _props5.width;
+      var _props4 = this.props;
+      var height = _props4.height;
+      var onScroll = _props4.onScroll;
+      var width = _props4.width;
 
 
       this._onScrollMemoizer({
@@ -624,11 +593,6 @@ var Grid = function (_Component) {
         _this3._setNextStateAnimationFrameId = null;
         _this3.setState(state);
       });
-    }
-  }, {
-    key: '_stopEvent',
-    value: function _stopEvent(event) {
-      event.preventDefault();
     }
   }, {
     key: '_updateScrollLeftForScrollToColumn',
@@ -684,18 +648,17 @@ var Grid = function (_Component) {
   }, {
     key: '_onKeyPress',
     value: function _onKeyPress(event) {
-      var _props6 = this.props;
-      var columnsCount = _props6.columnsCount;
-      var height = _props6.height;
-      var rowsCount = _props6.rowsCount;
-      var width = _props6.width;
+      var _props5 = this.props;
+      var columnsCount = _props5.columnsCount;
+      var height = _props5.height;
+      var rowsCount = _props5.rowsCount;
+      var width = _props5.width;
       var _state3 = this.state;
       var scrollLeft = _state3.scrollLeft;
       var scrollTop = _state3.scrollTop;
 
 
-      var start = undefined,
-          datum = undefined,
+      var datum = undefined,
           newScrollLeft = undefined,
           newScrollTop = undefined;
 
@@ -705,15 +668,9 @@ var Grid = function (_Component) {
 
       switch (event.key) {
         case 'ArrowDown':
-          this._stopEvent(event); // Prevent key from also scrolling surrounding window
+          event.preventDefault(); // Prevent key from also scrolling surrounding window
 
-          start = (0, _utils.getVisibleCellIndices)({
-            cellsCount: rowsCount,
-            cellMetadata: this._rowMetadata,
-            containerSize: height,
-            currentOffset: scrollTop
-          }).start;
-          datum = this._rowMetadata[start];
+          datum = this._rowMetadata[this._renderedRowStartIndex];
           newScrollTop = Math.min(this._getTotalRowsHeight() - height, scrollTop + datum.size);
 
           this.setScrollPosition({
@@ -721,30 +678,17 @@ var Grid = function (_Component) {
           });
           break;
         case 'ArrowLeft':
-          this._stopEvent(event); // Prevent key from also scrolling surrounding window
-
-          start = (0, _utils.getVisibleCellIndices)({
-            cellsCount: columnsCount,
-            cellMetadata: this._columnMetadata,
-            containerSize: width,
-            currentOffset: scrollLeft
-          }).start;
+          event.preventDefault(); // Prevent key from also scrolling surrounding window
 
           this.scrollToCell({
-            scrollToColumn: Math.max(0, start - 1),
+            scrollToColumn: Math.max(0, this._renderedColumnStartIndex - 1),
             scrollToRow: this.props.scrollToRow
           });
           break;
         case 'ArrowRight':
-          this._stopEvent(event); // Prevent key from also scrolling surrounding window
+          event.preventDefault(); // Prevent key from also scrolling surrounding window
 
-          start = (0, _utils.getVisibleCellIndices)({
-            cellsCount: columnsCount,
-            cellMetadata: this._columnMetadata,
-            containerSize: width,
-            currentOffset: scrollLeft
-          }).start;
-          datum = this._columnMetadata[start];
+          datum = this._columnMetadata[this._renderedColumnStartIndex];
           newScrollLeft = Math.min(this._getTotalColumnsWidth() - width, scrollLeft + datum.size);
 
           this.setScrollPosition({
@@ -752,18 +696,11 @@ var Grid = function (_Component) {
           });
           break;
         case 'ArrowUp':
-          this._stopEvent(event); // Prevent key from also scrolling surrounding window
-
-          start = (0, _utils.getVisibleCellIndices)({
-            cellsCount: rowsCount,
-            cellMetadata: this._rowMetadata,
-            containerSize: height,
-            currentOffset: scrollTop
-          }).start;
+          event.preventDefault(); // Prevent key from also scrolling surrounding window
 
           this.scrollToCell({
             scrollToColumn: this.props.scrollToColumn,
-            scrollToRow: Math.max(0, start - 1)
+            scrollToRow: Math.max(0, this._renderedRowStartIndex - 1)
           });
           break;
       }
@@ -785,9 +722,9 @@ var Grid = function (_Component) {
       // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
       // This causes a series of rapid renders that is slow for long lists.
       // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-      var _props7 = this.props;
-      var height = _props7.height;
-      var width = _props7.width;
+      var _props6 = this.props;
+      var height = _props6.height;
+      var width = _props6.width;
 
       var totalRowsHeight = this._getTotalRowsHeight();
       var totalColumnsWidth = this._getTotalColumnsWidth();

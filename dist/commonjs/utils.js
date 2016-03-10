@@ -178,11 +178,15 @@ function getVisibleCellIndices(_ref6) {
     return {};
   }
 
-  currentOffset = Math.max(0, currentOffset);
-
-  var maxOffset = currentOffset + containerSize;
-
   // TODO Add better guards here against NaN offset
+
+  var lastDatum = cellMetadata[cellMetadata.length - 1];
+  var totalCellSize = lastDatum.offset + lastDatum.size;
+
+  // Ensure offset is within reasonable bounds
+  currentOffset = Math.max(0, Math.min(totalCellSize - containerSize, currentOffset));
+
+  var maxOffset = Math.min(totalCellSize, currentOffset + containerSize);
 
   var start = findNearestCell({
     cellMetadata: cellMetadata,

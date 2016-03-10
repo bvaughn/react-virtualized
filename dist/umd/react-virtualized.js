@@ -650,34 +650,33 @@
                 value: function() {
                     var _props3 = this.props, className = _props3.className, columnsCount = _props3.columnsCount, height = _props3.height, noContentRenderer = _props3.noContentRenderer, overscanColumnsCount = _props3.overscanColumnsCount, overscanRowsCount = _props3.overscanRowsCount, renderCell = _props3.renderCell, rowsCount = _props3.rowsCount, width = _props3.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = [];
                     if (height > 0 && width > 0) {
-                        var _getVisibleCellIndice = (0, _utils.getVisibleCellIndices)({
+                        var visibleColumnIndices = (0, _utils.getVisibleCellIndices)({
                             cellsCount: columnsCount,
                             cellMetadata: this._columnMetadata,
                             containerSize: width,
                             currentOffset: scrollLeft
-                        }), columnStartIndex = _getVisibleCellIndice.start, columnStopIndex = _getVisibleCellIndice.stop, _getVisibleCellIndice2 = (0, 
-                        _utils.getVisibleCellIndices)({
+                        }), visibleRowIndices = (0, _utils.getVisibleCellIndices)({
                             cellsCount: rowsCount,
                             cellMetadata: this._rowMetadata,
                             containerSize: height,
                             currentOffset: scrollTop
-                        }), rowStartIndex = _getVisibleCellIndice2.start, rowStopIndex = _getVisibleCellIndice2.stop;
-                        this._renderedColumnStartIndex = columnStartIndex, this._renderedColumnStopIndex = columnStopIndex, 
-                        this._renderedRowStartIndex = rowStartIndex, this._renderedRowStopIndex = rowStopIndex;
+                        });
+                        this._renderedColumnStartIndex = visibleColumnIndices.start, this._renderedColumnStopIndex = visibleColumnIndices.stop, 
+                        this._renderedRowStartIndex = visibleRowIndices.start, this._renderedRowStopIndex = visibleRowIndices.stop;
                         var overscanColumnIndices = (0, _utils.getOverscanIndices)({
                             cellsCount: columnsCount,
                             overscanCellsCount: overscanColumnsCount,
-                            startIndex: columnStartIndex,
-                            stopIndex: columnStopIndex
+                            startIndex: this._renderedColumnStartIndex,
+                            stopIndex: this._renderedColumnStopIndex
                         }), overscanRowIndices = (0, _utils.getOverscanIndices)({
                             cellsCount: rowsCount,
                             overscanCellsCount: overscanRowsCount,
-                            startIndex: rowStartIndex,
-                            stopIndex: rowStopIndex
+                            startIndex: this._renderedRowStartIndex,
+                            stopIndex: this._renderedRowStopIndex
                         });
-                        columnStartIndex = overscanColumnIndices.overscanStartIndex, columnStopIndex = overscanColumnIndices.overscanStopIndex, 
-                        rowStartIndex = overscanRowIndices.overscanStartIndex, rowStopIndex = overscanRowIndices.overscanStopIndex;
-                        for (var rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
+                        this._columnStartIndex = overscanColumnIndices.overscanStartIndex, this._columnStopIndex = overscanColumnIndices.overscanStopIndex, 
+                        this._rowStartIndex = overscanRowIndices.overscanStartIndex, this._rowStopIndex = overscanRowIndices.overscanStopIndex;
+                        for (var rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
                             var columnDatum = this._columnMetadata[columnIndex], renderedCell = renderCell({
                                 columnIndex: columnIndex,
                                 rowIndex: rowIndex
@@ -769,28 +768,16 @@
             }, {
                 key: "_invokeOnGridRenderedHelper",
                 value: function() {
-                    var _props4 = this.props, columnsCount = _props4.columnsCount, onSectionRendered = _props4.onSectionRendered, overscanColumnsCount = _props4.overscanColumnsCount, overscanRowsCount = _props4.overscanRowsCount, rowsCount = _props4.rowsCount, _getOverscanIndices = (0, 
-                    _utils.getOverscanIndices)({
-                        cellsCount: columnsCount,
-                        overscanCellsCount: overscanColumnsCount,
-                        startIndex: this._renderedColumnStartIndex,
-                        stopIndex: this._renderedColumnStopIndex
-                    }), columnOverscanStartIndex = _getOverscanIndices.overscanStartIndex, columnOverscanStopIndex = _getOverscanIndices.overscanStopIndex, _getOverscanIndices2 = (0, 
-                    _utils.getOverscanIndices)({
-                        cellsCount: rowsCount,
-                        overscanCellsCount: overscanRowsCount,
-                        startIndex: this._renderedRowStartIndex,
-                        stopIndex: this._renderedRowStopIndex
-                    }), rowOverscanStartIndex = _getOverscanIndices2.overscanStartIndex, rowOverscanStopIndex = _getOverscanIndices2.overscanStopIndex;
+                    var onSectionRendered = this.props.onSectionRendered;
                     this._onGridRenderedMemoizer({
                         callback: onSectionRendered,
                         indices: {
-                            columnOverscanStartIndex: columnOverscanStartIndex,
-                            columnOverscanStopIndex: columnOverscanStopIndex,
+                            columnOverscanStartIndex: this._columnStartIndex,
+                            columnOverscanStopIndex: this._columnStopIndex,
                             columnStartIndex: this._renderedColumnStartIndex,
                             columnStopIndex: this._renderedColumnStopIndex,
-                            rowOverscanStartIndex: rowOverscanStartIndex,
-                            rowOverscanStopIndex: rowOverscanStopIndex,
+                            rowOverscanStartIndex: this._rowStartIndex,
+                            rowOverscanStopIndex: this._rowStopIndex,
                             rowStartIndex: this._renderedRowStartIndex,
                             rowStopIndex: this._renderedRowStopIndex
                         }
@@ -799,7 +786,7 @@
             }, {
                 key: "_invokeOnScrollMemoizer",
                 value: function(_ref3) {
-                    var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop, totalColumnsWidth = _ref3.totalColumnsWidth, totalRowsHeight = _ref3.totalRowsHeight, _props5 = this.props, height = _props5.height, onScroll = _props5.onScroll, width = _props5.width;
+                    var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop, totalColumnsWidth = _ref3.totalColumnsWidth, totalRowsHeight = _ref3.totalRowsHeight, _props4 = this.props, height = _props4.height, onScroll = _props4.onScroll, width = _props4.width;
                     this._onScrollMemoizer({
                         callback: function(_ref4) {
                             var scrollLeft = _ref4.scrollLeft, scrollTop = _ref4.scrollTop;
@@ -826,11 +813,6 @@
                     this._setNextStateAnimationFrameId = (0, _raf2["default"])(function() {
                         _this3._setNextStateAnimationFrameId = null, _this3.setState(state);
                     });
-                }
-            }, {
-                key: "_stopEvent",
-                value: function(event) {
-                    event.preventDefault();
                 }
             }, {
                 key: "_updateScrollLeftForScrollToColumn",
@@ -867,53 +849,35 @@
             }, {
                 key: "_onKeyPress",
                 value: function(event) {
-                    var _props6 = this.props, columnsCount = _props6.columnsCount, height = _props6.height, rowsCount = _props6.rowsCount, width = _props6.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop, start = void 0, datum = void 0, newScrollLeft = void 0, newScrollTop = void 0;
+                    var _props5 = this.props, columnsCount = _props5.columnsCount, height = _props5.height, rowsCount = _props5.rowsCount, width = _props5.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop, datum = void 0, newScrollLeft = void 0, newScrollTop = void 0;
                     if (0 !== columnsCount && 0 !== rowsCount) switch (event.key) {
                       case "ArrowDown":
-                        this._stopEvent(event), start = (0, _utils.getVisibleCellIndices)({
-                            cellsCount: rowsCount,
-                            cellMetadata: this._rowMetadata,
-                            containerSize: height,
-                            currentOffset: scrollTop
-                        }).start, datum = this._rowMetadata[start], newScrollTop = Math.min(this._getTotalRowsHeight() - height, scrollTop + datum.size), 
+                        event.preventDefault(), datum = this._rowMetadata[this._renderedRowStartIndex], 
+                        newScrollTop = Math.min(this._getTotalRowsHeight() - height, scrollTop + datum.size), 
                         this.setScrollPosition({
                             scrollTop: newScrollTop
                         });
                         break;
 
                       case "ArrowLeft":
-                        this._stopEvent(event), start = (0, _utils.getVisibleCellIndices)({
-                            cellsCount: columnsCount,
-                            cellMetadata: this._columnMetadata,
-                            containerSize: width,
-                            currentOffset: scrollLeft
-                        }).start, this.scrollToCell({
-                            scrollToColumn: Math.max(0, start - 1),
+                        event.preventDefault(), this.scrollToCell({
+                            scrollToColumn: Math.max(0, this._renderedColumnStartIndex - 1),
                             scrollToRow: this.props.scrollToRow
                         });
                         break;
 
                       case "ArrowRight":
-                        this._stopEvent(event), start = (0, _utils.getVisibleCellIndices)({
-                            cellsCount: columnsCount,
-                            cellMetadata: this._columnMetadata,
-                            containerSize: width,
-                            currentOffset: scrollLeft
-                        }).start, datum = this._columnMetadata[start], newScrollLeft = Math.min(this._getTotalColumnsWidth() - width, scrollLeft + datum.size), 
+                        event.preventDefault(), datum = this._columnMetadata[this._renderedColumnStartIndex], 
+                        newScrollLeft = Math.min(this._getTotalColumnsWidth() - width, scrollLeft + datum.size), 
                         this.setScrollPosition({
                             scrollLeft: newScrollLeft
                         });
                         break;
 
                       case "ArrowUp":
-                        this._stopEvent(event), start = (0, _utils.getVisibleCellIndices)({
-                            cellsCount: rowsCount,
-                            cellMetadata: this._rowMetadata,
-                            containerSize: height,
-                            currentOffset: scrollTop
-                        }).start, this.scrollToCell({
+                        event.preventDefault(), this.scrollToCell({
                             scrollToColumn: this.props.scrollToColumn,
-                            scrollToRow: Math.max(0, start - 1)
+                            scrollToRow: Math.max(0, this._renderedRowStartIndex - 1)
                         });
                     }
                 }
@@ -922,7 +886,7 @@
                 value: function(event) {
                     if (event.target === this.refs.scrollingContainer) {
                         this._enablePointerEventsAfterDelay();
-                        var _props7 = this.props, height = _props7.height, width = _props7.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
+                        var _props6 = this.props, height = _props6.height, width = _props6.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
                         if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
                             var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
                             this.state.isScrolling || this.setState({
@@ -1020,8 +984,9 @@
         function getVisibleCellIndices(_ref6) {
             var cellsCount = _ref6.cellsCount, cellMetadata = _ref6.cellMetadata, containerSize = _ref6.containerSize, currentOffset = _ref6.currentOffset;
             if (0 === cellsCount) return {};
-            currentOffset = Math.max(0, currentOffset);
-            var maxOffset = currentOffset + containerSize, start = findNearestCell({
+            var lastDatum = cellMetadata[cellMetadata.length - 1], totalCellSize = lastDatum.offset + lastDatum.size;
+            currentOffset = Math.max(0, Math.min(totalCellSize - containerSize, currentOffset));
+            var maxOffset = Math.min(totalCellSize, currentOffset + containerSize), start = findNearestCell({
                 cellMetadata: cellMetadata,
                 mode: findNearestCell.EQUAL_OR_LOWER,
                 offset: currentOffset
