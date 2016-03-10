@@ -2,6 +2,7 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import AutoSizer from './AutoSizer'
+import { Simulate } from 'react-addons-test-utils'
 
 function ChildComponent ({ height, width, foo, bar }) {
   return (
@@ -83,7 +84,27 @@ describe('AutoSizer', () => {
     expect(rendered.textContent).toContain('width:200')
   })
 
-  // TODO It would be nice to test the following (if I could trigger /vendor/detectElementResize event)
-  // The :onResize callback
-  // That resize events update the width/height
+  async function simulateResize ({ element, height, width }) {
+    element.style.height = `${height}px`
+    element.style.width = `${width}px`
+
+    // Trigger detectElementResize library by faking a scroll event
+    Simulate.scroll(element)
+
+    // Allow requestAnimationFrame to be invoked before continuing
+    await new Promise(resolve => setTimeout(resolve, 100))
+  }
+
+  it('should not update :height if :disableHeight is true', async (done) => {
+    const rendered = findDOMNode(render(getMarkup({
+      height: 100,
+      width: 200
+    })))
+    expect(rendered.textContent).toContain('height:100')
+    expect(rendered.textContent).toContain('width:200')
+    await simulateResize({ element: rendered, height: 400, width: 300 })
+    expect(rendered.textContent).toContain('height:400')
+    expect(rendered.textContent).toContain('width:300')
+    done()
+  })
 })
