@@ -10,6 +10,11 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
 import cn from 'classnames'
 import styles from './ScrollSync.example.css'
 
+const LEFT_COLOR_FROM = hexToRgb('#471061')
+const LEFT_COLOR_TO = hexToRgb('#BC3959')
+const TOP_COLOR_FROM = hexToRgb('#000000')
+const TOP_COLOR_TO = hexToRgb('#333333')
+
 export default class GridExample extends Component {
   shouldComponentUpdate = shouldPureComponentUpdate
 
@@ -70,18 +75,19 @@ export default class GridExample extends Component {
             const x = scrollLeft / (scrollWidth - clientWidth)
             const y = scrollTop / (scrollHeight - clientHeight)
 
-            const leftBackgroundColor = fadeBetweenRGB([65, 65, 65], [0, 0, 0], y)
+            const leftBackgroundColor = mixColors(LEFT_COLOR_FROM, LEFT_COLOR_TO, y)
             const leftColor = `#ffffff`
-
-            const topBackgroundColor = fadeBetweenRGB([77, 182, 172], [23, 146, 135], x)
+            const topBackgroundColor = mixColors(TOP_COLOR_FROM, TOP_COLOR_TO, x)
             const topColor = `#ffffff`
+            const middleBackgroundColor = mixColors(leftBackgroundColor, topBackgroundColor, 0.5)
+            const middleColor = `#ffffff`
 
             return (
               <div className={styles.GridRow}>
                 <div
                   className={styles.LeftSideGridContainer}
                   style={{
-                    backgroundColor: leftBackgroundColor,
+                    backgroundColor: `rgb(${leftBackgroundColor.r},${leftBackgroundColor.g},${leftBackgroundColor.b})`,
                     color: leftColor,
                     marginTop: rowHeight
                   }}
@@ -102,7 +108,7 @@ export default class GridExample extends Component {
                     {({ width }) => (
                       <div>
                         <div style={{
-                          backgroundColor: topBackgroundColor,
+                          backgroundColor: `rgb(${topBackgroundColor.r},${topBackgroundColor.g},${topBackgroundColor.b})`,
                           color: topColor,
                           height: rowHeight,
                           width
@@ -120,7 +126,14 @@ export default class GridExample extends Component {
                             width={width}
                           />
                         </div>
-                        <div>
+                        <div
+                          style={{
+                            backgroundColor: `rgb(${middleBackgroundColor.r},${middleBackgroundColor.g},${middleBackgroundColor.b})`,
+                            color: middleColor,
+                            height,
+                            width
+                          }}
+                        >
                           <Grid
                             className={styles.BodyGrid}
                             columnWidth={columnWidth}
@@ -179,10 +192,26 @@ export default class GridExample extends Component {
   }
 }
 
-function fadeBetweenRGB (rgbFrom, rgbTo, amount) {
-  const r = Math.round(rgbFrom[0] + (rgbTo[0] - rgbFrom[0]) * amount)
-  const g = Math.round(rgbFrom[1] + (rgbTo[1] - rgbFrom[1]) * amount)
-  const b = Math.round(rgbFrom[2] + (rgbTo[2] - rgbFrom[2]) * amount)
+function hexToRgb (hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null
+}
 
-  return `rgb(${r}, ${g}, ${b})`
+/**
+ * Ported from sass implementation in C
+ * https://github.com/sass/libsass/blob/0e6b4a2850092356aa3ece07c6b249f0221caced/functions.cpp#L209
+ */
+function mixColors (color1, color2, amount) {
+  const weight1 = amount
+  const weight2 = 1 - amount
+
+  const r = Math.round(weight1 * color1.r + weight2 * color2.r)
+  const g = Math.round(weight1 * color1.g + weight2 * color2.g)
+  const b = Math.round(weight1 * color1.b + weight2 * color2.b)
+
+  return { r, g, b }
 }
