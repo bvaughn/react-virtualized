@@ -14,6 +14,7 @@
 
 .Grid__cell {
   position: absolute;
+  will-change: left, top;
 }
 
 /* FlexTable default theme */

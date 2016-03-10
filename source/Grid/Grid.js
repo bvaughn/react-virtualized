@@ -732,6 +732,9 @@ export default class Grid extends Component {
       return
     }
 
+    // Prevent detectElementResize library from being triggered by this scroll event.
+    event.stopPropagation()
+
     // Prevent pointer events from interrupting a smooth scroll
     this._enablePointerEventsAfterDelay()
 
