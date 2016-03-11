@@ -5,6 +5,11 @@
   overflow: auto;
   outline: 0;
   -webkit-overflow-scrolling: touch;
+
+  /* Without this property, Chrome repaints the entire Grid any time a new row or column is added.
+     Firefox only repaints the new row or column (regardless of this property).
+     Safari and IE don't support the property at all. */
+  will-change: transform;
 }
 
 .Grid__innerScrollContainer {
