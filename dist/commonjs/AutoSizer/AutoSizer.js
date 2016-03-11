@@ -45,6 +45,7 @@ var AutoSizer = function (_Component) {
     };
 
     _this._onResize = _this._onResize.bind(_this);
+    _this._onScroll = _this._onScroll.bind(_this);
     _this._setRef = _this._setRef.bind(_this);
     return _this;
   }
@@ -93,6 +94,7 @@ var AutoSizer = function (_Component) {
         'div',
         {
           ref: this._setRef,
+          onScroll: this._onScroll,
           style: outerStyle
         },
         children({ height: height, width: width })
@@ -121,6 +123,12 @@ var AutoSizer = function (_Component) {
       });
 
       onResize({ height: height, width: width });
+    }
+  }, {
+    key: '_onScroll',
+    value: function _onScroll(event) {
+      // Prevent detectElementResize library from being triggered by this scroll event.
+      event.stopPropagation();
     }
   }, {
     key: '_setRef',

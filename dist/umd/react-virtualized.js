@@ -199,8 +199,8 @@
                 return _this.shouldComponentUpdate = _function2["default"], _this.state = {
                     height: 0,
                     width: 0
-                }, _this._onResize = _this._onResize.bind(_this), _this._setRef = _this._setRef.bind(_this), 
-                _this;
+                }, _this._onResize = _this._onResize.bind(_this), _this._onScroll = _this._onScroll.bind(_this), 
+                _this._setRef = _this._setRef.bind(_this), _this;
             }
             return _inherits(AutoSizer, _Component), _createClass(AutoSizer, [ {
                 key: "componentDidMount",
@@ -222,6 +222,7 @@
                     return disableHeight || (outerStyle.height = 0), disableWidth || (outerStyle.width = 0), 
                     _react2["default"].createElement("div", {
                         ref: this._setRef,
+                        onScroll: this._onScroll,
                         style: outerStyle
                     }, children({
                         height: height,
@@ -239,6 +240,11 @@
                         height: height,
                         width: width
                     });
+                }
+            }, {
+                key: "_onScroll",
+                value: function(event) {
+                    event.stopPropagation();
                 }
             }, {
                 key: "_setRef",

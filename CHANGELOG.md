@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 5.5.3
+Added `will-change` property to `Grid` to work around a Chrome bug(?) that caused the entire grid to be repainted whenever a new row or column was added. This was negatively impacting scrolling performance for Chrome under certain conditions. This change is not expected to impact Firefox, Safari, or IE.
+
+Also trapped scroll events inside of `AutoSizer` so that `sdecima/javascript-detect-element-resize` did not treat them as potential resizes and unnecessarily force a sync DOM layout.
+
 ##### 5.5.2
 Removed two unnecessary method calls in `Grid` and replaced them with cached properties. Should offer a minor performance boost.
 Added better bounds-checking to util function `getVisibleCellIndices()`
