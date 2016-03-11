@@ -1,9 +1,26 @@
+var REACT_VIRTUALIZED_BANNER = 'https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png'
+
 function renderCell (params) {
-  return React.DOM.input({
+  var key = `c:${params.columnIndex}, r:${params.rowIndex}`
+  var input = React.DOM.input({
     className: 'input',
-    onChange: function () {},
-    defaultValue: `column:${params.columnIndex}, row:${params.rowIndex}`
+    defaultValue: key,
+    key: 'input',
+    onChange: function () {}
   })
+  var button = React.DOM.button({
+    className: 'button',
+    key: 'button'
+  }, key)
+  var image = React.DOM.img({
+    className: 'image',
+    key: 'image',
+    src: REACT_VIRTUALIZED_BANNER
+  })
+
+  return React.DOM.div({
+    className: 'cell'
+  }, [input, button, image])
 }
 
 var App = React.createClass({
