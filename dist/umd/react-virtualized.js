@@ -885,7 +885,7 @@
                 key: "_onScroll",
                 value: function(event) {
                     if (event.target === this.refs.scrollingContainer) {
-                        event.stopPropagation(), this._enablePointerEventsAfterDelay();
+                        this._enablePointerEventsAfterDelay();
                         var _props6 = this.props, height = _props6.height, width = _props6.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
                         if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
                             var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
