@@ -528,10 +528,10 @@
                     scrollLeft: 0,
                     scrollTop: 0
                 }, _this._onGridRenderedMemoizer = (0, _utils.createCallbackMemoizer)(), _this._onScrollMemoizer = (0, 
-                _utils.createCallbackMemoizer)(!1), _this._gridCellCache = {}, _this._renderedCellCache = {}, 
-                _this._computeGridMetadata = _this._computeGridMetadata.bind(_this), _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this), 
+                _utils.createCallbackMemoizer)(!1), _this._renderedCellCache = {}, _this._computeGridMetadata = _this._computeGridMetadata.bind(_this), 
+                _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this), 
                 _this._onKeyPress = _this._onKeyPress.bind(_this), _this._onScroll = _this._onScroll.bind(_this), 
-                _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this), 
+                _this._pollScroll = _this._pollScroll.bind(_this), _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this), 
                 _this._updateScrollTopForScrollToRow = _this._updateScrollTopForScrollToRow.bind(_this), 
                 _this;
             }
@@ -570,7 +570,7 @@
                         scrollTop: scrollTop || 0,
                         totalColumnsWidth: this._getTotalColumnsWidth(),
                         totalRowsHeight: this._getTotalRowsHeight()
-                    });
+                    }), this._pollScrollAnimationFrameId = (0, _raf2["default"])(this._pollScroll);
                 }
             }, {
                 key: "componentDidUpdate",
@@ -613,6 +613,7 @@
                 key: "componentWillUnmount",
                 value: function() {
                     this._disablePointerEventsTimeoutId && clearTimeout(this._disablePointerEventsTimeoutId), 
+                    this._pollScrollAnimationFrameId && _raf2["default"].cancel(this._pollScrollAnimationFrameId), 
                     this._setNextStateAnimationFrameId && _raf2["default"].cancel(this._setNextStateAnimationFrameId);
                 }
             }, {
@@ -683,8 +684,8 @@
                         });
                         this._columnStartIndex = overscanColumnIndices.overscanStartIndex, this._columnStopIndex = overscanColumnIndices.overscanStopIndex, 
                         this._rowStartIndex = overscanRowIndices.overscanStartIndex, this._rowStopIndex = overscanRowIndices.overscanStopIndex;
-                        for (var rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
-                            this._gridCellCache, this._renderedCellCache;
+                        for (var rowIndex = (this._columnStopIndex - this._columnStartIndex + 1, this._rowStopIndex - this._rowStartIndex + 1, 
+                        this._rowStartIndex); rowIndex <= this._rowStopIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
                             var columnDatum = this._columnMetadata[columnIndex], renderedCell = renderCell({
                                 columnIndex: columnIndex,
                                 rowIndex: rowIndex
@@ -710,7 +711,6 @@
                         ref: "scrollingContainer",
                         className: (0, _classnames2["default"])("Grid", className),
                         onKeyDown: this._onKeyPress,
-                        onScroll: this._onScroll,
                         tabIndex: 0,
                         style: gridStyle
                     }, childrenToDisplay.length > 0 && _react2["default"].createElement("div", {
@@ -814,6 +814,29 @@
                     });
                 }
             }, {
+                key: "_pollScroll",
+                value: function() {
+                    this._enablePointerEventsAfterDelay();
+                    var _props5 = this.props, height = _props5.height, width = _props5.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, this.refs.scrollingContainer.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, this.refs.scrollingContainer.scrollTop);
+                    if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
+                        var scrollPositionChangeReason = SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
+                        this.state.isScrolling || this.setState({
+                            isScrolling: !0
+                        }), this.setState({
+                            isScrolling: !0,
+                            scrollLeft: scrollLeft,
+                            scrollPositionChangeReason: scrollPositionChangeReason,
+                            scrollTop: scrollTop
+                        });
+                    }
+                    this._invokeOnScrollMemoizer({
+                        scrollLeft: scrollLeft,
+                        scrollTop: scrollTop,
+                        totalColumnsWidth: totalColumnsWidth,
+                        totalRowsHeight: totalRowsHeight
+                    }), this._pollScrollAnimationFrameId = (0, _raf2["default"])(this._pollScroll);
+                }
+            }, {
                 key: "_setNextState",
                 value: function(state) {
                     var _this3 = this;
@@ -857,7 +880,7 @@
             }, {
                 key: "_onKeyPress",
                 value: function(event) {
-                    var _props5 = this.props, columnsCount = _props5.columnsCount, height = _props5.height, rowsCount = _props5.rowsCount, width = _props5.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop, datum = void 0, newScrollLeft = void 0, newScrollTop = void 0;
+                    var _props6 = this.props, columnsCount = _props6.columnsCount, height = _props6.height, rowsCount = _props6.rowsCount, width = _props6.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop, datum = void 0, newScrollLeft = void 0, newScrollTop = void 0;
                     if (0 !== columnsCount && 0 !== rowsCount) switch (event.key) {
                       case "ArrowDown":
                         event.preventDefault(), datum = this._rowMetadata[this._renderedRowStartIndex], 
@@ -894,7 +917,7 @@
                 value: function(event) {
                     if (event.target === this.refs.scrollingContainer) {
                         this._enablePointerEventsAfterDelay();
-                        var _props6 = this.props, height = _props6.height, width = _props6.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
+                        var _props7 = this.props, height = _props7.height, width = _props7.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
                         if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
                             var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
                             this.state.isScrolling || this.setState({
