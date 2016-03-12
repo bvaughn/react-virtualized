@@ -15,10 +15,19 @@
 .Grid__innerScrollContainer {
   box-sizing: border-box;
   overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .Grid__cell {
   position: absolute;
+  top: 0;
+  z-index: 0;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
 }
 
 /* FlexTable default theme */
