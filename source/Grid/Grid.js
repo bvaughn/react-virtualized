@@ -12,7 +12,6 @@ import cn from 'classnames'
 import raf from 'raf'
 import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
-import GridCell from './GridCell'
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -431,15 +430,13 @@ export default class Grid extends Component {
       this._rowStartIndex = overscanRowIndices.overscanStartIndex
       this._rowStopIndex = overscanRowIndices.overscanStopIndex
 
-      const renderedColumnCount = this._columnStopIndex - this._columnStartIndex + 1
-      const renderedRowCount = this._rowStopIndex - this._rowStartIndex + 1
+      // const renderedColumnCount = this._columnStopIndex - this._columnStartIndex + 1
+      // const renderedRowCount = this._rowStopIndex - this._rowStartIndex + 1
 
       for (let rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) {
         let rowDatum = this._rowMetadata[rowIndex]
 
         for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
-          // this._renderedCellCache = 
-
           let columnDatum = this._columnMetadata[columnIndex]
           let renderedCell = renderCell({ columnIndex, rowIndex })
 
