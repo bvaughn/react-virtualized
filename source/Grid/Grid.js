@@ -12,6 +12,8 @@ import cn from 'classnames'
 import raf from 'raf'
 import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
+// import GridCell from './GridCell'
+import GridCellPool from './GridCellPool'
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -144,18 +146,17 @@ export default class Grid extends Component {
       scrollTop: 0
     }
 
+    this._gridCellPool = new GridCellPool()
+
     // Invokes onSectionRendered callback only when start/stop row or column indices change
     this._onGridRenderedMemoizer = createCallbackMemoizer()
     this._onScrollMemoizer = createCallbackMemoizer(false)
-
-    this._renderedCellCache = {}
 
     // Bind functions to instance so they don't lose context when passed around
     this._computeGridMetadata = this._computeGridMetadata.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onKeyPress = this._onKeyPress.bind(this)
     this._onScroll = this._onScroll.bind(this)
-    this._pollScroll = this._pollScroll.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
   }
@@ -230,9 +231,6 @@ export default class Grid extends Component {
       totalColumnsWidth: this._getTotalColumnsWidth(),
       totalRowsHeight: this._getTotalRowsHeight()
     })
-
-    // Testing an alternate to the :onScroll hook
-    this._pollScrollAnimationFrameId = raf(this._pollScroll)
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -302,10 +300,6 @@ export default class Grid extends Component {
   componentWillUnmount () {
     if (this._disablePointerEventsTimeoutId) {
       clearTimeout(this._disablePointerEventsTimeoutId)
-    }
-
-    if (this._pollScrollAnimationFrameId) {
-      raf.cancel(this._pollScrollAnimationFrameId)
     }
 
     if (this._setNextStateAnimationFrameId) {
@@ -430,39 +424,32 @@ export default class Grid extends Component {
       this._rowStartIndex = overscanRowIndices.overscanStartIndex
       this._rowStopIndex = overscanRowIndices.overscanStopIndex
 
-      // const renderedColumnCount = this._columnStopIndex - this._columnStartIndex + 1
-      // const renderedRowCount = this._rowStopIndex - this._rowStartIndex + 1
+      // TODO
+      this._gridCellPool.increasePoolSize({
+        columnsCount: this._columnStopIndex - this._columnStartIndex + 1,
+        rowsCount: this._rowStopIndex - this._rowStartIndex + 1
+      })
 
       for (let rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) {
         let rowDatum = this._rowMetadata[rowIndex]
 
         for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
           let columnDatum = this._columnMetadata[columnIndex]
-          let renderedCell = renderCell({ columnIndex, rowIndex })
 
-          // Why don't we pool and re-use cell renderers here?
-          // Because it causes larger areas of the scroll container to be repainted when scrolling up or to the left.
-          let key = `${rowIndex}-${columnIndex}`
-          // let key = `${rowIndex % renderedRowCount}-${columnIndex % renderedColumnCount}`
-          let child = (
-            <div
-              key={key}
-              className='Grid__cell'
-              style={{
-                height: this._getRowHeight(rowIndex),
-                left: `${columnDatum.offset}px`,
-                top: `${rowDatum.offset}px`,
-                width: this._getColumnWidth(columnIndex)
-              }}
-            >
-              {renderedCell}
-            </div>
+          childrenToDisplay.push(
+            this._gridCellPool.getGridCell({
+              columnDatum,
+              columnIndex,
+              renderCell,
+              rowDatum,
+              rowIndex
+            })
           )
-
-          childrenToDisplay.push(child)
         }
       }
     }
+
+    // TODO Flush cache, cicle cells
 
     const gridStyle = {
       height: height,
@@ -488,6 +475,7 @@ export default class Grid extends Component {
         ref='scrollingContainer'
         className={cn('Grid', className)}
         onKeyDown={this._onKeyPress}
+        onScroll={this._onScroll}
         tabIndex={0}
         style={gridStyle}
       >
@@ -616,55 +604,6 @@ export default class Grid extends Component {
         scrollTop
       }
     })
-  }
-
-  _pollScroll () {
-    // Prevent pointer events from interrupting a smooth scroll
-    this._enablePointerEventsAfterDelay()
-
-    // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
-    // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
-    // This causes a series of rapid renders that is slow for long lists.
-    // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-    const { height, width } = this.props
-    const totalRowsHeight = this._getTotalRowsHeight()
-    const totalColumnsWidth = this._getTotalColumnsWidth()
-    const scrollLeft = Math.min(totalColumnsWidth - width, this.refs.scrollingContainer.scrollLeft)
-    const scrollTop = Math.min(totalRowsHeight - height, this.refs.scrollingContainer.scrollTop)
-
-    // Certain devices (like Apple touchpad) rapid-fire duplicate events.
-    // Don't force a re-render if this is the case.
-    // The mouse may move faster then the animation frame does.
-    // Use requestAnimationFrame to avoid over-updating.
-    if (
-      this.state.scrollLeft !== scrollLeft ||
-      this.state.scrollTop !== scrollTop
-    ) {
-      // Browsers with cancelable scroll events (eg. Firefox) interrupt scrolling animations if scrollTop/scrollLeft is set.
-      // Other browsers (eg. Safari) don't scroll as well without the help under certain conditions (DOM or style changes during scrolling).
-      // All things considered, this seems to be the best current work around that I'm aware of.
-      // For more information see https://github.com/bvaughn/react-virtualized/pull/124
-      const scrollPositionChangeReason = false // event.cancelable
-        ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED
-        : SCROLL_POSITION_CHANGE_REASONS.REQUESTED
-
-      if (!this.state.isScrolling) {
-        this.setState({
-          isScrolling: true
-        })
-      }
-
-      this.setState({
-        isScrolling: true,
-        scrollLeft,
-        scrollPositionChangeReason,
-        scrollTop
-      })
-    }
-
-    this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
-
-    this._pollScrollAnimationFrameId = raf(this._pollScroll)
   }
 
   /**
