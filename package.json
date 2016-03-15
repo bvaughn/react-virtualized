@@ -125,6 +125,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.3",
+    "dom-helpers": "^2.4.0",
     "raf": "^3.1.0",
     "react-pure-render": "^1.0.2"
   },

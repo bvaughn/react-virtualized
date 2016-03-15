@@ -10,6 +10,7 @@ import {
 } from '../utils'
 import cn from 'classnames'
 import raf from 'raf'
+import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 
@@ -45,6 +46,11 @@ export default class Grid extends Component {
      * Number of columns in grid.
      */
     columnsCount: PropTypes.number.isRequired,
+
+    /**
+     * Number of columns to fix to the left of the grid while scrolling.
+     */
+    columnsLocked: PropTypes.number,
 
     /**
      * Either a fixed column width (number) or a function that returns the width of a column given its index.
@@ -103,6 +109,11 @@ export default class Grid extends Component {
      * Number of rows in grid.
      */
     rowsCount: PropTypes.number.isRequired,
+
+    /**
+     * Number of rows to fix along the top of the grid while scrolling.
+     */
+    rowsLocked: PropTypes.number,
 
     /** Horizontal offset. */
     scrollLeft: PropTypes.number,
@@ -365,9 +376,10 @@ export default class Grid extends Component {
       noContentRenderer,
       overscanColumnsCount,
       overscanRowsCount,
-      renderCell,
       rowsCount,
-      width
+      width,
+      rowsLocked,
+      columnsLocked
     } = this.props
 
     const {
@@ -382,6 +394,7 @@ export default class Grid extends Component {
     if (height > 0 && width > 0) {
       const visibleColumnIndices = getVisibleCellIndices({
         cellsCount: columnsCount,
+        cellsLocked: columnsLocked,
         cellMetadata: this._columnMetadata,
         containerSize: width,
         currentOffset: scrollLeft
@@ -389,6 +402,7 @@ export default class Grid extends Component {
 
       const visibleRowIndices = getVisibleCellIndices({
         cellsCount: rowsCount,
+        cellsLocked: rowsLocked,
         cellMetadata: this._rowMetadata,
         containerSize: height,
         currentOffset: scrollTop
@@ -402,6 +416,7 @@ export default class Grid extends Component {
 
       const overscanColumnIndices = getOverscanIndices({
         cellsCount: columnsCount,
+        cellsLocked: columnsLocked,
         overscanCellsCount: overscanColumnsCount,
         startIndex: this._renderedColumnStartIndex,
         stopIndex: this._renderedColumnStopIndex
@@ -409,6 +424,7 @@ export default class Grid extends Component {
 
       const overscanRowIndices = getOverscanIndices({
         cellsCount: rowsCount,
+        cellsLocked: rowsLocked,
         overscanCellsCount: overscanRowsCount,
         startIndex: this._renderedRowStartIndex,
         stopIndex: this._renderedRowStopIndex
@@ -420,30 +436,14 @@ export default class Grid extends Component {
       this._rowStartIndex = overscanRowIndices.overscanStartIndex
       this._rowStopIndex = overscanRowIndices.overscanStopIndex
 
+      let lockedOffset = scrollTop
+      for (let rowIndex = 0; rowIndex < rowsLocked; rowIndex++) {
+        this.renderColumns(childrenToDisplay, rowIndex, lockedOffset)
+        lockedOffset += this._getRowHeight(rowIndex)
+      }
+
       for (let rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) {
-        let rowDatum = this._rowMetadata[rowIndex]
-
-        for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
-          let columnDatum = this._columnMetadata[columnIndex]
-          let renderedCell = renderCell({ columnIndex, rowIndex })
-          let key = `${rowIndex}-${columnIndex}`
-          let child = (
-            <div
-              key={key}
-              className='Grid__cell'
-              style={{
-                height: this._getRowHeight(rowIndex),
-                left: `${columnDatum.offset}px`,
-                top: `${rowDatum.offset}px`,
-                width: this._getColumnWidth(columnIndex)
-              }}
-            >
-              {renderedCell}
-            </div>
-          )
-
-          childrenToDisplay.push(child)
-        }
+        this.renderColumns(childrenToDisplay, rowIndex, null)
       }
     }
 
@@ -496,6 +496,47 @@ export default class Grid extends Component {
     )
   }
 
+  renderColumns (childrenToDisplay, rowIndex, top) {
+    let { columnsLocked } = this.props
+    let lockedOffset = this.state.scrollLeft
+
+    for (let columnIndex = 0; columnIndex < columnsLocked; columnIndex++) {
+      let child = this.renderCell(columnIndex, rowIndex, lockedOffset, top)
+      lockedOffset += this._getColumnWidth(columnIndex)
+
+      childrenToDisplay.push(child)
+    }
+
+    for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
+      let child = this.renderCell(columnIndex, rowIndex, null, top)
+      childrenToDisplay.push(child)
+    }
+  }
+
+  renderCell (columnIndex, rowIndex, left, top) {
+    let rowDatum = this._rowMetadata[rowIndex]
+    let columnDatum = this._columnMetadata[columnIndex]
+    let renderedCell = this.props.renderCell({ columnIndex, rowIndex })
+    let key = `${rowIndex}-${columnIndex}`
+
+    return (
+      <div
+        key={key}
+        className={cn('Grid__cell', {
+          'Grid__cell--locked-row': top != null,
+          'Grid__cell--locked-column': left != null
+        })}
+        style={{
+          height: this._getRowHeight(rowIndex),
+          left: `${left || columnDatum.offset}px`,
+          top: `${top || rowDatum.offset}px`,
+          width: this._getColumnWidth(columnIndex)
+        }}
+      >
+        {renderedCell}
+      </div>
+    )
+  }
   /* ---------------------------- Helper methods ---------------------------- */
 
   _computeGridMetadata (props) {
@@ -740,10 +781,11 @@ export default class Grid extends Component {
     // This causes a series of rapid renders that is slow for long lists.
     // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
     const { height, width } = this.props
+    const scrollbarSize = getScrollbarSize()
     const totalRowsHeight = this._getTotalRowsHeight()
     const totalColumnsWidth = this._getTotalColumnsWidth()
-    const scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft)
-    const scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop)
+    const scrollLeft = Math.min(totalColumnsWidth - width + scrollbarSize, event.target.scrollLeft)
+    const scrollTop = Math.min(totalRowsHeight - height + scrollbarSize, event.target.scrollTop)
 
     // Certain devices (like Apple touchpad) rapid-fire duplicate events.
     // Don't force a re-render if this is the case.

@@ -22,7 +22,7 @@ const HIGH_ORDER_COMPONENTS = ['AutoSizer', 'ColumnSizer', 'InfiniteLoader', 'Sc
 const list = Immutable.List(generateRandomList())
 
 class Application extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
+  shouldComponentUpdate = shouldPureComponentUpdate;
 
   constructor (props) {
     super(props)

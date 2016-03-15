@@ -29,7 +29,9 @@ export default class GridExample extends Component {
       rowsCount: 1000,
       scrollToColumn: undefined,
       scrollToRow: undefined,
-      useDynamicRowHeight: false
+      useDynamicRowHeight: false,
+      lockedColumnCount: 1,
+      lockedRowCount: 0
     }
 
     this._getColumnWidth = this._getColumnWidth.bind(this)
@@ -51,6 +53,8 @@ export default class GridExample extends Component {
     const {
       columnsCount,
       height,
+      lockedRowCount,
+      lockedColumnCount,
       overscanColumnsCount,
       overscanRowsCount,
       rowHeight,
@@ -126,6 +130,18 @@ export default class GridExample extends Component {
             value={rowHeight}
           />
           <LabeledInput
+            label='Locked columns'
+            name='lockedColumnCount'
+            onChange={event => this.setState({ lockedColumnCount: parseInt(event.target.value, 10) || 0 })}
+            value={lockedColumnCount}
+          />
+          <LabeledInput
+            label='Locked rows'
+            name='lockedRowCount'
+            onChange={event => this.setState({ lockedRowCount: parseInt(event.target.value, 10) || 0 })}
+            value={lockedRowCount}
+          />
+          <LabeledInput
             label='Overscan columns'
             name='overscanColumnsCount'
             onChange={event => this.setState({ overscanColumnsCount: parseInt(event.target.value, 10) || 0 })}
@@ -146,6 +162,8 @@ export default class GridExample extends Component {
               columnWidth={this._getColumnWidth}
               columnsCount={columnsCount}
               height={height}
+              rowsLocked={lockedRowCount}
+              columnsLocked={lockedColumnCount}
               noContentRenderer={this._noContentRenderer}
               overscanColumnsCount={overscanColumnsCount}
               overscanRowsCount={overscanRowsCount}
