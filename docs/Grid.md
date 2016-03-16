@@ -60,7 +60,7 @@ The Grid component supports the following static class names
 
 ### Examples
 
-Below is a very basic `Grid` example. The grid displays an array of objects with fixed row and column sizes. (Dynamic sizes are also supported but this example is intended to be basic.) [See here](source/Grid/Grid.example.js) for a more full-featured example with dynamic cell sizes and more.
+Below is a very basic `Grid` example. The grid displays an array of objects with fixed row and column sizes. (Dynamic sizes are also supported but this example is intended to be basic.) [See here](../source/Grid/Grid.example.js) for a more full-featured example with dynamic cell sizes and more.
 
 ```javascript
 import React from 'react';

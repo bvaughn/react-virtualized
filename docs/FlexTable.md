@@ -67,7 +67,7 @@ The FlexTable component supports the following static class names
 
 ### Examples
 
-Below is a very basic `FlexTable` example. This table has only 2 columns, each containing a simple string. Both have a fixed width and neither is sortable. [See here](source/FlexTable/FlexTable.example.js) for a more full-featured example including custom cell renderers, sortable headers, and more.
+Below is a very basic `FlexTable` example. This table has only 2 columns, each containing a simple string. Both have a fixed width and neither is sortable. [See here](../source/FlexTable/FlexTable.example.js) for a more full-featured example including custom cell renderers, sortable headers, and more.
 
 ```javascript
 import React from 'react';
