@@ -858,30 +858,28 @@
                     var _props5 = this.props, columnsCount = _props5.columnsCount, height = _props5.height, rowsCount = _props5.rowsCount, width = _props5.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop, datum = void 0, newScrollLeft = void 0, newScrollTop = void 0;
                     if (0 !== columnsCount && 0 !== rowsCount) switch (event.key) {
                       case "ArrowDown":
-                        event.preventDefault(), datum = this._rowMetadata[this._renderedRowStartIndex], 
-                        newScrollTop = Math.min(this._getTotalRowsHeight() - height, scrollTop + datum.size), 
+                        datum = this._rowMetadata[this._renderedRowStartIndex], newScrollTop = Math.min(this._getTotalRowsHeight() - height, scrollTop + datum.size), 
                         this.setScrollPosition({
                             scrollTop: newScrollTop
                         });
                         break;
 
                       case "ArrowLeft":
-                        event.preventDefault(), this.scrollToCell({
+                        this.scrollToCell({
                             scrollToColumn: Math.max(0, this._renderedColumnStartIndex - 1),
                             scrollToRow: this.props.scrollToRow
                         });
                         break;
 
                       case "ArrowRight":
-                        event.preventDefault(), datum = this._columnMetadata[this._renderedColumnStartIndex], 
-                        newScrollLeft = Math.min(this._getTotalColumnsWidth() - width, scrollLeft + datum.size), 
+                        datum = this._columnMetadata[this._renderedColumnStartIndex], newScrollLeft = Math.min(this._getTotalColumnsWidth() - width, scrollLeft + datum.size), 
                         this.setScrollPosition({
                             scrollLeft: newScrollLeft
                         });
                         break;
 
                       case "ArrowUp":
-                        event.preventDefault(), this.scrollToCell({
+                        this.scrollToCell({
                             scrollToColumn: this.props.scrollToColumn,
                             scrollToRow: Math.max(0, this._renderedRowStartIndex - 1)
                         });

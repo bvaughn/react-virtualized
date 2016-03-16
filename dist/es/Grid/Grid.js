@@ -641,8 +641,6 @@ var Grid = function (_Component) {
 
       switch (event.key) {
         case 'ArrowDown':
-          event.preventDefault(); // Prevent key from also scrolling surrounding window
-
           datum = this._rowMetadata[this._renderedRowStartIndex];
           newScrollTop = Math.min(this._getTotalRowsHeight() - height, scrollTop + datum.size);
 
@@ -651,16 +649,12 @@ var Grid = function (_Component) {
           });
           break;
         case 'ArrowLeft':
-          event.preventDefault(); // Prevent key from also scrolling surrounding window
-
           this.scrollToCell({
             scrollToColumn: Math.max(0, this._renderedColumnStartIndex - 1),
             scrollToRow: this.props.scrollToRow
           });
           break;
         case 'ArrowRight':
-          event.preventDefault(); // Prevent key from also scrolling surrounding window
-
           datum = this._columnMetadata[this._renderedColumnStartIndex];
           newScrollLeft = Math.min(this._getTotalColumnsWidth() - width, scrollLeft + datum.size);
 
@@ -669,8 +663,6 @@ var Grid = function (_Component) {
           });
           break;
         case 'ArrowUp':
-          event.preventDefault(); // Prevent key from also scrolling surrounding window
-
           this.scrollToCell({
             scrollToColumn: this.props.scrollToColumn,
             scrollToRow: Math.max(0, this._renderedRowStartIndex - 1)

@@ -3,7 +3,6 @@
 .Grid {
   position: relative;
   overflow: auto;
-  outline: 0;
   -webkit-overflow-scrolling: touch;
 
   /* Without this property, Chrome repaints the entire Grid any time a new row or column is added.
@@ -99,7 +98,6 @@
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  outline: 0;
   -webkit-overflow-scrolling: touch;
 }
 

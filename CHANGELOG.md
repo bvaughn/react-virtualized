@@ -1,6 +1,14 @@
 Changelog
 ------------
 
+##### 5.5.4
+Changed key-down event handler in `VirtualScroll`, `FlexTable`, and `Grid` to no longer call `event.preventDefault()` for arrow-key events.
+This was causing poor user interactions for `<input>` elements within `VirtualScroll` and `FlexTable` components.
+Note that this issue still occurs for `<input>` elements in a `Grid` component.
+
+This release also removes the `outline: 0` default style for `Grid`.
+After consideration I think that's a harmful default behavior.
+
 ##### 5.5.3
 Added `will-change` property to `Grid` to work around a Chrome bug(?) that caused the entire grid to be repainted whenever a new row or column was added. This was negatively impacting scrolling performance for Chrome under certain conditions. This change is not expected to impact Firefox, Safari, or IE.
 
