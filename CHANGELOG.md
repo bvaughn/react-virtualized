@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 5.5.5
+Updated `package.json` to support React `^0.14.0` as well as `^15.0.0-rc.1`.
+Thanks to @opichals for the PR.
+
 ##### 5.5.4
 Changed key-down event handler in `VirtualScroll`, `FlexTable`, and `Grid` to no longer call `event.preventDefault()` for arrow-key events.
 This was causing poor user interactions for `<input>` elements within `VirtualScroll` and `FlexTable` components.
