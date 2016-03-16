@@ -11,6 +11,7 @@ describe('Grid', () => {
   function getMarkup ({
     className,
     columnsCount = NUM_COLUMNS,
+    columnsLocked,
     columnWidth = 50,
     height = 100,
     noContentRenderer,
@@ -19,6 +20,7 @@ describe('Grid', () => {
     overscanColumnsCount = 0,
     overscanRowsCount = 0,
     rowHeight = 20,
+    rowsLocked,
     rowsCount = NUM_ROWS,
     scrollLeft = undefined,
     scrollToColumn,
@@ -39,6 +41,7 @@ describe('Grid', () => {
         className={className}
         columnsCount={columnsCount}
         columnWidth={columnWidth}
+        columnsLocked={columnsLocked}
         height={height}
         noContentRenderer={noContentRenderer}
         onSectionRendered={onSectionRendered}
@@ -48,6 +51,7 @@ describe('Grid', () => {
         renderCell={renderCell}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
+        rowsLocked={rowsLocked}
         scrollLeft={scrollLeft}
         scrollToColumn={scrollToColumn}
         scrollToRow={scrollToRow}

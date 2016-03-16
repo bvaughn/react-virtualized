@@ -336,10 +336,11 @@ describe('getUpdatedOffsetForIndex', () => {
 })
 
 describe('getVisibleCellIndices', () => {
-  function testHelper (currentOffset, cellMetadata = getCellMetadata()) {
+  function testHelper (currentOffset, cellsLocked = 0, cellMetadata = getCellMetadata()) {
     return getVisibleCellIndices({
       cellsCount: cellMetadata.length,
       cellMetadata,
+      cellsLocked,
       containerSize: 50,
       currentOffset
     })
@@ -349,6 +350,18 @@ describe('getVisibleCellIndices', () => {
     const { start, stop } = testHelper(0)
     expect(start).toEqual(0)
     expect(stop).toEqual(3)
+  })
+
+  it('should handle locked cells offset', () => {
+    const { start, stop } = testHelper(0, 1)
+    expect(start).toEqual(1)
+    expect(stop).toEqual(3)
+  })
+
+  it('should handle locked cells offset', () => {
+    const { start, stop } = testHelper(0, 4)
+    expect(start).toEqual(4)
+    expect(stop).toEqual(4)
   })
 
   it('should handle scrolled to the middle', () => {
@@ -479,9 +492,10 @@ describe('updateScrollIndexHelper', () => {
 })
 
 describe('getOverscanIndices', () => {
-  function testHelper (cellsCount, startIndex, stopIndex, overscanCellsCount) {
+  function testHelper (cellsCount, startIndex, stopIndex, overscanCellsCount, cellsLocked) {
     return getOverscanIndices({
       cellsCount,
+      cellsLocked,
       overscanCellsCount,
       startIndex,
       stopIndex
@@ -505,6 +519,13 @@ describe('getOverscanIndices', () => {
   it('should not overscan beyond the start of the list', () => {
     expect(testHelper(100, 5, 15, 10)).toEqual({
       overscanStartIndex: 0,
+      overscanStopIndex: 25
+    })
+  })
+
+  it('should not overscan beyond the first locked index', () => {
+    expect(testHelper(100, 5, 15, 10, 2)).toEqual({
+      overscanStartIndex: 2,
       overscanStopIndex: 25
     })
   })

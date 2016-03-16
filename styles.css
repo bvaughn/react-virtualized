@@ -20,6 +20,16 @@
   position: absolute;
 }
 
+.Grid__cell--locked-row,
+.Grid__cell--locked-column {
+  z-index: 5;
+}
+
+.Grid__cell--locked-row.Grid__cell--locked-column {
+  z-index: 10;
+}
+
+
 /* FlexTable default theme */
 
 .FlexTable {

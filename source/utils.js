@@ -107,9 +107,15 @@ export function findNearestCell ({
 findNearestCell.EQUAL_OR_LOWER = 1
 findNearestCell.EQUAL_OR_HIGHER = 2
 
-export function getOverscanIndices ({ cellsCount, overscanCellsCount, startIndex, stopIndex }) {
+export function getOverscanIndices ({ cellsCount, cellsLocked, overscanCellsCount, startIndex, stopIndex }) {
+  let start = Math.max(0, startIndex - overscanCellsCount)
+
+  if (start < cellsLocked) {
+    start = start + (cellsLocked - start)
+  }
+
   return {
-    overscanStartIndex: Math.max(0, startIndex - overscanCellsCount),
+    overscanStartIndex: Math.max(0, start),
     overscanStopIndex: Math.min(cellsCount - 1, stopIndex + overscanCellsCount)
   }
 }
@@ -157,6 +163,7 @@ export function getUpdatedOffsetForIndex ({
 export function getVisibleCellIndices ({
   cellsCount,
   cellMetadata,
+  cellsLocked,
   containerSize,
   currentOffset
 }) {
@@ -189,6 +196,13 @@ export function getVisibleCellIndices ({
     stop++
 
     currentOffset += cellMetadata[stop].size
+  }
+
+  cellsLocked = cellsLocked || 0
+
+  if (start < cellsLocked) {
+    start = start + (cellsLocked - start)
+    stop = Math.max(stop, start)
   }
 
   return {
