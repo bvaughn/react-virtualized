@@ -1,0 +1,15 @@
+.Grid {
+  border: 1px solid #e0e0e0;
+}
+
+.EvenCell,
+.OddCell {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.OddCell {
+  background-color: rgba(0, 0, 0, .1);
+}

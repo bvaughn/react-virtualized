@@ -151,7 +151,6 @@ export default class Grid extends Component {
     // Bind functions to instance so they don't lose context when passed around
     this._computeGridMetadata = this._computeGridMetadata.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
-    this._onKeyPress = this._onKeyPress.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
@@ -470,7 +469,6 @@ export default class Grid extends Component {
       <div
         ref='scrollingContainer'
         className={cn('Grid', className)}
-        onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
         tabIndex={0}
         style={gridStyle}
@@ -663,56 +661,6 @@ export default class Grid extends Component {
           scrollTop: calculatedScrollTop
         })
       }
-    }
-  }
-
-  /* ---------------------------- Event handlers ---------------------------- */
-
-  _onKeyPress (event) {
-    const { columnsCount, height, rowsCount, width } = this.props
-    const { scrollLeft, scrollTop } = this.state
-
-    let datum, newScrollLeft, newScrollTop
-
-    if (columnsCount === 0 || rowsCount === 0) {
-      return
-    }
-
-    switch (event.key) {
-      case 'ArrowDown':
-        datum = this._rowMetadata[this._renderedRowStartIndex]
-        newScrollTop = Math.min(
-          this._getTotalRowsHeight() - height,
-          scrollTop + datum.size
-        )
-
-        this.setScrollPosition({
-          scrollTop: newScrollTop
-        })
-        break
-      case 'ArrowLeft':
-        this.scrollToCell({
-          scrollToColumn: Math.max(0, this._renderedColumnStartIndex - 1),
-          scrollToRow: this.props.scrollToRow
-        })
-        break
-      case 'ArrowRight':
-        datum = this._columnMetadata[this._renderedColumnStartIndex]
-        newScrollLeft = Math.min(
-          this._getTotalColumnsWidth() - width,
-          scrollLeft + datum.size
-        )
-
-        this.setScrollPosition({
-          scrollLeft: newScrollLeft
-        })
-        break
-      case 'ArrowUp':
-        this.scrollToCell({
-          scrollToColumn: this.props.scrollToColumn,
-          scrollToRow: Math.max(0, this._renderedRowStartIndex - 1)
-        })
-        break
     }
   }
 

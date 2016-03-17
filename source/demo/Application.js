@@ -1,3 +1,4 @@
+import ArrowKeyStepperExample from '../ArrowKeyStepper/ArrowKeyStepper.example'
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
 import ColumnSizerExample from '../ColumnSizer/ColumnSizer.example'
 import ComponentLink from './ComponentLink'
@@ -16,7 +17,7 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
 import '../../styles.css'
 
 const COMPONENTS = ['Grid', 'FlexTable', 'VirtualScroll']
-const HIGH_ORDER_COMPONENTS = ['AutoSizer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync']
+const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync']
 
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
@@ -102,6 +103,12 @@ class Application extends Component {
         </div>
 
         <div className={styles.row}>
+          {activeComponent === 'ArrowKeyStepper' &&
+            <ArrowKeyStepperExample
+              className={styles.column}
+              list={list}
+            />
+          }
           {activeComponent === 'AutoSizer' &&
             <AutoSizerExample
               className={styles.column}
