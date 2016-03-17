@@ -1,6 +1,6 @@
 !function(root, factory) {
     "object" == typeof exports && "object" == typeof module ? module.exports = factory(require("react"), require("react-dom")) : "function" == typeof define && define.amd ? define([ "react", "react-dom" ], factory) : "object" == typeof exports ? exports.ReactVirtualized = factory(require("react"), require("react-dom")) : root.ReactVirtualized = factory(root.React, root.ReactDOM);
-}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_21__) {
+}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_23__) {
     /******/
     return function(modules) {
         /******/
@@ -86,7 +86,7 @@
                 return _ColumnSizer.ColumnSizer;
             }
         });
-        var _FlexTable = __webpack_require__(16);
+        var _FlexTable = __webpack_require__(18);
         Object.defineProperty(exports, "FlexTable", {
             enumerable: !0,
             get: function() {
@@ -115,21 +115,21 @@
                 return _Grid.Grid;
             }
         });
-        var _InfiniteLoader = __webpack_require__(22);
+        var _InfiniteLoader = __webpack_require__(24);
         Object.defineProperty(exports, "InfiniteLoader", {
             enumerable: !0,
             get: function() {
                 return _InfiniteLoader.InfiniteLoader;
             }
         });
-        var _ScrollSync = __webpack_require__(24);
+        var _ScrollSync = __webpack_require__(26);
         Object.defineProperty(exports, "ScrollSync", {
             enumerable: !0,
             get: function() {
                 return _ScrollSync.ScrollSync;
             }
         });
-        var _VirtualScroll = __webpack_require__(26);
+        var _VirtualScroll = __webpack_require__(28);
         Object.defineProperty(exports, "VirtualScroll", {
             enumerable: !0,
             get: function() {
@@ -514,7 +514,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _utils = __webpack_require__(11), _classnames = __webpack_require__(12), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(13), _raf2 = _interopRequireDefault(_raf), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
+        }(), _utils = __webpack_require__(11), _classnames = __webpack_require__(12), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(13), _raf2 = _interopRequireDefault(_raf), _scrollbarSize = __webpack_require__(16), _scrollbarSize2 = _interopRequireDefault(_scrollbarSize), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
             OBSERVED: "observed",
             REQUESTED: "requested"
         }, Grid = function(_Component) {
@@ -560,7 +560,7 @@
                 key: "componentDidMount",
                 value: function() {
                     var _props = this.props, scrollLeft = _props.scrollLeft, scrollToColumn = _props.scrollToColumn, scrollTop = _props.scrollTop, scrollToRow = _props.scrollToRow;
-                    (scrollLeft >= 0 || scrollTop >= 0) && this.setScrollPosition({
+                    this._scrollbarSize = (0, _scrollbarSize2["default"])(), (scrollLeft >= 0 || scrollTop >= 0) && this.setScrollPosition({
                         scrollLeft: scrollLeft,
                         scrollTop: scrollTop
                     }), (scrollToColumn >= 0 || scrollToRow >= 0) && (this._updateScrollLeftForScrollToColumn(), 
@@ -686,17 +686,20 @@
                             var columnDatum = this._columnMetadata[columnIndex], renderedCell = renderCell({
                                 columnIndex: columnIndex,
                                 rowIndex: rowIndex
-                            }), key = rowIndex + "-" + columnIndex, child = _react2["default"].createElement("div", {
-                                key: key,
-                                className: "Grid__cell",
-                                style: {
-                                    height: this._getRowHeight(rowIndex),
-                                    left: columnDatum.offset + "px",
-                                    top: rowDatum.offset + "px",
-                                    width: this._getColumnWidth(columnIndex)
-                                }
-                            }, renderedCell);
-                            childrenToDisplay.push(child);
+                            }), key = rowIndex + "-" + columnIndex;
+                            if (null != renderedCell && renderedCell !== !1) {
+                                var child = _react2["default"].createElement("div", {
+                                    key: key,
+                                    className: "Grid__cell",
+                                    style: {
+                                        height: this._getRowHeight(rowIndex),
+                                        left: columnDatum.offset + "px",
+                                        top: rowDatum.offset + "px",
+                                        width: this._getColumnWidth(columnIndex)
+                                    }
+                                }, renderedCell);
+                                childrenToDisplay.push(child);
+                            }
                         }
                     }
                     var gridStyle = {
@@ -890,7 +893,7 @@
                 value: function(event) {
                     if (event.target === this.refs.scrollingContainer) {
                         this._enablePointerEventsAfterDelay();
-                        var _props6 = this.props, height = _props6.height, width = _props6.width, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
+                        var _props6 = this.props, height = _props6.height, width = _props6.width, scrollbarSize = this._scrollbarSize, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width + scrollbarSize, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height + scrollbarSize, event.target.scrollTop);
                         if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
                             var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
                             this.state.isScrolling || this.setState({
@@ -1184,6 +1187,25 @@
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
+        var size, canUseDOM = __webpack_require__(17);
+        module.exports = function(recalc) {
+            if ((!size || recalc) && canUseDOM) {
+                var scrollDiv = document.createElement("div");
+                scrollDiv.style.position = "absolute", scrollDiv.style.top = "-9999px", scrollDiv.style.width = "50px", 
+                scrollDiv.style.height = "50px", scrollDiv.style.overflow = "scroll", document.body.appendChild(scrollDiv), 
+                size = scrollDiv.offsetWidth - scrollDiv.clientWidth, document.body.removeChild(scrollDiv);
+            }
+            return size;
+        };
+    }, /* 17 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        module.exports = !("undefined" == typeof window || !window.document || !window.document.createElement);
+    }, /* 18 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
         function _interopRequireDefault(obj) {
             return obj && obj.__esModule ? obj : {
                 "default": obj
@@ -1192,11 +1214,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.SortIndicator = exports.SortDirection = exports.FlexColumn = exports.FlexTable = exports["default"] = void 0;
-        var _FlexTable2 = __webpack_require__(17), _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(18), _FlexColumn3 = _interopRequireDefault(_FlexColumn2), _SortDirection2 = __webpack_require__(20), _SortDirection3 = _interopRequireDefault(_SortDirection2), _SortIndicator2 = __webpack_require__(19), _SortIndicator3 = _interopRequireDefault(_SortIndicator2);
+        var _FlexTable2 = __webpack_require__(19), _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(20), _FlexColumn3 = _interopRequireDefault(_FlexColumn2), _SortDirection2 = __webpack_require__(22), _SortDirection3 = _interopRequireDefault(_SortDirection2), _SortIndicator2 = __webpack_require__(21), _SortIndicator3 = _interopRequireDefault(_SortIndicator2);
         exports["default"] = _FlexTable3["default"], exports.FlexTable = _FlexTable3["default"], 
         exports.FlexColumn = _FlexColumn3["default"], exports.SortDirection = _SortDirection3["default"], 
         exports.SortIndicator = _SortIndicator3["default"];
-    }, /* 17 */
+    }, /* 19 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1238,7 +1260,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _classnames = __webpack_require__(12), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(18), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(21), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), _SortDirection = __webpack_require__(20), _SortDirection2 = _interopRequireDefault(_SortDirection), FlexTable = function(_Component) {
+        }(), _classnames = __webpack_require__(12), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(20), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(23), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), _SortDirection = __webpack_require__(22), _SortDirection2 = _interopRequireDefault(_SortDirection), FlexTable = function(_Component) {
             function FlexTable(props) {
                 _classCallCheck(this, FlexTable);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
@@ -1471,7 +1493,7 @@
             this.shouldComponentUpdate = _function2["default"];
         };
         exports["default"] = FlexTable;
-    }, /* 18 */
+    }, /* 20 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1519,7 +1541,7 @@
             value: !0
         }), exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter, 
         exports.defaultHeaderRenderer = defaultHeaderRenderer;
-        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _SortIndicator = __webpack_require__(19), _SortIndicator2 = _interopRequireDefault(_SortIndicator), Column = function(_Component) {
+        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _SortIndicator = __webpack_require__(21), _SortIndicator2 = _interopRequireDefault(_SortIndicator), Column = function(_Component) {
             function Column() {
                 return _classCallCheck(this, Column), _possibleConstructorReturn(this, Object.getPrototypeOf(Column).apply(this, arguments));
             }
@@ -1547,7 +1569,7 @@
             minWidth: _react.PropTypes.number,
             width: _react.PropTypes.number.isRequired
         }, exports["default"] = Column;
-    }, /* 19 */
+    }, /* 21 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1579,11 +1601,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports["default"] = SortIndicator;
-        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(12), _classnames2 = _interopRequireDefault(_classnames), _SortDirection = __webpack_require__(20), _SortDirection2 = _interopRequireDefault(_SortDirection);
+        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(12), _classnames2 = _interopRequireDefault(_classnames), _SortDirection = __webpack_require__(22), _SortDirection2 = _interopRequireDefault(_SortDirection);
         SortIndicator.propTypes = {
             sortDirection: _react.PropTypes.oneOf([ _SortDirection2["default"].ASC, _SortDirection2["default"].DESC ])
         };
-    }, /* 20 */
+    }, /* 22 */
     /***/
     function(module, exports) {
         "use strict";
@@ -1595,11 +1617,11 @@
             DESC: "DESC"
         };
         exports["default"] = SortDirection;
-    }, /* 21 */
+    }, /* 23 */
     /***/
     function(module, exports) {
-        module.exports = __WEBPACK_EXTERNAL_MODULE_21__;
-    }, /* 22 */
+        module.exports = __WEBPACK_EXTERNAL_MODULE_23__;
+    }, /* 24 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1611,9 +1633,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.InfiniteLoader = exports["default"] = void 0;
-        var _InfiniteLoader2 = __webpack_require__(23), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
+        var _InfiniteLoader2 = __webpack_require__(25), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
         exports["default"] = _InfiniteLoader3["default"], exports.InfiniteLoader = _InfiniteLoader3["default"];
-    }, /* 23 */
+    }, /* 25 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1729,7 +1751,7 @@
             rowsCount: 0,
             threshold: 15
         }, exports["default"] = InfiniteLoader;
-    }, /* 24 */
+    }, /* 26 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1741,9 +1763,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.ScrollSync = exports["default"] = void 0;
-        var _ScrollSync2 = __webpack_require__(25), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
+        var _ScrollSync2 = __webpack_require__(27), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
         exports["default"] = _ScrollSync3["default"], exports.ScrollSync = _ScrollSync3["default"];
-    }, /* 25 */
+    }, /* 27 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1830,7 +1852,7 @@
         ScrollSync.propTypes = {
             children: _react.PropTypes.func.isRequired
         }, exports["default"] = ScrollSync;
-    }, /* 26 */
+    }, /* 28 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1842,9 +1864,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.VirtualScroll = exports["default"] = void 0;
-        var _VirtualScroll2 = __webpack_require__(27), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
+        var _VirtualScroll2 = __webpack_require__(29), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
         exports["default"] = _VirtualScroll3["default"], exports.VirtualScroll = _VirtualScroll3["default"];
-    }, /* 27 */
+    }, /* 29 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";

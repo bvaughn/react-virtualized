@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 5.5.6
+Max scroll position logic in `Grid` now takes scrollbar size into consideration.
+Also includes a small `render` optimization for null cells.
+This release made possible by @jquense!
+
 ##### 5.5.5
 Updated `package.json` to support React `^0.14.0` as well as `^15.0.0-rc.1`.
 Thanks to @opichals for the PR.
