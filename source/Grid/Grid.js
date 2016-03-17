@@ -10,6 +10,7 @@ import {
 } from '../utils'
 import cn from 'classnames'
 import raf from 'raf'
+import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 
@@ -207,6 +208,8 @@ export default class Grid extends Component {
 
   componentDidMount () {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
+
+    this._scrollbarSize = getScrollbarSize()
 
     if (scrollLeft >= 0 || scrollTop >= 0) {
       this.setScrollPosition({ scrollLeft, scrollTop })
@@ -427,6 +430,13 @@ export default class Grid extends Component {
           let columnDatum = this._columnMetadata[columnIndex]
           let renderedCell = renderCell({ columnIndex, rowIndex })
           let key = `${rowIndex}-${columnIndex}`
+
+          // any other falsey value will be rendered
+          // as a text node by React
+          if (renderedCell == null || renderedCell === false) {
+            continue
+          }
+
           let child = (
             <div
               key={key}
@@ -740,10 +750,11 @@ export default class Grid extends Component {
     // This causes a series of rapid renders that is slow for long lists.
     // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
     const { height, width } = this.props
+    const scrollbarSize = this._scrollbarSize
     const totalRowsHeight = this._getTotalRowsHeight()
     const totalColumnsWidth = this._getTotalColumnsWidth()
-    const scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft)
-    const scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop)
+    const scrollLeft = Math.min(totalColumnsWidth - width + scrollbarSize, event.target.scrollLeft)
+    const scrollTop = Math.min(totalRowsHeight - height + scrollbarSize, event.target.scrollTop)
 
     // Certain devices (like Apple touchpad) rapid-fire duplicate events.
     // Don't force a re-render if this is the case.
