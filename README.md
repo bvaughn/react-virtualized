@@ -19,6 +19,26 @@ Install `react-virtualized` using npm.
 npm install react-virtualized --save
 ```
 
+ES6, CommonJS, and UMD builds are available with each distribution.
+For example:
+
+```js
+// Make sure to import default styles.
+// This only needs to be done once; probably during your application's bootstrapping process.
+import 'react-virtualized/styles.css';
+
+// Then you can import any react-virtualized components you need.
+// Tree-shaking is supported with ES6 or CommonJS usage.
+import { Grid } from 'react-virtualized'
+```
+
+Alternately you can load a global-friendly UMD build:
+
+```html
+<link rel="stylesheet" href="path-to-react-virtualized/styles.css">
+<script src="path-to-react-virtualized/dist/umd/react-virtualized.js"></script>
+```
+
 Documentation
 ---------------
 

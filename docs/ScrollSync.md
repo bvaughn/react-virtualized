@@ -28,6 +28,7 @@ This example uses `ScrollSync` to create a fixed row of columns to go along with
 
 ```js
 import { Grid, ScrollSync, VirtualScroll } from 'react-virtualized'
+import 'react-virtualized/styles.css'; // only needs to be imported once
 
 function render (props) {
   return (
