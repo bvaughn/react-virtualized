@@ -5,10 +5,10 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import AutoSizer from '../AutoSizer'
 import Grid from '../Grid'
 import ScrollSync from './ScrollSync'
-import VirtualScroll from '../VirtualScroll'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 import cn from 'classnames'
 import styles from './ScrollSync.example.css'
+import scrollbarSize from 'dom-helpers/util/scrollbarSize'
 
 const LEFT_COLOR_FROM = hexToRgb('#471061')
 const LEFT_COLOR_TO = hexToRgb('#BC3959')
@@ -83,21 +83,47 @@ export default class GridExample extends Component {
             const middleColor = `#ffffff`
 
             return (
-              <div className={styles.GridRow}>
+              <div className={styles.GridRow }>
                 <div
                   className={styles.LeftSideGridContainer}
                   style={{
-                    backgroundColor: `rgb(${leftBackgroundColor.r},${leftBackgroundColor.g},${leftBackgroundColor.b})`,
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
                     color: leftColor,
-                    marginTop: rowHeight
+                    backgroundColor: `rgb(${topBackgroundColor.r},${topBackgroundColor.g},${topBackgroundColor.b})`
                   }}
                 >
-                  <VirtualScroll
-                    className={styles.LeftSideGrid}
-                    height={height}
-                    overscanRowsCount={overscanRowsCount}
+                  <Grid
+                    renderCell={this._renderLeftHeaderCell}
+                    className={styles.HeaderGrid}
+                    width={columnWidth}
+                    height={rowHeight}
                     rowHeight={rowHeight}
-                    rowRenderer={this._renderLeftSideCell}
+                    columnWidth={columnWidth}
+                    rowsCount={1}
+                    columnsCount={1}
+                  />
+                </div>
+                <div
+                  className={styles.LeftSideGridContainer}
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: rowHeight,
+                    color: leftColor,
+                    backgroundColor: `rgb(${leftBackgroundColor.r},${leftBackgroundColor.g},${leftBackgroundColor.b})`
+                  }}
+                >
+                  <Grid
+                    overscanColumnsCount={overscanColumnsCount}
+                    overscanRowsCount={overscanRowsCount}
+                    renderCell={this._renderLeftSideCell}
+                    columnWidth={columnWidth}
+                    columnsCount={1}
+                    className={styles.LeftSideGrid}
+                    height={height - scrollbarSize()}
+                    rowHeight={rowHeight}
                     rowsCount={rowsCount}
                     scrollTop={scrollTop}
                     width={columnWidth}
@@ -111,7 +137,7 @@ export default class GridExample extends Component {
                           backgroundColor: `rgb(${topBackgroundColor.r},${topBackgroundColor.g},${topBackgroundColor.b})`,
                           color: topColor,
                           height: rowHeight,
-                          width
+                          width: width - scrollbarSize()
                         }}>
                           <Grid
                             className={styles.HeaderGrid}
@@ -123,7 +149,7 @@ export default class GridExample extends Component {
                             rowHeight={rowHeight}
                             rowsCount={1}
                             scrollLeft={scrollLeft}
-                            width={width}
+                            width={width - scrollbarSize()}
                           />
                         </div>
                         <div
@@ -161,6 +187,30 @@ export default class GridExample extends Component {
   }
 
   _renderBodyCell ({ columnIndex, rowIndex }) {
+    if (columnIndex < 1) {
+      return
+    }
+
+    return this._renderLeftSideCell({ columnIndex, rowIndex })
+  }
+
+  _renderHeaderCell ({ columnIndex, rowIndex }) {
+    if (columnIndex < 1) {
+      return
+    }
+
+    return this._renderLeftHeaderCell({ columnIndex, rowIndex })
+  }
+
+  _renderLeftHeaderCell ({ columnIndex, rowIndex }) {
+    return (
+      <div className={styles.headerCell}>
+        {`C${columnIndex}`}
+      </div>
+    )
+  }
+
+  _renderLeftSideCell ({ columnIndex, rowIndex }) {
     const rowClass = rowIndex % 2 === 0
       ? columnIndex % 2 === 0 ? styles.evenRow : styles.oddRow
       : columnIndex % 2 !== 0 ? styles.evenRow : styles.oddRow
@@ -169,24 +219,6 @@ export default class GridExample extends Component {
     return (
       <div className={classNames}>
         {`R${rowIndex}, C${columnIndex}`}
-      </div>
-    )
-  }
-
-  _renderHeaderCell ({ columnIndex, rowIndex }) {
-    return (
-      <div className={styles.headerCell}>
-        {`C${columnIndex}`}
-      </div>
-    )
-  }
-
-  _renderLeftSideCell (rowIndex) {
-    const classNames = cn(styles.cell, styles.leftCell)
-
-    return (
-      <div className={classNames}>
-        {`R${rowIndex}`}
       </div>
     )
   }
