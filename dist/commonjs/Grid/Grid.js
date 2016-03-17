@@ -16,6 +16,10 @@ var _raf = require('raf');
 
 var _raf2 = _interopRequireDefault(_raf);
 
+var _scrollbarSize = require('dom-helpers/util/scrollbarSize');
+
+var _scrollbarSize2 = _interopRequireDefault(_scrollbarSize);
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -153,6 +157,8 @@ var Grid = function (_Component) {
       var scrollTop = _props.scrollTop;
       var scrollToRow = _props.scrollToRow;
 
+
+      this._scrollbarSize = (0, _scrollbarSize2.default)();
 
       if (scrollLeft >= 0 || scrollTop >= 0) {
         this.setScrollPosition({ scrollLeft: scrollLeft, scrollTop: scrollTop });
@@ -374,6 +380,13 @@ var Grid = function (_Component) {
             var columnDatum = this._columnMetadata[columnIndex];
             var renderedCell = renderCell({ columnIndex: columnIndex, rowIndex: rowIndex });
             var key = rowIndex + '-' + columnIndex;
+
+            // any other falsey value will be rendered
+            // as a text node by React
+            if (renderedCell == null || renderedCell === false) {
+              continue;
+            }
+
             var child = _react2.default.createElement(
               'div',
               {
@@ -718,10 +731,11 @@ var Grid = function (_Component) {
       var height = _props6.height;
       var width = _props6.width;
 
+      var scrollbarSize = this._scrollbarSize;
       var totalRowsHeight = this._getTotalRowsHeight();
       var totalColumnsWidth = this._getTotalColumnsWidth();
-      var scrollLeft = Math.min(totalColumnsWidth - width, event.target.scrollLeft);
-      var scrollTop = Math.min(totalRowsHeight - height, event.target.scrollTop);
+      var scrollLeft = Math.min(totalColumnsWidth - width + scrollbarSize, event.target.scrollLeft);
+      var scrollTop = Math.min(totalRowsHeight - height + scrollbarSize, event.target.scrollTop);
 
       // Certain devices (like Apple touchpad) rapid-fire duplicate events.
       // Don't force a re-render if this is the case.
