@@ -1,4 +1,5 @@
 .GridRow {
+  position: relative;
   display: flex;
   flex-direction: row;
 }
@@ -9,6 +10,7 @@
 }
 .LeftSideGridContainer {
   flex: 0 0 75px;
+  z-index: 10;
 }
 
 .LeftSideGrid {
