@@ -508,7 +508,4 @@ describe('Grid', () => {
       expect(helper.rowStopIndex()).toEqual(4)
     })
   })
-
-  // TODO Add tests for :scrollToCell and :setScrollPosition.
-  // This probably requires the creation of an inner test-only class with refs.
 })

@@ -168,50 +168,13 @@ export default class Grid extends Component {
     })
   }
 
-  /**
-   * Updates the Grid to ensure the cell at the specified row and column indices is visible.
-   * This method exists so that a user can forcefully scroll to the same cell twice.
-   * (The :scrollToColumn and :scrollToRow properties would not change in that case so it would not be picked up by the component.)
-   */
-  scrollToCell ({ scrollToColumn, scrollToRow }) {
-    this._updateScrollLeftForScrollToColumn(scrollToColumn)
-    this._updateScrollTopForScrollToRow(scrollToRow)
-  }
-
-  /**
-   * Set the :scrollLeft and :scrollTop position within the inner scroll container.
-   * Normally it is best to let Grid manage these properties or to use a method like :scrollToCell.
-   * This method enables Grid to be scroll-synced to another react-virtualized component though.
-   * It is appropriate to use in that case.
-   */
-  setScrollPosition ({ scrollLeft, scrollTop }) {
-    const newState = {
-      scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
-    }
-
-    if (scrollLeft >= 0) {
-      newState.scrollLeft = scrollLeft
-    }
-
-    if (scrollTop >= 0) {
-      newState.scrollTop = scrollTop
-    }
-
-    if (
-      scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft ||
-      scrollTop >= 0 && scrollTop !== this.state.scrollTop
-    ) {
-      this.setState(newState)
-    }
-  }
-
   componentDidMount () {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
 
     this._scrollbarSize = getScrollbarSize()
 
     if (scrollLeft >= 0 || scrollTop >= 0) {
-      this.setScrollPosition({ scrollLeft, scrollTop })
+      this._setScrollPosition({ scrollLeft, scrollTop })
     }
 
     if (scrollToColumn >= 0 || scrollToRow >= 0) {
@@ -310,22 +273,22 @@ export default class Grid extends Component {
       nextProps.columnsCount === 0 &&
       nextState.scrollLeft !== 0
     ) {
-      this.setScrollPosition({ scrollLeft: 0 })
+      this._setScrollPosition({ scrollLeft: 0 })
     }
 
     if (
       nextProps.rowsCount === 0 &&
       nextState.scrollTop !== 0
     ) {
-      this.setScrollPosition({ scrollTop: 0 })
+      this._setScrollPosition({ scrollTop: 0 })
     }
 
     if (nextProps.scrollLeft !== this.props.scrollLeft) {
-      this.setScrollPosition({ scrollLeft: nextProps.scrollLeft })
+      this._setScrollPosition({ scrollLeft: nextProps.scrollLeft })
     }
 
     if (nextProps.scrollTop !== this.props.scrollTop) {
-      this.setScrollPosition({ scrollTop: nextProps.scrollTop })
+      this._setScrollPosition({ scrollTop: nextProps.scrollTop })
     }
 
     computeCellMetadataAndUpdateScrollOffsetHelper({
@@ -626,6 +589,27 @@ export default class Grid extends Component {
     })
   }
 
+  _setScrollPosition ({ scrollLeft, scrollTop }) {
+    const newState = {
+      scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+    }
+
+    if (scrollLeft >= 0) {
+      newState.scrollLeft = scrollLeft
+    }
+
+    if (scrollTop >= 0) {
+      newState.scrollTop = scrollTop
+    }
+
+    if (
+      scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft ||
+      scrollTop >= 0 && scrollTop !== this.state.scrollTop
+    ) {
+      this.setState(newState)
+    }
+  }
+
   _updateScrollLeftForScrollToColumn (scrollToColumnOverride) {
     const scrollToColumn = scrollToColumnOverride != null
       ? scrollToColumnOverride
@@ -643,7 +627,7 @@ export default class Grid extends Component {
       })
 
       if (scrollLeft !== calculatedScrollLeft) {
-        this.setScrollPosition({
+        this._setScrollPosition({
           scrollLeft: calculatedScrollLeft
         })
       }
@@ -667,7 +651,7 @@ export default class Grid extends Component {
       })
 
       if (scrollTop !== calculatedScrollTop) {
-        this.setScrollPosition({
+        this._setScrollPosition({
           scrollTop: calculatedScrollTop
         })
       }

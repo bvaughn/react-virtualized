@@ -322,7 +322,4 @@ describe('VirtualScroll', () => {
       })
     })
   })
-
-  // TODO Add tests for :scrollToRow and :setScrollTop.
-  // This probably requires the creation of an inner test-only class with refs.
 })
