@@ -10,6 +10,7 @@ Documentation
 * [VirtualScroll](VirtualScroll.md)
 
 ### High-Order Components
+* [ArrowKeyStepper](ArrowKeyStepper.md)
 * [AutoSizer](AutoSizer.md)
 * [ColumnSizer](ColumnSizer.md)
 * [InfiniteLoader](InfiniteLoader.md)

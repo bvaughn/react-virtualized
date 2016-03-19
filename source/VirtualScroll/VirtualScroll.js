@@ -73,45 +73,11 @@ export default class VirtualScroll extends Component {
     overscanRowsCount: 10
   }
 
-  componentDidMount () {
-    const { scrollTop } = this.props
-
-    if (scrollTop >= 0) {
-      this.setScrollTop(scrollTop)
-    }
-  }
-
-  componentWillUpdate (nextProps, nextState) {
-    if (nextProps.scrollTop !== this.props.scrollTop) {
-      this.setScrollTop(nextProps.scrollTop)
-    }
-  }
-
   /**
    * See Grid#recomputeGridSize
    */
   recomputeRowHeights () {
     this.refs.Grid.recomputeGridSize()
-  }
-
-  /**
-   * See Grid#scrollToCell
-   */
-  scrollToRow (scrollToIndex) {
-    this.refs.Grid.scrollToCell({
-      scrollToColumn: 0,
-      scrollToRow: scrollToIndex
-    })
-  }
-
-  /**
-   * See Grid#setScrollPosition
-   */
-  setScrollTop (scrollTop) {
-    this.refs.Grid.setScrollPosition({
-      scrollLeft: 0,
-      scrollTop
-    })
   }
 
   render () {
@@ -126,6 +92,7 @@ export default class VirtualScroll extends Component {
       overscanRowsCount,
       rowsCount,
       scrollToIndex,
+      scrollTop,
       width
     } = this.props
 
@@ -151,6 +118,7 @@ export default class VirtualScroll extends Component {
         rowHeight={rowHeight}
         rowsCount={rowsCount}
         scrollToRow={scrollToIndex}
+        scrollTop={scrollTop}
         width={width}
       />
     )

@@ -7,7 +7,7 @@ import {
   getVisibleCellIndices,
   initCellMetadata,
   updateScrollIndexHelper
-} from '../utils'
+} from './GridUtils'
 import cn from 'classnames'
 import raf from 'raf'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
@@ -152,7 +152,6 @@ export default class Grid extends Component {
     // Bind functions to instance so they don't lose context when passed around
     this._computeGridMetadata = this._computeGridMetadata.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
-    this._onKeyPress = this._onKeyPress.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
@@ -169,50 +168,13 @@ export default class Grid extends Component {
     })
   }
 
-  /**
-   * Updates the Grid to ensure the cell at the specified row and column indices is visible.
-   * This method exists so that a user can forcefully scroll to the same cell twice.
-   * (The :scrollToColumn and :scrollToRow properties would not change in that case so it would not be picked up by the component.)
-   */
-  scrollToCell ({ scrollToColumn, scrollToRow }) {
-    this._updateScrollLeftForScrollToColumn(scrollToColumn)
-    this._updateScrollTopForScrollToRow(scrollToRow)
-  }
-
-  /**
-   * Set the :scrollLeft and :scrollTop position within the inner scroll container.
-   * Normally it is best to let Grid manage these properties or to use a method like :scrollToCell.
-   * This method enables Grid to be scroll-synced to another react-virtualized component though.
-   * It is appropriate to use in that case.
-   */
-  setScrollPosition ({ scrollLeft, scrollTop }) {
-    const newState = {
-      scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
-    }
-
-    if (scrollLeft >= 0) {
-      newState.scrollLeft = scrollLeft
-    }
-
-    if (scrollTop >= 0) {
-      newState.scrollTop = scrollTop
-    }
-
-    if (
-      scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft ||
-      scrollTop >= 0 && scrollTop !== this.state.scrollTop
-    ) {
-      this.setState(newState)
-    }
-  }
-
   componentDidMount () {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
 
     this._scrollbarSize = getScrollbarSize()
 
     if (scrollLeft >= 0 || scrollTop >= 0) {
-      this.setScrollPosition({ scrollLeft, scrollTop })
+      this._setScrollPosition({ scrollLeft, scrollTop })
     }
 
     if (scrollToColumn >= 0 || scrollToRow >= 0) {
@@ -232,6 +194,11 @@ export default class Grid extends Component {
     })
   }
 
+  /**
+   * @private
+   * This method updates scrollLeft/scrollTop in state for the following conditions:
+   * 1) New scroll-to-cell props have been set
+   */
   componentDidUpdate (prevProps, prevState) {
     const { columnsCount, columnWidth, height, rowHeight, rowsCount, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
@@ -258,7 +225,7 @@ export default class Grid extends Component {
       }
     }
 
-    // Update scrollLeft if appropriate
+    // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
     updateScrollIndexHelper({
       cellsCount: columnsCount,
       cellMetadata: this._columnMetadata,
@@ -272,8 +239,6 @@ export default class Grid extends Component {
       size: width,
       updateScrollIndexCallback: this._updateScrollLeftForScrollToColumn
     })
-
-    // Update scrollTop if appropriate
     updateScrollIndexHelper({
       cellsCount: rowsCount,
       cellMetadata: this._rowMetadata,
@@ -306,29 +271,35 @@ export default class Grid extends Component {
     }
   }
 
+  /**
+   * @private
+   * This method updates scrollLeft/scrollTop in state for the following conditions:
+   * 1) Empty content (0 rows or columns)
+   * 2) New scroll props overriding the current state
+   * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
+   */
   componentWillUpdate (nextProps, nextState) {
     if (
       nextProps.columnsCount === 0 &&
-      nextState.scrollLeft !== 0
-    ) {
-      this.setScrollPosition({ scrollLeft: 0 })
-    }
-
-    if (
+      nextState.scrollLeft !== 0 ||
       nextProps.rowsCount === 0 &&
       nextState.scrollTop !== 0
     ) {
-      this.setScrollPosition({ scrollTop: 0 })
+      this._setScrollPosition({
+        scrollLeft: 0,
+        scrollTop: 0
+      })
+    } else if (
+      nextProps.scrollLeft !== this.props.scrollLeft ||
+      nextProps.scrollTop !== this.props.scrollTop
+    ) {
+      this._setScrollPosition({
+        scrollLeft: nextProps.scrollLeft,
+        scrollTop: nextProps.scrollTop
+      })
     }
 
-    if (nextProps.scrollLeft !== this.props.scrollLeft) {
-      this.setScrollPosition({ scrollLeft: nextProps.scrollLeft })
-    }
-
-    if (nextProps.scrollTop !== this.props.scrollTop) {
-      this.setScrollPosition({ scrollTop: nextProps.scrollTop })
-    }
-
+    // Update scroll offsets if the size or number of cells have changed, invalidating the previous value
     computeCellMetadataAndUpdateScrollOffsetHelper({
       cellsCount: this.props.columnsCount,
       cellSize: this.props.columnWidth,
@@ -341,7 +312,6 @@ export default class Grid extends Component {
       scrollToIndex: this.props.scrollToColumn,
       updateScrollOffsetForScrollToIndex: this._updateScrollLeftForScrollToColumn
     })
-
     computeCellMetadataAndUpdateScrollOffsetHelper({
       cellsCount: this.props.rowsCount,
       cellSize: this.props.rowHeight,
@@ -480,7 +450,6 @@ export default class Grid extends Component {
       <div
         ref='scrollingContainer'
         className={cn('Grid', className)}
-        onKeyDown={this._onKeyPress}
         onScroll={this._onScroll}
         tabIndex={0}
         style={gridStyle}
@@ -628,6 +597,27 @@ export default class Grid extends Component {
     })
   }
 
+  _setScrollPosition ({ scrollLeft, scrollTop }) {
+    const newState = {
+      scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+    }
+
+    if (scrollLeft >= 0) {
+      newState.scrollLeft = scrollLeft
+    }
+
+    if (scrollTop >= 0) {
+      newState.scrollTop = scrollTop
+    }
+
+    if (
+      scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft ||
+      scrollTop >= 0 && scrollTop !== this.state.scrollTop
+    ) {
+      this.setState(newState)
+    }
+  }
+
   _updateScrollLeftForScrollToColumn (scrollToColumnOverride) {
     const scrollToColumn = scrollToColumnOverride != null
       ? scrollToColumnOverride
@@ -645,7 +635,7 @@ export default class Grid extends Component {
       })
 
       if (scrollLeft !== calculatedScrollLeft) {
-        this.setScrollPosition({
+        this._setScrollPosition({
           scrollLeft: calculatedScrollLeft
         })
       }
@@ -669,60 +659,10 @@ export default class Grid extends Component {
       })
 
       if (scrollTop !== calculatedScrollTop) {
-        this.setScrollPosition({
+        this._setScrollPosition({
           scrollTop: calculatedScrollTop
         })
       }
-    }
-  }
-
-  /* ---------------------------- Event handlers ---------------------------- */
-
-  _onKeyPress (event) {
-    const { columnsCount, height, rowsCount, width } = this.props
-    const { scrollLeft, scrollTop } = this.state
-
-    let datum, newScrollLeft, newScrollTop
-
-    if (columnsCount === 0 || rowsCount === 0) {
-      return
-    }
-
-    switch (event.key) {
-      case 'ArrowDown':
-        datum = this._rowMetadata[this._renderedRowStartIndex]
-        newScrollTop = Math.min(
-          this._getTotalRowsHeight() - height,
-          scrollTop + datum.size
-        )
-
-        this.setScrollPosition({
-          scrollTop: newScrollTop
-        })
-        break
-      case 'ArrowLeft':
-        this.scrollToCell({
-          scrollToColumn: Math.max(0, this._renderedColumnStartIndex - 1),
-          scrollToRow: this.props.scrollToRow
-        })
-        break
-      case 'ArrowRight':
-        datum = this._columnMetadata[this._renderedColumnStartIndex]
-        newScrollLeft = Math.min(
-          this._getTotalColumnsWidth() - width,
-          scrollLeft + datum.size
-        )
-
-        this.setScrollPosition({
-          scrollLeft: newScrollLeft
-        })
-        break
-      case 'ArrowUp':
-        this.scrollToCell({
-          scrollToColumn: this.props.scrollToColumn,
-          scrollToRow: Math.max(0, this._renderedRowStartIndex - 1)
-        })
-        break
     }
   }
 

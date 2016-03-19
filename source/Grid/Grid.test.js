@@ -137,6 +137,37 @@ describe('Grid', () => {
       // Target offset for the last item then is 2,000 - 100
       expect(grid.state.scrollTop).toEqual(1900)
     })
+
+    it('should scroll to a row and column just added', () => {
+      let grid = render(getMarkup())
+      expect(grid.state.scrollLeft).toEqual(0)
+      expect(grid.state.scrollTop).toEqual(0)
+      grid = render(getMarkup({
+        columnsCount: NUM_COLUMNS + 1,
+        rowsCount: NUM_ROWS + 1,
+        scrollToColumn: NUM_COLUMNS,
+        scrollToRow: NUM_ROWS
+      }))
+      expect(grid.state.scrollLeft).toEqual(2350)
+      expect(grid.state.scrollTop).toEqual(1920)
+    })
+
+    it('should scroll back to a newly-added cell without a change in prop', () => {
+      let grid = render(getMarkup({
+        columnsCount: NUM_COLUMNS,
+        rowsCount: NUM_ROWS,
+        scrollToColumn: NUM_COLUMNS,
+        scrollToRow: NUM_ROWS
+      }))
+      grid = render(getMarkup({
+        columnsCount: NUM_COLUMNS + 1,
+        rowsCount: NUM_ROWS + 1,
+        scrollToColumn: NUM_COLUMNS,
+        scrollToRow: NUM_ROWS
+      }))
+      expect(grid.state.scrollLeft).toEqual(2350)
+      expect(grid.state.scrollTop).toEqual(1920)
+    })
   })
 
   describe('property updates', () => {
@@ -508,7 +539,4 @@ describe('Grid', () => {
       expect(helper.rowStopIndex()).toEqual(4)
     })
   })
-
-  // TODO Add tests for :scrollToCell and :setScrollPosition.
-  // This probably requires the creation of an inner test-only class with refs.
 })

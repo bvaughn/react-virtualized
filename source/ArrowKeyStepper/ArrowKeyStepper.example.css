@@ -1,0 +1,17 @@
+.Grid {
+  border: 1px solid #e0e0e0;
+}
+
+.Cell {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.FocusedCell {
+  background-color: #e0e0e0;
+  font-weight: bold;
+}

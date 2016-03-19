@@ -146,44 +146,12 @@ export default class FlexTable extends Component {
     this.refs.Grid.recomputeGridSize()
   }
 
-  /**
-   * See Grid#scrollToIndex
-   */
-  scrollToRow (scrollToIndex) {
-    this.refs.Grid.scrollToCell({
-      scrollToColumn: 0,
-      scrollToRow: scrollToIndex
-    })
-  }
-
-  /**
-   * See Grid#setScrollPosition
-   */
-  setScrollTop (scrollTop) {
-    this.refs.Grid.setScrollPosition({
-      scrollLeft: 0,
-      scrollTop
-    })
-  }
-
   componentDidMount () {
-    const { scrollTop } = this.props
-
-    if (scrollTop >= 0) {
-      this.setScrollTop(scrollTop)
-    }
-
     this._setScrollbarWidth()
   }
 
   componentDidUpdate () {
     this._setScrollbarWidth()
-  }
-
-  componentWillUpdate (nextProps, nextState) {
-    if (nextProps.scrollTop !== this.props.scrollTop) {
-      this.setScrollTop(nextProps.scrollTop)
-    }
   }
 
   render () {
@@ -200,6 +168,7 @@ export default class FlexTable extends Component {
       rowHeight,
       rowsCount,
       scrollToIndex,
+      scrollTop,
       width
     } = this.props
     const { scrollbarWidth } = this.state
@@ -250,6 +219,7 @@ export default class FlexTable extends Component {
           rowHeight={rowHeight}
           rowsCount={rowsCount}
           scrollToRow={scrollToIndex}
+          scrollTop={scrollTop}
           width={width}
         />
       </div>

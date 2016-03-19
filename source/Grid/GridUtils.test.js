@@ -6,7 +6,7 @@ import {
   getVisibleCellIndices,
   initCellMetadata,
   updateScrollIndexHelper
-} from './utils'
+} from './GridUtils'
 
 // Default cell sizes and offsets for use in below tests
 function getCellMetadata () {
