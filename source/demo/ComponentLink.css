@@ -13,13 +13,20 @@
   color: #fff;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 550px) {
   .ComponentLink {
     font-size: .75rem;
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
+  .ComponentLink {
+    padding: .5em;
+    font-size: .65rem;
+  }
+}
+
+@media (max-width: 450px) {
   .ComponentLink {
     padding: .5em;
     font-size: .5rem;
