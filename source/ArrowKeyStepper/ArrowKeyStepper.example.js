@@ -6,6 +6,7 @@ import ArrowKeyStepper from './ArrowKeyStepper'
 import AutoSizer from '../AutoSizer'
 import Grid from '../Grid'
 import shouldPureComponentUpdate from 'react-pure-render/function'
+import cn from 'classnames'
 import styles from './ArrowKeyStepper.example.css'
 
 export default class ArrowKeyStepperExample extends Component {
@@ -61,7 +62,7 @@ export default class ArrowKeyStepperExample extends Component {
                     columnsCount={100}
                     height={200}
                     onSectionRendered={onSectionRendered}
-                    renderCell={this._renderCell}
+                    renderCell={({ columnIndex, rowIndex }) => this._renderCell({ columnIndex, rowIndex, scrollToColumn, scrollToRow }) }
                     rowHeight={this._getRowHeight}
                     rowsCount={100}
                     scrollToColumn={scrollToColumn}
@@ -85,10 +86,10 @@ export default class ArrowKeyStepperExample extends Component {
     return (1 + (index % 3)) * 30
   }
 
-  _renderCell ({ columnIndex, rowIndex }) {
-    const className = rowIndex % 2 === 0
-      ? columnIndex % 2 === 0 ? styles.EvenCell : styles.OddCell
-      : columnIndex % 2 !== 0 ? styles.EvenCell : styles.OddCell
+  _renderCell ({ columnIndex, rowIndex, scrollToColumn, scrollToRow }) {
+    const className = cn(styles.Cell, {
+      [styles.FocusedCell]: columnIndex === scrollToColumn && rowIndex === scrollToRow
+    })
 
     return (
       <div className={className}>

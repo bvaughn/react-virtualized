@@ -2,14 +2,16 @@
   border: 1px solid #e0e0e0;
 }
 
-.EvenCell,
-.OddCell {
+.Cell {
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.OddCell {
-  background-color: rgba(0, 0, 0, .1);
+.FocusedCell {
+  background-color: #e0e0e0;
+  font-weight: bold;
 }
