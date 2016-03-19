@@ -137,6 +137,9 @@ describe('Grid', () => {
       // Target offset for the last item then is 2,000 - 100
       expect(grid.state.scrollTop).toEqual(1900)
     })
+
+    // @TODO Test updating with new row + scrollTop, removing row, scrolling, then re-adding row (with same scrollTop)
+    // @TODO Test updating with new row + scrollToIndex, removing row, scrolling, then re-adding row (with same scrollToIndex)
   })
 
   describe('property updates', () => {

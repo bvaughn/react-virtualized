@@ -36,38 +36,40 @@ export default class ArrowKeyStepperExample extends Component {
 
         <ContentBoxParagraph>
           This high-order component decorates a <code>VirtualScroll</code>, <code>FlexTable</code>, or <code>Grid</code> and responds to arrow-key events by scrolling one row or column at a time.
-          Focus in the `Grid` below and type the left, right, up, or down arrow key for an example.
+          Focus in the `Grid` below and use the left, right, up, or down arrow keys to move around within the grid.
+        </ContentBoxParagraph>
+
+        <ContentBoxParagraph>
+          Note that unlike the other HOCs in react-virtualized, the <code>ArrowKeyStepper</code> adds a <code>&lt;div&gt;</code> element around its children in order to attach a key-down event handler.
         </ContentBoxParagraph>
 
         <ArrowKeyStepper
           columnsCount={100}
           rowsCount={100}
         >
-          {({ onKeyDown, onSectionRendered, scrollToColumn, scrollToRow }) => (
+          {({ onSectionRendered, scrollToColumn, scrollToRow }) => (
             <div>
               <ContentBoxParagraph>
                 {`Most-recently-stepped column: ${scrollToColumn}, row: ${scrollToRow}`}
               </ContentBoxParagraph>
 
-              <div onKeyDown={onKeyDown}>
-                <AutoSizer disableHeight>
-                  {({ width }) => (
-                    <Grid
-                      className={styles.Grid}
-                      columnWidth={this._getColumnWidth}
-                      columnsCount={100}
-                      height={300}
-                      onSectionRendered={onSectionRendered}
-                      renderCell={this._renderCell}
-                      rowHeight={this._getRowHeight}
-                      rowsCount={100}
-                      scrollToColumn={scrollToColumn}
-                      scrollToRow={scrollToRow}
-                      width={width}
-                    />
-                  )}
-                </AutoSizer>
-              </div>
+              <AutoSizer disableHeight>
+                {({ width }) => (
+                  <Grid
+                    className={styles.Grid}
+                    columnWidth={this._getColumnWidth}
+                    columnsCount={100}
+                    height={200}
+                    onSectionRendered={onSectionRendered}
+                    renderCell={this._renderCell}
+                    rowHeight={this._getRowHeight}
+                    rowsCount={100}
+                    scrollToColumn={scrollToColumn}
+                    scrollToRow={scrollToRow}
+                    width={width}
+                  />
+                )}
+              </AutoSizer>
             </div>
           )}
         </ArrowKeyStepper>

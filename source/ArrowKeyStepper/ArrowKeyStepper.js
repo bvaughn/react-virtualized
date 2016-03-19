@@ -1,5 +1,5 @@
 /** @flow */
-import { Component, PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react'
 import shouldPureComponentUpdate from 'react-pure-render/function'
 
 /**
@@ -22,6 +22,11 @@ export default class ArrowKeyStepper extends Component {
       scrollToRow: 0
     }
 
+    this._columnStartIndex = 0
+    this._columnStopIndex = 0
+    this._rowStartIndex = 0
+    this._rowStopIndex = 0
+
     this._onKeyDown = this._onKeyDown.bind(this)
     this._onSectionRendered = this._onSectionRendered.bind(this)
   }
@@ -30,12 +35,15 @@ export default class ArrowKeyStepper extends Component {
     const { children } = this.props
     const { scrollToColumn, scrollToRow } = this.state
 
-    return children({
-      onKeyDown: this._onKeyDown,
-      onSectionRendered: this._onSectionRendered,
-      scrollToColumn,
-      scrollToRow
-    })
+    return (
+      <div onKeyDown={this._onKeyDown}>
+        {children({
+          onSectionRendered: this._onSectionRendered,
+          scrollToColumn,
+          scrollToRow
+        })}
+      </div>
+    )
   }
 
   _onKeyDown (event) {
