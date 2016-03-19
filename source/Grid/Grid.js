@@ -194,6 +194,11 @@ export default class Grid extends Component {
     })
   }
 
+  /**
+   * @private
+   * This method updates scrollLeft/scrollTop in state for the following conditions:
+   * 1) New scroll-to-cell props have been set
+   */
   componentDidUpdate (prevProps, prevState) {
     const { columnsCount, columnWidth, height, rowHeight, rowsCount, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
@@ -220,7 +225,7 @@ export default class Grid extends Component {
       }
     }
 
-    // Update scrollLeft if appropriate
+    // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
     updateScrollIndexHelper({
       cellsCount: columnsCount,
       cellMetadata: this._columnMetadata,
@@ -234,8 +239,6 @@ export default class Grid extends Component {
       size: width,
       updateScrollIndexCallback: this._updateScrollLeftForScrollToColumn
     })
-
-    // Update scrollTop if appropriate
     updateScrollIndexHelper({
       cellsCount: rowsCount,
       cellMetadata: this._rowMetadata,
@@ -268,6 +271,13 @@ export default class Grid extends Component {
     }
   }
 
+  /**
+   * @private
+   * This method updates scrollLeft/scrollTop in state for the following conditions:
+   * 1) Empty content (0 rows or columns)
+   * 2) New scroll props overriding the current state
+   * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
+   */
   componentWillUpdate (nextProps, nextState) {
     if (
       nextProps.columnsCount === 0 &&
@@ -289,6 +299,7 @@ export default class Grid extends Component {
       })
     }
 
+    // Update scroll offsets if the size or number of cells have changed, invalidating the previous value
     computeCellMetadataAndUpdateScrollOffsetHelper({
       cellsCount: this.props.columnsCount,
       cellSize: this.props.columnWidth,
@@ -301,7 +312,6 @@ export default class Grid extends Component {
       scrollToIndex: this.props.scrollToColumn,
       updateScrollOffsetForScrollToIndex: this._updateScrollLeftForScrollToColumn
     })
-
     computeCellMetadataAndUpdateScrollOffsetHelper({
       cellsCount: this.props.rowsCount,
       cellSize: this.props.rowHeight,
