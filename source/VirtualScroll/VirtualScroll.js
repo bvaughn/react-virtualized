@@ -2,7 +2,7 @@
 import Grid from '../Grid'
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -13,8 +13,6 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
  * This component renders a virtualized list of elements with either fixed or dynamic heights.
  */
 export default class VirtualScroll extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     /** Optional CSS class name */
     className: PropTypes.string,
@@ -122,5 +120,9 @@ export default class VirtualScroll extends Component {
         width={width}
       />
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 }

@@ -5,13 +5,11 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import ArrowKeyStepper from './ArrowKeyStepper'
 import AutoSizer from '../AutoSizer'
 import Grid from '../Grid'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 import cn from 'classnames'
 import styles from './ArrowKeyStepper.example.css'
 
 export default class ArrowKeyStepperExample extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -76,6 +74,10 @@ export default class ArrowKeyStepperExample extends Component {
         </ArrowKeyStepper>
       </ContentBox>
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   _getColumnWidth (index) {
