@@ -7,7 +7,7 @@ import {
   getVisibleCellIndices,
   initCellMetadata,
   updateScrollIndexHelper
-} from '../utils'
+} from './GridUtils'
 import cn from 'classnames'
 import raf from 'raf'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
