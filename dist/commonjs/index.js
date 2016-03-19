@@ -4,6 +4,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _ArrowKeyStepper = require('./ArrowKeyStepper');
+
+Object.defineProperty(exports, 'ArrowKeyStepper', {
+  enumerable: true,
+  get: function get() {
+    return _ArrowKeyStepper.ArrowKeyStepper;
+  }
+});
+
 var _AutoSizer = require('./AutoSizer');
 
 Object.defineProperty(exports, 'AutoSizer', {

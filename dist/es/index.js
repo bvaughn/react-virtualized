@@ -1,4 +1,5 @@
 
+export { ArrowKeyStepper } from './ArrowKeyStepper';
 export { AutoSizer } from './AutoSizer';
 export { ColumnSizer } from './ColumnSizer';
 export { FlexTable, FlexColumn, SortDirection, SortIndicator } from './FlexTable';

@@ -40,55 +40,15 @@ var FlexTable = function (_Component) {
     value: function recomputeRowHeights() {
       this.refs.Grid.recomputeGridSize();
     }
-
-    /**
-     * See Grid#scrollToIndex
-     */
-
-  }, {
-    key: 'scrollToRow',
-    value: function scrollToRow(scrollToIndex) {
-      this.refs.Grid.scrollToCell({
-        scrollToColumn: 0,
-        scrollToRow: scrollToIndex
-      });
-    }
-
-    /**
-     * See Grid#setScrollPosition
-     */
-
-  }, {
-    key: 'setScrollTop',
-    value: function setScrollTop(scrollTop) {
-      this.refs.Grid.setScrollPosition({
-        scrollLeft: 0,
-        scrollTop: scrollTop
-      });
-    }
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var scrollTop = this.props.scrollTop;
-
-
-      if (scrollTop >= 0) {
-        this.setScrollTop(scrollTop);
-      }
-
       this._setScrollbarWidth();
     }
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
       this._setScrollbarWidth();
-    }
-  }, {
-    key: 'componentWillUpdate',
-    value: function componentWillUpdate(nextProps, nextState) {
-      if (nextProps.scrollTop !== this.props.scrollTop) {
-        this.setScrollTop(nextProps.scrollTop);
-      }
     }
   }, {
     key: 'render',
@@ -108,6 +68,7 @@ var FlexTable = function (_Component) {
       var rowHeight = _props.rowHeight;
       var rowsCount = _props.rowsCount;
       var scrollToIndex = _props.scrollToIndex;
+      var scrollTop = _props.scrollTop;
       var width = _props.width;
       var scrollbarWidth = this.state.scrollbarWidth;
 
@@ -173,6 +134,7 @@ var FlexTable = function (_Component) {
           rowHeight: rowHeight,
           rowsCount: rowsCount,
           scrollToRow: scrollToIndex,
+          scrollTop: scrollTop,
           width: width
         })
       );

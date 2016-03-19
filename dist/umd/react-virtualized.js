@@ -1,6 +1,6 @@
 !function(root, factory) {
     "object" == typeof exports && "object" == typeof module ? module.exports = factory(require("react"), require("react-dom")) : "function" == typeof define && define.amd ? define([ "react", "react-dom" ], factory) : "object" == typeof exports ? exports.ReactVirtualized = factory(require("react"), require("react-dom")) : root.ReactVirtualized = factory(root.React, root.ReactDOM);
-}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_23__) {
+}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_25__) {
     /******/
     return function(modules) {
         /******/
@@ -72,21 +72,28 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _AutoSizer = __webpack_require__(1);
+        var _ArrowKeyStepper = __webpack_require__(1);
+        Object.defineProperty(exports, "ArrowKeyStepper", {
+            enumerable: !0,
+            get: function() {
+                return _ArrowKeyStepper.ArrowKeyStepper;
+            }
+        });
+        var _AutoSizer = __webpack_require__(6);
         Object.defineProperty(exports, "AutoSizer", {
             enumerable: !0,
             get: function() {
                 return _AutoSizer.AutoSizer;
             }
         });
-        var _ColumnSizer = __webpack_require__(7);
+        var _ColumnSizer = __webpack_require__(9);
         Object.defineProperty(exports, "ColumnSizer", {
             enumerable: !0,
             get: function() {
                 return _ColumnSizer.ColumnSizer;
             }
         });
-        var _FlexTable = __webpack_require__(18);
+        var _FlexTable = __webpack_require__(20);
         Object.defineProperty(exports, "FlexTable", {
             enumerable: !0,
             get: function() {
@@ -108,28 +115,28 @@
                 return _FlexTable.SortIndicator;
             }
         });
-        var _Grid = __webpack_require__(9);
+        var _Grid = __webpack_require__(11);
         Object.defineProperty(exports, "Grid", {
             enumerable: !0,
             get: function() {
                 return _Grid.Grid;
             }
         });
-        var _InfiniteLoader = __webpack_require__(24);
+        var _InfiniteLoader = __webpack_require__(26);
         Object.defineProperty(exports, "InfiniteLoader", {
             enumerable: !0,
             get: function() {
                 return _InfiniteLoader.InfiniteLoader;
             }
         });
-        var _ScrollSync = __webpack_require__(26);
+        var _ScrollSync = __webpack_require__(28);
         Object.defineProperty(exports, "ScrollSync", {
             enumerable: !0,
             get: function() {
                 return _ScrollSync.ScrollSync;
             }
         });
-        var _VirtualScroll = __webpack_require__(28);
+        var _VirtualScroll = __webpack_require__(30);
         Object.defineProperty(exports, "VirtualScroll", {
             enumerable: !0,
             get: function() {
@@ -147,10 +154,166 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports.AutoSizer = exports["default"] = void 0;
-        var _AutoSizer2 = __webpack_require__(2), _AutoSizer3 = _interopRequireDefault(_AutoSizer2);
-        exports["default"] = _AutoSizer3["default"], exports.AutoSizer = _AutoSizer3["default"];
+        }), exports.ArrowKeyStepper = exports["default"] = void 0;
+        var _ArrowKeyStepper2 = __webpack_require__(2), _ArrowKeyStepper3 = _interopRequireDefault(_ArrowKeyStepper2);
+        exports["default"] = _ArrowKeyStepper3["default"], exports.ArrowKeyStepper = _ArrowKeyStepper3["default"];
     }, /* 2 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
+        }
+        function _inherits(subClass, superClass) {
+            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+            subClass.prototype = Object.create(superClass && superClass.prototype, {
+                constructor: {
+                    value: subClass,
+                    enumerable: !1,
+                    writable: !0,
+                    configurable: !0
+                }
+            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), ArrowKeyStepper = function(_Component) {
+            function ArrowKeyStepper(props, context) {
+                _classCallCheck(this, ArrowKeyStepper);
+                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ArrowKeyStepper).call(this, props, context));
+                return _this.shouldComponentUpdate = _function2["default"], _this.state = {
+                    scrollToColumn: 0,
+                    scrollToRow: 0
+                }, _this._columnStartIndex = 0, _this._columnStopIndex = 0, _this._rowStartIndex = 0, 
+                _this._rowStopIndex = 0, _this._onKeyDown = _this._onKeyDown.bind(_this), _this._onSectionRendered = _this._onSectionRendered.bind(_this), 
+                _this;
+            }
+            return _inherits(ArrowKeyStepper, _Component), _createClass(ArrowKeyStepper, [ {
+                key: "render",
+                value: function() {
+                    var _props = this.props, className = _props.className, children = _props.children, _state = this.state, scrollToColumn = _state.scrollToColumn, scrollToRow = _state.scrollToRow;
+                    return _react2["default"].createElement("div", {
+                        className: className,
+                        onKeyDown: this._onKeyDown
+                    }, children({
+                        onSectionRendered: this._onSectionRendered,
+                        scrollToColumn: scrollToColumn,
+                        scrollToRow: scrollToRow
+                    }));
+                }
+            }, {
+                key: "_onKeyDown",
+                value: function(event) {
+                    var _props2 = this.props, columnsCount = _props2.columnsCount, rowsCount = _props2.rowsCount;
+                    switch (event.key) {
+                      case "ArrowDown":
+                        event.preventDefault(), this.setState({
+                            scrollToRow: Math.min(this._rowStopIndex + 1, rowsCount - 1)
+                        });
+                        break;
+
+                      case "ArrowLeft":
+                        event.preventDefault(), this.setState({
+                            scrollToColumn: Math.max(this._columnStartIndex - 1, 0)
+                        });
+                        break;
+
+                      case "ArrowRight":
+                        event.preventDefault(), this.setState({
+                            scrollToColumn: Math.min(this._columnStopIndex + 1, columnsCount - 1)
+                        });
+                        break;
+
+                      case "ArrowUp":
+                        event.preventDefault(), this.setState({
+                            scrollToRow: Math.max(this._rowStartIndex - 1, 0)
+                        });
+                    }
+                }
+            }, {
+                key: "_onSectionRendered",
+                value: function(_ref) {
+                    var columnStartIndex = _ref.columnStartIndex, columnStopIndex = _ref.columnStopIndex, rowStartIndex = _ref.rowStartIndex, rowStopIndex = _ref.rowStopIndex;
+                    this._columnStartIndex = columnStartIndex, this._columnStopIndex = columnStopIndex, 
+                    this._rowStartIndex = rowStartIndex, this._rowStopIndex = rowStopIndex;
+                }
+            } ]), ArrowKeyStepper;
+        }(_react.Component);
+        ArrowKeyStepper.propTypes = {
+            children: _react.PropTypes.func.isRequired,
+            className: _react.PropTypes.string,
+            columnsCount: _react.PropTypes.number.isRequired,
+            rowsCount: _react.PropTypes.number.isRequired
+        }, exports["default"] = ArrowKeyStepper;
+    }, /* 3 */
+    /***/
+    function(module, exports) {
+        module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
+    }, /* 4 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function shouldPureComponentUpdate(nextProps, nextState) {
+            return !(0, _shallowEqual2["default"])(this.props, nextProps) || !(0, _shallowEqual2["default"])(this.state, nextState);
+        }
+        exports.__esModule = !0, exports["default"] = shouldPureComponentUpdate;
+        var _shallowEqual = __webpack_require__(5), _shallowEqual2 = _interopRequireDefault(_shallowEqual);
+        module.exports = exports["default"];
+    }, /* 5 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function shallowEqual(objA, objB) {
+            if (objA === objB) return !0;
+            if ("object" != typeof objA || null === objA || "object" != typeof objB || null === objB) return !1;
+            var keysA = Object.keys(objA), keysB = Object.keys(objB);
+            if (keysA.length !== keysB.length) return !1;
+            for (var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB), i = 0; i < keysA.length; i++) if (!bHasOwnProperty(keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) return !1;
+            return !0;
+        }
+        exports.__esModule = !0, exports["default"] = shallowEqual, module.exports = exports["default"];
+    }, /* 6 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports.AutoSizer = exports["default"] = void 0;
+        var _AutoSizer2 = __webpack_require__(7), _AutoSizer3 = _interopRequireDefault(_AutoSizer2);
+        exports["default"] = _AutoSizer3["default"], exports.AutoSizer = _AutoSizer3["default"];
+    }, /* 7 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -205,7 +368,7 @@
             return _inherits(AutoSizer, _Component), _createClass(AutoSizer, [ {
                 key: "componentDidMount",
                 value: function() {
-                    this._detectElementResize = __webpack_require__(6), this._detectElementResize.addResizeListener(this._parentNode, this._onResize), 
+                    this._detectElementResize = __webpack_require__(8), this._detectElementResize.addResizeListener(this._parentNode, this._onResize), 
                     this._onResize();
                 }
             }, {
@@ -261,39 +424,7 @@
         }, AutoSizer.defaultProps = {
             onResize: function() {}
         }, exports["default"] = AutoSizer;
-    }, /* 3 */
-    /***/
-    function(module, exports) {
-        module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
-    }, /* 4 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        "use strict";
-        function _interopRequireDefault(obj) {
-            return obj && obj.__esModule ? obj : {
-                "default": obj
-            };
-        }
-        function shouldPureComponentUpdate(nextProps, nextState) {
-            return !(0, _shallowEqual2["default"])(this.props, nextProps) || !(0, _shallowEqual2["default"])(this.state, nextState);
-        }
-        exports.__esModule = !0, exports["default"] = shouldPureComponentUpdate;
-        var _shallowEqual = __webpack_require__(5), _shallowEqual2 = _interopRequireDefault(_shallowEqual);
-        module.exports = exports["default"];
-    }, /* 5 */
-    /***/
-    function(module, exports) {
-        "use strict";
-        function shallowEqual(objA, objB) {
-            if (objA === objB) return !0;
-            if ("object" != typeof objA || null === objA || "object" != typeof objB || null === objB) return !1;
-            var keysA = Object.keys(objA), keysB = Object.keys(objB);
-            if (keysA.length !== keysB.length) return !1;
-            for (var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB), i = 0; i < keysA.length; i++) if (!bHasOwnProperty(keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) return !1;
-            return !0;
-        }
-        exports.__esModule = !0, exports["default"] = shallowEqual, module.exports = exports["default"];
-    }, /* 6 */
+    }, /* 8 */
     /***/
     function(module, exports) {
         "use strict";
@@ -359,105 +490,6 @@
             addResizeListener: addResizeListener,
             removeResizeListener: removeResizeListener
         };
-    }, /* 7 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        "use strict";
-        function _interopRequireDefault(obj) {
-            return obj && obj.__esModule ? obj : {
-                "default": obj
-            };
-        }
-        Object.defineProperty(exports, "__esModule", {
-            value: !0
-        }), exports.ColumnSizer = exports["default"] = void 0;
-        var _ColumnSizer2 = __webpack_require__(8), _ColumnSizer3 = _interopRequireDefault(_ColumnSizer2);
-        exports["default"] = _ColumnSizer3["default"], exports.ColumnSizer = _ColumnSizer3["default"];
-    }, /* 8 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        "use strict";
-        function _interopRequireDefault(obj) {
-            return obj && obj.__esModule ? obj : {
-                "default": obj
-            };
-        }
-        function _classCallCheck(instance, Constructor) {
-            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
-        }
-        function _possibleConstructorReturn(self, call) {
-            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-            return !call || "object" != typeof call && "function" != typeof call ? self : call;
-        }
-        function _inherits(subClass, superClass) {
-            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-            subClass.prototype = Object.create(superClass && superClass.prototype, {
-                constructor: {
-                    value: subClass,
-                    enumerable: !1,
-                    writable: !0,
-                    configurable: !0
-                }
-            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
-        }
-        Object.defineProperty(exports, "__esModule", {
-            value: !0
-        });
-        var _createClass = function() {
-            function defineProperties(target, props) {
-                for (var i = 0; i < props.length; i++) {
-                    var descriptor = props[i];
-                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
-                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
-                }
-            }
-            return function(Constructor, protoProps, staticProps) {
-                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
-                Constructor;
-            };
-        }(), _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = function(_Component) {
-            function ColumnSizer(props, context) {
-                _classCallCheck(this, ColumnSizer);
-                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ColumnSizer).call(this, props, context));
-                return _this.shouldComponentUpdate = _function2["default"], _this._registerChild = _this._registerChild.bind(_this), 
-                _this;
-            }
-            return _inherits(ColumnSizer, _Component), _createClass(ColumnSizer, [ {
-                key: "componentDidUpdate",
-                value: function(prevProps, prevState) {
-                    var _props = this.props, columnMaxWidth = _props.columnMaxWidth, columnMinWidth = _props.columnMinWidth, columnsCount = _props.columnsCount, width = _props.width;
-                    columnMaxWidth === prevProps.columnMaxWidth && columnMinWidth === prevProps.columnMinWidth && columnsCount === prevProps.columnsCount && width === prevProps.width || this._registeredChild && this._registeredChild.recomputeGridSize();
-                }
-            }, {
-                key: "render",
-                value: function() {
-                    var _props2 = this.props, children = _props2.children, columnMaxWidth = _props2.columnMaxWidth, columnMinWidth = _props2.columnMinWidth, columnsCount = _props2.columnsCount, width = _props2.width, safeColumnMinWidth = columnMinWidth || 1, safeColumnMaxWidth = columnMaxWidth ? Math.min(columnMaxWidth, width) : width, columnWidth = width / columnsCount;
-                    columnWidth = Math.max(safeColumnMinWidth, columnWidth), columnWidth = Math.min(safeColumnMaxWidth, columnWidth), 
-                    columnWidth = Math.floor(columnWidth);
-                    var adjustedWidth = Math.min(width, columnWidth * columnsCount);
-                    return children({
-                        adjustedWidth: adjustedWidth,
-                        getColumnWidth: function() {
-                            return columnWidth;
-                        },
-                        registerChild: this._registerChild
-                    });
-                }
-            }, {
-                key: "_registerChild",
-                value: function(child) {
-                    if (null !== child && !(child instanceof _Grid2["default"])) throw Error("Unexpected child type registered; only Grid children are supported.");
-                    this._registeredChild = child, this._registeredChild && this._registeredChild.recomputeGridSize();
-                }
-            } ]), ColumnSizer;
-        }(_react.Component);
-        ColumnSizer.propTypes = {
-            children: _react.PropTypes.func.isRequired,
-            columnMaxWidth: _react.PropTypes.number,
-            columnMinWidth: _react.PropTypes.number,
-            columnsCount: _react.PropTypes.number.isRequired,
-            width: _react.PropTypes.number.isRequired
-        }, exports["default"] = ColumnSizer;
     }, /* 9 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -469,9 +501,9 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports.Grid = exports["default"] = void 0;
-        var _Grid2 = __webpack_require__(10), _Grid3 = _interopRequireDefault(_Grid2);
-        exports["default"] = _Grid3["default"], exports.Grid = _Grid3["default"];
+        }), exports.ColumnSizer = exports["default"] = void 0;
+        var _ColumnSizer2 = __webpack_require__(10), _ColumnSizer3 = _interopRequireDefault(_ColumnSizer2);
+        exports["default"] = _ColumnSizer3["default"], exports.ColumnSizer = _ColumnSizer3["default"];
     }, /* 10 */
     /***/
     function(module, exports, __webpack_require__) {
@@ -514,7 +546,106 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _utils = __webpack_require__(11), _classnames = __webpack_require__(12), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(13), _raf2 = _interopRequireDefault(_raf), _scrollbarSize = __webpack_require__(16), _scrollbarSize2 = _interopRequireDefault(_scrollbarSize), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
+        }(), _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(11), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = function(_Component) {
+            function ColumnSizer(props, context) {
+                _classCallCheck(this, ColumnSizer);
+                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ColumnSizer).call(this, props, context));
+                return _this.shouldComponentUpdate = _function2["default"], _this._registerChild = _this._registerChild.bind(_this), 
+                _this;
+            }
+            return _inherits(ColumnSizer, _Component), _createClass(ColumnSizer, [ {
+                key: "componentDidUpdate",
+                value: function(prevProps, prevState) {
+                    var _props = this.props, columnMaxWidth = _props.columnMaxWidth, columnMinWidth = _props.columnMinWidth, columnsCount = _props.columnsCount, width = _props.width;
+                    columnMaxWidth === prevProps.columnMaxWidth && columnMinWidth === prevProps.columnMinWidth && columnsCount === prevProps.columnsCount && width === prevProps.width || this._registeredChild && this._registeredChild.recomputeGridSize();
+                }
+            }, {
+                key: "render",
+                value: function() {
+                    var _props2 = this.props, children = _props2.children, columnMaxWidth = _props2.columnMaxWidth, columnMinWidth = _props2.columnMinWidth, columnsCount = _props2.columnsCount, width = _props2.width, safeColumnMinWidth = columnMinWidth || 1, safeColumnMaxWidth = columnMaxWidth ? Math.min(columnMaxWidth, width) : width, columnWidth = width / columnsCount;
+                    columnWidth = Math.max(safeColumnMinWidth, columnWidth), columnWidth = Math.min(safeColumnMaxWidth, columnWidth), 
+                    columnWidth = Math.floor(columnWidth);
+                    var adjustedWidth = Math.min(width, columnWidth * columnsCount);
+                    return children({
+                        adjustedWidth: adjustedWidth,
+                        getColumnWidth: function() {
+                            return columnWidth;
+                        },
+                        registerChild: this._registerChild
+                    });
+                }
+            }, {
+                key: "_registerChild",
+                value: function(child) {
+                    if (null !== child && !(child instanceof _Grid2["default"])) throw Error("Unexpected child type registered; only Grid children are supported.");
+                    this._registeredChild = child, this._registeredChild && this._registeredChild.recomputeGridSize();
+                }
+            } ]), ColumnSizer;
+        }(_react.Component);
+        ColumnSizer.propTypes = {
+            children: _react.PropTypes.func.isRequired,
+            columnMaxWidth: _react.PropTypes.number,
+            columnMinWidth: _react.PropTypes.number,
+            columnsCount: _react.PropTypes.number.isRequired,
+            width: _react.PropTypes.number.isRequired
+        }, exports["default"] = ColumnSizer;
+    }, /* 11 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports.Grid = exports["default"] = void 0;
+        var _Grid2 = __webpack_require__(12), _Grid3 = _interopRequireDefault(_Grid2);
+        exports["default"] = _Grid3["default"], exports.Grid = _Grid3["default"];
+    }, /* 12 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
+        }
+        function _inherits(subClass, superClass) {
+            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+            subClass.prototype = Object.create(superClass && superClass.prototype, {
+                constructor: {
+                    value: subClass,
+                    enumerable: !1,
+                    writable: !0,
+                    configurable: !0
+                }
+            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), _GridUtils = __webpack_require__(13), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(15), _raf2 = _interopRequireDefault(_raf), _scrollbarSize = __webpack_require__(18), _scrollbarSize2 = _interopRequireDefault(_scrollbarSize), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
             OBSERVED: "observed",
             REQUESTED: "requested"
         }, Grid = function(_Component) {
@@ -526,11 +657,10 @@
                     isScrolling: !1,
                     scrollLeft: 0,
                     scrollTop: 0
-                }, _this._onGridRenderedMemoizer = (0, _utils.createCallbackMemoizer)(), _this._onScrollMemoizer = (0, 
-                _utils.createCallbackMemoizer)(!1), _this._computeGridMetadata = _this._computeGridMetadata.bind(_this), 
+                }, _this._onGridRenderedMemoizer = (0, _GridUtils.createCallbackMemoizer)(), _this._onScrollMemoizer = (0, 
+                _GridUtils.createCallbackMemoizer)(!1), _this._computeGridMetadata = _this._computeGridMetadata.bind(_this), 
                 _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this), 
-                _this._onKeyPress = _this._onKeyPress.bind(_this), _this._onScroll = _this._onScroll.bind(_this), 
-                _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this), 
+                _this._onScroll = _this._onScroll.bind(_this), _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this), 
                 _this._updateScrollTopForScrollToRow = _this._updateScrollTopForScrollToRow.bind(_this), 
                 _this;
             }
@@ -542,25 +672,10 @@
                     });
                 }
             }, {
-                key: "scrollToCell",
-                value: function(_ref) {
-                    var scrollToColumn = _ref.scrollToColumn, scrollToRow = _ref.scrollToRow;
-                    this._updateScrollLeftForScrollToColumn(scrollToColumn), this._updateScrollTopForScrollToRow(scrollToRow);
-                }
-            }, {
-                key: "setScrollPosition",
-                value: function(_ref2) {
-                    var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop, newState = {
-                        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
-                    };
-                    scrollLeft >= 0 && (newState.scrollLeft = scrollLeft), scrollTop >= 0 && (newState.scrollTop = scrollTop), 
-                    (scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft || scrollTop >= 0 && scrollTop !== this.state.scrollTop) && this.setState(newState);
-                }
-            }, {
                 key: "componentDidMount",
                 value: function() {
                     var _props = this.props, scrollLeft = _props.scrollLeft, scrollToColumn = _props.scrollToColumn, scrollTop = _props.scrollTop, scrollToRow = _props.scrollToRow;
-                    this._scrollbarSize = (0, _scrollbarSize2["default"])(), (scrollLeft >= 0 || scrollTop >= 0) && this.setScrollPosition({
+                    this._scrollbarSize = (0, _scrollbarSize2["default"])(), (scrollLeft >= 0 || scrollTop >= 0) && this._setScrollPosition({
                         scrollLeft: scrollLeft,
                         scrollTop: scrollTop
                     }), (scrollToColumn >= 0 || scrollToRow >= 0) && (this._updateScrollLeftForScrollToColumn(), 
@@ -577,7 +692,7 @@
                     var _props2 = this.props, columnsCount = _props2.columnsCount, columnWidth = _props2.columnWidth, height = _props2.height, rowHeight = _props2.rowHeight, rowsCount = _props2.rowsCount, scrollToColumn = _props2.scrollToColumn, scrollToRow = _props2.scrollToRow, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollPositionChangeReason = _state.scrollPositionChangeReason, scrollTop = _state.scrollTop;
                     scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED && (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft && (this.refs.scrollingContainer.scrollLeft = scrollLeft), 
                     scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop && (this.refs.scrollingContainer.scrollTop = scrollTop)), 
-                    (0, _utils.updateScrollIndexHelper)({
+                    (0, _GridUtils.updateScrollIndexHelper)({
                         cellsCount: columnsCount,
                         cellMetadata: this._columnMetadata,
                         cellSize: columnWidth,
@@ -589,7 +704,7 @@
                         scrollToIndex: scrollToColumn,
                         size: width,
                         updateScrollIndexCallback: this._updateScrollLeftForScrollToColumn
-                    }), (0, _utils.updateScrollIndexHelper)({
+                    }), (0, _GridUtils.updateScrollIndexHelper)({
                         cellsCount: rowsCount,
                         cellMetadata: this._rowMetadata,
                         cellSize: rowHeight,
@@ -617,15 +732,13 @@
             }, {
                 key: "componentWillUpdate",
                 value: function(nextProps, nextState) {
-                    0 === nextProps.columnsCount && 0 !== nextState.scrollLeft && this.setScrollPosition({
-                        scrollLeft: 0
-                    }), 0 === nextProps.rowsCount && 0 !== nextState.scrollTop && this.setScrollPosition({
+                    0 === nextProps.columnsCount && 0 !== nextState.scrollLeft || 0 === nextProps.rowsCount && 0 !== nextState.scrollTop ? this._setScrollPosition({
+                        scrollLeft: 0,
                         scrollTop: 0
-                    }), nextProps.scrollLeft !== this.props.scrollLeft && this.setScrollPosition({
-                        scrollLeft: nextProps.scrollLeft
-                    }), nextProps.scrollTop !== this.props.scrollTop && this.setScrollPosition({
+                    }) : nextProps.scrollLeft === this.props.scrollLeft && nextProps.scrollTop === this.props.scrollTop || this._setScrollPosition({
+                        scrollLeft: nextProps.scrollLeft,
                         scrollTop: nextProps.scrollTop
-                    }), (0, _utils.computeCellMetadataAndUpdateScrollOffsetHelper)({
+                    }), (0, _GridUtils.computeCellMetadataAndUpdateScrollOffsetHelper)({
                         cellsCount: this.props.columnsCount,
                         cellSize: this.props.columnWidth,
                         computeMetadataCallback: this._computeGridMetadata,
@@ -636,7 +749,7 @@
                         nextScrollToIndex: nextProps.scrollToColumn,
                         scrollToIndex: this.props.scrollToColumn,
                         updateScrollOffsetForScrollToIndex: this._updateScrollLeftForScrollToColumn
-                    }), (0, _utils.computeCellMetadataAndUpdateScrollOffsetHelper)({
+                    }), (0, _GridUtils.computeCellMetadataAndUpdateScrollOffsetHelper)({
                         cellsCount: this.props.rowsCount,
                         cellSize: this.props.rowHeight,
                         computeMetadataCallback: this._computeGridMetadata,
@@ -656,12 +769,12 @@
                 value: function() {
                     var _props3 = this.props, className = _props3.className, columnsCount = _props3.columnsCount, height = _props3.height, noContentRenderer = _props3.noContentRenderer, overscanColumnsCount = _props3.overscanColumnsCount, overscanRowsCount = _props3.overscanRowsCount, renderCell = _props3.renderCell, rowsCount = _props3.rowsCount, width = _props3.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = [];
                     if (height > 0 && width > 0) {
-                        var visibleColumnIndices = (0, _utils.getVisibleCellIndices)({
+                        var visibleColumnIndices = (0, _GridUtils.getVisibleCellIndices)({
                             cellsCount: columnsCount,
                             cellMetadata: this._columnMetadata,
                             containerSize: width,
                             currentOffset: scrollLeft
-                        }), visibleRowIndices = (0, _utils.getVisibleCellIndices)({
+                        }), visibleRowIndices = (0, _GridUtils.getVisibleCellIndices)({
                             cellsCount: rowsCount,
                             cellMetadata: this._rowMetadata,
                             containerSize: height,
@@ -669,12 +782,12 @@
                         });
                         this._renderedColumnStartIndex = visibleColumnIndices.start, this._renderedColumnStopIndex = visibleColumnIndices.stop, 
                         this._renderedRowStartIndex = visibleRowIndices.start, this._renderedRowStopIndex = visibleRowIndices.stop;
-                        var overscanColumnIndices = (0, _utils.getOverscanIndices)({
+                        var overscanColumnIndices = (0, _GridUtils.getOverscanIndices)({
                             cellsCount: columnsCount,
                             overscanCellsCount: overscanColumnsCount,
                             startIndex: this._renderedColumnStartIndex,
                             stopIndex: this._renderedColumnStopIndex
-                        }), overscanRowIndices = (0, _utils.getOverscanIndices)({
+                        }), overscanRowIndices = (0, _GridUtils.getOverscanIndices)({
                             cellsCount: rowsCount,
                             overscanCellsCount: overscanRowsCount,
                             startIndex: this._renderedRowStartIndex,
@@ -710,7 +823,6 @@
                     _react2["default"].createElement("div", {
                         ref: "scrollingContainer",
                         className: (0, _classnames2["default"])("Grid", className),
-                        onKeyDown: this._onKeyPress,
                         onScroll: this._onScroll,
                         tabIndex: 0,
                         style: gridStyle
@@ -729,10 +841,10 @@
                 key: "_computeGridMetadata",
                 value: function(props) {
                     var columnsCount = props.columnsCount, columnWidth = props.columnWidth, rowHeight = props.rowHeight, rowsCount = props.rowsCount;
-                    this._columnMetadata = (0, _utils.initCellMetadata)({
+                    this._columnMetadata = (0, _GridUtils.initCellMetadata)({
                         cellsCount: columnsCount,
                         size: columnWidth
-                    }), this._rowMetadata = (0, _utils.initCellMetadata)({
+                    }), this._rowMetadata = (0, _GridUtils.initCellMetadata)({
                         cellsCount: rowsCount,
                         size: rowHeight
                     });
@@ -794,11 +906,11 @@
                 }
             }, {
                 key: "_invokeOnScrollMemoizer",
-                value: function(_ref3) {
-                    var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop, totalColumnsWidth = _ref3.totalColumnsWidth, totalRowsHeight = _ref3.totalRowsHeight, _props4 = this.props, height = _props4.height, onScroll = _props4.onScroll, width = _props4.width;
+                value: function(_ref) {
+                    var scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop, totalColumnsWidth = _ref.totalColumnsWidth, totalRowsHeight = _ref.totalRowsHeight, _props4 = this.props, height = _props4.height, onScroll = _props4.onScroll, width = _props4.width;
                     this._onScrollMemoizer({
-                        callback: function(_ref4) {
-                            var scrollLeft = _ref4.scrollLeft, scrollTop = _ref4.scrollTop;
+                        callback: function(_ref2) {
+                            var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop;
                             onScroll({
                                 clientHeight: height,
                                 clientWidth: width,
@@ -824,17 +936,26 @@
                     });
                 }
             }, {
+                key: "_setScrollPosition",
+                value: function(_ref3) {
+                    var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop, newState = {
+                        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+                    };
+                    scrollLeft >= 0 && (newState.scrollLeft = scrollLeft), scrollTop >= 0 && (newState.scrollTop = scrollTop), 
+                    (scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft || scrollTop >= 0 && scrollTop !== this.state.scrollTop) && this.setState(newState);
+                }
+            }, {
                 key: "_updateScrollLeftForScrollToColumn",
                 value: function(scrollToColumnOverride) {
                     var scrollToColumn = null != scrollToColumnOverride ? scrollToColumnOverride : this.props.scrollToColumn, width = this.props.width, scrollLeft = this.state.scrollLeft;
                     if (scrollToColumn >= 0) {
-                        var calculatedScrollLeft = (0, _utils.getUpdatedOffsetForIndex)({
+                        var calculatedScrollLeft = (0, _GridUtils.getUpdatedOffsetForIndex)({
                             cellMetadata: this._columnMetadata,
                             containerSize: width,
                             currentOffset: scrollLeft,
                             targetIndex: scrollToColumn
                         });
-                        scrollLeft !== calculatedScrollLeft && this.setScrollPosition({
+                        scrollLeft !== calculatedScrollLeft && this._setScrollPosition({
                             scrollLeft: calculatedScrollLeft
                         });
                     }
@@ -844,47 +965,14 @@
                 value: function(scrollToRowOverride) {
                     var scrollToRow = null != scrollToRowOverride ? scrollToRowOverride : this.props.scrollToRow, height = this.props.height, scrollTop = this.state.scrollTop;
                     if (scrollToRow >= 0) {
-                        var calculatedScrollTop = (0, _utils.getUpdatedOffsetForIndex)({
+                        var calculatedScrollTop = (0, _GridUtils.getUpdatedOffsetForIndex)({
                             cellMetadata: this._rowMetadata,
                             containerSize: height,
                             currentOffset: scrollTop,
                             targetIndex: scrollToRow
                         });
-                        scrollTop !== calculatedScrollTop && this.setScrollPosition({
+                        scrollTop !== calculatedScrollTop && this._setScrollPosition({
                             scrollTop: calculatedScrollTop
-                        });
-                    }
-                }
-            }, {
-                key: "_onKeyPress",
-                value: function(event) {
-                    var _props5 = this.props, columnsCount = _props5.columnsCount, height = _props5.height, rowsCount = _props5.rowsCount, width = _props5.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop, datum = void 0, newScrollLeft = void 0, newScrollTop = void 0;
-                    if (0 !== columnsCount && 0 !== rowsCount) switch (event.key) {
-                      case "ArrowDown":
-                        datum = this._rowMetadata[this._renderedRowStartIndex], newScrollTop = Math.min(this._getTotalRowsHeight() - height, scrollTop + datum.size), 
-                        this.setScrollPosition({
-                            scrollTop: newScrollTop
-                        });
-                        break;
-
-                      case "ArrowLeft":
-                        this.scrollToCell({
-                            scrollToColumn: Math.max(0, this._renderedColumnStartIndex - 1),
-                            scrollToRow: this.props.scrollToRow
-                        });
-                        break;
-
-                      case "ArrowRight":
-                        datum = this._columnMetadata[this._renderedColumnStartIndex], newScrollLeft = Math.min(this._getTotalColumnsWidth() - width, scrollLeft + datum.size), 
-                        this.setScrollPosition({
-                            scrollLeft: newScrollLeft
-                        });
-                        break;
-
-                      case "ArrowUp":
-                        this.scrollToCell({
-                            scrollToColumn: this.props.scrollToColumn,
-                            scrollToRow: Math.max(0, this._renderedRowStartIndex - 1)
                         });
                     }
                 }
@@ -893,7 +981,7 @@
                 value: function(event) {
                     if (event.target === this.refs.scrollingContainer) {
                         this._enablePointerEventsAfterDelay();
-                        var _props6 = this.props, height = _props6.height, width = _props6.width, scrollbarSize = this._scrollbarSize, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width + scrollbarSize, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height + scrollbarSize, event.target.scrollTop);
+                        var _props5 = this.props, height = _props5.height, width = _props5.width, scrollbarSize = this._scrollbarSize, totalRowsHeight = this._getTotalRowsHeight(), totalColumnsWidth = this._getTotalColumnsWidth(), scrollLeft = Math.min(totalColumnsWidth - width + scrollbarSize, event.target.scrollLeft), scrollTop = Math.min(totalRowsHeight - height + scrollbarSize, event.target.scrollTop);
                         if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
                             var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
                             this.state.isScrolling || this.setState({
@@ -946,7 +1034,7 @@
             overscanColumnsCount: 0,
             overscanRowsCount: 10
         }, exports["default"] = Grid;
-    }, /* 11 */
+    }, /* 13 */
     /***/
     function(module, exports) {
         "use strict";
@@ -1039,7 +1127,7 @@
         exports.getVisibleCellIndices = getVisibleCellIndices, exports.initCellMetadata = initCellMetadata, 
         exports.updateScrollIndexHelper = updateScrollIndexHelper, findNearestCell.EQUAL_OR_LOWER = 1, 
         findNearestCell.EQUAL_OR_HIGHER = 2;
-    }, /* 12 */
+    }, /* 14 */
     /***/
     function(module, exports, __webpack_require__) {
         var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
@@ -1067,12 +1155,12 @@
                 return classNames;
             }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), !(void 0 !== __WEBPACK_AMD_DEFINE_RESULT__ && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)));
         }();
-    }, /* 13 */
+    }, /* 15 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
         (function(global) {
-            for (var now = __webpack_require__(14), root = "undefined" == typeof window ? global : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = root["request" + suffix], caf = root["cancel" + suffix] || root["cancelRequest" + suffix], i = 0; !raf && i < vendors.length; i++) raf = root[vendors[i] + "Request" + suffix], 
+            for (var now = __webpack_require__(16), root = "undefined" == typeof window ? global : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = root["request" + suffix], caf = root["cancel" + suffix] || root["cancelRequest" + suffix], i = 0; !raf && i < vendors.length; i++) raf = root[vendors[i] + "Request" + suffix], 
             caf = root[vendors[i] + "Cancel" + suffix] || root[vendors[i] + "CancelRequest" + suffix];
             // Some versions of FF have rAF but not cAF
             if (!raf || !caf) {
@@ -1117,7 +1205,7 @@
         }).call(exports, function() {
             return this;
         }());
-    }, /* 14 */
+    }, /* 16 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -1138,8 +1226,8 @@
                     return new Date().getTime() - loadTime;
                 }, loadTime = new Date().getTime());
             }).call(this);
-        }).call(exports, __webpack_require__(15));
-    }, /* 15 */
+        }).call(exports, __webpack_require__(17));
+    }, /* 17 */
     /***/
     function(module, exports) {
         function cleanUpNextTick() {
@@ -1183,11 +1271,11 @@
         }, process.umask = function() {
             return 0;
         };
-    }, /* 16 */
+    }, /* 18 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
-        var size, canUseDOM = __webpack_require__(17);
+        var size, canUseDOM = __webpack_require__(19);
         module.exports = function(recalc) {
             if ((!size || recalc) && canUseDOM) {
                 var scrollDiv = document.createElement("div");
@@ -1197,12 +1285,12 @@
             }
             return size;
         };
-    }, /* 17 */
+    }, /* 19 */
     /***/
     function(module, exports) {
         "use strict";
         module.exports = !("undefined" == typeof window || !window.document || !window.document.createElement);
-    }, /* 18 */
+    }, /* 20 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1214,11 +1302,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.SortIndicator = exports.SortDirection = exports.FlexColumn = exports.FlexTable = exports["default"] = void 0;
-        var _FlexTable2 = __webpack_require__(19), _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(20), _FlexColumn3 = _interopRequireDefault(_FlexColumn2), _SortDirection2 = __webpack_require__(22), _SortDirection3 = _interopRequireDefault(_SortDirection2), _SortIndicator2 = __webpack_require__(21), _SortIndicator3 = _interopRequireDefault(_SortIndicator2);
+        var _FlexTable2 = __webpack_require__(21), _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(22), _FlexColumn3 = _interopRequireDefault(_FlexColumn2), _SortDirection2 = __webpack_require__(24), _SortDirection3 = _interopRequireDefault(_SortDirection2), _SortIndicator2 = __webpack_require__(23), _SortIndicator3 = _interopRequireDefault(_SortIndicator2);
         exports["default"] = _FlexTable3["default"], exports.FlexTable = _FlexTable3["default"], 
         exports.FlexColumn = _FlexColumn3["default"], exports.SortDirection = _SortDirection3["default"], 
         exports.SortIndicator = _SortIndicator3["default"];
-    }, /* 19 */
+    }, /* 21 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1260,7 +1348,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _classnames = __webpack_require__(12), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(20), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(23), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), _SortDirection = __webpack_require__(22), _SortDirection2 = _interopRequireDefault(_SortDirection), FlexTable = function(_Component) {
+        }(), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(22), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(25), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(11), _Grid2 = _interopRequireDefault(_Grid), _SortDirection = __webpack_require__(24), _SortDirection2 = _interopRequireDefault(_SortDirection), FlexTable = function(_Component) {
             function FlexTable(props) {
                 _classCallCheck(this, FlexTable);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
@@ -1274,26 +1362,9 @@
                     this.refs.Grid.recomputeGridSize();
                 }
             }, {
-                key: "scrollToRow",
-                value: function(scrollToIndex) {
-                    this.refs.Grid.scrollToCell({
-                        scrollToColumn: 0,
-                        scrollToRow: scrollToIndex
-                    });
-                }
-            }, {
-                key: "setScrollTop",
-                value: function(scrollTop) {
-                    this.refs.Grid.setScrollPosition({
-                        scrollLeft: 0,
-                        scrollTop: scrollTop
-                    });
-                }
-            }, {
                 key: "componentDidMount",
                 value: function() {
-                    var scrollTop = this.props.scrollTop;
-                    scrollTop >= 0 && this.setScrollTop(scrollTop), this._setScrollbarWidth();
+                    this._setScrollbarWidth();
                 }
             }, {
                 key: "componentDidUpdate",
@@ -1301,14 +1372,9 @@
                     this._setScrollbarWidth();
                 }
             }, {
-                key: "componentWillUpdate",
-                value: function(nextProps, nextState) {
-                    nextProps.scrollTop !== this.props.scrollTop && this.setScrollTop(nextProps.scrollTop);
-                }
-            }, {
                 key: "render",
                 value: function() {
-                    var _this2 = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, _onScroll = _props.onScroll, overscanRowsCount = _props.overscanRowsCount, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, width = _props.width, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = height - headerHeight, rowRenderer = function(index) {
+                    var _this2 = this, _props = this.props, className = _props.className, disableHeader = _props.disableHeader, headerHeight = _props.headerHeight, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, _onScroll = _props.onScroll, overscanRowsCount = _props.overscanRowsCount, rowClassName = _props.rowClassName, rowHeight = _props.rowHeight, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, scrollTop = _props.scrollTop, width = _props.width, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = height - headerHeight, rowRenderer = function(index) {
                         return _this2._createRow(index);
                     }, rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
                     return _react2["default"].createElement("div", {
@@ -1352,6 +1418,7 @@
                         rowHeight: rowHeight,
                         rowsCount: rowsCount,
                         scrollToRow: scrollToIndex,
+                        scrollTop: scrollTop,
                         width: width
                     }));
                 }
@@ -1493,7 +1560,7 @@
             this.shouldComponentUpdate = _function2["default"];
         };
         exports["default"] = FlexTable;
-    }, /* 20 */
+    }, /* 22 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1541,7 +1608,7 @@
             value: !0
         }), exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter, 
         exports.defaultHeaderRenderer = defaultHeaderRenderer;
-        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _SortIndicator = __webpack_require__(21), _SortIndicator2 = _interopRequireDefault(_SortIndicator), Column = function(_Component) {
+        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _SortIndicator = __webpack_require__(23), _SortIndicator2 = _interopRequireDefault(_SortIndicator), Column = function(_Component) {
             function Column() {
                 return _classCallCheck(this, Column), _possibleConstructorReturn(this, Object.getPrototypeOf(Column).apply(this, arguments));
             }
@@ -1569,7 +1636,7 @@
             minWidth: _react.PropTypes.number,
             width: _react.PropTypes.number.isRequired
         }, exports["default"] = Column;
-    }, /* 21 */
+    }, /* 23 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1601,11 +1668,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports["default"] = SortIndicator;
-        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(12), _classnames2 = _interopRequireDefault(_classnames), _SortDirection = __webpack_require__(22), _SortDirection2 = _interopRequireDefault(_SortDirection);
+        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _SortDirection = __webpack_require__(24), _SortDirection2 = _interopRequireDefault(_SortDirection);
         SortIndicator.propTypes = {
             sortDirection: _react.PropTypes.oneOf([ _SortDirection2["default"].ASC, _SortDirection2["default"].DESC ])
         };
-    }, /* 22 */
+    }, /* 24 */
     /***/
     function(module, exports) {
         "use strict";
@@ -1617,11 +1684,11 @@
             DESC: "DESC"
         };
         exports["default"] = SortDirection;
-    }, /* 23 */
+    }, /* 25 */
     /***/
     function(module, exports) {
-        module.exports = __WEBPACK_EXTERNAL_MODULE_23__;
-    }, /* 24 */
+        module.exports = __WEBPACK_EXTERNAL_MODULE_25__;
+    }, /* 26 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1633,9 +1700,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.InfiniteLoader = exports["default"] = void 0;
-        var _InfiniteLoader2 = __webpack_require__(25), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
+        var _InfiniteLoader2 = __webpack_require__(27), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
         exports["default"] = _InfiniteLoader3["default"], exports.InfiniteLoader = _InfiniteLoader3["default"];
-    }, /* 25 */
+    }, /* 27 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1751,7 +1818,7 @@
             rowsCount: 0,
             threshold: 15
         }, exports["default"] = InfiniteLoader;
-    }, /* 26 */
+    }, /* 28 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1763,9 +1830,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.ScrollSync = exports["default"] = void 0;
-        var _ScrollSync2 = __webpack_require__(27), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
+        var _ScrollSync2 = __webpack_require__(29), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
         exports["default"] = _ScrollSync3["default"], exports.ScrollSync = _ScrollSync3["default"];
-    }, /* 27 */
+    }, /* 29 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1852,7 +1919,7 @@
         ScrollSync.propTypes = {
             children: _react.PropTypes.func.isRequired
         }, exports["default"] = ScrollSync;
-    }, /* 28 */
+    }, /* 30 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1864,9 +1931,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.VirtualScroll = exports["default"] = void 0;
-        var _VirtualScroll2 = __webpack_require__(29), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
+        var _VirtualScroll2 = __webpack_require__(31), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
         exports["default"] = _VirtualScroll3["default"], exports.VirtualScroll = _VirtualScroll3["default"];
-    }, /* 29 */
+    }, /* 31 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1908,7 +1975,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _Grid = __webpack_require__(9), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(12), _classnames2 = _interopRequireDefault(_classnames), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), VirtualScroll = function(_Component) {
+        }(), _Grid = __webpack_require__(11), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), VirtualScroll = function(_Component) {
             function VirtualScroll() {
                 var _Object$getPrototypeO, _temp, _this, _ret;
                 _classCallCheck(this, VirtualScroll);
@@ -1917,41 +1984,14 @@
                 _this.shouldComponentUpdate = _function2["default"], _ret = _temp, _possibleConstructorReturn(_this, _ret);
             }
             return _inherits(VirtualScroll, _Component), _createClass(VirtualScroll, [ {
-                key: "componentDidMount",
-                value: function() {
-                    var scrollTop = this.props.scrollTop;
-                    scrollTop >= 0 && this.setScrollTop(scrollTop);
-                }
-            }, {
-                key: "componentWillUpdate",
-                value: function(nextProps, nextState) {
-                    nextProps.scrollTop !== this.props.scrollTop && this.setScrollTop(nextProps.scrollTop);
-                }
-            }, {
                 key: "recomputeRowHeights",
                 value: function() {
                     this.refs.Grid.recomputeGridSize();
                 }
             }, {
-                key: "scrollToRow",
-                value: function(scrollToIndex) {
-                    this.refs.Grid.scrollToCell({
-                        scrollToColumn: 0,
-                        scrollToRow: scrollToIndex
-                    });
-                }
-            }, {
-                key: "setScrollTop",
-                value: function(scrollTop) {
-                    this.refs.Grid.setScrollPosition({
-                        scrollLeft: 0,
-                        scrollTop: scrollTop
-                    });
-                }
-            }, {
                 key: "render",
                 value: function() {
-                    var _props = this.props, className = _props.className, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, _onScroll = _props.onScroll, rowHeight = _props.rowHeight, rowRenderer = _props.rowRenderer, overscanRowsCount = _props.overscanRowsCount, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, width = _props.width, classNames = (0, 
+                    var _props = this.props, className = _props.className, height = _props.height, noRowsRenderer = _props.noRowsRenderer, onRowsRendered = _props.onRowsRendered, _onScroll = _props.onScroll, rowHeight = _props.rowHeight, rowRenderer = _props.rowRenderer, overscanRowsCount = _props.overscanRowsCount, rowsCount = _props.rowsCount, scrollToIndex = _props.scrollToIndex, scrollTop = _props.scrollTop, width = _props.width, classNames = (0, 
                     _classnames2["default"])("VirtualScroll", className);
                     return _react2["default"].createElement(_Grid2["default"], {
                         ref: "Grid",
@@ -1985,6 +2025,7 @@
                         rowHeight: rowHeight,
                         rowsCount: rowsCount,
                         scrollToRow: scrollToIndex,
+                        scrollTop: scrollTop,
                         width: width
                     });
                 }

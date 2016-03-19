@@ -57,57 +57,14 @@ var VirtualScroll = function (_Component) {
   }
 
   _createClass(VirtualScroll, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var scrollTop = this.props.scrollTop;
+    key: 'recomputeRowHeights',
 
-
-      if (scrollTop >= 0) {
-        this.setScrollTop(scrollTop);
-      }
-    }
-  }, {
-    key: 'componentWillUpdate',
-    value: function componentWillUpdate(nextProps, nextState) {
-      if (nextProps.scrollTop !== this.props.scrollTop) {
-        this.setScrollTop(nextProps.scrollTop);
-      }
-    }
 
     /**
      * See Grid#recomputeGridSize
      */
-
-  }, {
-    key: 'recomputeRowHeights',
     value: function recomputeRowHeights() {
       this.refs.Grid.recomputeGridSize();
-    }
-
-    /**
-     * See Grid#scrollToCell
-     */
-
-  }, {
-    key: 'scrollToRow',
-    value: function scrollToRow(scrollToIndex) {
-      this.refs.Grid.scrollToCell({
-        scrollToColumn: 0,
-        scrollToRow: scrollToIndex
-      });
-    }
-
-    /**
-     * See Grid#setScrollPosition
-     */
-
-  }, {
-    key: 'setScrollTop',
-    value: function setScrollTop(scrollTop) {
-      this.refs.Grid.setScrollPosition({
-        scrollLeft: 0,
-        scrollTop: scrollTop
-      });
     }
   }, {
     key: 'render',
@@ -123,6 +80,7 @@ var VirtualScroll = function (_Component) {
       var overscanRowsCount = _props.overscanRowsCount;
       var rowsCount = _props.rowsCount;
       var scrollToIndex = _props.scrollToIndex;
+      var scrollTop = _props.scrollTop;
       var width = _props.width;
 
 
@@ -162,6 +120,7 @@ var VirtualScroll = function (_Component) {
         rowHeight: rowHeight,
         rowsCount: rowsCount,
         scrollToRow: scrollToIndex,
+        scrollTop: scrollTop,
         width: width
       });
     }
