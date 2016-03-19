@@ -271,24 +271,22 @@ export default class Grid extends Component {
   componentWillUpdate (nextProps, nextState) {
     if (
       nextProps.columnsCount === 0 &&
-      nextState.scrollLeft !== 0
-    ) {
-      this._setScrollPosition({ scrollLeft: 0 })
-    }
-
-    if (
+      nextState.scrollLeft !== 0 ||
       nextProps.rowsCount === 0 &&
       nextState.scrollTop !== 0
     ) {
-      this._setScrollPosition({ scrollTop: 0 })
-    }
-
-    if (nextProps.scrollLeft !== this.props.scrollLeft) {
-      this._setScrollPosition({ scrollLeft: nextProps.scrollLeft })
-    }
-
-    if (nextProps.scrollTop !== this.props.scrollTop) {
-      this._setScrollPosition({ scrollTop: nextProps.scrollTop })
+      this._setScrollPosition({
+        scrollLeft: 0,
+        scrollTop: 0
+      })
+    } else if (
+      nextProps.scrollLeft !== this.props.scrollLeft ||
+      nextProps.scrollTop !== this.props.scrollTop
+    ) {
+      this._setScrollPosition({
+        scrollLeft: nextProps.scrollLeft,
+        scrollTop: nextProps.scrollTop
+      })
     }
 
     computeCellMetadataAndUpdateScrollOffsetHelper({

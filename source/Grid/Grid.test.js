@@ -138,8 +138,36 @@ describe('Grid', () => {
       expect(grid.state.scrollTop).toEqual(1900)
     })
 
-    // @TODO Test updating with new row + scrollTop, removing row, scrolling, then re-adding row (with same scrollTop)
-    // @TODO Test updating with new row + scrollToIndex, removing row, scrolling, then re-adding row (with same scrollToIndex)
+    it('should scroll to a row and column just added', () => {
+      let grid = render(getMarkup())
+      expect(grid.state.scrollLeft).toEqual(0)
+      expect(grid.state.scrollTop).toEqual(0)
+      grid = render(getMarkup({
+        columnsCount: NUM_COLUMNS + 1,
+        rowsCount: NUM_ROWS + 1,
+        scrollToColumn: NUM_COLUMNS,
+        scrollToRow: NUM_ROWS
+      }))
+      expect(grid.state.scrollLeft).toEqual(2350)
+      expect(grid.state.scrollTop).toEqual(1920)
+    })
+
+    it('should scroll back to a newly-added cell without a change in prop', () => {
+      let grid = render(getMarkup({
+        columnsCount: NUM_COLUMNS,
+        rowsCount: NUM_ROWS,
+        scrollToColumn: NUM_COLUMNS,
+        scrollToRow: NUM_ROWS
+      }))
+      grid = render(getMarkup({
+        columnsCount: NUM_COLUMNS + 1,
+        rowsCount: NUM_ROWS + 1,
+        scrollToColumn: NUM_COLUMNS,
+        scrollToRow: NUM_ROWS
+      }))
+      expect(grid.state.scrollLeft).toEqual(2350)
+      expect(grid.state.scrollTop).toEqual(1920)
+    })
   })
 
   describe('property updates', () => {
