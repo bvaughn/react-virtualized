@@ -16,6 +16,7 @@ function ChildComponent ({ scrollToColumn, scrollToRow }) {
 
 describe('ArrowKeyStepper', () => {
   function renderHelper ({
+    className,
     columnsCount = 10,
     rowsCount = 10
   } = {}) {
@@ -23,6 +24,7 @@ describe('ArrowKeyStepper', () => {
 
     const node = findDOMNode(render(
       <ArrowKeyStepper
+        className={className}
         columnsCount={columnsCount}
         rowsCount={rowsCount}
       >
@@ -48,6 +50,11 @@ describe('ArrowKeyStepper', () => {
   function assertCurrentScrollTo (node, scrollToColumn, scrollToRow) {
     expect(node.textContent).toEqual(renderTextContent(scrollToColumn, scrollToRow))
   }
+
+  it('should use a custom :className if one is specified', () => {
+    const { node } = renderHelper({ className: 'foo' })
+    expect(node.className).toEqual('foo')
+  })
 
   it('should update :scrollToColumn and :scrollToRow in response to arrow keys', () => {
     const { node } = renderHelper()

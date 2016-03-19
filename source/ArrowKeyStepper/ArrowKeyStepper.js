@@ -10,6 +10,7 @@ export default class ArrowKeyStepper extends Component {
 
   static propTypes = {
     children: PropTypes.func.isRequired,
+    className: PropTypes.string,
     columnsCount: PropTypes.number.isRequired,
     rowsCount: PropTypes.number.isRequired
   }
@@ -32,11 +33,14 @@ export default class ArrowKeyStepper extends Component {
   }
 
   render () {
-    const { children } = this.props
+    const { className, children } = this.props
     const { scrollToColumn, scrollToRow } = this.state
 
     return (
-      <div onKeyDown={this._onKeyDown}>
+      <div
+        className={className}
+        onKeyDown={this._onKeyDown}
+      >
         {children({
           onSectionRendered: this._onSectionRendered,
           scrollToColumn,

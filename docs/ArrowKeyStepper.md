@@ -5,11 +5,13 @@ High-order component that decorates another virtualized component and responds t
 This provides a snap-to behavior rather than the default browser scrolling behavior.
 
 Note that unlike the other HOCs in react-virtualized, the `ArrowKeyStepper` adds a `<div>` element around its children in order to attach a key-down event handler.
+The appearance of this wrapper element can be customized using the `className` property.
 
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | children | Function | ✓ | Function respondible for rendering children. This function should implement the following signature: `({ onKeyDown, onSectionRendered, scrollToColumn, scrollToRow }) => PropTypes.element` |
+| className | String |  | CSS class name to attach to the wrapper `<div>`. |
 | columnsCount | Number | ✓ | Number of columns in grid; for `FlexTable` and `VirtualScroll` this property should always be `1`. |
 | rowsCount | Number | ✓ | Number of rows in grid. |
 
