@@ -1,6 +1,44 @@
 Changelog
 ------------
 
+# 6.0.0
+
+Version 6 includes the following changes.
+(For more background information refer to the [Version 6 Roadmap wiki page](https://github.com/bvaughn/react-virtualized/wiki/Version-6-Roadmap).)
+At a high-level the purpose of this release is to improve customization and flexibility with regard to arrow-key event handling.
+
+### Backwards-incompatible changes
+* Refactored `Grid` to remove arrow-key scroll-snapping. Instead this feature is implemented in a HOC, `ArrowKeyStepper`. The upgrade path from React 5.x to 6.x if you want to maintain arrow-key navigation behavior is as follows:
+
+```js
+// Before...
+<Grid {...gridProps}/>
+
+// After...
+<ArrowKeyStepper
+  columnsCount={columnsCount}
+  rowsCount={rowsCount}
+>
+  {({ onSectionRendered, scrollToColumn, scrollToRow }) => (
+    <Grid
+      columnsCount={columnsCount}
+      onSectionRendered={onSectionRendered}
+      rowsCount={rowsCount}
+      scrollToColumn={scrollToColumn}
+      scrollToRow={scrollToRow}
+      {...otherGridProps}
+    />
+  )}
+</ArrowKeyStepper>
+```
+* The following public methods have also be removed from components:
+  * `FlexTable`: `scrollToRow` (use `scrollToIndex` prop instead), `setScrollTop` (use `scrollTop` prop instead)
+  * `Grid`: `scrollToCell` (use `scrollToColumn` and `scrollToRow` props instead), `setScrollPosition` (use `scrollLeft` and `scrollTop` props instead)
+  * `VirtualScroll`: `scrollToRow` (use `scrollToIndex` prop instead), `setScrollTop` (use `scrollTop` prop instead)
+
+### Backwards-compatible changes
+* Replaced (the now unsupported) `react-pure-render` with [`shallowCompare`](https://facebook.github.io/react/docs/shallow-compare.html).
+
 ##### 5.5.6
 Max scroll position logic in `Grid` now takes scrollbar size into consideration.
 Also includes a small `render` optimization for null cells.
