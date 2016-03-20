@@ -12,7 +12,7 @@ import cn from 'classnames'
 import raf from 'raf'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import React, { Component, PropTypes } from 'react'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -34,8 +34,6 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
 export default class Grid extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     /**
      * Optional custom CSS class name to attach to root Grid element.
@@ -473,6 +471,10 @@ export default class Grid extends Component {
         }
       </div>
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   /* ---------------------------- Helper methods ---------------------------- */

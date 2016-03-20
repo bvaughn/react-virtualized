@@ -13,7 +13,7 @@ import styles from './Application.css'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
 import { generateRandomList } from './utils'
 import { render } from 'react-dom'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 import '../../styles.css'
 
 const COMPONENTS = ['Grid', 'FlexTable', 'VirtualScroll']
@@ -23,8 +23,6 @@ const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'ColumnSizer', 'I
 const list = Immutable.List(generateRandomList())
 
 class Application extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   constructor (props) {
     super(props)
 
@@ -158,6 +156,10 @@ class Application extends Component {
         </p>
       </div>
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 }
 

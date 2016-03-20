@@ -5,7 +5,7 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import AutoSizer from '../AutoSizer'
 import Grid from '../Grid'
 import ScrollSync from './ScrollSync'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 import cn from 'classnames'
 import styles from './ScrollSync.example.css'
 import scrollbarSize from 'dom-helpers/util/scrollbarSize'
@@ -16,8 +16,6 @@ const TOP_COLOR_FROM = hexToRgb('#000000')
 const TOP_COLOR_TO = hexToRgb('#333333')
 
 export default class GridExample extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -184,6 +182,10 @@ export default class GridExample extends Component {
         </ScrollSync>
       </ContentBox>
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   _renderBodyCell ({ columnIndex, rowIndex }) {

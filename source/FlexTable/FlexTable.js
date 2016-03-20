@@ -3,7 +3,7 @@ import cn from 'classnames'
 import FlexColumn from './FlexColumn'
 import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 import Grid from '../Grid'
 import SortDirection from './SortDirection'
 
@@ -12,8 +12,6 @@ import SortDirection from './SortDirection'
  * This component expects explicit width, height, and padding parameters.
  */
 export default class FlexTable extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     /** One or more FlexColumns describing the data displayed in this row */
     children: (props, propName, componentName) => {
@@ -224,6 +222,10 @@ export default class FlexTable extends Component {
         />
       </div>
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   _createColumn (column, columnIndex, rowData, rowIndex) {

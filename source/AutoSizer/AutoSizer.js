@@ -1,6 +1,6 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
@@ -8,8 +8,6 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
  * All other properties will be passed through to the child component.
  */
 export default class AutoSizer extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     /**
      * Function respondible for rendering children.
@@ -84,6 +82,10 @@ export default class AutoSizer extends Component {
         {children({ height, width })}
       </div>
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   _onResize () {

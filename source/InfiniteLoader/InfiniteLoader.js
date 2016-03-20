@@ -1,6 +1,6 @@
 /** @flow */
 import { Component, PropTypes } from 'react'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 
 /**
  * Higher-order component that manages lazy-loading for "infinite" data.
@@ -8,8 +8,6 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
  * It is intended as a convenience component; fork it if you'd like finer-grained control over data-loading.
  */
 export default class InfiniteLoader extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     /**
      * Function respondible for rendering a virtualized component.
@@ -68,6 +66,10 @@ export default class InfiniteLoader extends Component {
       onRowsRendered: this._onRowsRendered,
       registerChild: this._registerChild
     })
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   _onRowsRendered ({ startIndex, stopIndex }) {
