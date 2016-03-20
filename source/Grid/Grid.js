@@ -231,10 +231,10 @@ export default class Grid extends Component {
 
   componentWillReceiveProps (nextProps) {
     // New scroll-offset props should override existing state.
-    if (this.porps.scrollLeft !== nextProps.scrollLeft) {
+    if (this.props.scrollLeft !== nextProps.scrollLeft) {
       this.setState({ scrollLeft: nextProps.scrollLeft })
     }
-    if (this.porps.scrollTop !== nextProps.scrollTop) {
+    if (this.props.scrollTop !== nextProps.scrollTop) {
       this.setState({ scrollTop: nextProps.scrollTop })
     }
 
@@ -261,7 +261,7 @@ export default class Grid extends Component {
     // Note that changes to cell-renderer and no-content-renderer do not trigger an update,
     // Because people may use inline callbacks which would cause too many false positives.
     this._forceRerender = (
-      this.porps.className !== nextProps.className
+      this.props.className !== nextProps.className
     )
   }
 
@@ -378,7 +378,7 @@ export default class Grid extends Component {
             ? this._renderedCellCache.get(key)
             : renderCell({ columnIndex, rowIndex })
 
-console.log('key:', key, this._renderedCellCache.has(key) ? 'cached' : 'new')
+          console.log('key:', key, this._renderedCellCache.has(key) ? 'cached' : 'new')
           this._renderedCellCache.set(key, renderedCell)
 
           // any other falsey value will be rendered
@@ -737,7 +737,7 @@ function isMetadataInvalid ({
   oldCellSize
 }) {
   return (
-    newCellCount != oldCellCount ||
+    newCellCount !== oldCellCount ||
     (
       (
         typeof newCellSize === 'number' ||
