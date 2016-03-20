@@ -4,7 +4,7 @@ import cn from 'classnames';
 import raf from 'raf';
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize';
 import React, { Component, PropTypes } from 'react';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import shallowCompare from 'react-addons-shallow-compare';
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -33,9 +33,6 @@ var Grid = function (_Component) {
     babelHelpers.classCallCheck(this, Grid);
 
     var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Grid).call(this, props, context));
-
-    _this.shouldComponentUpdate = shouldPureComponentUpdate;
-
 
     _this.state = {
       computeGridMetadataOnNextUpdate: false,
@@ -384,6 +381,11 @@ var Grid = function (_Component) {
         ),
         childrenToDisplay.length === 0 && noContentRenderer()
       );
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return shallowCompare(this, nextProps, nextState);
     }
 
     /* ---------------------------- Helper methods ---------------------------- */

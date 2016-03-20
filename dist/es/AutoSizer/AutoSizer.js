@@ -1,6 +1,6 @@
 
 import React, { Component, PropTypes } from 'react';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import shallowCompare from 'react-addons-shallow-compare';
 
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
@@ -15,9 +15,6 @@ var AutoSizer = function (_Component) {
     babelHelpers.classCallCheck(this, AutoSizer);
 
     var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(AutoSizer).call(this, props));
-
-    _this.shouldComponentUpdate = shouldPureComponentUpdate;
-
 
     _this.state = {
       height: 0,
@@ -79,6 +76,11 @@ var AutoSizer = function (_Component) {
         },
         children({ height: height, width: width })
       );
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return shallowCompare(this, nextProps, nextState);
     }
   }, {
     key: '_onResize',

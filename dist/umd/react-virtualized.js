@@ -1,6 +1,6 @@
 !function(root, factory) {
     "object" == typeof exports && "object" == typeof module ? module.exports = factory(require("react"), require("react-dom")) : "function" == typeof define && define.amd ? define([ "react", "react-dom" ], factory) : "object" == typeof exports ? exports.ReactVirtualized = factory(require("react"), require("react-dom")) : root.ReactVirtualized = factory(root.React, root.ReactDOM);
-}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_25__) {
+}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_26__) {
     /******/
     return function(modules) {
         /******/
@@ -79,21 +79,21 @@
                 return _ArrowKeyStepper.ArrowKeyStepper;
             }
         });
-        var _AutoSizer = __webpack_require__(6);
+        var _AutoSizer = __webpack_require__(7);
         Object.defineProperty(exports, "AutoSizer", {
             enumerable: !0,
             get: function() {
                 return _AutoSizer.AutoSizer;
             }
         });
-        var _ColumnSizer = __webpack_require__(9);
+        var _ColumnSizer = __webpack_require__(10);
         Object.defineProperty(exports, "ColumnSizer", {
             enumerable: !0,
             get: function() {
                 return _ColumnSizer.ColumnSizer;
             }
         });
-        var _FlexTable = __webpack_require__(20);
+        var _FlexTable = __webpack_require__(21);
         Object.defineProperty(exports, "FlexTable", {
             enumerable: !0,
             get: function() {
@@ -115,28 +115,28 @@
                 return _FlexTable.SortIndicator;
             }
         });
-        var _Grid = __webpack_require__(11);
+        var _Grid = __webpack_require__(12);
         Object.defineProperty(exports, "Grid", {
             enumerable: !0,
             get: function() {
                 return _Grid.Grid;
             }
         });
-        var _InfiniteLoader = __webpack_require__(26);
+        var _InfiniteLoader = __webpack_require__(27);
         Object.defineProperty(exports, "InfiniteLoader", {
             enumerable: !0,
             get: function() {
                 return _InfiniteLoader.InfiniteLoader;
             }
         });
-        var _ScrollSync = __webpack_require__(28);
+        var _ScrollSync = __webpack_require__(29);
         Object.defineProperty(exports, "ScrollSync", {
             enumerable: !0,
             get: function() {
                 return _ScrollSync.ScrollSync;
             }
         });
-        var _VirtualScroll = __webpack_require__(30);
+        var _VirtualScroll = __webpack_require__(31);
         Object.defineProperty(exports, "VirtualScroll", {
             enumerable: !0,
             get: function() {
@@ -199,11 +199,11 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), ArrowKeyStepper = function(_Component) {
+        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), ArrowKeyStepper = function(_Component) {
             function ArrowKeyStepper(props, context) {
                 _classCallCheck(this, ArrowKeyStepper);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ArrowKeyStepper).call(this, props, context));
-                return _this.shouldComponentUpdate = _function2["default"], _this.state = {
+                return _this.state = {
                     scrollToColumn: 0,
                     scrollToRow: 0
                 }, _this._columnStartIndex = 0, _this._columnStopIndex = 0, _this._rowStartIndex = 0, 
@@ -222,6 +222,11 @@
                         scrollToColumn: scrollToColumn,
                         scrollToRow: scrollToRow
                     }));
+                }
+            }, {
+                key: "shouldComponentUpdate",
+                value: function(nextProps, nextState) {
+                    return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
                 }
             }, {
                 key: "_onKeyDown",
@@ -274,32 +279,62 @@
     }, /* 4 */
     /***/
     function(module, exports, __webpack_require__) {
-        "use strict";
-        function _interopRequireDefault(obj) {
-            return obj && obj.__esModule ? obj : {
-                "default": obj
-            };
-        }
-        function shouldPureComponentUpdate(nextProps, nextState) {
-            return !(0, _shallowEqual2["default"])(this.props, nextProps) || !(0, _shallowEqual2["default"])(this.state, nextState);
-        }
-        exports.__esModule = !0, exports["default"] = shouldPureComponentUpdate;
-        var _shallowEqual = __webpack_require__(5), _shallowEqual2 = _interopRequireDefault(_shallowEqual);
-        module.exports = exports["default"];
+        module.exports = __webpack_require__(5);
     }, /* 5 */
     /***/
-    function(module, exports) {
+    function(module, exports, __webpack_require__) {
+        /**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	* @providesModule shallowCompare
+	*/
         "use strict";
+        /**
+	 * Does a shallow comparison for props and state.
+	 * See ReactComponentWithPureRenderMixin
+	 */
+        function shallowCompare(instance, nextProps, nextState) {
+            return !shallowEqual(instance.props, nextProps) || !shallowEqual(instance.state, nextState);
+        }
+        var shallowEqual = __webpack_require__(6);
+        module.exports = shallowCompare;
+    }, /* 6 */
+    /***/
+    function(module, exports) {
+        /**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule shallowEqual
+	 * @typechecks
+	 * 
+	 */
+        "use strict";
+        /**
+	 * Performs equality by iterating through keys on an object and returning false
+	 * when any key has values which are not strictly equal between the arguments.
+	 * Returns true when the values of all keys are strictly equal.
+	 */
         function shallowEqual(objA, objB) {
             if (objA === objB) return !0;
             if ("object" != typeof objA || null === objA || "object" != typeof objB || null === objB) return !1;
             var keysA = Object.keys(objA), keysB = Object.keys(objB);
             if (keysA.length !== keysB.length) return !1;
-            for (var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB), i = 0; i < keysA.length; i++) if (!bHasOwnProperty(keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) return !1;
+            for (var bHasOwnProperty = hasOwnProperty.bind(objB), i = 0; i < keysA.length; i++) if (!bHasOwnProperty(keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) return !1;
             return !0;
         }
-        exports.__esModule = !0, exports["default"] = shallowEqual, module.exports = exports["default"];
-    }, /* 6 */
+        var hasOwnProperty = Object.prototype.hasOwnProperty;
+        module.exports = shallowEqual;
+    }, /* 7 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -311,9 +346,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.AutoSizer = exports["default"] = void 0;
-        var _AutoSizer2 = __webpack_require__(7), _AutoSizer3 = _interopRequireDefault(_AutoSizer2);
+        var _AutoSizer2 = __webpack_require__(8), _AutoSizer3 = _interopRequireDefault(_AutoSizer2);
         exports["default"] = _AutoSizer3["default"], exports.AutoSizer = _AutoSizer3["default"];
-    }, /* 7 */
+    }, /* 8 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -355,11 +390,11 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), AutoSizer = function(_Component) {
+        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), AutoSizer = function(_Component) {
             function AutoSizer(props) {
                 _classCallCheck(this, AutoSizer);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AutoSizer).call(this, props));
-                return _this.shouldComponentUpdate = _function2["default"], _this.state = {
+                return _this.state = {
                     height: 0,
                     width: 0
                 }, _this._onResize = _this._onResize.bind(_this), _this._onScroll = _this._onScroll.bind(_this), 
@@ -368,7 +403,7 @@
             return _inherits(AutoSizer, _Component), _createClass(AutoSizer, [ {
                 key: "componentDidMount",
                 value: function() {
-                    this._detectElementResize = __webpack_require__(8), this._detectElementResize.addResizeListener(this._parentNode, this._onResize), 
+                    this._detectElementResize = __webpack_require__(9), this._detectElementResize.addResizeListener(this._parentNode, this._onResize), 
                     this._onResize();
                 }
             }, {
@@ -391,6 +426,11 @@
                         height: height,
                         width: width
                     }));
+                }
+            }, {
+                key: "shouldComponentUpdate",
+                value: function(nextProps, nextState) {
+                    return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
                 }
             }, {
                 key: "_onResize",
@@ -424,7 +464,7 @@
         }, AutoSizer.defaultProps = {
             onResize: function() {}
         }, exports["default"] = AutoSizer;
-    }, /* 8 */
+    }, /* 9 */
     /***/
     function(module, exports) {
         "use strict";
@@ -490,7 +530,7 @@
             addResizeListener: addResizeListener,
             removeResizeListener: removeResizeListener
         };
-    }, /* 9 */
+    }, /* 10 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -502,9 +542,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.ColumnSizer = exports["default"] = void 0;
-        var _ColumnSizer2 = __webpack_require__(10), _ColumnSizer3 = _interopRequireDefault(_ColumnSizer2);
+        var _ColumnSizer2 = __webpack_require__(11), _ColumnSizer3 = _interopRequireDefault(_ColumnSizer2);
         exports["default"] = _ColumnSizer3["default"], exports.ColumnSizer = _ColumnSizer3["default"];
-    }, /* 10 */
+    }, /* 11 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -546,12 +586,11 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(11), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = function(_Component) {
+        }(), _react = __webpack_require__(3), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), _Grid = __webpack_require__(12), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = function(_Component) {
             function ColumnSizer(props, context) {
                 _classCallCheck(this, ColumnSizer);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ColumnSizer).call(this, props, context));
-                return _this.shouldComponentUpdate = _function2["default"], _this._registerChild = _this._registerChild.bind(_this), 
-                _this;
+                return _this._registerChild = _this._registerChild.bind(_this), _this;
             }
             return _inherits(ColumnSizer, _Component), _createClass(ColumnSizer, [ {
                 key: "componentDidUpdate",
@@ -575,6 +614,11 @@
                     });
                 }
             }, {
+                key: "shouldComponentUpdate",
+                value: function(nextProps, nextState) {
+                    return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
+                }
+            }, {
                 key: "_registerChild",
                 value: function(child) {
                     if (null !== child && !(child instanceof _Grid2["default"])) throw Error("Unexpected child type registered; only Grid children are supported.");
@@ -589,7 +633,7 @@
             columnsCount: _react.PropTypes.number.isRequired,
             width: _react.PropTypes.number.isRequired
         }, exports["default"] = ColumnSizer;
-    }, /* 11 */
+    }, /* 12 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -601,9 +645,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.Grid = exports["default"] = void 0;
-        var _Grid2 = __webpack_require__(12), _Grid3 = _interopRequireDefault(_Grid2);
+        var _Grid2 = __webpack_require__(13), _Grid3 = _interopRequireDefault(_Grid2);
         exports["default"] = _Grid3["default"], exports.Grid = _Grid3["default"];
-    }, /* 12 */
+    }, /* 13 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -645,14 +689,14 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _GridUtils = __webpack_require__(13), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(15), _raf2 = _interopRequireDefault(_raf), _scrollbarSize = __webpack_require__(18), _scrollbarSize2 = _interopRequireDefault(_scrollbarSize), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
+        }(), _GridUtils = __webpack_require__(14), _classnames = __webpack_require__(15), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(16), _raf2 = _interopRequireDefault(_raf), _scrollbarSize = __webpack_require__(19), _scrollbarSize2 = _interopRequireDefault(_scrollbarSize), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
             OBSERVED: "observed",
             REQUESTED: "requested"
         }, Grid = function(_Component) {
             function Grid(props, context) {
                 _classCallCheck(this, Grid);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Grid).call(this, props, context));
-                return _this.shouldComponentUpdate = _function2["default"], _this.state = {
+                return _this.state = {
                     computeGridMetadataOnNextUpdate: !1,
                     isScrolling: !1,
                     scrollLeft: 0,
@@ -836,6 +880,11 @@
                             pointerEvents: isScrolling ? "none" : "auto"
                         }
                     }, childrenToDisplay), 0 === childrenToDisplay.length && noContentRenderer());
+                }
+            }, {
+                key: "shouldComponentUpdate",
+                value: function(nextProps, nextState) {
+                    return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
                 }
             }, {
                 key: "_computeGridMetadata",
@@ -1034,7 +1083,7 @@
             overscanColumnsCount: 0,
             overscanRowsCount: 10
         }, exports["default"] = Grid;
-    }, /* 13 */
+    }, /* 14 */
     /***/
     function(module, exports) {
         "use strict";
@@ -1127,7 +1176,7 @@
         exports.getVisibleCellIndices = getVisibleCellIndices, exports.initCellMetadata = initCellMetadata, 
         exports.updateScrollIndexHelper = updateScrollIndexHelper, findNearestCell.EQUAL_OR_LOWER = 1, 
         findNearestCell.EQUAL_OR_HIGHER = 2;
-    }, /* 14 */
+    }, /* 15 */
     /***/
     function(module, exports, __webpack_require__) {
         var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
@@ -1155,12 +1204,12 @@
                 return classNames;
             }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), !(void 0 !== __WEBPACK_AMD_DEFINE_RESULT__ && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)));
         }();
-    }, /* 15 */
+    }, /* 16 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
         (function(global) {
-            for (var now = __webpack_require__(16), root = "undefined" == typeof window ? global : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = root["request" + suffix], caf = root["cancel" + suffix] || root["cancelRequest" + suffix], i = 0; !raf && i < vendors.length; i++) raf = root[vendors[i] + "Request" + suffix], 
+            for (var now = __webpack_require__(17), root = "undefined" == typeof window ? global : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = root["request" + suffix], caf = root["cancel" + suffix] || root["cancelRequest" + suffix], i = 0; !raf && i < vendors.length; i++) raf = root[vendors[i] + "Request" + suffix], 
             caf = root[vendors[i] + "Cancel" + suffix] || root[vendors[i] + "CancelRequest" + suffix];
             // Some versions of FF have rAF but not cAF
             if (!raf || !caf) {
@@ -1205,7 +1254,7 @@
         }).call(exports, function() {
             return this;
         }());
-    }, /* 16 */
+    }, /* 17 */
     /***/
     function(module, exports, __webpack_require__) {
         /* WEBPACK VAR INJECTION */
@@ -1226,8 +1275,8 @@
                     return new Date().getTime() - loadTime;
                 }, loadTime = new Date().getTime());
             }).call(this);
-        }).call(exports, __webpack_require__(17));
-    }, /* 17 */
+        }).call(exports, __webpack_require__(18));
+    }, /* 18 */
     /***/
     function(module, exports) {
         function cleanUpNextTick() {
@@ -1271,11 +1320,11 @@
         }, process.umask = function() {
             return 0;
         };
-    }, /* 18 */
+    }, /* 19 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
-        var size, canUseDOM = __webpack_require__(19);
+        var size, canUseDOM = __webpack_require__(20);
         module.exports = function(recalc) {
             if ((!size || recalc) && canUseDOM) {
                 var scrollDiv = document.createElement("div");
@@ -1285,12 +1334,12 @@
             }
             return size;
         };
-    }, /* 19 */
+    }, /* 20 */
     /***/
     function(module, exports) {
         "use strict";
         module.exports = !("undefined" == typeof window || !window.document || !window.document.createElement);
-    }, /* 20 */
+    }, /* 21 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1302,11 +1351,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.SortIndicator = exports.SortDirection = exports.FlexColumn = exports.FlexTable = exports["default"] = void 0;
-        var _FlexTable2 = __webpack_require__(21), _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(22), _FlexColumn3 = _interopRequireDefault(_FlexColumn2), _SortDirection2 = __webpack_require__(24), _SortDirection3 = _interopRequireDefault(_SortDirection2), _SortIndicator2 = __webpack_require__(23), _SortIndicator3 = _interopRequireDefault(_SortIndicator2);
+        var _FlexTable2 = __webpack_require__(22), _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(23), _FlexColumn3 = _interopRequireDefault(_FlexColumn2), _SortDirection2 = __webpack_require__(25), _SortDirection3 = _interopRequireDefault(_SortDirection2), _SortIndicator2 = __webpack_require__(24), _SortIndicator3 = _interopRequireDefault(_SortIndicator2);
         exports["default"] = _FlexTable3["default"], exports.FlexTable = _FlexTable3["default"], 
         exports.FlexColumn = _FlexColumn3["default"], exports.SortDirection = _SortDirection3["default"], 
         exports.SortIndicator = _SortIndicator3["default"];
-    }, /* 21 */
+    }, /* 22 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1348,11 +1397,11 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(22), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(25), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), _Grid = __webpack_require__(11), _Grid2 = _interopRequireDefault(_Grid), _SortDirection = __webpack_require__(24), _SortDirection2 = _interopRequireDefault(_SortDirection), FlexTable = function(_Component) {
+        }(), _classnames = __webpack_require__(15), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(23), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(26), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), _Grid = __webpack_require__(12), _Grid2 = _interopRequireDefault(_Grid), _SortDirection = __webpack_require__(25), _SortDirection2 = _interopRequireDefault(_SortDirection), FlexTable = function(_Component) {
             function FlexTable(props) {
                 _classCallCheck(this, FlexTable);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
-                return _initialiseProps.call(_this), _this.state = {
+                return _this.state = {
                     scrollbarWidth: 0
                 }, _this._createRow = _this._createRow.bind(_this), _this;
             }
@@ -1421,6 +1470,11 @@
                         scrollTop: scrollTop,
                         width: width
                     }));
+                }
+            }, {
+                key: "shouldComponentUpdate",
+                value: function(nextProps, nextState) {
+                    return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
                 }
             }, {
                 key: "_createColumn",
@@ -1555,12 +1609,8 @@
                 return null;
             },
             overscanRowsCount: 10
-        };
-        var _initialiseProps = function() {
-            this.shouldComponentUpdate = _function2["default"];
-        };
-        exports["default"] = FlexTable;
-    }, /* 22 */
+        }, exports["default"] = FlexTable;
+    }, /* 23 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1608,7 +1658,7 @@
             value: !0
         }), exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter, 
         exports.defaultHeaderRenderer = defaultHeaderRenderer;
-        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _SortIndicator = __webpack_require__(23), _SortIndicator2 = _interopRequireDefault(_SortIndicator), Column = function(_Component) {
+        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _SortIndicator = __webpack_require__(24), _SortIndicator2 = _interopRequireDefault(_SortIndicator), Column = function(_Component) {
             function Column() {
                 return _classCallCheck(this, Column), _possibleConstructorReturn(this, Object.getPrototypeOf(Column).apply(this, arguments));
             }
@@ -1636,7 +1686,7 @@
             minWidth: _react.PropTypes.number,
             width: _react.PropTypes.number.isRequired
         }, exports["default"] = Column;
-    }, /* 23 */
+    }, /* 24 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1668,11 +1718,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports["default"] = SortIndicator;
-        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _SortDirection = __webpack_require__(24), _SortDirection2 = _interopRequireDefault(_SortDirection);
+        var _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(15), _classnames2 = _interopRequireDefault(_classnames), _SortDirection = __webpack_require__(25), _SortDirection2 = _interopRequireDefault(_SortDirection);
         SortIndicator.propTypes = {
             sortDirection: _react.PropTypes.oneOf([ _SortDirection2["default"].ASC, _SortDirection2["default"].DESC ])
         };
-    }, /* 24 */
+    }, /* 25 */
     /***/
     function(module, exports) {
         "use strict";
@@ -1684,11 +1734,11 @@
             DESC: "DESC"
         };
         exports["default"] = SortDirection;
-    }, /* 25 */
+    }, /* 26 */
     /***/
     function(module, exports) {
-        module.exports = __WEBPACK_EXTERNAL_MODULE_25__;
-    }, /* 26 */
+        module.exports = __WEBPACK_EXTERNAL_MODULE_26__;
+    }, /* 27 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1700,9 +1750,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.InfiniteLoader = exports["default"] = void 0;
-        var _InfiniteLoader2 = __webpack_require__(27), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
+        var _InfiniteLoader2 = __webpack_require__(28), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
         exports["default"] = _InfiniteLoader3["default"], exports.InfiniteLoader = _InfiniteLoader3["default"];
-    }, /* 27 */
+    }, /* 28 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1763,12 +1813,12 @@
             };
         }();
         exports.isRangeVisible = isRangeVisible, exports.scanForUnloadedRanges = scanForUnloadedRanges;
-        var _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), InfiniteLoader = function(_Component) {
+        var _react = __webpack_require__(3), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), InfiniteLoader = function(_Component) {
             function InfiniteLoader(props, context) {
                 _classCallCheck(this, InfiniteLoader);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InfiniteLoader).call(this, props, context));
-                return _this.shouldComponentUpdate = _function2["default"], _this._onRowsRendered = _this._onRowsRendered.bind(_this), 
-                _this._registerChild = _this._registerChild.bind(_this), _this;
+                return _this._onRowsRendered = _this._onRowsRendered.bind(_this), _this._registerChild = _this._registerChild.bind(_this), 
+                _this;
             }
             return _inherits(InfiniteLoader, _Component), _createClass(InfiniteLoader, [ {
                 key: "render",
@@ -1778,6 +1828,11 @@
                         onRowsRendered: this._onRowsRendered,
                         registerChild: this._registerChild
                     });
+                }
+            }, {
+                key: "shouldComponentUpdate",
+                value: function(nextProps, nextState) {
+                    return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
                 }
             }, {
                 key: "_onRowsRendered",
@@ -1818,7 +1873,7 @@
             rowsCount: 0,
             threshold: 15
         }, exports["default"] = InfiniteLoader;
-    }, /* 28 */
+    }, /* 29 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1830,9 +1885,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.ScrollSync = exports["default"] = void 0;
-        var _ScrollSync2 = __webpack_require__(29), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
+        var _ScrollSync2 = __webpack_require__(30), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
         exports["default"] = _ScrollSync3["default"], exports.ScrollSync = _ScrollSync3["default"];
-    }, /* 29 */
+    }, /* 30 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1874,11 +1929,11 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _react = __webpack_require__(3), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), ScrollSync = function(_Component) {
+        }(), _react = __webpack_require__(3), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), ScrollSync = function(_Component) {
             function ScrollSync(props, context) {
                 _classCallCheck(this, ScrollSync);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScrollSync).call(this, props, context));
-                return _this.shouldComponentUpdate = _function2["default"], _this.state = {
+                return _this.state = {
                     clientHeight: 0,
                     clientWidth: 0,
                     scrollHeight: 0,
@@ -1902,6 +1957,11 @@
                     });
                 }
             }, {
+                key: "shouldComponentUpdate",
+                value: function(nextProps, nextState) {
+                    return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
+                }
+            }, {
                 key: "_onScroll",
                 value: function(_ref) {
                     var clientHeight = _ref.clientHeight, clientWidth = _ref.clientWidth, scrollHeight = _ref.scrollHeight, scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop, scrollWidth = _ref.scrollWidth;
@@ -1919,7 +1979,7 @@
         ScrollSync.propTypes = {
             children: _react.PropTypes.func.isRequired
         }, exports["default"] = ScrollSync;
-    }, /* 30 */
+    }, /* 31 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1931,9 +1991,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.VirtualScroll = exports["default"] = void 0;
-        var _VirtualScroll2 = __webpack_require__(31), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
+        var _VirtualScroll2 = __webpack_require__(32), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
         exports["default"] = _VirtualScroll3["default"], exports.VirtualScroll = _VirtualScroll3["default"];
-    }, /* 31 */
+    }, /* 32 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1975,13 +2035,9 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _Grid = __webpack_require__(11), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(14), _classnames2 = _interopRequireDefault(_classnames), _function = __webpack_require__(4), _function2 = _interopRequireDefault(_function), VirtualScroll = function(_Component) {
+        }(), _Grid = __webpack_require__(12), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(15), _classnames2 = _interopRequireDefault(_classnames), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), VirtualScroll = function(_Component) {
             function VirtualScroll() {
-                var _Object$getPrototypeO, _temp, _this, _ret;
-                _classCallCheck(this, VirtualScroll);
-                for (var _len = arguments.length, args = Array(_len), _key = 0; _len > _key; _key++) args[_key] = arguments[_key];
-                return _temp = _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(VirtualScroll)).call.apply(_Object$getPrototypeO, [ this ].concat(args))), 
-                _this.shouldComponentUpdate = _function2["default"], _ret = _temp, _possibleConstructorReturn(_this, _ret);
+                return _classCallCheck(this, VirtualScroll), _possibleConstructorReturn(this, Object.getPrototypeOf(VirtualScroll).apply(this, arguments));
             }
             return _inherits(VirtualScroll, _Component), _createClass(VirtualScroll, [ {
                 key: "recomputeRowHeights",
@@ -2028,6 +2084,11 @@
                         scrollTop: scrollTop,
                         width: width
                     });
+                }
+            }, {
+                key: "shouldComponentUpdate",
+                value: function(nextProps, nextState) {
+                    return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
                 }
             } ]), VirtualScroll;
         }(_react.Component);

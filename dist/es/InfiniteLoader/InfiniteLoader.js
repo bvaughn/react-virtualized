@@ -1,6 +1,6 @@
 
 import { Component, PropTypes } from 'react';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import shallowCompare from 'react-addons-shallow-compare';
 
 /**
  * Higher-order component that manages lazy-loading for "infinite" data.
@@ -15,9 +15,6 @@ var InfiniteLoader = function (_Component) {
     babelHelpers.classCallCheck(this, InfiniteLoader);
 
     var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(InfiniteLoader).call(this, props, context));
-
-    _this.shouldComponentUpdate = shouldPureComponentUpdate;
-
 
     _this._onRowsRendered = _this._onRowsRendered.bind(_this);
     _this._registerChild = _this._registerChild.bind(_this);
@@ -34,6 +31,11 @@ var InfiniteLoader = function (_Component) {
         onRowsRendered: this._onRowsRendered,
         registerChild: this._registerChild
       });
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return shallowCompare(this, nextProps, nextState);
     }
   }, {
     key: '_onRowsRendered',

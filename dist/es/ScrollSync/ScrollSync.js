@@ -1,5 +1,5 @@
 import { Component, PropTypes } from 'react';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import shallowCompare from 'react-addons-shallow-compare';
 
 /**
  * HOC that simplifies the process of synchronizing scrolling between two or more virtualized components.
@@ -12,9 +12,6 @@ var ScrollSync = function (_Component) {
     babelHelpers.classCallCheck(this, ScrollSync);
 
     var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(ScrollSync).call(this, props, context));
-
-    _this.shouldComponentUpdate = shouldPureComponentUpdate;
-
 
     _this.state = {
       clientHeight: 0,
@@ -51,6 +48,11 @@ var ScrollSync = function (_Component) {
         scrollTop: scrollTop,
         scrollWidth: scrollWidth
       });
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return shallowCompare(this, nextProps, nextState);
     }
   }, {
     key: '_onScroll',

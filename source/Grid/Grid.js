@@ -12,6 +12,7 @@ import cn from 'classnames'
 import raf from 'raf'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import React, { Component, PropTypes } from 'react'
+// import shallowCompare from 'react-addons-shallow-compare'
 
 // let TMP_RENDER_COUNT = 0
 // let TMP_SCROLL_COUNT = 0

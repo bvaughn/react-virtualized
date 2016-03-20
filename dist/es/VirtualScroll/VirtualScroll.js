@@ -2,7 +2,7 @@
 import Grid from '../Grid';
 import React, { Component, PropTypes } from 'react';
 import cn from 'classnames';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import shallowCompare from 'react-addons-shallow-compare';
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -17,17 +17,8 @@ var VirtualScroll = function (_Component) {
   babelHelpers.inherits(VirtualScroll, _Component);
 
   function VirtualScroll() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
     babelHelpers.classCallCheck(this, VirtualScroll);
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _ret = (_temp = (_this = babelHelpers.possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(VirtualScroll)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = shouldPureComponentUpdate, _temp), babelHelpers.possibleConstructorReturn(_this, _ret);
+    return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(VirtualScroll).apply(this, arguments));
   }
 
   babelHelpers.createClass(VirtualScroll, [{
@@ -97,6 +88,11 @@ var VirtualScroll = function (_Component) {
         scrollTop: scrollTop,
         width: width
       });
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return shallowCompare(this, nextProps, nextState);
     }
   }]);
   return VirtualScroll;

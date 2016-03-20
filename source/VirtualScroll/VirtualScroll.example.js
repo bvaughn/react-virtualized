@@ -8,11 +8,9 @@ import AutoSizer from '../AutoSizer'
 import VirtualScroll from './VirtualScroll'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 
 export default class VirtualScrollExample extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -129,6 +127,10 @@ export default class VirtualScrollExample extends Component {
         </div>
       </ContentBox>
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   _getDatum (index) {

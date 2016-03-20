@@ -3,7 +3,7 @@ import cn from 'classnames';
 import FlexColumn from './FlexColumn';
 import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import shallowCompare from 'react-addons-shallow-compare';
 import Grid from '../Grid';
 import SortDirection from './SortDirection';
 
@@ -19,8 +19,6 @@ var FlexTable = function (_Component) {
     babelHelpers.classCallCheck(this, FlexTable);
 
     var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
-
-    _initialiseProps.call(_this);
 
     _this.state = {
       scrollbarWidth: 0
@@ -138,6 +136,11 @@ var FlexTable = function (_Component) {
           width: width
         })
       );
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return shallowCompare(this, nextProps, nextState);
     }
   }, {
     key: '_createColumn',
@@ -444,9 +447,4 @@ FlexTable.defaultProps = {
   },
   overscanRowsCount: 10
 };
-
-var _initialiseProps = function _initialiseProps() {
-  this.shouldComponentUpdate = shouldPureComponentUpdate;
-};
-
 export default FlexTable;

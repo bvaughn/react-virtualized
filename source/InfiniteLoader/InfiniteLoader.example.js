@@ -5,15 +5,13 @@ import Immutable from 'immutable'
 import AutoSizer from '../AutoSizer'
 import InfiniteLoader from './InfiniteLoader'
 import VirtualScroll from '../VirtualScroll'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 import styles from './InfiniteLoader.example.css'
 
 const STATUS_LOADING = 1
 const STATUS_LOADED = 2
 
 export default class InfiniteLoaderExample extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -99,6 +97,10 @@ export default class InfiniteLoaderExample extends Component {
         </InfiniteLoader>
       </ContentBox>
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   _clearData () {

@@ -8,12 +8,10 @@ import FlexColumn from './FlexColumn'
 import FlexTable from './FlexTable'
 import SortDirection from './SortDirection'
 import SortIndicator from './SortIndicator'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 import styles from './FlexTable.example.css'
 
 export default class FlexTableExample extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -187,6 +185,10 @@ export default class FlexTableExample extends Component {
         </div>
       </ContentBox>
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   _getDatum (list, index) {
