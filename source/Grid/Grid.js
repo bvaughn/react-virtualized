@@ -378,7 +378,7 @@ export default class Grid extends Component {
             ? this._renderedCellCache.get(key)
             : renderCell({ columnIndex, rowIndex })
 
-          console.log('key:', key, this._renderedCellCache.has(key) ? 'cached' : 'new')
+// console.log('key:', key, this._renderedCellCache.has(key) ? 'cached' : 'new')
           this._renderedCellCache.set(key, renderedCell)
 
           // any other falsey value will be rendered
