@@ -1,6 +1,6 @@
 
 import React, { Component, PropTypes } from 'react';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import shallowCompare from 'react-addons-shallow-compare';
 
 /**
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
@@ -13,9 +13,6 @@ var ArrowKeyStepper = function (_Component) {
     babelHelpers.classCallCheck(this, ArrowKeyStepper);
 
     var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(ArrowKeyStepper).call(this, props, context));
-
-    _this.shouldComponentUpdate = shouldPureComponentUpdate;
-
 
     _this.state = {
       scrollToColumn: 0,
@@ -55,6 +52,11 @@ var ArrowKeyStepper = function (_Component) {
           scrollToRow: scrollToRow
         })
       );
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return shallowCompare(this, nextProps, nextState);
     }
   }, {
     key: '_onKeyDown',

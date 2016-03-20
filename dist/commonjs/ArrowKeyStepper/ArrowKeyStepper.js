@@ -10,9 +10,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _function = require('react-pure-render/function');
+var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
 
-var _function2 = _interopRequireDefault(_function);
+var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33,9 +33,6 @@ var ArrowKeyStepper = function (_Component) {
     _classCallCheck(this, ArrowKeyStepper);
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ArrowKeyStepper).call(this, props, context));
-
-    _this.shouldComponentUpdate = _function2.default;
-
 
     _this.state = {
       scrollToColumn: 0,
@@ -75,6 +72,11 @@ var ArrowKeyStepper = function (_Component) {
           scrollToRow: scrollToRow
         })
       );
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return (0, _reactAddonsShallowCompare2.default)(this, nextProps, nextState);
     }
   }, {
     key: '_onKeyDown',

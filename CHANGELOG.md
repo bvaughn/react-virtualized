@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 6.0.1
+Removed lingering references to `react-pure-render` with with [`shallowCompare`](https://facebook.github.io/react/docs/shallow-compare.html).
+This was meant to be part of the initial 6.0 release but was left out accidentally.
+
 # 6.0.0
 
 Version 6 includes the following changes.

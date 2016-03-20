@@ -1,6 +1,6 @@
 
 import { Component, PropTypes } from 'react';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import shallowCompare from 'react-addons-shallow-compare';
 import Grid from '../Grid';
 
 /**
@@ -14,9 +14,6 @@ var ColumnSizer = function (_Component) {
     babelHelpers.classCallCheck(this, ColumnSizer);
 
     var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(ColumnSizer).call(this, props, context));
-
-    _this.shouldComponentUpdate = shouldPureComponentUpdate;
-
 
     _this._registerChild = _this._registerChild.bind(_this);
     return _this;
@@ -67,6 +64,11 @@ var ColumnSizer = function (_Component) {
         },
         registerChild: this._registerChild
       });
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return shallowCompare(this, nextProps, nextState);
     }
   }, {
     key: '_registerChild',

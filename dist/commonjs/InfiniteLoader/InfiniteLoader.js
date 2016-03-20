@@ -11,9 +11,9 @@ exports.scanForUnloadedRanges = scanForUnloadedRanges;
 
 var _react = require('react');
 
-var _function = require('react-pure-render/function');
+var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
 
-var _function2 = _interopRequireDefault(_function);
+var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -37,9 +37,6 @@ var InfiniteLoader = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InfiniteLoader).call(this, props, context));
 
-    _this.shouldComponentUpdate = _function2.default;
-
-
     _this._onRowsRendered = _this._onRowsRendered.bind(_this);
     _this._registerChild = _this._registerChild.bind(_this);
     return _this;
@@ -55,6 +52,11 @@ var InfiniteLoader = function (_Component) {
         onRowsRendered: this._onRowsRendered,
         registerChild: this._registerChild
       });
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return (0, _reactAddonsShallowCompare2.default)(this, nextProps, nextState);
     }
   }, {
     key: '_onRowsRendered',

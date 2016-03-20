@@ -8,9 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _react = require('react');
 
-var _function = require('react-pure-render/function');
+var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
 
-var _function2 = _interopRequireDefault(_function);
+var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31,9 +31,6 @@ var ScrollSync = function (_Component) {
     _classCallCheck(this, ScrollSync);
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScrollSync).call(this, props, context));
-
-    _this.shouldComponentUpdate = _function2.default;
-
 
     _this.state = {
       clientHeight: 0,
@@ -70,6 +67,11 @@ var ScrollSync = function (_Component) {
         scrollTop: scrollTop,
         scrollWidth: scrollWidth
       });
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return (0, _reactAddonsShallowCompare2.default)(this, nextProps, nextState);
     }
   }, {
     key: '_onScroll',

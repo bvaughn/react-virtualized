@@ -20,9 +20,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = require('react-dom');
 
-var _function = require('react-pure-render/function');
+var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
 
-var _function2 = _interopRequireDefault(_function);
+var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
 var _Grid = require('../Grid');
 
@@ -52,8 +52,6 @@ var FlexTable = function (_Component) {
     _classCallCheck(this, FlexTable);
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
-
-    _initialiseProps.call(_this);
 
     _this.state = {
       scrollbarWidth: 0
@@ -171,6 +169,11 @@ var FlexTable = function (_Component) {
           width: width
         })
       );
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return (0, _reactAddonsShallowCompare2.default)(this, nextProps, nextState);
     }
   }, {
     key: '_createColumn',
@@ -478,9 +481,4 @@ FlexTable.defaultProps = {
   },
   overscanRowsCount: 10
 };
-
-var _initialiseProps = function _initialiseProps() {
-  this.shouldComponentUpdate = _function2.default;
-};
-
 exports.default = FlexTable;
