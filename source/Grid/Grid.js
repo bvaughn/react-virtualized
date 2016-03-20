@@ -1,18 +1,20 @@
 /** @flow */
 import {
-  computeCellMetadataAndUpdateScrollOffsetHelper,
+  // computeCellMetadataAndUpdateScrollOffsetHelper,
   createCallbackMemoizer,
   getOverscanIndices,
   getUpdatedOffsetForIndex,
   getVisibleCellIndices,
-  initCellMetadata,
-  updateScrollIndexHelper
+  initCellMetadata
+  // updateScrollIndexHelper
 } from './GridUtils'
 import cn from 'classnames'
 import raf from 'raf'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import React, { Component, PropTypes } from 'react'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+
+// let TMP_RENDER_COUNT = 0
+// let TMP_SCROLL_COUNT = 0
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -34,8 +36,6 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
 export default class Grid extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     /**
      * Optional custom CSS class name to attach to root Grid element.
@@ -132,7 +132,7 @@ export default class Grid extends Component {
     onScroll: () => null,
     onSectionRendered: () => null,
     overscanColumnsCount: 0,
-    overscanRowsCount: 10
+    overscanRowsCount: 0
   }
 
   constructor (props, context) {
@@ -144,6 +144,8 @@ export default class Grid extends Component {
       scrollLeft: 0,
       scrollTop: 0
     }
+
+    this._renderedCellCache = new RenderedCellCache()
 
     // Invokes onSectionRendered callback only when start/stop row or column indices change
     this._onGridRenderedMemoizer = createCallbackMemoizer()
@@ -163,15 +165,12 @@ export default class Grid extends Component {
    * Since Grid only receives :columnsCount and :rowsCount it has no way of detecting when the underlying data changes.
    */
   recomputeGridSize () {
-    this.setState({
-      computeGridMetadataOnNextUpdate: true
-    })
+    this._computeGridMetadata(this.props)
+    this.forceUpdate()
   }
 
   componentDidMount () {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
-
-    this._scrollbarSize = getScrollbarSize()
 
     if (scrollLeft >= 0 || scrollTop >= 0) {
       this._setScrollPosition({ scrollLeft, scrollTop })
@@ -194,14 +193,12 @@ export default class Grid extends Component {
     })
   }
 
-  /**
-   * @private
-   * This method updates scrollLeft/scrollTop in state for the following conditions:
-   * 1) New scroll-to-cell props have been set
-   */
   componentDidUpdate (prevProps, prevState) {
-    const { columnsCount, columnWidth, height, rowHeight, rowsCount, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
+
+    this._cellIndicesHaveChanged = false
+    this._forceRerender = false
+    this._metadataRecreated = false
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
     // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
@@ -224,113 +221,88 @@ export default class Grid extends Component {
         this.refs.scrollingContainer.scrollTop = scrollTop
       }
     }
-
-    // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
-    updateScrollIndexHelper({
-      cellsCount: columnsCount,
-      cellMetadata: this._columnMetadata,
-      cellSize: columnWidth,
-      previousCellsCount: prevProps.columnsCount,
-      previousCellSize: prevProps.columnWidth,
-      previousScrollToIndex: prevProps.scrollToColumn,
-      previousSize: prevProps.width,
-      scrollOffset: scrollLeft,
-      scrollToIndex: scrollToColumn,
-      size: width,
-      updateScrollIndexCallback: this._updateScrollLeftForScrollToColumn
-    })
-    updateScrollIndexHelper({
-      cellsCount: rowsCount,
-      cellMetadata: this._rowMetadata,
-      cellSize: rowHeight,
-      previousCellsCount: prevProps.rowsCount,
-      previousCellSize: prevProps.rowHeight,
-      previousScrollToIndex: prevProps.scrollToRow,
-      previousSize: prevProps.height,
-      scrollOffset: scrollTop,
-      scrollToIndex: scrollToRow,
-      size: height,
-      updateScrollIndexCallback: this._updateScrollTopForScrollToRow
-    })
-
-    // Update onRowsRendered callback if start/stop indices have changed
-    this._invokeOnGridRenderedHelper()
   }
 
   componentWillMount () {
+    this._scrollbarSize = getScrollbarSize()
     this._computeGridMetadata(this.props)
   }
 
-  componentWillUnmount () {
-    if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId)
+  componentWillReceiveProps (nextProps) {
+    // New scroll-offset props should override existing state.
+    if (this.porps.scrollLeft !== nextProps.scrollLeft) {
+      this.setState({ scrollLeft: nextProps.scrollLeft })
+    }
+    if (this.porps.scrollTop !== nextProps.scrollTop) {
+      this.setState({ scrollTop: nextProps.scrollTop })
     }
 
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
+    // Recompute cell metadata if cell-counts or cell-sizes change.
+    if (
+      isMetadataInvalid({
+        newCellCount: nextProps.columnsCount,
+        newCellSize: nextProps.columnWidth,
+        oldCellCount: this.props.columnsCount,
+        oldCellSize: this.props.columnWidth
+      }) ||
+      isMetadataInvalid({
+        newCellCount: nextProps.rowsCount,
+        newCellSize: nextProps.rowHeight,
+        oldCellCount: this.props.rowsCount,
+        oldCellSize: this.props.rowHeight
+      })
+    ) {
+      this._computeGridMetadata(nextProps)
+      this._metadataRecreated = true
     }
+
+    // Changes in certain properties always require a new render.
+    // Note that changes to cell-renderer and no-content-renderer do not trigger an update,
+    // Because people may use inline callbacks which would cause too many false positives.
+    this._forceRerender = (
+      this.porps.className !== nextProps.className
+    )
   }
 
-  /**
-   * @private
-   * This method updates scrollLeft/scrollTop in state for the following conditions:
-   * 1) Empty content (0 rows or columns)
-   * 2) New scroll props overriding the current state
-   * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
-   */
-  componentWillUpdate (nextProps, nextState) {
-    if (
-      nextProps.columnsCount === 0 &&
-      nextState.scrollLeft !== 0 ||
-      nextProps.rowsCount === 0 &&
-      nextState.scrollTop !== 0
-    ) {
-      this._setScrollPosition({
-        scrollLeft: 0,
-        scrollTop: 0
-      })
-    } else if (
-      nextProps.scrollLeft !== this.props.scrollLeft ||
-      nextProps.scrollTop !== this.props.scrollTop
-    ) {
-      this._setScrollPosition({
-        scrollLeft: nextProps.scrollLeft,
-        scrollTop: nextProps.scrollTop
-      })
-    }
+  shouldComponentUpdate (nextProps, nextState) {
+    const isScrollingChanged = this.state.isScrolling !== nextState.isScrolling
 
-    // Update scroll offsets if the size or number of cells have changed, invalidating the previous value
-    computeCellMetadataAndUpdateScrollOffsetHelper({
-      cellsCount: this.props.columnsCount,
-      cellSize: this.props.columnWidth,
-      computeMetadataCallback: this._computeGridMetadata,
-      computeMetadataCallbackProps: nextProps,
-      computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
-      nextCellsCount: nextProps.columnsCount,
-      nextCellSize: nextProps.columnWidth,
-      nextScrollToIndex: nextProps.scrollToColumn,
-      scrollToIndex: this.props.scrollToColumn,
-      updateScrollOffsetForScrollToIndex: this._updateScrollLeftForScrollToColumn
-    })
-    computeCellMetadataAndUpdateScrollOffsetHelper({
-      cellsCount: this.props.rowsCount,
-      cellSize: this.props.rowHeight,
-      computeMetadataCallback: this._computeGridMetadata,
-      computeMetadataCallbackProps: nextProps,
-      computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
-      nextCellsCount: nextProps.rowsCount,
-      nextCellSize: nextProps.rowHeight,
-      nextScrollToIndex: nextProps.scrollToRow,
-      scrollToIndex: this.props.scrollToRow,
-      updateScrollOffsetForScrollToIndex: this._updateScrollTopForScrollToRow
-    })
+    // Check scroll-to-cell and scroll-offset to see if we need to update visible cells.
+    this._cellIndicesHaveChanged = (
+      areVisibleCellIndicesInvalid({
+        cellsCount: nextProps.columnsCount,
+        cellMetadata: this._columnMetadata,
+        containerSize: nextProps.width,
+        currentOffset: this.state.scrollLeft,
+        previousStartIndex: this._columnStartIndex,
+        previousStopIndex: this._columnStopIndex
+      }) ||
+      areVisibleCellIndicesInvalid({
+        cellsCount: nextProps.rowsCount,
+        cellMetadata: this._rowMetadata,
+        containerSize: nextProps.height,
+        currentOffset: this.state.scrollTop,
+        previousStartIndex: this._rowStartIndex,
+        previousStopIndex: this._rowStopIndex
+      })
+    )
+// console.group('shouldComponentUpdate()')
+// console.log('isScrollingChanged:', isScrollingChanged)
+// console.log('cellIndicesHaveChanged:', this._cellIndicesHaveChanged)
+// console.log('forceRerender:', this._forceRerender)
+// console.log('metadataRecreated:', this._metadataRecreated)
+// console.groupEnd()
 
-    this.setState({
-      computeGridMetadataOnNextUpdate: false
-    })
+    return (
+      isScrollingChanged ||
+      this._cellIndicesHaveChanged ||
+      this._forceRerender ||
+      this._metadataRecreated
+    )
   }
 
   render () {
+// console.log('Grid.render()', ++TMP_RENDER_COUNT)
     const {
       className,
       columnsCount,
@@ -398,8 +370,15 @@ export default class Grid extends Component {
 
         for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
           let columnDatum = this._columnMetadata[columnIndex]
-          let renderedCell = renderCell({ columnIndex, rowIndex })
           let key = `${rowIndex}-${columnIndex}`
+
+          // TODO How to flush this? try using a WeakMap polyfill instead.
+          let renderedCell = this._renderedCellCache.has(key)
+            ? this._renderedCellCache.get(key)
+            : renderCell({ columnIndex, rowIndex })
+
+console.log('key:', key, this._renderedCellCache.has(key) ? 'cached' : 'new')
+          this._renderedCellCache.set(key, renderedCell)
 
           // any other falsey value will be rendered
           // as a text node by React
@@ -667,6 +646,7 @@ export default class Grid extends Component {
   }
 
   _onScroll (event) {
+// console.log('Grid.onScroll()', ++TMP_SCROLL_COUNT)
     // In certain edge-cases React dispatches an onScroll event with an invalid target.scrollLeft / target.scrollTop.
     // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
     // See issue #404 for more information.
@@ -719,5 +699,73 @@ export default class Grid extends Component {
     }
 
     this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
+  }
+}
+
+// TODO Move to GridUtils
+function areVisibleCellIndicesInvalid ({
+  cellsCount,
+  cellMetadata,
+  containerSize,
+  currentOffset,
+  previousStartIndex,
+  previousStopIndex
+}) {
+  const indices = getVisibleCellIndices({
+    cellsCount,
+    cellMetadata,
+    containerSize,
+    currentOffset
+  })
+// console.group('areVisibleCellIndicesInvalid()')
+// console.log('start index:', previousStartIndex, '~>', indices.start)
+// console.log('stop index:', previousStopIndex, '~>', indices.stop)
+// console.groupEnd()
+
+  return (
+    previousStartIndex !== indices.start ||
+    previousStopIndex !== indices.stop
+  )
+}
+
+// TODO Move to GridUtils
+function isMetadataInvalid ({
+  newCellCount,
+  newCellSize,
+  oldCellCount,
+  oldCellSize
+}) {
+  return (
+    newCellCount != oldCellCount ||
+    (
+      (
+        typeof newCellSize === 'number' ||
+        typeof oldCellSize === 'number'
+      ) &&
+      newCellSize !== oldCellSize
+    )
+  )
+}
+
+// TODO Implement pool size limits and auto-flushing old cells maybe via an animation frame?
+class RenderedCellCache {
+  constructor () {
+    this._keyToCellMap = {}
+  }
+
+  flush () {
+    this._keyToCellMap = {}
+  }
+
+  get (key) {
+    return this._keyToCellMap[key]
+  }
+
+  has (key) {
+    return !!this._keyToCellMap[key]
+  }
+
+  set (key, renderedCell) {
+    this._keyToCellMap[key] = renderedCell
   }
 }
