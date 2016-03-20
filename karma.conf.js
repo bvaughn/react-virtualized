@@ -23,7 +23,7 @@ module.exports = function (config) {
     reporters: ['progress', 'coverage'],
     webpack: require('./webpack.config.dev'),
     coverageReporter: {
-      dir: (process.env.CIRCLE_ARTIFACTS || '.') + '/coverage',
+      dir: 'coverage',
       file: 'coverage.json',
       type: 'json'
     }
