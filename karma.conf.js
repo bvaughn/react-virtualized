@@ -12,6 +12,7 @@ module.exports = function (config) {
     },
     singleRun: true,
     plugins: [
+      require('karma-coverage'),
       require('karma-jasmine'),
       require('karma-webpack'),
       require('karma-spec-reporter'),
@@ -19,6 +20,10 @@ module.exports = function (config) {
       require('karma-sourcemap-loader'),
       require('karma-phantomjs-launcher')
     ],
-    webpack: require('./webpack.config.dev')
+    reporters: ['progress', 'coverage'],
+    webpack: require('./webpack.config.dev'),
+    coverageReporter: {
+      dir: (process.env.CIRCLE_ARTIFACTS || '.') + '/coverage'
+    }
   })
 }

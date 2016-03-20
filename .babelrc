@@ -57,6 +57,9 @@
     },
     "test": {
       "comments": false,
+      "plugins": [
+        "__coverage__"
+      ],
       "presets": [
         "es2015",
         "react",
