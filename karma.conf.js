@@ -24,6 +24,7 @@ module.exports = function (config) {
     webpack: require('./webpack.config.dev'),
     coverageReporter: {
       dir: (process.env.CIRCLE_ARTIFACTS || '.') + '/coverage',
+      file: 'coverage.json',
       type: 'json'
     }
   })
