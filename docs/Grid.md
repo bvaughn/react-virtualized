@@ -34,20 +34,6 @@ Recomputes row heights and column widths.
 This function should be called if dynamic column or row sizes have changed but nothing else has.
 Since Grid only receives `columnsCount` and `rowsCount` it has no way of detecting when the underlying data changes.
 
-##### scrollToCell({ scrollToColumn, scrollToRow })
-
-Updates the Grid to ensure the cell at the specified row and column indices is visible.
-This method exists so that a user can forcefully scroll to the same cell twice.
-(The `scrollToColumn` and `scrollToRow` properties would not change in that case so it would not be picked up by the component.)
-
-##### setScrollPosition({ scrollLeft, scrollTop })
-
-Set the `scrollLeft` and `scrollTop` position within the inner scroll container.
-
-Normally it is best to let `Grid` manage these properties or to use a method like `scrollToCell`.
-This method enables a `Grid` to be scroll-synced to another react-virtualized component though.
-It is appropriate to use in that case.
-
 ### Class names
 
 The Grid component supports the following static class names

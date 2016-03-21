@@ -26,19 +26,6 @@ Recompute row heights and offsets.
 
 VirtualScroll has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property. If the `rowHeight` is a number it can compare before and after values but if it is a function that comparison is error prone. In the event that a dynamic `rowHeight` function is in use and the row heights have changed this function should be manually called by the "smart" container parent.
 
-##### scrollToRow(rowIndex)
-
-Scroll the list to ensure the row at the specified index is visible. This method exists so that a user can forcefully scroll to the same row twice. (The `scrollToIndex` property would not change in that case and so it would not be picked up by VirtualScroll.)
-
-##### setScrollTop(scrollTop)
-
-Set the `scrollTop` position within the inner scroll container.
-
-Normally it is best to let `VirtualScroll` manage this properties or to use a method like `scrollToRow`.
-This method enables `VirtualScroll` to be scroll-synced to another react-virtualized component though.
-It is appropriate to use in that case.
-
-
 ### Class names
 
 The VirtualScroll component supports the following static class names
