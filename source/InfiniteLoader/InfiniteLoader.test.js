@@ -4,14 +4,17 @@ import VirtualScroll from '../VirtualScroll'
 import { render } from '../TestUtils'
 
 describe('InfiniteLoader', () => {
+  let innerOnRowsRendered
   let isRowLoadedCalls = []
   let isRowLoadedMap = {}
   let loadMoreRowsCalls = []
+  let rowRendererCalls = []
 
   beforeEach(() => {
     isRowLoadedCalls = []
     isRowLoadedMap = {}
     loadMoreRowsCalls = []
+    rowRendererCalls = []
   })
 
   function isRowLoaded (index) {
@@ -19,12 +22,20 @@ describe('InfiniteLoader', () => {
     return !!isRowLoadedMap[index]
   }
 
-  function loadMoreRows ({ startIndex, stopIndex }) {
+  function defaultLoadMoreRows ({ startIndex, stopIndex }) {
     loadMoreRowsCalls.push({ startIndex, stopIndex })
+  }
+
+  function rowRenderer (index) {
+    rowRendererCalls.push(index)
+    return (
+      <div key={index}/>
+    )
   }
 
   function getMarkup ({
     height = 100,
+    loadMoreRows = defaultLoadMoreRows,
     rowHeight = 20,
     rowsCount = 100,
     threshold = 10,
@@ -37,17 +48,21 @@ describe('InfiniteLoader', () => {
         rowsCount={rowsCount}
         threshold={threshold}
       >
-        {({ onRowsRendered, registerChild }) => (
-          <VirtualScroll
-            ref={registerChild}
-            height={height}
-            onRowsRendered={onRowsRendered}
-            rowHeight={rowHeight}
-            rowRenderer={index => <div key={index}/>}
-            rowsCount={rowsCount}
-            width={width}
-          />
-        )}
+        {({ onRowsRendered, registerChild }) => {
+          innerOnRowsRendered = onRowsRendered
+
+          return (
+            <VirtualScroll
+              ref={registerChild}
+              height={height}
+              onRowsRendered={onRowsRendered}
+              rowHeight={rowHeight}
+              rowRenderer={rowRenderer}
+              rowsCount={rowsCount}
+              width={width}
+            />
+          )
+        }}
       </InfiniteLoader>
     )
   }
@@ -60,6 +75,32 @@ describe('InfiniteLoader', () => {
   it('should call :loadMoreRows for unloaded rows within the threshold', () => {
     render(getMarkup())
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 14 }])
+  })
+
+  it('should :forceUpdate once rows have loaded if :loadMoreRows returns a Promise', async (done) => {
+    let resolve
+    function loadMoreRows () {
+      return new Promise((innerResolve) => resolve = innerResolve)
+    }
+    render(getMarkup({ loadMoreRows }))
+    rowRendererCalls.splice(0)
+    await resolve()
+    expect(rowRendererCalls.length > 0).toEqual(true)
+    done()
+  })
+
+  it('should not :forceUpdate once rows have loaded rows are no longer visible', async (done) => {
+    let resolves = []
+    function loadMoreRows () {
+      return new Promise((innerResolve) => resolves.push(innerResolve))
+    }
+    render(getMarkup({ loadMoreRows }))
+    // Simulate a new range of rows being loaded
+    innerOnRowsRendered({ startIndex: 100, stopIndex: 101 })
+    rowRendererCalls.splice(0)
+    await resolves[0]() // Resolve the first request only, not the simulated row-change
+    expect(rowRendererCalls.length).toEqual(0)
+    done()
   })
 })
 
