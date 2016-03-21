@@ -33,7 +33,7 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 function render (props) {
   return (
     <ScrollSync>
-      {({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => (
+      {({ clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => (
         <div className='Table'>
           <div className='LeftColumn'>
             <VirtualScroll
