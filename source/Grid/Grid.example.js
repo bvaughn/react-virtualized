@@ -213,7 +213,7 @@ export default class GridExample extends Component {
         content = datum.random
         break
       default:
-        content = `${rowIndex}, ${columnIndex}`
+        content = `${rowIndex}, ${columnIndex}` // <BodyCell columnIndex={columnIndex} rowIndex={rowIndex}/>
         break
     }
 
@@ -291,4 +291,16 @@ export default class GridExample extends Component {
 
     this.setState({ scrollToRow })
   }
+}
+
+class BodyCell extends Component {
+  static propTypes = {
+    columnIndex: PropTypes.number.isRequired,
+    rowIndex: PropTypes.number.isRequired
+  }
+
+  render () {
+// console.log(`render() ${this.props.rowIndex}, ${this.props.columnIndex}`)
+    return <div>{`${this.props.rowIndex}, ${this.props.columnIndex}`}</div>
+  }  
 }
