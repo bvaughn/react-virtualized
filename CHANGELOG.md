@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 6.0.2
+Added [transform-react-inline-elements](http://babeljs.io/docs/plugins/transform-react-inline-elements/) to UMD build for minor runtime performance improvements.
+This change does not effect CommonJS or ES6 module builds because I did not want to remove prop-type checks.
+You should apply this transformation step as part of your own production build pipeline.
+
 ##### 6.0.1
 Removed lingering references to `react-pure-render` with with [`shallowCompare`](https://facebook.github.io/react/docs/shallow-compare.html).
 This was meant to be part of the initial 6.0 release but was left out accidentally.
