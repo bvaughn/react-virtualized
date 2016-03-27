@@ -77,9 +77,9 @@ describe('Grid', () => {
     // Small performance tweak added in 5.5.6
     it('should not render/parent cells that are null or false', () => {
       function renderCell ({ columnIndex, rowIndex }) {
-        if (columnIndex == 0) {
+        if (columnIndex === 0) {
           return null
-        } else if (rowIndex == 0) {
+        } else if (rowIndex === 0) {
           return false
         } else {
           return `row:${rowIndex}, column:${columnIndex}`
