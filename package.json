@@ -29,7 +29,8 @@
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --config webpack.config.dev.js",
     "test": "npm run lint && npm run test:unit",
     "test:unit": "cross-env NODE_ENV=test karma start",
-    "watch": "watch 'clear && npm run lint -s && npm run test -s' source"
+    "watch": "watch 'clear && npm run test -s' source",
+    "watch:nolint": "watch 'clear && npm run test:unit' source"
   },
   "repository": {
     "type": "git",
