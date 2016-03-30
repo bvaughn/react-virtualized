@@ -6,7 +6,7 @@ High order component that simplifies the process of synchronizing scrolling betw
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| children | Function | ✓ | Function respondible for rendering 2 or more virtualized components. This function should implement the following signature: `({ onScroll, scrollLeft, scrollTop }) => PropTypes.element` |
+| children | Function | ✓ | Function responsible for rendering 2 or more virtualized components. This function should implement the following signature: `({ onScroll, scrollLeft, scrollTop }) => PropTypes.element` |
 
 ### Children function
 
