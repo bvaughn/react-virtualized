@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 6.0.3
+Small update to `FlexTable` to move the `rowGetter` call outside of the column loop to reduce the number of times that method gets called.
+
 ##### 6.0.2
 Added [transform-react-inline-elements](http://babeljs.io/docs/plugins/transform-react-inline-elements/) to UMD build for minor runtime performance improvements.
 This change does not effect CommonJS or ES6 module builds because I did not want to remove prop-type checks.
