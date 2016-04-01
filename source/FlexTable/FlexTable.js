@@ -316,13 +316,14 @@ export default class FlexTable extends Component {
     const { scrollbarWidth } = this.state
 
     const rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName
+    const rowData = rowGetter(rowIndex)
 
     const renderedRow = React.Children.map(
       children,
       (column, columnIndex) => this._createColumn(
         column,
         columnIndex,
-        rowGetter(rowIndex),
+        rowData,
         rowIndex
       )
     )
