@@ -1567,8 +1567,8 @@
             }, {
                 key: "_createRow",
                 value: function(rowIndex) {
-                    var _this3 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, scrollbarWidth = this.state.scrollbarWidth, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
-                        return _this3._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
+                    var _this3 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, scrollbarWidth = this.state.scrollbarWidth, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, rowData = rowGetter(rowIndex), renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
+                        return _this3._createColumn(column, columnIndex, rowData, rowIndex);
                     });
                     return _jsx("div", {
                         className: (0, _classnames2["default"])("FlexTable__row", rowClass),
