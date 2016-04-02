@@ -739,8 +739,8 @@
                     scrollLeft: 0,
                     scrollTop: 0
                 }, _this._onGridRenderedMemoizer = (0, _GridUtils.createCallbackMemoizer)(), _this._onScrollMemoizer = (0, 
-                _GridUtils.createCallbackMemoizer)(!1), _this._computeGridMetadata = _this._computeGridMetadata.bind(_this), 
-                _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this), 
+                _GridUtils.createCallbackMemoizer)(!1), _this._computeColumnMetadata = _this._computeColumnMetadata.bind(_this), 
+                _this._computeRowMetadata = _this._computeRowMetadata.bind(_this), _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this), 
                 _this._onScroll = _this._onScroll.bind(_this), _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this), 
                 _this._updateScrollTopForScrollToRow = _this._updateScrollTopForScrollToRow.bind(_this), 
                 _this;
@@ -802,7 +802,7 @@
             }, {
                 key: "componentWillMount",
                 value: function() {
-                    this._computeGridMetadata(this.props);
+                    this._computeColumnMetadata(this.props), this._computeRowMetadata(this.props);
                 }
             }, {
                 key: "componentWillUnmount",
@@ -822,7 +822,7 @@
                     }), (0, _GridUtils.computeCellMetadataAndUpdateScrollOffsetHelper)({
                         cellsCount: this.props.columnsCount,
                         cellSize: this.props.columnWidth,
-                        computeMetadataCallback: this._computeGridMetadata,
+                        computeMetadataCallback: this._computeColumnMetadata,
                         computeMetadataCallbackProps: nextProps,
                         computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
                         nextCellsCount: nextProps.columnsCount,
@@ -833,7 +833,7 @@
                     }), (0, _GridUtils.computeCellMetadataAndUpdateScrollOffsetHelper)({
                         cellsCount: this.props.rowsCount,
                         cellSize: this.props.rowHeight,
-                        computeMetadataCallback: this._computeGridMetadata,
+                        computeMetadataCallback: this._computeRowMetadata,
                         computeMetadataCallbackProps: nextProps,
                         computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
                         nextCellsCount: nextProps.rowsCount,
@@ -885,10 +885,10 @@
                                 var child = _jsx("div", {
                                     className: "Grid__cell",
                                     style: {
-                                        height: this._getRowHeight(rowIndex),
-                                        left: columnDatum.offset + "px",
-                                        top: rowDatum.offset + "px",
-                                        width: this._getColumnWidth(columnIndex)
+                                        height: rowDatum.size,
+                                        left: columnDatum.offset,
+                                        top: rowDatum.offset,
+                                        width: columnDatum.size
                                     }
                                 }, key, renderedCell);
                                 childrenToDisplay.push(child);
@@ -923,13 +923,19 @@
                     return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
                 }
             }, {
-                key: "_computeGridMetadata",
+                key: "_computeColumnMetadata",
                 value: function(props) {
-                    var columnsCount = props.columnsCount, columnWidth = props.columnWidth, rowHeight = props.rowHeight, rowsCount = props.rowsCount;
+                    var columnsCount = props.columnsCount, columnWidth = props.columnWidth;
                     this._columnMetadata = (0, _GridUtils.initCellMetadata)({
                         cellsCount: columnsCount,
                         size: columnWidth
-                    }), this._rowMetadata = (0, _GridUtils.initCellMetadata)({
+                    });
+                }
+            }, {
+                key: "_computeRowMetadata",
+                value: function(props) {
+                    var rowHeight = props.rowHeight, rowsCount = props.rowsCount;
+                    this._rowMetadata = (0, _GridUtils.initCellMetadata)({
                         cellsCount: rowsCount,
                         size: rowHeight
                     });
@@ -944,18 +950,6 @@
                             isScrolling: !1
                         });
                     }, IS_SCROLLING_TIMEOUT);
-                }
-            }, {
-                key: "_getColumnWidth",
-                value: function(index) {
-                    var columnWidth = this.props.columnWidth;
-                    return columnWidth instanceof Function ? columnWidth(index) : columnWidth;
-                }
-            }, {
-                key: "_getRowHeight",
-                value: function(index) {
-                    var rowHeight = this.props.rowHeight;
-                    return rowHeight instanceof Function ? rowHeight(index) : rowHeight;
                 }
             }, {
                 key: "_getTotalColumnsWidth",
