@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 6.0.4
+Separated horiontal and vertical `Grid` metadata calculation to avoid unnecessarily recomputing row metadata for `FlexTable`s and `VirtualScroll`s when a browser's window is resized, for example.
+Also replaced `columnWidth` and `rowHeight` getter uses in `Grid.render` in favor of cached cell metadata instead.
+
 ##### 6.0.3
 Small update to `FlexTable` to move the `rowGetter` call outside of the column loop to reduce the number of times that method gets called.
 
