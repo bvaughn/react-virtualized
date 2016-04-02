@@ -148,7 +148,8 @@ export default class Grid extends Component {
     this._onScrollMemoizer = createCallbackMemoizer(false)
 
     // Bind functions to instance so they don't lose context when passed around
-    this._computeGridMetadata = this._computeGridMetadata.bind(this)
+    this._computeColumnMetadata = this._computeColumnMetadata.bind(this)
+    this._computeRowMetadata = this._computeRowMetadata.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
@@ -256,7 +257,8 @@ export default class Grid extends Component {
   }
 
   componentWillMount () {
-    this._computeGridMetadata(this.props)
+    this._computeColumnMetadata(this.props)
+    this._computeRowMetadata(this.props)
   }
 
   componentWillUnmount () {
@@ -301,7 +303,7 @@ export default class Grid extends Component {
     computeCellMetadataAndUpdateScrollOffsetHelper({
       cellsCount: this.props.columnsCount,
       cellSize: this.props.columnWidth,
-      computeMetadataCallback: this._computeGridMetadata,
+      computeMetadataCallback: this._computeColumnMetadata,
       computeMetadataCallbackProps: nextProps,
       computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
       nextCellsCount: nextProps.columnsCount,
@@ -313,7 +315,7 @@ export default class Grid extends Component {
     computeCellMetadataAndUpdateScrollOffsetHelper({
       cellsCount: this.props.rowsCount,
       cellSize: this.props.rowHeight,
-      computeMetadataCallback: this._computeGridMetadata,
+      computeMetadataCallback: this._computeRowMetadata,
       computeMetadataCallbackProps: nextProps,
       computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
       nextCellsCount: nextProps.rowsCount,
@@ -410,10 +412,10 @@ export default class Grid extends Component {
               key={key}
               className='Grid__cell'
               style={{
-                height: this._getRowHeight(rowIndex),
-                left: `${columnDatum.offset}px`,
-                top: `${rowDatum.offset}px`,
-                width: this._getColumnWidth(columnIndex)
+                height: rowDatum.size,
+                left: columnDatum.offset,
+                top: rowDatum.offset,
+                width: columnDatum.size
               }}
             >
               {renderedCell}
@@ -479,13 +481,18 @@ export default class Grid extends Component {
 
   /* ---------------------------- Helper methods ---------------------------- */
 
-  _computeGridMetadata (props) {
-    const { columnsCount, columnWidth, rowHeight, rowsCount } = props
+  _computeColumnMetadata (props) {
+    const { columnsCount, columnWidth } = props
 
     this._columnMetadata = initCellMetadata({
       cellsCount: columnsCount,
       size: columnWidth
     })
+  }
+
+  _computeRowMetadata (props) {
+    const { rowHeight, rowsCount } = props
+
     this._rowMetadata = initCellMetadata({
       cellsCount: rowsCount,
       size: rowHeight
@@ -508,22 +515,6 @@ export default class Grid extends Component {
         isScrolling: false
       })
     }, IS_SCROLLING_TIMEOUT)
-  }
-
-  _getColumnWidth (index) {
-    const { columnWidth } = this.props
-
-    return columnWidth instanceof Function
-      ? columnWidth(index)
-      : columnWidth
-  }
-
-  _getRowHeight (index) {
-    const { rowHeight } = this.props
-
-    return rowHeight instanceof Function
-      ? rowHeight(index)
-      : rowHeight
   }
 
   _getTotalColumnsWidth () {
