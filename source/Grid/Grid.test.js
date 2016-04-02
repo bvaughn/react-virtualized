@@ -18,6 +18,7 @@ describe('Grid', () => {
     onScroll,
     overscanColumnsCount = 0,
     overscanRowsCount = 0,
+    renderCell,
     rowHeight = 20,
     rowsCount = NUM_ROWS,
     scrollLeft = undefined,
@@ -26,7 +27,7 @@ describe('Grid', () => {
     scrollTop = undefined,
     width = 200
   } = {}) {
-    function renderCell ({ columnIndex, rowIndex }) {
+    function defaultRenderCell ({ columnIndex, rowIndex }) {
       return (
         <div className='gridItem'>
           {`row:${rowIndex}, column:${columnIndex}`}
@@ -45,7 +46,7 @@ describe('Grid', () => {
         onScroll={onScroll}
         overscanColumnsCount={overscanColumnsCount}
         overscanRowsCount={overscanRowsCount}
-        renderCell={renderCell}
+        renderCell={renderCell || defaultRenderCell}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
         scrollLeft={scrollLeft}
@@ -71,6 +72,29 @@ describe('Grid', () => {
     it('should not render more columns than available if the area is not filled', () => {
       const rendered = findDOMNode(render(getMarkup({ columnsCount: 2 })))
       expect(rendered.querySelectorAll('.gridItem').length).toEqual(10) // 5 rows x 2 columns
+    })
+
+    // Small performance tweak added in 5.5.6
+    it('should not render/parent cells that are null or false', () => {
+      function renderCell ({ columnIndex, rowIndex }) {
+        if (columnIndex === 0) {
+          return null
+        } else if (rowIndex === 0) {
+          return false
+        } else {
+          return `row:${rowIndex}, column:${columnIndex}`
+        }
+      }
+      const rendered = findDOMNode(render(getMarkup({
+        columnsCount: 3,
+        overscanColumnsCount: 0,
+        overscanRowsCount: 0,
+        rowsCount: 3,
+        renderCell
+      })))
+      expect(rendered.querySelectorAll('.Grid__cell').length).toEqual(4) // [1,1], [1,2], [2,1], and [2,2]
+      expect(rendered.textContent).not.toContain('column:0')
+      expect(rendered.textContent).not.toContain('row:0')
     })
   })
 

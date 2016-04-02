@@ -38,6 +38,8 @@ describe('FlexTable', () => {
     headerHeight = 20,
     headerRenderer = undefined,
     height = 100,
+    maxWidth = undefined,
+    minWidth = undefined,
     noRowsRenderer = undefined,
     onHeaderClick = undefined,
     onRowClick = undefined,
@@ -91,6 +93,8 @@ describe('FlexTable', () => {
         <FlexColumn
           label='Email'
           dataKey='email'
+          maxWidth={maxWidth}
+          minWidth={minWidth}
           width={50}
         />
       </FlexTable>
@@ -135,16 +139,55 @@ describe('FlexTable', () => {
         })))
         const rows = rendered.querySelectorAll('.FlexTable__row')
         expect(rows.length).toEqual(2)
-
-        for (let index = 0; index < rows.length; index++) {
-          let row = rows[index]
+        Array.from(rows).forEach((row, index) => {
           let rowData = list.get(index)
           let columns = row.querySelectorAll('.FlexTable__rowColumn')
           expect(columns.length).toEqual(2)
           expect(columns[0].textContent).toEqual(rowData.get('name'))
           expect(columns[1].textContent).toEqual(rowData.get('email'))
-        }
+        })
       })
+    })
+
+    it('should support a :rowHeight function', () => {
+      const rowHeight = (index) => 10 + index * 10
+      const rendered = findDOMNode(render(getMarkup({
+        rowHeight,
+        rowsCount: 3
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Array.from(rows).forEach((row, index) => {
+        expect(Number.parseInt(row.style.height, 10)).toEqual(rowHeight(index))
+      })
+    })
+
+    it('should support :minWidth and :maxWidth values for a column', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        maxWidth: 75,
+        minWidth: 25,
+        rowsCount: 1
+      })))
+      const columns = rendered.querySelectorAll('.FlexTable__rowColumn')
+      const emailColumn = columns[1]
+      expect(Number.parseInt(emailColumn.style.maxWidth, 10)).toEqual(75)
+      expect(Number.parseInt(emailColumn.style.minWidth, 10)).toEqual(25)
+    })
+  })
+
+  describe('recomputeRowHeights', () => {
+    it('should recompute row heights and other values when called', () => {
+      let highestRowIndex = 0
+      const rowHeight = (index) => {
+        highestRowIndex = Math.max(index, highestRowIndex)
+        return 10
+      }
+      const component = render(getMarkup({
+        rowHeight,
+        rowsCount: 50
+      }))
+      highestRowIndex = 0
+      component.recomputeRowHeights()
+      expect(highestRowIndex).toEqual(49)
     })
   })
 
@@ -154,11 +197,9 @@ describe('FlexTable', () => {
         cellDataGetter: (dataKey, rowData, columnData) => `Custom ${dataKey} for row ${rowData.get('id')}`
       })))
       const nameColumns = rendered.querySelectorAll('.FlexTable__rowColumn:first-of-type')
-
-      for (let index = 0; index < nameColumns.length; index++) {
-        let nameColumn = nameColumns[index]
+      Array.from(nameColumns).forEach((nameColumn, index) => {
         expect(nameColumn.textContent).toEqual(`Custom name for row ${index}`)
-      }
+      })
     })
 
     it('should use a custom cellRenderer if specified', () => {
@@ -166,12 +207,10 @@ describe('FlexTable', () => {
         cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => `Custom ${cellData}`
       })))
       const nameColumns = rendered.querySelectorAll('.FlexTable__rowColumn:first-of-type')
-
-      for (let index = 0; index < nameColumns.length; index++) {
-        let nameColumn = nameColumns[index]
+      Array.from(nameColumns).forEach((nameColumn, index) => {
         let rowData = list.get(index)
         expect(nameColumn.textContent).toEqual(`Custom ${rowData.get('name')}`)
-      }
+      })
     })
 
     it('should set the rendered cell content as the cell :title if it is a string', () => {
@@ -407,10 +446,9 @@ describe('FlexTable', () => {
         rowClassName: staticClassName
       })))
       const rows = rendered.querySelectorAll('.FlexTable__row')
-      for (let index = 0; index < rows.length; index++) {
-        let row = rows[index]
+      Array.from(rows).forEach((row, index) => {
         expect(row.className).toContain(staticClassName)
-      }
+      })
     })
 
     it('should render dynamic classname given :rowClassName as a function', () => {
@@ -418,8 +456,7 @@ describe('FlexTable', () => {
         rowClassName: rowIndex => rowIndex % 2 === 0 ? 'even' : 'odd'
       })))
       const rows = rendered.querySelectorAll('.FlexTable__row')
-      for (let index = 0; index < rows.length; index++) {
-        let row = rows[index]
+      Array.from(rows).forEach((row, index) => {
         if (index % 2 === 0) {
           expect(row.className).toContain('even')
           expect(row.className).not.toContain('odd')
@@ -427,7 +464,7 @@ describe('FlexTable', () => {
           expect(row.className).toContain('odd')
           expect(row.className).not.toContain('even')
         }
-      }
+      })
     })
   })
 

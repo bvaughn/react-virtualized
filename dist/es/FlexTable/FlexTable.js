@@ -240,9 +240,10 @@ var FlexTable = function (_Component) {
 
 
       var rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName;
+      var rowData = rowGetter(rowIndex);
 
       var renderedRow = React.Children.map(children, function (column, columnIndex) {
-        return _this3._createColumn(column, columnIndex, rowGetter(rowIndex), rowIndex);
+        return _this3._createColumn(column, columnIndex, rowData, rowIndex);
       });
 
       return React.createElement(

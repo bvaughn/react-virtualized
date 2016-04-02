@@ -43,7 +43,7 @@ It should implement the following signature:
 function (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
 ```
 
-A defdault `cellRenderer` is provided that displays an attribute as a simple string
+A default `cellRenderer` is provided that displays an attribute as a simple string
 You should override this default method if your data is some other type of object or requires custom formatting.
 
 #### headerRenderer
@@ -55,5 +55,5 @@ It should implement the following signature:
 function ({ columnData: any, dataKey: string, disableSort: boolean, label: string, sortBy: string, sortDirection: SortDirection }): element
 ```
 
-A defdault `headerRenderer` is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
+A default `headerRenderer` is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
 You should override this default method if you want to customize the appearance of table columns.
