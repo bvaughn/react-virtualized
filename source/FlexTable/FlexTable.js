@@ -303,7 +303,7 @@ export default class FlexTable extends Component {
         style={style}
         onClick={onClick}
         role="gridcell"
-		tabIndex="0"
+        tabIndex="0"
       >
         {renderedHeader}
       </div>
@@ -341,8 +341,8 @@ export default class FlexTable extends Component {
           height: this._getRowHeight(rowIndex),
           paddingRight: scrollbarWidth
         }}
-		role="row"
-		tabIndex="0"
+        role="row"
+        tabIndex="0"
       >
         {renderedRow}
       </div>
