@@ -35,6 +35,8 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  */
 export default class Grid extends Component {
   static propTypes = {
+    'aria-label': PropTypes.string,
+
     /**
      * Optional custom CSS class name to attach to root Grid element.
      */
@@ -126,6 +128,7 @@ export default class Grid extends Component {
   }
 
   static defaultProps = {
+    'aria-label': 'grid',
     noContentRenderer: () => null,
     onScroll: () => null,
     onSectionRendered: () => null,
@@ -449,10 +452,12 @@ export default class Grid extends Component {
     return (
       <div
         ref='scrollingContainer'
+        aria-label={this.props['aria-label']}
         className={cn('Grid', className)}
         onScroll={this._onScroll}
-        tabIndex={0}
+        role='grid'
         style={gridStyle}
+        tabIndex={0}
       >
         {childrenToDisplay.length > 0 &&
           <div

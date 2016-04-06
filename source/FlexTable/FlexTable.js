@@ -304,7 +304,7 @@ export default class FlexTable extends Component {
         className={classNames}
         style={style}
         onClick={onClick}
-        role='gridcell'
+        role='rowheader'
         tabIndex='0'
       >
         {renderedHeader}
@@ -336,6 +336,7 @@ export default class FlexTable extends Component {
 
     return (
       <div
+        aria-label='row'
         key={rowIndex}
         className={cn('FlexTable__row', rowClass)}
         onClick={() => onRowClick(rowIndex)}
