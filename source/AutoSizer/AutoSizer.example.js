@@ -42,6 +42,7 @@ export default class AutoSizerExample extends Component {
         <ContentBoxParagraph>
           <label className={styles.checkboxLabel}>
             <input
+              aria-label='Hide description (to show resize)?'
               className={styles.checkbox}
               type='checkbox'
               value={hideDescription}
