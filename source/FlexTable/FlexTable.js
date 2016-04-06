@@ -277,15 +277,6 @@ export default class FlexTable extends Component {
     )
     const style = this._getFlexStyleForColumn(column)
 
-    // If this is a sortable header, clicking it should update the table data's sorting.
-    const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
-      ? SortDirection.ASC
-      : SortDirection.DESC
-    const onClick = () => {
-      sortEnabled && sort(dataKey, newSortDirection)
-      onHeaderClick && onHeaderClick(dataKey, columnData)
-    }
-
     const renderedHeader = headerRenderer({
       columnData,
       dataKey,
@@ -298,10 +289,27 @@ export default class FlexTable extends Component {
     const a11yProps = {}
 
     if (sortEnabled || onHeaderClick) {
+      // If this is a sortable header, clicking it should update the table data's sorting.
+      const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
+        ? SortDirection.ASC
+        : SortDirection.DESC
+
+      const onClick = () => {
+        sortEnabled && sort(dataKey, newSortDirection)
+        onHeaderClick && onHeaderClick(dataKey, columnData)
+      }
+
+      const onKeyDown = (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          onClick()
+        }
+      }
+
       a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey
       a11yProps.role = 'rowheader'
       a11yProps.tabIndex = 0
       a11yProps.onClick = onClick
+      a11yProps.onKeyDown = onKeyDown
     }
 
     return (

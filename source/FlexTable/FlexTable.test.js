@@ -311,6 +311,22 @@ describe('FlexTable', () => {
       expect(dataKey).toEqual('name')
       expect(newSortDirection).toEqual(SortDirection.ASC)
     })
+
+    it('should call sort when a column header is activated via ENTER or SPACE key', () => {
+      const sortCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
+        sortBy: 'name'
+      })))
+      const nameColumn = rendered.querySelector('.FlexTable__headerColumn:first-of-type')
+      expect(sortCalls.length).toEqual(0)
+      Simulate.keyDown(nameColumn, {key: ' '})
+      expect(sortCalls.length).toEqual(1)
+      Simulate.keyDown(nameColumn, {key: 'Enter'})
+      expect(sortCalls.length).toEqual(2)
+      Simulate.keyDown(nameColumn, {key: 'F'})
+      expect(sortCalls.length).toEqual(2)
+    })
   })
 
   describe('headerRenderer', () => {
