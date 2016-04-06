@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+#### 6.0.6
+Added conditional checks to when `aria-label`, `role`, and `tabIndex` get attached to `FlexTable` headers and rows.
+These a11y properties are only added when on-click or sort handlers are present.
+
 #### 6.0.5
 Added `aria-label` and `role` attributes to `FlexTable`, `Grid`, and `VirtualScroll` components to fix a11y issues reported by [reactjs/react-a11y](https://github.com/reactjs/react-a11y).
 Thanks to @globexdesigns for the contributions!
