@@ -1419,7 +1419,13 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _jsx = function() {
+        var _extends = Object.assign || function(target) {
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
+            }
+            return target;
+        }, _jsx = function() {
             var REACT_ELEMENT_TYPE = "function" == typeof Symbol && Symbol["for"] && Symbol["for"]("react.element") || 60103;
             return function(type, props, key, children) {
                 var defaultProps = type && type.defaultProps, childrenLength = arguments.length - 3;
@@ -1548,7 +1554,7 @@
                     _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
                         FlexTable__sortableHeaderColumn: sortEnabled
                     }), style = this._getFlexStyleForColumn(column), newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2["default"].DESC ? _SortDirection2["default"].ASC : _SortDirection2["default"].DESC, onClick = function() {
-                        sortEnabled && sort(dataKey, newSortDirection), onHeaderClick(dataKey, columnData);
+                        sortEnabled && sort(dataKey, newSortDirection), onHeaderClick && onHeaderClick(dataKey, columnData);
                     }, renderedHeader = headerRenderer({
                         columnData: columnData,
                         dataKey: dataKey,
@@ -1556,35 +1562,32 @@
                         label: label,
                         sortBy: sortBy,
                         sortDirection: sortDirection
-                    });
-                    return _jsx("div", {
-                        "aria-label": column.props["aria-label"] || label || dataKey,
+                    }), a11yProps = {};
+                    return (sortEnabled || onHeaderClick) && (a11yProps["aria-label"] = column.props["aria-label"] || label || dataKey, 
+                    a11yProps.role = "rowheader", a11yProps.tabIndex = 0, a11yProps.onClick = onClick), 
+                    _react2["default"].createElement("div", _extends({}, a11yProps, {
+                        key: "Header-Col" + columnIndex,
                         className: classNames,
-                        style: style,
-                        onClick: onClick,
-                        role: "rowheader",
-                        tabIndex: "0"
-                    }, "Header-Col" + columnIndex, renderedHeader);
+                        style: style
+                    }), renderedHeader);
                 }
             }, {
                 key: "_createRow",
                 value: function(rowIndex) {
                     var _this3 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, scrollbarWidth = this.state.scrollbarWidth, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, rowData = rowGetter(rowIndex), renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
                         return _this3._createColumn(column, columnIndex, rowData, rowIndex);
-                    });
-                    return _jsx("div", {
-                        "aria-label": "row",
+                    }), a11yProps = {};
+                    return onRowClick && (a11yProps["aria-label"] = "row", a11yProps.role = "row", a11yProps.tabIndex = 0, 
+                    a11yProps.onClick = function() {
+                        return onRowClick(rowIndex);
+                    }), _react2["default"].createElement("div", _extends({}, a11yProps, {
+                        key: rowIndex,
                         className: (0, _classnames2["default"])("FlexTable__row", rowClass),
-                        onClick: function() {
-                            return onRowClick(rowIndex);
-                        },
                         style: {
                             height: this._getRowHeight(rowIndex),
                             paddingRight: scrollbarWidth
-                        },
-                        role: "row",
-                        tabIndex: "0"
-                    }, rowIndex, renderedRow);
+                        }
+                    }), renderedRow);
                 }
             }, {
                 key: "_getFlexStyleForColumn",
@@ -1651,12 +1654,6 @@
             disableHeader: !1,
             headerHeight: 0,
             noRowsRenderer: function() {
-                return null;
-            },
-            onHeaderClick: function() {
-                return null;
-            },
-            onRowClick: function() {
                 return null;
             },
             onRowsRendered: function() {

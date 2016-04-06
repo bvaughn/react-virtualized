@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _classnames = require('classnames');
@@ -237,7 +239,7 @@ var FlexTable = function (_Component) {
       var newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2.default.DESC ? _SortDirection2.default.ASC : _SortDirection2.default.DESC;
       var onClick = function onClick() {
         sortEnabled && sort(dataKey, newSortDirection);
-        onHeaderClick(dataKey, columnData);
+        onHeaderClick && onHeaderClick(dataKey, columnData);
       };
 
       var renderedHeader = headerRenderer({
@@ -249,17 +251,22 @@ var FlexTable = function (_Component) {
         sortDirection: sortDirection
       });
 
+      var a11yProps = {};
+
+      if (sortEnabled || onHeaderClick) {
+        a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey;
+        a11yProps.role = 'rowheader';
+        a11yProps.tabIndex = 0;
+        a11yProps.onClick = onClick;
+      }
+
       return _react2.default.createElement(
         'div',
-        {
-          'aria-label': column.props['aria-label'] || label || dataKey,
+        _extends({}, a11yProps, {
           key: 'Header-Col' + columnIndex,
           className: classNames,
-          style: style,
-          onClick: onClick,
-          role: 'rowheader',
-          tabIndex: '0'
-        },
+          style: style
+        }),
         renderedHeader
       );
     }
@@ -283,22 +290,27 @@ var FlexTable = function (_Component) {
         return _this3._createColumn(column, columnIndex, rowData, rowIndex);
       });
 
+      var a11yProps = {};
+
+      if (onRowClick) {
+        a11yProps['aria-label'] = 'row';
+        a11yProps.role = 'row';
+        a11yProps.tabIndex = 0;
+        a11yProps.onClick = function () {
+          return onRowClick(rowIndex);
+        };
+      }
+
       return _react2.default.createElement(
         'div',
-        {
-          'aria-label': 'row',
+        _extends({}, a11yProps, {
           key: rowIndex,
           className: (0, _classnames2.default)('FlexTable__row', rowClass),
-          onClick: function onClick() {
-            return onRowClick(rowIndex);
-          },
           style: {
             height: this._getRowHeight(rowIndex),
             paddingRight: scrollbarWidth
-          },
-          role: 'row',
-          tabIndex: '0'
-        },
+          }
+        }),
         renderedRow
       );
     }
@@ -475,12 +487,6 @@ FlexTable.defaultProps = {
   disableHeader: false,
   headerHeight: 0,
   noRowsRenderer: function noRowsRenderer() {
-    return null;
-  },
-  onHeaderClick: function onHeaderClick() {
-    return null;
-  },
-  onRowClick: function onRowClick() {
     return null;
   },
   onRowsRendered: function onRowsRendered() {

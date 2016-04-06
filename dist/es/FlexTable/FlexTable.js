@@ -204,7 +204,7 @@ var FlexTable = function (_Component) {
       var newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC;
       var onClick = function onClick() {
         sortEnabled && sort(dataKey, newSortDirection);
-        onHeaderClick(dataKey, columnData);
+        onHeaderClick && onHeaderClick(dataKey, columnData);
       };
 
       var renderedHeader = headerRenderer({
@@ -216,17 +216,22 @@ var FlexTable = function (_Component) {
         sortDirection: sortDirection
       });
 
+      var a11yProps = {};
+
+      if (sortEnabled || onHeaderClick) {
+        a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey;
+        a11yProps.role = 'rowheader';
+        a11yProps.tabIndex = 0;
+        a11yProps.onClick = onClick;
+      }
+
       return React.createElement(
         'div',
-        {
-          'aria-label': column.props['aria-label'] || label || dataKey,
+        babelHelpers.extends({}, a11yProps, {
           key: 'Header-Col' + columnIndex,
           className: classNames,
-          style: style,
-          onClick: onClick,
-          role: 'rowheader',
-          tabIndex: '0'
-        },
+          style: style
+        }),
         renderedHeader
       );
     }
@@ -250,22 +255,27 @@ var FlexTable = function (_Component) {
         return _this3._createColumn(column, columnIndex, rowData, rowIndex);
       });
 
+      var a11yProps = {};
+
+      if (onRowClick) {
+        a11yProps['aria-label'] = 'row';
+        a11yProps.role = 'row';
+        a11yProps.tabIndex = 0;
+        a11yProps.onClick = function () {
+          return onRowClick(rowIndex);
+        };
+      }
+
       return React.createElement(
         'div',
-        {
-          'aria-label': 'row',
+        babelHelpers.extends({}, a11yProps, {
           key: rowIndex,
           className: cn('FlexTable__row', rowClass),
-          onClick: function onClick() {
-            return onRowClick(rowIndex);
-          },
           style: {
             height: this._getRowHeight(rowIndex),
             paddingRight: scrollbarWidth
-          },
-          role: 'row',
-          tabIndex: '0'
-        },
+          }
+        }),
         renderedRow
       );
     }
@@ -441,12 +451,6 @@ FlexTable.defaultProps = {
   disableHeader: false,
   headerHeight: 0,
   noRowsRenderer: function noRowsRenderer() {
-    return null;
-  },
-  onHeaderClick: function onHeaderClick() {
-    return null;
-  },
-  onRowClick: function onRowClick() {
     return null;
   },
   onRowsRendered: function onRowsRendered() {
