@@ -13,6 +13,8 @@ import SortDirection from './SortDirection'
  */
 export default class FlexTable extends Component {
   static propTypes = {
+    'aria-label': PropTypes.string,
+
     /** One or more FlexColumns describing the data displayed in this row */
     children: (props, propName, componentName) => {
       const children = React.Children.toArray(props.children)
@@ -120,8 +122,6 @@ export default class FlexTable extends Component {
     disableHeader: false,
     headerHeight: 0,
     noRowsRenderer: () => null,
-    onHeaderClick: () => null,
-    onRowClick: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
     overscanRowsCount: 10
@@ -199,6 +199,7 @@ export default class FlexTable extends Component {
         )}
 
         <Grid
+          aria-label={this.props['aria-label']}
           ref='Grid'
           className={'FlexTable__Grid'}
           columnWidth={width}
@@ -276,15 +277,6 @@ export default class FlexTable extends Component {
     )
     const style = this._getFlexStyleForColumn(column)
 
-    // If this is a sortable header, clicking it should update the table data's sorting.
-    const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
-      ? SortDirection.ASC
-      : SortDirection.DESC
-    const onClick = () => {
-      sortEnabled && sort(dataKey, newSortDirection)
-      onHeaderClick(dataKey, columnData)
-    }
-
     const renderedHeader = headerRenderer({
       columnData,
       dataKey,
@@ -294,12 +286,38 @@ export default class FlexTable extends Component {
       sortDirection
     })
 
+    const a11yProps = {}
+
+    if (sortEnabled || onHeaderClick) {
+      // If this is a sortable header, clicking it should update the table data's sorting.
+      const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
+        ? SortDirection.ASC
+        : SortDirection.DESC
+
+      const onClick = () => {
+        sortEnabled && sort(dataKey, newSortDirection)
+        onHeaderClick && onHeaderClick(dataKey, columnData)
+      }
+
+      const onKeyDown = (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          onClick()
+        }
+      }
+
+      a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey
+      a11yProps.role = 'rowheader'
+      a11yProps.tabIndex = 0
+      a11yProps.onClick = onClick
+      a11yProps.onKeyDown = onKeyDown
+    }
+
     return (
       <div
+        {...a11yProps}
         key={`Header-Col${columnIndex}`}
         className={classNames}
         style={style}
-        onClick={onClick}
       >
         {renderedHeader}
       </div>
@@ -328,11 +346,20 @@ export default class FlexTable extends Component {
       )
     )
 
+    const a11yProps = {}
+
+    if (onRowClick) {
+      a11yProps['aria-label'] = 'row'
+      a11yProps.role = 'row'
+      a11yProps.tabIndex = 0
+      a11yProps.onClick = () => onRowClick(rowIndex)
+    }
+
     return (
       <div
+        {...a11yProps}
         key={rowIndex}
         className={cn('FlexTable__row', rowClass)}
-        onClick={() => onRowClick(rowIndex)}
         style={{
           height: this._getRowHeight(rowIndex),
           paddingRight: scrollbarWidth

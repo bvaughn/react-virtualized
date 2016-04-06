@@ -38,6 +38,8 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  */
 export default class Grid extends Component {
   static propTypes = {
+    'aria-label': PropTypes.string,
+
     /**
      * Optional custom CSS class name to attach to root Grid element.
      */
@@ -129,6 +131,7 @@ export default class Grid extends Component {
   }
 
   static defaultProps = {
+    'aria-label': 'grid',
     noContentRenderer: () => null,
     onScroll: () => null,
     onSectionRendered: () => null,
@@ -153,7 +156,8 @@ export default class Grid extends Component {
     this._onScrollMemoizer = createCallbackMemoizer(false)
 
     // Bind functions to instance so they don't lose context when passed around
-    this._computeGridMetadata = this._computeGridMetadata.bind(this)
+    this._computeColumnMetadata = this._computeColumnMetadata.bind(this)
+    this._computeRowMetadata = this._computeRowMetadata.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
@@ -166,7 +170,8 @@ export default class Grid extends Component {
    * Since Grid only receives :columnsCount and :rowsCount it has no way of detecting when the underlying data changes.
    */
   recomputeGridSize () {
-    this._computeGridMetadata(this.props)
+    this._computeColumnMetadata(this.props)
+    this._computeRowMetadata(this.props)
     this.forceUpdate()
   }
 
@@ -226,7 +231,8 @@ export default class Grid extends Component {
 
   componentWillMount () {
     this._scrollbarSize = getScrollbarSize()
-    this._computeGridMetadata(this.props)
+    this._computeColumnMetadata(this.props)
+    this._computeRowMetadata(this.props)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -253,7 +259,8 @@ export default class Grid extends Component {
         oldCellSize: this.props.rowHeight
       })
     ) {
-      this._computeGridMetadata(nextProps)
+      this._computeColumnMetadata(nextProps)
+      this._computeRowMetadata(nextProps)
       this._metadataRecreated = true
     }
 
@@ -287,12 +294,6 @@ export default class Grid extends Component {
         previousStopIndex: this._rowStopIndex
       })
     )
-// console.group('shouldComponentUpdate()')
-// console.log('isScrollingChanged:', isScrollingChanged)
-// console.log('cellIndicesHaveChanged:', this._cellIndicesHaveChanged)
-// console.log('forceRerender:', this._forceRerender)
-// console.log('metadataRecreated:', this._metadataRecreated)
-// console.groupEnd()
 
     return (
       isScrollingChanged ||
@@ -303,7 +304,6 @@ export default class Grid extends Component {
   }
 
   render () {
-// console.log('Grid.render()', ++TMP_RENDER_COUNT)
     const {
       className,
       columnsCount,
@@ -378,7 +378,6 @@ export default class Grid extends Component {
             ? this._renderedCellCache.get(key)
             : renderCell({ columnIndex, rowIndex })
 
-// console.log('key:', key, this._renderedCellCache.has(key) ? 'cached' : 'new')
           this._renderedCellCache.set(key, renderedCell)
 
           // any other falsey value will be rendered
@@ -392,10 +391,10 @@ export default class Grid extends Component {
               key={key}
               className='Grid__cell'
               style={{
-                height: this._getRowHeight(rowIndex),
-                left: `${columnDatum.offset}px`,
-                top: `${rowDatum.offset}px`,
-                width: this._getColumnWidth(columnIndex)
+                height: rowDatum.size,
+                left: columnDatum.offset,
+                top: rowDatum.offset,
+                width: columnDatum.size
               }}
             >
               {renderedCell}
@@ -429,10 +428,12 @@ export default class Grid extends Component {
     return (
       <div
         ref='scrollingContainer'
+        aria-label={this.props['aria-label']}
         className={cn('Grid', className)}
         onScroll={this._onScroll}
-        tabIndex={0}
+        role='grid'
         style={gridStyle}
+        tabIndex={0}
       >
         {childrenToDisplay.length > 0 &&
           <div
@@ -457,13 +458,18 @@ export default class Grid extends Component {
 
   /* ---------------------------- Helper methods ---------------------------- */
 
-  _computeGridMetadata (props) {
-    const { columnsCount, columnWidth, rowHeight, rowsCount } = props
+  _computeColumnMetadata (props) {
+    const { columnsCount, columnWidth } = props
 
     this._columnMetadata = initCellMetadata({
       cellsCount: columnsCount,
       size: columnWidth
     })
+  }
+
+  _computeRowMetadata (props) {
+    const { rowHeight, rowsCount } = props
+
     this._rowMetadata = initCellMetadata({
       cellsCount: rowsCount,
       size: rowHeight
@@ -486,22 +492,6 @@ export default class Grid extends Component {
         isScrolling: false
       })
     }, IS_SCROLLING_TIMEOUT)
-  }
-
-  _getColumnWidth (index) {
-    const { columnWidth } = this.props
-
-    return columnWidth instanceof Function
-      ? columnWidth(index)
-      : columnWidth
-  }
-
-  _getRowHeight (index) {
-    const { rowHeight } = this.props
-
-    return rowHeight instanceof Function
-      ? rowHeight(index)
-      : rowHeight
   }
 
   _getTotalColumnsWidth () {
@@ -647,7 +637,6 @@ export default class Grid extends Component {
   }
 
   _onScroll (event) {
-// console.log('Grid.onScroll()', ++TMP_SCROLL_COUNT)
     // In certain edge-cases React dispatches an onScroll event with an invalid target.scrollLeft / target.scrollTop.
     // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
     // See issue #404 for more information.
@@ -718,10 +707,6 @@ function areVisibleCellIndicesInvalid ({
     containerSize,
     currentOffset
   })
-// console.group('areVisibleCellIndicesInvalid()')
-// console.log('start index:', previousStartIndex, '~>', indices.start)
-// console.log('stop index:', previousStopIndex, '~>', indices.stop)
-// console.groupEnd()
 
   return (
     previousStartIndex !== indices.start ||

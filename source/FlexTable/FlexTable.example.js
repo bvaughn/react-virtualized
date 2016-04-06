@@ -83,6 +83,7 @@ export default class FlexTableExample extends Component {
         <ContentBoxParagraph>
           <label className={styles.checkboxLabel}>
             <input
+              aria-label='Use dynamic row heights?'
               className={styles.checkbox}
               type='checkbox'
               value={useDynamicRowHeight}

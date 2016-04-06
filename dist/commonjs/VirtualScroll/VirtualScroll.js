@@ -80,6 +80,7 @@ var VirtualScroll = function (_Component) {
 
       return _react2.default.createElement(_Grid2.default, {
         ref: 'Grid',
+        'aria-label': this.props['aria-label'],
         className: classNames,
         columnWidth: width,
         columnsCount: 1,
@@ -127,6 +128,8 @@ var VirtualScroll = function (_Component) {
 }(_react.Component);
 
 VirtualScroll.propTypes = {
+  'aria-label': _react.PropTypes.string,
+
   /** Optional CSS class name */
   className: _react.PropTypes.string,
 

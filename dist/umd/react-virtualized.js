@@ -739,8 +739,8 @@
                     scrollLeft: 0,
                     scrollTop: 0
                 }, _this._onGridRenderedMemoizer = (0, _GridUtils.createCallbackMemoizer)(), _this._onScrollMemoizer = (0, 
-                _GridUtils.createCallbackMemoizer)(!1), _this._computeGridMetadata = _this._computeGridMetadata.bind(_this), 
-                _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this), 
+                _GridUtils.createCallbackMemoizer)(!1), _this._computeColumnMetadata = _this._computeColumnMetadata.bind(_this), 
+                _this._computeRowMetadata = _this._computeRowMetadata.bind(_this), _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this), 
                 _this._onScroll = _this._onScroll.bind(_this), _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this), 
                 _this._updateScrollTopForScrollToRow = _this._updateScrollTopForScrollToRow.bind(_this), 
                 _this;
@@ -802,7 +802,7 @@
             }, {
                 key: "componentWillMount",
                 value: function() {
-                    this._computeGridMetadata(this.props);
+                    this._computeColumnMetadata(this.props), this._computeRowMetadata(this.props);
                 }
             }, {
                 key: "componentWillUnmount",
@@ -822,7 +822,7 @@
                     }), (0, _GridUtils.computeCellMetadataAndUpdateScrollOffsetHelper)({
                         cellsCount: this.props.columnsCount,
                         cellSize: this.props.columnWidth,
-                        computeMetadataCallback: this._computeGridMetadata,
+                        computeMetadataCallback: this._computeColumnMetadata,
                         computeMetadataCallbackProps: nextProps,
                         computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
                         nextCellsCount: nextProps.columnsCount,
@@ -833,7 +833,7 @@
                     }), (0, _GridUtils.computeCellMetadataAndUpdateScrollOffsetHelper)({
                         cellsCount: this.props.rowsCount,
                         cellSize: this.props.rowHeight,
-                        computeMetadataCallback: this._computeGridMetadata,
+                        computeMetadataCallback: this._computeRowMetadata,
                         computeMetadataCallbackProps: nextProps,
                         computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
                         nextCellsCount: nextProps.rowsCount,
@@ -885,10 +885,10 @@
                                 var child = _jsx("div", {
                                     className: "Grid__cell",
                                     style: {
-                                        height: this._getRowHeight(rowIndex),
-                                        left: columnDatum.offset + "px",
-                                        top: rowDatum.offset + "px",
-                                        width: this._getColumnWidth(columnIndex)
+                                        height: rowDatum.size,
+                                        left: columnDatum.offset,
+                                        top: rowDatum.offset,
+                                        width: columnDatum.size
                                     }
                                 }, key, renderedCell);
                                 childrenToDisplay.push(child);
@@ -902,10 +902,12 @@
                     return width >= totalColumnsWidth && (gridStyle.overflowX = "hidden"), height >= totalRowsHeight && (gridStyle.overflowY = "hidden"), 
                     _react2["default"].createElement("div", {
                         ref: "scrollingContainer",
+                        "aria-label": this.props["aria-label"],
                         className: (0, _classnames2["default"])("Grid", className),
                         onScroll: this._onScroll,
-                        tabIndex: 0,
-                        style: gridStyle
+                        role: "grid",
+                        style: gridStyle,
+                        tabIndex: 0
                     }, childrenToDisplay.length > 0 && _jsx("div", {
                         className: "Grid__innerScrollContainer",
                         style: {
@@ -923,13 +925,19 @@
                     return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
                 }
             }, {
-                key: "_computeGridMetadata",
+                key: "_computeColumnMetadata",
                 value: function(props) {
-                    var columnsCount = props.columnsCount, columnWidth = props.columnWidth, rowHeight = props.rowHeight, rowsCount = props.rowsCount;
+                    var columnsCount = props.columnsCount, columnWidth = props.columnWidth;
                     this._columnMetadata = (0, _GridUtils.initCellMetadata)({
                         cellsCount: columnsCount,
                         size: columnWidth
-                    }), this._rowMetadata = (0, _GridUtils.initCellMetadata)({
+                    });
+                }
+            }, {
+                key: "_computeRowMetadata",
+                value: function(props) {
+                    var rowHeight = props.rowHeight, rowsCount = props.rowsCount;
+                    this._rowMetadata = (0, _GridUtils.initCellMetadata)({
                         cellsCount: rowsCount,
                         size: rowHeight
                     });
@@ -944,18 +952,6 @@
                             isScrolling: !1
                         });
                     }, IS_SCROLLING_TIMEOUT);
-                }
-            }, {
-                key: "_getColumnWidth",
-                value: function(index) {
-                    var columnWidth = this.props.columnWidth;
-                    return columnWidth instanceof Function ? columnWidth(index) : columnWidth;
-                }
-            }, {
-                key: "_getRowHeight",
-                value: function(index) {
-                    var rowHeight = this.props.rowHeight;
-                    return rowHeight instanceof Function ? rowHeight(index) : rowHeight;
                 }
             }, {
                 key: "_getTotalColumnsWidth",
@@ -1089,6 +1085,7 @@
             } ]), Grid;
         }(_react.Component);
         Grid.propTypes = {
+            "aria-label": _react.PropTypes.string,
             className: _react.PropTypes.string,
             columnsCount: _react.PropTypes.number.isRequired,
             columnWidth: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
@@ -1107,6 +1104,7 @@
             scrollToRow: _react.PropTypes.number,
             width: _react.PropTypes.number.isRequired
         }, Grid.defaultProps = {
+            "aria-label": "grid",
             noContentRenderer: function() {
                 return null;
             },
@@ -1421,7 +1419,13 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _jsx = function() {
+        var _extends = Object.assign || function(target) {
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
+            }
+            return target;
+        }, _jsx = function() {
             var REACT_ELEMENT_TYPE = "function" == typeof Symbol && Symbol["for"] && Symbol["for"]("react.element") || 60103;
             return function(type, props, key, children) {
                 var defaultProps = type && type.defaultProps, childrenLength = arguments.length - 3;
@@ -1490,6 +1494,7 @@
                             width: width
                         }
                     }, void 0, this._getRenderedHeaderRow()), _react2["default"].createElement(_Grid2["default"], {
+                        "aria-label": this.props["aria-label"],
                         ref: "Grid",
                         className: "FlexTable__Grid",
                         columnWidth: width,
@@ -1548,38 +1553,45 @@
                     var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, headerRenderer = _column$props2.headerRenderer, label = _column$props2.label, columnData = _column$props2.columnData, sortEnabled = !disableSort && sort, classNames = (0, 
                     _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
                         FlexTable__sortableHeaderColumn: sortEnabled
-                    }), style = this._getFlexStyleForColumn(column), newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2["default"].DESC ? _SortDirection2["default"].ASC : _SortDirection2["default"].DESC, onClick = function() {
-                        sortEnabled && sort(dataKey, newSortDirection), onHeaderClick(dataKey, columnData);
-                    }, renderedHeader = headerRenderer({
+                    }), style = this._getFlexStyleForColumn(column), renderedHeader = headerRenderer({
                         columnData: columnData,
                         dataKey: dataKey,
                         disableSort: disableSort,
                         label: label,
                         sortBy: sortBy,
                         sortDirection: sortDirection
-                    });
-                    return _jsx("div", {
+                    }), a11yProps = {};
+                    return (sortEnabled || onHeaderClick) && !function() {
+                        var newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2["default"].DESC ? _SortDirection2["default"].ASC : _SortDirection2["default"].DESC, onClick = function() {
+                            sortEnabled && sort(dataKey, newSortDirection), onHeaderClick && onHeaderClick(dataKey, columnData);
+                        }, onKeyDown = function(event) {
+                            "Enter" !== event.key && " " !== event.key || onClick();
+                        };
+                        a11yProps["aria-label"] = column.props["aria-label"] || label || dataKey, a11yProps.role = "rowheader", 
+                        a11yProps.tabIndex = 0, a11yProps.onClick = onClick, a11yProps.onKeyDown = onKeyDown;
+                    }(), _react2["default"].createElement("div", _extends({}, a11yProps, {
+                        key: "Header-Col" + columnIndex,
                         className: classNames,
-                        style: style,
-                        onClick: onClick
-                    }, "Header-Col" + columnIndex, renderedHeader);
+                        style: style
+                    }), renderedHeader);
                 }
             }, {
                 key: "_createRow",
                 value: function(rowIndex) {
                     var _this3 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, scrollbarWidth = this.state.scrollbarWidth, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, rowData = rowGetter(rowIndex), renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
                         return _this3._createColumn(column, columnIndex, rowData, rowIndex);
-                    });
-                    return _jsx("div", {
+                    }), a11yProps = {};
+                    return onRowClick && (a11yProps["aria-label"] = "row", a11yProps.role = "row", a11yProps.tabIndex = 0, 
+                    a11yProps.onClick = function() {
+                        return onRowClick(rowIndex);
+                    }), _react2["default"].createElement("div", _extends({}, a11yProps, {
+                        key: rowIndex,
                         className: (0, _classnames2["default"])("FlexTable__row", rowClass),
-                        onClick: function() {
-                            return onRowClick(rowIndex);
-                        },
                         style: {
                             height: this._getRowHeight(rowIndex),
                             paddingRight: scrollbarWidth
                         }
-                    }, rowIndex, renderedRow);
+                    }), renderedRow);
                 }
             }, {
                 key: "_getFlexStyleForColumn",
@@ -1617,6 +1629,7 @@
             } ]), FlexTable;
         }(_react.Component);
         FlexTable.propTypes = {
+            "aria-label": _react.PropTypes.string,
             children: function children(props, propName, componentName) {
                 for (var children = _react2["default"].Children.toArray(props.children), i = 0; i < children.length; i++) if (children[i].type !== _FlexColumn2["default"]) return new Error("FlexTable only accepts children of type FlexColumn");
             },
@@ -1645,12 +1658,6 @@
             disableHeader: !1,
             headerHeight: 0,
             noRowsRenderer: function() {
-                return null;
-            },
-            onHeaderClick: function() {
-                return null;
-            },
-            onRowClick: function() {
                 return null;
             },
             onRowsRendered: function() {
@@ -1741,6 +1748,7 @@
             flexShrink: 1,
             headerRenderer: defaultHeaderRenderer
         }, Column.propTypes = {
+            "aria-label": _react.PropTypes.string,
             cellClassName: _react.PropTypes.string,
             cellDataGetter: _react.PropTypes.func,
             cellRenderer: _react.PropTypes.func,
@@ -2142,6 +2150,7 @@
                     _classnames2["default"])("VirtualScroll", className);
                     return _react2["default"].createElement(_Grid2["default"], {
                         ref: "Grid",
+                        "aria-label": this.props["aria-label"],
                         className: classNames,
                         columnWidth: width,
                         columnsCount: 1,
@@ -2184,6 +2193,7 @@
             } ]), VirtualScroll;
         }(_react.Component);
         VirtualScroll.propTypes = {
+            "aria-label": _react.PropTypes.string,
             className: _react.PropTypes.string,
             height: _react.PropTypes.number.isRequired,
             noRowsRenderer: _react.PropTypes.func.isRequired,

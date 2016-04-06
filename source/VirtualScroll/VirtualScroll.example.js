@@ -63,6 +63,7 @@ export default class VirtualScrollExample extends Component {
         <ContentBoxParagraph>
           <label className={styles.checkboxLabel}>
             <input
+              aria-label='Use dynamic row heights?'
               className={styles.checkbox}
               type='checkbox'
               value={useDynamicRowHeight}

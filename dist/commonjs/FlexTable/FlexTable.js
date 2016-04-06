@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _classnames = require('classnames');
@@ -132,6 +134,7 @@ var FlexTable = function (_Component) {
           this._getRenderedHeaderRow()
         ),
         _react2.default.createElement(_Grid2.default, {
+          'aria-label': this.props['aria-label'],
           ref: 'Grid',
           className: 'FlexTable__Grid',
           columnWidth: width,
@@ -232,13 +235,6 @@ var FlexTable = function (_Component) {
       });
       var style = this._getFlexStyleForColumn(column);
 
-      // If this is a sortable header, clicking it should update the table data's sorting.
-      var newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2.default.DESC ? _SortDirection2.default.ASC : _SortDirection2.default.DESC;
-      var onClick = function onClick() {
-        sortEnabled && sort(dataKey, newSortDirection);
-        onHeaderClick(dataKey, columnData);
-      };
-
       var renderedHeader = headerRenderer({
         columnData: columnData,
         dataKey: dataKey,
@@ -248,14 +244,39 @@ var FlexTable = function (_Component) {
         sortDirection: sortDirection
       });
 
+      var a11yProps = {};
+
+      if (sortEnabled || onHeaderClick) {
+        (function () {
+          // If this is a sortable header, clicking it should update the table data's sorting.
+          var newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2.default.DESC ? _SortDirection2.default.ASC : _SortDirection2.default.DESC;
+
+          var onClick = function onClick() {
+            sortEnabled && sort(dataKey, newSortDirection);
+            onHeaderClick && onHeaderClick(dataKey, columnData);
+          };
+
+          var onKeyDown = function onKeyDown(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+              onClick();
+            }
+          };
+
+          a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey;
+          a11yProps.role = 'rowheader';
+          a11yProps.tabIndex = 0;
+          a11yProps.onClick = onClick;
+          a11yProps.onKeyDown = onKeyDown;
+        })();
+      }
+
       return _react2.default.createElement(
         'div',
-        {
+        _extends({}, a11yProps, {
           key: 'Header-Col' + columnIndex,
           className: classNames,
-          style: style,
-          onClick: onClick
-        },
+          style: style
+        }),
         renderedHeader
       );
     }
@@ -279,19 +300,27 @@ var FlexTable = function (_Component) {
         return _this3._createColumn(column, columnIndex, rowData, rowIndex);
       });
 
+      var a11yProps = {};
+
+      if (onRowClick) {
+        a11yProps['aria-label'] = 'row';
+        a11yProps.role = 'row';
+        a11yProps.tabIndex = 0;
+        a11yProps.onClick = function () {
+          return onRowClick(rowIndex);
+        };
+      }
+
       return _react2.default.createElement(
         'div',
-        {
+        _extends({}, a11yProps, {
           key: rowIndex,
           className: (0, _classnames2.default)('FlexTable__row', rowClass),
-          onClick: function onClick() {
-            return onRowClick(rowIndex);
-          },
           style: {
             height: this._getRowHeight(rowIndex),
             paddingRight: scrollbarWidth
           }
-        },
+        }),
         renderedRow
       );
     }
@@ -360,6 +389,8 @@ var FlexTable = function (_Component) {
 }(_react.Component);
 
 FlexTable.propTypes = {
+  'aria-label': _react.PropTypes.string,
+
   /** One or more FlexColumns describing the data displayed in this row */
   children: function children(props, propName, componentName) {
     var children = _react2.default.Children.toArray(props.children);
@@ -466,12 +497,6 @@ FlexTable.defaultProps = {
   disableHeader: false,
   headerHeight: 0,
   noRowsRenderer: function noRowsRenderer() {
-    return null;
-  },
-  onHeaderClick: function onHeaderClick() {
-    return null;
-  },
-  onRowClick: function onRowClick() {
     return null;
   },
   onRowsRendered: function onRowsRendered() {

@@ -14,6 +14,8 @@ import shallowCompare from 'react-addons-shallow-compare'
  */
 export default class VirtualScroll extends Component {
   static propTypes = {
+    'aria-label': PropTypes.string,
+
     /** Optional CSS class name */
     className: PropTypes.string,
 
@@ -99,6 +101,7 @@ export default class VirtualScroll extends Component {
     return (
       <Grid
         ref='Grid'
+        aria-label={this.props['aria-label']}
         className={classNames}
         columnWidth={width}
         columnsCount={1}

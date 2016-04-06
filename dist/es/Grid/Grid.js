@@ -46,7 +46,8 @@ var Grid = function (_Component) {
     _this._onScrollMemoizer = createCallbackMemoizer(false);
 
     // Bind functions to instance so they don't lose context when passed around
-    _this._computeGridMetadata = _this._computeGridMetadata.bind(_this);
+    _this._computeColumnMetadata = _this._computeColumnMetadata.bind(_this);
+    _this._computeRowMetadata = _this._computeRowMetadata.bind(_this);
     _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this);
     _this._onScroll = _this._onScroll.bind(_this);
     _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this);
@@ -173,7 +174,8 @@ var Grid = function (_Component) {
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
-      this._computeGridMetadata(this.props);
+      this._computeColumnMetadata(this.props);
+      this._computeRowMetadata(this.props);
     }
   }, {
     key: 'componentWillUnmount',
@@ -214,7 +216,7 @@ var Grid = function (_Component) {
       computeCellMetadataAndUpdateScrollOffsetHelper({
         cellsCount: this.props.columnsCount,
         cellSize: this.props.columnWidth,
-        computeMetadataCallback: this._computeGridMetadata,
+        computeMetadataCallback: this._computeColumnMetadata,
         computeMetadataCallbackProps: nextProps,
         computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
         nextCellsCount: nextProps.columnsCount,
@@ -226,7 +228,7 @@ var Grid = function (_Component) {
       computeCellMetadataAndUpdateScrollOffsetHelper({
         cellsCount: this.props.rowsCount,
         cellSize: this.props.rowHeight,
-        computeMetadataCallback: this._computeGridMetadata,
+        computeMetadataCallback: this._computeRowMetadata,
         computeMetadataCallbackProps: nextProps,
         computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
         nextCellsCount: nextProps.rowsCount,
@@ -323,10 +325,10 @@ var Grid = function (_Component) {
                 key: key,
                 className: 'Grid__cell',
                 style: {
-                  height: this._getRowHeight(rowIndex),
-                  left: columnDatum.offset + 'px',
-                  top: rowDatum.offset + 'px',
-                  width: this._getColumnWidth(columnIndex)
+                  height: rowDatum.size,
+                  left: columnDatum.offset,
+                  top: rowDatum.offset,
+                  width: columnDatum.size
                 }
               },
               renderedCell
@@ -360,10 +362,12 @@ var Grid = function (_Component) {
         'div',
         {
           ref: 'scrollingContainer',
+          'aria-label': this.props['aria-label'],
           className: cn('Grid', className),
           onScroll: this._onScroll,
-          tabIndex: 0,
-          style: gridStyle
+          role: 'grid',
+          style: gridStyle,
+          tabIndex: 0
         },
         childrenToDisplay.length > 0 && React.createElement(
           'div',
@@ -391,18 +395,24 @@ var Grid = function (_Component) {
     /* ---------------------------- Helper methods ---------------------------- */
 
   }, {
-    key: '_computeGridMetadata',
-    value: function _computeGridMetadata(props) {
+    key: '_computeColumnMetadata',
+    value: function _computeColumnMetadata(props) {
       var columnsCount = props.columnsCount;
       var columnWidth = props.columnWidth;
-      var rowHeight = props.rowHeight;
-      var rowsCount = props.rowsCount;
 
 
       this._columnMetadata = initCellMetadata({
         cellsCount: columnsCount,
         size: columnWidth
       });
+    }
+  }, {
+    key: '_computeRowMetadata',
+    value: function _computeRowMetadata(props) {
+      var rowHeight = props.rowHeight;
+      var rowsCount = props.rowsCount;
+
+
       this._rowMetadata = initCellMetadata({
         cellsCount: rowsCount,
         size: rowHeight
@@ -430,22 +440,6 @@ var Grid = function (_Component) {
           isScrolling: false
         });
       }, IS_SCROLLING_TIMEOUT);
-    }
-  }, {
-    key: '_getColumnWidth',
-    value: function _getColumnWidth(index) {
-      var columnWidth = this.props.columnWidth;
-
-
-      return columnWidth instanceof Function ? columnWidth(index) : columnWidth;
-    }
-  }, {
-    key: '_getRowHeight',
-    value: function _getRowHeight(index) {
-      var rowHeight = this.props.rowHeight;
-
-
-      return rowHeight instanceof Function ? rowHeight(index) : rowHeight;
     }
   }, {
     key: '_getTotalColumnsWidth',
@@ -670,6 +664,8 @@ var Grid = function (_Component) {
 }(Component);
 
 Grid.propTypes = {
+  'aria-label': PropTypes.string,
+
   /**
    * Optional custom CSS class name to attach to root Grid element.
    */
@@ -760,6 +756,7 @@ Grid.propTypes = {
   width: PropTypes.number.isRequired
 };
 Grid.defaultProps = {
+  'aria-label': 'grid',
   noContentRenderer: function noContentRenderer() {
     return null;
   },

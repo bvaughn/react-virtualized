@@ -1,13 +1,19 @@
 .ComponentLink {
-  display: inline-block;
+  background: none;
+  border: none;
   padding: .75em;
   color: #bdbdbd;
   cursor: pointer;
   font-size: .8rem;
   text-transform: uppercase;
+  transition: .2s all;
 }
 .ComponentLink:hover {
   color: #fff;
+}
+.ComponentLink:focus {
+  outline: none;
+  background: rgba(255,255,255,.08);
 }
 .ActiveComponentLink {
   color: #fff;

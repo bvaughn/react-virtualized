@@ -311,6 +311,22 @@ describe('FlexTable', () => {
       expect(dataKey).toEqual('name')
       expect(newSortDirection).toEqual(SortDirection.ASC)
     })
+
+    it('should call sort when a column header is activated via ENTER or SPACE key', () => {
+      const sortCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
+        sortBy: 'name'
+      })))
+      const nameColumn = rendered.querySelector('.FlexTable__headerColumn:first-of-type')
+      expect(sortCalls.length).toEqual(0)
+      Simulate.keyDown(nameColumn, {key: ' '})
+      expect(sortCalls.length).toEqual(1)
+      Simulate.keyDown(nameColumn, {key: 'Enter'})
+      expect(sortCalls.length).toEqual(2)
+      Simulate.keyDown(nameColumn, {key: 'F'})
+      expect(sortCalls.length).toEqual(2)
+    })
   })
 
   describe('headerRenderer', () => {
@@ -667,6 +683,49 @@ describe('FlexTable', () => {
         scrollHeight: 1000,
         scrollTop: 100
       })
+    })
+  })
+
+  describe('a11y properties', () => {
+    it('should attach a11y properties to a row if :onRowClick is specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        onRowClick: () => {}
+      })))
+      const row = rendered.querySelector('.FlexTable__row')
+      expect(row.getAttribute('aria-label')).toEqual('row')
+      expect(row.getAttribute('role')).toEqual('row')
+      expect(row.tabIndex).toEqual(0)
+    })
+
+    it('should not attach a11y properties to a row if no :onRowClick is specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        onRowClick: null
+      })))
+      const row = rendered.querySelector('.FlexTable__row')
+      expect(row.getAttribute('aria-label')).toEqual(null)
+      expect(row.getAttribute('role')).toEqual(null)
+      expect(row.tabIndex).toEqual(-1)
+    })
+
+    it('should attach a11y properties to a header column if sort is enabled', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        disableSort: false,
+        sort: () => {}
+      })))
+      const row = rendered.querySelector('.FlexTable__headerColumn')
+      expect(row.getAttribute('aria-label')).toEqual('Name')
+      expect(row.getAttribute('role')).toEqual('rowheader')
+      expect(row.tabIndex).toEqual(0)
+    })
+
+    it('should not attach a11y properties to a header column if sort is not enabled', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        disableSort: true
+      })))
+      const row = rendered.querySelector('.FlexTable__headerColumn')
+      expect(row.getAttribute('aria-label')).toEqual(null)
+      expect(row.getAttribute('role')).toEqual(null)
+      expect(row.tabIndex).toEqual(-1)
     })
   })
 })

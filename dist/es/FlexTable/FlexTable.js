@@ -99,6 +99,7 @@ var FlexTable = function (_Component) {
           this._getRenderedHeaderRow()
         ),
         React.createElement(Grid, {
+          'aria-label': this.props['aria-label'],
           ref: 'Grid',
           className: 'FlexTable__Grid',
           columnWidth: width,
@@ -199,13 +200,6 @@ var FlexTable = function (_Component) {
       });
       var style = this._getFlexStyleForColumn(column);
 
-      // If this is a sortable header, clicking it should update the table data's sorting.
-      var newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC;
-      var onClick = function onClick() {
-        sortEnabled && sort(dataKey, newSortDirection);
-        onHeaderClick(dataKey, columnData);
-      };
-
       var renderedHeader = headerRenderer({
         columnData: columnData,
         dataKey: dataKey,
@@ -215,14 +209,39 @@ var FlexTable = function (_Component) {
         sortDirection: sortDirection
       });
 
+      var a11yProps = {};
+
+      if (sortEnabled || onHeaderClick) {
+        (function () {
+          // If this is a sortable header, clicking it should update the table data's sorting.
+          var newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC;
+
+          var onClick = function onClick() {
+            sortEnabled && sort(dataKey, newSortDirection);
+            onHeaderClick && onHeaderClick(dataKey, columnData);
+          };
+
+          var onKeyDown = function onKeyDown(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+              onClick();
+            }
+          };
+
+          a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey;
+          a11yProps.role = 'rowheader';
+          a11yProps.tabIndex = 0;
+          a11yProps.onClick = onClick;
+          a11yProps.onKeyDown = onKeyDown;
+        })();
+      }
+
       return React.createElement(
         'div',
-        {
+        babelHelpers.extends({}, a11yProps, {
           key: 'Header-Col' + columnIndex,
           className: classNames,
-          style: style,
-          onClick: onClick
-        },
+          style: style
+        }),
         renderedHeader
       );
     }
@@ -246,19 +265,27 @@ var FlexTable = function (_Component) {
         return _this3._createColumn(column, columnIndex, rowData, rowIndex);
       });
 
+      var a11yProps = {};
+
+      if (onRowClick) {
+        a11yProps['aria-label'] = 'row';
+        a11yProps.role = 'row';
+        a11yProps.tabIndex = 0;
+        a11yProps.onClick = function () {
+          return onRowClick(rowIndex);
+        };
+      }
+
       return React.createElement(
         'div',
-        {
+        babelHelpers.extends({}, a11yProps, {
           key: rowIndex,
           className: cn('FlexTable__row', rowClass),
-          onClick: function onClick() {
-            return onRowClick(rowIndex);
-          },
           style: {
             height: this._getRowHeight(rowIndex),
             paddingRight: scrollbarWidth
           }
-        },
+        }),
         renderedRow
       );
     }
@@ -326,6 +353,8 @@ var FlexTable = function (_Component) {
 }(Component);
 
 FlexTable.propTypes = {
+  'aria-label': PropTypes.string,
+
   /** One or more FlexColumns describing the data displayed in this row */
   children: function children(props, propName, componentName) {
     var children = React.Children.toArray(props.children);
@@ -432,12 +461,6 @@ FlexTable.defaultProps = {
   disableHeader: false,
   headerHeight: 0,
   noRowsRenderer: function noRowsRenderer() {
-    return null;
-  },
-  onHeaderClick: function onHeaderClick() {
-    return null;
-  },
-  onRowClick: function onRowClick() {
     return null;
   },
   onRowsRendered: function onRowsRendered() {

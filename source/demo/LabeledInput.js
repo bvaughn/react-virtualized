@@ -23,6 +23,7 @@ export function LabeledInput ({
         {label}
       </label>
       <input
+        aria-label={label}
         className={styles.Input}
         name={name}
         placeholder={placeholder}

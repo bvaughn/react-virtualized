@@ -74,6 +74,7 @@ export default class GridExample extends Component {
         <ContentBoxParagraph>
           <label className={styles.checkboxLabel}>
             <input
+              aria-label='Use dynamic row height?'
               className={styles.checkbox}
               type='checkbox'
               value={useDynamicRowHeight}
