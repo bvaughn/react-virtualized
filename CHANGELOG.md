@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 6.0.7
+Added key handling to sortable `FlexTable` headers so that ENTER and SPACE keys can be used to toggle sort direction.
+
 #### 6.0.6
 Added conditional checks to when `aria-label`, `role`, and `tabIndex` get attached to `FlexTable` headers and rows.
 These a11y properties are only added when on-click or sort handlers are present.
