@@ -13,6 +13,8 @@ import SortDirection from './SortDirection'
  */
 export default class FlexTable extends Component {
   static propTypes = {
+    'aria-label': PropTypes.string,
+
     /** One or more FlexColumns describing the data displayed in this row */
     children: (props, propName, componentName) => {
       const children = React.Children.toArray(props.children)
@@ -199,6 +201,7 @@ export default class FlexTable extends Component {
         )}
 
         <Grid
+          aria-label={this.props['aria-label']}
           ref='Grid'
           className={'FlexTable__Grid'}
           columnWidth={width}
@@ -296,10 +299,13 @@ export default class FlexTable extends Component {
 
     return (
       <div
+        aria-label={column.props['aria-label'] || label || dataKey}
         key={`Header-Col${columnIndex}`}
         className={classNames}
         style={style}
         onClick={onClick}
+        role='gridcell'
+        tabIndex='0'
       >
         {renderedHeader}
       </div>
@@ -337,6 +343,8 @@ export default class FlexTable extends Component {
           height: this._getRowHeight(rowIndex),
           paddingRight: scrollbarWidth
         }}
+        role='row'
+        tabIndex='0'
       >
         {renderedRow}
       </div>

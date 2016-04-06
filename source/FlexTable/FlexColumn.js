@@ -85,6 +85,9 @@ export default class Column extends Component {
   }
 
   static propTypes = {
+    /** Optional aria-label value to set on the column header */
+    'aria-label': PropTypes.string,
+
     /** Optional CSS class to apply to cell */
     cellClassName: PropTypes.string,
 
