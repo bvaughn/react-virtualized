@@ -8,11 +8,11 @@ export default function ComponentLink ({ activeComponent, component, setActiveCo
   })
 
   return (
-    <li
+    <button
       className={classNames}
       onClick={() => setActiveComponent(component)}
     >
       {component}
-    </li>
+    </button>
   )
 }
