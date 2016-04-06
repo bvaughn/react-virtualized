@@ -104,6 +104,9 @@ Column.defaultProps = {
   headerRenderer: defaultHeaderRenderer
 };
 Column.propTypes = {
+  /** Optional aria-label value to set on the column header */
+  'aria-label': _react.PropTypes.string,
+
   /** Optional CSS class to apply to cell */
   cellClassName: _react.PropTypes.string,
 

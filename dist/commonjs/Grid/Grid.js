@@ -392,10 +392,12 @@ var Grid = function (_Component) {
         'div',
         {
           ref: 'scrollingContainer',
+          'aria-label': this.props['aria-label'],
           className: (0, _classnames2.default)('Grid', className),
           onScroll: this._onScroll,
-          tabIndex: 0,
-          style: gridStyle
+          role: 'grid',
+          style: gridStyle,
+          tabIndex: 0
         },
         childrenToDisplay.length > 0 && _react2.default.createElement(
           'div',
@@ -693,6 +695,8 @@ var Grid = function (_Component) {
 }(_react.Component);
 
 Grid.propTypes = {
+  'aria-label': _react.PropTypes.string,
+
   /**
    * Optional custom CSS class name to attach to root Grid element.
    */
@@ -783,6 +787,7 @@ Grid.propTypes = {
   width: _react.PropTypes.number.isRequired
 };
 Grid.defaultProps = {
+  'aria-label': 'grid',
   noContentRenderer: function noContentRenderer() {
     return null;
   },

@@ -902,10 +902,12 @@
                     return width >= totalColumnsWidth && (gridStyle.overflowX = "hidden"), height >= totalRowsHeight && (gridStyle.overflowY = "hidden"), 
                     _react2["default"].createElement("div", {
                         ref: "scrollingContainer",
+                        "aria-label": this.props["aria-label"],
                         className: (0, _classnames2["default"])("Grid", className),
                         onScroll: this._onScroll,
-                        tabIndex: 0,
-                        style: gridStyle
+                        role: "grid",
+                        style: gridStyle,
+                        tabIndex: 0
                     }, childrenToDisplay.length > 0 && _jsx("div", {
                         className: "Grid__innerScrollContainer",
                         style: {
@@ -1083,6 +1085,7 @@
             } ]), Grid;
         }(_react.Component);
         Grid.propTypes = {
+            "aria-label": _react.PropTypes.string,
             className: _react.PropTypes.string,
             columnsCount: _react.PropTypes.number.isRequired,
             columnWidth: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
@@ -1101,6 +1104,7 @@
             scrollToRow: _react.PropTypes.number,
             width: _react.PropTypes.number.isRequired
         }, Grid.defaultProps = {
+            "aria-label": "grid",
             noContentRenderer: function() {
                 return null;
             },
@@ -1484,6 +1488,7 @@
                             width: width
                         }
                     }, void 0, this._getRenderedHeaderRow()), _react2["default"].createElement(_Grid2["default"], {
+                        "aria-label": this.props["aria-label"],
                         ref: "Grid",
                         className: "FlexTable__Grid",
                         columnWidth: width,
@@ -1553,9 +1558,12 @@
                         sortDirection: sortDirection
                     });
                     return _jsx("div", {
+                        "aria-label": column.props["aria-label"] || label || dataKey,
                         className: classNames,
                         style: style,
-                        onClick: onClick
+                        onClick: onClick,
+                        role: "rowheader",
+                        tabIndex: "0"
                     }, "Header-Col" + columnIndex, renderedHeader);
                 }
             }, {
@@ -1565,6 +1573,7 @@
                         return _this3._createColumn(column, columnIndex, rowData, rowIndex);
                     });
                     return _jsx("div", {
+                        "aria-label": "row",
                         className: (0, _classnames2["default"])("FlexTable__row", rowClass),
                         onClick: function() {
                             return onRowClick(rowIndex);
@@ -1572,7 +1581,9 @@
                         style: {
                             height: this._getRowHeight(rowIndex),
                             paddingRight: scrollbarWidth
-                        }
+                        },
+                        role: "row",
+                        tabIndex: "0"
                     }, rowIndex, renderedRow);
                 }
             }, {
@@ -1611,6 +1622,7 @@
             } ]), FlexTable;
         }(_react.Component);
         FlexTable.propTypes = {
+            "aria-label": _react.PropTypes.string,
             children: function children(props, propName, componentName) {
                 for (var children = _react2["default"].Children.toArray(props.children), i = 0; i < children.length; i++) if (children[i].type !== _FlexColumn2["default"]) return new Error("FlexTable only accepts children of type FlexColumn");
             },
@@ -1735,6 +1747,7 @@
             flexShrink: 1,
             headerRenderer: defaultHeaderRenderer
         }, Column.propTypes = {
+            "aria-label": _react.PropTypes.string,
             cellClassName: _react.PropTypes.string,
             cellDataGetter: _react.PropTypes.func,
             cellRenderer: _react.PropTypes.func,
@@ -2136,6 +2149,7 @@
                     _classnames2["default"])("VirtualScroll", className);
                     return _react2["default"].createElement(_Grid2["default"], {
                         ref: "Grid",
+                        "aria-label": this.props["aria-label"],
                         className: classNames,
                         columnWidth: width,
                         columnsCount: 1,
@@ -2178,6 +2192,7 @@
             } ]), VirtualScroll;
         }(_react.Component);
         VirtualScroll.propTypes = {
+            "aria-label": _react.PropTypes.string,
             className: _react.PropTypes.string,
             height: _react.PropTypes.number.isRequired,
             noRowsRenderer: _react.PropTypes.func.isRequired,

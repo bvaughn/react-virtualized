@@ -99,6 +99,7 @@ var FlexTable = function (_Component) {
           this._getRenderedHeaderRow()
         ),
         React.createElement(Grid, {
+          'aria-label': this.props['aria-label'],
           ref: 'Grid',
           className: 'FlexTable__Grid',
           columnWidth: width,
@@ -218,10 +219,13 @@ var FlexTable = function (_Component) {
       return React.createElement(
         'div',
         {
+          'aria-label': column.props['aria-label'] || label || dataKey,
           key: 'Header-Col' + columnIndex,
           className: classNames,
           style: style,
-          onClick: onClick
+          onClick: onClick,
+          role: 'rowheader',
+          tabIndex: '0'
         },
         renderedHeader
       );
@@ -249,6 +253,7 @@ var FlexTable = function (_Component) {
       return React.createElement(
         'div',
         {
+          'aria-label': 'row',
           key: rowIndex,
           className: cn('FlexTable__row', rowClass),
           onClick: function onClick() {
@@ -257,7 +262,9 @@ var FlexTable = function (_Component) {
           style: {
             height: this._getRowHeight(rowIndex),
             paddingRight: scrollbarWidth
-          }
+          },
+          role: 'row',
+          tabIndex: '0'
         },
         renderedRow
       );
@@ -326,6 +333,8 @@ var FlexTable = function (_Component) {
 }(Component);
 
 FlexTable.propTypes = {
+  'aria-label': PropTypes.string,
+
   /** One or more FlexColumns describing the data displayed in this row */
   children: function children(props, propName, componentName) {
     var children = React.Children.toArray(props.children);
