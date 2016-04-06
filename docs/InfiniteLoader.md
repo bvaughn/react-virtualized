@@ -31,7 +31,7 @@ import ReactDOM from 'react-dom';
 import { InfiniteLoader, VirtualScroll } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
-const list = {};
+const list = [];
 
 function isRowLoaded (index) {
   return !!list[index];
