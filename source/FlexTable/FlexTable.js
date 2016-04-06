@@ -122,8 +122,6 @@ export default class FlexTable extends Component {
     disableHeader: false,
     headerHeight: 0,
     noRowsRenderer: () => null,
-    onHeaderClick: () => null,
-    onRowClick: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
     overscanRowsCount: 10
@@ -285,7 +283,7 @@ export default class FlexTable extends Component {
       : SortDirection.DESC
     const onClick = () => {
       sortEnabled && sort(dataKey, newSortDirection)
-      onHeaderClick(dataKey, columnData)
+      onHeaderClick && onHeaderClick(dataKey, columnData)
     }
 
     const renderedHeader = headerRenderer({
@@ -297,15 +295,21 @@ export default class FlexTable extends Component {
       sortDirection
     })
 
+    const a11yProps = {}
+
+    if (sortEnabled || onHeaderClick) {
+      a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey
+      a11yProps.role = 'rowheader'
+      a11yProps.tabIndex = 0
+      a11yProps.onClick = onClick
+    }
+
     return (
       <div
-        aria-label={column.props['aria-label'] || label || dataKey}
+        {...a11yProps}
         key={`Header-Col${columnIndex}`}
         className={classNames}
         style={style}
-        onClick={onClick}
-        role='rowheader'
-        tabIndex='0'
       >
         {renderedHeader}
       </div>
@@ -334,18 +338,24 @@ export default class FlexTable extends Component {
       )
     )
 
+    const a11yProps = {}
+
+    if (onRowClick) {
+      a11yProps['aria-label'] = 'row'
+      a11yProps.role = 'row'
+      a11yProps.tabIndex = 0
+      a11yProps.onClick = () => onRowClick(rowIndex)
+    }
+
     return (
       <div
-        aria-label='row'
+        {...a11yProps}
         key={rowIndex}
         className={cn('FlexTable__row', rowClass)}
-        onClick={() => onRowClick(rowIndex)}
         style={{
           height: this._getRowHeight(rowIndex),
           paddingRight: scrollbarWidth
         }}
-        role='row'
-        tabIndex='0'
       >
         {renderedRow}
       </div>

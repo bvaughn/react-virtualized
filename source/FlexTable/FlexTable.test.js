@@ -669,4 +669,47 @@ describe('FlexTable', () => {
       })
     })
   })
+
+  describe('a11y properties', () => {
+    it('should attach a11y properties to a row if :onRowClick is specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        onRowClick: () => {}
+      })))
+      const row = rendered.querySelector('.FlexTable__row')
+      expect(row.getAttribute('aria-label')).toEqual('row')
+      expect(row.getAttribute('role')).toEqual('row')
+      expect(row.tabIndex).toEqual(0)
+    })
+
+    it('should not attach a11y properties to a row if no :onRowClick is specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        onRowClick: null
+      })))
+      const row = rendered.querySelector('.FlexTable__row')
+      expect(row.getAttribute('aria-label')).toEqual(null)
+      expect(row.getAttribute('role')).toEqual(null)
+      expect(row.tabIndex).toEqual(-1)
+    })
+
+    it('should attach a11y properties to a header column if sort is enabled', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        disableSort: false,
+        sort: () => {}
+      })))
+      const row = rendered.querySelector('.FlexTable__headerColumn')
+      expect(row.getAttribute('aria-label')).toEqual('Name')
+      expect(row.getAttribute('role')).toEqual('rowheader')
+      expect(row.tabIndex).toEqual(0)
+    })
+
+    it('should not attach a11y properties to a header column if sort is not enabled', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        disableSort: true
+      })))
+      const row = rendered.querySelector('.FlexTable__headerColumn')
+      expect(row.getAttribute('aria-label')).toEqual(null)
+      expect(row.getAttribute('role')).toEqual(null)
+      expect(row.tabIndex).toEqual(-1)
+    })
+  })
 })
