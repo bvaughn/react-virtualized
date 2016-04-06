@@ -1553,9 +1553,7 @@
                     var _props2 = this.props, headerClassName = _props2.headerClassName, onHeaderClick = _props2.onHeaderClick, sort = _props2.sort, sortBy = _props2.sortBy, sortDirection = _props2.sortDirection, _column$props2 = column.props, dataKey = _column$props2.dataKey, disableSort = _column$props2.disableSort, headerRenderer = _column$props2.headerRenderer, label = _column$props2.label, columnData = _column$props2.columnData, sortEnabled = !disableSort && sort, classNames = (0, 
                     _classnames2["default"])("FlexTable__headerColumn", headerClassName, column.props.headerClassName, {
                         FlexTable__sortableHeaderColumn: sortEnabled
-                    }), style = this._getFlexStyleForColumn(column), newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2["default"].DESC ? _SortDirection2["default"].ASC : _SortDirection2["default"].DESC, onClick = function() {
-                        sortEnabled && sort(dataKey, newSortDirection), onHeaderClick && onHeaderClick(dataKey, columnData);
-                    }, renderedHeader = headerRenderer({
+                    }), style = this._getFlexStyleForColumn(column), renderedHeader = headerRenderer({
                         columnData: columnData,
                         dataKey: dataKey,
                         disableSort: disableSort,
@@ -1563,9 +1561,15 @@
                         sortBy: sortBy,
                         sortDirection: sortDirection
                     }), a11yProps = {};
-                    return (sortEnabled || onHeaderClick) && (a11yProps["aria-label"] = column.props["aria-label"] || label || dataKey, 
-                    a11yProps.role = "rowheader", a11yProps.tabIndex = 0, a11yProps.onClick = onClick), 
-                    _react2["default"].createElement("div", _extends({}, a11yProps, {
+                    return (sortEnabled || onHeaderClick) && !function() {
+                        var newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2["default"].DESC ? _SortDirection2["default"].ASC : _SortDirection2["default"].DESC, onClick = function() {
+                            sortEnabled && sort(dataKey, newSortDirection), onHeaderClick && onHeaderClick(dataKey, columnData);
+                        }, onKeyDown = function(event) {
+                            "Enter" !== event.key && " " !== event.key || onClick();
+                        };
+                        a11yProps["aria-label"] = column.props["aria-label"] || label || dataKey, a11yProps.role = "rowheader", 
+                        a11yProps.tabIndex = 0, a11yProps.onClick = onClick, a11yProps.onKeyDown = onKeyDown;
+                    }(), _react2["default"].createElement("div", _extends({}, a11yProps, {
                         key: "Header-Col" + columnIndex,
                         className: classNames,
                         style: style

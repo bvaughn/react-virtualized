@@ -235,13 +235,6 @@ var FlexTable = function (_Component) {
       });
       var style = this._getFlexStyleForColumn(column);
 
-      // If this is a sortable header, clicking it should update the table data's sorting.
-      var newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2.default.DESC ? _SortDirection2.default.ASC : _SortDirection2.default.DESC;
-      var onClick = function onClick() {
-        sortEnabled && sort(dataKey, newSortDirection);
-        onHeaderClick && onHeaderClick(dataKey, columnData);
-      };
-
       var renderedHeader = headerRenderer({
         columnData: columnData,
         dataKey: dataKey,
@@ -254,10 +247,27 @@ var FlexTable = function (_Component) {
       var a11yProps = {};
 
       if (sortEnabled || onHeaderClick) {
-        a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey;
-        a11yProps.role = 'rowheader';
-        a11yProps.tabIndex = 0;
-        a11yProps.onClick = onClick;
+        (function () {
+          // If this is a sortable header, clicking it should update the table data's sorting.
+          var newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2.default.DESC ? _SortDirection2.default.ASC : _SortDirection2.default.DESC;
+
+          var onClick = function onClick() {
+            sortEnabled && sort(dataKey, newSortDirection);
+            onHeaderClick && onHeaderClick(dataKey, columnData);
+          };
+
+          var onKeyDown = function onKeyDown(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+              onClick();
+            }
+          };
+
+          a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey;
+          a11yProps.role = 'rowheader';
+          a11yProps.tabIndex = 0;
+          a11yProps.onClick = onClick;
+          a11yProps.onKeyDown = onKeyDown;
+        })();
       }
 
       return _react2.default.createElement(
