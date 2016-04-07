@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+#### 6.0.8
+Fixed dependency ranges for `react-addons-shallow-compare` and `react-dom`.
+
 #### 6.0.7
 Added key handling to sortable `FlexTable` headers so that ENTER and SPACE keys can be used to toggle sort direction.
 
