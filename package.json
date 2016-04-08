@@ -3,7 +3,7 @@
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "homepage": "https://github.com/bvaughn/react-virtualized",
   "main": "dist/commonjs/index.js",
   "jsnext:main": "dist/es/index.js",
@@ -135,10 +135,10 @@
     "classnames": "^2.2.3",
     "dom-helpers": "^2.4.0",
     "raf": "^3.1.0",
-    "react-addons-shallow-compare": "^0.14.0 || ^15.0.0-rc.1"
+    "react-addons-shallow-compare": "^0.14.0 || ^15.0.0"
   },
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0-rc.1",
-    "react-dom": "^0.14.0 || ^15.0.0-rc.1"
+    "react": "^0.14.0 || ^15.0.0",
+    "react-dom": "^0.14.0 || ^15.0.0"
   }
 }

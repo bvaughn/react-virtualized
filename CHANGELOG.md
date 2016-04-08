@@ -1,7 +1,10 @@
 Changelog
 ------------
 
-#### 6.1.0
+##### 6.1.1
+Updated React dependency ranges now that 15.0 has been released.
+
+### 6.1.0
 `Grid` supports a new `renderCellRanges` property for customizing the rendering of a window of cells.
 This function should implement the following signature:
 ```js
@@ -16,21 +19,21 @@ function renderCellRanges ({
 }): Array<PropTypes.node>
 ```
 
-#### 6.0.8
+##### 6.0.8
 Fixed dependency ranges for `react-addons-shallow-compare` and `react-dom`.
 
-#### 6.0.7
+##### 6.0.7
 Added key handling to sortable `FlexTable` headers so that ENTER and SPACE keys can be used to toggle sort direction.
 
-#### 6.0.6
+##### 6.0.6
 Added conditional checks to when `aria-label`, `role`, and `tabIndex` get attached to `FlexTable` headers and rows.
 These a11y properties are only added when on-click or sort handlers are present.
 
-#### 6.0.5
+##### 6.0.5
 Added `aria-label` and `role` attributes to `FlexTable`, `Grid`, and `VirtualScroll` components to fix a11y issues reported by [reactjs/react-a11y](https://github.com/reactjs/react-a11y).
 Thanks to @globexdesigns for the contributions!
 
-#### 6.0.4
+##### 6.0.4
 Separated horiontal and vertical `Grid` metadata calculation to avoid unnecessarily recomputing row metadata for `FlexTable`s and `VirtualScroll`s when a browser's window is resized, for example.
 Also replaced `columnWidth` and `rowHeight` getter uses in `Grid.render` in favor of cached cell metadata instead.
 
