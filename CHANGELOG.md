@@ -1,6 +1,21 @@
 Changelog
 ------------
 
+#### 6.1.0
+`Grid` supports a new `renderCellRanges` property for customizing the rendering of a window of cells.
+This function should implement the following signature:
+```js
+function renderCellRanges ({
+  columnMetadata:Array<Object>,
+  columnStartIndex: number,
+  columnStopIndex: number,
+  renderCell: Function,
+  rowMetadata:Array<Object>,
+  rowStartIndex: number,
+  rowStopIndex: number
+}): Array<PropTypes.node>
+```
+
 #### 6.0.8
 Fixed dependency ranges for `react-addons-shallow-compare` and `react-dom`.
 
