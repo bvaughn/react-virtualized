@@ -693,6 +693,27 @@
                 }
             }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
         }
+        function defaultRenderCellRanges(_ref4) {
+            for (var columnMetadata = _ref4.columnMetadata, columnStartIndex = _ref4.columnStartIndex, columnStopIndex = _ref4.columnStopIndex, renderCell = _ref4.renderCell, rowMetadata = _ref4.rowMetadata, rowStartIndex = _ref4.rowStartIndex, rowStopIndex = _ref4.rowStopIndex, renderedCells = [], rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
+                var columnDatum = columnMetadata[columnIndex], renderedCell = renderCell({
+                    columnIndex: columnIndex,
+                    rowIndex: rowIndex
+                }), key = rowIndex + "-" + columnIndex;
+                if (null != renderedCell && renderedCell !== !1) {
+                    var child = _jsx("div", {
+                        className: "Grid__cell",
+                        style: {
+                            height: rowDatum.size,
+                            left: columnDatum.offset,
+                            top: rowDatum.offset,
+                            width: columnDatum.size
+                        }
+                    }, key, renderedCell);
+                    renderedCells.push(child);
+                }
+            }
+            return renderedCells;
+        }
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
@@ -848,7 +869,7 @@
             }, {
                 key: "render",
                 value: function() {
-                    var _props3 = this.props, className = _props3.className, columnsCount = _props3.columnsCount, height = _props3.height, noContentRenderer = _props3.noContentRenderer, overscanColumnsCount = _props3.overscanColumnsCount, overscanRowsCount = _props3.overscanRowsCount, renderCell = _props3.renderCell, rowsCount = _props3.rowsCount, width = _props3.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = [];
+                    var _props3 = this.props, className = _props3.className, columnsCount = _props3.columnsCount, height = _props3.height, noContentRenderer = _props3.noContentRenderer, overscanColumnsCount = _props3.overscanColumnsCount, overscanRowsCount = _props3.overscanRowsCount, renderCell = _props3.renderCell, renderCellRanges = _props3.renderCellRanges, rowsCount = _props3.rowsCount, width = _props3.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = [];
                     if (height > 0 && width > 0) {
                         var visibleColumnIndices = (0, _GridUtils.getVisibleCellIndices)({
                             cellsCount: columnsCount,
@@ -875,25 +896,16 @@
                             stopIndex: this._renderedRowStopIndex
                         });
                         this._columnStartIndex = overscanColumnIndices.overscanStartIndex, this._columnStopIndex = overscanColumnIndices.overscanStopIndex, 
-                        this._rowStartIndex = overscanRowIndices.overscanStartIndex, this._rowStopIndex = overscanRowIndices.overscanStopIndex;
-                        for (var rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) for (var rowDatum = this._rowMetadata[rowIndex], columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
-                            var columnDatum = this._columnMetadata[columnIndex], renderedCell = renderCell({
-                                columnIndex: columnIndex,
-                                rowIndex: rowIndex
-                            }), key = rowIndex + "-" + columnIndex;
-                            if (null != renderedCell && renderedCell !== !1) {
-                                var child = _jsx("div", {
-                                    className: "Grid__cell",
-                                    style: {
-                                        height: rowDatum.size,
-                                        left: columnDatum.offset,
-                                        top: rowDatum.offset,
-                                        width: columnDatum.size
-                                    }
-                                }, key, renderedCell);
-                                childrenToDisplay.push(child);
-                            }
-                        }
+                        this._rowStartIndex = overscanRowIndices.overscanStartIndex, this._rowStopIndex = overscanRowIndices.overscanStopIndex, 
+                        childrenToDisplay = renderCellRanges({
+                            columnMetadata: this._columnMetadata,
+                            columnStartIndex: this._columnStartIndex,
+                            columnStopIndex: this._columnStopIndex,
+                            renderCell: renderCell,
+                            rowMetadata: this._rowMetadata,
+                            rowStartIndex: this._rowStartIndex,
+                            rowStopIndex: this._rowStopIndex
+                        });
                     }
                     var gridStyle = {
                         height: height,
@@ -1096,6 +1108,7 @@
             overscanColumnsCount: _react.PropTypes.number.isRequired,
             overscanRowsCount: _react.PropTypes.number.isRequired,
             renderCell: _react.PropTypes.func.isRequired,
+            renderCellRanges: _react.PropTypes.func.isRequired,
             rowHeight: _react.PropTypes.oneOfType([ _react.PropTypes.number, _react.PropTypes.func ]).isRequired,
             rowsCount: _react.PropTypes.number.isRequired,
             scrollLeft: _react.PropTypes.number,
@@ -1115,7 +1128,8 @@
                 return null;
             },
             overscanColumnsCount: 0,
-            overscanRowsCount: 10
+            overscanRowsCount: 10,
+            renderCellRanges: defaultRenderCellRanges
         }, exports["default"] = Grid;
     }, /* 14 */
     /***/
