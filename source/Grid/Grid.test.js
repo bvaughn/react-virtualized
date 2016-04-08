@@ -19,6 +19,7 @@ describe('Grid', () => {
     overscanColumnsCount = 0,
     overscanRowsCount = 0,
     renderCell,
+    renderCellRanges,
     rowHeight = 20,
     rowsCount = NUM_ROWS,
     scrollLeft = undefined,
@@ -47,6 +48,7 @@ describe('Grid', () => {
         overscanColumnsCount={overscanColumnsCount}
         overscanRowsCount={overscanRowsCount}
         renderCell={renderCell || defaultRenderCell}
+        renderCellRanges={renderCellRanges}
         rowHeight={rowHeight}
         rowsCount={rowsCount}
         scrollLeft={scrollLeft}
@@ -561,6 +563,29 @@ describe('Grid', () => {
       expect(helper.rowOverscanStopIndex()).toEqual(4)
       expect(helper.rowStartIndex()).toEqual(0)
       expect(helper.rowStopIndex()).toEqual(4)
+    })
+  })
+
+  describe('renderCellRanges', () => {
+    it('should use a custom :renderCellRanges if specified', () => {
+      let renderCellRangesCalled = 0
+      let renderCellRangesParams
+      const rendered = findDOMNode(render(getMarkup({
+        renderCellRanges: (params) => {
+          renderCellRangesParams = params
+          renderCellRangesCalled++
+
+          return [
+            <div key='0'>Fake content</div>
+          ]
+        }
+      })))
+      expect(renderCellRangesCalled).toEqual(1)
+      expect(renderCellRangesParams.columnStartIndex).toEqual(0)
+      expect(renderCellRangesParams.columnStopIndex).toEqual(3)
+      expect(renderCellRangesParams.rowStartIndex).toEqual(0)
+      expect(renderCellRangesParams.rowStopIndex).toEqual(4)
+      expect(rendered.textContent).toContain('Fake content')
     })
   })
 })

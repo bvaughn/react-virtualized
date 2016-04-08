@@ -95,6 +95,20 @@ export default class Grid extends Component {
     renderCell: PropTypes.func.isRequired,
 
     /**
+     * Responsible for rendering a group of cells given their index ranges.
+     * Should implement the following interface: ({
+     *   columnMetadata:Array<Object>,
+     *   columnStartIndex: number,
+     *   columnStopIndex: number,
+     *   renderCell: Function,
+     *   rowMetadata:Array<Object>,
+     *   rowStartIndex: number,
+     *   rowStopIndex: number
+     * }): Array<PropTypes.node>
+     */
+    renderCellRanges: PropTypes.func.isRequired,
+
+    /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * Should implement the following interface: (index: number): number
      */
@@ -133,7 +147,8 @@ export default class Grid extends Component {
     onScroll: () => null,
     onSectionRendered: () => null,
     overscanColumnsCount: 0,
-    overscanRowsCount: 10
+    overscanRowsCount: 10,
+    renderCellRanges: defaultRenderCellRanges
   }
 
   constructor (props, context) {
@@ -342,6 +357,7 @@ export default class Grid extends Component {
       overscanColumnsCount,
       overscanRowsCount,
       renderCell,
+      renderCellRanges,
       rowsCount,
       width
     } = this.props
@@ -396,38 +412,15 @@ export default class Grid extends Component {
       this._rowStartIndex = overscanRowIndices.overscanStartIndex
       this._rowStopIndex = overscanRowIndices.overscanStopIndex
 
-      for (let rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) {
-        let rowDatum = this._rowMetadata[rowIndex]
-
-        for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
-          let columnDatum = this._columnMetadata[columnIndex]
-          let renderedCell = renderCell({ columnIndex, rowIndex })
-          let key = `${rowIndex}-${columnIndex}`
-
-          // any other falsey value will be rendered
-          // as a text node by React
-          if (renderedCell == null || renderedCell === false) {
-            continue
-          }
-
-          let child = (
-            <div
-              key={key}
-              className='Grid__cell'
-              style={{
-                height: rowDatum.size,
-                left: columnDatum.offset,
-                top: rowDatum.offset,
-                width: columnDatum.size
-              }}
-            >
-              {renderedCell}
-            </div>
-          )
-
-          childrenToDisplay.push(child)
-        }
-      }
+      childrenToDisplay = renderCellRanges({
+        columnMetadata: this._columnMetadata,
+        columnStartIndex: this._columnStartIndex,
+        columnStopIndex: this._columnStopIndex,
+        renderCell,
+        rowMetadata: this._rowMetadata,
+        rowStartIndex: this._rowStartIndex,
+        rowStopIndex: this._rowStopIndex
+      })
     }
 
     const gridStyle = {
@@ -718,4 +711,51 @@ export default class Grid extends Component {
 
     this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
   }
+}
+
+function defaultRenderCellRanges ({
+  columnMetadata,
+  columnStartIndex,
+  columnStopIndex,
+  renderCell,
+  rowMetadata,
+  rowStartIndex,
+  rowStopIndex
+}) {
+  const renderedCells = []
+
+  for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
+    let rowDatum = rowMetadata[rowIndex]
+
+    for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
+      let columnDatum = columnMetadata[columnIndex]
+      let renderedCell = renderCell({ columnIndex, rowIndex })
+      let key = `${rowIndex}-${columnIndex}`
+
+      // any other falsey value will be rendered
+      // as a text node by React
+      if (renderedCell == null || renderedCell === false) {
+        continue
+      }
+
+      let child = (
+        <div
+          key={key}
+          className='Grid__cell'
+          style={{
+            height: rowDatum.size,
+            left: columnDatum.offset,
+            top: rowDatum.offset,
+            width: columnDatum.size
+          }}
+        >
+          {renderedCell}
+        </div>
+      )
+
+      renderedCells.push(child)
+    }
+  }
+
+  return renderedCells
 }
