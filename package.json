@@ -134,11 +134,11 @@
   "dependencies": {
     "classnames": "^2.2.3",
     "dom-helpers": "^2.4.0",
-    "raf": "^3.1.0",
-    "react-addons-shallow-compare": "^0.14.0 || ^15.0.0"
+    "raf": "^3.1.0"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0",
+    "react-addons-shallow-compare": "^0.14.0 || ^15.0.0",
     "react-dom": "^0.14.0 || ^15.0.0"
   }
 }
