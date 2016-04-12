@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 6.1.2
+Moved `react-addons-shallow-compare` from `dependencies` to `peerDependencies`.
+
 ##### 6.1.1
 Updated React dependency ranges now that 15.0 has been released.
 
