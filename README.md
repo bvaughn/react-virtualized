@@ -6,6 +6,7 @@
 ![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat)
 [![Circle CI badge](https://img.shields.io/circleci/project/bvaughn/react-virtualized/master.svg?style=flat)](https://circleci.com/gh/bvaughn/react-virtualized)
 [![Codecov badge](https://img.shields.io/codecov/c/github/bvaughn/react-virtualized/master.svg)](https://codecov.io/github/bvaughn/react-virtualized)
+[![Gitter](https://badges.gitter.im/bvaughn/react-virtualized.svg)](https://gitter.im/bvaughn/react-virtualized?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![PayPal donate button](https://img.shields.io/badge/paypal-donate-lightgray.svg?style=flat)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5CVMYQKVPZC72)
 [![Patreon donate button](https://img.shields.io/badge/patreon-donate%20once-lightgray.svg?style=flat)](https://www.patreon.com/user?u=2979769)
 
@@ -39,6 +40,13 @@ Alternately you can load a global-friendly UMD build:
 <link rel="stylesheet" href="path-to-react-virtualized/styles.css">
 <script src="path-to-react-virtualized/dist/umd/react-virtualized.js"></script>
 ```
+
+Dependencies
+---------------
+
+React Virtualized has very few dependencies and most are managed by NPM automatically.
+However the following peer dependencies must be specified by your project in order to avoid version conflicts: `react`, `react-addons-shallow-compare`, and `react-dom`.
+NPM will not automatically install these for you but it will show you a warnin message with instructions on how to install them.
 
 Documentation
 ---------------
