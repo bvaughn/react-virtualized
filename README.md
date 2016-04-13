@@ -11,6 +11,8 @@
 
 ### Demos available here: http://bvaughn.github.io/react-virtualized/
 
+[![Join the chat at https://gitter.im/bvaughn/react-virtualized](https://badges.gitter.im/bvaughn/react-virtualized.svg)](https://gitter.im/bvaughn/react-virtualized?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Getting started
 ---------------
 
