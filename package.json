@@ -119,6 +119,7 @@
     "postcss-cli": "^2.3.3",
     "postcss-loader": "^0.8.0",
     "react": "^0.14.3",
+    "react-addons-shallow-compare": "^0.14.3",
     "react-addons-test-utils": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-transform-catch-errors": "^1.0.2",
