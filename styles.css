@@ -1,3 +1,25 @@
+/* Collection default theme */
+
+.Collection {
+  position: relative;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  /* Without this property, Chrome repaints the entire Collection any time a new row or column is added.
+     Firefox only repaints the new row or column (regardless of this property).
+     Safari and IE don't support the property at all. */
+  will-change: transform;
+}
+
+.Collection__innerScrollContainer {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.Collection__cell {
+  position: absolute;
+}
+
 /* Grid default theme */
 
 .Grid {
