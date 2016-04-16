@@ -214,7 +214,13 @@ export default class GridExample extends Component {
         content = datum.random
         break
       default:
-        content = `${rowIndex}, ${columnIndex}`
+        content = (
+          <div>
+            c:{columnIndex}
+            <br/>
+            r:{rowIndex}
+          </div>
+        )
         break
     }
 
