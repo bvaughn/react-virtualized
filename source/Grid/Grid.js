@@ -1,17 +1,17 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
-import calculateSizeAndPositionDataAndUpdateScrollOffset from '../utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
+import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
-import getNearestIndex from '../utils/getNearestIndex'
-import getOverscanIndices from '../utils/getOverscanIndices'
+import getNearestIndex from './utils/getNearestIndex'
+import getOverscanIndices from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import getUpdatedOffsetForIndex from '../utils/getUpdatedOffsetForIndex'
-import getVisibleCellIndices from '../utils/getVisibleCellIndices'
+import getVisibleCellIndices from './utils/getVisibleCellIndices'
 import initCellMetadata from '../utils/initCellMetadata'
 import raf from 'raf'
 import shallowCompare from 'react-addons-shallow-compare'
-import updateScrollIndexHelper from '../utils/updateScrollIndexHelper'
+import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.

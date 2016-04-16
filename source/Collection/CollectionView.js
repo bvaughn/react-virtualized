@@ -101,7 +101,7 @@ export default class CollectionView extends Component {
     super(props, context)
 
     this.state = {
-      computeCellMetadataOnNextUpdate: false,
+      calculateSizeAndPositionDataOnNextUpdate: false,
       isScrolling: false,
       scrollLeft: 0,
       scrollTop: 0
@@ -124,7 +124,7 @@ export default class CollectionView extends Component {
    */
   recomputeCellSizesAndPositions () {
     this.setState({
-      computeCellMetadataOnNextUpdate: true
+      calculateSizeAndPositionDataOnNextUpdate: true
     })
   }
 
@@ -239,14 +239,14 @@ export default class CollectionView extends Component {
     if (
       nextProps.cellCount !== this.props.cellCount ||
       nextProps.cellLayoutManager !== this.props.cellLayoutManager ||
-      nextState.computeCellMetadataOnNextUpdate
+      nextState.calculateSizeAndPositionDataOnNextUpdate
     ) {
       nextProps.cellLayoutManager.calculateSizeAndPositionData()
     }
 
-    if (nextState.computeCellMetadataOnNextUpdate) {
+    if (nextState.calculateSizeAndPositionDataOnNextUpdate) {
       this.setState({
-        computeCellMetadataOnNextUpdate: false
+        calculateSizeAndPositionDataOnNextUpdate: false
       })
     }
   }

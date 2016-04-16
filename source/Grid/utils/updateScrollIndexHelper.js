@@ -1,5 +1,5 @@
 import getNearestIndex from './getNearestIndex'
-import getUpdatedOffsetForIndex from './getUpdatedOffsetForIndex'
+import getUpdatedOffsetForIndex from '../../utils/getUpdatedOffsetForIndex'
 
 /**
  * Helper function that determines when to update scroll offsets to ensure that a scroll-to-index remains visible.

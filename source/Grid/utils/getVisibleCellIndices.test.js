@@ -1,5 +1,5 @@
 import getVisibleCellIndices from './getVisibleCellIndices'
-import { getCellMetadata } from './TestHelper'
+import { getCellMetadata } from '../../utils/TestHelper'
 
 describe('getVisibleCellIndices', () => {
   function testHelper (currentOffset, cellMetadata = getCellMetadata()) {

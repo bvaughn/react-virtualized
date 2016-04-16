@@ -1,5 +1,5 @@
 import updateScrollIndexHelper from './updateScrollIndexHelper'
-import { getCellMetadata } from './TestHelper'
+import { getCellMetadata } from '../../utils/TestHelper'
 
 describe('updateScrollIndexHelper', () => {
   function helper ({
