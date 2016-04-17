@@ -55,7 +55,7 @@ export default class FlexTableExample extends Component {
     const { list, ...props } = this.props
     const sortedList = this._isSortEnabled()
       ? list
-        .sortBy(index => list.getIn([index, sortBy]))
+        .sortBy(el => el[sortBy])
         .update(list =>
           sortDirection === SortDirection.DESC
             ? list.reverse()
