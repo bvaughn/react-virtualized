@@ -1,17 +1,56 @@
 import React, { Component, PropTypes } from 'react'
 import CollectionView from './CollectionView'
-import shallowCompare from 'react-addons-shallow-compare'
 import calculateSizeAndPositionData from './utils/calculateSizeAndPositionData'
 import getUpdatedOffsetForIndex from '../utils/getUpdatedOffsetForIndex'
+import shallowCompare from 'react-addons-shallow-compare'
 import type { ScrollPosition, SizeInfo } from './types'
 
+/**
+ * Renders scattered or non-linear data.
+ * Unlike Grid, which renders checkerboard data, Collection can render arbitrarily positioned- even overlapping- data.
+ */
 export default class Collection extends Component {
 
   static propTypes = {
+    'aria-label': PropTypes.string,
+
+    /**
+     * Number of cells in Collection.
+     */
     cellCount: PropTypes.number.isRequired,
+
+    /**
+     * Responsible for rendering a group of cells given their indices.
+     * Should implement the following interface: ({
+     *   cellSizeAndPositionGetter:Function,
+     *   indices: Array<number>,
+     *   cellRenderer: Function
+     * }): Array<PropTypes.node>
+     */
+    cellGroupRenderer: PropTypes.func.isRequired,
+
+    /**
+     * Responsible for rendering a cell given an row and column index.
+     * Should implement the following interface: (index: number): PropTypes.node
+     */
     cellRenderer: PropTypes.func.isRequired,
-    cellSizeAndPositionGetter: PropTypes.func.isRequired
-  }
+
+    /**
+     * Callback responsible for returning size and offset/position information for a given cell (index).
+     * (index): { height: number, width: number, x: number, y: number }
+     */
+    cellSizeAndPositionGetter: PropTypes.func.isRequired,
+
+    /**
+     * Optionally override the size of the sections a Collection's cells are split into.
+     */
+    sectionSize: PropTypes.number
+  };
+
+  static defaultProps = {
+    'aria-label': 'grid',
+    cellGroupRenderer: defaultCellGroupRenderer
+  };
 
   constructor (props, context) {
     super(props, context)
@@ -28,6 +67,7 @@ export default class Collection extends Component {
     return (
       <CollectionView
         cellLayoutManager={this}
+        ref='CollectionView'
         {...props}
       />
     )
@@ -40,11 +80,12 @@ export default class Collection extends Component {
   /** CellLayoutManager interface */
 
   calculateSizeAndPositionData () {
-    const { cellCount, cellSizeAndPositionGetter } = this.props
+    const { cellCount, cellSizeAndPositionGetter, sectionSize } = this.props
 
     const data = calculateSizeAndPositionData({
       cellCount,
-      cellSizeAndPositionGetter
+      cellSizeAndPositionGetter,
+      sectionSize
     })
 
     this._cellMetadata = data.cellMetadata
@@ -115,8 +156,9 @@ export default class Collection extends Component {
     x,
     y
   }) {
-    const { cellRenderer } = this.props
+    const { cellGroupRenderer, cellRenderer } = this.props
 
+    // Store for later calls to getLastRenderedIndices()
     this._lastRenderedCellIndices = this._sectionManager.getCellIndices({
       height,
       width,
@@ -124,13 +166,31 @@ export default class Collection extends Component {
       y
     })
 
-    return this._lastRenderedCellIndices.map((index) => {
-      const cellMetadata = this._sectionManager.getCellMetadata(index)
+    return cellGroupRenderer({
+      cellRenderer,
+      cellSizeAndPositionGetter: (index) => this._sectionManager.getCellMetadata(index),
+      indices: this._lastRenderedCellIndices
+    })
+  }
+}
+
+function defaultCellGroupRenderer ({
+  cellRenderer,
+  cellSizeAndPositionGetter,
+  indices
+}) {
+  return indices
+    .map((index) => {
+      const cellMetadata = cellSizeAndPositionGetter(index)
       const renderedCell = cellRenderer(index)
+
+      if (renderedCell == null || renderedCell === false) {
+        return null
+      }
 
       return (
         <div
-          className='Grid__cell'
+          className='Collection__cell'
           key={index}
           style={{
             height: cellMetadata.height,
@@ -143,5 +203,5 @@ export default class Collection extends Component {
         </div>
       )
     })
-  }
+    .filter((renderedCell) => !!renderedCell)
 }

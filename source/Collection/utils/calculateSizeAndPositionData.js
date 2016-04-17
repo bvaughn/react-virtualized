@@ -2,10 +2,11 @@ import SectionManager from '../SectionManager'
 
 export default function calculateSizeAndPositionData ({
   cellCount,
-  cellSizeAndPositionGetter
+  cellSizeAndPositionGetter,
+  sectionSize
 }) {
   const cellMetadata = []
-  const sectionManager = new SectionManager()
+  const sectionManager = new SectionManager(sectionSize)
   let height = 0
   let width = 0
 

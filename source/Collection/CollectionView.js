@@ -42,12 +42,12 @@ export default class CollectionView extends Component {
     cellLayoutManager: PropTypes.object.isRequired,
 
     /**
-     * Optional custom CSS class name to attach to root Grid element.
+     * Optional custom CSS class name to attach to root Collection element.
      */
     className: PropTypes.string,
 
     /**
-     * Height of Grid; this property determines the number of visible (vs virtualized) rows.
+     * Height of Collection; this property determines the number of visible (vs virtualized) rows.
      */
     height: PropTypes.number.isRequired,
 
@@ -64,8 +64,8 @@ export default class CollectionView extends Component {
     onScroll: PropTypes.func.isRequired,
 
     /**
-     * Callback invoked with information about the section of the Grid that was just rendered.
-     * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
+     * Callback invoked with information about the section of the Collection that was just rendered.
+     * This callback is passed an array of the most recently rendered section indices.
      */
     onSectionRendered: PropTypes.func.isRequired,
 
@@ -85,17 +85,17 @@ export default class CollectionView extends Component {
     scrollTop: PropTypes.number,
 
     /**
-     * Width of Grid; this property determines the number of visible (vs virtualized) columns.
+     * Width of Collection; this property determines the number of visible (vs virtualized) columns.
      */
     width: PropTypes.number.isRequired
-  }
+  };
 
   static defaultProps = {
     'aria-label': 'grid',
     noContentRenderer: () => null,
     onScroll: () => null,
     onSectionRendered: () => null
-  }
+  };
 
   constructor (props, context) {
     super(props, context)
@@ -120,7 +120,7 @@ export default class CollectionView extends Component {
   /**
    * Forced recompute of cell sizes and positions.
    * This function should be called if cell sizes have changed but nothing else has.
-   * Since cell positions are calculated by callbacks, the collectionv iew has no way of detecting when the underlying data has changed.
+   * Since cell positions are calculated by callbacks, the collection view has no way of detecting when the underlying data has changed.
    */
   recomputeCellSizesAndPositions () {
     this.setState({
@@ -131,7 +131,7 @@ export default class CollectionView extends Component {
   /* ---------------------------- Component lifecycle methods ---------------------------- */
 
   componentDidMount () {
-    const { cellLayoutManager, scrollLeft, scrollTop } = this.props
+    const { cellLayoutManager, scrollLeft, scrollToCell, scrollTop } = this.props
 
     this._scrollbarSize = getScrollbarSize()
 
@@ -143,6 +143,10 @@ export default class CollectionView extends Component {
       width: totalWidth
     } = cellLayoutManager.getTotalSize()
 
+    if (scrollToCell >= 0) {
+      this._updateScrollPositionForScrollToCell()
+    }
+
     // Initialize onScroll callback.
     this._invokeOnScrollMemoizer({
       scrollLeft: scrollLeft || 0,
@@ -153,7 +157,7 @@ export default class CollectionView extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    const { scrollToCell } = this.props
+    const { height, scrollToCell, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
@@ -179,7 +183,11 @@ export default class CollectionView extends Component {
     }
 
     // Update scroll offsets if the current :scrollToCell values requires it
-    if (scrollToCell !== prevProps.scrollToCell) {
+    if (
+      height !== prevProps.height ||
+      scrollToCell !== prevProps.scrollToCell ||
+      width !== prevProps.width
+    ) {
       this._updateScrollPositionForScrollToCell()
     }
 
@@ -299,7 +307,7 @@ export default class CollectionView extends Component {
       <div
         ref='scrollingContainer'
         aria-label={this.props['aria-label']}
-        className={cn('Grid', className)}
+        className={cn('Collection', className)}
         onScroll={this._onScroll}
         role='grid'
         style={gridStyle}
@@ -307,7 +315,7 @@ export default class CollectionView extends Component {
       >
         {childrenToDisplay.length > 0 &&
           <div
-            className='Grid__innerScrollContainer'
+            className='Collection__innerScrollContainer'
             style={{
               height: totalHeight,
               maxHeight: totalHeight,
@@ -334,7 +342,7 @@ export default class CollectionView extends Component {
 
   /**
    * Sets an :isScrolling flag for a small window of time.
-   * This flag is used to disable pointer events on the scrollable portion of the Grid.
+   * This flag is used to disable pointer events on the scrollable portion of the Collection.
    * This prevents jerky/stuttery mouse-wheel scrolling.
    */
   _enablePointerEventsAfterDelay () {
@@ -360,10 +368,10 @@ export default class CollectionView extends Component {
   }
 
   _invokeOnScrollMemoizer ({ scrollLeft, scrollTop, totalHeight, totalWidth }) {
-    const { height, onScroll, width } = this.props
-
     this._onScrollMemoizer({
       callback: ({ scrollLeft, scrollTop }) => {
+        const { height, onScroll, width } = this.props
+
         onScroll({
           clientHeight: height,
           clientWidth: width,

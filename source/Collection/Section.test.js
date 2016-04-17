@@ -21,7 +21,7 @@ describe('Section', () => {
     section.addCellIndex(0)
     expect(section.getCellIndices()).toEqual([0])
     section.addCellIndex(1)
-    expect(section.getCellIndices()).toEqual([0,1])
+    expect(section.getCellIndices()).toEqual([0, 1])
   })
 
   it('should not add a duplicate cell index', () => {
@@ -31,7 +31,7 @@ describe('Section', () => {
     section.addCellIndex(0)
     section.addCellIndex(1)
     section.addCellIndex(2)
-    expect(section.getCellIndices()).toEqual([0,1,2])
+    expect(section.getCellIndices()).toEqual([0, 1, 2])
   })
 
   it('should define a working toString() method for debugging', () => {

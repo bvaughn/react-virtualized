@@ -165,4 +165,26 @@ describe('createCallbackMemoizer', () => {
     expect(util.overscanStartIndex()).toEqual(0)
     expect(util.overscanStopIndex()).toEqual(3)
   })
+
+  it('should support an array of indices', () => {
+    let numCalls = 0
+    let indices
+    const callback = params => {
+      indices = params
+      numCalls++
+    }
+    const helper = createCallbackMemoizer()
+    helper({
+      callback,
+      indices: [0, 1, 2]
+    })
+    expect(numCalls).toEqual(1)
+    expect(indices).toEqual([0, 1, 2])
+    helper({
+      callback,
+      indices: [0, 1]
+    })
+    expect(numCalls).toEqual(2)
+    expect(indices).toEqual([0, 1])
+  })
 })

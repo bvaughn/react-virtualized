@@ -138,7 +138,7 @@ export default class Grid extends Component {
      * Width of Grid; this property determines the number of visible (vs virtualized) columns.
      */
     width: PropTypes.number.isRequired
-  }
+  };
 
   static defaultProps = {
     'aria-label': 'grid',
@@ -148,7 +148,7 @@ export default class Grid extends Component {
     overscanColumnsCount: 0,
     overscanRowsCount: 10,
     renderCellRanges: defaultRenderCellRanges
-  }
+  };
 
   constructor (props, context) {
     super(props, context)
@@ -551,10 +551,10 @@ export default class Grid extends Component {
   }
 
   _invokeOnScrollMemoizer ({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight }) {
-    const { height, onScroll, width } = this.props
-
     this._onScrollMemoizer({
       callback: ({ scrollLeft, scrollTop }) => {
+        const { height, onScroll, width } = this.props
+
         onScroll({
           clientHeight: height,
           clientWidth: width,
@@ -745,8 +745,6 @@ function defaultRenderCellRanges ({
       let renderedCell = renderCell({ columnIndex, rowIndex })
       let key = `${rowIndex}-${columnIndex}`
 
-      // any other falsey value will be rendered
-      // as a text node by React
       if (renderedCell == null || renderedCell === false) {
         continue
       }
