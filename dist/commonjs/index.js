@@ -22,6 +22,15 @@ Object.defineProperty(exports, 'AutoSizer', {
   }
 });
 
+var _Collection = require('./Collection');
+
+Object.defineProperty(exports, 'Collection', {
+  enumerable: true,
+  get: function get() {
+    return _Collection.Collection;
+  }
+});
+
 var _ColumnSizer = require('./ColumnSizer');
 
 Object.defineProperty(exports, 'ColumnSizer', {

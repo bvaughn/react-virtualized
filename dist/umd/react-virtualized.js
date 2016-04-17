@@ -1,6 +1,6 @@
 !function(root, factory) {
     "object" == typeof exports && "object" == typeof module ? module.exports = factory(require("react"), require("react-dom")) : "function" == typeof define && define.amd ? define([ "react", "react-dom" ], factory) : "object" == typeof exports ? exports.ReactVirtualized = factory(require("react"), require("react-dom")) : root.ReactVirtualized = factory(root.React, root.ReactDOM);
-}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_26__) {
+}(this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_39__) {
     /******/
     return function(modules) {
         /******/
@@ -86,14 +86,21 @@
                 return _AutoSizer.AutoSizer;
             }
         });
-        var _ColumnSizer = __webpack_require__(10);
+        var _Collection = __webpack_require__(10);
+        Object.defineProperty(exports, "Collection", {
+            enumerable: !0,
+            get: function() {
+                return _Collection.Collection;
+            }
+        });
+        var _ColumnSizer = __webpack_require__(24);
         Object.defineProperty(exports, "ColumnSizer", {
             enumerable: !0,
             get: function() {
                 return _ColumnSizer.ColumnSizer;
             }
         });
-        var _FlexTable = __webpack_require__(21);
+        var _FlexTable = __webpack_require__(34);
         Object.defineProperty(exports, "FlexTable", {
             enumerable: !0,
             get: function() {
@@ -115,28 +122,28 @@
                 return _FlexTable.SortIndicator;
             }
         });
-        var _Grid = __webpack_require__(12);
+        var _Grid = __webpack_require__(26);
         Object.defineProperty(exports, "Grid", {
             enumerable: !0,
             get: function() {
                 return _Grid.Grid;
             }
         });
-        var _InfiniteLoader = __webpack_require__(27);
+        var _InfiniteLoader = __webpack_require__(40);
         Object.defineProperty(exports, "InfiniteLoader", {
             enumerable: !0,
             get: function() {
                 return _InfiniteLoader.InfiniteLoader;
             }
         });
-        var _ScrollSync = __webpack_require__(29);
+        var _ScrollSync = __webpack_require__(42);
         Object.defineProperty(exports, "ScrollSync", {
             enumerable: !0,
             get: function() {
                 return _ScrollSync.ScrollSync;
             }
         });
-        var _VirtualScroll = __webpack_require__(31);
+        var _VirtualScroll = __webpack_require__(44);
         Object.defineProperty(exports, "VirtualScroll", {
             enumerable: !0,
             get: function() {
@@ -560,10 +567,873 @@
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports.ColumnSizer = exports["default"] = void 0;
-        var _ColumnSizer2 = __webpack_require__(11), _ColumnSizer3 = _interopRequireDefault(_ColumnSizer2);
-        exports["default"] = _ColumnSizer3["default"], exports.ColumnSizer = _ColumnSizer3["default"];
+        }), exports.Collection = exports["default"] = void 0;
+        var _Collection2 = __webpack_require__(11), _Collection3 = _interopRequireDefault(_Collection2);
+        exports["default"] = _Collection3["default"], exports.Collection = _Collection3["default"];
     }, /* 11 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function _objectWithoutProperties(obj, keys) {
+            var target = {};
+            for (var i in obj) keys.indexOf(i) >= 0 || Object.prototype.hasOwnProperty.call(obj, i) && (target[i] = obj[i]);
+            return target;
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
+        }
+        function _inherits(subClass, superClass) {
+            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+            subClass.prototype = Object.create(superClass && superClass.prototype, {
+                constructor: {
+                    value: subClass,
+                    enumerable: !1,
+                    writable: !0,
+                    configurable: !0
+                }
+            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
+        }
+        function defaultCellGroupRenderer(_ref3) {
+            var cellRenderer = _ref3.cellRenderer, cellSizeAndPositionGetter = _ref3.cellSizeAndPositionGetter, indices = _ref3.indices;
+            return indices.map(function(index) {
+                var cellMetadata = cellSizeAndPositionGetter(index), renderedCell = cellRenderer(index);
+                return null == renderedCell || renderedCell === !1 ? null : _jsx("div", {
+                    className: "Collection__cell",
+                    style: {
+                        height: cellMetadata.height,
+                        left: cellMetadata.x,
+                        top: cellMetadata.y,
+                        width: cellMetadata.width
+                    }
+                }, index, renderedCell);
+            }).filter(function(renderedCell) {
+                return !!renderedCell;
+            });
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _jsx = function() {
+            var REACT_ELEMENT_TYPE = "function" == typeof Symbol && Symbol["for"] && Symbol["for"]("react.element") || 60103;
+            return function(type, props, key, children) {
+                var defaultProps = type && type.defaultProps, childrenLength = arguments.length - 3;
+                if (props || 0 === childrenLength || (props = {}), props && defaultProps) for (var propName in defaultProps) void 0 === props[propName] && (props[propName] = defaultProps[propName]); else props || (props = defaultProps || {});
+                if (1 === childrenLength) props.children = children; else if (childrenLength > 1) {
+                    for (var childArray = Array(childrenLength), i = 0; childrenLength > i; i++) childArray[i] = arguments[i + 3];
+                    props.children = childArray;
+                }
+                return {
+                    $$typeof: REACT_ELEMENT_TYPE,
+                    type: type,
+                    key: void 0 === key ? null : "" + key,
+                    ref: null,
+                    props: props,
+                    _owner: null
+                };
+            };
+        }(), _extends = Object.assign || function(target) {
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
+            }
+            return target;
+        }, _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _CollectionView = __webpack_require__(12), _CollectionView2 = _interopRequireDefault(_CollectionView), _calculateSizeAndPositionData2 = __webpack_require__(20), _calculateSizeAndPositionData3 = _interopRequireDefault(_calculateSizeAndPositionData2), _getUpdatedOffsetForIndex = __webpack_require__(23), _getUpdatedOffsetForIndex2 = _interopRequireDefault(_getUpdatedOffsetForIndex), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), Collection = function(_Component) {
+            function Collection(props, context) {
+                _classCallCheck(this, Collection);
+                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Collection).call(this, props, context));
+                return _this._cellMetadata = [], _this._lastRenderedCellIndices = [], _this;
+            }
+            return _inherits(Collection, _Component), _createClass(Collection, [ {
+                key: "render",
+                value: function() {
+                    var props = _objectWithoutProperties(this.props, []);
+                    return _react2["default"].createElement(_CollectionView2["default"], _extends({
+                        cellLayoutManager: this,
+                        ref: "CollectionView"
+                    }, props));
+                }
+            }, {
+                key: "shouldComponentUpdate",
+                value: function(nextProps, nextState) {
+                    return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
+                }
+            }, {
+                key: "calculateSizeAndPositionData",
+                value: function() {
+                    var _props = this.props, cellCount = _props.cellCount, cellSizeAndPositionGetter = _props.cellSizeAndPositionGetter, sectionSize = _props.sectionSize, data = (0, 
+                    _calculateSizeAndPositionData3["default"])({
+                        cellCount: cellCount,
+                        cellSizeAndPositionGetter: cellSizeAndPositionGetter,
+                        sectionSize: sectionSize
+                    });
+                    this._cellMetadata = data.cellMetadata, this._sectionManager = data.sectionManager, 
+                    this._height = data.height, this._width = data.width;
+                }
+            }, {
+                key: "getLastRenderedIndices",
+                value: function() {
+                    return this._lastRenderedCellIndices;
+                }
+            }, {
+                key: "getScrollPositionForCell",
+                value: function(_ref) {
+                    var cellIndex = _ref.cellIndex, height = _ref.height, scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop, width = _ref.width, cellCount = this.props.cellCount;
+                    if (cellIndex >= 0 && cellCount > cellIndex) {
+                        var cellMetadata = this._cellMetadata[cellIndex];
+                        scrollLeft = (0, _getUpdatedOffsetForIndex2["default"])({
+                            cellOffset: cellMetadata.x,
+                            cellSize: cellMetadata.width,
+                            containerSize: width,
+                            currentOffset: scrollLeft,
+                            targetIndex: cellIndex
+                        }), scrollTop = (0, _getUpdatedOffsetForIndex2["default"])({
+                            cellOffset: cellMetadata.y,
+                            cellSize: cellMetadata.height,
+                            containerSize: height,
+                            currentOffset: scrollTop,
+                            targetIndex: cellIndex
+                        });
+                    }
+                    return {
+                        scrollLeft: scrollLeft,
+                        scrollTop: scrollTop
+                    };
+                }
+            }, {
+                key: "getTotalSize",
+                value: function() {
+                    return {
+                        height: this._height,
+                        width: this._width
+                    };
+                }
+            }, {
+                key: "renderCells",
+                value: function(_ref2) {
+                    var _this2 = this, height = _ref2.height, width = (_ref2.isScrolling, _ref2.width), x = _ref2.x, y = _ref2.y, _props2 = this.props, cellGroupRenderer = _props2.cellGroupRenderer, cellRenderer = _props2.cellRenderer;
+                    return this._lastRenderedCellIndices = this._sectionManager.getCellIndices({
+                        height: height,
+                        width: width,
+                        x: x,
+                        y: y
+                    }), cellGroupRenderer({
+                        cellRenderer: cellRenderer,
+                        cellSizeAndPositionGetter: function(index) {
+                            return _this2._sectionManager.getCellMetadata(index);
+                        },
+                        indices: this._lastRenderedCellIndices
+                    });
+                }
+            } ]), Collection;
+        }(_react.Component);
+        Collection.propTypes = {
+            "aria-label": _react.PropTypes.string,
+            cellCount: _react.PropTypes.number.isRequired,
+            cellGroupRenderer: _react.PropTypes.func.isRequired,
+            cellRenderer: _react.PropTypes.func.isRequired,
+            cellSizeAndPositionGetter: _react.PropTypes.func.isRequired,
+            sectionSize: _react.PropTypes.number
+        }, Collection.defaultProps = {
+            "aria-label": "grid",
+            cellGroupRenderer: defaultCellGroupRenderer
+        }, exports["default"] = Collection;
+    }, /* 12 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        function _possibleConstructorReturn(self, call) {
+            if (!self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+            return !call || "object" != typeof call && "function" != typeof call ? self : call;
+        }
+        function _inherits(subClass, superClass) {
+            if ("function" != typeof superClass && null !== superClass) throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+            subClass.prototype = Object.create(superClass && superClass.prototype, {
+                constructor: {
+                    value: subClass,
+                    enumerable: !1,
+                    writable: !0,
+                    configurable: !0
+                }
+            }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _jsx = function() {
+            var REACT_ELEMENT_TYPE = "function" == typeof Symbol && Symbol["for"] && Symbol["for"]("react.element") || 60103;
+            return function(type, props, key, children) {
+                var defaultProps = type && type.defaultProps, childrenLength = arguments.length - 3;
+                if (props || 0 === childrenLength || (props = {}), props && defaultProps) for (var propName in defaultProps) void 0 === props[propName] && (props[propName] = defaultProps[propName]); else props || (props = defaultProps || {});
+                if (1 === childrenLength) props.children = children; else if (childrenLength > 1) {
+                    for (var childArray = Array(childrenLength), i = 0; childrenLength > i; i++) childArray[i] = arguments[i + 3];
+                    props.children = childArray;
+                }
+                return {
+                    $$typeof: REACT_ELEMENT_TYPE,
+                    type: type,
+                    key: void 0 === key ? null : "" + key,
+                    ref: null,
+                    props: props,
+                    _owner: null
+                };
+            };
+        }(), _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(13), _classnames2 = _interopRequireDefault(_classnames), _createCallbackMemoizer = __webpack_require__(14), _createCallbackMemoizer2 = _interopRequireDefault(_createCallbackMemoizer), _scrollbarSize = __webpack_require__(15), _scrollbarSize2 = _interopRequireDefault(_scrollbarSize), _raf = __webpack_require__(17), _raf2 = _interopRequireDefault(_raf), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
+            OBSERVED: "observed",
+            REQUESTED: "requested"
+        }, CollectionView = function(_Component) {
+            function CollectionView(props, context) {
+                _classCallCheck(this, CollectionView);
+                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CollectionView).call(this, props, context));
+                return _this.state = {
+                    calculateSizeAndPositionDataOnNextUpdate: !1,
+                    isScrolling: !1,
+                    scrollLeft: 0,
+                    scrollTop: 0
+                }, _this._onSectionRenderedMemoizer = (0, _createCallbackMemoizer2["default"])(), 
+                _this._onScrollMemoizer = (0, _createCallbackMemoizer2["default"])(!1), _this._invokeOnSectionRenderedHelper = _this._invokeOnSectionRenderedHelper.bind(_this), 
+                _this._onScroll = _this._onScroll.bind(_this), _this._updateScrollPositionForScrollToCell = _this._updateScrollPositionForScrollToCell.bind(_this), 
+                _this;
+            }
+            return _inherits(CollectionView, _Component), _createClass(CollectionView, [ {
+                key: "recomputeCellSizesAndPositions",
+                value: function() {
+                    this.setState({
+                        calculateSizeAndPositionDataOnNextUpdate: !0
+                    });
+                }
+            }, {
+                key: "componentDidMount",
+                value: function() {
+                    var _props = this.props, cellLayoutManager = _props.cellLayoutManager, scrollLeft = _props.scrollLeft, scrollToCell = _props.scrollToCell, scrollTop = _props.scrollTop;
+                    this._scrollbarSize = (0, _scrollbarSize2["default"])(), this._invokeOnSectionRenderedHelper();
+                    var _cellLayoutManager$ge = cellLayoutManager.getTotalSize(), totalHeight = _cellLayoutManager$ge.height, totalWidth = _cellLayoutManager$ge.width;
+                    scrollToCell >= 0 && this._updateScrollPositionForScrollToCell(), this._invokeOnScrollMemoizer({
+                        scrollLeft: scrollLeft || 0,
+                        scrollTop: scrollTop || 0,
+                        totalHeight: totalHeight,
+                        totalWidth: totalWidth
+                    });
+                }
+            }, {
+                key: "componentDidUpdate",
+                value: function(prevProps, prevState) {
+                    var _props2 = this.props, height = _props2.height, scrollToCell = _props2.scrollToCell, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollPositionChangeReason = _state.scrollPositionChangeReason, scrollTop = _state.scrollTop;
+                    scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED && (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft && (this.refs.scrollingContainer.scrollLeft = scrollLeft), 
+                    scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop && (this.refs.scrollingContainer.scrollTop = scrollTop)), 
+                    height === prevProps.height && scrollToCell === prevProps.scrollToCell && width === prevProps.width || this._updateScrollPositionForScrollToCell(), 
+                    this._invokeOnSectionRenderedHelper();
+                }
+            }, {
+                key: "componentWillMount",
+                value: function() {
+                    var _props3 = this.props, cellLayoutManager = _props3.cellLayoutManager, scrollLeft = _props3.scrollLeft, scrollTop = _props3.scrollTop;
+                    cellLayoutManager.calculateSizeAndPositionData(), (scrollLeft >= 0 || scrollTop >= 0) && this._setScrollPosition({
+                        scrollLeft: scrollLeft,
+                        scrollTop: scrollTop
+                    });
+                }
+            }, {
+                key: "componentWillUnmount",
+                value: function() {
+                    this._disablePointerEventsTimeoutId && clearTimeout(this._disablePointerEventsTimeoutId), 
+                    this._setNextStateAnimationFrameId && _raf2["default"].cancel(this._setNextStateAnimationFrameId);
+                }
+            }, {
+                key: "componentWillUpdate",
+                value: function(nextProps, nextState) {
+                    0 !== nextProps.cellCount || 0 === nextState.scrollLeft && 0 === nextState.scrollTop ? nextProps.scrollLeft === this.props.scrollLeft && nextProps.scrollTop === this.props.scrollTop || this._setScrollPosition({
+                        scrollLeft: nextProps.scrollLeft,
+                        scrollTop: nextProps.scrollTop
+                    }) : this._setScrollPosition({
+                        scrollLeft: 0,
+                        scrollTop: 0
+                    }), (nextProps.cellCount !== this.props.cellCount || nextProps.cellLayoutManager !== this.props.cellLayoutManager || nextState.calculateSizeAndPositionDataOnNextUpdate) && nextProps.cellLayoutManager.calculateSizeAndPositionData(), 
+                    nextState.calculateSizeAndPositionDataOnNextUpdate && this.setState({
+                        calculateSizeAndPositionDataOnNextUpdate: !1
+                    });
+                }
+            }, {
+                key: "render",
+                value: function() {
+                    var _props4 = this.props, cellLayoutManager = _props4.cellLayoutManager, className = _props4.className, height = _props4.height, noContentRenderer = _props4.noContentRenderer, width = _props4.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = height > 0 && width > 0 ? cellLayoutManager.renderCells({
+                        height: height,
+                        isScrolling: isScrolling,
+                        width: width,
+                        x: scrollLeft,
+                        y: scrollTop
+                    }) : [], _cellLayoutManager$ge2 = cellLayoutManager.getTotalSize(), totalHeight = _cellLayoutManager$ge2.height, totalWidth = _cellLayoutManager$ge2.width, gridStyle = {
+                        height: height,
+                        width: width
+                    };
+                    return height >= totalHeight && (gridStyle.overflowY = "hidden"), width >= totalWidth && (gridStyle.overflowX = "hidden"), 
+                    _react2["default"].createElement("div", {
+                        ref: "scrollingContainer",
+                        "aria-label": this.props["aria-label"],
+                        className: (0, _classnames2["default"])("Collection", className),
+                        onScroll: this._onScroll,
+                        role: "grid",
+                        style: gridStyle,
+                        tabIndex: 0
+                    }, childrenToDisplay.length > 0 && _jsx("div", {
+                        className: "Collection__innerScrollContainer",
+                        style: {
+                            height: totalHeight,
+                            maxHeight: totalHeight,
+                            maxWidth: totalWidth,
+                            pointerEvents: isScrolling ? "none" : "auto",
+                            width: totalWidth
+                        }
+                    }, void 0, childrenToDisplay), 0 === childrenToDisplay.length && noContentRenderer());
+                }
+            }, {
+                key: "shouldComponentUpdate",
+                value: function(nextProps, nextState) {
+                    return (0, _reactAddonsShallowCompare2["default"])(this, nextProps, nextState);
+                }
+            }, {
+                key: "_enablePointerEventsAfterDelay",
+                value: function() {
+                    var _this2 = this;
+                    this._disablePointerEventsTimeoutId && clearTimeout(this._disablePointerEventsTimeoutId), 
+                    this._disablePointerEventsTimeoutId = setTimeout(function() {
+                        _this2._disablePointerEventsTimeoutId = null, _this2.setState({
+                            isScrolling: !1
+                        });
+                    }, IS_SCROLLING_TIMEOUT);
+                }
+            }, {
+                key: "_invokeOnSectionRenderedHelper",
+                value: function() {
+                    var _props5 = this.props, cellLayoutManager = _props5.cellLayoutManager, onSectionRendered = _props5.onSectionRendered;
+                    this._onSectionRenderedMemoizer({
+                        callback: onSectionRendered,
+                        indices: cellLayoutManager.getLastRenderedIndices()
+                    });
+                }
+            }, {
+                key: "_invokeOnScrollMemoizer",
+                value: function(_ref) {
+                    var _this3 = this, scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop, totalHeight = _ref.totalHeight, totalWidth = _ref.totalWidth;
+                    this._onScrollMemoizer({
+                        callback: function(_ref2) {
+                            var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop, _props6 = _this3.props, height = _props6.height, onScroll = _props6.onScroll, width = _props6.width;
+                            onScroll({
+                                clientHeight: height,
+                                clientWidth: width,
+                                scrollHeight: totalHeight,
+                                scrollLeft: scrollLeft,
+                                scrollTop: scrollTop,
+                                scrollWidth: totalWidth
+                            });
+                        },
+                        indices: {
+                            scrollLeft: scrollLeft,
+                            scrollTop: scrollTop
+                        }
+                    });
+                }
+            }, {
+                key: "_setNextState",
+                value: function(state) {
+                    var _this4 = this;
+                    this._setNextStateAnimationFrameId && _raf2["default"].cancel(this._setNextStateAnimationFrameId), 
+                    this._setNextStateAnimationFrameId = (0, _raf2["default"])(function() {
+                        _this4._setNextStateAnimationFrameId = null, _this4.setState(state);
+                    });
+                }
+            }, {
+                key: "_setScrollPosition",
+                value: function(_ref3) {
+                    var scrollLeft = _ref3.scrollLeft, scrollTop = _ref3.scrollTop, newState = {
+                        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+                    };
+                    scrollLeft >= 0 && (newState.scrollLeft = scrollLeft), scrollTop >= 0 && (newState.scrollTop = scrollTop), 
+                    (scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft || scrollTop >= 0 && scrollTop !== this.state.scrollTop) && this.setState(newState);
+                }
+            }, {
+                key: "_updateScrollPositionForScrollToCell",
+                value: function() {
+                    var _props7 = this.props, cellLayoutManager = _props7.cellLayoutManager, height = _props7.height, scrollToCell = _props7.scrollToCell, width = _props7.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop;
+                    if (scrollToCell >= 0) {
+                        var scrollPosition = cellLayoutManager.getScrollPositionForCell({
+                            cellIndex: scrollToCell,
+                            height: height,
+                            scrollLeft: scrollLeft,
+                            scrollTop: scrollTop,
+                            width: width
+                        });
+                        scrollPosition.scrollLeft === scrollLeft && scrollPosition.scrollTop === scrollTop || this._setScrollPosition(scrollPosition);
+                    }
+                }
+            }, {
+                key: "_onScroll",
+                value: function(event) {
+                    if (event.target === this.refs.scrollingContainer) {
+                        this._enablePointerEventsAfterDelay();
+                        var _props8 = this.props, cellLayoutManager = _props8.cellLayoutManager, height = _props8.height, width = _props8.width, scrollbarSize = this._scrollbarSize, _cellLayoutManager$ge3 = cellLayoutManager.getTotalSize(), totalHeight = _cellLayoutManager$ge3.height, totalWidth = _cellLayoutManager$ge3.width, scrollLeft = Math.min(totalWidth - width + scrollbarSize, event.target.scrollLeft), scrollTop = Math.min(totalHeight - height + scrollbarSize, event.target.scrollTop);
+                        if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
+                            var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
+                            this.state.isScrolling || this.setState({
+                                isScrolling: !0
+                            }), this._setNextState({
+                                isScrolling: !0,
+                                scrollLeft: scrollLeft,
+                                scrollPositionChangeReason: scrollPositionChangeReason,
+                                scrollTop: scrollTop
+                            });
+                        }
+                        this._invokeOnScrollMemoizer({
+                            scrollLeft: scrollLeft,
+                            scrollTop: scrollTop,
+                            totalWidth: totalWidth,
+                            totalHeight: totalHeight
+                        });
+                    }
+                }
+            } ]), CollectionView;
+        }(_react.Component);
+        CollectionView.propTypes = {
+            "aria-label": _react.PropTypes.string,
+            cellCount: _react.PropTypes.number.isRequired,
+            cellLayoutManager: _react.PropTypes.object.isRequired,
+            className: _react.PropTypes.string,
+            height: _react.PropTypes.number.isRequired,
+            noContentRenderer: _react.PropTypes.func.isRequired,
+            onScroll: _react.PropTypes.func.isRequired,
+            onSectionRendered: _react.PropTypes.func.isRequired,
+            scrollLeft: _react.PropTypes.number,
+            scrollToCell: _react.PropTypes.number,
+            scrollTop: _react.PropTypes.number,
+            width: _react.PropTypes.number.isRequired
+        }, CollectionView.defaultProps = {
+            "aria-label": "grid",
+            noContentRenderer: function() {
+                return null;
+            },
+            onScroll: function() {
+                return null;
+            },
+            onSectionRendered: function() {
+                return null;
+            }
+        }, exports["default"] = CollectionView;
+    }, /* 13 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+        /*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+        /* global define */
+        !function() {
+            "use strict";
+            function classNames() {
+                for (var classes = [], i = 0; i < arguments.length; i++) {
+                    var arg = arguments[i];
+                    if (arg) {
+                        var argType = typeof arg;
+                        if ("string" === argType || "number" === argType) classes.push(arg); else if (Array.isArray(arg)) classes.push(classNames.apply(null, arg)); else if ("object" === argType) for (var key in arg) hasOwn.call(arg, key) && arg[key] && classes.push(key);
+                    }
+                }
+                return classes.join(" ");
+            }
+            var hasOwn = {}.hasOwnProperty;
+            "undefined" != typeof module && module.exports ? module.exports = classNames : (__WEBPACK_AMD_DEFINE_ARRAY__ = [], 
+            __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+                return classNames;
+            }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), !(void 0 !== __WEBPACK_AMD_DEFINE_RESULT__ && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)));
+        }();
+    }, /* 14 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function createCallbackMemoizer() {
+            var requireAllKeys = arguments.length <= 0 || void 0 === arguments[0] ? !0 : arguments[0], cachedIndices = {};
+            return function(_ref) {
+                var callback = _ref.callback, indices = _ref.indices, keys = Object.keys(indices), allInitialized = !requireAllKeys || keys.every(function(key) {
+                    return indices[key] >= 0;
+                }), indexChanged = keys.length !== Object.keys(cachedIndices).length || keys.some(function(key) {
+                    return cachedIndices[key] !== indices[key];
+                });
+                cachedIndices = indices, allInitialized && indexChanged && callback(indices);
+            };
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = createCallbackMemoizer;
+    }, /* 15 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        var size, canUseDOM = __webpack_require__(16);
+        module.exports = function(recalc) {
+            if ((!size || recalc) && canUseDOM) {
+                var scrollDiv = document.createElement("div");
+                scrollDiv.style.position = "absolute", scrollDiv.style.top = "-9999px", scrollDiv.style.width = "50px", 
+                scrollDiv.style.height = "50px", scrollDiv.style.overflow = "scroll", document.body.appendChild(scrollDiv), 
+                size = scrollDiv.offsetWidth - scrollDiv.clientWidth, document.body.removeChild(scrollDiv);
+            }
+            return size;
+        };
+    }, /* 16 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        module.exports = !("undefined" == typeof window || !window.document || !window.document.createElement);
+    }, /* 17 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        /* WEBPACK VAR INJECTION */
+        (function(global) {
+            for (var now = __webpack_require__(18), root = "undefined" == typeof window ? global : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = root["request" + suffix], caf = root["cancel" + suffix] || root["cancelRequest" + suffix], i = 0; !raf && i < vendors.length; i++) raf = root[vendors[i] + "Request" + suffix], 
+            caf = root[vendors[i] + "Cancel" + suffix] || root[vendors[i] + "CancelRequest" + suffix];
+            // Some versions of FF have rAF but not cAF
+            if (!raf || !caf) {
+                var last = 0, id = 0, queue = [], frameDuration = 1e3 / 60;
+                raf = function(callback) {
+                    if (0 === queue.length) {
+                        var _now = now(), next = Math.max(0, frameDuration - (_now - last));
+                        last = next + _now, setTimeout(function() {
+                            var cp = queue.slice(0);
+                            // Clear queue here to prevent
+                            // callbacks from appending listeners
+                            // to the current frame's queue
+                            queue.length = 0;
+                            for (var i = 0; i < cp.length; i++) if (!cp[i].cancelled) try {
+                                cp[i].callback(last);
+                            } catch (e) {
+                                setTimeout(function() {
+                                    throw e;
+                                }, 0);
+                            }
+                        }, Math.round(next));
+                    }
+                    return queue.push({
+                        handle: ++id,
+                        callback: callback,
+                        cancelled: !1
+                    }), id;
+                }, caf = function(handle) {
+                    for (var i = 0; i < queue.length; i++) queue[i].handle === handle && (queue[i].cancelled = !0);
+                };
+            }
+            module.exports = function(fn) {
+                // Wrap in a new function to prevent
+                // `cancel` potentially being assigned
+                // to the native rAF function
+                return raf.call(root, fn);
+            }, module.exports.cancel = function() {
+                caf.apply(root, arguments);
+            }, module.exports.polyfill = function() {
+                root.requestAnimationFrame = raf, root.cancelAnimationFrame = caf;
+            };
+        }).call(exports, function() {
+            return this;
+        }());
+    }, /* 18 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        /* WEBPACK VAR INJECTION */
+        (function(process) {
+            // Generated by CoffeeScript 1.7.1
+            (function() {
+                var getNanoSeconds, hrtime, loadTime;
+                "undefined" != typeof performance && null !== performance && performance.now ? module.exports = function() {
+                    return performance.now();
+                } : "undefined" != typeof process && null !== process && process.hrtime ? (module.exports = function() {
+                    return (getNanoSeconds() - loadTime) / 1e6;
+                }, hrtime = process.hrtime, getNanoSeconds = function() {
+                    var hr;
+                    return hr = hrtime(), 1e9 * hr[0] + hr[1];
+                }, loadTime = getNanoSeconds()) : Date.now ? (module.exports = function() {
+                    return Date.now() - loadTime;
+                }, loadTime = Date.now()) : (module.exports = function() {
+                    return new Date().getTime() - loadTime;
+                }, loadTime = new Date().getTime());
+            }).call(this);
+        }).call(exports, __webpack_require__(19));
+    }, /* 19 */
+    /***/
+    function(module, exports) {
+        function cleanUpNextTick() {
+            draining = !1, currentQueue.length ? queue = currentQueue.concat(queue) : queueIndex = -1, 
+            queue.length && drainQueue();
+        }
+        function drainQueue() {
+            if (!draining) {
+                var timeout = setTimeout(cleanUpNextTick);
+                draining = !0;
+                for (var len = queue.length; len; ) {
+                    for (currentQueue = queue, queue = []; ++queueIndex < len; ) currentQueue && currentQueue[queueIndex].run();
+                    queueIndex = -1, len = queue.length;
+                }
+                currentQueue = null, draining = !1, clearTimeout(timeout);
+            }
+        }
+        // v8 likes predictible objects
+        function Item(fun, array) {
+            this.fun = fun, this.array = array;
+        }
+        function noop() {}
+        // shim for using process in browser
+        var currentQueue, process = module.exports = {}, queue = [], draining = !1, queueIndex = -1;
+        process.nextTick = function(fun) {
+            var args = new Array(arguments.length - 1);
+            if (arguments.length > 1) for (var i = 1; i < arguments.length; i++) args[i - 1] = arguments[i];
+            queue.push(new Item(fun, args)), 1 !== queue.length || draining || setTimeout(drainQueue, 0);
+        }, Item.prototype.run = function() {
+            this.fun.apply(null, this.array);
+        }, process.title = "browser", process.browser = !0, process.env = {}, process.argv = [], 
+        process.version = "", // empty string to avoid regexp issues
+        process.versions = {}, process.on = noop, process.addListener = noop, process.once = noop, 
+        process.off = noop, process.removeListener = noop, process.removeAllListeners = noop, 
+        process.emit = noop, process.binding = function(name) {
+            throw new Error("process.binding is not supported");
+        }, process.cwd = function() {
+            return "/";
+        }, process.chdir = function(dir) {
+            throw new Error("process.chdir is not supported");
+        }, process.umask = function() {
+            return 0;
+        };
+    }, /* 20 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function calculateSizeAndPositionData(_ref) {
+            for (var cellCount = _ref.cellCount, cellSizeAndPositionGetter = _ref.cellSizeAndPositionGetter, sectionSize = _ref.sectionSize, cellMetadata = [], sectionManager = new _SectionManager2["default"](sectionSize), height = 0, width = 0, index = 0; cellCount > index; index++) {
+                var cellMetadatum = cellSizeAndPositionGetter(index);
+                if (null == cellMetadatum.height || isNaN(cellMetadatum.height) || null == cellMetadatum.width || isNaN(cellMetadatum.width) || null == cellMetadatum.x || isNaN(cellMetadatum.x) || null == cellMetadatum.y || isNaN(cellMetadatum.y)) throw Error("Invalid metadata returned for cell " + index + ":\n        x:" + cellMetadatum.x + ", y:" + cellMetadatum.y + ", width:" + cellMetadatum.width + ", height:" + cellMetadatum.height);
+                height = Math.max(height, cellMetadatum.y + cellMetadatum.height), width = Math.max(width, cellMetadatum.x + cellMetadatum.width), 
+                cellMetadata[index] = cellMetadatum, sectionManager.registerCell({
+                    cellMetadatum: cellMetadatum,
+                    index: index
+                });
+            }
+            return {
+                cellMetadata: cellMetadata,
+                height: height,
+                sectionManager: sectionManager,
+                width: width
+            };
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = calculateSizeAndPositionData;
+        var _SectionManager = __webpack_require__(21), _SectionManager2 = _interopRequireDefault(_SectionManager);
+    }, /* 21 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), _Section = __webpack_require__(22), _Section2 = _interopRequireDefault(_Section), SECTION_SIZE = 100, SectionManager = function() {
+            function SectionManager() {
+                var sectionSize = arguments.length <= 0 || void 0 === arguments[0] ? SECTION_SIZE : arguments[0];
+                _classCallCheck(this, SectionManager), this._sectionSize = sectionSize, this._cellMetadata = [], 
+                this._sections = {};
+            }
+            return _createClass(SectionManager, [ {
+                key: "getCellIndices",
+                value: function(_ref) {
+                    var height = _ref.height, width = _ref.width, x = _ref.x, y = _ref.y, indices = {};
+                    return this.getSections({
+                        height: height,
+                        width: width,
+                        x: x,
+                        y: y
+                    }).forEach(function(section) {
+                        return section.getCellIndices().forEach(function(index) {
+                            return indices[index] = index;
+                        });
+                    }), Object.keys(indices).map(function(index) {
+                        return indices[index];
+                    });
+                }
+            }, {
+                key: "getCellMetadata",
+                value: function(index) {
+                    return this._cellMetadata[index];
+                }
+            }, {
+                key: "getSections",
+                value: function(_ref2) {
+                    for (var height = _ref2.height, width = _ref2.width, x = _ref2.x, y = _ref2.y, sectionXStart = Math.floor(x / this._sectionSize), sectionXStop = Math.floor((x + width - 1) / this._sectionSize), sectionYStart = Math.floor(y / this._sectionSize), sectionYStop = Math.floor((y + height - 1) / this._sectionSize), sections = [], sectionX = sectionXStart; sectionXStop >= sectionX; sectionX++) for (var sectionY = sectionYStart; sectionYStop >= sectionY; sectionY++) {
+                        var key = sectionX + "." + sectionY;
+                        this._sections[key] || (this._sections[key] = new _Section2["default"]({
+                            height: this._sectionSize,
+                            width: this._sectionSize,
+                            x: sectionX * this._sectionSize,
+                            y: sectionY * this._sectionSize
+                        })), sections.push(this._sections[key]);
+                    }
+                    return sections;
+                }
+            }, {
+                key: "getTotalSectionCount",
+                value: function() {
+                    return Object.keys(this._sections).length;
+                }
+            }, {
+                key: "toString",
+                value: function() {
+                    var _this = this;
+                    return Object.keys(this._sections).map(function(index) {
+                        return _this._sections[index].toString();
+                    });
+                }
+            }, {
+                key: "registerCell",
+                value: function(_ref3) {
+                    var cellMetadatum = _ref3.cellMetadatum, index = _ref3.index;
+                    this._cellMetadata[index] = cellMetadatum, this.getSections(cellMetadatum).forEach(function(section) {
+                        return section.addCellIndex(index);
+                    });
+                }
+            } ]), SectionManager;
+        }();
+        exports["default"] = SectionManager;
+    }, /* 22 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function _classCallCheck(instance, Constructor) {
+            if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _createClass = function() {
+            function defineProperties(target, props) {
+                for (var i = 0; i < props.length; i++) {
+                    var descriptor = props[i];
+                    descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, 
+                    "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+                }
+            }
+            return function(Constructor, protoProps, staticProps) {
+                return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
+                Constructor;
+            };
+        }(), Section = function() {
+            function Section(_ref) {
+                var height = _ref.height, width = _ref.width, x = _ref.x, y = _ref.y;
+                _classCallCheck(this, Section), this.height = height, this.width = width, this.x = x, 
+                this.y = y, this._indexMap = {}, this._indices = [];
+            }
+            return _createClass(Section, [ {
+                key: "addCellIndex",
+                value: function(index) {
+                    this._indexMap[index] || (this._indexMap[index] = !0, this._indices.push(index));
+                }
+            }, {
+                key: "getCellIndices",
+                value: function() {
+                    return this._indices;
+                }
+            }, {
+                key: "toString",
+                value: function() {
+                    return this.x + "," + this.y + " " + this.width + "x" + this.height;
+                }
+            } ]), Section;
+        }();
+        exports["default"] = Section;
+    }, /* 23 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function getUpdatedOffsetForIndex(_ref) {
+            var cellOffset = _ref.cellOffset, cellSize = _ref.cellSize, containerSize = _ref.containerSize, currentOffset = _ref.currentOffset, maxOffset = cellOffset, minOffset = maxOffset - containerSize + cellSize, newOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
+            return newOffset;
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = getUpdatedOffsetForIndex;
+    }, /* 24 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports.ColumnSizer = exports["default"] = void 0;
+        var _ColumnSizer2 = __webpack_require__(25), _ColumnSizer3 = _interopRequireDefault(_ColumnSizer2);
+        exports["default"] = _ColumnSizer3["default"], exports.ColumnSizer = _ColumnSizer3["default"];
+    }, /* 25 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -605,7 +1475,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _react = __webpack_require__(3), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), _Grid = __webpack_require__(12), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = function(_Component) {
+        }(), _react = __webpack_require__(3), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), _Grid = __webpack_require__(26), _Grid2 = _interopRequireDefault(_Grid), ColumnSizer = function(_Component) {
             function ColumnSizer(props, context) {
                 _classCallCheck(this, ColumnSizer);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ColumnSizer).call(this, props, context));
@@ -652,7 +1522,7 @@
             columnsCount: _react.PropTypes.number.isRequired,
             width: _react.PropTypes.number.isRequired
         }, exports["default"] = ColumnSizer;
-    }, /* 12 */
+    }, /* 26 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -664,9 +1534,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.Grid = exports["default"] = void 0;
-        var _Grid2 = __webpack_require__(13), _Grid3 = _interopRequireDefault(_Grid2);
+        var _Grid2 = __webpack_require__(27), _Grid3 = _interopRequireDefault(_Grid2);
         exports["default"] = _Grid3["default"], exports.Grid = _Grid3["default"];
-    }, /* 13 */
+    }, /* 27 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -747,7 +1617,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _GridUtils = __webpack_require__(14), _classnames = __webpack_require__(15), _classnames2 = _interopRequireDefault(_classnames), _raf = __webpack_require__(16), _raf2 = _interopRequireDefault(_raf), _scrollbarSize = __webpack_require__(19), _scrollbarSize2 = _interopRequireDefault(_scrollbarSize), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
+        }(), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(13), _classnames2 = _interopRequireDefault(_classnames), _calculateSizeAndPositionDataAndUpdateScrollOffset = __webpack_require__(28), _calculateSizeAndPositionDataAndUpdateScrollOffset2 = _interopRequireDefault(_calculateSizeAndPositionDataAndUpdateScrollOffset), _createCallbackMemoizer = __webpack_require__(14), _createCallbackMemoizer2 = _interopRequireDefault(_createCallbackMemoizer), _getNearestIndex = __webpack_require__(29), _getNearestIndex2 = _interopRequireDefault(_getNearestIndex), _getOverscanIndices = __webpack_require__(30), _getOverscanIndices2 = _interopRequireDefault(_getOverscanIndices), _scrollbarSize = __webpack_require__(15), _scrollbarSize2 = _interopRequireDefault(_scrollbarSize), _getUpdatedOffsetForIndex = __webpack_require__(23), _getUpdatedOffsetForIndex2 = _interopRequireDefault(_getUpdatedOffsetForIndex), _getVisibleCellIndices = __webpack_require__(31), _getVisibleCellIndices2 = _interopRequireDefault(_getVisibleCellIndices), _initCellMetadata = __webpack_require__(32), _initCellMetadata2 = _interopRequireDefault(_initCellMetadata), _raf = __webpack_require__(17), _raf2 = _interopRequireDefault(_raf), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), _updateScrollIndexHelper = __webpack_require__(33), _updateScrollIndexHelper2 = _interopRequireDefault(_updateScrollIndexHelper), IS_SCROLLING_TIMEOUT = 150, SCROLL_POSITION_CHANGE_REASONS = {
             OBSERVED: "observed",
             REQUESTED: "requested"
         }, Grid = function(_Component) {
@@ -759,8 +1629,8 @@
                     isScrolling: !1,
                     scrollLeft: 0,
                     scrollTop: 0
-                }, _this._onGridRenderedMemoizer = (0, _GridUtils.createCallbackMemoizer)(), _this._onScrollMemoizer = (0, 
-                _GridUtils.createCallbackMemoizer)(!1), _this._computeColumnMetadata = _this._computeColumnMetadata.bind(_this), 
+                }, _this._onGridRenderedMemoizer = (0, _createCallbackMemoizer2["default"])(), _this._onScrollMemoizer = (0, 
+                _createCallbackMemoizer2["default"])(!1), _this._computeColumnMetadata = _this._computeColumnMetadata.bind(_this), 
                 _this._computeRowMetadata = _this._computeRowMetadata.bind(_this), _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this), 
                 _this._onScroll = _this._onScroll.bind(_this), _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this), 
                 _this._updateScrollTopForScrollToRow = _this._updateScrollTopForScrollToRow.bind(_this), 
@@ -794,8 +1664,8 @@
                     var _props2 = this.props, columnsCount = _props2.columnsCount, columnWidth = _props2.columnWidth, height = _props2.height, rowHeight = _props2.rowHeight, rowsCount = _props2.rowsCount, scrollToColumn = _props2.scrollToColumn, scrollToRow = _props2.scrollToRow, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollPositionChangeReason = _state.scrollPositionChangeReason, scrollTop = _state.scrollTop;
                     scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED && (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft && (this.refs.scrollingContainer.scrollLeft = scrollLeft), 
                     scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop && (this.refs.scrollingContainer.scrollTop = scrollTop)), 
-                    (0, _GridUtils.updateScrollIndexHelper)({
-                        cellsCount: columnsCount,
+                    (0, _updateScrollIndexHelper2["default"])({
+                        cellCount: columnsCount,
                         cellMetadata: this._columnMetadata,
                         cellSize: columnWidth,
                         previousCellsCount: prevProps.columnsCount,
@@ -806,8 +1676,8 @@
                         scrollToIndex: scrollToColumn,
                         size: width,
                         updateScrollIndexCallback: this._updateScrollLeftForScrollToColumn
-                    }), (0, _GridUtils.updateScrollIndexHelper)({
-                        cellsCount: rowsCount,
+                    }), (0, _updateScrollIndexHelper2["default"])({
+                        cellCount: rowsCount,
                         cellMetadata: this._rowMetadata,
                         cellSize: rowHeight,
                         previousCellsCount: prevProps.rowsCount,
@@ -840,8 +1710,8 @@
                     }) : nextProps.scrollLeft === this.props.scrollLeft && nextProps.scrollTop === this.props.scrollTop || this._setScrollPosition({
                         scrollLeft: nextProps.scrollLeft,
                         scrollTop: nextProps.scrollTop
-                    }), (0, _GridUtils.computeCellMetadataAndUpdateScrollOffsetHelper)({
-                        cellsCount: this.props.columnsCount,
+                    }), (0, _calculateSizeAndPositionDataAndUpdateScrollOffset2["default"])({
+                        cellCount: this.props.columnsCount,
                         cellSize: this.props.columnWidth,
                         computeMetadataCallback: this._computeColumnMetadata,
                         computeMetadataCallbackProps: nextProps,
@@ -851,8 +1721,8 @@
                         nextScrollToIndex: nextProps.scrollToColumn,
                         scrollToIndex: this.props.scrollToColumn,
                         updateScrollOffsetForScrollToIndex: this._updateScrollLeftForScrollToColumn
-                    }), (0, _GridUtils.computeCellMetadataAndUpdateScrollOffsetHelper)({
-                        cellsCount: this.props.rowsCount,
+                    }), (0, _calculateSizeAndPositionDataAndUpdateScrollOffset2["default"])({
+                        cellCount: this.props.rowsCount,
                         cellSize: this.props.rowHeight,
                         computeMetadataCallback: this._computeRowMetadata,
                         computeMetadataCallbackProps: nextProps,
@@ -871,26 +1741,26 @@
                 value: function() {
                     var _props3 = this.props, className = _props3.className, columnsCount = _props3.columnsCount, height = _props3.height, noContentRenderer = _props3.noContentRenderer, overscanColumnsCount = _props3.overscanColumnsCount, overscanRowsCount = _props3.overscanRowsCount, renderCell = _props3.renderCell, renderCellRanges = _props3.renderCellRanges, rowsCount = _props3.rowsCount, width = _props3.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = [];
                     if (height > 0 && width > 0) {
-                        var visibleColumnIndices = (0, _GridUtils.getVisibleCellIndices)({
-                            cellsCount: columnsCount,
+                        var visibleColumnIndices = (0, _getVisibleCellIndices2["default"])({
+                            cellCount: columnsCount,
                             cellMetadata: this._columnMetadata,
                             containerSize: width,
                             currentOffset: scrollLeft
-                        }), visibleRowIndices = (0, _GridUtils.getVisibleCellIndices)({
-                            cellsCount: rowsCount,
+                        }), visibleRowIndices = (0, _getVisibleCellIndices2["default"])({
+                            cellCount: rowsCount,
                             cellMetadata: this._rowMetadata,
                             containerSize: height,
                             currentOffset: scrollTop
                         });
                         this._renderedColumnStartIndex = visibleColumnIndices.start, this._renderedColumnStopIndex = visibleColumnIndices.stop, 
                         this._renderedRowStartIndex = visibleRowIndices.start, this._renderedRowStopIndex = visibleRowIndices.stop;
-                        var overscanColumnIndices = (0, _GridUtils.getOverscanIndices)({
-                            cellsCount: columnsCount,
+                        var overscanColumnIndices = (0, _getOverscanIndices2["default"])({
+                            cellCount: columnsCount,
                             overscanCellsCount: overscanColumnsCount,
                             startIndex: this._renderedColumnStartIndex,
                             stopIndex: this._renderedColumnStopIndex
-                        }), overscanRowIndices = (0, _GridUtils.getOverscanIndices)({
-                            cellsCount: rowsCount,
+                        }), overscanRowIndices = (0, _getOverscanIndices2["default"])({
+                            cellCount: rowsCount,
                             overscanCellsCount: overscanRowsCount,
                             startIndex: this._renderedRowStartIndex,
                             stopIndex: this._renderedRowStopIndex
@@ -940,8 +1810,8 @@
                 key: "_computeColumnMetadata",
                 value: function(props) {
                     var columnsCount = props.columnsCount, columnWidth = props.columnWidth;
-                    this._columnMetadata = (0, _GridUtils.initCellMetadata)({
-                        cellsCount: columnsCount,
+                    this._columnMetadata = (0, _initCellMetadata2["default"])({
+                        cellCount: columnsCount,
                         size: columnWidth
                     });
                 }
@@ -949,8 +1819,8 @@
                 key: "_computeRowMetadata",
                 value: function(props) {
                     var rowHeight = props.rowHeight, rowsCount = props.rowsCount;
-                    this._rowMetadata = (0, _GridUtils.initCellMetadata)({
-                        cellsCount: rowsCount,
+                    this._rowMetadata = (0, _initCellMetadata2["default"])({
+                        cellCount: rowsCount,
                         size: rowHeight
                     });
                 }
@@ -1000,10 +1870,10 @@
             }, {
                 key: "_invokeOnScrollMemoizer",
                 value: function(_ref) {
-                    var scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop, totalColumnsWidth = _ref.totalColumnsWidth, totalRowsHeight = _ref.totalRowsHeight, _props4 = this.props, height = _props4.height, onScroll = _props4.onScroll, width = _props4.width;
+                    var _this3 = this, scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop, totalColumnsWidth = _ref.totalColumnsWidth, totalRowsHeight = _ref.totalRowsHeight;
                     this._onScrollMemoizer({
                         callback: function(_ref2) {
-                            var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop;
+                            var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop, _props4 = _this3.props, height = _props4.height, onScroll = _props4.onScroll, width = _props4.width;
                             onScroll({
                                 clientHeight: height,
                                 clientWidth: width,
@@ -1022,10 +1892,10 @@
             }, {
                 key: "_setNextState",
                 value: function(state) {
-                    var _this3 = this;
+                    var _this4 = this;
                     this._setNextStateAnimationFrameId && _raf2["default"].cancel(this._setNextStateAnimationFrameId), 
                     this._setNextStateAnimationFrameId = (0, _raf2["default"])(function() {
-                        _this3._setNextStateAnimationFrameId = null, _this3.setState(state);
+                        _this4._setNextStateAnimationFrameId = null, _this4.setState(state);
                     });
                 }
             }, {
@@ -1042,8 +1912,13 @@
                 value: function(scrollToColumnOverride) {
                     var scrollToColumn = null != scrollToColumnOverride ? scrollToColumnOverride : this.props.scrollToColumn, width = this.props.width, scrollLeft = this.state.scrollLeft;
                     if (scrollToColumn >= 0) {
-                        var calculatedScrollLeft = (0, _GridUtils.getUpdatedOffsetForIndex)({
-                            cellMetadata: this._columnMetadata,
+                        var targetIndex = (0, _getNearestIndex2["default"])({
+                            cellCount: this._columnMetadata.length,
+                            targetIndex: scrollToColumn
+                        }), columnMetadata = this._columnMetadata[targetIndex], calculatedScrollLeft = (0, 
+                        _getUpdatedOffsetForIndex2["default"])({
+                            cellOffset: columnMetadata.offset,
+                            cellSize: columnMetadata.size,
                             containerSize: width,
                             currentOffset: scrollLeft,
                             targetIndex: scrollToColumn
@@ -1058,8 +1933,12 @@
                 value: function(scrollToRowOverride) {
                     var scrollToRow = null != scrollToRowOverride ? scrollToRowOverride : this.props.scrollToRow, height = this.props.height, scrollTop = this.state.scrollTop;
                     if (scrollToRow >= 0) {
-                        var calculatedScrollTop = (0, _GridUtils.getUpdatedOffsetForIndex)({
-                            cellMetadata: this._rowMetadata,
+                        var targetIndex = (0, _getNearestIndex2["default"])({
+                            cellCount: this._rowMetadata.length,
+                            targetIndex: scrollToRow
+                        }), rowMetadata = this._rowMetadata[targetIndex], calculatedScrollTop = (0, _getUpdatedOffsetForIndex2["default"])({
+                            cellOffset: rowMetadata.offset,
+                            cellSize: rowMetadata.size,
                             containerSize: height,
                             currentOffset: scrollTop,
                             targetIndex: scrollToRow
@@ -1131,70 +2010,85 @@
             overscanRowsCount: 10,
             renderCellRanges: defaultRenderCellRanges
         }, exports["default"] = Grid;
-    }, /* 14 */
+    }, /* 28 */
     /***/
     function(module, exports) {
         "use strict";
-        function computeCellMetadataAndUpdateScrollOffsetHelper(_ref) {
-            var cellsCount = _ref.cellsCount, cellSize = _ref.cellSize, computeMetadataCallback = _ref.computeMetadataCallback, computeMetadataCallbackProps = _ref.computeMetadataCallbackProps, computeMetadataOnNextUpdate = _ref.computeMetadataOnNextUpdate, nextCellsCount = _ref.nextCellsCount, nextCellSize = _ref.nextCellSize, nextScrollToIndex = _ref.nextScrollToIndex, scrollToIndex = _ref.scrollToIndex, updateScrollOffsetForScrollToIndex = _ref.updateScrollOffsetForScrollToIndex;
-            (computeMetadataOnNextUpdate || cellsCount !== nextCellsCount || ("number" == typeof cellSize || "number" == typeof nextCellSize) && cellSize !== nextCellSize) && (computeMetadataCallback(computeMetadataCallbackProps), 
+        function calculateSizeAndPositionDataAndUpdateScrollOffset(_ref) {
+            var cellCount = _ref.cellCount, cellSize = _ref.cellSize, computeMetadataCallback = _ref.computeMetadataCallback, computeMetadataCallbackProps = _ref.computeMetadataCallbackProps, computeMetadataOnNextUpdate = _ref.computeMetadataOnNextUpdate, nextCellsCount = _ref.nextCellsCount, nextCellSize = _ref.nextCellSize, nextScrollToIndex = _ref.nextScrollToIndex, scrollToIndex = _ref.scrollToIndex, updateScrollOffsetForScrollToIndex = _ref.updateScrollOffsetForScrollToIndex;
+            (computeMetadataOnNextUpdate || cellCount !== nextCellsCount || ("number" == typeof cellSize || "number" == typeof nextCellSize) && cellSize !== nextCellSize) && (computeMetadataCallback(computeMetadataCallbackProps), 
             scrollToIndex >= 0 && scrollToIndex === nextScrollToIndex && updateScrollOffsetForScrollToIndex());
         }
-        function createCallbackMemoizer() {
-            var requireAllKeys = arguments.length <= 0 || void 0 === arguments[0] ? !0 : arguments[0], cachedIndices = {};
-            return function(_ref2) {
-                var callback = _ref2.callback, indices = _ref2.indices, keys = Object.keys(indices), allInitialized = !requireAllKeys || keys.every(function(key) {
-                    return indices[key] >= 0;
-                }), indexChanged = keys.some(function(key) {
-                    return cachedIndices[key] !== indices[key];
-                });
-                cachedIndices = indices, allInitialized && indexChanged && callback(indices);
-            };
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = calculateSizeAndPositionDataAndUpdateScrollOffset;
+    }, /* 29 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function getNearestIndex(_ref) {
+            var cellCount = _ref.cellCount, targetIndex = _ref.targetIndex;
+            return Math.max(0, Math.min(cellCount - 1, targetIndex));
         }
-        function findNearestCell(_ref3) {
-            for (var cellMetadata = _ref3.cellMetadata, mode = _ref3.mode, offset = _ref3.offset, high = cellMetadata.length - 1, low = 0, middle = void 0, currentOffset = void 0; high >= low; ) {
-                if (middle = low + Math.floor((high - low) / 2), currentOffset = cellMetadata[middle].offset, 
-                currentOffset === offset) return middle;
-                offset > currentOffset ? low = middle + 1 : currentOffset > offset && (high = middle - 1);
-            }
-            return mode === findNearestCell.EQUAL_OR_LOWER && low > 0 ? low - 1 : mode === findNearestCell.EQUAL_OR_HIGHER && high < cellMetadata.length - 1 ? high + 1 : void 0;
-        }
-        function getOverscanIndices(_ref4) {
-            var cellsCount = _ref4.cellsCount, overscanCellsCount = _ref4.overscanCellsCount, startIndex = _ref4.startIndex, stopIndex = _ref4.stopIndex;
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = getNearestIndex;
+    }, /* 30 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function getOverscanIndices(_ref) {
+            var cellCount = _ref.cellCount, overscanCellsCount = _ref.overscanCellsCount, startIndex = _ref.startIndex, stopIndex = _ref.stopIndex;
             return {
                 overscanStartIndex: Math.max(0, startIndex - overscanCellsCount),
-                overscanStopIndex: Math.min(cellsCount - 1, stopIndex + overscanCellsCount)
+                overscanStopIndex: Math.min(cellCount - 1, stopIndex + overscanCellsCount)
             };
         }
-        function getUpdatedOffsetForIndex(_ref5) {
-            var cellMetadata = _ref5.cellMetadata, containerSize = _ref5.containerSize, currentOffset = _ref5.currentOffset, targetIndex = _ref5.targetIndex;
-            if (0 === cellMetadata.length) return 0;
-            targetIndex = Math.max(0, Math.min(cellMetadata.length - 1, targetIndex));
-            var datum = cellMetadata[targetIndex], maxOffset = datum.offset, minOffset = maxOffset - containerSize + datum.size, newOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
-            return newOffset;
-        }
-        function getVisibleCellIndices(_ref6) {
-            var cellsCount = _ref6.cellsCount, cellMetadata = _ref6.cellMetadata, containerSize = _ref6.containerSize, currentOffset = _ref6.currentOffset;
-            if (0 === cellsCount) return {};
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = getOverscanIndices;
+    }, /* 31 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function getVisibleCellIndices(_ref) {
+            var cellCount = _ref.cellCount, cellMetadata = _ref.cellMetadata, containerSize = _ref.containerSize, currentOffset = _ref.currentOffset;
+            if (0 === cellCount) return {};
             var lastDatum = cellMetadata[cellMetadata.length - 1], totalCellSize = lastDatum.offset + lastDatum.size;
             currentOffset = Math.max(0, Math.min(totalCellSize - containerSize, currentOffset));
             var maxOffset = Math.min(totalCellSize, currentOffset + containerSize), start = findNearestCell({
                 cellMetadata: cellMetadata,
-                mode: findNearestCell.EQUAL_OR_LOWER,
+                mode: EQUAL_OR_LOWER,
                 offset: currentOffset
             }), datum = cellMetadata[start];
             currentOffset = datum.offset + datum.size;
-            for (var stop = start; maxOffset > currentOffset && cellsCount - 1 > stop; ) stop++, 
+            for (var stop = start; maxOffset > currentOffset && cellCount - 1 > stop; ) stop++, 
             currentOffset += cellMetadata[stop].size;
             return {
                 start: start,
                 stop: stop
             };
         }
-        function initCellMetadata(_ref7) {
-            for (var cellsCount = _ref7.cellsCount, size = _ref7.size, sizeGetter = size instanceof Function ? size : function(index) {
+        function findNearestCell(_ref2) {
+            for (var cellMetadata = _ref2.cellMetadata, mode = _ref2.mode, offset = _ref2.offset, high = cellMetadata.length - 1, low = 0, middle = void 0, currentOffset = void 0; high >= low; ) {
+                if (middle = low + Math.floor((high - low) / 2), currentOffset = cellMetadata[middle].offset, 
+                currentOffset === offset) return middle;
+                offset > currentOffset ? low = middle + 1 : currentOffset > offset && (high = middle - 1);
+            }
+            return mode === EQUAL_OR_LOWER && low > 0 ? low - 1 : mode === EQUAL_OR_HIGHER && high < cellMetadata.length - 1 ? high + 1 : void 0;
+        }
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = getVisibleCellIndices;
+        var EQUAL_OR_LOWER = 1, EQUAL_OR_HIGHER = 2;
+    }, /* 32 */
+    /***/
+    function(module, exports) {
+        "use strict";
+        function initCellMetadata(_ref) {
+            for (var cellCount = _ref.cellCount, size = _ref.size, sizeGetter = size instanceof Function ? size : function(index) {
                 return size;
-            }, cellMetadata = [], offset = 0, i = 0; cellsCount > i; i++) {
+            }, cellMetadata = [], offset = 0, i = 0; cellCount > i; i++) {
                 var _size = sizeGetter(i);
                 if (null == _size || isNaN(_size)) throw Error("Invalid size returned for cell " + i + " of value " + _size);
                 cellMetadata[i] = {
@@ -1204,190 +2098,39 @@
             }
             return cellMetadata;
         }
-        function updateScrollIndexHelper(_ref8) {
-            var cellMetadata = _ref8.cellMetadata, cellsCount = _ref8.cellsCount, cellSize = _ref8.cellSize, previousCellsCount = _ref8.previousCellsCount, previousCellSize = _ref8.previousCellSize, previousScrollToIndex = _ref8.previousScrollToIndex, previousSize = _ref8.previousSize, scrollOffset = _ref8.scrollOffset, scrollToIndex = _ref8.scrollToIndex, size = _ref8.size, updateScrollIndexCallback = _ref8.updateScrollIndexCallback, hasScrollToIndex = scrollToIndex >= 0 && cellsCount > scrollToIndex, sizeHasChanged = size !== previousSize || !previousCellSize || "number" == typeof cellSize && cellSize !== previousCellSize;
-            if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== previousScrollToIndex)) updateScrollIndexCallback(); else if (!hasScrollToIndex && (previousSize > size || previousCellsCount > cellsCount)) {
-                var calculatedScrollOffset = getUpdatedOffsetForIndex({
-                    cellMetadata: cellMetadata,
-                    containerSize: size,
-                    currentOffset: scrollOffset,
-                    targetIndex: cellsCount - 1
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        }), exports["default"] = initCellMetadata;
+    }, /* 33 */
+    /***/
+    function(module, exports, __webpack_require__) {
+        "use strict";
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {
+                "default": obj
+            };
+        }
+        function updateScrollIndexHelper(_ref) {
+            var cellMetadata = _ref.cellMetadata, cellCount = _ref.cellCount, cellSize = _ref.cellSize, previousCellsCount = _ref.previousCellsCount, previousCellSize = _ref.previousCellSize, previousScrollToIndex = _ref.previousScrollToIndex, previousSize = _ref.previousSize, scrollOffset = _ref.scrollOffset, scrollToIndex = _ref.scrollToIndex, size = _ref.size, updateScrollIndexCallback = _ref.updateScrollIndexCallback, hasScrollToIndex = scrollToIndex >= 0 && cellCount > scrollToIndex, sizeHasChanged = size !== previousSize || !previousCellSize || "number" == typeof cellSize && cellSize !== previousCellSize;
+            if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== previousScrollToIndex)) updateScrollIndexCallback(); else if (!hasScrollToIndex && (previousSize > size || previousCellsCount > cellCount)) {
+                scrollToIndex = (0, _getNearestIndex2["default"])({
+                    cellCount: cellCount,
+                    targetIndex: cellCount - 1
                 });
-                scrollOffset > calculatedScrollOffset && updateScrollIndexCallback(cellsCount - 1);
+                var cellMetadatum = cellMetadata[scrollToIndex], calculatedScrollOffset = (0, _getUpdatedOffsetForIndex2["default"])({
+                    cellOffset: cellMetadatum.offset,
+                    cellSize: cellMetadatum.size,
+                    containerSize: size,
+                    currentOffset: scrollOffset
+                });
+                scrollOffset > calculatedScrollOffset && updateScrollIndexCallback(cellCount - 1);
             }
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports.computeCellMetadataAndUpdateScrollOffsetHelper = computeCellMetadataAndUpdateScrollOffsetHelper, 
-        exports.createCallbackMemoizer = createCallbackMemoizer, exports.findNearestCell = findNearestCell, 
-        exports.getOverscanIndices = getOverscanIndices, exports.getUpdatedOffsetForIndex = getUpdatedOffsetForIndex, 
-        exports.getVisibleCellIndices = getVisibleCellIndices, exports.initCellMetadata = initCellMetadata, 
-        exports.updateScrollIndexHelper = updateScrollIndexHelper, findNearestCell.EQUAL_OR_LOWER = 1, 
-        findNearestCell.EQUAL_OR_HIGHER = 2;
-    }, /* 15 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
-        /*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-        /* global define */
-        !function() {
-            "use strict";
-            function classNames() {
-                for (var classes = [], i = 0; i < arguments.length; i++) {
-                    var arg = arguments[i];
-                    if (arg) {
-                        var argType = typeof arg;
-                        if ("string" === argType || "number" === argType) classes.push(arg); else if (Array.isArray(arg)) classes.push(classNames.apply(null, arg)); else if ("object" === argType) for (var key in arg) hasOwn.call(arg, key) && arg[key] && classes.push(key);
-                    }
-                }
-                return classes.join(" ");
-            }
-            var hasOwn = {}.hasOwnProperty;
-            "undefined" != typeof module && module.exports ? module.exports = classNames : (__WEBPACK_AMD_DEFINE_ARRAY__ = [], 
-            __WEBPACK_AMD_DEFINE_RESULT__ = function() {
-                return classNames;
-            }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), !(void 0 !== __WEBPACK_AMD_DEFINE_RESULT__ && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)));
-        }();
-    }, /* 16 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        /* WEBPACK VAR INJECTION */
-        (function(global) {
-            for (var now = __webpack_require__(17), root = "undefined" == typeof window ? global : window, vendors = [ "moz", "webkit" ], suffix = "AnimationFrame", raf = root["request" + suffix], caf = root["cancel" + suffix] || root["cancelRequest" + suffix], i = 0; !raf && i < vendors.length; i++) raf = root[vendors[i] + "Request" + suffix], 
-            caf = root[vendors[i] + "Cancel" + suffix] || root[vendors[i] + "CancelRequest" + suffix];
-            // Some versions of FF have rAF but not cAF
-            if (!raf || !caf) {
-                var last = 0, id = 0, queue = [], frameDuration = 1e3 / 60;
-                raf = function(callback) {
-                    if (0 === queue.length) {
-                        var _now = now(), next = Math.max(0, frameDuration - (_now - last));
-                        last = next + _now, setTimeout(function() {
-                            var cp = queue.slice(0);
-                            // Clear queue here to prevent
-                            // callbacks from appending listeners
-                            // to the current frame's queue
-                            queue.length = 0;
-                            for (var i = 0; i < cp.length; i++) if (!cp[i].cancelled) try {
-                                cp[i].callback(last);
-                            } catch (e) {
-                                setTimeout(function() {
-                                    throw e;
-                                }, 0);
-                            }
-                        }, Math.round(next));
-                    }
-                    return queue.push({
-                        handle: ++id,
-                        callback: callback,
-                        cancelled: !1
-                    }), id;
-                }, caf = function(handle) {
-                    for (var i = 0; i < queue.length; i++) queue[i].handle === handle && (queue[i].cancelled = !0);
-                };
-            }
-            module.exports = function(fn) {
-                // Wrap in a new function to prevent
-                // `cancel` potentially being assigned
-                // to the native rAF function
-                return raf.call(root, fn);
-            }, module.exports.cancel = function() {
-                caf.apply(root, arguments);
-            }, module.exports.polyfill = function() {
-                root.requestAnimationFrame = raf, root.cancelAnimationFrame = caf;
-            };
-        }).call(exports, function() {
-            return this;
-        }());
-    }, /* 17 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        /* WEBPACK VAR INJECTION */
-        (function(process) {
-            // Generated by CoffeeScript 1.7.1
-            (function() {
-                var getNanoSeconds, hrtime, loadTime;
-                "undefined" != typeof performance && null !== performance && performance.now ? module.exports = function() {
-                    return performance.now();
-                } : "undefined" != typeof process && null !== process && process.hrtime ? (module.exports = function() {
-                    return (getNanoSeconds() - loadTime) / 1e6;
-                }, hrtime = process.hrtime, getNanoSeconds = function() {
-                    var hr;
-                    return hr = hrtime(), 1e9 * hr[0] + hr[1];
-                }, loadTime = getNanoSeconds()) : Date.now ? (module.exports = function() {
-                    return Date.now() - loadTime;
-                }, loadTime = Date.now()) : (module.exports = function() {
-                    return new Date().getTime() - loadTime;
-                }, loadTime = new Date().getTime());
-            }).call(this);
-        }).call(exports, __webpack_require__(18));
-    }, /* 18 */
-    /***/
-    function(module, exports) {
-        function cleanUpNextTick() {
-            draining = !1, currentQueue.length ? queue = currentQueue.concat(queue) : queueIndex = -1, 
-            queue.length && drainQueue();
-        }
-        function drainQueue() {
-            if (!draining) {
-                var timeout = setTimeout(cleanUpNextTick);
-                draining = !0;
-                for (var len = queue.length; len; ) {
-                    for (currentQueue = queue, queue = []; ++queueIndex < len; ) currentQueue && currentQueue[queueIndex].run();
-                    queueIndex = -1, len = queue.length;
-                }
-                currentQueue = null, draining = !1, clearTimeout(timeout);
-            }
-        }
-        // v8 likes predictible objects
-        function Item(fun, array) {
-            this.fun = fun, this.array = array;
-        }
-        function noop() {}
-        // shim for using process in browser
-        var currentQueue, process = module.exports = {}, queue = [], draining = !1, queueIndex = -1;
-        process.nextTick = function(fun) {
-            var args = new Array(arguments.length - 1);
-            if (arguments.length > 1) for (var i = 1; i < arguments.length; i++) args[i - 1] = arguments[i];
-            queue.push(new Item(fun, args)), 1 !== queue.length || draining || setTimeout(drainQueue, 0);
-        }, Item.prototype.run = function() {
-            this.fun.apply(null, this.array);
-        }, process.title = "browser", process.browser = !0, process.env = {}, process.argv = [], 
-        process.version = "", // empty string to avoid regexp issues
-        process.versions = {}, process.on = noop, process.addListener = noop, process.once = noop, 
-        process.off = noop, process.removeListener = noop, process.removeAllListeners = noop, 
-        process.emit = noop, process.binding = function(name) {
-            throw new Error("process.binding is not supported");
-        }, process.cwd = function() {
-            return "/";
-        }, process.chdir = function(dir) {
-            throw new Error("process.chdir is not supported");
-        }, process.umask = function() {
-            return 0;
-        };
-    }, /* 19 */
-    /***/
-    function(module, exports, __webpack_require__) {
-        "use strict";
-        var size, canUseDOM = __webpack_require__(20);
-        module.exports = function(recalc) {
-            if ((!size || recalc) && canUseDOM) {
-                var scrollDiv = document.createElement("div");
-                scrollDiv.style.position = "absolute", scrollDiv.style.top = "-9999px", scrollDiv.style.width = "50px", 
-                scrollDiv.style.height = "50px", scrollDiv.style.overflow = "scroll", document.body.appendChild(scrollDiv), 
-                size = scrollDiv.offsetWidth - scrollDiv.clientWidth, document.body.removeChild(scrollDiv);
-            }
-            return size;
-        };
-    }, /* 20 */
-    /***/
-    function(module, exports) {
-        "use strict";
-        module.exports = !("undefined" == typeof window || !window.document || !window.document.createElement);
-    }, /* 21 */
+        }), exports["default"] = updateScrollIndexHelper;
+        var _getNearestIndex = __webpack_require__(29), _getNearestIndex2 = _interopRequireDefault(_getNearestIndex), _getUpdatedOffsetForIndex = __webpack_require__(23), _getUpdatedOffsetForIndex2 = _interopRequireDefault(_getUpdatedOffsetForIndex);
+    }, /* 34 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1399,11 +2142,11 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.SortIndicator = exports.SortDirection = exports.FlexColumn = exports.FlexTable = exports["default"] = void 0;
-        var _FlexTable2 = __webpack_require__(22), _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(23), _FlexColumn3 = _interopRequireDefault(_FlexColumn2), _SortDirection2 = __webpack_require__(25), _SortDirection3 = _interopRequireDefault(_SortDirection2), _SortIndicator2 = __webpack_require__(24), _SortIndicator3 = _interopRequireDefault(_SortIndicator2);
+        var _FlexTable2 = __webpack_require__(35), _FlexTable3 = _interopRequireDefault(_FlexTable2), _FlexColumn2 = __webpack_require__(36), _FlexColumn3 = _interopRequireDefault(_FlexColumn2), _SortDirection2 = __webpack_require__(38), _SortDirection3 = _interopRequireDefault(_SortDirection2), _SortIndicator2 = __webpack_require__(37), _SortIndicator3 = _interopRequireDefault(_SortIndicator2);
         exports["default"] = _FlexTable3["default"], exports.FlexTable = _FlexTable3["default"], 
         exports.FlexColumn = _FlexColumn3["default"], exports.SortDirection = _SortDirection3["default"], 
         exports.SortIndicator = _SortIndicator3["default"];
-    }, /* 22 */
+    }, /* 35 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1469,7 +2212,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _classnames = __webpack_require__(15), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(23), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(26), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), _Grid = __webpack_require__(12), _Grid2 = _interopRequireDefault(_Grid), _SortDirection = __webpack_require__(25), _SortDirection2 = _interopRequireDefault(_SortDirection), FlexTable = function(_Component) {
+        }(), _classnames = __webpack_require__(13), _classnames2 = _interopRequireDefault(_classnames), _FlexColumn = __webpack_require__(36), _FlexColumn2 = _interopRequireDefault(_FlexColumn), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(39), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), _Grid = __webpack_require__(26), _Grid2 = _interopRequireDefault(_Grid), _SortDirection = __webpack_require__(38), _SortDirection2 = _interopRequireDefault(_SortDirection), FlexTable = function(_Component) {
             function FlexTable(props) {
                 _classCallCheck(this, FlexTable);
                 var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
@@ -1682,7 +2425,7 @@
             },
             overscanRowsCount: 10
         }, exports["default"] = FlexTable;
-    }, /* 23 */
+    }, /* 36 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1749,7 +2492,7 @@
         exports.defaultCellRenderer = defaultCellRenderer, exports.defaultCellDataGetter = defaultCellDataGetter, 
         exports.defaultHeaderRenderer = defaultHeaderRenderer;
         var _react = __webpack_require__(3), _SortIndicator = (_interopRequireDefault(_react), 
-        __webpack_require__(24)), _SortIndicator2 = _interopRequireDefault(_SortIndicator), Column = function(_Component) {
+        __webpack_require__(37)), _SortIndicator2 = _interopRequireDefault(_SortIndicator), Column = function(_Component) {
             function Column() {
                 return _classCallCheck(this, Column), _possibleConstructorReturn(this, Object.getPrototypeOf(Column).apply(this, arguments));
             }
@@ -1778,7 +2521,7 @@
             minWidth: _react.PropTypes.number,
             width: _react.PropTypes.number.isRequired
         }, exports["default"] = Column;
-    }, /* 24 */
+    }, /* 37 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1831,11 +2574,11 @@
         }();
         exports["default"] = SortIndicator;
         var _react = __webpack_require__(3), _classnames = (_interopRequireDefault(_react), 
-        __webpack_require__(15)), _classnames2 = _interopRequireDefault(_classnames), _SortDirection = __webpack_require__(25), _SortDirection2 = _interopRequireDefault(_SortDirection);
+        __webpack_require__(13)), _classnames2 = _interopRequireDefault(_classnames), _SortDirection = __webpack_require__(38), _SortDirection2 = _interopRequireDefault(_SortDirection);
         SortIndicator.propTypes = {
             sortDirection: _react.PropTypes.oneOf([ _SortDirection2["default"].ASC, _SortDirection2["default"].DESC ])
         };
-    }, /* 25 */
+    }, /* 38 */
     /***/
     function(module, exports) {
         "use strict";
@@ -1847,11 +2590,11 @@
             DESC: "DESC"
         };
         exports["default"] = SortDirection;
-    }, /* 26 */
+    }, /* 39 */
     /***/
     function(module, exports) {
-        module.exports = __WEBPACK_EXTERNAL_MODULE_26__;
-    }, /* 27 */
+        module.exports = __WEBPACK_EXTERNAL_MODULE_39__;
+    }, /* 40 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1863,9 +2606,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.InfiniteLoader = exports["default"] = void 0;
-        var _InfiniteLoader2 = __webpack_require__(28), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
+        var _InfiniteLoader2 = __webpack_require__(41), _InfiniteLoader3 = _interopRequireDefault(_InfiniteLoader2);
         exports["default"] = _InfiniteLoader3["default"], exports.InfiniteLoader = _InfiniteLoader3["default"];
-    }, /* 28 */
+    }, /* 41 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1986,7 +2729,7 @@
             rowsCount: 0,
             threshold: 15
         }, exports["default"] = InfiniteLoader;
-    }, /* 29 */
+    }, /* 42 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -1998,9 +2741,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.ScrollSync = exports["default"] = void 0;
-        var _ScrollSync2 = __webpack_require__(30), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
+        var _ScrollSync2 = __webpack_require__(43), _ScrollSync3 = _interopRequireDefault(_ScrollSync2);
         exports["default"] = _ScrollSync3["default"], exports.ScrollSync = _ScrollSync3["default"];
-    }, /* 30 */
+    }, /* 43 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -2092,7 +2835,7 @@
         ScrollSync.propTypes = {
             children: _react.PropTypes.func.isRequired
         }, exports["default"] = ScrollSync;
-    }, /* 31 */
+    }, /* 44 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -2104,9 +2847,9 @@
         Object.defineProperty(exports, "__esModule", {
             value: !0
         }), exports.VirtualScroll = exports["default"] = void 0;
-        var _VirtualScroll2 = __webpack_require__(32), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
+        var _VirtualScroll2 = __webpack_require__(45), _VirtualScroll3 = _interopRequireDefault(_VirtualScroll2);
         exports["default"] = _VirtualScroll3["default"], exports.VirtualScroll = _VirtualScroll3["default"];
-    }, /* 32 */
+    }, /* 45 */
     /***/
     function(module, exports, __webpack_require__) {
         "use strict";
@@ -2148,7 +2891,7 @@
                 return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
                 Constructor;
             };
-        }(), _Grid = __webpack_require__(12), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(15), _classnames2 = _interopRequireDefault(_classnames), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), VirtualScroll = function(_Component) {
+        }(), _Grid = __webpack_require__(26), _Grid2 = _interopRequireDefault(_Grid), _react = __webpack_require__(3), _react2 = _interopRequireDefault(_react), _classnames = __webpack_require__(13), _classnames2 = _interopRequireDefault(_classnames), _reactAddonsShallowCompare = __webpack_require__(4), _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare), VirtualScroll = function(_Component) {
             function VirtualScroll() {
                 return _classCallCheck(this, VirtualScroll), _possibleConstructorReturn(this, Object.getPrototypeOf(VirtualScroll).apply(this, arguments));
             }
