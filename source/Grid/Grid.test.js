@@ -213,7 +213,7 @@ describe('Grid', () => {
       expect(grid.textContent).toContain('row:50')
     })
 
-    it('should update :scrollToColumn position when :height changes', () => {
+    it('should update :scrollToColumn position when :width changes', () => {
       let grid = findDOMNode(render(getMarkup({ scrollToColumn: 25 })))
       expect(grid.textContent).toContain('column:25')
       // Making the grid narrower leaves only room for 1 item

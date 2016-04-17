@@ -3,6 +3,7 @@ Documentation
 
 ### Components
 
+* [Collection](Collection.md)
 * [FlexTable](FlexTable.md)
   * [FlexColumn](FlexColumn.md)
   * [SortDirection](SortDirection.md)

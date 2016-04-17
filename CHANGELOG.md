@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+### 6.2.0
+Added new `Collection` component for rendering non-checkboard data.
+This component's cells can be positioned in any arrangement, even overlapping.
+Note that because it has fewer constraints, `Collection` cannot compute positioning and layout data as fast as `Grid`.
+
 ##### 6.1.2
 Moved `react-addons-shallow-compare` from `dependencies` to `peerDependencies`.
 
