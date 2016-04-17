@@ -26,7 +26,7 @@ export default class FlexTableExample extends Component {
       rowHeight: 40,
       rowsCount: 1000,
       scrollToIndex: undefined,
-      sortBy: 'name',
+      sortBy: 'index',
       sortDirection: SortDirection.ASC,
       useDynamicRowHeight: false
     }
@@ -55,7 +55,7 @@ export default class FlexTableExample extends Component {
     const { list, ...props } = this.props
     const sortedList = this._isSortEnabled()
       ? list
-        .sortBy(el => el[sortBy])
+        .sortBy(item => item[sortBy])
         .update(list =>
           sortDirection === SortDirection.DESC
             ? list.reverse()
@@ -161,7 +161,7 @@ export default class FlexTableExample extends Component {
                   }
                   dataKey='index'
                   disableSort={!this._isSortEnabled()}
-                  width={50}
+                  width={60}
                 />
                 <FlexColumn
                   dataKey='name'
