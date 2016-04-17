@@ -17,7 +17,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | overscanColumnsCount |  | Number | Number of columns to render before/after the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
 | overscanRowsCount |  | Number | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
 | renderCell | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
-| renderCellRanges | Function | ✓ | Responsible for rendering a group of cells given their index ranges.: `{ columnMetadata:Array<Object>, columnStartIndex: number, columnStopIndex: number, renderCell: Function, rowMetadata:Array<Object>, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>` |
+| renderCellRanges | Function | ✓ | Responsible for rendering a group of cells given their index ranges.: `({ columnMetadata:Array<Object>, columnStartIndex: number, columnStopIndex: number, renderCell: Function, rowMetadata:Array<Object>, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>` |
 | rowsCount | Number | ✓ | Number of rows in grid. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
 | scrollLeft | Number |  | Horizontal offset |
@@ -57,7 +57,7 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // Grid data as an array of arrays
 const list = [
-  ['Brian Vaughn', 'Software Engineer', 'Sunnyvale', 'CA', 94086 /* ... */ ]
+  ['Brian Vaughn', 'Software Engineer', 'San Jose', 'CA', 95125 /* ... */ ]
   // And so on...
 ];
 
