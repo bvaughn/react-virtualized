@@ -27,11 +27,11 @@ Callback responsible for returning a cell's data, given its `dataKey`.
 It should implement the following signature:
 
 ```javascript
-function (dataKey: string, rowData: any): any
+function (dataKey: string, rowData: any, columnData: any): any
 ```
 
 A default `cellDataGetter` is provided that simply returns the attribute as a String.
-This function expects to operate on either a vanilla Object or an Immutable Map.
+This function expects to operate on either a vanilla Object or a Map-like object with a get method.
 You should override this default method if your data is calculated or requires any custom processing.
 
 #### cellRenderer
