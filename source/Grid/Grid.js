@@ -372,14 +372,12 @@ export default class Grid extends Component {
     // Render only enough columns and rows to cover the visible area of the grid.
     if (height > 0 && width > 0) {
       const visibleColumnIndices = getVisibleCellIndices({
-        cellCount: columnsCount,
         cellMetadata: this._columnMetadata,
         containerSize: width,
         currentOffset: scrollLeft
       })
 
       const visibleRowIndices = getVisibleCellIndices({
-        cellCount: rowsCount,
         cellMetadata: this._rowMetadata,
         containerSize: height,
         currentOffset: scrollTop

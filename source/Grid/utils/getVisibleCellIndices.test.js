@@ -4,7 +4,6 @@ import { getCellMetadata } from '../../utils/TestHelper'
 describe('getVisibleCellIndices', () => {
   function testHelper (currentOffset, cellMetadata = getCellMetadata()) {
     return getVisibleCellIndices({
-      cellCount: cellMetadata.length,
       cellMetadata,
       containerSize: 50,
       currentOffset
