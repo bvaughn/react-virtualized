@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 6.2.1
+`FlexTable` supports `true`, `false`, `undefined`, and `null` children now to more easily enable support for dynamic columns (see issue #174).
+Improved edge-case handling for changes to cell counts when scroll-to-index properties have been set.
+
 ### 6.2.0
 Added new `Collection` component for rendering non-checkboard data.
 This component's cells can be positioned in any arrangement, even overlapping.
