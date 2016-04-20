@@ -28,7 +28,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @param scrollOffset Current scrollLeft or scrollTop
  * @param scrollToIndex Scroll-to-index
  * @param size Width or height of the virtualized container
- * @param updateScrollIndexCallback Callback to invoke with an optional scroll-to-index override
+ * @param updateScrollIndexCallback Callback to invoke with an scroll-to-index value
  */
 function updateScrollIndexHelper(_ref) {
   var cellMetadata = _ref.cellMetadata;
@@ -49,26 +49,29 @@ function updateScrollIndexHelper(_ref) {
   // If we have a new scroll target OR if height/row-height has changed,
   // We should ensure that the scroll target is visible.
   if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== previousScrollToIndex)) {
-    updateScrollIndexCallback();
+    updateScrollIndexCallback(scrollToIndex);
 
     // If we don't have a selected item but list size or number of children have decreased,
     // Make sure we aren't scrolled too far past the current content.
-  } else if (!hasScrollToIndex && (size < previousSize || cellCount < previousCellsCount)) {
+  } else if (!hasScrollToIndex && cellCount > 0 && (size < previousSize || cellCount < previousCellsCount)) {
       scrollToIndex = (0, _getNearestIndex2.default)({
         cellCount: cellCount,
         targetIndex: cellCount - 1
       });
-      var cellMetadatum = cellMetadata[scrollToIndex];
-      var calculatedScrollOffset = (0, _getUpdatedOffsetForIndex2.default)({
-        cellOffset: cellMetadatum.offset,
-        cellSize: cellMetadatum.size,
-        containerSize: size,
-        currentOffset: scrollOffset
-      });
 
-      // Only adjust the scroll position if we've scrolled below the last set of rows.
-      if (calculatedScrollOffset < scrollOffset) {
-        updateScrollIndexCallback(cellCount - 1);
+      if (scrollToIndex < cellCount) {
+        var cellMetadatum = cellMetadata[scrollToIndex];
+        var calculatedScrollOffset = (0, _getUpdatedOffsetForIndex2.default)({
+          cellOffset: cellMetadatum.offset,
+          cellSize: cellMetadatum.size,
+          containerSize: size,
+          currentOffset: scrollOffset
+        });
+
+        // Only adjust the scroll position if we've scrolled below the last set of rows.
+        if (calculatedScrollOffset < scrollOffset) {
+          updateScrollIndexCallback(cellCount - 1);
+        }
       }
     }
 }

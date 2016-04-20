@@ -1563,8 +1563,8 @@
                 }
             }), superClass && (Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass);
         }
-        function defaultRenderCellRanges(_ref4) {
-            for (var columnMetadata = _ref4.columnMetadata, columnStartIndex = _ref4.columnStartIndex, columnStopIndex = _ref4.columnStopIndex, renderCell = _ref4.renderCell, rowMetadata = _ref4.rowMetadata, rowStartIndex = _ref4.rowStartIndex, rowStopIndex = _ref4.rowStopIndex, renderedCells = [], rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
+        function defaultRenderCellRanges(_ref8) {
+            for (var columnMetadata = _ref8.columnMetadata, columnStartIndex = _ref8.columnStartIndex, columnStopIndex = _ref8.columnStopIndex, renderCell = _ref8.renderCell, rowMetadata = _ref8.rowMetadata, rowStartIndex = _ref8.rowStartIndex, rowStopIndex = _ref8.rowStopIndex, renderedCells = [], rowIndex = rowStartIndex; rowStopIndex >= rowIndex; rowIndex++) for (var rowDatum = rowMetadata[rowIndex], columnIndex = columnStartIndex; columnStopIndex >= columnIndex; columnIndex++) {
                 var columnDatum = columnMetadata[columnIndex], renderedCell = renderCell({
                     columnIndex: columnIndex,
                     rowIndex: rowIndex
@@ -1605,7 +1605,13 @@
                     _owner: null
                 };
             };
-        }(), _createClass = function() {
+        }(), _extends = Object.assign || function(target) {
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
+            }
+            return target;
+        }, _createClass = function() {
             function defineProperties(target, props) {
                 for (var i = 0; i < props.length; i++) {
                     var descriptor = props[i];
@@ -1661,7 +1667,7 @@
             }, {
                 key: "componentDidUpdate",
                 value: function(prevProps, prevState) {
-                    var _props2 = this.props, columnsCount = _props2.columnsCount, columnWidth = _props2.columnWidth, height = _props2.height, rowHeight = _props2.rowHeight, rowsCount = _props2.rowsCount, scrollToColumn = _props2.scrollToColumn, scrollToRow = _props2.scrollToRow, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollPositionChangeReason = _state.scrollPositionChangeReason, scrollTop = _state.scrollTop;
+                    var _this2 = this, _props2 = this.props, columnsCount = _props2.columnsCount, columnWidth = _props2.columnWidth, height = _props2.height, rowHeight = _props2.rowHeight, rowsCount = _props2.rowsCount, scrollToColumn = _props2.scrollToColumn, scrollToRow = _props2.scrollToRow, width = _props2.width, _state = this.state, scrollLeft = _state.scrollLeft, scrollPositionChangeReason = _state.scrollPositionChangeReason, scrollTop = _state.scrollTop;
                     scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED && (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft && (this.refs.scrollingContainer.scrollLeft = scrollLeft), 
                     scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop && (this.refs.scrollingContainer.scrollTop = scrollTop)), 
                     (0, _updateScrollIndexHelper2["default"])({
@@ -1675,7 +1681,11 @@
                         scrollOffset: scrollLeft,
                         scrollToIndex: scrollToColumn,
                         size: width,
-                        updateScrollIndexCallback: this._updateScrollLeftForScrollToColumn
+                        updateScrollIndexCallback: function(scrollToColumn) {
+                            return _this2._updateScrollLeftForScrollToColumn(_extends({}, _this2.props, {
+                                scrollToColumn: scrollToColumn
+                            }));
+                        }
                     }), (0, _updateScrollIndexHelper2["default"])({
                         cellCount: rowsCount,
                         cellMetadata: this._rowMetadata,
@@ -1687,7 +1697,11 @@
                         scrollOffset: scrollTop,
                         scrollToIndex: scrollToRow,
                         size: height,
-                        updateScrollIndexCallback: this._updateScrollTopForScrollToRow
+                        updateScrollIndexCallback: function(scrollToRow) {
+                            return _this2._updateScrollTopForScrollToRow(_extends({}, _this2.props, {
+                                scrollToRow: scrollToRow
+                            }));
+                        }
                     }), this._invokeOnGridRenderedHelper();
                 }
             }, {
@@ -1704,6 +1718,7 @@
             }, {
                 key: "componentWillUpdate",
                 value: function(nextProps, nextState) {
+                    var _this3 = this;
                     0 === nextProps.columnsCount && 0 !== nextState.scrollLeft || 0 === nextProps.rowsCount && 0 !== nextState.scrollTop ? this._setScrollPosition({
                         scrollLeft: 0,
                         scrollTop: 0
@@ -1720,7 +1735,9 @@
                         nextCellSize: nextProps.columnWidth,
                         nextScrollToIndex: nextProps.scrollToColumn,
                         scrollToIndex: this.props.scrollToColumn,
-                        updateScrollOffsetForScrollToIndex: this._updateScrollLeftForScrollToColumn
+                        updateScrollOffsetForScrollToIndex: function() {
+                            return _this3._updateScrollLeftForScrollToColumn(nextProps, nextState);
+                        }
                     }), (0, _calculateSizeAndPositionDataAndUpdateScrollOffset2["default"])({
                         cellCount: this.props.rowsCount,
                         cellSize: this.props.rowHeight,
@@ -1731,7 +1748,9 @@
                         nextCellSize: nextProps.rowHeight,
                         nextScrollToIndex: nextProps.scrollToRow,
                         scrollToIndex: this.props.scrollToRow,
-                        updateScrollOffsetForScrollToIndex: this._updateScrollTopForScrollToRow
+                        updateScrollOffsetForScrollToIndex: function() {
+                            return _this3._updateScrollTopForScrollToRow(nextProps, nextState);
+                        }
                     }), this.setState({
                         computeGridMetadataOnNextUpdate: !1
                     });
@@ -1742,12 +1761,10 @@
                     var _props3 = this.props, className = _props3.className, columnsCount = _props3.columnsCount, height = _props3.height, noContentRenderer = _props3.noContentRenderer, overscanColumnsCount = _props3.overscanColumnsCount, overscanRowsCount = _props3.overscanRowsCount, renderCell = _props3.renderCell, renderCellRanges = _props3.renderCellRanges, rowsCount = _props3.rowsCount, width = _props3.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = [];
                     if (height > 0 && width > 0) {
                         var visibleColumnIndices = (0, _getVisibleCellIndices2["default"])({
-                            cellCount: columnsCount,
                             cellMetadata: this._columnMetadata,
                             containerSize: width,
                             currentOffset: scrollLeft
                         }), visibleRowIndices = (0, _getVisibleCellIndices2["default"])({
-                            cellCount: rowsCount,
                             cellMetadata: this._rowMetadata,
                             containerSize: height,
                             currentOffset: scrollTop
@@ -1827,10 +1844,10 @@
             }, {
                 key: "_enablePointerEventsAfterDelay",
                 value: function() {
-                    var _this2 = this;
+                    var _this4 = this;
                     this._disablePointerEventsTimeoutId && clearTimeout(this._disablePointerEventsTimeoutId), 
                     this._disablePointerEventsTimeoutId = setTimeout(function() {
-                        _this2._disablePointerEventsTimeoutId = null, _this2.setState({
+                        _this4._disablePointerEventsTimeoutId = null, _this4.setState({
                             isScrolling: !1
                         });
                     }, IS_SCROLLING_TIMEOUT);
@@ -1870,10 +1887,10 @@
             }, {
                 key: "_invokeOnScrollMemoizer",
                 value: function(_ref) {
-                    var _this3 = this, scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop, totalColumnsWidth = _ref.totalColumnsWidth, totalRowsHeight = _ref.totalRowsHeight;
+                    var _this5 = this, scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop, totalColumnsWidth = _ref.totalColumnsWidth, totalRowsHeight = _ref.totalRowsHeight;
                     this._onScrollMemoizer({
                         callback: function(_ref2) {
-                            var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop, _props4 = _this3.props, height = _props4.height, onScroll = _props4.onScroll, width = _props4.width;
+                            var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop, _props4 = _this5.props, height = _props4.height, onScroll = _props4.onScroll, width = _props4.width;
                             onScroll({
                                 clientHeight: height,
                                 clientWidth: width,
@@ -1892,10 +1909,10 @@
             }, {
                 key: "_setNextState",
                 value: function(state) {
-                    var _this4 = this;
+                    var _this6 = this;
                     this._setNextStateAnimationFrameId && _raf2["default"].cancel(this._setNextStateAnimationFrameId), 
                     this._setNextStateAnimationFrameId = (0, _raf2["default"])(function() {
-                        _this4._setNextStateAnimationFrameId = null, _this4.setState(state);
+                        _this6._setNextStateAnimationFrameId = null, _this6.setState(state);
                     });
                 }
             }, {
@@ -1909,9 +1926,9 @@
                 }
             }, {
                 key: "_updateScrollLeftForScrollToColumn",
-                value: function(scrollToColumnOverride) {
-                    var scrollToColumn = null != scrollToColumnOverride ? scrollToColumnOverride : this.props.scrollToColumn, width = this.props.width, scrollLeft = this.state.scrollLeft;
-                    if (scrollToColumn >= 0) {
+                value: function() {
+                    var props = arguments.length <= 0 || void 0 === arguments[0] ? null : arguments[0], state = arguments.length <= 1 || void 0 === arguments[1] ? null : arguments[1], _ref4 = props || this.props, columnsCount = _ref4.columnsCount, scrollToColumn = _ref4.scrollToColumn, width = _ref4.width, _ref5 = state || this.state, scrollLeft = _ref5.scrollLeft;
+                    if (scrollToColumn >= 0 && columnsCount > 0) {
                         var targetIndex = (0, _getNearestIndex2["default"])({
                             cellCount: this._columnMetadata.length,
                             targetIndex: scrollToColumn
@@ -1930,9 +1947,9 @@
                 }
             }, {
                 key: "_updateScrollTopForScrollToRow",
-                value: function(scrollToRowOverride) {
-                    var scrollToRow = null != scrollToRowOverride ? scrollToRowOverride : this.props.scrollToRow, height = this.props.height, scrollTop = this.state.scrollTop;
-                    if (scrollToRow >= 0) {
+                value: function() {
+                    var props = arguments.length <= 0 || void 0 === arguments[0] ? null : arguments[0], state = arguments.length <= 1 || void 0 === arguments[1] ? null : arguments[1], _ref6 = props || this.props, height = _ref6.height, rowsCount = _ref6.rowsCount, scrollToRow = _ref6.scrollToRow, _ref7 = state || this.state, scrollTop = _ref7.scrollTop;
+                    if (scrollToRow >= 0 && rowsCount > 0) {
                         var targetIndex = (0, _getNearestIndex2["default"])({
                             cellCount: this._rowMetadata.length,
                             targetIndex: scrollToRow
@@ -2052,7 +2069,7 @@
     function(module, exports) {
         "use strict";
         function getVisibleCellIndices(_ref) {
-            var cellCount = _ref.cellCount, cellMetadata = _ref.cellMetadata, containerSize = _ref.containerSize, currentOffset = _ref.currentOffset;
+            var cellMetadata = _ref.cellMetadata, containerSize = _ref.containerSize, currentOffset = _ref.currentOffset, cellCount = cellMetadata.length;
             if (0 === cellCount) return {};
             var lastDatum = cellMetadata[cellMetadata.length - 1], totalCellSize = lastDatum.offset + lastDatum.size;
             currentOffset = Math.max(0, Math.min(totalCellSize - containerSize, currentOffset));
@@ -2112,11 +2129,11 @@
         }
         function updateScrollIndexHelper(_ref) {
             var cellMetadata = _ref.cellMetadata, cellCount = _ref.cellCount, cellSize = _ref.cellSize, previousCellsCount = _ref.previousCellsCount, previousCellSize = _ref.previousCellSize, previousScrollToIndex = _ref.previousScrollToIndex, previousSize = _ref.previousSize, scrollOffset = _ref.scrollOffset, scrollToIndex = _ref.scrollToIndex, size = _ref.size, updateScrollIndexCallback = _ref.updateScrollIndexCallback, hasScrollToIndex = scrollToIndex >= 0 && cellCount > scrollToIndex, sizeHasChanged = size !== previousSize || !previousCellSize || "number" == typeof cellSize && cellSize !== previousCellSize;
-            if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== previousScrollToIndex)) updateScrollIndexCallback(); else if (!hasScrollToIndex && (previousSize > size || previousCellsCount > cellCount)) {
-                scrollToIndex = (0, _getNearestIndex2["default"])({
-                    cellCount: cellCount,
-                    targetIndex: cellCount - 1
-                });
+            if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== previousScrollToIndex)) updateScrollIndexCallback(scrollToIndex); else if (!hasScrollToIndex && cellCount > 0 && (previousSize > size || previousCellsCount > cellCount) && (scrollToIndex = (0, 
+            _getNearestIndex2["default"])({
+                cellCount: cellCount,
+                targetIndex: cellCount - 1
+            }), cellCount > scrollToIndex)) {
                 var cellMetadatum = cellMetadata[scrollToIndex], calculatedScrollOffset = (0, _getUpdatedOffsetForIndex2["default"])({
                     cellOffset: cellMetadatum.offset,
                     cellSize: cellMetadatum.size,
@@ -2335,7 +2352,7 @@
             }, {
                 key: "_createRow",
                 value: function(rowIndex) {
-                    var _this3 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, scrollbarWidth = this.state.scrollbarWidth, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, rowData = rowGetter(rowIndex), renderedRow = _react2["default"].Children.map(children, function(column, columnIndex) {
+                    var _this3 = this, _props3 = this.props, children = _props3.children, onRowClick = _props3.onRowClick, rowClassName = _props3.rowClassName, rowGetter = _props3.rowGetter, scrollbarWidth = this.state.scrollbarWidth, rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName, rowData = rowGetter(rowIndex), renderedRow = _react2["default"].Children.toArray(children).map(function(column, columnIndex) {
                         return _this3._createColumn(column, columnIndex, rowData, rowIndex);
                     }), a11yProps = {};
                     return onRowClick && (a11yProps["aria-label"] = "row", a11yProps.role = "row", a11yProps.tabIndex = 0, 
@@ -2364,8 +2381,8 @@
             }, {
                 key: "_getRenderedHeaderRow",
                 value: function() {
-                    var _this4 = this, _props4 = this.props, children = _props4.children, disableHeader = _props4.disableHeader, items = disableHeader ? [] : children;
-                    return _react2["default"].Children.map(items, function(column, index) {
+                    var _this4 = this, _props4 = this.props, children = _props4.children, disableHeader = _props4.disableHeader, items = disableHeader ? [] : _react2["default"].Children.toArray(children);
+                    return items.map(function(column, index) {
                         return _this4._createHeader(column, index);
                     });
                 }

@@ -261,7 +261,7 @@ var FlexTable = function (_Component) {
       var rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName;
       var rowData = rowGetter(rowIndex);
 
-      var renderedRow = React.Children.map(children, function (column, columnIndex) {
+      var renderedRow = React.Children.toArray(children).map(function (column, columnIndex) {
         return _this3._createColumn(column, columnIndex, rowData, rowIndex);
       });
 
@@ -324,9 +324,9 @@ var FlexTable = function (_Component) {
       var children = _props4.children;
       var disableHeader = _props4.disableHeader;
 
-      var items = disableHeader ? [] : children;
+      var items = disableHeader ? [] : React.Children.toArray(children);
 
-      return React.Children.map(items, function (column, index) {
+      return items.map(function (column, index) {
         return _this4._createHeader(column, index);
       });
     }

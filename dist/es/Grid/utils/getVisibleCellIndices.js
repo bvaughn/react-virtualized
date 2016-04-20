@@ -1,17 +1,17 @@
 /**
  * Determines the range of cells to display for a given offset in order to fill the specified container.
  *
- * @param cellCount Total number of cells.
  * @param cellMetadata Metadata initially computed by initCellMetadata()
  * @param containerSize Total size (width or height) of the container
  * @param currentOffset Container's current (x or y) offset
  * @return An object containing :start and :stop attributes, each specifying a cell index
  */
 export default function getVisibleCellIndices(_ref) {
-  var cellCount = _ref.cellCount;
   var cellMetadata = _ref.cellMetadata;
   var containerSize = _ref.containerSize;
   var currentOffset = _ref.currentOffset;
+
+  var cellCount = cellMetadata.length;
 
   if (cellCount === 0) {
     return {};

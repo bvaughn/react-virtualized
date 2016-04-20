@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -171,6 +173,8 @@ var Grid = function (_Component) {
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
+      var _this2 = this;
+
       var _props2 = this.props;
       var columnsCount = _props2.columnsCount;
       var columnWidth = _props2.columnWidth;
@@ -201,6 +205,7 @@ var Grid = function (_Component) {
       }
 
       // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
+      // @TODO Do we also need this check or can the one in componentWillUpdate() suffice?
       (0, _updateScrollIndexHelper2.default)({
         cellCount: columnsCount,
         cellMetadata: this._columnMetadata,
@@ -212,7 +217,9 @@ var Grid = function (_Component) {
         scrollOffset: scrollLeft,
         scrollToIndex: scrollToColumn,
         size: width,
-        updateScrollIndexCallback: this._updateScrollLeftForScrollToColumn
+        updateScrollIndexCallback: function updateScrollIndexCallback(scrollToColumn) {
+          return _this2._updateScrollLeftForScrollToColumn(_extends({}, _this2.props, { scrollToColumn: scrollToColumn }));
+        }
       });
       (0, _updateScrollIndexHelper2.default)({
         cellCount: rowsCount,
@@ -225,7 +232,9 @@ var Grid = function (_Component) {
         scrollOffset: scrollTop,
         scrollToIndex: scrollToRow,
         size: height,
-        updateScrollIndexCallback: this._updateScrollTopForScrollToRow
+        updateScrollIndexCallback: function updateScrollIndexCallback(scrollToRow) {
+          return _this2._updateScrollTopForScrollToRow(_extends({}, _this2.props, { scrollToRow: scrollToRow }));
+        }
       });
 
       // Update onRowsRendered callback if start/stop indices have changed
@@ -260,6 +269,8 @@ var Grid = function (_Component) {
   }, {
     key: 'componentWillUpdate',
     value: function componentWillUpdate(nextProps, nextState) {
+      var _this3 = this;
+
       if (nextProps.columnsCount === 0 && nextState.scrollLeft !== 0 || nextProps.rowsCount === 0 && nextState.scrollTop !== 0) {
         this._setScrollPosition({
           scrollLeft: 0,
@@ -283,7 +294,9 @@ var Grid = function (_Component) {
         nextCellSize: nextProps.columnWidth,
         nextScrollToIndex: nextProps.scrollToColumn,
         scrollToIndex: this.props.scrollToColumn,
-        updateScrollOffsetForScrollToIndex: this._updateScrollLeftForScrollToColumn
+        updateScrollOffsetForScrollToIndex: function updateScrollOffsetForScrollToIndex() {
+          return _this3._updateScrollLeftForScrollToColumn(nextProps, nextState);
+        }
       });
       (0, _calculateSizeAndPositionDataAndUpdateScrollOffset2.default)({
         cellCount: this.props.rowsCount,
@@ -295,7 +308,9 @@ var Grid = function (_Component) {
         nextCellSize: nextProps.rowHeight,
         nextScrollToIndex: nextProps.scrollToRow,
         scrollToIndex: this.props.scrollToRow,
-        updateScrollOffsetForScrollToIndex: this._updateScrollTopForScrollToRow
+        updateScrollOffsetForScrollToIndex: function updateScrollOffsetForScrollToIndex() {
+          return _this3._updateScrollTopForScrollToRow(nextProps, nextState);
+        }
       });
 
       this.setState({
@@ -327,14 +342,12 @@ var Grid = function (_Component) {
       // Render only enough columns and rows to cover the visible area of the grid.
       if (height > 0 && width > 0) {
         var visibleColumnIndices = (0, _getVisibleCellIndices2.default)({
-          cellCount: columnsCount,
           cellMetadata: this._columnMetadata,
           containerSize: width,
           currentOffset: scrollLeft
         });
 
         var visibleRowIndices = (0, _getVisibleCellIndices2.default)({
-          cellCount: rowsCount,
           cellMetadata: this._rowMetadata,
           containerSize: height,
           currentOffset: scrollTop
@@ -466,15 +479,15 @@ var Grid = function (_Component) {
   }, {
     key: '_enablePointerEventsAfterDelay',
     value: function _enablePointerEventsAfterDelay() {
-      var _this2 = this;
+      var _this4 = this;
 
       if (this._disablePointerEventsTimeoutId) {
         clearTimeout(this._disablePointerEventsTimeoutId);
       }
 
       this._disablePointerEventsTimeoutId = setTimeout(function () {
-        _this2._disablePointerEventsTimeoutId = null;
-        _this2.setState({
+        _this4._disablePointerEventsTimeoutId = null;
+        _this4.setState({
           isScrolling: false
         });
       }, IS_SCROLLING_TIMEOUT);
@@ -522,7 +535,7 @@ var Grid = function (_Component) {
   }, {
     key: '_invokeOnScrollMemoizer',
     value: function _invokeOnScrollMemoizer(_ref) {
-      var _this3 = this;
+      var _this5 = this;
 
       var scrollLeft = _ref.scrollLeft;
       var scrollTop = _ref.scrollTop;
@@ -533,7 +546,7 @@ var Grid = function (_Component) {
         callback: function callback(_ref2) {
           var scrollLeft = _ref2.scrollLeft;
           var scrollTop = _ref2.scrollTop;
-          var _props4 = _this3.props;
+          var _props4 = _this5.props;
           var height = _props4.height;
           var onScroll = _props4.onScroll;
           var width = _props4.width;
@@ -564,15 +577,15 @@ var Grid = function (_Component) {
   }, {
     key: '_setNextState',
     value: function _setNextState(state) {
-      var _this4 = this;
+      var _this6 = this;
 
       if (this._setNextStateAnimationFrameId) {
         _raf2.default.cancel(this._setNextStateAnimationFrameId);
       }
 
       this._setNextStateAnimationFrameId = (0, _raf2.default)(function () {
-        _this4._setNextStateAnimationFrameId = null;
-        _this4.setState(state);
+        _this6._setNextStateAnimationFrameId = null;
+        _this6.setState(state);
       });
     }
   }, {
@@ -599,18 +612,27 @@ var Grid = function (_Component) {
     }
   }, {
     key: '_updateScrollLeftForScrollToColumn',
-    value: function _updateScrollLeftForScrollToColumn(scrollToColumnOverride) {
-      var scrollToColumn = scrollToColumnOverride != null ? scrollToColumnOverride : this.props.scrollToColumn;
+    value: function _updateScrollLeftForScrollToColumn() {
+      var props = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+      var state = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-      var width = this.props.width;
-      var scrollLeft = this.state.scrollLeft;
+      var _ref4 = props || this.props;
+
+      var columnsCount = _ref4.columnsCount;
+      var scrollToColumn = _ref4.scrollToColumn;
+      var width = _ref4.width;
+
+      var _ref5 = state || this.state;
+
+      var scrollLeft = _ref5.scrollLeft;
 
 
-      if (scrollToColumn >= 0) {
+      if (scrollToColumn >= 0 && columnsCount > 0) {
         var targetIndex = (0, _getNearestIndex2.default)({
           cellCount: this._columnMetadata.length,
           targetIndex: scrollToColumn
         });
+
         var columnMetadata = this._columnMetadata[targetIndex];
 
         var calculatedScrollLeft = (0, _getUpdatedOffsetForIndex2.default)({
@@ -630,18 +652,27 @@ var Grid = function (_Component) {
     }
   }, {
     key: '_updateScrollTopForScrollToRow',
-    value: function _updateScrollTopForScrollToRow(scrollToRowOverride) {
-      var scrollToRow = scrollToRowOverride != null ? scrollToRowOverride : this.props.scrollToRow;
+    value: function _updateScrollTopForScrollToRow() {
+      var props = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+      var state = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-      var height = this.props.height;
-      var scrollTop = this.state.scrollTop;
+      var _ref6 = props || this.props;
+
+      var height = _ref6.height;
+      var rowsCount = _ref6.rowsCount;
+      var scrollToRow = _ref6.scrollToRow;
+
+      var _ref7 = state || this.state;
+
+      var scrollTop = _ref7.scrollTop;
 
 
-      if (scrollToRow >= 0) {
+      if (scrollToRow >= 0 && rowsCount > 0) {
         var targetIndex = (0, _getNearestIndex2.default)({
           cellCount: this._rowMetadata.length,
           targetIndex: scrollToRow
         });
+
         var rowMetadata = this._rowMetadata[targetIndex];
 
         var calculatedScrollTop = (0, _getUpdatedOffsetForIndex2.default)({
@@ -842,14 +873,14 @@ Grid.defaultProps = {
 exports.default = Grid;
 
 
-function defaultRenderCellRanges(_ref4) {
-  var columnMetadata = _ref4.columnMetadata;
-  var columnStartIndex = _ref4.columnStartIndex;
-  var columnStopIndex = _ref4.columnStopIndex;
-  var renderCell = _ref4.renderCell;
-  var rowMetadata = _ref4.rowMetadata;
-  var rowStartIndex = _ref4.rowStartIndex;
-  var rowStopIndex = _ref4.rowStopIndex;
+function defaultRenderCellRanges(_ref8) {
+  var columnMetadata = _ref8.columnMetadata;
+  var columnStartIndex = _ref8.columnStartIndex;
+  var columnStopIndex = _ref8.columnStopIndex;
+  var renderCell = _ref8.renderCell;
+  var rowMetadata = _ref8.rowMetadata;
+  var rowStartIndex = _ref8.rowStartIndex;
+  var rowStopIndex = _ref8.rowStopIndex;
 
   var renderedCells = [];
 
