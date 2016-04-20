@@ -22,6 +22,7 @@ export default class FlexTableExample extends Component {
     this.state = {
       headerHeight: 30,
       height: 270,
+      hideIndexRow: false,
       overscanRowsCount: 0,
       rowHeight: 40,
       rowsCount: 1000,
@@ -43,6 +44,7 @@ export default class FlexTableExample extends Component {
     const {
       headerHeight,
       height,
+      hideIndexRow,
       overscanRowsCount,
       rowHeight,
       rowsCount,
@@ -90,6 +92,17 @@ export default class FlexTableExample extends Component {
               onChange={event => this._updateUseDynamicRowHeight(event.target.checked)}
             />
             Use dynamic row heights?
+          </label>
+
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Hide index row?'
+              className={styles.checkbox}
+              type='checkbox'
+              value={hideIndexRow}
+              onChange={event => this.setState({ hideIndexRow: event.target.checked })}
+            />
+            Hide index row?
           </label>
         </ContentBoxParagraph>
 
@@ -154,15 +167,17 @@ export default class FlexTableExample extends Component {
                 sortDirection={sortDirection}
                 width={width}
               >
-                <FlexColumn
-                  label='Index'
-                  cellDataGetter={
-                    (dataKey, rowData, columnData) => rowData.index
-                  }
-                  dataKey='index'
-                  disableSort={!this._isSortEnabled()}
-                  width={60}
-                />
+                {!hideIndexRow &&
+                  <FlexColumn
+                    label='Index'
+                    cellDataGetter={
+                      (dataKey, rowData, columnData) => rowData.index
+                    }
+                    dataKey='index'
+                    disableSort={!this._isSortEnabled()}
+                    width={60}
+                  />
+                }
                 <FlexColumn
                   dataKey='name'
                   disableSort={!this._isSortEnabled()}

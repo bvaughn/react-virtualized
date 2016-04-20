@@ -336,8 +336,7 @@ export default class FlexTable extends Component {
     const rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName
     const rowData = rowGetter(rowIndex)
 
-    const renderedRow = React.Children.map(
-      children,
+    const renderedRow = React.Children.toArray(children).map(
       (column, columnIndex) => this._createColumn(
         column,
         columnIndex,
@@ -395,9 +394,9 @@ export default class FlexTable extends Component {
 
   _getRenderedHeaderRow () {
     const { children, disableHeader } = this.props
-    const items = disableHeader ? [] : children
+    const items = disableHeader ? [] : React.Children.toArray(children)
 
-    return React.Children.map(items, (column, index) =>
+    return items.map((column, index) =>
       this._createHeader(column, index)
     )
   }

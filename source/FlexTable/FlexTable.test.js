@@ -97,14 +97,46 @@ describe('FlexTable', () => {
           minWidth={minWidth}
           width={50}
         />
+        {false}
+        {true}
+        {null}
+        {undefined}
       </FlexTable>
     )
   }
 
-  // Maybe test FlexTable.propTypes.children directly
-  it('should not accept non-FlexColumn children', () => {
-    const result = FlexTable.propTypes.children({ children: <div/> }, 'children', 'FlexTable')
-    expect(result instanceof Error).toEqual(true)
+  describe('children', () => {
+    it('should accept FlexColumn children', () => {
+      const children = [
+        <FlexColumn
+          dataKey='foo'
+          width={100}
+        />
+      ]
+      const result = FlexTable.propTypes.children({ children }, 'children', 'FlexTable')
+      expect(result instanceof Error).toEqual(false)
+    })
+
+    it('should not accept non-FlexColumn children', () => {
+      const children = [
+        <div/>
+      ]
+      const result = FlexTable.propTypes.children({ children }, 'children', 'FlexTable')
+      expect(result instanceof Error).toEqual(true)
+    })
+
+    it('should accept falsy children to allow easier dyanmic showing/hiding of columns', () => {
+      const children = [
+        false,
+        <FlexColumn
+          dataKey='foo'
+          width={100}
+        />,
+        null
+      ]
+      const result = FlexTable.propTypes.children({ children }, 'children', 'FlexTable')
+      expect(result instanceof Error).toEqual(false)
+    })
   })
 
   describe('initial rendering', () => {
