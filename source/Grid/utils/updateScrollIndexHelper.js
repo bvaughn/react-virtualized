@@ -14,7 +14,7 @@ import getUpdatedOffsetForIndex from '../../utils/getUpdatedOffsetForIndex'
  * @param scrollOffset Current scrollLeft or scrollTop
  * @param scrollToIndex Scroll-to-index
  * @param size Width or height of the virtualized container
- * @param updateScrollIndexCallback Callback to invoke with an optional scroll-to-index override
+ * @param updateScrollIndexCallback Callback to invoke with an scroll-to-index value
  */
 export default function updateScrollIndexHelper ({
   cellMetadata,
@@ -41,27 +41,43 @@ export default function updateScrollIndexHelper ({
 
   // If we have a new scroll target OR if height/row-height has changed,
   // We should ensure that the scroll target is visible.
-  if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== previousScrollToIndex)) {
-    updateScrollIndexCallback()
+  if (
+    hasScrollToIndex &&
+    (
+      sizeHasChanged ||
+      scrollToIndex !== previousScrollToIndex
+    )
+  ) {
+    updateScrollIndexCallback(scrollToIndex)
 
   // If we don't have a selected item but list size or number of children have decreased,
   // Make sure we aren't scrolled too far past the current content.
-  } else if (!hasScrollToIndex && (size < previousSize || cellCount < previousCellsCount)) {
+  } else if (
+    !hasScrollToIndex &&
+    cellCount > 0 &&
+    (
+      size < previousSize ||
+      cellCount < previousCellsCount
+    )
+  ) {
     scrollToIndex = getNearestIndex({
       cellCount,
       targetIndex: cellCount - 1
     })
-    const cellMetadatum = cellMetadata[scrollToIndex]
-    const calculatedScrollOffset = getUpdatedOffsetForIndex({
-      cellOffset: cellMetadatum.offset,
-      cellSize: cellMetadatum.size,
-      containerSize: size,
-      currentOffset: scrollOffset
-    })
 
-    // Only adjust the scroll position if we've scrolled below the last set of rows.
-    if (calculatedScrollOffset < scrollOffset) {
-      updateScrollIndexCallback(cellCount - 1)
+    if (scrollToIndex < cellCount) {
+      const cellMetadatum = cellMetadata[scrollToIndex]
+      const calculatedScrollOffset = getUpdatedOffsetForIndex({
+        cellOffset: cellMetadatum.offset,
+        cellSize: cellMetadatum.size,
+        containerSize: size,
+        currentOffset: scrollOffset
+      })
+
+      // Only adjust the scroll position if we've scrolled below the last set of rows.
+      if (calculatedScrollOffset < scrollOffset) {
+        updateScrollIndexCallback(cellCount - 1)
+      }
     }
   }
 }

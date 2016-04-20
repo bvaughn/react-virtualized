@@ -242,6 +242,7 @@ export default class Grid extends Component {
     }
 
     // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
+    // @TODO Do we also need this check or can the one in componentWillUpdate() suffice?
     updateScrollIndexHelper({
       cellCount: columnsCount,
       cellMetadata: this._columnMetadata,
@@ -253,7 +254,7 @@ export default class Grid extends Component {
       scrollOffset: scrollLeft,
       scrollToIndex: scrollToColumn,
       size: width,
-      updateScrollIndexCallback: this._updateScrollLeftForScrollToColumn
+      updateScrollIndexCallback: (scrollToColumn) => this._updateScrollLeftForScrollToColumn({ ...this.props, scrollToColumn })
     })
     updateScrollIndexHelper({
       cellCount: rowsCount,
@@ -266,7 +267,7 @@ export default class Grid extends Component {
       scrollOffset: scrollTop,
       scrollToIndex: scrollToRow,
       size: height,
-      updateScrollIndexCallback: this._updateScrollTopForScrollToRow
+      updateScrollIndexCallback: (scrollToRow) => this._updateScrollTopForScrollToRow({ ...this.props, scrollToRow })
     })
 
     // Update onRowsRendered callback if start/stop indices have changed
@@ -327,7 +328,7 @@ export default class Grid extends Component {
       nextCellSize: nextProps.columnWidth,
       nextScrollToIndex: nextProps.scrollToColumn,
       scrollToIndex: this.props.scrollToColumn,
-      updateScrollOffsetForScrollToIndex: this._updateScrollLeftForScrollToColumn
+      updateScrollOffsetForScrollToIndex: () => this._updateScrollLeftForScrollToColumn(nextProps, nextState)
     })
     calculateSizeAndPositionDataAndUpdateScrollOffset({
       cellCount: this.props.rowsCount,
@@ -339,7 +340,7 @@ export default class Grid extends Component {
       nextCellSize: nextProps.rowHeight,
       nextScrollToIndex: nextProps.scrollToRow,
       scrollToIndex: this.props.scrollToRow,
-      updateScrollOffsetForScrollToIndex: this._updateScrollTopForScrollToRow
+      updateScrollOffsetForScrollToIndex: () => this._updateScrollTopForScrollToRow(nextProps, nextState)
     })
 
     this.setState({
@@ -606,19 +607,16 @@ export default class Grid extends Component {
     }
   }
 
-  _updateScrollLeftForScrollToColumn (scrollToColumnOverride) {
-    const scrollToColumn = scrollToColumnOverride != null
-      ? scrollToColumnOverride
-      : this.props.scrollToColumn
+  _updateScrollLeftForScrollToColumn (props = null, state = null) {
+    const { columnsCount, scrollToColumn, width } = props || this.props
+    const { scrollLeft } = state || this.state
 
-    const { width } = this.props
-    const { scrollLeft } = this.state
-
-    if (scrollToColumn >= 0) {
+    if (scrollToColumn >= 0 && columnsCount > 0) {
       const targetIndex = getNearestIndex({
         cellCount: this._columnMetadata.length,
         targetIndex: scrollToColumn
       })
+
       const columnMetadata = this._columnMetadata[targetIndex]
 
       const calculatedScrollLeft = getUpdatedOffsetForIndex({
@@ -637,19 +635,16 @@ export default class Grid extends Component {
     }
   }
 
-  _updateScrollTopForScrollToRow (scrollToRowOverride) {
-    const scrollToRow = scrollToRowOverride != null
-      ? scrollToRowOverride
-      : this.props.scrollToRow
+  _updateScrollTopForScrollToRow (props = null, state = null) {
+    const { height, rowsCount, scrollToRow } = props || this.props
+    const { scrollTop } = state || this.state
 
-    const { height } = this.props
-    const { scrollTop } = this.state
-
-    if (scrollToRow >= 0) {
+    if (scrollToRow >= 0 && rowsCount > 0) {
       const targetIndex = getNearestIndex({
         cellCount: this._rowMetadata.length,
         targetIndex: scrollToRow
       })
+
       const rowMetadata = this._rowMetadata[targetIndex]
 
       const calculatedScrollTop = getUpdatedOffsetForIndex({
