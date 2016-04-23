@@ -72,9 +72,19 @@ describe('InfiniteLoader', () => {
     expect(isRowLoadedCalls).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
   })
 
+  it('should call :isRowLoaded for all rows within the rowsCount each time a range of rows are rendered', () => {
+    render(getMarkup({ rowsCount: 10 }))
+    expect(isRowLoadedCalls).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+  })
+
   it('should call :loadMoreRows for unloaded rows within the threshold', () => {
     render(getMarkup())
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 14 }])
+  })
+
+  it('should call :loadMoreRows for unloaded rows within the rowsCount', () => {
+    render(getMarkup({ rowsCount: 10 }))
+    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 9 }])
   })
 
   it('should :forceUpdate once rows have loaded if :loadMoreRows returns a Promise', async (done) => {
