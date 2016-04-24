@@ -57,7 +57,7 @@ var InfiniteLoader = function (_Component) {
       var unloadedRanges = scanForUnloadedRanges({
         isRowLoaded: isRowLoaded,
         startIndex: Math.max(0, startIndex - threshold),
-        stopIndex: Math.min(rowsCount, stopIndex + threshold)
+        stopIndex: Math.min(rowsCount - 1, stopIndex + threshold)
       });
 
       unloadedRanges.forEach(function (unloadedRange) {

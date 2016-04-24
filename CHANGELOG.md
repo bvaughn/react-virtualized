@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 6.2.2
+Fixed off-by-one for `InfiniteLoader` that caused it to request one too many rows when scrolled to the end of the list.
+
 ##### 6.2.1
 `FlexTable` supports `true`, `false`, `undefined`, and `null` children now to more easily enable support for dynamic columns (see issue #174).
 Improved edge-case handling for changes to cell counts when scroll-to-index properties have been set.
