@@ -81,7 +81,7 @@ export default class InfiniteLoader extends Component {
     const unloadedRanges = scanForUnloadedRanges({
       isRowLoaded,
       startIndex: Math.max(0, startIndex - threshold),
-      stopIndex: Math.min(rowsCount, stopIndex + threshold)
+      stopIndex: Math.min(rowsCount - 1, stopIndex + threshold)
     })
 
     unloadedRanges.forEach(unloadedRange => {
