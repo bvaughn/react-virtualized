@@ -55,6 +55,7 @@ describe('FlexTable', () => {
     sort,
     sortBy,
     sortDirection,
+    style,
     width = 100
   } = {}) {
     return (
@@ -95,6 +96,7 @@ describe('FlexTable', () => {
           dataKey='email'
           maxWidth={maxWidth}
           minWidth={minWidth}
+          style={style}
           width={50}
         />
         {false}
@@ -201,6 +203,36 @@ describe('FlexTable', () => {
       })))
       const columns = rendered.querySelectorAll('.FlexTable__rowColumn')
       const emailColumn = columns[1]
+      expect(Number.parseInt(emailColumn.style.maxWidth, 10)).toEqual(75)
+      expect(Number.parseInt(emailColumn.style.minWidth, 10)).toEqual(25)
+    })
+
+    it('should support a :style value for a column', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowsCount: 1,
+        style: {
+          backgroundColor: 'blue'
+        }
+      })))
+      const columns = rendered.querySelectorAll('.FlexTable__rowColumn')
+      const emailColumn = columns[1]
+      expect(emailColumn.style.backgroundColor).toEqual('blue')
+    })
+
+    it('should prioritize calculated styles over user-specified styles', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        maxWidth: 75,
+        minWidth: 25,
+        rowsCount: 1,
+        style: {
+          backgroundColor: 'blue',
+          maxWidth: 2400,
+          minWidth: 10
+        }
+      })))
+      const columns = rendered.querySelectorAll('.FlexTable__rowColumn')
+      const emailColumn = columns[1]
+      expect(emailColumn.style.backgroundColor).toEqual('blue')
       expect(Number.parseInt(emailColumn.style.maxWidth, 10)).toEqual(75)
       expect(Number.parseInt(emailColumn.style.minWidth, 10)).toEqual(25)
     })
