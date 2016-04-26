@@ -19,6 +19,7 @@ Describes the header and cell contents of a table column
 | label | String |  | Header label for this column |
 | maxWidth | Number |  | Maximum width of column; this property will only be used if :flexGrow is greater than 0 |
 | minWidth | Number |  | Minimum width of column |
+| style | Object |  | Inline styles used for rendering the column cell.  Certain styles such as `maxWidth` and `minWidth` will be overridden if specified as other props.  `flex` will also be overridden by computed styling. |
 | width | Number | ✓ | Flex basis (width) for this column; This value can grow or shrink based on `flexGrow` and `flexShrink` properties |
 
 #### cellDataGetter
