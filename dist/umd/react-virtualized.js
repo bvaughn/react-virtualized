@@ -435,7 +435,7 @@
             }, {
                 key: "componentWillUnmount",
                 value: function() {
-                    this._detectElementResize.removeResizeListener(this._parentNode, this._onResize);
+                    this._detectElementResize && this._detectElementResize.removeResizeListener(this._parentNode, this._onResize);
                 }
             }, {
                 key: "render",
@@ -2312,7 +2312,7 @@
             }, {
                 key: "_createColumn",
                 value: function(column, columnIndex, rowData, rowIndex) {
-                    var _column$props = column.props, cellClassName = _column$props.cellClassName, cellDataGetter = _column$props.cellDataGetter, columnData = _column$props.columnData, dataKey = _column$props.dataKey, cellRenderer = _column$props.cellRenderer, userStyle = _column$props.style, cellData = cellDataGetter(dataKey, rowData, columnData), renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData), style = _extends({}, userStyle, this._getFlexStyleForColumn(column)), title = "string" == typeof renderedCell ? renderedCell : null;
+                    var _column$props = column.props, cellClassName = _column$props.cellClassName, cellDataGetter = _column$props.cellDataGetter, columnData = _column$props.columnData, dataKey = _column$props.dataKey, cellRenderer = _column$props.cellRenderer, cellData = cellDataGetter(dataKey, rowData, columnData), renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData), style = this._getFlexStyleForColumn(column), title = "string" == typeof renderedCell ? renderedCell : null;
                     return _jsx("div", {
                         className: (0, _classnames2["default"])("FlexTable__rowColumn", cellClassName),
                         style: style
@@ -2536,7 +2536,6 @@
             label: _react.PropTypes.string,
             maxWidth: _react.PropTypes.number,
             minWidth: _react.PropTypes.number,
-            style: _react.PropTypes.object,
             width: _react.PropTypes.number.isRequired
         }, exports["default"] = Column;
     }, /* 37 */
@@ -2658,17 +2657,21 @@
             return !(startIndex > lastRenderedStopIndex || lastRenderedStartIndex > stopIndex);
         }
         function scanForUnloadedRanges(_ref3) {
-            for (var isRowLoaded = _ref3.isRowLoaded, startIndex = _ref3.startIndex, stopIndex = _ref3.stopIndex, unloadedRanges = [], rangeStartIndex = null, rangeStopIndex = null, i = startIndex; stopIndex >= i; i++) {
+            for (var isRowLoaded = _ref3.isRowLoaded, minimumBatchSize = _ref3.minimumBatchSize, rowsCount = _ref3.rowsCount, startIndex = _ref3.startIndex, stopIndex = _ref3.stopIndex, unloadedRanges = [], rangeStartIndex = null, rangeStopIndex = null, i = startIndex; stopIndex >= i; i++) {
                 var loaded = isRowLoaded(i);
                 loaded ? null !== rangeStopIndex && (unloadedRanges.push({
                     startIndex: rangeStartIndex,
                     stopIndex: rangeStopIndex
                 }), rangeStartIndex = rangeStopIndex = null) : (rangeStopIndex = i, null === rangeStartIndex && (rangeStartIndex = i));
             }
-            return null !== rangeStopIndex && unloadedRanges.push({
-                startIndex: rangeStartIndex,
-                stopIndex: rangeStopIndex
-            }), unloadedRanges;
+            if (null !== rangeStopIndex) {
+                for (var potentialStopIndex = Math.min(Math.max(rangeStopIndex, rangeStartIndex + minimumBatchSize - 1), rowsCount - 1), _i = rangeStopIndex + 1; potentialStopIndex >= _i && !isRowLoaded(_i); _i++) rangeStopIndex = _i;
+                unloadedRanges.push({
+                    startIndex: rangeStartIndex,
+                    stopIndex: rangeStopIndex
+                });
+            }
+            return unloadedRanges;
         }
         Object.defineProperty(exports, "__esModule", {
             value: !0
@@ -2711,10 +2714,12 @@
             }, {
                 key: "_onRowsRendered",
                 value: function(_ref) {
-                    var _this2 = this, startIndex = _ref.startIndex, stopIndex = _ref.stopIndex, _props = this.props, isRowLoaded = _props.isRowLoaded, loadMoreRows = _props.loadMoreRows, rowsCount = _props.rowsCount, threshold = _props.threshold;
+                    var _this2 = this, startIndex = _ref.startIndex, stopIndex = _ref.stopIndex, _props = this.props, isRowLoaded = _props.isRowLoaded, loadMoreRows = _props.loadMoreRows, minimumBatchSize = _props.minimumBatchSize, rowsCount = _props.rowsCount, threshold = _props.threshold;
                     this._lastRenderedStartIndex = startIndex, this._lastRenderedStopIndex = stopIndex;
                     var unloadedRanges = scanForUnloadedRanges({
                         isRowLoaded: isRowLoaded,
+                        minimumBatchSize: minimumBatchSize,
+                        rowsCount: rowsCount,
                         startIndex: Math.max(0, startIndex - threshold),
                         stopIndex: Math.min(rowsCount - 1, stopIndex + threshold)
                     });
@@ -2741,9 +2746,11 @@
             children: _react.PropTypes.func.isRequired,
             isRowLoaded: _react.PropTypes.func.isRequired,
             loadMoreRows: _react.PropTypes.func.isRequired,
+            minimumBatchSize: _react.PropTypes.number.isRequired,
             rowsCount: _react.PropTypes.number.isRequired,
             threshold: _react.PropTypes.number.isRequired
         }, InfiniteLoader.defaultProps = {
+            minimumBatchSize: 10,
             rowsCount: 0,
             threshold: 15
         }, exports["default"] = InfiniteLoader;

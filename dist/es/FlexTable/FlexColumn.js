@@ -133,9 +133,6 @@ Column.propTypes = {
   /** Minimum width of column. */
   minWidth: PropTypes.number,
 
-  /** Inline styles to be specified by the user */
-  style: PropTypes.object,
-
   /** Flex basis (width) for this column; This value can grow or shrink based on :flexGrow and :flexShrink properties. */
   width: PropTypes.number.isRequired
 };
