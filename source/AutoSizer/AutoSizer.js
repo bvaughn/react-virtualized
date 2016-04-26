@@ -53,7 +53,9 @@ export default class AutoSizer extends Component {
   }
 
   componentWillUnmount () {
-    this._detectElementResize.removeResizeListener(this._parentNode, this._onResize)
+    if (this._detectElementResize) {
+      this._detectElementResize.removeResizeListener(this._parentNode, this._onResize)
+    }
   }
 
   render () {
