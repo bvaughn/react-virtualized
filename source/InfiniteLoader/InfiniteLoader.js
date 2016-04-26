@@ -35,6 +35,12 @@ export default class InfiniteLoader extends Component {
     loadMoreRows: PropTypes.func.isRequired,
 
     /**
+     * Minimum number of rows to be loaded at a time.
+     * This property can be used to batch requests to reduce HTTP requests.
+     */
+    minimumBatchSize: PropTypes.number.isRequired,
+
+    /**
      * Number of rows in list; can be arbitrary high number if actual number is unknown.
      */
     rowsCount: PropTypes.number.isRequired,
@@ -48,6 +54,7 @@ export default class InfiniteLoader extends Component {
   }
 
   static defaultProps = {
+    minimumBatchSize: 10,
     rowsCount: 0,
     threshold: 15
   }
@@ -73,13 +80,15 @@ export default class InfiniteLoader extends Component {
   }
 
   _onRowsRendered ({ startIndex, stopIndex }) {
-    const { isRowLoaded, loadMoreRows, rowsCount, threshold } = this.props
+    const { isRowLoaded, loadMoreRows, minimumBatchSize, rowsCount, threshold } = this.props
 
     this._lastRenderedStartIndex = startIndex
     this._lastRenderedStopIndex = stopIndex
 
     const unloadedRanges = scanForUnloadedRanges({
       isRowLoaded,
+      minimumBatchSize,
+      rowsCount,
       startIndex: Math.max(0, startIndex - threshold),
       stopIndex: Math.min(rowsCount - 1, stopIndex + threshold)
     })
@@ -127,8 +136,15 @@ export function isRangeVisible ({
 /**
  * Returns all of the ranges within a larger range that contain unloaded rows.
  */
-export function scanForUnloadedRanges ({ isRowLoaded, startIndex, stopIndex }) {
+export function scanForUnloadedRanges ({
+  isRowLoaded,
+  minimumBatchSize,
+  rowsCount,
+  startIndex,
+  stopIndex
+}) {
   const unloadedRanges = []
+
   let rangeStartIndex = null
   let rangeStopIndex = null
 
@@ -151,6 +167,23 @@ export function scanForUnloadedRanges ({ isRowLoaded, startIndex, stopIndex }) {
   }
 
   if (rangeStopIndex !== null) {
+    // Attempt to satisfy :minimumBatchSize requirement but don't exceed :rowsCount
+    const potentialStopIndex = Math.min(
+      Math.max(
+        rangeStopIndex,
+        rangeStartIndex + minimumBatchSize - 1
+      ),
+      rowsCount - 1
+    )
+
+    for (let i = rangeStopIndex + 1; i <= potentialStopIndex; i++) {
+      if (!isRowLoaded(i)) {
+        rangeStopIndex = i
+      } else {
+        break
+      }
+    }
+
     unloadedRanges.push({
       startIndex: rangeStartIndex,
       stopIndex: rangeStopIndex
