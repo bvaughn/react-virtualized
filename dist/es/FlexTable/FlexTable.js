@@ -152,11 +152,12 @@ var FlexTable = function (_Component) {
       var columnData = _column$props.columnData;
       var dataKey = _column$props.dataKey;
       var cellRenderer = _column$props.cellRenderer;
+      var userStyle = _column$props.style;
 
       var cellData = cellDataGetter(dataKey, rowData, columnData);
       var renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData);
 
-      var style = this._getFlexStyleForColumn(column);
+      var style = babelHelpers.extends({}, userStyle, this._getFlexStyleForColumn(column));
 
       var title = typeof renderedCell === 'string' ? renderedCell : null;
 

@@ -2312,7 +2312,7 @@
             }, {
                 key: "_createColumn",
                 value: function(column, columnIndex, rowData, rowIndex) {
-                    var _column$props = column.props, cellClassName = _column$props.cellClassName, cellDataGetter = _column$props.cellDataGetter, columnData = _column$props.columnData, dataKey = _column$props.dataKey, cellRenderer = _column$props.cellRenderer, cellData = cellDataGetter(dataKey, rowData, columnData), renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData), style = this._getFlexStyleForColumn(column), title = "string" == typeof renderedCell ? renderedCell : null;
+                    var _column$props = column.props, cellClassName = _column$props.cellClassName, cellDataGetter = _column$props.cellDataGetter, columnData = _column$props.columnData, dataKey = _column$props.dataKey, cellRenderer = _column$props.cellRenderer, userStyle = _column$props.style, cellData = cellDataGetter(dataKey, rowData, columnData), renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData), style = _extends({}, userStyle, this._getFlexStyleForColumn(column)), title = "string" == typeof renderedCell ? renderedCell : null;
                     return _jsx("div", {
                         className: (0, _classnames2["default"])("FlexTable__rowColumn", cellClassName),
                         style: style
@@ -2536,6 +2536,7 @@
             label: _react.PropTypes.string,
             maxWidth: _react.PropTypes.number,
             minWidth: _react.PropTypes.number,
+            style: _react.PropTypes.object,
             width: _react.PropTypes.number.isRequired
         }, exports["default"] = Column;
     }, /* 37 */
