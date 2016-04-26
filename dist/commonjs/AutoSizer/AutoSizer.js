@@ -60,7 +60,9 @@ var AutoSizer = function (_Component) {
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      this._detectElementResize.removeResizeListener(this._parentNode, this._onResize);
+      if (this._detectElementResize) {
+        this._detectElementResize.removeResizeListener(this._parentNode, this._onResize);
+      }
     }
   }, {
     key: 'render',
