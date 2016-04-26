@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 6.3.0
+Added new `minimumBatchSize` property to `InfiniteLoader` to simplify HTTP request batching.
+Fixed edge-case NPE with `AutoSizer` when it is unmounted immediately after being mounted.
+
 ##### 6.2.2
 Fixed off-by-one for `InfiniteLoader` that caused it to request one too many rows when scrolled to the end of the list.
 
