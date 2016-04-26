@@ -235,12 +235,16 @@ export default class FlexTable extends Component {
       cellDataGetter,
       columnData,
       dataKey,
-      cellRenderer
+      cellRenderer,
+      style: userStyle
     } = column.props
     const cellData = cellDataGetter(dataKey, rowData, columnData)
     const renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData)
 
-    const style = this._getFlexStyleForColumn(column)
+    const style = {
+      ...userStyle,
+      ...this._getFlexStyleForColumn(column)
+    }
 
     const title = typeof renderedCell === 'string'
       ? renderedCell
