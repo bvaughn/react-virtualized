@@ -165,7 +165,7 @@ export default class GridExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _getColumnWidth (index) {
+  _getColumnWidth ({ index }) {
     switch (index) {
       case 0:
         return 50

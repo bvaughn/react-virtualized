@@ -11,7 +11,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | cellRangeRenderer | Function | ✓ | Responsible for rendering a group of cells given their index ranges.: `({ columnMetadata:Array<Object>, columnStartIndex: number, columnStopIndex: number, cellRenderer: Function, rowMetadata:Array<Object>, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>` |
 | className | String |  | Optional custom CSS class name to attach to root Grid element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
-| columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `(index: number): number` |
+| columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number` |
 | height | Number | ✓ | Height of Grid; this property determines the number of visible (vs virtualized) rows. |
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowCount` or `columnCount` is 0: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered: `({ columnOverscanStartIndex, columnOverscanStopIndex, columnStartIndex, columnStopIndex, rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }): void` |
