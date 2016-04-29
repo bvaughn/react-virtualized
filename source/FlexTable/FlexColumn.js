@@ -1,19 +1,19 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
-import type { CellDataGetterParams } from './types'
+import type { CellDataGetterParams, CellRendererParams } from './types'
 import SortIndicator from './SortIndicator'
 
 /**
  * Default cell renderer that displays an attribute as a simple string
  * You should override the column's cellRenderer if your data is some other type of object.
  */
-export function defaultCellRenderer (
-  cellData: any,
-  cellDataKey: string,
-  rowData: any,
-  rowIndex: number,
-  columnData: any
-): string {
+export function defaultCellRenderer ({
+  cellData,
+  cellDataKey,
+  columnData,
+  rowData,
+  rowIndex
+}: CellRendererParams): string {
   if (cellData === null || cellData === undefined) {
     return ''
   } else {
@@ -100,7 +100,7 @@ export default class Column extends Component {
 
     /**
      * Callback responsible for rendering a cell's contents.
-     * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): node
+     * ({ cellData: any, columnData: any, dataKey: string, rowData: any, rowIndex: number }): node
      */
     cellRenderer: PropTypes.func,
 

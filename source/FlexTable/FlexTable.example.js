@@ -191,7 +191,7 @@ export default class FlexTableExample extends Component {
                   dataKey='random'
                   cellClassName={styles.exampleColumn}
                   cellRenderer={
-                    (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
+                    ({ cellData, columnData, dataKey, rowData, rowIndex }) => cellData
                   }
                   flexGrow={1}
                 />

@@ -236,7 +236,7 @@ describe('FlexTable', () => {
 
     it('should use a custom cellRenderer if specified', () => {
       const rendered = findDOMNode(render(getMarkup({
-        cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => `Custom ${cellData}`
+        cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex }) => `Custom ${cellData}`
       })))
       const nameColumns = rendered.querySelectorAll('.FlexTable__rowColumn:first-of-type')
       Array.from(nameColumns).forEach((nameColumn, index) => {
@@ -247,7 +247,7 @@ describe('FlexTable', () => {
 
     it('should set the rendered cell content as the cell :title if it is a string', () => {
       const rendered = findDOMNode(render(getMarkup({
-        cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => 'Custom'
+        cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex }) => 'Custom'
       })))
       const nameColumn = rendered.querySelector('.FlexTable__rowColumn:first-of-type')
       expect(nameColumn.children[0].getAttribute('title')).toContain('Custom')
@@ -255,7 +255,7 @@ describe('FlexTable', () => {
 
     it('should not set a cell :title if the rendered cell content is not a string', () => {
       const rendered = findDOMNode(render(getMarkup({
-        cellRenderer: (cellData, dataKey, rowData, rowIndex, columnData) => <div>Custom</div>
+        cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex }) => <div>Custom</div>
       })))
       const nameColumn = rendered.querySelector('.FlexTable__rowColumn:first-of-type')
       expect(nameColumn.children[0].getAttribute('title')).toEqual(null)
