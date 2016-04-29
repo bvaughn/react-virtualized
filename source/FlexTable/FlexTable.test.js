@@ -412,7 +412,7 @@ describe('FlexTable', () => {
       const rendered = findDOMNode(render(getMarkup({
         columnData,
         headerRenderer: (params) => 'custom header',
-        onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push([dataKey, columnData])
+        onHeaderClick: ({ columnData, dataKey }) => onHeaderClickCalls.push([dataKey, columnData])
       })))
       const nameColumn = rendered.querySelector('.FlexTable__headerColumn:first-of-type')
 
@@ -449,7 +449,7 @@ describe('FlexTable', () => {
       let onHeaderClickCalls = []
       const rendered = findDOMNode(render(getMarkup({
         disableSort: true,
-        onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push({dataKey, columnData})
+        onHeaderClick: ({ columnData, dataKey }) => onHeaderClickCalls.push({dataKey, columnData})
       })))
       const nameColumn = rendered.querySelector('.FlexTable__headerColumn:first-of-type')
 
@@ -463,7 +463,7 @@ describe('FlexTable', () => {
       let onHeaderClickCalls = []
       const rendered = findDOMNode(render(getMarkup({
         disableSort: false,
-        onHeaderClick: (dataKey, columnData) => onHeaderClickCalls.push({dataKey, columnData})
+        onHeaderClick: ({ columnData, dataKey }) => onHeaderClickCalls.push({dataKey, columnData})
       })))
       const nameColumn = rendered.querySelector('.FlexTable__headerColumn:first-of-type')
 

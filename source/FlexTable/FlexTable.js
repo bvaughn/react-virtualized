@@ -45,13 +45,13 @@ export default class FlexTable extends Component {
 
     /**
     * Optional callback when a column's header is clicked.
-    * (dataKey: string): void
+    * ({ columnData: any, dataKey: string }): void
     */
     onHeaderClick: PropTypes.func,
 
     /**
      * Callback invoked when a user clicks on a table row.
-     * (rowIndex: number): void
+     * ({ index: number }): void
      */
     onRowClick: PropTypes.func,
 
@@ -299,7 +299,7 @@ export default class FlexTable extends Component {
           sortBy: dataKey,
           sortDirection: newSortDirection
         })
-        onHeaderClick && onHeaderClick(dataKey, columnData)
+        onHeaderClick && onHeaderClick({ columnData, dataKey })
       }
 
       const onKeyDown = (event) => {
