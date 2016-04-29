@@ -25,7 +25,7 @@ This component expects explicit width, height, and padding parameters.
 | rowCount | Number | ✓ | Number of rows in table. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
-| sort | Function |  | Sort function to be called if a sortable header is clicked. `({ dataKey: string, sortDirection: SortDirection }): void` |
+| sort | Function |  | Sort function to be called if a sortable header is clicked. `({ sortBy: string, sortDirection: SortDirection }): void` |
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
 | width | Number | ✓ | Width of the table |

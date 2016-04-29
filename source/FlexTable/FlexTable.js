@@ -104,7 +104,7 @@ export default class FlexTable extends Component {
 
     /**
      * Sort function to be called if a sortable header is clicked.
-     * ({ dataKey: string, sortDirection: SortDirection }): void
+     * ({ sortBy: string, sortDirection: SortDirection }): void
      */
     sort: PropTypes.func,
 
@@ -296,7 +296,7 @@ export default class FlexTable extends Component {
 
       const onClick = () => {
         sortEnabled && sort({
-          dataKey,
+          sortBy: dataKey,
           sortDirection: newSortDirection
         })
         onHeaderClick && onHeaderClick(dataKey, columnData)

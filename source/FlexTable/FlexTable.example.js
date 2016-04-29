@@ -275,7 +275,7 @@ export default class FlexTableExample extends Component {
     }
   }
 
-  _sort ({ dataKey: sortBy, sortDirection }) {
+  _sort ({ sortBy, sortDirection }) {
     this.setState({ sortBy, sortDirection })
   }
 
