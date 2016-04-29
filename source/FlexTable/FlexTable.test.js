@@ -478,7 +478,7 @@ describe('FlexTable', () => {
     it('should call :onRowClick with the correct :rowIndex when a row is clicked', () => {
       const onRowClickCalls = []
       const rendered = findDOMNode(render(getMarkup({
-        onRowClick: index => onRowClickCalls.push(index)
+        onRowClick: ({ index }) => onRowClickCalls.push(index)
       })))
       const rows = rendered.querySelectorAll('.FlexTable__row')
       Simulate.click(rows[0])

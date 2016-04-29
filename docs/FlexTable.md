@@ -15,7 +15,7 @@ This component expects explicit width, height, and padding parameters.
 | height | Number | ✓ | Fixed/available height for out DOM element |
 | noRowsRenderer |  | Function | Callback used to render placeholder content when :rowCount is 0 |
 | onHeaderClick |  | Function | Callback invoked when a user clicks on a table header. `(dataKey: string, columnData: any): void` |
-| onRowClick |  | Function | Callback invoked when a user clicks on a table row. `(rowIndex: number): void` |
+| onRowClick |  | Function | Callback invoked when a user clicks on a table row. `({ index: number }): void` |
 | onRowsRendered |  | Function | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }): void` |
 | overscanRowCount |  | Number | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight, scrollHeight, scrollTop }): void` |
