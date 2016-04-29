@@ -19,7 +19,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | overscanColumnCount |  | Number | Number of columns to render before/after the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
 | overscanRowCount |  | Number | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
 | rowCount | Number | ✓ | Number of rows in grid. |
-| rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
+| rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
 | scrollLeft | Number |  | Horizontal offset |
 | scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary) |
 | scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
