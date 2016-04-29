@@ -98,11 +98,6 @@ export default class VirtualScroll extends Component {
 
     const classNames = cn('VirtualScroll', className)
 
-    // @TODO version-7 Remove this wrapper once Grid's :rowHeight signature has been updated
-    const wrappedRowHeight = typeof rowHeight === 'function'
-      ? index => rowHeight({ index })
-      : rowHeight
-
     return (
       <Grid
         ref='Grid'
@@ -121,7 +116,7 @@ export default class VirtualScroll extends Component {
         })}
         overscanRowCount={overscanRowCount}
         cellRenderer={({ columnIndex, rowIndex }) => rowRenderer({ index: rowIndex })}
-        rowHeight={wrappedRowHeight}
+        rowHeight={rowHeight}
         rowCount={rowCount}
         scrollToRow={scrollToIndex}
         scrollTop={scrollTop}

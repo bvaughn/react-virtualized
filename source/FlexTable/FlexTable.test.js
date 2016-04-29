@@ -182,14 +182,14 @@ describe('FlexTable', () => {
     })
 
     it('should support a :rowHeight function', () => {
-      const rowHeight = (index) => 10 + index * 10
+      const rowHeight = ({ index }) => 10 + index * 10
       const rendered = findDOMNode(render(getMarkup({
         rowHeight,
         rowCount: 3
       })))
       const rows = rendered.querySelectorAll('.FlexTable__row')
       Array.from(rows).forEach((row, index) => {
-        expect(Number.parseInt(row.style.height, 10)).toEqual(rowHeight(index))
+        expect(Number.parseInt(row.style.height, 10)).toEqual(rowHeight({ index }))
       })
     })
 
@@ -209,7 +209,7 @@ describe('FlexTable', () => {
   describe('recomputeRowHeights', () => {
     it('should recompute row heights and other values when called', () => {
       let highestRowIndex = 0
-      const rowHeight = (index) => {
+      const rowHeight = ({ index }) => {
         highestRowIndex = Math.max(index, highestRowIndex)
         return 10
       }

@@ -188,7 +188,7 @@ export default class GridExample extends Component {
     return row % 2 === 0 ? styles.evenRow : styles.oddRow
   }
 
-  _getRowHeight (index) {
+  _getRowHeight ({ index }) {
     return this._getDatum(index).size
   }
 

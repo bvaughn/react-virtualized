@@ -211,7 +211,7 @@ export default class FlexTableExample extends Component {
     return list.get(index % list.size)
   }
 
-  _getRowHeight (index) {
+  _getRowHeight ({ index }) {
     const { list } = this.props
 
     return this._getDatum(list, index).size

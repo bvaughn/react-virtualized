@@ -89,7 +89,7 @@ export default class FlexTable extends Component {
 
     /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
-     * (index: number): number
+     * ({ index: number }): number
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
@@ -408,7 +408,7 @@ export default class FlexTable extends Component {
     const { rowHeight } = this.props
 
     return rowHeight instanceof Function
-      ? rowHeight(rowIndex)
+      ? rowHeight({ index: rowIndex })
       : rowHeight
   }
 
