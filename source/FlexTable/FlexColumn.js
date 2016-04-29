@@ -94,7 +94,7 @@ export default class Column extends Component {
 
     /**
      * Callback responsible for returning a cell's data, given its :dataKey
-     * (dataKey: string, rowData: any): any
+     * ({ columnData: any, dataKey: string, rowData: any }): any
      */
     cellDataGetter: PropTypes.func,
 
