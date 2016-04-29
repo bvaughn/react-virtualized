@@ -26,7 +26,7 @@ describe('Collection', () => {
     scrollTop,
     width = SECTION_SIZE * 2
   } = {}) {
-    function defaultCellRenderer ({ index }) {
+    function defaultCellRenderer ({ index }) {
       return (
         <div className='cell'>
           cell:{index}
@@ -34,7 +34,7 @@ describe('Collection', () => {
       )
     }
 
-    function defaultCellSizeAndPositionGetter (index) {
+    function defaultCellSizeAndPositionGetter ({ index }) {
       index = index % cellCount
 
       return CELLS[index]
@@ -363,7 +363,7 @@ describe('Collection', () => {
     it('should use a custom :cellGroupRenderer if specified', () => {
       let cellGroupRendererCalled = 0
       let cellGroupRendererParams
-      const cellRenderer = ({ index }) => index
+      const cellRenderer = ({ index }) => index
       findDOMNode(render(getMarkup({
         cellRenderer,
         cellGroupRenderer: (params) => {

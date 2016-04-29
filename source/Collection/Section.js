@@ -1,5 +1,5 @@
 /** @rlow */
-import type { SizeAndPositionInfo } from './types'
+import type { Index, SizeAndPositionInfo } from './types'
 
 /**
  * A section of the Window.
@@ -24,7 +24,9 @@ export default class Section {
   }
 
   /** Add a cell to this section. */
-  addCellIndex (index: number) {
+  addCellIndex ({
+    index
+  }: Index) {
     if (!this._indexMap[index]) {
       this._indexMap[index] = true
       this._indices.push(index)

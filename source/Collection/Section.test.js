@@ -18,19 +18,19 @@ describe('Section', () => {
   it('should add a new cell index', () => {
     const section = helper()
     expect(section.getCellIndices()).toEqual([])
-    section.addCellIndex(0)
+    section.addCellIndex({ index: 0 })
     expect(section.getCellIndices()).toEqual([0])
-    section.addCellIndex(1)
+    section.addCellIndex({ index: 1 })
     expect(section.getCellIndices()).toEqual([0, 1])
   })
 
   it('should not add a duplicate cell index', () => {
     const section = helper()
-    section.addCellIndex(0)
-    section.addCellIndex(1)
-    section.addCellIndex(0)
-    section.addCellIndex(1)
-    section.addCellIndex(2)
+    section.addCellIndex({ index: 0 })
+    section.addCellIndex({ index: 1 })
+    section.addCellIndex({ index: 0 })
+    section.addCellIndex({ index: 1 })
+    section.addCellIndex({ index: 2 })
     expect(section.getCellIndices()).toEqual([0, 1, 2])
   })
 

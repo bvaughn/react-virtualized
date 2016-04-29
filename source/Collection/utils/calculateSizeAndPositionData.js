@@ -11,7 +11,7 @@ export default function calculateSizeAndPositionData ({
   let width = 0
 
   for (let index = 0; index < cellCount; index++) {
-    const cellMetadatum = cellSizeAndPositionGetter(index)
+    const cellMetadatum = cellSizeAndPositionGetter({ index })
 
     if (
       cellMetadatum.height == null || isNaN(cellMetadatum.height) ||

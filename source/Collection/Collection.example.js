@@ -114,7 +114,7 @@ export default class CollectionExample extends Component {
     )
   }
 
-  _cellSizeAndPositionGetter (index) {
+  _cellSizeAndPositionGetter ({ index }) {
     const { list } = this.props
     const { columnCount } = this.state
 

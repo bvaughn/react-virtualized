@@ -11,7 +11,7 @@ Unlike `Grid`, which renders checkerboard data, `Collection` can render arbitrar
 | cellCount | Number | ✓ | Number of cells in collection. |
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ index: number }): PropTypes.element` |
 | cellGroupRenderer | Function | ✓ | Responsible for rendering a group of cells given their indices.: `({ cellSizeAndPositionGetter:Function, indices: Array<number>, cellRenderer: Function }): Array<PropTypes.node>` |
-| cellSizeAndPositionGetter | Function | ✓ | Callback responsible for returning size and offset/position information for a given cell (index): `(index): { height: number, width: number, x: number, y: number }` |
+| cellSizeAndPositionGetter | Function | ✓ | Callback responsible for returning size and offset/position information for a given cell (index): `({ index: number }): { height: number, width: number, x: number, y: number }` |
 | height | Number | ✓ | Height of Collection; this property determines the number of visible (vs virtualized) rows. |
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when `cellCount` is 0: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Collection that was just rendered: `({ indices: Array<number> }): void` |
@@ -63,7 +63,7 @@ ReactDOM.render(
   <Collection
     cellCount={list.length}
     cellRenderer={({ index }) => list[index].name}
-    cellSizeAndPositionGette={(index) => list[index]}
+    cellSizeAndPositionGette={({ index }) => list[index]}
     columnCount={list.length}
     height={300}
     width={300}

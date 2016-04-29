@@ -4,7 +4,7 @@
  * @flow
  */
 import Section from './Section'
-import type { SizeAndPositionInfo } from './types'
+import type { Index, SizeAndPositionInfo } from './types'
 
 const SECTION_SIZE = 100
 
@@ -50,7 +50,9 @@ export default class SectionManager {
   }
 
   /** Get size and position information for the cell specified. */
-  getCellMetadata (index: number): SizeAndPositionInfo {
+  getCellMetadata ({
+    index
+  }: Index): SizeAndPositionInfo {
     return this._cellMetadata[index]
   }
 
@@ -108,6 +110,6 @@ export default class SectionManager {
     this._cellMetadata[index] = cellMetadatum
 
     this.getSections(cellMetadatum)
-      .forEach((section) => section.addCellIndex(index))
+      .forEach((section) => section.addCellIndex({ index }))
   }
 }
