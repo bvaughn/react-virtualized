@@ -19,12 +19,12 @@ describe('FlexTable', () => {
   const list = Immutable.fromJS(array)
 
   // Works with an Immutable List of Maps
-  function immutableRowGetter (index) {
+  function immutableRowGetter ({ index }) {
     return list.get(index)
   }
 
   // Works with an Array of Objects
-  function vanillaRowGetter (index) {
+  function vanillaRowGetter ({ index }) {
     return array[index]
   }
 

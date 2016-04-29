@@ -65,7 +65,7 @@ export default class FlexTableExample extends Component {
         )
       : list
 
-    const rowGetter = index => this._getDatum(sortedList, index)
+    const rowGetter = ({ index }) => this._getDatum(sortedList, index)
 
     return (
       <ContentBox {...props}>

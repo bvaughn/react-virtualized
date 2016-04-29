@@ -83,7 +83,7 @@ export default class FlexTable extends Component {
 
     /**
      * Callback responsible for returning a data row given an index.
-     * (index: number): any
+     * ({ index: number }): any
      */
     rowGetter: PropTypes.func.isRequired,
 
@@ -337,7 +337,7 @@ export default class FlexTable extends Component {
     const { scrollbarWidth } = this.state
 
     const rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName
-    const rowData = rowGetter(rowIndex)
+    const rowData = rowGetter({ index: rowIndex })
 
     const renderedRow = React.Children.toArray(children).map(
       (column, columnIndex) => this._createColumn(
