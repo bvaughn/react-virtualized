@@ -501,7 +501,7 @@ describe('FlexTable', () => {
 
     it('should render dynamic classname given :rowClassName as a function', () => {
       const rendered = findDOMNode(render(getMarkup({
-        rowClassName: rowIndex => rowIndex % 2 === 0 ? 'even' : 'odd'
+        rowClassName: ({ index }) => index % 2 === 0 ? 'even' : 'odd'
       })))
       const rows = rendered.querySelectorAll('.FlexTable__row')
       Array.from(rows).forEach((row, index) => {

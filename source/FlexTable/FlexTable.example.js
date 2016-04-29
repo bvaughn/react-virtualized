@@ -267,7 +267,7 @@ export default class FlexTableExample extends Component {
     this.setState({ scrollToIndex })
   }
 
-  _rowClassName (index) {
+  _rowClassName ({ index }) {
     if (index < 0) {
       return styles.headerRow
     } else {

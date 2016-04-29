@@ -77,7 +77,7 @@ export default class FlexTable extends Component {
     /**
      * Optional CSS class to apply to all table rows (including the header row).
      * This property can be a CSS class name (string) or a function that returns a class name.
-     * If a function is provided its signature should be: (rowIndex: number): string
+     * If a function is provided its signature should be: ({ index: number }): string
      */
     rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
@@ -179,7 +179,7 @@ export default class FlexTable extends Component {
       return this._createRow(index)
     }
 
-    const rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName
+    const rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName
 
     return (
       <div
@@ -327,7 +327,7 @@ export default class FlexTable extends Component {
     )
   }
 
-  _createRow (rowIndex) {
+  _createRow (index) {
     const {
       children,
       onRowClick,
@@ -336,15 +336,15 @@ export default class FlexTable extends Component {
     } = this.props
     const { scrollbarWidth } = this.state
 
-    const rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName
-    const rowData = rowGetter({ index: rowIndex })
+    const rowClass = rowClassName instanceof Function ? rowClassName({ index }) : rowClassName
+    const rowData = rowGetter({ index })
 
     const renderedRow = React.Children.toArray(children).map(
       (column, columnIndex) => this._createColumn(
         column,
         columnIndex,
         rowData,
-        rowIndex
+        index
       )
     )
 
@@ -354,16 +354,16 @@ export default class FlexTable extends Component {
       a11yProps['aria-label'] = 'row'
       a11yProps.role = 'row'
       a11yProps.tabIndex = 0
-      a11yProps.onClick = () => onRowClick(rowIndex)
+      a11yProps.onClick = () => onRowClick(index)
     }
 
     return (
       <div
         {...a11yProps}
-        key={rowIndex}
+        key={index}
         className={cn('FlexTable__row', rowClass)}
         style={{
-          height: this._getRowHeight(rowIndex),
+          height: this._getRowHeight(index),
           paddingRight: scrollbarWidth
         }}
       >
