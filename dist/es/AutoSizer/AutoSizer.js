@@ -89,17 +89,19 @@ var AutoSizer = function (_Component) {
     value: function _onResize() {
       var onResize = this.props.onResize;
 
-      var _parentNode$getBoundi = this._parentNode.getBoundingClientRect();
+      // Gaurd against AutoSizer component being removed from the DOM immediately after being added.
+      // This can result in invalid style values which can result in NaN values if we don't handle them.
+      // See issue #150 for more context.
 
-      var height = _parentNode$getBoundi.height;
-      var width = _parentNode$getBoundi.width;
-
+      var boundingRect = this._parentNode.getBoundingClientRect();
+      var height = boundingRect.height || 0;
+      var width = boundingRect.width || 0;
 
       var style = getComputedStyle(this._parentNode);
-      var paddingLeft = parseInt(style.paddingLeft, 10);
-      var paddingRight = parseInt(style.paddingRight, 10);
-      var paddingTop = parseInt(style.paddingTop, 10);
-      var paddingBottom = parseInt(style.paddingBottom, 10);
+      var paddingLeft = parseInt(style.paddingLeft, 10) || 0;
+      var paddingRight = parseInt(style.paddingRight, 10) || 0;
+      var paddingTop = parseInt(style.paddingTop, 10) || 0;
+      var paddingBottom = parseInt(style.paddingBottom, 10) || 0;
 
       this.setState({
         height: height - paddingTop - paddingBottom,

@@ -461,7 +461,7 @@
             }, {
                 key: "_onResize",
                 value: function() {
-                    var onResize = this.props.onResize, _parentNode$getBoundi = this._parentNode.getBoundingClientRect(), height = _parentNode$getBoundi.height, width = _parentNode$getBoundi.width, style = getComputedStyle(this._parentNode), paddingLeft = parseInt(style.paddingLeft, 10), paddingRight = parseInt(style.paddingRight, 10), paddingTop = parseInt(style.paddingTop, 10), paddingBottom = parseInt(style.paddingBottom, 10);
+                    var onResize = this.props.onResize, boundingRect = this._parentNode.getBoundingClientRect(), height = boundingRect.height || 0, width = boundingRect.width || 0, style = getComputedStyle(this._parentNode), paddingLeft = parseInt(style.paddingLeft, 10) || 0, paddingRight = parseInt(style.paddingRight, 10) || 0, paddingTop = parseInt(style.paddingTop, 10) || 0, paddingBottom = parseInt(style.paddingBottom, 10) || 0;
                     this.setState({
                         height: height - paddingTop - paddingBottom,
                         width: width - paddingLeft - paddingRight
@@ -2665,7 +2665,7 @@
                 }), rangeStartIndex = rangeStopIndex = null) : (rangeStopIndex = i, null === rangeStartIndex && (rangeStartIndex = i));
             }
             if (null !== rangeStopIndex) {
-                for (var potentialStopIndex = Math.min(Math.max(rangeStopIndex, rangeStartIndex + minimumBatchSize - 1), rowsCount - 1), _i = rangeStopIndex + 1; potentialStopIndex >= _i && !isRowLoaded(_i); _i++) rangeStopIndex = _i;
+                for (var potentialStopIndex = Math.min(Math.max(rangeStopIndex, rangeStartIndex + minimumBatchSize - 1), rowsCount - 1), i = rangeStopIndex + 1; potentialStopIndex >= i && !isRowLoaded(i); i++) rangeStopIndex = i;
                 unloadedRanges.push({
                     startIndex: rangeStartIndex,
                     stopIndex: rangeStopIndex

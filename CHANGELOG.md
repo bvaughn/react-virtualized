@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 6.3.1
+Added better checks against invalid style properties in `AutoSizer` to protected against the case when it is removed from the DOM immediately after being added.
+
 ##### 6.3.0
 Added new `minimumBatchSize` property to `InfiniteLoader` to simplify HTTP request batching.
 Fixed edge-case NPE with `AutoSizer` when it is unmounted immediately after being mounted.

@@ -92,13 +92,20 @@ export default class AutoSizer extends Component {
 
   _onResize () {
     const { onResize } = this.props
-    const { height, width } = this._parentNode.getBoundingClientRect()
+
+    // Gaurd against AutoSizer component being removed from the DOM immediately after being added.
+    // This can result in invalid style values which can result in NaN values if we don't handle them.
+    // See issue #150 for more context.
+
+    const boundingRect = this._parentNode.getBoundingClientRect()
+    const height = boundingRect.height || 0
+    const width = boundingRect.width || 0
 
     const style = getComputedStyle(this._parentNode)
-    const paddingLeft = parseInt(style.paddingLeft, 10)
-    const paddingRight = parseInt(style.paddingRight, 10)
-    const paddingTop = parseInt(style.paddingTop, 10)
-    const paddingBottom = parseInt(style.paddingBottom, 10)
+    const paddingLeft = parseInt(style.paddingLeft, 10) || 0
+    const paddingRight = parseInt(style.paddingRight, 10) || 0
+    const paddingTop = parseInt(style.paddingTop, 10) || 0
+    const paddingBottom = parseInt(style.paddingBottom, 10) || 0
 
     this.setState({
       height: height - paddingTop - paddingBottom,
