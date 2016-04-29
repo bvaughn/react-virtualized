@@ -50,7 +50,7 @@ export default class VirtualScroll extends Component {
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
-    /** Responsbile for rendering a row given an index */
+    /** Responsbile for rendering a row given an index; ({ index: number }): node */
     rowRenderer: PropTypes.func.isRequired,
 
     /** Number of rows in list. */
@@ -115,7 +115,7 @@ export default class VirtualScroll extends Component {
           stopIndex: rowStopIndex
         })}
         overscanRowCount={overscanRowCount}
-        cellRenderer={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
+        cellRenderer={({ columnIndex, rowIndex }) => rowRenderer({ index: rowIndex })}
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollToRow={scrollToIndex}

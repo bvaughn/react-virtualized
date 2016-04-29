@@ -169,7 +169,7 @@ export default class VirtualScrollExample extends Component {
     this.setState({ scrollToIndex })
   }
 
-  _rowRenderer (index) {
+  _rowRenderer ({ index }) {
     const { useDynamicRowHeight } = this.state
 
     const datum = this._getDatum(index)

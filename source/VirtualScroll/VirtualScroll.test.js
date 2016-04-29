@@ -25,7 +25,7 @@ describe('VirtualScroll', () => {
     scrollTop = undefined,
     width = 100
   } = {}) {
-    function rowRenderer (index) {
+    function rowRenderer ({ index }) {
       return (
         <div
           key={index}

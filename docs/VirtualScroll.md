@@ -13,7 +13,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight, scrollHeight, scrollTop }): void` |
 | overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
-| rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Signature should look like `(index: number): React.PropTypes.node` |
+| rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Signature should look like `({ index: number }): React.PropTypes.node` |
 | rowCount | Number | ✓ | Number of rows in list. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
@@ -64,7 +64,7 @@ ReactDOM.render(
     rowCount={list.length}
     rowHeight={20}
     rowRenderer={
-      index => list[index] // Could also be a DOM element
+      ({ index }) => list[index] // Could also be a DOM element
     }
   />,
   document.getElementById('example')
