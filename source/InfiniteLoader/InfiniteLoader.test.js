@@ -17,7 +17,7 @@ describe('InfiniteLoader', () => {
     rowRendererCalls = []
   })
 
-  function defaultIsRowLoaded (index) {
+  function defaultIsRowLoaded ({ index }) {
     isRowLoadedCalls.push(index)
     return !!isRowLoadedMap[index]
   }
@@ -138,7 +138,7 @@ describe('InfiniteLoader', () => {
     it('should respect the specified :minimumBatchSize if a user scrolls past the previous range', () => {
       const isRowLoadedIndices = {}
 
-      function isRowLoaded (index) {
+      function isRowLoaded ({ index }) {
         if (!isRowLoadedIndices[index]) {
           isRowLoadedIndices[index] = true
 
@@ -179,7 +179,7 @@ describe('InfiniteLoader', () => {
 
 describe('scanForUnloadedRanges', () => {
   function createIsRowLoaded (rows) {
-    return index => rows[index]
+    return ({ index }) => rows[index]
   }
 
   it('should return an empty array for a range of rows that have all been loaded', () => {

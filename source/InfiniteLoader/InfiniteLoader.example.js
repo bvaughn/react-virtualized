@@ -111,7 +111,7 @@ export default class InfiniteLoaderExample extends Component {
     })
   }
 
-  _isRowLoaded (index) {
+  _isRowLoaded ({ index }) {
     const { loadedRowsMap } = this.state
     return !!loadedRowsMap[index] // STATUS_LOADING or STATUS_LOADED
   }
@@ -152,7 +152,7 @@ export default class InfiniteLoaderExample extends Component {
     return new Promise(resolve => promiseResolver = resolve)
   }
 
-  _rowRenderer (index) {
+  _rowRenderer ({ index }) {
     const { list } = this.props
     const { loadedRowsMap } = this.state
 

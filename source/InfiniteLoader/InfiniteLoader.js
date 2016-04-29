@@ -21,7 +21,7 @@ export default class InfiniteLoader extends Component {
 
     /**
      * Function responsible for tracking the loaded state of each row.
-     * It should implement the following signature: (index: number): boolean
+     * It should implement the following signature: ({ index: number }): boolean
      */
     isRowLoaded: PropTypes.func.isRequired,
 
@@ -148,13 +148,13 @@ export function scanForUnloadedRanges ({
   let rangeStartIndex = null
   let rangeStopIndex = null
 
-  for (let i = startIndex; i <= stopIndex; i++) {
-    let loaded = isRowLoaded(i)
+  for (let index = startIndex; index <= stopIndex; index++) {
+    let loaded = isRowLoaded({ index })
 
     if (!loaded) {
-      rangeStopIndex = i
+      rangeStopIndex = index
       if (rangeStartIndex === null) {
-        rangeStartIndex = i
+        rangeStartIndex = index
       }
     } else if (rangeStopIndex !== null) {
       unloadedRanges.push({
@@ -176,9 +176,9 @@ export function scanForUnloadedRanges ({
       rowCount - 1
     )
 
-    for (let i = rangeStopIndex + 1; i <= potentialStopIndex; i++) {
-      if (!isRowLoaded(i)) {
-        rangeStopIndex = i
+    for (let index = rangeStopIndex + 1; index <= potentialStopIndex; index++) {
+      if (!isRowLoaded({ index })) {
+        rangeStopIndex = index
       } else {
         break
       }
