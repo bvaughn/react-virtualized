@@ -19,12 +19,12 @@ describe('FlexTable', () => {
   const list = Immutable.fromJS(array)
 
   // Works with an Immutable List of Maps
-  function immutableRowGetter (index) {
+  function immutableRowGetter ({ index }) {
     return list.get(index)
   }
 
   // Works with an Array of Objects
-  function vanillaRowGetter (index) {
+  function vanillaRowGetter ({ index }) {
     return array[index]
   }
 
@@ -182,14 +182,14 @@ describe('FlexTable', () => {
     })
 
     it('should support a :rowHeight function', () => {
-      const rowHeight = (index) => 10 + index * 10
+      const rowHeight = ({ index }) => 10 + index * 10
       const rendered = findDOMNode(render(getMarkup({
         rowHeight,
         rowCount: 3
       })))
       const rows = rendered.querySelectorAll('.FlexTable__row')
       Array.from(rows).forEach((row, index) => {
-        expect(Number.parseInt(row.style.height, 10)).toEqual(rowHeight(index))
+        expect(Number.parseInt(row.style.height, 10)).toEqual(rowHeight({ index }))
       })
     })
 
@@ -209,7 +209,7 @@ describe('FlexTable', () => {
   describe('recomputeRowHeights', () => {
     it('should recompute row heights and other values when called', () => {
       let highestRowIndex = 0
-      const rowHeight = (index) => {
+      const rowHeight = ({ index }) => {
         highestRowIndex = Math.max(index, highestRowIndex)
         return 10
       }
@@ -311,7 +311,7 @@ describe('FlexTable', () => {
       sortDirections.forEach(sortDirection => {
         const sortCalls = []
         const rendered = findDOMNode(render(getMarkup({
-          sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
+          sort: ({dataKey, sortDirection: newSortDirection}) => sortCalls.push({dataKey, newSortDirection}),
           sortBy: 'name',
           sortDirection
         })))
@@ -330,7 +330,7 @@ describe('FlexTable', () => {
     it('should call sort with the correct arguments when a new sort-by column header is clicked', () => {
       const sortCalls = []
       const rendered = findDOMNode(render(getMarkup({
-        sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
+        sort: ({dataKey, sortDirection: newSortDirection}) => sortCalls.push({dataKey, newSortDirection}),
         sortBy: 'email',
         sortDirection: SortDirection.ASC
       })))
@@ -347,7 +347,7 @@ describe('FlexTable', () => {
     it('should call sort when a column header is activated via ENTER or SPACE key', () => {
       const sortCalls = []
       const rendered = findDOMNode(render(getMarkup({
-        sort: (dataKey, newSortDirection) => sortCalls.push({dataKey, newSortDirection}),
+        sort: ({dataKey, sortDirection: newSortDirection}) => sortCalls.push({dataKey, newSortDirection}),
         sortBy: 'name'
       })))
       const nameColumn = rendered.querySelector('.FlexTable__headerColumn:first-of-type')
@@ -392,7 +392,7 @@ describe('FlexTable', () => {
       const sortCalls = []
       const rendered = findDOMNode(render(getMarkup({
         headerRenderer: (params) => 'custom header',
-        sort: (sortKey, sortDirection) => sortCalls.push([sortKey, sortDirection]),
+        sort: ({dataKey: sortKey, sortDirection}) => sortCalls.push([sortKey, sortDirection]),
         sortBy: 'name',
         sortDirection: SortDirection.ASC
       })))

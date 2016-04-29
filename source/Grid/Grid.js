@@ -109,7 +109,7 @@ export default class Grid extends Component {
 
     /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
-     * Should implement the following interface: (index: number): number
+     * Should implement the following interface: ({ index: number }): number
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 

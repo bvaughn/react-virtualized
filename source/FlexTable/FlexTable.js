@@ -83,13 +83,13 @@ export default class FlexTable extends Component {
 
     /**
      * Callback responsible for returning a data row given an index.
-     * (index: number): any
+     * ({ index: number }): any
      */
     rowGetter: PropTypes.func.isRequired,
 
     /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
-     * (index: number): number
+     * ({ index: number }): number
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
@@ -104,7 +104,7 @@ export default class FlexTable extends Component {
 
     /**
      * Sort function to be called if a sortable header is clicked.
-     * (dataKey: string, sortDirection: SortDirection): void
+     * ({ dataKey: string, sortDirection: SortDirection }): void
      */
     sort: PropTypes.func,
 
@@ -295,7 +295,10 @@ export default class FlexTable extends Component {
         : SortDirection.DESC
 
       const onClick = () => {
-        sortEnabled && sort(dataKey, newSortDirection)
+        sortEnabled && sort({
+          dataKey,
+          sortDirection: newSortDirection
+        })
         onHeaderClick && onHeaderClick(dataKey, columnData)
       }
 
@@ -334,7 +337,7 @@ export default class FlexTable extends Component {
     const { scrollbarWidth } = this.state
 
     const rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName
-    const rowData = rowGetter(rowIndex)
+    const rowData = rowGetter({ index: rowIndex })
 
     const renderedRow = React.Children.toArray(children).map(
       (column, columnIndex) => this._createColumn(
@@ -405,7 +408,7 @@ export default class FlexTable extends Component {
     const { rowHeight } = this.props
 
     return rowHeight instanceof Function
-      ? rowHeight(rowIndex)
+      ? rowHeight({ index: rowIndex })
       : rowHeight
   }
 

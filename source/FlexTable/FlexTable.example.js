@@ -65,7 +65,7 @@ export default class FlexTableExample extends Component {
         )
       : list
 
-    const rowGetter = index => this._getDatum(sortedList, index)
+    const rowGetter = ({ index }) => this._getDatum(sortedList, index)
 
     return (
       <ContentBox {...props}>
@@ -211,7 +211,7 @@ export default class FlexTableExample extends Component {
     return list.get(index % list.size)
   }
 
-  _getRowHeight (index) {
+  _getRowHeight ({ index }) {
     const { list } = this.props
 
     return this._getDatum(list, index).size
@@ -275,7 +275,7 @@ export default class FlexTableExample extends Component {
     }
   }
 
-  _sort (sortBy, sortDirection) {
+  _sort ({ dataKey: sortBy, sortDirection }) {
     this.setState({ sortBy, sortDirection })
   }
 
