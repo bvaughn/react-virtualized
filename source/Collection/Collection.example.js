@@ -98,7 +98,7 @@ export default class CollectionExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _cellRenderer (index) {
+  _cellRenderer ({ index }) {
     const { list } = this.props
     const datum = list.get(index % list.size)
 

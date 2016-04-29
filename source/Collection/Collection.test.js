@@ -26,7 +26,7 @@ describe('Collection', () => {
     scrollTop,
     width = SECTION_SIZE * 2
   } = {}) {
-    function defaultCellRenderer (index) {
+    function defaultCellRenderer ({ index }) {
       return (
         <div className='cell'>
           cell:{index}
@@ -81,7 +81,7 @@ describe('Collection', () => {
 
     // Small performance tweak added in 5.5.6
     it('should not render/parent cells that are null or false', () => {
-      function cellRenderer (index) {
+      function cellRenderer ({ index }) {
         if (index > 2) {
           return null
         } else {
@@ -363,7 +363,7 @@ describe('Collection', () => {
     it('should use a custom :cellGroupRenderer if specified', () => {
       let cellGroupRendererCalled = 0
       let cellGroupRendererParams
-      const cellRenderer = (index) => index
+      const cellRenderer = ({ index }) => index
       findDOMNode(render(getMarkup({
         cellRenderer,
         cellGroupRenderer: (params) => {

@@ -182,7 +182,7 @@ function defaultCellGroupRenderer ({
   return indices
     .map((index) => {
       const cellMetadata = cellSizeAndPositionGetter(index)
-      const renderedCell = cellRenderer(index)
+      const renderedCell = cellRenderer({ index })
 
       if (renderedCell == null || renderedCell === false) {
         return null
