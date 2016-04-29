@@ -82,7 +82,7 @@ export default class AutoSizerExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _rowRenderer (index) {
+  _rowRenderer ({ index }) {
     const { list } = this.props
     const row = list.get(index)
 

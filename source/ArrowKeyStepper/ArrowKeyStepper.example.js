@@ -80,11 +80,11 @@ export default class ArrowKeyStepperExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _getColumnWidth (index) {
+  _getColumnWidth ({ index }) {
     return (1 + (index % 3)) * 60
   }
 
-  _getRowHeight (index) {
+  _getRowHeight ({ index }) {
     return (1 + (index % 3)) * 30
   }
 
