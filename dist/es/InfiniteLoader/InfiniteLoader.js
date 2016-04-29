@@ -193,9 +193,9 @@ export function scanForUnloadedRanges(_ref3) {
     // Attempt to satisfy :minimumBatchSize requirement but don't exceed :rowsCount
     var potentialStopIndex = Math.min(Math.max(rangeStopIndex, rangeStartIndex + minimumBatchSize - 1), rowsCount - 1);
 
-    for (var _i = rangeStopIndex + 1; _i <= potentialStopIndex; _i++) {
-      if (!isRowLoaded(_i)) {
-        rangeStopIndex = _i;
+    for (var i = rangeStopIndex + 1; i <= potentialStopIndex; i++) {
+      if (!isRowLoaded(i)) {
+        rangeStopIndex = i;
       } else {
         break;
       }

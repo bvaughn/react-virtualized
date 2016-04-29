@@ -66,8 +66,8 @@ function findNearestCell(_ref2) {
 
   var high = cellMetadata.length - 1;
   var low = 0;
-  var middle = void 0;
-  var currentOffset = void 0;
+  var middle = undefined;
+  var currentOffset = undefined;
 
   // TODO Add better guards here against NaN offset
 
