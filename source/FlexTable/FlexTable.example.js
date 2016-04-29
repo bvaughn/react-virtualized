@@ -171,7 +171,7 @@ export default class FlexTableExample extends Component {
                   <FlexColumn
                     label='Index'
                     cellDataGetter={
-                      (dataKey, rowData, columnData) => rowData.index
+                      ({ columnData, dataKey, rowData }) => rowData.index
                     }
                     dataKey='index'
                     disableSort={!this._isSortEnabled()}

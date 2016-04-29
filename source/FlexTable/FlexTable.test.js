@@ -226,7 +226,7 @@ describe('FlexTable', () => {
   describe('custom getter functions', () => {
     it('should use a custom cellDataGetter if specified', () => {
       const rendered = findDOMNode(render(getMarkup({
-        cellDataGetter: (dataKey, rowData, columnData) => `Custom ${dataKey} for row ${rowData.get('id')}`
+        cellDataGetter: ({ columnData, dataKey, rowData }) => `Custom ${dataKey} for row ${rowData.get('id')}`
       })))
       const nameColumns = rendered.querySelectorAll('.FlexTable__rowColumn:first-of-type')
       Array.from(nameColumns).forEach((nameColumn, index) => {

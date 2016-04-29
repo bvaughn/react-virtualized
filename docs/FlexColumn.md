@@ -27,7 +27,7 @@ Callback responsible for returning a cell's data, given its `dataKey`.
 It should implement the following signature:
 
 ```javascript
-function (dataKey: string, rowData: any, columnData: any): any
+function ({ columnData: any, dataKey: string, rowData: any }): any
 ```
 
 A default `cellDataGetter` is provided that simply returns the attribute as a String.
@@ -40,7 +40,7 @@ Callback responsible for rendering a cell's contents.
 It should implement the following signature:
 
 ```javascript
-function (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
+function (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): node
 ```
 
 A default `cellRenderer` is provided that displays an attribute as a simple string

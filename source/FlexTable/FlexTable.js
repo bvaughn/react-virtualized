@@ -237,7 +237,7 @@ export default class FlexTable extends Component {
       dataKey,
       cellRenderer
     } = column.props
-    const cellData = cellDataGetter(dataKey, rowData, columnData)
+    const cellData = cellDataGetter({ columnData, dataKey, rowData })
     const renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData)
 
     const style = this._getFlexStyleForColumn(column)

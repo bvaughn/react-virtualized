@@ -1,5 +1,6 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
+import type { CellDataGetterParams } from './types'
 import SortIndicator from './SortIndicator'
 
 /**
@@ -25,11 +26,11 @@ export function defaultCellRenderer (
  * This function expects to operate on either a vanilla Object or an Immutable Map.
  * You should override the column's cellDataGetter if your data is some other type of object.
  */
-export function defaultCellDataGetter (
-  dataKey: string,
-  rowData: any,
-  columnData: any
-) {
+export function defaultCellDataGetter ({
+  columnData,
+  dataKey,
+  rowData
+}: CellDataGetterParams) {
   if (rowData.get instanceof Function) {
     return rowData.get(dataKey)
   } else {
@@ -99,7 +100,7 @@ export default class Column extends Component {
 
     /**
      * Callback responsible for rendering a cell's contents.
-     * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
+     * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): node
      */
     cellRenderer: PropTypes.func,
 
