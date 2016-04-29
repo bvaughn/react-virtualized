@@ -52,7 +52,7 @@ export default class CollectionView extends Component {
     height: PropTypes.number.isRequired,
 
     /**
-     * Optional renderer to be used in place of rows when either :rowsCount or :cellCount is 0.
+     * Optional renderer to be used in place of rows when either :rowCount or :cellCount is 0.
      */
     noContentRenderer: PropTypes.func.isRequired,
 
@@ -275,7 +275,7 @@ export default class CollectionView extends Component {
     } = this.state
 
     const childrenToDisplay = height > 0 && width > 0
-      ? cellLayoutManager.renderCells({
+      ? cellLayoutManager.cellRenderers({
         height,
         isScrolling,
         width,

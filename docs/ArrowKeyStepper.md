@@ -12,8 +12,8 @@ The appearance of this wrapper element can be customized using the `className` p
 |:---|:---|:---:|:---|
 | children | Function | ✓ | Function respondible for rendering children. This function should implement the following signature: `({ onKeyDown, onSectionRendered, scrollToColumn, scrollToRow }) => PropTypes.element` |
 | className | String |  | CSS class name to attach to the wrapper `<div>`. |
-| columnsCount | Number | ✓ | Number of columns in grid; for `FlexTable` and `VirtualScroll` this property should always be `1`. |
-| rowsCount | Number | ✓ | Number of rows in grid. |
+| columnCount | Number | ✓ | Number of columns in grid; for `FlexTable` and `VirtualScroll` this property should always be `1`. |
+| rowCount | Number | ✓ | Number of rows in grid. |
 
 ### Children function
 
@@ -38,15 +38,15 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 
 ReactDOM.render(
   <ArrowKeyStepper
-    columnsCount={columnsCount}
-    rowsCount={rowsCount}
+    columnCount={columnCount}
+    rowCount={rowCount}
   >
     {({ onKeyDown, onSectionRendered, scrollToColumn, scrollToRow }) => (
       <div onKeyDown={onKeyDown}>
         <Grid
-          columnsCount={columnsCount}
+          columnCount={columnCount}
           onSectionRendered={onSectionRendered}
-          rowsCount={rowsCount}
+          rowCount={rowCount}
           scrollToColumn={scrollToColumn}
           scrollToRow={scrollToRow}
           {...otherGridProps}

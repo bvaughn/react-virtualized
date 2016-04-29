@@ -11,7 +11,7 @@ function getColumnWidth (columnIndex) {
   }
 }
 
-function renderCell (params) {
+function cellRenderer (params) {
   var key = `c:${params.columnIndex}, r:${params.rowIndex}`
   switch (params.columnIndex % 3) {
     case 0:
@@ -41,13 +41,13 @@ var App = React.createClass({
         return React.createElement(
           ReactVirtualized.Grid,
           {
-            columnsCount: 1000,
+            columnCount: 1000,
             columnWidth: getColumnWidth,
             height: params.height,
-            overscanRowsCount: 0,
-            renderCell: renderCell,
+            overscanRowCount: 0,
+            cellRenderer: cellRenderer,
             rowHeight: 30,
-            rowsCount: 1000,
+            rowCount: 1000,
             width: params.width
           }
         )

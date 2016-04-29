@@ -34,7 +34,7 @@ export default class Example extends Component {
           width={300}
           height={200}
           rowHeight={60}
-          rowsCount={list.length}
+          rowCount={list.length}
           rowRenderer={::this._rowRenderer}
         />
       </div>

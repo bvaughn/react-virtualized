@@ -8,10 +8,10 @@ describe('ColumnSizer', () => {
   function getMarkup ({
     columnMinWidth = undefined,
     columnMaxWidth = undefined,
-    columnsCount = 10,
+    columnCount = 10,
     width = 200
   } = {}) {
-    function renderCell ({ columnIndex, rowIndex }) {
+    function cellRenderer ({ columnIndex, rowIndex }) {
       return (
         <div className='gridItem'>
           {`row:${rowIndex}, column:${columnIndex}`}
@@ -23,19 +23,19 @@ describe('ColumnSizer', () => {
       <ColumnSizer
         columnMinWidth={columnMinWidth}
         columnMaxWidth={columnMaxWidth}
-        columnsCount={columnsCount}
+        columnCount={columnCount}
         width={width}
       >
         {({ adjustedWidth, getColumnWidth, registerChild }) => (
           <div>
             <Grid
-              columnsCount={columnsCount}
+              columnCount={columnCount}
               columnWidth={getColumnWidth}
               height={50}
               ref={registerChild}
-              renderCell={renderCell}
+              cellRenderer={cellRenderer}
               rowHeight={50}
-              rowsCount={1}
+              rowCount={1}
               width={adjustedWidth}
             />
             <div className='debug'>
@@ -87,8 +87,8 @@ describe('ColumnSizer', () => {
       helper({ width: 300 }, 'columnWidth:30')
     })
 
-    it('should recompute metadata sizes if :columnsCount changes', () => {
-      helper({ columnsCount: 2 }, 'columnWidth:100')
+    it('should recompute metadata sizes if :columnCount changes', () => {
+      helper({ columnCount: 2 }, 'columnWidth:100')
     })
   })
 
@@ -112,7 +112,7 @@ describe('ColumnSizer', () => {
         <ColumnSizer
           columnMinWidth={100}
           columnMaxWidth={100}
-          columnsCount={100}
+          columnCount={100}
           width={100}
         >
           {({ adjustedWidth, getColumnWidth, registerChild }) => (

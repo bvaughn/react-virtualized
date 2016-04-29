@@ -19,12 +19,12 @@ export default class GridExample extends Component {
 
     this.state = {
       columnWidth: 100,
-      columnsCount: 1000,
+      columnCount: 1000,
       height: 300,
-      overscanColumnsCount: 0,
-      overscanRowsCount: 5,
+      overscanColumnCount: 0,
+      overscanRowCount: 5,
       rowHeight: 40,
-      rowsCount: 1000,
+      rowCount: 1000,
       scrollToColumn: undefined,
       scrollToRow: undefined,
       useDynamicRowHeight: false
@@ -34,12 +34,12 @@ export default class GridExample extends Component {
     this._getRowClassName = this._getRowClassName.bind(this)
     this._getRowHeight = this._getRowHeight.bind(this)
     this._noContentRenderer = this._noContentRenderer.bind(this)
-    this._onColumnsCountChange = this._onColumnsCountChange.bind(this)
-    this._onRowsCountChange = this._onRowsCountChange.bind(this)
+    this._onColumnCountChange = this._onColumnCountChange.bind(this)
+    this._onRowCountChange = this._onRowCountChange.bind(this)
     this._onScrollToColumnChange = this._onScrollToColumnChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._renderBodyCell = this._renderBodyCell.bind(this)
-    this._renderCell = this._renderCell.bind(this)
+    this._cellRenderer = this._cellRenderer.bind(this)
     this._renderLeftSideCell = this._renderLeftSideCell.bind(this)
   }
 
@@ -47,12 +47,12 @@ export default class GridExample extends Component {
     const { list, ...props } = this.props
 
     const {
-      columnsCount,
+      columnCount,
       height,
-      overscanColumnsCount,
-      overscanRowsCount,
+      overscanColumnCount,
+      overscanRowCount,
       rowHeight,
-      rowsCount,
+      rowCount,
       scrollToColumn,
       scrollToRow,
       useDynamicRowHeight
@@ -87,15 +87,15 @@ export default class GridExample extends Component {
         <InputRow>
           <LabeledInput
             label='Num columns'
-            name='columnsCount'
-            onChange={this._onColumnsCountChange}
-            value={columnsCount}
+            name='columnCount'
+            onChange={this._onColumnCountChange}
+            value={columnCount}
           />
           <LabeledInput
             label='Num rows'
-            name='rowsCount'
-            onChange={this._onRowsCountChange}
-            value={rowsCount}
+            name='rowCount'
+            onChange={this._onRowCountChange}
+            value={rowCount}
           />
           <LabeledInput
             label='Scroll to column'
@@ -126,15 +126,15 @@ export default class GridExample extends Component {
           />
           <LabeledInput
             label='Overscan columns'
-            name='overscanColumnsCount'
-            onChange={event => this.setState({ overscanColumnsCount: parseInt(event.target.value, 10) || 0 })}
-            value={overscanColumnsCount}
+            name='overscanColumnCount'
+            onChange={event => this.setState({ overscanColumnCount: parseInt(event.target.value, 10) || 0 })}
+            value={overscanColumnCount}
           />
           <LabeledInput
             label='Overscan rows'
-            name='overscanRowsCount'
-            onChange={event => this.setState({ overscanRowsCount: parseInt(event.target.value, 10) || 0 })}
-            value={overscanRowsCount}
+            name='overscanRowCount'
+            onChange={event => this.setState({ overscanRowCount: parseInt(event.target.value, 10) || 0 })}
+            value={overscanRowCount}
           />
         </InputRow>
 
@@ -143,14 +143,14 @@ export default class GridExample extends Component {
             <Grid
               className={styles.BodyGrid}
               columnWidth={this._getColumnWidth}
-              columnsCount={columnsCount}
+              columnCount={columnCount}
               height={height}
               noContentRenderer={this._noContentRenderer}
-              overscanColumnsCount={overscanColumnsCount}
-              overscanRowsCount={overscanRowsCount}
-              renderCell={this._renderCell}
+              overscanColumnCount={overscanColumnCount}
+              overscanRowCount={overscanRowCount}
+              cellRenderer={this._cellRenderer}
               rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
-              rowsCount={rowsCount}
+              rowCount={rowCount}
               scrollToColumn={scrollToColumn}
               scrollToRow={scrollToRow}
               width={width}
@@ -235,7 +235,7 @@ export default class GridExample extends Component {
     )
   }
 
-  _renderCell ({ columnIndex, rowIndex }) {
+  _cellRenderer ({ columnIndex, rowIndex }) {
     if (columnIndex === 0) {
       return this._renderLeftSideCell({ columnIndex, rowIndex })
     } else {
@@ -265,21 +265,21 @@ export default class GridExample extends Component {
     })
   }
 
-  _onColumnsCountChange (event) {
-    const columnsCount = parseInt(event.target.value, 10) || 0
+  _onColumnCountChange (event) {
+    const columnCount = parseInt(event.target.value, 10) || 0
 
-    this.setState({ columnsCount })
+    this.setState({ columnCount })
   }
 
-  _onRowsCountChange (event) {
-    const rowsCount = parseInt(event.target.value, 10) || 0
+  _onRowCountChange (event) {
+    const rowCount = parseInt(event.target.value, 10) || 0
 
-    this.setState({ rowsCount })
+    this.setState({ rowCount })
   }
 
   _onScrollToColumnChange (event) {
-    const { columnsCount } = this.state
-    let scrollToColumn = Math.min(columnsCount - 1, parseInt(event.target.value, 10))
+    const { columnCount } = this.state
+    let scrollToColumn = Math.min(columnCount - 1, parseInt(event.target.value, 10))
 
     if (isNaN(scrollToColumn)) {
       scrollToColumn = undefined
@@ -289,8 +289,8 @@ export default class GridExample extends Component {
   }
 
   _onScrollToRowChange (event) {
-    const { rowsCount } = this.state
-    let scrollToRow = Math.min(rowsCount - 1, parseInt(event.target.value, 10))
+    const { rowCount } = this.state
+    let scrollToRow = Math.min(rowCount - 1, parseInt(event.target.value, 10))
 
     if (isNaN(scrollToRow)) {
       scrollToRow = undefined

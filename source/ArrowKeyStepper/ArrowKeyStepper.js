@@ -9,8 +9,8 @@ export default class ArrowKeyStepper extends Component {
   static propTypes = {
     children: PropTypes.func.isRequired,
     className: PropTypes.string,
-    columnsCount: PropTypes.number.isRequired,
-    rowsCount: PropTypes.number.isRequired
+    columnCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired
   }
 
   constructor (props, context) {
@@ -53,7 +53,7 @@ export default class ArrowKeyStepper extends Component {
   }
 
   _onKeyDown (event) {
-    const { columnsCount, rowsCount } = this.props
+    const { columnCount, rowCount } = this.props
 
     // The above cases all prevent default event event behavior.
     // This is to keep the grid from scrolling after the snap-to update.
@@ -61,7 +61,7 @@ export default class ArrowKeyStepper extends Component {
       case 'ArrowDown':
         event.preventDefault()
         this.setState({
-          scrollToRow: Math.min(this._rowStopIndex + 1, rowsCount - 1)
+          scrollToRow: Math.min(this._rowStopIndex + 1, rowCount - 1)
         })
         break
       case 'ArrowLeft':
@@ -73,7 +73,7 @@ export default class ArrowKeyStepper extends Component {
       case 'ArrowRight':
         event.preventDefault()
         this.setState({
-          scrollToColumn: Math.min(this._columnStopIndex + 1, columnsCount - 1)
+          scrollToColumn: Math.min(this._columnStopIndex + 1, columnCount - 1)
         })
         break
       case 'ArrowUp':

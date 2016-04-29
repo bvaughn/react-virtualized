@@ -39,7 +39,7 @@ describe('InfiniteLoader', () => {
     loadMoreRows = defaultLoadMoreRows,
     minimumBatchSize = 1,
     rowHeight = 20,
-    rowsCount = 100,
+    rowCount = 100,
     threshold = 10,
     width = 200
   } = {}) {
@@ -48,7 +48,7 @@ describe('InfiniteLoader', () => {
         isRowLoaded={isRowLoaded}
         loadMoreRows={loadMoreRows}
         minimumBatchSize={minimumBatchSize}
-        rowsCount={rowsCount}
+        rowCount={rowCount}
         threshold={threshold}
       >
         {({ onRowsRendered, registerChild }) => {
@@ -61,7 +61,7 @@ describe('InfiniteLoader', () => {
               onRowsRendered={onRowsRendered}
               rowHeight={rowHeight}
               rowRenderer={rowRenderer}
-              rowsCount={rowsCount}
+              rowCount={rowCount}
               width={width}
             />
           )
@@ -75,8 +75,8 @@ describe('InfiniteLoader', () => {
     expect(isRowLoadedCalls).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
   })
 
-  it('should call :isRowLoaded for all rows within the rowsCount each time a range of rows are rendered', () => {
-    render(getMarkup({ rowsCount: 10 }))
+  it('should call :isRowLoaded for all rows within the rowCount each time a range of rows are rendered', () => {
+    render(getMarkup({ rowCount: 10 }))
     expect(isRowLoadedCalls).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
   })
 
@@ -85,8 +85,8 @@ describe('InfiniteLoader', () => {
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 14 }])
   })
 
-  it('should call :loadMoreRows for unloaded rows within the rowsCount', () => {
-    render(getMarkup({ rowsCount: 10 }))
+  it('should call :loadMoreRows for unloaded rows within the rowCount', () => {
+    render(getMarkup({ rowCount: 10 }))
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 9 }])
   })
 
@@ -164,7 +164,7 @@ describe('InfiniteLoader', () => {
     it('should not exceed boundaries if :minimumBatchSize is larger than needed', () => {
       render(getMarkup({
         minimumBatchSize: 10,
-        rowsCount: 25,
+        rowCount: 25,
         threshold: 0
       }))
       // Simulate a new range of rows being loaded

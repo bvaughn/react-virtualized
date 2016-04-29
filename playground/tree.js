@@ -56,7 +56,7 @@ function setRef (ref) {
   VirtualScroll = ref
 }
 
-function renderCell (index) {
+function cellRenderer (index) {
   return renderItem(data[index], index)
 }
 
@@ -74,11 +74,11 @@ var App = React.createClass({
           ReactVirtualized.VirtualScroll,
           {
             height: params.height,
-            overscanRowsCount: 10,
+            overscanRowCount: 10,
             ref: setRef,
             rowHeight: rowHeight,
-            rowRenderer: renderCell,
-            rowsCount: data.length,
+            rowRenderer: cellRenderer,
+            rowCount: data.length,
             width: params.width
           }
         )

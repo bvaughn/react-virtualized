@@ -19,8 +19,8 @@ export default class VirtualScrollExample extends Component {
     super(props)
 
     this.state = {
-      overscanRowsCount: 5,
-      rowsCount: props.list.size,
+      overscanRowCount: 5,
+      rowCount: props.list.size,
       scrollToIndex: undefined,
       useDynamicRowHeight: false,
       virtualScrollHeight: 300,
@@ -29,7 +29,7 @@ export default class VirtualScrollExample extends Component {
 
     this._getRowHeight = this._getRowHeight.bind(this)
     this._noRowsRenderer = this._noRowsRenderer.bind(this)
-    this._onRowsCountChange = this._onRowsCountChange.bind(this)
+    this._onRowCountChange = this._onRowCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._rowRenderer = this._rowRenderer.bind(this)
     this._updateUseDynamicRowHeight = this._updateUseDynamicRowHeight.bind(this)
@@ -39,8 +39,8 @@ export default class VirtualScrollExample extends Component {
     const { list, ...props } = this.props
 
     const {
-      overscanRowsCount,
-      rowsCount,
+      overscanRowCount,
+      rowCount,
       scrollToIndex,
       useDynamicRowHeight,
       virtualScrollHeight,
@@ -76,9 +76,9 @@ export default class VirtualScrollExample extends Component {
         <InputRow>
           <LabeledInput
             label='Num rows'
-            name='rowsCount'
-            onChange={this._onRowsCountChange}
-            value={rowsCount}
+            name='rowCount'
+            onChange={this._onRowCountChange}
+            value={rowCount}
           />
           <LabeledInput
             label='Scroll to'
@@ -102,9 +102,9 @@ export default class VirtualScrollExample extends Component {
           />
           <LabeledInput
             label='Overscan'
-            name='overscanRowsCount'
-            onChange={event => this.setState({ overscanRowsCount: parseInt(event.target.value, 10) || 0 })}
-            value={overscanRowsCount}
+            name='overscanRowCount'
+            onChange={event => this.setState({ overscanRowCount: parseInt(event.target.value, 10) || 0 })}
+            value={overscanRowCount}
           />
         </InputRow>
 
@@ -115,9 +115,9 @@ export default class VirtualScrollExample extends Component {
                 ref='VirtualScroll'
                 className={styles.VirtualScroll}
                 height={virtualScrollHeight}
-                overscanRowsCount={overscanRowsCount}
+                overscanRowCount={overscanRowCount}
                 noRowsRenderer={this._noRowsRenderer}
-                rowsCount={rowsCount}
+                rowCount={rowCount}
                 rowHeight={useDynamicRowHeight ? this._getRowHeight : virtualScrollRowHeight}
                 rowRenderer={this._rowRenderer}
                 scrollToIndex={scrollToIndex}
@@ -152,15 +152,15 @@ export default class VirtualScrollExample extends Component {
     )
   }
 
-  _onRowsCountChange (event) {
-    const rowsCount = parseInt(event.target.value, 10) || 0
+  _onRowCountChange (event) {
+    const rowCount = parseInt(event.target.value, 10) || 0
 
-    this.setState({ rowsCount })
+    this.setState({ rowCount })
   }
 
   _onScrollToRowChange (event) {
-    const { rowsCount } = this.state
-    let scrollToIndex = Math.min(rowsCount - 1, parseInt(event.target.value, 10))
+    const { rowCount } = this.state
+    let scrollToIndex = Math.min(rowCount - 1, parseInt(event.target.value, 10))
 
     if (isNaN(scrollToIndex)) {
       scrollToIndex = undefined

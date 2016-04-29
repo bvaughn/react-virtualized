@@ -149,7 +149,7 @@ export default class Collection extends Component {
     }
   }
 
-  renderCells ({
+  cellRenderers ({
     height,
     isScrolling,
     width,

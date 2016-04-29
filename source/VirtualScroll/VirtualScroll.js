@@ -22,7 +22,7 @@ export default class VirtualScroll extends Component {
     /** Height constraint for list (determines how many actual rows are rendered) */
     height: PropTypes.number.isRequired,
 
-    /** Optional renderer to be used in place of rows when rowsCount is 0 */
+    /** Optional renderer to be used in place of rows when rowCount is 0 */
     noRowsRenderer: PropTypes.func.isRequired,
 
     /**
@@ -35,7 +35,7 @@ export default class VirtualScroll extends Component {
      * Number of rows to render above/below the visible bounds of the list.
      * These rows can help for smoother scrolling on touch devices.
      */
-    overscanRowsCount: PropTypes.number.isRequired,
+    overscanRowCount: PropTypes.number.isRequired,
 
     /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
@@ -54,7 +54,7 @@ export default class VirtualScroll extends Component {
     rowRenderer: PropTypes.func.isRequired,
 
     /** Number of rows in list. */
-    rowsCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired,
 
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
@@ -70,7 +70,7 @@ export default class VirtualScroll extends Component {
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
-    overscanRowsCount: 10
+    overscanRowCount: 10
   }
 
   /**
@@ -89,8 +89,8 @@ export default class VirtualScroll extends Component {
       onScroll,
       rowHeight,
       rowRenderer,
-      overscanRowsCount,
-      rowsCount,
+      overscanRowCount,
+      rowCount,
       scrollToIndex,
       scrollTop,
       width
@@ -104,7 +104,7 @@ export default class VirtualScroll extends Component {
         aria-label={this.props['aria-label']}
         className={classNames}
         columnWidth={width}
-        columnsCount={1}
+        columnCount={1}
         height={height}
         noContentRenderer={noRowsRenderer}
         onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
@@ -114,10 +114,10 @@ export default class VirtualScroll extends Component {
           startIndex: rowStartIndex,
           stopIndex: rowStopIndex
         })}
-        overscanRowsCount={overscanRowsCount}
-        renderCell={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
+        overscanRowCount={overscanRowCount}
+        cellRenderer={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
         rowHeight={rowHeight}
-        rowsCount={rowsCount}
+        rowCount={rowCount}
         scrollToRow={scrollToIndex}
         scrollTop={scrollTop}
         width={width}

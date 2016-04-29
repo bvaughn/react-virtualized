@@ -38,18 +38,18 @@ ReactDOM.render(
   <ColumnSizer
     columnMaxWidth={100}
     columnMinWidth={50}
-    columnsCount={numColumns}
+    columnCount={numColumns}
     width={someCalculatedWidth}
   >
     {({ adjustedWidth, getColumnWidth, registerChild }) => (
       <Grid
         ref={registerChild}
         columnWidth={getColumnWidth}
-        columnsCount={numColumns}
+        columnCount={numColumns}
         height={someCalculatedHeight}
-        renderCell={someCellRenderer}
+        cellRenderer={someCellRenderer}
         rowHeight={50}
-        rowsCount={numRows}
+        rowCount={numRows}
         width={adjustedWidth}
       />
     )}

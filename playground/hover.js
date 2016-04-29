@@ -4,7 +4,7 @@ var App = React.createClass({
   },
 
   render: function() {
-    var renderCell = this._renderCell
+    var cellRenderer = this._cellRenderer
 
     return React.createElement(
       ReactVirtualized.AutoSizer,
@@ -15,14 +15,14 @@ var App = React.createClass({
         return React.createElement(
           ReactVirtualized.Grid,
           {
-            columnsCount: 1000,
+            columnCount: 1000,
             columnWidth: 100,
             height: params.height,
-            overscanRowsCount: 0,
+            overscanRowCount: 0,
             ref: 'Grid',
-            renderCell: renderCell,
+            cellRenderer: cellRenderer,
             rowHeight: 30,
-            rowsCount: 1000,
+            rowCount: 1000,
             width: params.width
           }
         )
@@ -30,7 +30,7 @@ var App = React.createClass({
     )
   },
 
-  _renderCell (params) {
+  _cellRenderer (params) {
     var columnIndex = params.columnIndex
     var rowIndex = params.rowIndex
     var key = `c:${columnIndex}, r:${rowIndex}`

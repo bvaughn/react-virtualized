@@ -10,18 +10,18 @@ const NUM_COLUMNS = 50
 describe('Grid', () => {
   function getMarkup ({
     className,
-    columnsCount = NUM_COLUMNS,
+    columnCount = NUM_COLUMNS,
     columnWidth = 50,
     height = 100,
     noContentRenderer,
     onSectionRendered,
     onScroll,
-    overscanColumnsCount = 0,
-    overscanRowsCount = 0,
-    renderCell,
-    renderCellRanges,
+    overscanColumnCount = 0,
+    overscanRowCount = 0,
+    cellRenderer,
+    cellRangeRenderer,
     rowHeight = 20,
-    rowsCount = NUM_ROWS,
+    rowCount = NUM_ROWS,
     scrollLeft = undefined,
     scrollToColumn,
     scrollToRow,
@@ -39,18 +39,18 @@ describe('Grid', () => {
     return (
       <Grid
         className={className}
-        columnsCount={columnsCount}
+        columnCount={columnCount}
         columnWidth={columnWidth}
         height={height}
         noContentRenderer={noContentRenderer}
         onSectionRendered={onSectionRendered}
         onScroll={onScroll}
-        overscanColumnsCount={overscanColumnsCount}
-        overscanRowsCount={overscanRowsCount}
-        renderCell={renderCell || defaultRenderCell}
-        renderCellRanges={renderCellRanges}
+        overscanColumnCount={overscanColumnCount}
+        overscanRowCount={overscanRowCount}
+        cellRenderer={cellRenderer || defaultRenderCell}
+        cellRangeRenderer={cellRangeRenderer}
         rowHeight={rowHeight}
-        rowsCount={rowsCount}
+        rowCount={rowCount}
         scrollLeft={scrollLeft}
         scrollToColumn={scrollToColumn}
         scrollToRow={scrollToRow}
@@ -67,18 +67,18 @@ describe('Grid', () => {
     })
 
     it('should not render more rows than available if the area is not filled', () => {
-      const rendered = findDOMNode(render(getMarkup({ rowsCount: 2 })))
+      const rendered = findDOMNode(render(getMarkup({ rowCount: 2 })))
       expect(rendered.querySelectorAll('.gridItem').length).toEqual(8) // 2 rows x 4 columns
     })
 
     it('should not render more columns than available if the area is not filled', () => {
-      const rendered = findDOMNode(render(getMarkup({ columnsCount: 2 })))
+      const rendered = findDOMNode(render(getMarkup({ columnCount: 2 })))
       expect(rendered.querySelectorAll('.gridItem').length).toEqual(10) // 5 rows x 2 columns
     })
 
     // Small performance tweak added in 5.5.6
     it('should not render/parent cells that are null or false', () => {
-      function renderCell ({ columnIndex, rowIndex }) {
+      function cellRenderer ({ columnIndex, rowIndex }) {
         if (columnIndex === 0) {
           return null
         } else if (rowIndex === 0) {
@@ -88,11 +88,11 @@ describe('Grid', () => {
         }
       }
       const rendered = findDOMNode(render(getMarkup({
-        columnsCount: 3,
-        overscanColumnsCount: 0,
-        overscanRowsCount: 0,
-        rowsCount: 3,
-        renderCell
+        columnCount: 3,
+        overscanColumnCount: 0,
+        overscanRowCount: 0,
+        rowCount: 3,
+        cellRenderer
       })))
       expect(rendered.querySelectorAll('.Grid__cell').length).toEqual(4) // [1,1], [1,2], [2,1], and [2,2]
       expect(rendered.textContent).not.toContain('column:0')
@@ -102,22 +102,22 @@ describe('Grid', () => {
 
   describe('shows and hides scrollbars based on rendered content', () => {
     it('should set overflowX:hidden on scroll-container if columns fit within the available width', () => {
-      const rendered = findDOMNode(render(getMarkup({ columnsCount: 4 })))
+      const rendered = findDOMNode(render(getMarkup({ columnCount: 4 })))
       expect(rendered.style.overflowX).toEqual('hidden')
     })
 
     it('should leave overflowX:auto on scroll-container if columns require more than the available width', () => {
-      const rendered = findDOMNode(render(getMarkup({ columnsCount: 25 })))
+      const rendered = findDOMNode(render(getMarkup({ columnCount: 25 })))
       expect(rendered.style.overflowX).not.toEqual('hidden')
     })
 
     it('should set overflowY:hidden on scroll-container if rows fit within the available height', () => {
-      const rendered = findDOMNode(render(getMarkup({ rowsCount: 5 })))
+      const rendered = findDOMNode(render(getMarkup({ rowCount: 5 })))
       expect(rendered.style.overflowY).toEqual('hidden')
     })
 
     it('should leave overflowY:auto on scroll-container if rows require more than the available height', () => {
-      const rendered = findDOMNode(render(getMarkup({ rowsCount: 25 })))
+      const rendered = findDOMNode(render(getMarkup({ rowCount: 25 })))
       expect(rendered.style.overflowY).not.toEqual('hidden')
     })
   })
@@ -169,8 +169,8 @@ describe('Grid', () => {
       expect(grid.state.scrollLeft).toEqual(0)
       expect(grid.state.scrollTop).toEqual(0)
       grid = render(getMarkup({
-        columnsCount: NUM_COLUMNS + 1,
-        rowsCount: NUM_ROWS + 1,
+        columnCount: NUM_COLUMNS + 1,
+        rowCount: NUM_ROWS + 1,
         scrollToColumn: NUM_COLUMNS,
         scrollToRow: NUM_ROWS
       }))
@@ -180,14 +180,14 @@ describe('Grid', () => {
 
     it('should scroll back to a newly-added cell without a change in prop', () => {
       let grid = render(getMarkup({
-        columnsCount: NUM_COLUMNS,
-        rowsCount: NUM_ROWS,
+        columnCount: NUM_COLUMNS,
+        rowCount: NUM_ROWS,
         scrollToColumn: NUM_COLUMNS,
         scrollToRow: NUM_ROWS
       }))
       grid = render(getMarkup({
-        columnsCount: NUM_COLUMNS + 1,
-        rowsCount: NUM_ROWS + 1,
+        columnCount: NUM_COLUMNS + 1,
+        rowCount: NUM_ROWS + 1,
         scrollToColumn: NUM_COLUMNS,
         scrollToRow: NUM_ROWS
       }))
@@ -246,45 +246,45 @@ describe('Grid', () => {
     it('should update scroll position if size shrinks smaller than the current scroll', () => {
       let grid = findDOMNode(render(getMarkup({ scrollToColumn: 250 })))
       grid = findDOMNode(render(getMarkup()))
-      grid = findDOMNode(render(getMarkup({ scrollToColumn: 250, columnsCount: 10 })))
+      grid = findDOMNode(render(getMarkup({ scrollToColumn: 250, columnCount: 10 })))
       expect(grid.textContent).toContain('column:9')
     })
 
     it('should update scroll position if size shrinks smaller than the current scroll', () => {
       let grid = findDOMNode(render(getMarkup({ scrollToRow: 500 })))
       grid = findDOMNode(render(getMarkup()))
-      grid = findDOMNode(render(getMarkup({ scrollToRow: 500, rowsCount: 10 })))
+      grid = findDOMNode(render(getMarkup({ scrollToRow: 500, rowCount: 10 })))
       expect(grid.textContent).toContain('row:9')
     })
   })
 
   describe('noContentRenderer', () => {
-    it('should call :noContentRenderer if :columnsCount is 0', () => {
+    it('should call :noContentRenderer if :columnCount is 0', () => {
       let list = findDOMNode(render(getMarkup({
         noContentRenderer: () => <div>No data</div>,
-        columnsCount: 0
+        columnCount: 0
       })))
       expect(list.textContent).toEqual('No data')
     })
 
-    it('should call :noContentRenderer if :rowsCount is 0', () => {
+    it('should call :noContentRenderer if :rowCount is 0', () => {
       let list = findDOMNode(render(getMarkup({
         noContentRenderer: () => <div>No data</div>,
-        rowsCount: 0
+        rowCount: 0
       })))
       expect(list.textContent).toEqual('No data')
     })
 
-    it('should render an empty body if :columnsCount is 0 and there is no :noContentRenderer', () => {
+    it('should render an empty body if :columnCount is 0 and there is no :noContentRenderer', () => {
       let list = findDOMNode(render(getMarkup({
-        columnsCount: 0
+        columnCount: 0
       })))
       expect(list.textContent).toEqual('')
     })
 
-    it('should render an empty body if :rowsCount is 0 and there is no :noContentRenderer', () => {
+    it('should render an empty body if :rowCount is 0 and there is no :noContentRenderer', () => {
       let list = findDOMNode(render(getMarkup({
-        rowsCount: 0
+        rowCount: 0
       })))
       expect(list.textContent).toEqual('')
     })
@@ -488,7 +488,7 @@ describe('Grid', () => {
     })
   })
 
-  describe('overscanRowsCount', () => {
+  describe('overscanRowCount', () => {
     function createHelper () {
       let columnOverscanStartIndex, columnOverscanStopIndex, columnStartIndex, columnStopIndex, rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex
 
@@ -531,8 +531,8 @@ describe('Grid', () => {
       const helper = createHelper()
       render(getMarkup({
         onSectionRendered: helper.onSectionRendered,
-        overscanColumnsCount: 2,
-        overscanRowsCount: 5,
+        overscanColumnCount: 2,
+        overscanRowCount: 5,
         scrollToColumn: 25,
         scrollToRow: 50
       }))
@@ -550,10 +550,10 @@ describe('Grid', () => {
       const helper = createHelper()
       render(getMarkup({
         onSectionRendered: helper.onSectionRendered,
-        columnsCount: 6,
-        overscanColumnsCount: 10,
-        overscanRowsCount: 10,
-        rowsCount: 5
+        columnCount: 6,
+        overscanColumnCount: 10,
+        overscanRowCount: 10,
+        rowCount: 5
       }))
       expect(helper.columnOverscanStartIndex()).toEqual(0)
       expect(helper.columnOverscanStopIndex()).toEqual(5)
@@ -566,25 +566,25 @@ describe('Grid', () => {
     })
   })
 
-  describe('renderCellRanges', () => {
-    it('should use a custom :renderCellRanges if specified', () => {
-      let renderCellRangesCalled = 0
-      let renderCellRangesParams
+  describe('cellRangeRenderer', () => {
+    it('should use a custom :cellRangeRenderer if specified', () => {
+      let cellRangeRendererCalled = 0
+      let cellRangeRendererParams
       const rendered = findDOMNode(render(getMarkup({
-        renderCellRanges: (params) => {
-          renderCellRangesParams = params
-          renderCellRangesCalled++
+        cellRangeRenderer: (params) => {
+          cellRangeRendererParams = params
+          cellRangeRendererCalled++
 
           return [
             <div key='0'>Fake content</div>
           ]
         }
       })))
-      expect(renderCellRangesCalled).toEqual(1)
-      expect(renderCellRangesParams.columnStartIndex).toEqual(0)
-      expect(renderCellRangesParams.columnStopIndex).toEqual(3)
-      expect(renderCellRangesParams.rowStartIndex).toEqual(0)
-      expect(renderCellRangesParams.rowStopIndex).toEqual(4)
+      expect(cellRangeRendererCalled).toEqual(1)
+      expect(cellRangeRendererParams.columnStartIndex).toEqual(0)
+      expect(cellRangeRendererParams.columnStopIndex).toEqual(3)
+      expect(cellRangeRendererParams.rowStartIndex).toEqual(0)
+      expect(cellRangeRendererParams.rowStopIndex).toEqual(4)
       expect(rendered.textContent).toContain('Fake content')
     })
   })

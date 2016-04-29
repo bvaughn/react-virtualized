@@ -7,18 +7,18 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
+| cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
+| cellRangeRenderer | Function | ✓ | Responsible for rendering a group of cells given their index ranges.: `({ columnMetadata:Array<Object>, columnStartIndex: number, columnStopIndex: number, cellRenderer: Function, rowMetadata:Array<Object>, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>` |
 | className | String |  | Optional custom CSS class name to attach to root Grid element. |
-| columnsCount | Number | ✓ | Number of columns in grid. |
+| columnCount | Number | ✓ | Number of columns in grid. |
 | columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `(index: number): number` |
 | height | Number | ✓ | Height of Grid; this property determines the number of visible (vs virtualized) rows. |
-| noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowsCount` or `columnsCount` is 0: `(): PropTypes.node` |
+| noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowCount` or `columnCount` is 0: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered: `({ columnOverscanStartIndex, columnOverscanStopIndex, columnStartIndex, columnStopIndex, rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void` |
-| overscanColumnsCount |  | Number | Number of columns to render before/after the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
-| overscanRowsCount |  | Number | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
-| renderCell | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
-| renderCellRanges | Function | ✓ | Responsible for rendering a group of cells given their index ranges.: `({ columnMetadata:Array<Object>, columnStartIndex: number, columnStopIndex: number, renderCell: Function, rowMetadata:Array<Object>, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>` |
-| rowsCount | Number | ✓ | Number of rows in grid. |
+| overscanColumnCount |  | Number | Number of columns to render before/after the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
+| overscanRowCount |  | Number | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
+| rowCount | Number | ✓ | Number of rows in grid. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
 | scrollLeft | Number |  | Horizontal offset |
 | scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary) |
@@ -33,7 +33,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 Recomputes row heights and column widths.
 
 This function should be called if dynamic column or row sizes have changed but nothing else has.
-Since Grid only receives `columnsCount` and `rowsCount` it has no way of detecting when the underlying data changes.
+Since Grid only receives `columnCount` and `rowCount` it has no way of detecting when the underlying data changes.
 
 ### Class names
 
@@ -68,9 +68,9 @@ ReactDOM.render(
     height={300}
     columnWidth={100}
     rowHeight={30}
-    columnsCount={list.length}
-    rowsCount={list.length}
-    renderCell={({ columnIndex, rowIndex }) => list[rowIndex][columnIndex]}
+    columnCount={list.length}
+    rowCount={list.length}
+    cellRenderer={({ columnIndex, rowIndex }) => list[rowIndex][columnIndex]}
   />,
   document.getElementById('example')
 );

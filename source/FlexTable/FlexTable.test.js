@@ -45,11 +45,11 @@ describe('FlexTable', () => {
     onRowClick = undefined,
     onRowsRendered = undefined,
     onScroll = undefined,
-    overscanRowsCount = 0,
+    overscanRowCount = 0,
     rowClassName = undefined,
     rowGetter = immutableRowGetter,
     rowHeight = 10,
-    rowsCount = list.size,
+    rowCount = list.size,
     scrollToIndex,
     scrollTop,
     sort,
@@ -68,11 +68,11 @@ describe('FlexTable', () => {
         onRowClick={onRowClick}
         onRowsRendered={onRowsRendered}
         onScroll={onScroll}
-        overscanRowsCount={overscanRowsCount}
+        overscanRowCount={overscanRowCount}
         rowClassName={rowClassName}
         rowGetter={rowGetter}
         rowHeight={rowHeight}
-        rowsCount={rowsCount}
+        rowCount={rowCount}
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
         sort={sort}
@@ -185,7 +185,7 @@ describe('FlexTable', () => {
       const rowHeight = (index) => 10 + index * 10
       const rendered = findDOMNode(render(getMarkup({
         rowHeight,
-        rowsCount: 3
+        rowCount: 3
       })))
       const rows = rendered.querySelectorAll('.FlexTable__row')
       Array.from(rows).forEach((row, index) => {
@@ -197,7 +197,7 @@ describe('FlexTable', () => {
       const rendered = findDOMNode(render(getMarkup({
         maxWidth: 75,
         minWidth: 25,
-        rowsCount: 1
+        rowCount: 1
       })))
       const columns = rendered.querySelectorAll('.FlexTable__rowColumn')
       const emailColumn = columns[1]
@@ -215,7 +215,7 @@ describe('FlexTable', () => {
       }
       const component = render(getMarkup({
         rowHeight,
-        rowsCount: 50
+        rowCount: 50
       }))
       highestRowIndex = 0
       component.recomputeRowHeights()
@@ -426,18 +426,18 @@ describe('FlexTable', () => {
   })
 
   describe('noRowsRenderer', () => {
-    it('should call :noRowsRenderer if :rowsCount is 0', () => {
+    it('should call :noRowsRenderer if :rowCount is 0', () => {
       const rendered = render(getMarkup({
         noRowsRenderer: () => <div>No rows!</div>,
-        rowsCount: 0
+        rowCount: 0
       }))
       const bodyDOMNode = findDOMNode(rendered.refs.Grid)
       expect(bodyDOMNode.textContent).toEqual('No rows!')
     })
 
-    it('should render an empty body if :rowsCount is 0 and there is no :noRowsRenderer', () => {
+    it('should render an empty body if :rowCount is 0 and there is no :noRowsRenderer', () => {
       const rendered = render(getMarkup({
-        rowsCount: 0
+        rowCount: 0
       }))
       const bodyDOMNode = findDOMNode(rendered.refs.Grid)
       expect(bodyDOMNode.textContent).toEqual('')
@@ -637,7 +637,7 @@ describe('FlexTable', () => {
     })
   })
 
-  describe('overscanRowsCount', () => {
+  describe('overscanRowCount', () => {
     it('should not overscan by default', () => {
       let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
       render(getMarkup({
@@ -651,7 +651,7 @@ describe('FlexTable', () => {
       let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
       render(getMarkup({
         onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowsCount: 10,
+        overscanRowCount: 10,
         scrollToIndex: 30
       }))
       expect(overscanStartIndex).toEqual(13)
@@ -664,7 +664,7 @@ describe('FlexTable', () => {
       let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
       render(getMarkup({
         onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowsCount: 10
+        overscanRowCount: 10
       }))
       expect(overscanStartIndex).toEqual(0)
       expect(startIndex).toEqual(0)
@@ -676,8 +676,8 @@ describe('FlexTable', () => {
       let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
       render(getMarkup({
         onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowsCount: 10,
-        rowsCount: 15
+        overscanRowCount: 10,
+        rowCount: 15
       }))
       expect(overscanStartIndex).toEqual(0)
       expect(startIndex).toEqual(0)

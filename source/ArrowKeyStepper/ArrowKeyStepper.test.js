@@ -17,16 +17,16 @@ function ChildComponent ({ scrollToColumn, scrollToRow }) {
 describe('ArrowKeyStepper', () => {
   function renderHelper ({
     className,
-    columnsCount = 10,
-    rowsCount = 10
+    columnCount = 10,
+    rowCount = 10
   } = {}) {
     let onSectionRenderedCallback
 
     const node = findDOMNode(render(
       <ArrowKeyStepper
         className={className}
-        columnsCount={columnsCount}
-        rowsCount={rowsCount}
+        columnCount={columnCount}
+        rowCount={rowCount}
       >
         {({ onSectionRendered, scrollToColumn, scrollToRow }) => {
           onSectionRenderedCallback = onSectionRendered
@@ -71,8 +71,8 @@ describe('ArrowKeyStepper', () => {
 
   it('should not scroll past the row and column boundaries provided', () => {
     const { node } = renderHelper({
-      columnsCount: 2,
-      rowsCount: 2
+      columnCount: 2,
+      rowCount: 2
     })
     Simulate.keyDown(node, {key: 'ArrowDown'})
     Simulate.keyDown(node, {key: 'ArrowDown'})

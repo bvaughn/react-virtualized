@@ -36,7 +36,7 @@ ReactDOM.render(
       <VirtualScroll
         width={width}
         height={height}
-        rowsCount={list.length}
+        rowCount={list.length}
         rowHeight={20}
         rowRenderer={
           index => list[index] // Could also be a DOM element

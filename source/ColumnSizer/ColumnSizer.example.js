@@ -22,14 +22,14 @@ export default class ColumnSizerExample extends Component {
     this.state = {
       columnMaxWidth: 100,
       columnMinWidth: 75,
-      columnsCount: 10
+      columnCount: 10
     }
 
     this._noColumnMaxWidthChange = this._noColumnMaxWidthChange.bind(this)
     this._noColumnMinWidthChange = this._noColumnMinWidthChange.bind(this)
-    this._onColumnsCountChange = this._onColumnsCountChange.bind(this)
+    this._onColumnCountChange = this._onColumnCountChange.bind(this)
     this._noContentRenderer = this._noContentRenderer.bind(this)
-    this._renderCell = this._renderCell.bind(this)
+    this._cellRenderer = this._cellRenderer.bind(this)
   }
 
   render () {
@@ -38,7 +38,7 @@ export default class ColumnSizerExample extends Component {
     const {
       columnMaxWidth,
       columnMinWidth,
-      columnsCount
+      columnCount
     } = this.state
 
     return (
@@ -56,9 +56,9 @@ export default class ColumnSizerExample extends Component {
         <InputRow>
           <LabeledInput
             label='Num Columns'
-            name='columnsCount'
-            onChange={this._onColumnsCountChange}
-            value={columnsCount}
+            name='columnCount'
+            onChange={this._onColumnCountChange}
+            value={columnCount}
           />
           <LabeledInput
             label='Column Min Width'
@@ -80,7 +80,7 @@ export default class ColumnSizerExample extends Component {
               <ColumnSizer
                 columnMaxWidth={columnMaxWidth}
                 columnMinWidth={columnMinWidth}
-                columnsCount={columnsCount}
+                columnCount={columnCount}
                 key='GridColumnSizer'
                 width={width}
               >
@@ -95,12 +95,12 @@ export default class ColumnSizerExample extends Component {
                     <Grid
                       ref={registerChild}
                       columnWidth={getColumnWidth}
-                      columnsCount={columnsCount}
+                      columnCount={columnCount}
                       height={50}
                       noContentRenderer={this._noContentRenderer}
-                      renderCell={this._renderCell}
+                      cellRenderer={this._cellRenderer}
                       rowHeight={50}
-                      rowsCount={1}
+                      rowCount={1}
                       width={adjustedWidth}
                     />
                   </div>
@@ -141,8 +141,8 @@ export default class ColumnSizerExample extends Component {
     this.setState({ columnMinWidth })
   }
 
-  _onColumnsCountChange (event) {
-    this.setState({ columnsCount: parseInt(event.target.value, 10) || 0 })
+  _onColumnCountChange (event) {
+    this.setState({ columnCount: parseInt(event.target.value, 10) || 0 })
   }
 
   _noContentRenderer () {
@@ -153,7 +153,7 @@ export default class ColumnSizerExample extends Component {
     )
   }
 
-  _renderCell ({ columnIndex, rowIndex }) {
+  _cellRenderer ({ columnIndex, rowIndex }) {
     const className = columnIndex === 0
       ? styles.firstCell
       : styles.cell

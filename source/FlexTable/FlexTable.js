@@ -40,7 +40,7 @@ export default class FlexTable extends Component {
     /** Fixed/available height for out DOM element */
     height: PropTypes.number.isRequired,
 
-    /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
+    /** Optional renderer to be used in place of table body rows when rowCount is 0 */
     noRowsRenderer: PropTypes.func,
 
     /**
@@ -72,7 +72,7 @@ export default class FlexTable extends Component {
      * Number of rows to render above/below the visible bounds of the list.
      * These rows can help for smoother scrolling on touch devices.
      */
-    overscanRowsCount: PropTypes.number.isRequired,
+    overscanRowCount: PropTypes.number.isRequired,
 
     /**
      * Optional CSS class to apply to all table rows (including the header row).
@@ -94,7 +94,7 @@ export default class FlexTable extends Component {
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
     /** Number of rows in table. */
-    rowsCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired,
 
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
@@ -124,7 +124,7 @@ export default class FlexTable extends Component {
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
-    overscanRowsCount: 10
+    overscanRowCount: 10
   }
 
   constructor (props) {
@@ -161,10 +161,10 @@ export default class FlexTable extends Component {
       noRowsRenderer,
       onRowsRendered,
       onScroll,
-      overscanRowsCount,
+      overscanRowCount,
       rowClassName,
       rowHeight,
-      rowsCount,
+      rowCount,
       scrollToIndex,
       scrollTop,
       width
@@ -203,7 +203,7 @@ export default class FlexTable extends Component {
           ref='Grid'
           className={'FlexTable__Grid'}
           columnWidth={width}
-          columnsCount={1}
+          columnCount={1}
           height={availableRowsHeight}
           noContentRenderer={noRowsRenderer}
           onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
@@ -213,10 +213,10 @@ export default class FlexTable extends Component {
             startIndex: rowStartIndex,
             stopIndex: rowStopIndex
           })}
-          overscanRowsCount={overscanRowsCount}
-          renderCell={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
+          overscanRowCount={overscanRowCount}
+          cellRenderer={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
           rowHeight={rowHeight}
-          rowsCount={rowsCount}
+          rowCount={rowCount}
           scrollToRow={scrollToIndex}
           scrollTop={scrollTop}
           width={width}

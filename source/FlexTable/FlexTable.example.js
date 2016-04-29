@@ -23,9 +23,9 @@ export default class FlexTableExample extends Component {
       headerHeight: 30,
       height: 270,
       hideIndexRow: false,
-      overscanRowsCount: 0,
+      overscanRowCount: 0,
       rowHeight: 40,
-      rowsCount: 1000,
+      rowCount: 1000,
       scrollToIndex: undefined,
       sortBy: 'index',
       sortDirection: SortDirection.ASC,
@@ -35,7 +35,7 @@ export default class FlexTableExample extends Component {
     this._getRowHeight = this._getRowHeight.bind(this)
     this._headerRenderer = this._headerRenderer.bind(this)
     this._noRowsRenderer = this._noRowsRenderer.bind(this)
-    this._onRowsCountChange = this._onRowsCountChange.bind(this)
+    this._onRowCountChange = this._onRowCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._sort = this._sort.bind(this)
   }
@@ -45,9 +45,9 @@ export default class FlexTableExample extends Component {
       headerHeight,
       height,
       hideIndexRow,
-      overscanRowsCount,
+      overscanRowCount,
       rowHeight,
-      rowsCount,
+      rowCount,
       scrollToIndex,
       sortBy,
       sortDirection,
@@ -109,9 +109,9 @@ export default class FlexTableExample extends Component {
         <InputRow>
           <LabeledInput
             label='Num rows'
-            name='rowsCount'
-            onChange={this._onRowsCountChange}
-            value={rowsCount}
+            name='rowCount'
+            onChange={this._onRowCountChange}
+            value={rowCount}
           />
           <LabeledInput
             label='Scroll to'
@@ -141,9 +141,9 @@ export default class FlexTableExample extends Component {
           />
           <LabeledInput
             label='Overscan'
-            name='overscanRowsCount'
-            onChange={event => this.setState({ overscanRowsCount: parseInt(event.target.value, 10) || 0 })}
-            value={overscanRowsCount}
+            name='overscanRowCount'
+            onChange={event => this.setState({ overscanRowCount: parseInt(event.target.value, 10) || 0 })}
+            value={overscanRowCount}
           />
         </InputRow>
 
@@ -156,11 +156,11 @@ export default class FlexTableExample extends Component {
                 headerHeight={headerHeight}
                 height={height}
                 noRowsRenderer={this._noRowsRenderer}
-                overscanRowsCount={overscanRowsCount}
+                overscanRowCount={overscanRowCount}
                 rowClassName={::this._rowClassName}
                 rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
                 rowGetter={rowGetter}
-                rowsCount={rowsCount}
+                rowCount={rowCount}
                 scrollToIndex={scrollToIndex}
                 sort={this._sort}
                 sortBy={sortBy}
@@ -237,9 +237,9 @@ export default class FlexTableExample extends Component {
 
   _isSortEnabled () {
     const { list } = this.props
-    const { rowsCount } = this.state
+    const { rowCount } = this.state
 
-    return rowsCount <= list.size
+    return rowCount <= list.size
   }
 
   _noRowsRenderer () {
@@ -250,15 +250,15 @@ export default class FlexTableExample extends Component {
     )
   }
 
-  _onRowsCountChange (event) {
-    const rowsCount = parseInt(event.target.value, 10) || 0
+  _onRowCountChange (event) {
+    const rowCount = parseInt(event.target.value, 10) || 0
 
-    this.setState({ rowsCount })
+    this.setState({ rowCount })
   }
 
   _onScrollToRowChange (event) {
-    const { rowsCount } = this.state
-    let scrollToIndex = Math.min(rowsCount - 1, parseInt(event.target.value, 10))
+    const { rowCount } = this.state
+    let scrollToIndex = Math.min(rowCount - 1, parseInt(event.target.value, 10))
 
     if (isNaN(scrollToIndex)) {
       scrollToIndex = undefined

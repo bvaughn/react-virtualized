@@ -66,7 +66,7 @@ export default class AutoSizerExample extends Component {
               <VirtualScroll
                 className={styles.VirtualScroll}
                 height={height}
-                rowsCount={list.size}
+                rowCount={list.size}
                 rowHeight={30}
                 rowRenderer={this._rowRenderer}
                 width={width}
