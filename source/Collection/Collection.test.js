@@ -199,7 +199,7 @@ describe('Collection', () => {
     it('should call :onSectionRendered if at least one cell is rendered', () => {
       let indices
       render(getMarkup({
-        onSectionRendered: params => indices = params
+        onSectionRendered: params => indices = params.indices
       }))
       compareArrays(indices, [0, 1, 2, 3])
     })
@@ -208,7 +208,7 @@ describe('Collection', () => {
       let numCalls = 0
       let indices
       const onSectionRendered = params => {
-        indices = params
+        indices = params.indices
         numCalls++
       }
       render(getMarkup({ onSectionRendered }))
@@ -223,7 +223,7 @@ describe('Collection', () => {
       let numCalls = 0
       let indices
       const onSectionRendered = params => {
-        indices = params
+        indices = params.indices
         numCalls++
       }
       render(getMarkup({ onSectionRendered }))
@@ -258,7 +258,7 @@ describe('Collection', () => {
     it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
       let indices
       render(getMarkup({
-        onSectionRendered: params => indices = params,
+        onSectionRendered: params => indices = params.indices,
         scrollLeft: 2,
         scrollTop: 2
       }))
@@ -268,11 +268,11 @@ describe('Collection', () => {
     it('should render correctly when :scrollLeft and :scrollTop properties are updated', () => {
       let indices
       render(getMarkup({
-        onSectionRendered: params => indices = params
+        onSectionRendered: params => indices = params.indices
       }))
       compareArrays(indices, [0, 1, 2, 3])
       render(getMarkup({
-        onSectionRendered: params => indices = params,
+        onSectionRendered: params => indices = params.indices,
         scrollLeft: 2,
         scrollTop: 2
       }))

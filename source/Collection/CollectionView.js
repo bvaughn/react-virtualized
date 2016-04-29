@@ -65,7 +65,7 @@ export default class CollectionView extends Component {
 
     /**
      * Callback invoked with information about the section of the Collection that was just rendered.
-     * This callback is passed an array of the most recently rendered section indices.
+     * This callback is passed a named :indices parameter which is an Array of the most recently rendered section indices.
      */
     onSectionRendered: PropTypes.func.isRequired,
 
@@ -363,7 +363,9 @@ export default class CollectionView extends Component {
 
     this._onSectionRenderedMemoizer({
       callback: onSectionRendered,
-      indices: cellLayoutManager.getLastRenderedIndices()
+      indices: {
+        indices: cellLayoutManager.getLastRenderedIndices()
+      }
     })
   }
 
