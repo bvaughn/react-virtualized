@@ -326,7 +326,7 @@ describe('VirtualScroll', () => {
   describe('recomputeRowHeights', () => {
     it('should recompute row heights and other values when called', () => {
       let highestRowIndex = 0
-      const rowHeight = (index) => {
+      const rowHeight = ({ index }) => {
         highestRowIndex = Math.max(index, highestRowIndex)
         return 10
       }

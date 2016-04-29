@@ -140,7 +140,7 @@ export default class VirtualScrollExample extends Component {
     return list.get(index % list.size)
   }
 
-  _getRowHeight (index) {
+  _getRowHeight ({ index }) {
     return this._getDatum(index).size
   }
 
