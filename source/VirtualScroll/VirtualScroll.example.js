@@ -19,12 +19,12 @@ export default class VirtualScrollExample extends Component {
     super(props)
 
     this.state = {
-      overscanRowCount: 5,
+      overscanRowCount: 0,
       rowCount: props.list.size,
       scrollToIndex: undefined,
       useDynamicRowHeight: false,
       virtualScrollHeight: 300,
-      virtualScrollRowHeight: 60
+      virtualScrollRowHeight: 50
     }
 
     this._getRowHeight = this._getRowHeight.bind(this)
