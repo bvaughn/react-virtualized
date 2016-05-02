@@ -519,8 +519,8 @@ export default class Grid extends Component {
   }
 
   _getEstimatedRowSize (props) {
-    return typeof props.rowWidth === 'number'
-      ? props.rowWidth
+    return typeof props.rowHeight === 'number'
+      ? props.rowHeight
       : props.estimatedRowSize
   }
 

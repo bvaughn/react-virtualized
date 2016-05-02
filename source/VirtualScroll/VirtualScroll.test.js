@@ -314,8 +314,7 @@ describe('VirtualScroll', () => {
       }
       rendered.refs.Grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
       Simulate.scroll(findDOMNode(rendered), { target })
-      expect(onScrollCalls.length).toEqual(2)
-      expect(onScrollCalls[1]).toEqual({
+      expect(onScrollCalls[onScrollCalls.length - 1]).toEqual({
         clientHeight: 100,
         scrollHeight: 1000,
         scrollTop: 100
@@ -336,7 +335,13 @@ describe('VirtualScroll', () => {
       }))
       highestRowIndex = 0
       component.recomputeRowHeights()
-      expect(highestRowIndex).toEqual(49)
+      // Rows won't actually be remeasured until the VirtualScroll is next rendered.
+      render(getMarkup({
+        rowHeight,
+        rowCount: 50
+      }))
+      // And then only the rows necessary to fill the visible region.
+      expect(highestRowIndex).toEqual(9)
     })
   })
 })

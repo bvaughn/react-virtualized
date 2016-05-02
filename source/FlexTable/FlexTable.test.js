@@ -219,7 +219,13 @@ describe('FlexTable', () => {
       }))
       highestRowIndex = 0
       component.recomputeRowHeights()
-      expect(highestRowIndex).toEqual(49)
+      // Rows won't actually be remeasured until the FlexTable is next rendered.
+      render(getMarkup({
+        rowHeight,
+        rowCount: 50
+      }))
+      // And then only the rows necessary to fill the visible region.
+      expect(highestRowIndex).toEqual(7)
     })
   })
 

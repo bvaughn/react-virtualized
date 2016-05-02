@@ -1,10 +1,34 @@
 import updateScrollIndexHelper from './updateScrollIndexHelper'
-import { getCellMetadata } from '../../utils/TestHelper'
+import CellSizeAndPositionManager from './CellSizeAndPositionManager'
+
+// Default cell sizes and offsets for use in shared tests
+export function getCellSizeAndPositionManager ({
+  cellCount = CELL_SIZES.length,
+  estimatedCellSize = 10
+}) {
+  return new CellSizeAndPositionManager({
+    cellCount,
+    cellSizeGetter: ({ index }) => CELL_SIZES[index % CELL_SIZES.length],
+    estimatedCellSize
+  })
+}
+
+const CELL_SIZES = [
+  10, // 0: 0..0 (min)
+  20, // 1: 0..10
+  15, // 2: 0..30
+  10, // 3: 5..45
+  15, // 4: 20..55
+  30, // 5: 50..70
+  20, // 6: 70..100
+  10, // 7: 80..110
+  30 //  8: 110..110 (max)
+]
 
 describe('updateScrollIndexHelper', () => {
   function helper ({
     cellCount = undefined,
-    cellMetadata = getCellMetadata(),
+    cellSizeAndPositionManager,
     cellSize = 10,
     previousCellsCount = 100,
     previousCellSize = 10,
@@ -14,8 +38,9 @@ describe('updateScrollIndexHelper', () => {
     scrollToIndex,
     size = 50
   } = {}) {
+    cellSizeAndPositionManager = cellSizeAndPositionManager || getCellSizeAndPositionManager({ cellCount })
     cellCount = cellCount === undefined
-      ? cellMetadata.length
+      ? cellSizeAndPositionManager.getCellCount()
       : cellCount
 
     let updateScrollIndexCallbackCalled = false
@@ -26,7 +51,7 @@ describe('updateScrollIndexHelper', () => {
 
     updateScrollIndexHelper({
       cellCount,
-      cellMetadata,
+      cellSizeAndPositionManager,
       cellSize,
       previousCellsCount,
       previousCellSize,

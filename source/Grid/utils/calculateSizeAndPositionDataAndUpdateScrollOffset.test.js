@@ -5,7 +5,6 @@ describe('calculateSizeAndPositionDataAndUpdateScrollOffset', () => {
     cellCount = 100,
     cellSize = 10,
     computeMetadataCallbackProps = {},
-    computeMetadataOnNextUpdate = false,
     nextCellsCount = 100,
     nextCellSize = 10,
     nextScrollToIndex,
@@ -19,7 +18,6 @@ describe('calculateSizeAndPositionDataAndUpdateScrollOffset', () => {
       cellSize,
       computeMetadataCallback: params => computeMetadataCallbackCalls.push(params),
       computeMetadataCallbackProps,
-      computeMetadataOnNextUpdate,
       nextCellsCount,
       nextCellSize,
       nextScrollToIndex,
@@ -32,20 +30,6 @@ describe('calculateSizeAndPositionDataAndUpdateScrollOffset', () => {
       updateScrollOffsetForScrollToIndexCalls
     }
   }
-
-  it('should call :computeMetadataCallback if :computeMetadataOnNextUpdate is true', () => {
-    const { computeMetadataCallbackCalls } = helper({ computeMetadataOnNextUpdate: true })
-    expect(computeMetadataCallbackCalls.length).toEqual(1)
-  })
-
-  it('should pass the specified :computeMetadataCallbackProps to :computeMetadataCallback', () => {
-    const params = { foo: 'bar' }
-    const { computeMetadataCallbackCalls } = helper({
-      computeMetadataCallbackProps: params,
-      computeMetadataOnNextUpdate: true
-    })
-    expect(computeMetadataCallbackCalls).toEqual([params])
-  })
 
   it('should call :computeMetadataCallback if :cellCount has changed', () => {
     const { computeMetadataCallbackCalls } = helper({
@@ -71,25 +55,13 @@ describe('calculateSizeAndPositionDataAndUpdateScrollOffset', () => {
     expect(computeMetadataCallbackCalls.length).toEqual(0)
   })
 
-  it('should call :updateScrollOffsetForScrollToIndex if metadata has changed and :scrollToIndex has not', () => {
-    const { updateScrollOffsetForScrollToIndexCalls } = helper({
-      computeMetadataOnNextUpdate: true,
-      scrollToIndex: 10,
-      nextScrollToIndex: 10
-    })
-    expect(updateScrollOffsetForScrollToIndexCalls.length).toEqual(1)
-  })
-
   it('should not call :updateScrollOffsetForScrollToIndex if :scrollToIndex is not specified', () => {
-    const { updateScrollOffsetForScrollToIndexCalls } = helper({
-      computeMetadataOnNextUpdate: true
-    })
+    const { updateScrollOffsetForScrollToIndexCalls } = helper()
     expect(updateScrollOffsetForScrollToIndexCalls.length).toEqual(0)
   })
 
   it('should not call :updateScrollOffsetForScrollToIndex if :scrollToIndex has also changed', () => {
     const { updateScrollOffsetForScrollToIndexCalls } = helper({
-      computeMetadataOnNextUpdate: true,
       scrollToIndex: 10,
       nextScrollToIndex: 20
     })

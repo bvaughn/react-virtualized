@@ -150,6 +150,21 @@ describe('CellSizeAndPositionManager', () => {
   })
 
   describe('getVisibleCellRange', () => {
+    it('should not return any indices if :cellCount is 0', () => {
+      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager({
+        cellCount: 0
+      })
+      const {
+        start,
+        stop
+      } = cellSizeAndPositionManager.getVisibleCellRange({
+        containerSize: 50,
+        offset: 0
+      })
+      expect(start).toEqual(undefined)
+      expect(stop).toEqual(undefined)
+    })
+
     it('should return a visible range of cells for the beginning of the list', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
       const {

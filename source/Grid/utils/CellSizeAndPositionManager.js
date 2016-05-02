@@ -130,11 +130,11 @@ export default class CellSizeAndPositionManager {
   getVisibleCellRange ({
     containerSize,
     offset
-  }: GetVisibleCellRangeParams): ?VisibleCellRange {
+  }: GetVisibleCellRangeParams): VisibleCellRange {
     const totalSize = this.getTotalSize()
 
     if (totalSize === 0) {
-      return null
+      return {}
     }
 
     const maxOffset = offset + containerSize
@@ -236,6 +236,6 @@ type SizeAndPositionData = {
 };
 
 type VisibleCellRange = {
-  start: number,
-  stop: number
+  start: ?number,
+  stop: ?number
 };
