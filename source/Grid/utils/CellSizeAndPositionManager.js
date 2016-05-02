@@ -31,6 +31,9 @@ export default class CellSizeAndPositionManager {
 
   /**
    * Searches for the cell (index) nearest the specified offset.
+   *
+   * If no exact match is found the next lowest cell index will be returned.
+   * This allows partially visible cells (with offsets just before/above the fold) to be visible.
    */
   findNearestCell (offset: number): number {
     if (Number.isNaN(offset)) {
@@ -62,12 +65,20 @@ export default class CellSizeAndPositionManager {
     return this._cellCount
   }
 
+  getEstimatedCellSize (): number {
+    return this._estimatedCellSize
+  }
+
+  getLastMeasuredIndex (): number {
+    return this._lastMeasuredIndex
+  }
+
   /**
    * This method returns the size and position for the cell at the specified index.
    * It just-in-time calculates (or used cached values) for cells leading up to the index.
    */
   getSizeAndPositionOfCell (index: number): SizeAndPositionData {
-    if (index >= this._cellCount) {
+    if (index < 0 || index >= this._cellCount) {
       throw Error(`Requested index ${index} is outside of range 0..${this._cellCount}`)
     }
 
