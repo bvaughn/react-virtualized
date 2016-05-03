@@ -73,7 +73,7 @@ export default class CellMeasurer extends Component {
 
     let maxWidth = 0
 
-    for (var rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
       let { width } = this._measureCell({
         columnIndex: index,
         rowIndex
@@ -92,11 +92,11 @@ export default class CellMeasurer extends Component {
       return this._cachedRowHeights[index]
     }
 
-    const { rowCount } = this.props
+    const { columnCount } = this.props
 
     let maxHeight = 0
 
-    for (var columnIndex = 0; columnIndex < rowCount; columnIndex++) {
+    for (let columnIndex = 0; columnIndex < columnCount; columnIndex++) {
       let { height } = this._measureCell({
         columnIndex,
         rowIndex: index
@@ -124,7 +124,7 @@ export default class CellMeasurer extends Component {
   }
 
   componentWillUnmount () {
-    this._unrenderAndDestroy()
+    this._unmountContainer()
   }
 
   render () {
@@ -190,7 +190,7 @@ export default class CellMeasurer extends Component {
     }
   }
 
-  _unrenderAndDestroy () {
+  _unmountContainer () {
     if (this._div) {
       this._containerNode.removeChild(this._div)
 
