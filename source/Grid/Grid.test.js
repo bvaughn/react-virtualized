@@ -12,6 +12,8 @@ describe('Grid', () => {
     className,
     columnCount = NUM_COLUMNS,
     columnWidth = 50,
+    estimatedColumnSize,
+    estimatedRowSize,
     height = 100,
     noContentRenderer,
     onSectionRendered,
@@ -41,6 +43,8 @@ describe('Grid', () => {
         className={className}
         columnCount={columnCount}
         columnWidth={columnWidth}
+        estimatedColumnSize={estimatedColumnSize}
+        estimatedRowSize={estimatedRowSize}
         height={height}
         noContentRenderer={noContentRenderer}
         onSectionRendered={onSectionRendered}
@@ -586,6 +590,30 @@ describe('Grid', () => {
       expect(cellRangeRendererParams.rowStartIndex).toEqual(0)
       expect(cellRangeRendererParams.rowStopIndex).toEqual(4)
       expect(rendered.textContent).toContain('Fake content')
+    })
+  })
+
+  describe('estimated row and column sizes', () => {
+    it('should not estimate sizes if actual sizes are numbers', () => {
+      const grid = render(getMarkup({
+        columnWidth: 100,
+        estimatedColumnSize: 150,
+        estimatedRowSize: 15,
+        rowHeight: 20
+      }))
+      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(100)
+      expect(grid._getEstimatedRowSize(grid.props)).toEqual(20)
+    })
+
+    it('should estimate row and column sizes if actual sizes are functions', () => {
+      const grid = render(getMarkup({
+        columnWidth: () => 100,
+        estimatedColumnSize: 150,
+        estimatedRowSize: 15,
+        rowHeight: () => 20
+      }))
+      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(150)
+      expect(grid._getEstimatedRowSize(grid.props)).toEqual(15)
     })
   })
 })
