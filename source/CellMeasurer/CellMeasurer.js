@@ -75,6 +75,7 @@ export default class CellMeasurer extends Component {
 
     for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
       let { width } = this._measureCell({
+        clientWidth: true,
         columnIndex: index,
         rowIndex
       })
@@ -98,6 +99,7 @@ export default class CellMeasurer extends Component {
 
     for (let columnIndex = 0; columnIndex < columnCount; columnIndex++) {
       let { height } = this._measureCell({
+        clientHeight: true,
         columnIndex,
         rowIndex: index
       })
@@ -154,6 +156,8 @@ export default class CellMeasurer extends Component {
   }
 
   _measureCell ({
+    clientHeight = false,
+    clientWidth = true,
     columnIndex,
     rowIndex
   }) {
@@ -166,12 +170,9 @@ export default class CellMeasurer extends Component {
 
     this._div.innerHTML = ReactDOMServer.renderToString(rendered)
 
-    const height = this._div.clientHeight
-    const width = this._div.clientWidth
-
     return {
-      height,
-      width
+      height: clientHeight && this._div.clientHeight,
+      width: clientWidth && this._div.clientWidth
     }
   }
 
