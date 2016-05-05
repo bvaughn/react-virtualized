@@ -54,7 +54,7 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // Collection data as an array of arrays
 const list = [
-  { name: 'Brian Vaughn', x: 13, y: 34, width: 123, size: 234 ]
+  { name: 'Brian Vaughn', x: 13, y: 34, width: 123, size: 234 }
   // And so on...
 ];
 
@@ -63,8 +63,7 @@ ReactDOM.render(
   <Collection
     cellCount={list.length}
     cellRenderer={({ index }) => list[index].name}
-    cellSizeAndPositionGette={({ index }) => list[index]}
-    columnCount={list.length}
+    cellSizeAndPositionGetter={({ index }) => list[index].size}
     height={300}
     width={300}
   />,
