@@ -42,7 +42,11 @@ describe('CellSizeAndPositionManager', () => {
       expect(() => cellSizeAndPositionManager.findNearestCell(NaN)).toThrow()
     })
 
-    // @TODO Should I test bounds outside of the total size?
+    it('should gracefully handle offets outisde of bounds (to account for elastic scrolling)', () => {
+      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
+      expect(cellSizeAndPositionManager.findNearestCell(-100)).toEqual(0)
+      expect(cellSizeAndPositionManager.findNearestCell(1234567890)).toEqual(99)
+    })
 
     it('should find the first cell', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()

@@ -40,6 +40,10 @@ export default class CellSizeAndPositionManager {
       throw Error(`Invalid offset ${offset} specified`)
     }
 
+    // Our search algorithms find the nearest match at or below the specified offset.
+    // So make sure the offset is at least 0 or no match will be found.
+    offset = Math.max(0, offset)
+
     const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell()
     const lastMeasuredIndex = Math.max(0, this._lastMeasuredIndex)
 
@@ -170,7 +174,7 @@ export default class CellSizeAndPositionManager {
     high,
     low,
     offset
-  }) {
+  }): number {
     let middle
     let currentOffset
 
@@ -195,7 +199,7 @@ export default class CellSizeAndPositionManager {
   _exponentialSearch ({
     index,
     offset
-  }) {
+  }): number {
     let interval = 1
 
     while (
