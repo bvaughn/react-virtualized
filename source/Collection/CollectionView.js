@@ -135,6 +135,10 @@ export default class CollectionView extends Component {
 
     this._scrollbarSize = getScrollbarSize()
 
+    if (scrollLeft >= 0 || scrollTop >= 0) {
+      this._setScrollPosition({ scrollLeft, scrollTop })
+    }
+
     // Update onSectionRendered callback.
     this._invokeOnSectionRenderedHelper()
 
@@ -196,13 +200,9 @@ export default class CollectionView extends Component {
   }
 
   componentWillMount () {
-    const { cellLayoutManager, scrollLeft, scrollTop } = this.props
+    const { cellLayoutManager } = this.props
 
     cellLayoutManager.calculateSizeAndPositionData()
-
-    if (scrollLeft >= 0 || scrollTop >= 0) {
-      this._setScrollPosition({ scrollLeft, scrollTop })
-    }
   }
 
   componentWillUnmount () {
