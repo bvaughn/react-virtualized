@@ -135,7 +135,9 @@ export default class CollectionView extends Component {
 
     this._scrollbarSize = getScrollbarSize()
 
-    if (scrollLeft >= 0 || scrollTop >= 0) {
+    if (scrollToCell >= 0) {
+      this._updateScrollPositionForScrollToCell()
+    } else if (scrollLeft >= 0 || scrollTop >= 0) {
       this._setScrollPosition({ scrollLeft, scrollTop })
     }
 
@@ -146,10 +148,6 @@ export default class CollectionView extends Component {
       height: totalHeight,
       width: totalWidth
     } = cellLayoutManager.getTotalSize()
-
-    if (scrollToCell >= 0) {
-      this._updateScrollPositionForScrollToCell()
-    }
 
     // Initialize onScroll callback.
     this._invokeOnScrollMemoizer({

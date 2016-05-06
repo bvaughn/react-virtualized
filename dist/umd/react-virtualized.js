@@ -846,9 +846,12 @@
                 key: "componentDidMount",
                 value: function() {
                     var _props = this.props, cellLayoutManager = _props.cellLayoutManager, scrollLeft = _props.scrollLeft, scrollToCell = _props.scrollToCell, scrollTop = _props.scrollTop;
-                    this._scrollbarSize = (0, _scrollbarSize2["default"])(), this._invokeOnSectionRenderedHelper();
+                    this._scrollbarSize = (0, _scrollbarSize2["default"])(), scrollToCell >= 0 ? this._updateScrollPositionForScrollToCell() : (scrollLeft >= 0 || scrollTop >= 0) && this._setScrollPosition({
+                        scrollLeft: scrollLeft,
+                        scrollTop: scrollTop
+                    }), this._invokeOnSectionRenderedHelper();
                     var _cellLayoutManager$ge = cellLayoutManager.getTotalSize(), totalHeight = _cellLayoutManager$ge.height, totalWidth = _cellLayoutManager$ge.width;
-                    scrollToCell >= 0 && this._updateScrollPositionForScrollToCell(), this._invokeOnScrollMemoizer({
+                    this._invokeOnScrollMemoizer({
                         scrollLeft: scrollLeft || 0,
                         scrollTop: scrollTop || 0,
                         totalHeight: totalHeight,
@@ -867,11 +870,8 @@
             }, {
                 key: "componentWillMount",
                 value: function() {
-                    var _props3 = this.props, cellLayoutManager = _props3.cellLayoutManager, scrollLeft = _props3.scrollLeft, scrollTop = _props3.scrollTop;
-                    cellLayoutManager.calculateSizeAndPositionData(), (scrollLeft >= 0 || scrollTop >= 0) && this._setScrollPosition({
-                        scrollLeft: scrollLeft,
-                        scrollTop: scrollTop
-                    });
+                    var cellLayoutManager = this.props.cellLayoutManager;
+                    cellLayoutManager.calculateSizeAndPositionData();
                 }
             }, {
                 key: "componentWillUnmount",
@@ -896,7 +896,7 @@
             }, {
                 key: "render",
                 value: function() {
-                    var _props4 = this.props, cellLayoutManager = _props4.cellLayoutManager, className = _props4.className, height = _props4.height, noContentRenderer = _props4.noContentRenderer, width = _props4.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = height > 0 && width > 0 ? cellLayoutManager.renderCells({
+                    var _props3 = this.props, cellLayoutManager = _props3.cellLayoutManager, className = _props3.className, height = _props3.height, noContentRenderer = _props3.noContentRenderer, width = _props3.width, _state2 = this.state, isScrolling = _state2.isScrolling, scrollLeft = _state2.scrollLeft, scrollTop = _state2.scrollTop, childrenToDisplay = height > 0 && width > 0 ? cellLayoutManager.renderCells({
                         height: height,
                         isScrolling: isScrolling,
                         width: width,
@@ -945,7 +945,7 @@
             }, {
                 key: "_invokeOnSectionRenderedHelper",
                 value: function() {
-                    var _props5 = this.props, cellLayoutManager = _props5.cellLayoutManager, onSectionRendered = _props5.onSectionRendered;
+                    var _props4 = this.props, cellLayoutManager = _props4.cellLayoutManager, onSectionRendered = _props4.onSectionRendered;
                     this._onSectionRenderedMemoizer({
                         callback: onSectionRendered,
                         indices: cellLayoutManager.getLastRenderedIndices()
@@ -957,7 +957,7 @@
                     var _this3 = this, scrollLeft = _ref.scrollLeft, scrollTop = _ref.scrollTop, totalHeight = _ref.totalHeight, totalWidth = _ref.totalWidth;
                     this._onScrollMemoizer({
                         callback: function(_ref2) {
-                            var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop, _props6 = _this3.props, height = _props6.height, onScroll = _props6.onScroll, width = _props6.width;
+                            var scrollLeft = _ref2.scrollLeft, scrollTop = _ref2.scrollTop, _props5 = _this3.props, height = _props5.height, onScroll = _props5.onScroll, width = _props5.width;
                             onScroll({
                                 clientHeight: height,
                                 clientWidth: width,
@@ -994,7 +994,7 @@
             }, {
                 key: "_updateScrollPositionForScrollToCell",
                 value: function() {
-                    var _props7 = this.props, cellLayoutManager = _props7.cellLayoutManager, height = _props7.height, scrollToCell = _props7.scrollToCell, width = _props7.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop;
+                    var _props6 = this.props, cellLayoutManager = _props6.cellLayoutManager, height = _props6.height, scrollToCell = _props6.scrollToCell, width = _props6.width, _state3 = this.state, scrollLeft = _state3.scrollLeft, scrollTop = _state3.scrollTop;
                     if (scrollToCell >= 0) {
                         var scrollPosition = cellLayoutManager.getScrollPositionForCell({
                             cellIndex: scrollToCell,
@@ -1011,7 +1011,7 @@
                 value: function(event) {
                     if (event.target === this.refs.scrollingContainer) {
                         this._enablePointerEventsAfterDelay();
-                        var _props8 = this.props, cellLayoutManager = _props8.cellLayoutManager, height = _props8.height, width = _props8.width, scrollbarSize = this._scrollbarSize, _cellLayoutManager$ge3 = cellLayoutManager.getTotalSize(), totalHeight = _cellLayoutManager$ge3.height, totalWidth = _cellLayoutManager$ge3.width, scrollLeft = Math.min(totalWidth - width + scrollbarSize, event.target.scrollLeft), scrollTop = Math.min(totalHeight - height + scrollbarSize, event.target.scrollTop);
+                        var _props7 = this.props, cellLayoutManager = _props7.cellLayoutManager, height = _props7.height, width = _props7.width, scrollbarSize = this._scrollbarSize, _cellLayoutManager$ge3 = cellLayoutManager.getTotalSize(), totalHeight = _cellLayoutManager$ge3.height, totalWidth = _cellLayoutManager$ge3.width, scrollLeft = Math.min(totalWidth - width + scrollbarSize, event.target.scrollLeft), scrollTop = Math.min(totalHeight - height + scrollbarSize, event.target.scrollTop);
                         if (this.state.scrollLeft !== scrollLeft || this.state.scrollTop !== scrollTop) {
                             var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
                             this.state.isScrolling || this.setState({
