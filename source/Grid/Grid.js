@@ -45,7 +45,7 @@ export default class Grid extends Component {
      * Responsible for rendering a group of cells given their index ranges.
      * Should implement the following interface: ({
      *   cellCache: Map,
-     *   cellRangeRenderer: Function,
+     *   cellRenderer: Function,
      *   columnSizeAndPositionManager: CellSizeAndPositionManager,
      *   columnStartIndex: number,
      *   columnStopIndex: number,

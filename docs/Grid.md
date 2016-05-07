@@ -8,7 +8,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, isScrolling: boolean, rowIndex: number }): PropTypes.node` |
-| cellRangeRenderer | Function | ✓ | Responsible for rendering a group of cells given their index ranges.: `({ cellCache: Map, cellRangeRenderer: Function, columnSizeAndPositionManager: CellSizeAndPositionManager, columnStartIndex: number, columnStopIndex: number, isScrolling: boolean, rowSizeAndPositionManager: CellSizeAndPositionManager, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>` |
+| cellRangeRenderer | Function | ✓ | Responsible for rendering a group of cells given their index ranges.: `({ cellCache: Map, cellRenderer: Function, columnSizeAndPositionManager: CellSizeAndPositionManager, columnStartIndex: number, columnStopIndex: number, isScrolling: boolean, rowSizeAndPositionManager: CellSizeAndPositionManager, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>` |
 | className | String |  | Optional custom CSS class name to attach to root Grid element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
 | columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number` |
@@ -57,7 +57,7 @@ The general shape of your range renderer function should look something like the
 ```js
 function cellRangeRenderer ({
   cellCache,
-  cellRangeRenderer,
+  cellRenderer,
   columnSizeAndPositionManager,
   columnStartIndex,
   columnStopIndex,
