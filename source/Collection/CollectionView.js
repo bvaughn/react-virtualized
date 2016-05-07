@@ -135,6 +135,12 @@ export default class CollectionView extends Component {
 
     this._scrollbarSize = getScrollbarSize()
 
+    if (scrollToCell >= 0) {
+      this._updateScrollPositionForScrollToCell()
+    } else if (scrollLeft >= 0 || scrollTop >= 0) {
+      this._setScrollPosition({ scrollLeft, scrollTop })
+    }
+
     // Update onSectionRendered callback.
     this._invokeOnSectionRenderedHelper()
 
@@ -142,10 +148,6 @@ export default class CollectionView extends Component {
       height: totalHeight,
       width: totalWidth
     } = cellLayoutManager.getTotalSize()
-
-    if (scrollToCell >= 0) {
-      this._updateScrollPositionForScrollToCell()
-    }
 
     // Initialize onScroll callback.
     this._invokeOnScrollMemoizer({
@@ -196,13 +198,9 @@ export default class CollectionView extends Component {
   }
 
   componentWillMount () {
-    const { cellLayoutManager, scrollLeft, scrollTop } = this.props
+    const { cellLayoutManager } = this.props
 
     cellLayoutManager.calculateSizeAndPositionData()
-
-    if (scrollLeft >= 0 || scrollTop >= 0) {
-      this._setScrollPosition({ scrollLeft, scrollTop })
-    }
   }
 
   componentWillUnmount () {

@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 6.3.2
+Fixed edge-case bug in `Collection` where initial `scrollLeft` and `scrollTop` would not correctly adjust inner offsets.
+Thanks @edulan for the contribution!
+
 ##### 6.3.1
 Added better checks against invalid style properties in `AutoSizer` to protected against the case when it is removed from the DOM immediately after being added.
 

@@ -68,7 +68,7 @@ ReactDOM.render(
     height={300}
     columnWidth={100}
     rowHeight={30}
-    columnCount={list.length}
+    columnCount={list[0].length}
     rowCount={list.length}
     cellRenderer={({ columnIndex, rowIndex }) => list[rowIndex][columnIndex]}
   />,

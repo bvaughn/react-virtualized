@@ -83,6 +83,12 @@ var CollectionView = function (_Component) {
 
       this._scrollbarSize = getScrollbarSize();
 
+      if (scrollToCell >= 0) {
+        this._updateScrollPositionForScrollToCell();
+      } else if (scrollLeft >= 0 || scrollTop >= 0) {
+        this._setScrollPosition({ scrollLeft: scrollLeft, scrollTop: scrollTop });
+      }
+
       // Update onSectionRendered callback.
       this._invokeOnSectionRenderedHelper();
 
@@ -91,12 +97,8 @@ var CollectionView = function (_Component) {
       var totalHeight = _cellLayoutManager$ge.height;
       var totalWidth = _cellLayoutManager$ge.width;
 
-
-      if (scrollToCell >= 0) {
-        this._updateScrollPositionForScrollToCell();
-      }
-
       // Initialize onScroll callback.
+
       this._invokeOnScrollMemoizer({
         scrollLeft: scrollLeft || 0,
         scrollTop: scrollTop || 0,
@@ -142,17 +144,10 @@ var CollectionView = function (_Component) {
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
-      var _props3 = this.props;
-      var cellLayoutManager = _props3.cellLayoutManager;
-      var scrollLeft = _props3.scrollLeft;
-      var scrollTop = _props3.scrollTop;
+      var cellLayoutManager = this.props.cellLayoutManager;
 
 
       cellLayoutManager.calculateSizeAndPositionData();
-
-      if (scrollLeft >= 0 || scrollTop >= 0) {
-        this._setScrollPosition({ scrollLeft: scrollLeft, scrollTop: scrollTop });
-      }
     }
   }, {
     key: 'componentWillUnmount',
@@ -202,12 +197,12 @@ var CollectionView = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _props4 = this.props;
-      var cellLayoutManager = _props4.cellLayoutManager;
-      var className = _props4.className;
-      var height = _props4.height;
-      var noContentRenderer = _props4.noContentRenderer;
-      var width = _props4.width;
+      var _props3 = this.props;
+      var cellLayoutManager = _props3.cellLayoutManager;
+      var className = _props3.className;
+      var height = _props3.height;
+      var noContentRenderer = _props3.noContentRenderer;
+      var width = _props3.width;
       var _state2 = this.state;
       var isScrolling = _state2.isScrolling;
       var scrollLeft = _state2.scrollLeft;
@@ -304,9 +299,9 @@ var CollectionView = function (_Component) {
   }, {
     key: '_invokeOnSectionRenderedHelper',
     value: function _invokeOnSectionRenderedHelper() {
-      var _props5 = this.props;
-      var cellLayoutManager = _props5.cellLayoutManager;
-      var onSectionRendered = _props5.onSectionRendered;
+      var _props4 = this.props;
+      var cellLayoutManager = _props4.cellLayoutManager;
+      var onSectionRendered = _props4.onSectionRendered;
 
 
       this._onSectionRenderedMemoizer({
@@ -328,10 +323,10 @@ var CollectionView = function (_Component) {
         callback: function callback(_ref2) {
           var scrollLeft = _ref2.scrollLeft;
           var scrollTop = _ref2.scrollTop;
-          var _props6 = _this3.props;
-          var height = _props6.height;
-          var onScroll = _props6.onScroll;
-          var width = _props6.width;
+          var _props5 = _this3.props;
+          var height = _props5.height;
+          var onScroll = _props5.onScroll;
+          var width = _props5.width;
 
 
           onScroll({
@@ -395,11 +390,11 @@ var CollectionView = function (_Component) {
   }, {
     key: '_updateScrollPositionForScrollToCell',
     value: function _updateScrollPositionForScrollToCell() {
-      var _props7 = this.props;
-      var cellLayoutManager = _props7.cellLayoutManager;
-      var height = _props7.height;
-      var scrollToCell = _props7.scrollToCell;
-      var width = _props7.width;
+      var _props6 = this.props;
+      var cellLayoutManager = _props6.cellLayoutManager;
+      var height = _props6.height;
+      var scrollToCell = _props6.scrollToCell;
+      var width = _props6.width;
       var _state3 = this.state;
       var scrollLeft = _state3.scrollLeft;
       var scrollTop = _state3.scrollTop;
@@ -436,10 +431,10 @@ var CollectionView = function (_Component) {
       // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
       // This causes a series of rapid renders that is slow for long lists.
       // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-      var _props8 = this.props;
-      var cellLayoutManager = _props8.cellLayoutManager;
-      var height = _props8.height;
-      var width = _props8.width;
+      var _props7 = this.props;
+      var cellLayoutManager = _props7.cellLayoutManager;
+      var height = _props7.height;
+      var width = _props7.width;
 
       var scrollbarSize = this._scrollbarSize;
 
