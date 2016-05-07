@@ -71,6 +71,7 @@ Here are some online demos of each component:
 
 * [ArrowKeyStepper](https://bvaughn.github.io/react-virtualized/?component=ArrowKeyStepper)
 * [AutoSizer](https://bvaughn.github.io/react-virtualized/?component=AutoSizer)
+* [CellMeasurer](https://bvaughn.github.io/react-virtualized/?component=CellMeasurer)
 * [Collection](https://bvaughn.github.io/react-virtualized/?component=Collection)
 * [ColumnSizer](https://bvaughn.github.io/react-virtualized/?component=ColumnSizer)
 * [FlexTable](https://bvaughn.github.io/react-virtualized/?component=FlexTable)

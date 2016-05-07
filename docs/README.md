@@ -13,6 +13,7 @@ Documentation
 ### High-Order Components
 * [ArrowKeyStepper](ArrowKeyStepper.md)
 * [AutoSizer](AutoSizer.md)
+* [CellMeasurer](CellMeasurer.md)
 * [ColumnSizer](ColumnSizer.md)
 * [InfiniteLoader](InfiniteLoader.md)
 * [ScrollSync](ScrollSync.md)
