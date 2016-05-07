@@ -40,7 +40,7 @@ Callback responsible for rendering a cell's contents.
 It should implement the following signature:
 
 ```javascript
-function ({ cellData: any, columnData: any, dataKey: string, rowData: any, rowIndex: number }): node
+function ({ cellData: any, columnData: any, dataKey: string, isScrolling: boolean, rowData: any, rowIndex: number }): node
 ```
 
 A default `cellRenderer` is provided that displays an attribute as a simple string

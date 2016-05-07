@@ -16,6 +16,16 @@ describe('Grid', () => {
     )
   }
 
+  function simulateScroll ({
+    grid,
+    scrollLeft = 0,
+    scrollTop = 0
+  }) {
+    const target = { scrollLeft, scrollTop }
+    grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
+    Simulate.scroll(findDOMNode(grid), { target })
+  }
+
   function getMarkup ({
     cellRenderer = defaultRenderCell,
     cellRangeRenderer,
@@ -426,12 +436,6 @@ describe('Grid', () => {
   })
 
   describe('onScroll', () => {
-    function helper ({ grid, scrollLeft, scrollTop }) {
-      const target = { scrollLeft, scrollTop }
-      grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
-      Simulate.scroll(findDOMNode(grid), { target })
-    }
-
     it('should trigger callback when component is mounted', () => {
       const onScrollCalls = []
       render(getMarkup({
@@ -454,7 +458,7 @@ describe('Grid', () => {
       const grid = render(getMarkup({
         onScroll: params => onScrollCalls.push(params)
       }))
-      helper({
+      simulateScroll({
         grid,
         scrollLeft: 100,
         scrollTop: 0
@@ -475,7 +479,7 @@ describe('Grid', () => {
       const grid = render(getMarkup({
         onScroll: params => onScrollCalls.push(params)
       }))
-      helper({
+      simulateScroll({
         grid,
         scrollLeft: 0,
         scrollTop: 100
@@ -618,7 +622,7 @@ describe('Grid', () => {
   })
 
   describe('cell caching', () => {
-    it('should cache a cell once it has been rendered', () => {
+    it('should not cache cells if the Grid is not scrolling', () => {
       const cellRendererCalls = []
       function cellRenderer ({ columnIndex, rowIndex }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
@@ -648,8 +652,48 @@ describe('Grid', () => {
         ...props,
         scrollToRow: 1
       }))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+    })
+
+    it('should cache a cell once it has been rendered while scrolling', () => {
+      const cellRendererCalls = []
+      function cellRenderer ({ columnIndex, rowIndex }) {
+        cellRendererCalls.push({ columnIndex, rowIndex })
+        return defaultRenderCell({ columnIndex, rowIndex })
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollToRow: 0,
+        width: 100
+      }
+
+      const grid = render(getMarkup({
+        ...props,
+        scrollToRow: 0
+      }))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+
+      simulateScroll({ grid, scrollTop: 1 })
+
+      cellRendererCalls.splice(0)
+
+      // Row 1 is already visible so no new cells are rendered
+      render(getMarkup({
+        ...props,
+        scrollToRow: 1
+      }))
       expect(cellRendererCalls).toEqual([])
 
+      // Row 2 is not yet visible so 1 new cell must be rendered
       render(getMarkup({
         ...props,
         scrollToRow: 2
@@ -680,21 +724,18 @@ describe('Grid', () => {
         { columnIndex: 0, rowIndex: 1 }
       ])
 
-      Simulate.scroll(grid.refs.scrollingContainer)
-
-      cellRendererCalls.splice(0)
+      simulateScroll({ grid, scrollTop: 1 })
 
       // Allow scrolling timeout to complete so that cell cache is reset
       await new Promise(resolve => setTimeout(resolve, 500))
+
+      cellRendererCalls.splice(0)
 
       render(getMarkup({
         ...props,
         scrollToRow: 1
       }))
-      expect(cellRendererCalls).toEqual([
-        { columnIndex: 0, rowIndex: 0 },
-        { columnIndex: 0, rowIndex: 1 }
-      ])
+      expect(cellRendererCalls.length).not.toEqual(0)
 
       done()
     })

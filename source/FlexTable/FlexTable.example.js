@@ -86,9 +86,9 @@ export default class FlexTableExample extends Component {
           <label className={styles.checkboxLabel}>
             <input
               aria-label='Use dynamic row heights?'
+              checked={useDynamicRowHeight}
               className={styles.checkbox}
               type='checkbox'
-              value={useDynamicRowHeight}
               onChange={event => this._updateUseDynamicRowHeight(event.target.checked)}
             />
             Use dynamic row heights?
@@ -97,9 +97,9 @@ export default class FlexTableExample extends Component {
           <label className={styles.checkboxLabel}>
             <input
               aria-label='Hide index row?'
+              checked={hideIndexRow}
               className={styles.checkbox}
               type='checkbox'
-              value={hideIndexRow}
               onChange={event => this.setState({ hideIndexRow: event.target.checked })}
             />
             Hide index row?

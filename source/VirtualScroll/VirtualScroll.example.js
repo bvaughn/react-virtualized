@@ -22,6 +22,7 @@ export default class VirtualScrollExample extends Component {
       overscanRowCount: 0,
       rowCount: props.list.size,
       scrollToIndex: undefined,
+      showScrollingPlaceholder: true,
       useDynamicRowHeight: false,
       virtualScrollHeight: 300,
       virtualScrollRowHeight: 50
@@ -32,7 +33,6 @@ export default class VirtualScrollExample extends Component {
     this._onRowCountChange = this._onRowCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._rowRenderer = this._rowRenderer.bind(this)
-    this._updateUseDynamicRowHeight = this._updateUseDynamicRowHeight.bind(this)
   }
 
   render () {
@@ -42,6 +42,7 @@ export default class VirtualScrollExample extends Component {
       overscanRowCount,
       rowCount,
       scrollToIndex,
+      showScrollingPlaceholder,
       useDynamicRowHeight,
       virtualScrollHeight,
       virtualScrollRowHeight
@@ -64,12 +65,23 @@ export default class VirtualScrollExample extends Component {
           <label className={styles.checkboxLabel}>
             <input
               aria-label='Use dynamic row heights?'
+              checked={useDynamicRowHeight}
               className={styles.checkbox}
               type='checkbox'
-              value={useDynamicRowHeight}
-              onChange={event => this._updateUseDynamicRowHeight(event.target.checked)}
+              onChange={event => this.setState({ useDynamicRowHeight: event.target.checked })}
             />
             Use dynamic row heights?
+          </label>
+
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Show scrolling placeholder?'
+              checked={showScrollingPlaceholder}
+              className={styles.checkbox}
+              type='checkbox'
+              onChange={event => this.setState({ showScrollingPlaceholder: event.target.checked })}
+            />
+            Show scrolling placeholder?
           </label>
         </ContentBoxParagraph>
 
@@ -169,8 +181,24 @@ export default class VirtualScrollExample extends Component {
     this.setState({ scrollToIndex })
   }
 
-  _rowRenderer ({ index }) {
-    const { useDynamicRowHeight } = this.state
+  _rowRenderer ({ index, isScrolling }) {
+    const {
+      showScrollingPlaceholder,
+      useDynamicRowHeight
+    } = this.state
+
+    if (
+      showScrollingPlaceholder &&
+      isScrolling
+    ) {
+      return (
+        <div className={styles.row}>
+          <span className={styles.isScrollingPlaceholder}>
+            Scrolling...
+          </span>
+        </div>
+      )
+    }
 
     const datum = this._getDatum(index)
 
@@ -188,10 +216,7 @@ export default class VirtualScrollExample extends Component {
     }
 
     return (
-      <div
-        className={styles.row}
-        style={{ height: '100%' }}
-      >
+      <div className={styles.row}>
         <div
           className={styles.letter}
           style={{
@@ -216,11 +241,5 @@ export default class VirtualScrollExample extends Component {
         }
       </div>
     )
-  }
-
-  _updateUseDynamicRowHeight (value) {
-    this.setState({
-      useDynamicRowHeight: value
-    })
   }
 }

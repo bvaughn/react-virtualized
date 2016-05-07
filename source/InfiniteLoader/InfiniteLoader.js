@@ -108,7 +108,6 @@ export default class InfiniteLoader extends Component {
             })
           ) {
             if (this._registeredChild) {
-              this._registeredChild.clearCellCache()
               this._registeredChild.forceUpdate()
             }
           }

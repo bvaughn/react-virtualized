@@ -7,7 +7,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
+| cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, isScrolling: boolean, rowIndex: number }): PropTypes.node` |
 | cellRangeRenderer | Function | ✓ | Responsible for rendering a group of cells given their index ranges.: `({ columnMetadata:Array<Object>, columnStartIndex: number, columnStopIndex: number, cellRenderer: Function, rowMetadata:Array<Object>, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>` |
 | className | String |  | Optional custom CSS class name to attach to root Grid element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
@@ -27,12 +27,6 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | width | Number | ✓ | Width of Grid; this property determines the number of visible (vs virtualized) columns. |
 
 ### Public Methods
-
-##### clearCellCache
-
-Cells are cahced during scrolling to improve performance.
-Once scrolling completes (and after a debounce period) the cache is flushed to avoid memory leaks or stale renders.
-Use this method to forcefeully clear the cell cache and ensure all cells are re-rendered during the next update.
 
 ##### recomputeGridSize
 
@@ -76,7 +70,7 @@ ReactDOM.render(
     rowHeight={30}
     columnCount={list[0].length}
     rowCount={list.length}
-    cellRenderer={({ columnIndex, rowIndex }) => list[rowIndex][columnIndex]}
+    cellRenderer={({ columnIndex, isScrolling, rowIndex }) => list[rowIndex][columnIndex]}
   />,
   document.getElementById('example')
 );

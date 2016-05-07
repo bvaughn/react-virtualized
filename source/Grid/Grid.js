@@ -201,13 +201,6 @@ export default class Grid extends Component {
   }
 
   /**
-   * Clear cell cache to ensure cells are rerendered during the next update.
-   */
-  clearCellCache () {
-    this._cellCache = new Map()
-  }
-
-  /**
    * Forced recompute of row heights and column widths.
    * This function should be called if dynamic column or row sizes have changed but nothing else has.
    * Since Grid only receives :columnCount and :rowCount it has no way of detecting when the underlying data changes.
@@ -751,10 +744,18 @@ function defaultCellRangeRenderer ({
       let renderedCell
 
       // Avoid re-rendering a cell many times while scrolling.
-      if (cellCache.has(key)) {
+      // Don't use the cell cache if we are not scrolling because it complicates simpe prop updates.
+      if (
+        isScrolling &&
+        cellCache.has(key)
+      ) {
         renderedCell = cellCache.get(key)
       } else {
-        renderedCell = cellRenderer({ columnIndex, rowIndex })
+        renderedCell = cellRenderer({
+          columnIndex,
+          isScrolling,
+          rowIndex
+        })
 
         cellCache.set(key, renderedCell)
       }

@@ -73,11 +73,6 @@ export default class VirtualScroll extends Component {
     overscanRowCount: 10
   }
 
-  /** See Grid#clearCellCache */
-  clearCellCache () {
-    this.refs.Grid.clearCellCache()
-  }
-
   /** See Grid#recomputeGridSize */
   recomputeRowHeights () {
     this.refs.Grid.recomputeGridSize()
@@ -118,7 +113,10 @@ export default class VirtualScroll extends Component {
           stopIndex: rowStopIndex
         })}
         overscanRowCount={overscanRowCount}
-        cellRenderer={({ columnIndex, rowIndex }) => rowRenderer({ index: rowIndex })}
+        cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
+          index: rowIndex,
+          isScrolling
+        })}
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollToRow={scrollToIndex}
