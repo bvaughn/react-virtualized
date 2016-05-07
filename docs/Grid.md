@@ -8,7 +8,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, isScrolling: boolean, rowIndex: number }): PropTypes.node` |
-| cellRangeRenderer | Function | ✓ | Responsible for rendering a group of cells given their index ranges.: `({ columnMetadata:Array<Object>, columnStartIndex: number, columnStopIndex: number, cellRenderer: Function, rowMetadata:Array<Object>, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>` |
+| cellRangeRenderer | Function | ✓ | Responsible for rendering a group of cells given their index ranges.: `({ cellCache: Map, cellRangeRenderer: Function, columnSizeAndPositionManager: CellSizeAndPositionManager, columnStartIndex: number, columnStopIndex: number, isScrolling: boolean, rowSizeAndPositionManager: CellSizeAndPositionManager, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>` |
 | className | String |  | Optional custom CSS class name to attach to root Grid element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
 | columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number` |
@@ -44,6 +44,48 @@ The Grid component supports the following static class names
 | Grid | Main (outer) element |
 | Grid__innerScrollContainer | Inner scrollable area |
 | Grid__cell | Individual cell |
+
+### cellRangeRenderer
+
+This is an advanced property.
+It is useful for situations where the `Grid` requires additional, overlayed UI (such as a Gantt chart or a calendar application).
+Many use cases can be solved more easily using the `onScroll` callback or the `ScrollSync` HOC.
+If you do choose to implement your own range renderer though, consider starting by forking the [`defaultCellRangeRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/defaultCellRangeRenderer.js) function.
+
+The general shape of your range renderer function should look something like the following:
+
+```js
+function cellRangeRenderer ({
+  cellCache,
+  cellRangeRenderer,
+  columnSizeAndPositionManager,
+  columnStartIndex,
+  columnStopIndex,
+  isScrolling,
+  rowSizeAndPositionManager,
+  rowStartIndex,
+  rowStopIndex
+}) {
+  const renderedCells = []
+
+  for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
+    // This contains :offset (top) and :size (height) information for the cell
+    let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex)
+
+    for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
+      // This contains :offset (left) and :size (width) information for the cell
+      let columnDatum = columnSizeAndPositionManager.getSizeAndPositionOfCell(columnIndex)
+
+      // Now render your cell and additional UI as you see fit.
+      // Be sure to provide unique :key attributes.
+      // Add all rendered children to the :renderedCells Array.
+    }
+  }
+
+  return renderedCells
+}
+}
+```
 
 ### Examples
 
