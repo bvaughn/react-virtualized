@@ -30,6 +30,7 @@ export default class GridExample extends Component {
       useDynamicRowHeight: false
     }
 
+    this._cellRenderer = this._cellRenderer.bind(this)
     this._getColumnWidth = this._getColumnWidth.bind(this)
     this._getRowClassName = this._getRowClassName.bind(this)
     this._getRowHeight = this._getRowHeight.bind(this)
@@ -39,7 +40,6 @@ export default class GridExample extends Component {
     this._onScrollToColumnChange = this._onScrollToColumnChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._renderBodyCell = this._renderBodyCell.bind(this)
-    this._cellRenderer = this._cellRenderer.bind(this)
     this._renderLeftSideCell = this._renderLeftSideCell.bind(this)
   }
 
@@ -141,6 +141,7 @@ export default class GridExample extends Component {
         <AutoSizer disableHeight>
           {({ width }) => (
             <Grid
+              cellRenderer={this._cellRenderer}
               className={styles.BodyGrid}
               columnWidth={this._getColumnWidth}
               columnCount={columnCount}
@@ -148,7 +149,6 @@ export default class GridExample extends Component {
               noContentRenderer={this._noContentRenderer}
               overscanColumnCount={overscanColumnCount}
               overscanRowCount={overscanRowCount}
-              cellRenderer={this._cellRenderer}
               rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
               rowCount={rowCount}
               scrollToColumn={scrollToColumn}

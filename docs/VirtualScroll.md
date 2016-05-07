@@ -21,6 +21,12 @@ This component renders a virtualized list of elements with either fixed or dynam
 
 ### Public Methods
 
+##### clearCellCache
+
+Cells are cahced during scrolling to improve performance.
+Once scrolling completes (and after a debounce period) the cache is flushed to avoid memory leaks or stale renders.
+Use this method to forcefeully clear the cell cache and ensure all cells are re-rendered during the next update.
+
 ##### recomputeRowHeights
 Recompute row heights and offsets.
 

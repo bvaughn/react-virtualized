@@ -43,10 +43,12 @@ export default class Grid extends Component {
     /**
      * Responsible for rendering a group of cells given their index ranges.
      * Should implement the following interface: ({
+     *   cellCache: Map,
+     *   cellRangeRenderer: Function,
      *   columnSizeAndPositionManager: CellSizeAndPositionManager,
      *   columnStartIndex: number,
      *   columnStopIndex: number,
-     *   cellRenderer: Function,
+     *   isScrolling: boolean,
      *   rowSizeAndPositionManager: CellSizeAndPositionManager,
      *   rowStartIndex: number,
      *   rowStopIndex: number
@@ -159,7 +161,7 @@ export default class Grid extends Component {
     onSectionRendered: () => null,
     overscanColumnCount: 0,
     overscanRowCount: 10,
-    cellRangeRenderer: defaultRenderCellRanges
+    cellRangeRenderer: defaultCellRangeRenderer
   };
 
   constructor (props, context) {
@@ -194,6 +196,15 @@ export default class Grid extends Component {
       cellSizeGetter: (index) => this._rowHeightGetter(index),
       estimatedCellSize: this._getEstimatedRowSize(props)
     })
+
+    this._cellCache = new Map()
+  }
+
+  /**
+   * Clear cell cache to ensure cells are rerendered during the next update.
+   */
+  clearCellCache () {
+    this._cellCache = new Map()
   }
 
   /**
@@ -428,10 +439,12 @@ export default class Grid extends Component {
       this._rowStopIndex = overscanRowIndices.overscanStopIndex
 
       childrenToDisplay = cellRangeRenderer({
+        cellCache: this._cellCache,
         cellRenderer,
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
+        isScrolling,
         rowSizeAndPositionManager: this._rowSizeAndPositionManager,
         rowStartIndex: this._rowStartIndex,
         rowStopIndex: this._rowStopIndex
@@ -506,6 +519,10 @@ export default class Grid extends Component {
 
     this._disablePointerEventsTimeoutId = setTimeout(() => {
       this._disablePointerEventsTimeoutId = null
+
+      // Only cache cells when scrolling to avoid causing update problems.
+      this._cellCache = new Map()
+
       this.setState({
         isScrolling: false
       })
@@ -712,11 +729,13 @@ export default class Grid extends Component {
   }
 }
 
-function defaultRenderCellRanges ({
+function defaultCellRangeRenderer ({
+  cellCache,
   cellRenderer,
   columnSizeAndPositionManager,
   columnStartIndex,
   columnStopIndex,
+  isScrolling,
   rowSizeAndPositionManager,
   rowStartIndex,
   rowStopIndex
@@ -728,8 +747,17 @@ function defaultRenderCellRanges ({
 
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
       let columnDatum = columnSizeAndPositionManager.getSizeAndPositionOfCell(columnIndex)
-      let renderedCell = cellRenderer({ columnIndex, rowIndex })
       let key = `${rowIndex}-${columnIndex}`
+      let renderedCell
+
+      // Avoid re-rendering a cell many times while scrolling.
+      if (cellCache.has(key)) {
+        renderedCell = cellCache.get(key)
+      } else {
+        renderedCell = cellRenderer({ columnIndex, rowIndex })
+
+        cellCache.set(key, renderedCell)
+      }
 
       if (renderedCell == null || renderedCell === false) {
         continue

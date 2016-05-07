@@ -8,7 +8,17 @@ const NUM_ROWS = 100
 const NUM_COLUMNS = 50
 
 describe('Grid', () => {
+  function defaultRenderCell ({ columnIndex, rowIndex }) {
+    return (
+      <div className='gridItem'>
+        {`row:${rowIndex}, column:${columnIndex}`}
+      </div>
+    )
+  }
+
   function getMarkup ({
+    cellRenderer = defaultRenderCell,
+    cellRangeRenderer,
     className,
     columnCount = NUM_COLUMNS,
     columnWidth = 50,
@@ -20,8 +30,6 @@ describe('Grid', () => {
     onScroll,
     overscanColumnCount = 0,
     overscanRowCount = 0,
-    cellRenderer,
-    cellRangeRenderer,
     rowHeight = 20,
     rowCount = NUM_ROWS,
     scrollLeft = undefined,
@@ -30,16 +38,10 @@ describe('Grid', () => {
     scrollTop = undefined,
     width = 200
   } = {}) {
-    function defaultRenderCell ({ columnIndex, rowIndex }) {
-      return (
-        <div className='gridItem'>
-          {`row:${rowIndex}, column:${columnIndex}`}
-        </div>
-      )
-    }
-
     return (
       <Grid
+        cellRenderer={cellRenderer || defaultRenderCell}
+        cellRangeRenderer={cellRangeRenderer}
         className={className}
         columnCount={columnCount}
         columnWidth={columnWidth}
@@ -51,8 +53,6 @@ describe('Grid', () => {
         onScroll={onScroll}
         overscanColumnCount={overscanColumnCount}
         overscanRowCount={overscanRowCount}
-        cellRenderer={cellRenderer || defaultRenderCell}
-        cellRangeRenderer={cellRangeRenderer}
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollLeft={scrollLeft}
@@ -614,6 +614,89 @@ describe('Grid', () => {
       }))
       expect(grid._getEstimatedColumnSize(grid.props)).toEqual(150)
       expect(grid._getEstimatedRowSize(grid.props)).toEqual(15)
+    })
+  })
+
+  describe('cell caching', () => {
+    it('should cache a cell once it has been rendered', () => {
+      const cellRendererCalls = []
+      function cellRenderer ({ columnIndex, rowIndex }) {
+        cellRendererCalls.push({ columnIndex, rowIndex })
+        return defaultRenderCell({ columnIndex, rowIndex })
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollToRow: 0,
+        width: 100
+      }
+
+      render(getMarkup({
+        ...props,
+        scrollToRow: 0
+      }))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+
+      cellRendererCalls.splice(0)
+
+      render(getMarkup({
+        ...props,
+        scrollToRow: 1
+      }))
+      expect(cellRendererCalls).toEqual([])
+
+      render(getMarkup({
+        ...props,
+        scrollToRow: 2
+      }))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 2 }
+      ])
+    })
+
+    it('should clear cache once :isScrolling is false', async (done) => {
+      const cellRendererCalls = []
+      function cellRenderer ({ columnIndex, rowIndex }) {
+        cellRendererCalls.push({ columnIndex, rowIndex })
+        return defaultRenderCell({ columnIndex, rowIndex })
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollToRow: 0,
+        width: 100
+      }
+
+      const grid = render(getMarkup(props))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+
+      Simulate.scroll(grid.refs.scrollingContainer)
+
+      cellRendererCalls.splice(0)
+
+      // Allow scrolling timeout to complete so that cell cache is reset
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      render(getMarkup({
+        ...props,
+        scrollToRow: 1
+      }))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+
+      done()
     })
   })
 })

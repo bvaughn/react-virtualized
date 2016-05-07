@@ -137,9 +137,12 @@ export default class FlexTable extends Component {
     this._createRow = this._createRow.bind(this)
   }
 
-  /**
-   * See Grid#recomputeGridSize
-   */
+  /** See Grid#clearCellCache */
+  clearCellCache () {
+    this.refs.Grid.clearCellCache()
+  }
+
+  /** See Grid#recomputeGridSize */
   recomputeRowHeights () {
     this.refs.Grid.recomputeGridSize()
   }

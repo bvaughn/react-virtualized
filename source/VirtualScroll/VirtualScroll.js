@@ -73,9 +73,12 @@ export default class VirtualScroll extends Component {
     overscanRowCount: 10
   }
 
-  /**
-   * See Grid#recomputeGridSize
-   */
+  /** See Grid#clearCellCache */
+  clearCellCache () {
+    this.refs.Grid.clearCellCache()
+  }
+
+  /** See Grid#recomputeGridSize */
   recomputeRowHeights () {
     this.refs.Grid.recomputeGridSize()
   }
