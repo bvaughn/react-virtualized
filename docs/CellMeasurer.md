@@ -6,6 +6,8 @@ Specify a fixed width or height constraint if you only want to measure one dimen
 
 **Warning**: This HOC is fairly experimental and may change in future releases.
 At this time it is only intended for use with a `Grid` (not `VirtualScroll` or `FlexTable` as their item rendering and cell measuring signatures are different).
+Also note that in order to measure a column's width for a `Grid`, that column's content must be rendered for all rows in order to determine the maximum width.
+For this reason it may not be a good idea to use this HOC for `Grid`s containing both a large number of columns _and_ cells.
 
 ### Prop Types
 | Property | Type | Required? | Description |
