@@ -197,7 +197,8 @@ export default class Grid extends Component {
       estimatedCellSize: this._getEstimatedRowSize(props)
     })
 
-    this._cellCache = new Map()
+    // See defaultCellRangeRenderer() for more information on the usage of this cache
+    this._cellCache = {}
   }
 
   /**
@@ -513,8 +514,8 @@ export default class Grid extends Component {
     this._disablePointerEventsTimeoutId = setTimeout(() => {
       this._disablePointerEventsTimeoutId = null
 
-      // Only cache cells when scrolling to avoid causing update problems.
-      this._cellCache = new Map()
+      // Throw away cell cache once scrolling is complete
+      this._cellCache = {}
 
       this.setState({
         isScrolling: false
@@ -743,21 +744,27 @@ function defaultCellRangeRenderer ({
       let key = `${rowIndex}-${columnIndex}`
       let renderedCell
 
-      // Avoid re-rendering a cell many times while scrolling.
-      // Don't use the cell cache if we are not scrolling because it complicates simpe prop updates.
-      if (
-        isScrolling &&
-        cellCache.has(key)
-      ) {
-        renderedCell = cellCache.get(key)
+      // Avoid re-creating cells while scrolling.
+      // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
+      // If a scroll is in progress- cache and reuse cells.
+      // This cache will be thrown away once scrolling complets.
+      if (isScrolling) {
+        if (!cellCache[key]) {
+          cellCache[key] = cellRenderer({
+            columnIndex,
+            isScrolling,
+            rowIndex
+          })
+        }
+        renderedCell = cellCache[key]
+      // If the user is no longer scrolling, don't cache cells.
+      // This makes dynamic cell content difficult for users and would also lead to a heavier memory footprint.
       } else {
         renderedCell = cellRenderer({
           columnIndex,
           isScrolling,
           rowIndex
         })
-
-        cellCache.set(key, renderedCell)
       }
 
       if (renderedCell == null || renderedCell === false) {
