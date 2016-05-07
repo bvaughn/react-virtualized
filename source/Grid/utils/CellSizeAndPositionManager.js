@@ -44,6 +44,9 @@ export default class CellSizeAndPositionManager {
     // So make sure the offset is at least 0 or no match will be found.
     offset = Math.max(0, offset)
 
+    // Adjust offset to account for max scroll size
+    offset = this._getScaledOffset(offset)
+
     const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell()
     const lastMeasuredIndex = Math.max(0, this._lastMeasuredIndex)
 
@@ -75,6 +78,22 @@ export default class CellSizeAndPositionManager {
 
   getLastMeasuredIndex (): number {
     return this._lastMeasuredIndex
+  }
+
+  /**
+   * @TODO Add more comments here I'm too tired.
+   */
+  getOffsetAdjustment ({
+    containerSize,
+    offset
+  }: GetOffsetAdjustment): number {
+    const unboundTotalSize = this._getUnboundTotalSize()
+    const totalSize = this.getTotalSize()
+    const maxOffset = totalSize - containerSize
+
+    return unboundTotalSize === totalSize
+      ? 0
+      : Math.round((totalSize - unboundTotalSize) * (offset / maxOffset))
   }
 
   /**
@@ -121,14 +140,10 @@ export default class CellSizeAndPositionManager {
   }
 
   /**
-   * Total size of all cells being measured.
-   * This value will be completedly estimated initially.
-   * As cells as measured the estimate will be updated.
+   * @TODO Add more comments here I'm too tired.
    */
   getTotalSize (): number {
-    const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell()
-
-    return lastMeasuredCellSizeAndPosition.offset + lastMeasuredCellSizeAndPosition.size + (this._cellCount - this._lastMeasuredIndex - 1) * this._estimatedCellSize
+    return Math.min(MAX_SIZE, this._getUnboundTotalSize())
   }
 
   getVisibleCellRange ({
@@ -141,15 +156,19 @@ export default class CellSizeAndPositionManager {
       return {}
     }
 
-    const maxOffset = offset + containerSize
     const start = this.findNearestCell(offset)
+
+    // Adjust offset to account for max scroll size
+    offset = this._getScaledOffset(offset)
+
+    const bottom = offset + containerSize
 
     const datum = this.getSizeAndPositionOfCell(start)
     offset = datum.offset + datum.size
 
     let stop = start
 
-    while (offset < maxOffset && stop < this._cellCount - 1) {
+    while (offset < bottom && stop < this._cellCount - 1) {
       stop++
 
       offset += this.getSizeAndPositionOfCell(stop).size
@@ -216,6 +235,27 @@ export default class CellSizeAndPositionManager {
       offset
     })
   }
+
+  _getScaledOffset (offset: number): number {
+    const unboundTotalSize = this._getUnboundTotalSize()
+    const totalSize = this.getTotalSize()
+
+    // @TODO Does this need to subtract container size?
+    return unboundTotalSize === totalSize
+      ? offset
+      : offset * unboundTotalSize / totalSize
+  }
+
+  /**
+   * Total size of all cells being measured.
+   * This value will be completedly estimated initially.
+   * As cells as measured the estimate will be updated.
+   */
+  _getUnboundTotalSize (): number {
+    const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell()
+
+    return lastMeasuredCellSizeAndPosition.offset + lastMeasuredCellSizeAndPosition.size + (this._cellCount - this._lastMeasuredIndex - 1) * this._estimatedCellSize
+  }
 }
 
 type CellSizeAndPositionManagerConstructorParams = {
@@ -227,6 +267,11 @@ type CellSizeAndPositionManagerConstructorParams = {
 type ConfigureParams = {
   cellCount: number,
   estimatedCellSize: number
+};
+
+type GetOffsetAdjustment = {
+  containerSize: number,
+  offset: number
 };
 
 type GetVisibleCellRangeParams = {
