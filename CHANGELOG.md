@@ -2,7 +2,8 @@ Changelog
 ------------
 
 # 7.0.0
-Version 7 changes are described in detail on the [Version 7 Roadmap wiki page](https://github.com/bvaughn/react-virtualized/wiki/Version-7-Roadmap).)
+Version 7 changes are described in detail on the [Version 7 Roadmap wiki page](https://github.com/bvaughn/react-virtualized/wiki/Version-7-Roadmap).
+Upgrade instructions and [jscodeshift](https://github.com/facebook/jscodeshift) mods can also be found there.
 
 ##### 6.3.2
 Fixed edge-case bug in `Collection` where initial `scrollLeft` and `scrollTop` would not correctly adjust inner offsets.
