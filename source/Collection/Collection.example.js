@@ -26,7 +26,7 @@ export default class CollectionExample extends Component {
       columnCount: this._getColumnCount(props.list.size),
       height: 300,
       scrollToCell: undefined,
-      showScrollingPlaceholder: true
+      showScrollingPlaceholder: false
     }
 
     this._columnYMap = []
