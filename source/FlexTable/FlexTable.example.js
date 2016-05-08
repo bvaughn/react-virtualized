@@ -20,6 +20,7 @@ export default class FlexTableExample extends Component {
     super(props, context)
 
     this.state = {
+      disableHeader: false,
       headerHeight: 30,
       height: 270,
       hideIndexRow: false,
@@ -42,6 +43,7 @@ export default class FlexTableExample extends Component {
 
   render () {
     const {
+      disableHeader,
       headerHeight,
       height,
       hideIndexRow,
@@ -96,13 +98,24 @@ export default class FlexTableExample extends Component {
 
           <label className={styles.checkboxLabel}>
             <input
-              aria-label='Hide index row?'
+              aria-label='Hide index?'
               checked={hideIndexRow}
               className={styles.checkbox}
               type='checkbox'
               onChange={event => this.setState({ hideIndexRow: event.target.checked })}
             />
-            Hide index row?
+            Hide index?
+          </label>
+
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Hide header?'
+              checked={disableHeader}
+              className={styles.checkbox}
+              type='checkbox'
+              onChange={event => this.setState({ disableHeader: event.target.checked })}
+            />
+            Hide header?
           </label>
         </ContentBoxParagraph>
 
@@ -152,6 +165,7 @@ export default class FlexTableExample extends Component {
             {({ width }) => (
               <FlexTable
                 ref='Table'
+                disableHeader={disableHeader}
                 headerClassName={styles.headerColumn}
                 headerHeight={headerHeight}
                 height={height}
