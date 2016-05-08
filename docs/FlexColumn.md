@@ -1,7 +1,7 @@
 FlexColumn
 ---------------
 
-Describes the header and cell contents of a table column
+Describes the header and cell contents of a table column.
 
 #### Prop Types
 | Property | Type | Required? | Description |
@@ -9,8 +9,8 @@ Describes the header and cell contents of a table column
 | cellClassName | String |  | CSS class to apply to cell |
 | cellDataGetter | Function |  | Callback responsible for returning a cell's data, given its `dataKey`. [Learn more](#celldatagetter) |
 | cellRenderer |  Function |  | Callback responsible for rendering a cell's contents. [Learn more](#cellrenderer) |
-| columnData | Object |  | Additional data passed to this column's `cellDataGetter` |
-| dataKey | any | ✓ | Uniquely identifies the row-data attribute correspnding to this cell |
+| columnData | Object |  | Additional data passed to this column's `cellDataGetter`. Use this object to relay action-creators or relational data. |
+| dataKey | any | ✓ | Uniquely identifies the row-data attribute correspnding to this cell (eg this might be "name" in an array of user objects). |
 | disableSort | Boolean |  | If sort is enabled for the table at large, disable it for this column |
 | flexGrow | Number |  | Flex grow style; defaults to 0 |
 | flexShrink | Number |  | Flex shrink style; defaults to 1 |
@@ -30,7 +30,7 @@ It should implement the following signature:
 function ({ columnData: any, dataKey: string, rowData: any }): any
 ```
 
-A default `cellDataGetter` is provided that simply returns the attribute as a String.
+A [default `cellDataGetter`](https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/defaultCellDataGetter.js) is provided that simply returns the attribute as a String.
 This function expects to operate on either a vanilla Object or a Map-like object with a get method.
 You should override this default method if your data is calculated or requires any custom processing.
 
@@ -43,7 +43,7 @@ It should implement the following signature:
 function ({ cellData: any, columnData: any, dataKey: string, isScrolling: boolean, rowData: any, rowIndex: number }): node
 ```
 
-A default `cellRenderer` is provided that displays an attribute as a simple string
+A [default `cellRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/defaultCellRenderer.js) is provided that displays an attribute as a simple string
 You should override this default method if your data is some other type of object or requires custom formatting.
 
 #### headerRenderer
@@ -55,5 +55,5 @@ It should implement the following signature:
 function ({ columnData: any, dataKey: string, disableSort: boolean, label: string, sortBy: string, sortDirection: SortDirection }): element
 ```
 
-A default `headerRenderer` is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
+A [default `headerRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/defaultHeaderRenderer.js) is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
 You should override this default method if you want to customize the appearance of table columns.

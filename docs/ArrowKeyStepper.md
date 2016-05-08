@@ -10,7 +10,7 @@ The appearance of this wrapper element can be customized using the `className` p
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| children | Function | ✓ | Function respondible for rendering children. This function should implement the following signature: `({ onKeyDown, onSectionRendered, scrollToColumn, scrollToRow }) => PropTypes.element` |
+| children | Function | ✓ | Function respondible for rendering children. This function should implement the following signature: `({ onSectionRendered: Function, scrollToColumn: number, scrollToRow: number }) => PropTypes.element` |
 | className | String |  | CSS class name to attach to the wrapper `<div>`. |
 | columnCount | Number | ✓ | Number of columns in grid; for `FlexTable` and `VirtualScroll` this property should always be `1`. |
 | rowCount | Number | ✓ | Number of rows in grid. |
@@ -20,8 +20,7 @@ The appearance of this wrapper element can be customized using the `className` p
 The child function is passed the following named parameters:
 
 | Parameter | Type | Description |
-|:---|:---|:---:|
-| onKeyDown | Function | Key-down event handler to be attached to the DOM hierarchy. |
+|:---|:---|:---|
 | onSectionRendered | Function | Pass-through callback to be attached to child component; informs the key-stepper which range of cells are currently visible. |
 | scrollToColumn | Number | Specifies which column in the child component should be visible |
 | scrollToRow | Number | Specifies which row in the child component should be visible |
@@ -41,17 +40,15 @@ ReactDOM.render(
     columnCount={columnCount}
     rowCount={rowCount}
   >
-    {({ onKeyDown, onSectionRendered, scrollToColumn, scrollToRow }) => (
-      <div onKeyDown={onKeyDown}>
-        <Grid
-          columnCount={columnCount}
-          onSectionRendered={onSectionRendered}
-          rowCount={rowCount}
-          scrollToColumn={scrollToColumn}
-          scrollToRow={scrollToRow}
-          {...otherGridProps}
-        />
-      </div>
+    {({ onSectionRendered, scrollToColumn, scrollToRow }) => (
+      <Grid
+        columnCount={columnCount}
+        onSectionRendered={onSectionRendered}
+        rowCount={rowCount}
+        scrollToColumn={scrollToColumn}
+        scrollToRow={scrollToRow}
+        {...otherGridProps}
+      />
     )}
   </ArrowKeyStepper>,
   document.getElementById('example')

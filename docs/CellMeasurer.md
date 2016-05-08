@@ -7,18 +7,28 @@ Specify a fixed width or height constraint if you only want to measure one dimen
 **Warning**: This HOC is fairly experimental and may change in future releases.
 At this time it is only intended for use with a `Grid` (not `VirtualScroll` or `FlexTable` as their item rendering and cell measuring signatures are different).
 Also note that in order to measure a column's width for a `Grid`, that column's content must be rendered for all rows in order to determine the maximum width.
-For this reason it may not be a good idea to use this HOC for `Grid`s containing both a large number of columns _and_ cells.
+For this reason it may not be a good idea to use this HOC for `Grid`s containing a large number of both columns _and_ cells.
 
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | cellRenderer | Function | ✓ | Renders a cell given its indices. `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
-| children | Function | ✓ | Function respondible for rendering a virtualized component; `({ getColumnWidth, getRowHeight, resetMeasurements }) => PropTypes.element` |
+| children | Function | ✓ | Function respondible for rendering a virtualized component; `({ getColumnWidth: Function, getRowHeight: Function, resetMeasurements: Function }) => PropTypes.element` |
 | columnCount | number | ✓ | Number of columns in the `Grid`; in order to measure a row's height, all of that row's columns must be rendered. |
 | container |  |  | A Node, Component instance, or function that returns either. If this property is not specified the document body will be used. |
-| height | number |  | Fixed height; specify this property to measure width only. |
+| height | number |  | Fixed height; specify this property to measure cell-width only. |
 | rowCount | number | ✓ | Number of rows in the `Grid`; in order to measure a column's width, all of that column's rows must be rendered. |
-| width | number |  | Fixed width; specify this property to measure height only. |
+| width | number |  | Fixed width; specify this property to measure cell-height only. |
+
+### Children function
+
+The child function is passed the following named parameters:
+
+| Parameter | Type | Description |
+|:---|:---|:---|
+| getColumnWidth | Function | Callback to set as the `columnWidth` property of a `Grid` |
+| getRowHeight | Function | Callback to set as the `rowHeight` property of a `Grid` |
+| resetMeasurements | Function | Use this function to clear cached measurements in `CellRenderer`; its size will be remeasured the next time it is requested. |
 
 ### Examples
 
