@@ -8,7 +8,7 @@ const NUM_ROWS = 100
 const NUM_COLUMNS = 50
 
 describe('Grid', () => {
-  function defaultRenderCell ({ columnIndex, rowIndex }) {
+  function defaultCellRenderer ({ columnIndex, rowIndex }) {
     return (
       <div className='gridItem'>
         {`row:${rowIndex}, column:${columnIndex}`}
@@ -27,7 +27,7 @@ describe('Grid', () => {
   }
 
   function getMarkup ({
-    cellRenderer = defaultRenderCell,
+    cellRenderer = defaultCellRenderer,
     cellRangeRenderer,
     className,
     columnCount = NUM_COLUMNS,
@@ -50,7 +50,7 @@ describe('Grid', () => {
   } = {}) {
     return (
       <Grid
-        cellRenderer={cellRenderer || defaultRenderCell}
+        cellRenderer={cellRenderer || defaultCellRenderer}
         cellRangeRenderer={cellRangeRenderer}
         className={className}
         columnCount={columnCount}
@@ -621,12 +621,27 @@ describe('Grid', () => {
     })
   })
 
+  it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', () => {
+    const cellRendererCalls = []
+    function cellRenderer ({ columnIndex, isScrolling, rowIndex }) {
+      cellRendererCalls.push(isScrolling)
+      return defaultCellRenderer({ columnIndex, rowIndex })
+    }
+    const grid = render(getMarkup({
+      cellRenderer
+    }))
+    expect(cellRendererCalls[0]).toEqual(false)
+    cellRendererCalls.splice(0)
+    simulateScroll({ grid, scrollTop: 100 })
+    expect(cellRendererCalls[0]).toEqual(true)
+  })
+
   describe('cell caching', () => {
     it('should not cache cells if the Grid is not scrolling', () => {
       const cellRendererCalls = []
       function cellRenderer ({ columnIndex, rowIndex }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
-        return defaultRenderCell({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, rowIndex })
       }
       const props = {
         cellRenderer,
@@ -662,7 +677,7 @@ describe('Grid', () => {
       const cellRendererCalls = []
       function cellRenderer ({ columnIndex, rowIndex }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
-        return defaultRenderCell({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, rowIndex })
       }
       const props = {
         cellRenderer,
@@ -707,7 +722,7 @@ describe('Grid', () => {
       const cellRendererCalls = []
       function cellRenderer ({ columnIndex, rowIndex }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
-        return defaultRenderCell({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, rowIndex })
       }
       const props = {
         cellRenderer,

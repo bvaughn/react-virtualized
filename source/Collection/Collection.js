@@ -169,7 +169,8 @@ export default class Collection extends Component {
     return cellGroupRenderer({
       cellRenderer,
       cellSizeAndPositionGetter: ({ index }) => this._sectionManager.getCellMetadata({ index }),
-      indices: this._lastRenderedCellIndices
+      indices: this._lastRenderedCellIndices,
+      isScrolling
     })
   }
 }
@@ -177,12 +178,16 @@ export default class Collection extends Component {
 function defaultCellGroupRenderer ({
   cellRenderer,
   cellSizeAndPositionGetter,
-  indices
+  indices,
+  isScrolling
 }) {
   return indices
     .map((index) => {
       const cellMetadata = cellSizeAndPositionGetter({ index })
-      const renderedCell = cellRenderer({ index })
+      const renderedCell = cellRenderer({
+        index,
+        isScrolling
+      })
 
       if (renderedCell == null || renderedCell === false) {
         return null

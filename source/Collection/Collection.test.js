@@ -10,6 +10,14 @@ import Collection from './Collection'
 import { CELLS, SECTION_SIZE } from './TestData'
 
 describe('Collection', () => {
+  function defaultCellRenderer ({ index }) {
+    return (
+      <div className='cell'>
+        cell:{index}
+      </div>
+    )
+  }
+
   function getMarkup ({
     className,
     cellCount = CELLS.length,
@@ -26,14 +34,6 @@ describe('Collection', () => {
     scrollTop,
     width = SECTION_SIZE * 2
   } = {}) {
-    function defaultCellRenderer ({ index }) {
-      return (
-        <div className='cell'>
-          cell:{index}
-        </div>
-      )
-    }
-
     function defaultCellSizeAndPositionGetter ({ index }) {
       index = index % cellCount
 
@@ -58,6 +58,12 @@ describe('Collection', () => {
         width={width}
       />
     )
+  }
+
+  function simulateScroll ({ collection, scrollLeft, scrollTop }) {
+    const target = { scrollLeft, scrollTop }
+    collection.refs.CollectionView.refs.scrollingContainer = target // HACK to work around _onScroll target check
+    Simulate.scroll(findDOMNode(collection), { target })
   }
 
   function compareArrays (array1, array2) {
@@ -293,12 +299,6 @@ describe('Collection', () => {
   })
 
   describe('onScroll', () => {
-    function helper ({ collection, scrollLeft, scrollTop }) {
-      const target = { scrollLeft, scrollTop }
-      collection.refs.CollectionView.refs.scrollingContainer = target // HACK to work around _onScroll target check
-      Simulate.scroll(findDOMNode(collection), { target })
-    }
-
     it('should trigger callback when component is mounted', () => {
       const onScrollCalls = []
       render(getMarkup({
@@ -321,7 +321,7 @@ describe('Collection', () => {
       const collection = render(getMarkup({
         onScroll: params => onScrollCalls.push(params)
       }))
-      helper({
+      simulateScroll({
         collection,
         scrollLeft: 1,
         scrollTop: 0
@@ -342,7 +342,7 @@ describe('Collection', () => {
       const collection = render(getMarkup({
         onScroll: params => onScrollCalls.push(params)
       }))
-      helper({
+      simulateScroll({
         collection,
         scrollLeft: 0,
         scrollTop: 2
@@ -380,5 +380,20 @@ describe('Collection', () => {
       expect(typeof cellGroupRendererParams.cellSizeAndPositionGetter).toEqual('function')
       compareArrays(cellGroupRendererParams.indices, [0, 1, 2, 3])
     })
+  })
+
+  it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', () => {
+    const cellRendererCalls = []
+    function cellRenderer ({ index, isScrolling }) {
+      cellRendererCalls.push(isScrolling)
+      return defaultCellRenderer({ index })
+    }
+    const collection = render(getMarkup({
+      cellRenderer
+    }))
+    expect(cellRendererCalls[0]).toEqual(false)
+    cellRendererCalls.splice(0)
+    simulateScroll({ collection, scrollTop: 100 })
+    expect(cellRendererCalls[0]).toEqual(true)
   })
 })
