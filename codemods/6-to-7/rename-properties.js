@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 // Renames react-virtualized version 6.x properties to be version-7 compatible
 module.exports = function transformer (file, api) {
