@@ -1,5 +1,6 @@
 import Immutable from 'immutable'
-import { defaultCellDataGetter, defaultCellRenderer } from './FlexColumn'
+import defaultCellDataGetter from './defaultCellDataGetter'
+import defaultCellRenderer from './defaultCellRenderer'
 
 describe('Column', () => {
   const rowData = Immutable.Map({

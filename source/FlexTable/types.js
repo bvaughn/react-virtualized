@@ -13,3 +13,12 @@ export type CellRendererParams = {
   rowData: any,
   rowIndex: number
 };
+
+export type HeaderRendererParams = {
+  columnData: ?any,
+  dataKey: string,
+  disableSort: ?boolean,
+  label: ?string,
+  sortBy: ?string,
+  sortDirection: ?string
+};
