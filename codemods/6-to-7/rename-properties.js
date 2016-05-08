@@ -1,7 +1,7 @@
-import { attributeBelongsToReactVirtualizedElement } from './utils'
+'use strict';
 
 // Renames react-virtualized version 6.x properties to be version-7 compatible
-export default function transformer (file, api) {
+module.exports = function transformer (file, api) {
   const jscodeshift = api.jscodeshift
 
   let source = file.source
@@ -23,6 +23,20 @@ export default function transformer (file, api) {
 
   return source
 }
+
+const reactVirtualizedElementNames = [
+  'ArrowKeyStepper',
+  'AutoSizer',
+  'Collection',
+  'ColumnSizer',
+  'FlexTable',
+  'Grid',
+  'ScrollSync',
+  'VirtualScroll'
+]
+
+// @param path jscodeshift.JSXAttribute
+const attributeBelongsToReactVirtualizedElement = path => reactVirtualizedElementNames.includes(path.parent.value.name.name)
 
 // See https://github.com/bvaughn/react-virtualized/wiki/Version-7-Roadmap#clean-up-property-names
 const propertyRenameMap = {
