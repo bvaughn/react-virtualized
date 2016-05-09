@@ -40,6 +40,7 @@ const attributeBelongsToReactVirtualizedElement = path => reactVirtualizedElemen
 
 // See https://github.com/bvaughn/react-virtualized/wiki/Version-7-Roadmap#clean-up-property-names
 const propertyRenameMap = {
+  cellClassName: 'className',
   columnsCount: 'columnCount',
   overscanColumnsCount: 'overscanColumnCount',
   overscanRowsCount: 'overscanRowCount',
