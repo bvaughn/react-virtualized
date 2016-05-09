@@ -12,6 +12,7 @@ export default class Column extends Component {
   static defaultProps = {
     cellDataGetter: defaultCellDataGetter,
     cellRenderer: defaultCellRenderer,
+    cellStyle: {},
     flexGrow: 0,
     flexShrink: 1,
     headerRenderer: defaultHeaderRenderer
@@ -20,9 +21,6 @@ export default class Column extends Component {
   static propTypes = {
     /** Optional aria-label value to set on the column header */
     'aria-label': PropTypes.string,
-
-    /** Optional CSS class to apply to cell */
-    cellClassName: PropTypes.string,
 
     /**
      * Callback responsible for returning a cell's data, given its :dataKey
@@ -35,6 +33,9 @@ export default class Column extends Component {
      * ({ cellData: any, columnData: any, dataKey: string, rowData: any, rowIndex: number }): node
      */
     cellRenderer: PropTypes.func,
+
+    /** Optional CSS class to apply to cell */
+    className: PropTypes.string,
 
     /** Optional additional data passed to this column's :cellDataGetter */
     columnData: PropTypes.object,
@@ -68,6 +69,9 @@ export default class Column extends Component {
 
     /** Minimum width of column. */
     minWidth: PropTypes.number,
+
+    /** Optional inline style to apply to cell */
+    style: PropTypes.object,
 
     /** Flex basis (width) for this column; This value can grow or shrink based on :flexGrow and :flexShrink properties. */
     width: PropTypes.number.isRequired

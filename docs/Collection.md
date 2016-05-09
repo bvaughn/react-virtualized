@@ -22,6 +22,7 @@ Unlike `Grid`, which renders checkerboard data, `Collection` can render arbitrar
 | scrollToCell | Number |  | Cell index to ensure visible (by scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
 | sectionSize | Number |  | Optionally override the size of the sections a Collection's cells are split into. This is an advanced option and should only be used for performance tuning purposes. |
+| style | Object |  | Optional custom inline style to attach to root Collection element. |
 | width | Number | ✓ | Width of Collection; this property determines the number of visible (vs virtualized) columns. |
 
 ### Public Methods

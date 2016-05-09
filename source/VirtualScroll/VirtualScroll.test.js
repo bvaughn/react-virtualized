@@ -15,14 +15,15 @@ describe('VirtualScroll', () => {
   function getMarkup ({
     className,
     height = 100,
-    noRowsRenderer = undefined,
-    onRowsRendered = undefined,
-    onScroll = undefined,
+    noRowsRenderer,
+    onRowsRendered,
+    onScroll,
     overscanRowCount = 0,
     rowHeight = 10,
     rowCount = rendered.size,
-    scrollToIndex = undefined,
-    scrollTop = undefined,
+    scrollToIndex,
+    scrollTop,
+    style,
     width = 100
   } = {}) {
     function rowRenderer ({ index }) {
@@ -49,6 +50,7 @@ describe('VirtualScroll', () => {
         rowCount={rowCount}
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
+        style={style}
         width={width}
       />
     )
@@ -239,6 +241,12 @@ describe('VirtualScroll', () => {
     it('should use a custom :className if specified', () => {
       const node = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(node.className).toContain('foo')
+    })
+
+    it('should use a custom :style if specified', () => {
+      const style = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ style })))
+      expect(rendered.style.backgroundColor).toEqual('red')
     })
   })
 

@@ -32,6 +32,7 @@ describe('Collection', () => {
     scrollLeft,
     scrollToCell,
     scrollTop,
+    style,
     width = SECTION_SIZE * 2
   } = {}) {
     function defaultCellSizeAndPositionGetter ({ index }) {
@@ -55,6 +56,7 @@ describe('Collection', () => {
         scrollLeft={scrollLeft}
         scrollToCell={scrollToCell}
         scrollTop={scrollTop}
+        style={style}
         width={width}
       />
     )
@@ -295,6 +297,12 @@ describe('Collection', () => {
     it('should use a custom :className if specified', () => {
       const rendered = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(rendered.className).toContain('foo')
+    })
+
+    it('should use a custom :style if specified', () => {
+      const style = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ style })))
+      expect(rendered.style.backgroundColor).toEqual('red')
     })
   })
 

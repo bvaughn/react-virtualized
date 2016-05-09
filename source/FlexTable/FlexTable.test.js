@@ -29,32 +29,36 @@ describe('FlexTable', () => {
   }
 
   function getMarkup ({
-    cellRenderer,
     cellDataGetter,
+    cellRenderer,
+    cellStyle,
     className,
     columnData = { data: 123 },
     disableSort = false,
     headerClassName,
     headerHeight = 20,
-    headerRenderer = undefined,
+    headerRenderer,
+    headerStyle,
     height = 100,
-    maxWidth = undefined,
-    minWidth = undefined,
-    noRowsRenderer = undefined,
-    onHeaderClick = undefined,
-    onRowClick = undefined,
-    onRowsRendered = undefined,
-    onScroll = undefined,
+    maxWidth,
+    minWidth,
+    noRowsRenderer,
+    onHeaderClick,
+    onRowClick,
+    onRowsRendered,
+    onScroll,
     overscanRowCount = 0,
-    rowClassName = undefined,
+    rowClassName,
+    rowCount = list.size,
     rowGetter = immutableRowGetter,
     rowHeight = 10,
-    rowCount = list.size,
+    rowStyle,
     scrollToIndex,
     scrollTop,
     sort,
     sortBy,
     sortDirection,
+    style,
     width = 100
   } = {}) {
     return (
@@ -62,6 +66,7 @@ describe('FlexTable', () => {
         className={className}
         headerClassName={headerClassName}
         headerHeight={headerHeight}
+        headerStyle={headerStyle}
         height={height}
         noRowsRenderer={noRowsRenderer}
         onHeaderClick={onHeaderClick}
@@ -70,14 +75,16 @@ describe('FlexTable', () => {
         onScroll={onScroll}
         overscanRowCount={overscanRowCount}
         rowClassName={rowClassName}
+        rowCount={rowCount}
         rowGetter={rowGetter}
         rowHeight={rowHeight}
-        rowCount={rowCount}
+        rowStyle={rowStyle}
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
         sort={sort}
         sortBy={sortBy}
         sortDirection={sortDirection}
+        style={style}
         width={width}
       >
         <FlexColumn
@@ -89,6 +96,7 @@ describe('FlexTable', () => {
           cellDataGetter={cellDataGetter}
           headerRenderer={headerRenderer}
           disableSort={disableSort}
+          style={cellStyle}
         />
         <FlexColumn
           label='Email'
@@ -640,6 +648,23 @@ describe('FlexTable', () => {
       expect(node.className).toContain('foo')
       expect(node.querySelectorAll('.bar').length).toEqual(2)
       expect(node.querySelectorAll('.baz').length).toEqual(9)
+    })
+
+    it('should use custom :styles if specified', () => {
+      const cellStyle = { backgroundColor: 'red' }
+      const headerStyle = { backgroundColor: 'blue' }
+      const rowStyle = { backgroundColor: 'green' }
+      const style = { backgroundColor: 'orange' }
+      const node = findDOMNode(render(getMarkup({
+        cellStyle,
+        headerStyle,
+        rowStyle,
+        style
+      })))
+      expect(node.querySelector('.FlexTable__rowColumn').style.backgroundColor).toEqual('red')
+      expect(node.querySelector('.FlexTable__headerColumn').style.backgroundColor).toEqual('blue')
+      expect(node.querySelector('.FlexTable__row').style.backgroundColor).toEqual('green')
+      expect(node.style.backgroundColor).toEqual('orange')
     })
   })
 

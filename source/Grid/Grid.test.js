@@ -42,10 +42,11 @@ describe('Grid', () => {
     overscanRowCount = 0,
     rowHeight = 20,
     rowCount = NUM_ROWS,
-    scrollLeft = undefined,
+    scrollLeft,
     scrollToColumn,
     scrollToRow,
-    scrollTop = undefined,
+    scrollTop,
+    style,
     width = 200
   } = {}) {
     return (
@@ -69,6 +70,7 @@ describe('Grid', () => {
         scrollToColumn={scrollToColumn}
         scrollToRow={scrollToRow}
         scrollTop={scrollTop}
+        style={style}
         width={width}
       />
     )
@@ -432,6 +434,12 @@ describe('Grid', () => {
     it('should use a custom :className if specified', () => {
       const rendered = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(rendered.className).toContain('foo')
+    })
+
+    it('should use a custom :style if specified', () => {
+      const style = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ style })))
+      expect(rendered.style.backgroundColor).toEqual('red')
     })
   })
 

@@ -6,7 +6,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| className | String |  | CSS class name |
+| className | String |  | Optional custom CSS class name to attach to root `VirtualScroll` element. |
 | height | Number | ✓ | Height constraint for list (determines how many actual rows are rendered) |
 | noRowsRenderer | Function |  | Callback used to render placeholder content when `rowCount` is 0 |
 | onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
@@ -17,6 +17,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | rowCount | Number | ✓ | Number of rows in list. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Forced vertical scroll offset; can be used to synchronize scrolling between components |
+| style | Object |  | Optional custom inline style to attach to root `VirtualScroll` element. |
 | width | Number | ✓ | Width of the list |
 
 ### Public Methods

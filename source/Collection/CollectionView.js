@@ -85,6 +85,11 @@ export default class CollectionView extends Component {
     scrollTop: PropTypes.number,
 
     /**
+     * Optional custom inline style to attach to root Collection element.
+     */
+    style: PropTypes.object,
+
+    /**
      * Width of Collection; this property determines the number of visible (vs virtualized) columns.
      */
     width: PropTypes.number.isRequired
@@ -94,7 +99,8 @@ export default class CollectionView extends Component {
     'aria-label': 'grid',
     noContentRenderer: () => null,
     onScroll: () => null,
-    onSectionRendered: () => null
+    onSectionRendered: () => null,
+    style: {}
   };
 
   constructor (props, context) {
@@ -263,6 +269,7 @@ export default class CollectionView extends Component {
       className,
       height,
       noContentRenderer,
+      style,
       width
     } = this.props
 
@@ -286,19 +293,20 @@ export default class CollectionView extends Component {
       width: totalWidth
     } = cellLayoutManager.getTotalSize()
 
-    const gridStyle = {
-      height: height,
-      width: width
+    const collectionStyle = {
+      ...style,
+      height,
+      width
     }
 
     // Force browser to hide scrollbars when we know they aren't necessary.
     // Otherwise once scrollbars appear they may not disappear again.
     // For more info see issue #116
     if (totalHeight <= height) {
-      gridStyle.overflowY = 'hidden'
+      collectionStyle.overflowY = 'hidden'
     }
     if (totalWidth <= width) {
-      gridStyle.overflowX = 'hidden'
+      collectionStyle.overflowX = 'hidden'
     }
 
     return (
@@ -308,7 +316,7 @@ export default class CollectionView extends Component {
         className={cn('Collection', className)}
         onScroll={this._onScroll}
         role='grid'
-        style={gridStyle}
+        style={collectionStyle}
         tabIndex={0}
       >
         {childrenToDisplay.length > 0 &&

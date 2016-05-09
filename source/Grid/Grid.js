@@ -147,6 +147,9 @@ export default class Grid extends Component {
      */
     scrollToRow: PropTypes.number,
 
+    /** Optional inline style */
+    style: PropTypes.object,
+
     /**
      * Width of Grid; this property determines the number of visible (vs virtualized) columns.
      */
@@ -155,6 +158,7 @@ export default class Grid extends Component {
 
   static defaultProps = {
     'aria-label': 'grid',
+    cellRangeRenderer: defaultCellRangeRenderer,
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
     noContentRenderer: () => null,
@@ -162,7 +166,7 @@ export default class Grid extends Component {
     onSectionRendered: () => null,
     overscanColumnCount: 0,
     overscanRowCount: 10,
-    cellRangeRenderer: defaultCellRangeRenderer
+    style: {}
   };
 
   constructor (props, context) {
@@ -384,6 +388,7 @@ export default class Grid extends Component {
       overscanColumnCount,
       overscanRowCount,
       rowCount,
+      style,
       width
     } = this.props
 
@@ -447,8 +452,9 @@ export default class Grid extends Component {
     }
 
     const gridStyle = {
-      height: height,
-      width: width
+      ...style,
+      height,
+      width
     }
 
     const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()

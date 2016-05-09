@@ -9,7 +9,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 |:---|:---|:---:|:---|
 | cellRangeRenderer | Function |  | Responsible for rendering a group of cells given their index ranges.: `({ cellCache: Map, cellRenderer: Function, columnSizeAndPositionManager: CellSizeAndPositionManager, columnStartIndex: number, columnStopIndex: number, isScrolling: boolean, rowSizeAndPositionManager: CellSizeAndPositionManager, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>`. [Learn more](#cellRangeRenderer) |
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, isScrolling: boolean, rowIndex: number }): PropTypes.node` |
-| className | String |  | Optional custom CSS class name to attach to root Grid element. |
+| className | String |  | Optional custom CSS class name to attach to root `Grid` element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
 | columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number` |
 | height | Number | ✓ | Height of Grid; this property determines the number of visible (vs virtualized) rows. |
@@ -24,6 +24,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary) |
 | scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
+| style | Object |  | Optional custom inline style to attach to root `Grid` element. |
 | width | Number | ✓ | Width of Grid; this property determines the number of visible (vs virtualized) columns. |
 
 ### Public Methods

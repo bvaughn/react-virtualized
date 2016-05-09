@@ -8,10 +8,11 @@ This component expects explicit width, height, and padding parameters.
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | children | [FlexColumn](FlexColumn.md) | ✓ | One or more FlexColumns describing the data displayed in this table |
-| className | String |  | CSS class name |
+| className | String |  | Optional custom CSS class name to attach to root `FlexTable` element. |
 | disableHeader | Boolean |  | Do not render the table header (only the rows) |
 | headerClassName | String |  | CSS class to apply to all column headers |
 | headerHeight | Number | ✓ | Fixed height of header row |
+| headerStyle | Object |  | Optional custom inline style to attach to table header columns. |
 | height | Number | ✓ | Fixed/available height for out DOM element |
 | noRowsRenderer |  | Function | Callback used to render placeholder content when :rowCount is 0 |
 | onHeaderClick |  | Function | Callback invoked when a user clicks on a table header. `(dataKey: string, columnData: any): void` |
@@ -23,11 +24,13 @@ This component expects explicit width, height, and padding parameters.
 | rowCount | Number | ✓ | Number of rows in table. |
 | rowGetter | Function | ✓ | Callback responsible for returning a data row given an index. `({ index: int }): any` |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
+| rowStyle | Object |  | Optional custom inline style to attach to table rows. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
 | sort | Function |  | Sort function to be called if a sortable header is clicked. `({ sortBy: string, sortDirection: SortDirection }): void` |
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
+| style | Object |  | Optional custom inline style to attach to root `FlexTable` element. |
 | width | Number | ✓ | Width of the table |
 
 ### Public Methods

@@ -62,6 +62,9 @@ export default class VirtualScroll extends Component {
     /** Vertical offset. */
     scrollTop: PropTypes.number,
 
+    /** Optional inline style */
+    style: PropTypes.object,
+
     /** Width of list */
     width: PropTypes.number.isRequired
   }
@@ -70,7 +73,8 @@ export default class VirtualScroll extends Component {
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
-    overscanRowCount: 10
+    overscanRowCount: 10,
+    style: {}
   }
 
   /** See Grid#recomputeGridSize */
@@ -91,6 +95,7 @@ export default class VirtualScroll extends Component {
       rowCount,
       scrollToIndex,
       scrollTop,
+      style,
       width
     } = this.props
 
@@ -121,6 +126,7 @@ export default class VirtualScroll extends Component {
         rowCount={rowCount}
         scrollToRow={scrollToIndex}
         scrollTop={scrollTop}
+        style={style}
         width={width}
       />
     )

@@ -203,7 +203,7 @@ export default class FlexTableExample extends Component {
                   disableSort
                   label='The description label is really long so that it will be truncated'
                   dataKey='random'
-                  cellClassName={styles.exampleColumn}
+                  className={styles.exampleColumn}
                   cellRenderer={
                     ({ cellData, columnData, dataKey, rowData, rowIndex }) => cellData
                   }
