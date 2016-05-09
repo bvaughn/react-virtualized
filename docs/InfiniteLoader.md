@@ -3,6 +3,10 @@ InfiniteLoader
 
 High-order component that manages just-in-time fetching of data as a user scrolls up or down in a list.
 
+Note that this component is inteded to assist with row-loading.
+As such it is best suited for use with `FlexTable` and `VirtualScroll` (although it can also be used with `Grid`).
+This HOC is not compatible with the `Collection` component.
+
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
