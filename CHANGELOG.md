@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.0.1
+Replaced single occurence of `Number.isNaN` with `isNaN` to avoid IE compatibility issues.
+
 # 7.0.0
 Version 7 changes are described in detail on the [Version 7 Roadmap wiki page](https://github.com/bvaughn/react-virtualized/wiki/Version-7-Roadmap).
 Upgrade instructions and [jscodeshift](https://github.com/facebook/jscodeshift) mods can also be found there.
