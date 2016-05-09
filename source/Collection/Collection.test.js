@@ -10,6 +10,14 @@ import Collection from './Collection'
 import { CELLS, SECTION_SIZE } from './TestData'
 
 describe('Collection', () => {
+  function defaultCellRenderer ({ index }) {
+    return (
+      <div className='cell'>
+        cell:{index}
+      </div>
+    )
+  }
+
   function getMarkup ({
     className,
     cellCount = CELLS.length,
@@ -24,17 +32,10 @@ describe('Collection', () => {
     scrollLeft,
     scrollToCell,
     scrollTop,
+    style,
     width = SECTION_SIZE * 2
   } = {}) {
-    function defaultCellRenderer (index) {
-      return (
-        <div className='cell'>
-          cell:{index}
-        </div>
-      )
-    }
-
-    function defaultCellSizeAndPositionGetter (index) {
+    function defaultCellSizeAndPositionGetter ({ index }) {
       index = index % cellCount
 
       return CELLS[index]
@@ -55,9 +56,16 @@ describe('Collection', () => {
         scrollLeft={scrollLeft}
         scrollToCell={scrollToCell}
         scrollTop={scrollTop}
+        style={style}
         width={width}
       />
     )
+  }
+
+  function simulateScroll ({ collection, scrollLeft, scrollTop }) {
+    const target = { scrollLeft, scrollTop }
+    collection.refs.CollectionView.refs.scrollingContainer = target // HACK to work around _onScroll target check
+    Simulate.scroll(findDOMNode(collection), { target })
   }
 
   function compareArrays (array1, array2) {
@@ -81,7 +89,7 @@ describe('Collection', () => {
 
     // Small performance tweak added in 5.5.6
     it('should not render/parent cells that are null or false', () => {
-      function cellRenderer (index) {
+      function cellRenderer ({ index }) {
         if (index > 2) {
           return null
         } else {
@@ -199,7 +207,7 @@ describe('Collection', () => {
     it('should call :onSectionRendered if at least one cell is rendered', () => {
       let indices
       render(getMarkup({
-        onSectionRendered: params => indices = params
+        onSectionRendered: params => indices = params.indices
       }))
       compareArrays(indices, [0, 1, 2, 3])
     })
@@ -208,7 +216,7 @@ describe('Collection', () => {
       let numCalls = 0
       let indices
       const onSectionRendered = params => {
-        indices = params
+        indices = params.indices
         numCalls++
       }
       render(getMarkup({ onSectionRendered }))
@@ -223,7 +231,7 @@ describe('Collection', () => {
       let numCalls = 0
       let indices
       const onSectionRendered = params => {
-        indices = params
+        indices = params.indices
         numCalls++
       }
       render(getMarkup({ onSectionRendered }))
@@ -258,7 +266,7 @@ describe('Collection', () => {
     it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
       let indices
       render(getMarkup({
-        onSectionRendered: params => indices = params,
+        onSectionRendered: params => indices = params.indices,
         scrollLeft: 2,
         scrollTop: 2
       }))
@@ -268,11 +276,11 @@ describe('Collection', () => {
     it('should render correctly when :scrollLeft and :scrollTop properties are updated', () => {
       let indices
       render(getMarkup({
-        onSectionRendered: params => indices = params
+        onSectionRendered: params => indices = params.indices
       }))
       compareArrays(indices, [0, 1, 2, 3])
       render(getMarkup({
-        onSectionRendered: params => indices = params,
+        onSectionRendered: params => indices = params.indices,
         scrollLeft: 2,
         scrollTop: 2
       }))
@@ -290,15 +298,15 @@ describe('Collection', () => {
       const rendered = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(rendered.className).toContain('foo')
     })
+
+    it('should use a custom :style if specified', () => {
+      const style = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ style })))
+      expect(rendered.style.backgroundColor).toEqual('red')
+    })
   })
 
   describe('onScroll', () => {
-    function helper ({ collection, scrollLeft, scrollTop }) {
-      const target = { scrollLeft, scrollTop }
-      collection.refs.CollectionView.refs.scrollingContainer = target // HACK to work around _onScroll target check
-      Simulate.scroll(findDOMNode(collection), { target })
-    }
-
     it('should trigger callback when component is mounted', () => {
       const onScrollCalls = []
       render(getMarkup({
@@ -321,7 +329,7 @@ describe('Collection', () => {
       const collection = render(getMarkup({
         onScroll: params => onScrollCalls.push(params)
       }))
-      helper({
+      simulateScroll({
         collection,
         scrollLeft: 1,
         scrollTop: 0
@@ -342,7 +350,7 @@ describe('Collection', () => {
       const collection = render(getMarkup({
         onScroll: params => onScrollCalls.push(params)
       }))
-      helper({
+      simulateScroll({
         collection,
         scrollLeft: 0,
         scrollTop: 2
@@ -363,7 +371,7 @@ describe('Collection', () => {
     it('should use a custom :cellGroupRenderer if specified', () => {
       let cellGroupRendererCalled = 0
       let cellGroupRendererParams
-      const cellRenderer = (index) => index
+      const cellRenderer = ({ index }) => index
       findDOMNode(render(getMarkup({
         cellRenderer,
         cellGroupRenderer: (params) => {
@@ -380,5 +388,20 @@ describe('Collection', () => {
       expect(typeof cellGroupRendererParams.cellSizeAndPositionGetter).toEqual('function')
       compareArrays(cellGroupRendererParams.indices, [0, 1, 2, 3])
     })
+  })
+
+  it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', () => {
+    const cellRendererCalls = []
+    function cellRenderer ({ index, isScrolling }) {
+      cellRendererCalls.push(isScrolling)
+      return defaultCellRenderer({ index })
+    }
+    const collection = render(getMarkup({
+      cellRenderer
+    }))
+    expect(cellRendererCalls[0]).toEqual(false)
+    cellRendererCalls.splice(0)
+    simulateScroll({ collection, scrollTop: 100 })
+    expect(cellRendererCalls[0]).toEqual(true)
   })
 })

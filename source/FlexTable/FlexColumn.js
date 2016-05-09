@@ -1,75 +1,8 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
-import SortIndicator from './SortIndicator'
-
-/**
- * Default cell renderer that displays an attribute as a simple string
- * You should override the column's cellRenderer if your data is some other type of object.
- */
-export function defaultCellRenderer (
-  cellData: any,
-  cellDataKey: string,
-  rowData: any,
-  rowIndex: number,
-  columnData: any
-): string {
-  if (cellData === null || cellData === undefined) {
-    return ''
-  } else {
-    return String(cellData)
-  }
-}
-
-/**
- * Default accessor for returning a cell value for a given attribute.
- * This function expects to operate on either a vanilla Object or an Immutable Map.
- * You should override the column's cellDataGetter if your data is some other type of object.
- */
-export function defaultCellDataGetter (
-  dataKey: string,
-  rowData: any,
-  columnData: any
-) {
-  if (rowData.get instanceof Function) {
-    return rowData.get(dataKey)
-  } else {
-    return rowData[dataKey]
-  }
-}
-
-/**
- * Default table header renderer.
- */
-export function defaultHeaderRenderer ({
-  columnData,
-  dataKey,
-  disableSort,
-  label,
-  sortBy,
-  sortDirection
-}) {
-  const showSortIndicator = sortBy === dataKey
-  const children = [
-    <div
-      className='FlexTable__headerTruncatedText'
-      key='label'
-      title={label}
-    >
-      {label}
-    </div>
-  ]
-
-  if (showSortIndicator) {
-    children.push(
-      <SortIndicator
-        key='SortIndicator'
-        sortDirection={sortDirection}
-      />
-    )
-  }
-
-  return children
-}
+import { Component, PropTypes } from 'react'
+import defaultHeaderRenderer from './defaultHeaderRenderer'
+import defaultCellRenderer from './defaultCellRenderer'
+import defaultCellDataGetter from './defaultCellDataGetter'
 
 /**
  * Describes the header and cell contents of a table column.
@@ -79,6 +12,7 @@ export default class Column extends Component {
   static defaultProps = {
     cellDataGetter: defaultCellDataGetter,
     cellRenderer: defaultCellRenderer,
+    cellStyle: {},
     flexGrow: 0,
     flexShrink: 1,
     headerRenderer: defaultHeaderRenderer
@@ -88,20 +22,20 @@ export default class Column extends Component {
     /** Optional aria-label value to set on the column header */
     'aria-label': PropTypes.string,
 
-    /** Optional CSS class to apply to cell */
-    cellClassName: PropTypes.string,
-
     /**
      * Callback responsible for returning a cell's data, given its :dataKey
-     * (dataKey: string, rowData: any): any
+     * ({ columnData: any, dataKey: string, rowData: any }): any
      */
     cellDataGetter: PropTypes.func,
 
     /**
      * Callback responsible for rendering a cell's contents.
-     * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
+     * ({ cellData: any, columnData: any, dataKey: string, rowData: any, rowIndex: number }): node
      */
     cellRenderer: PropTypes.func,
+
+    /** Optional CSS class to apply to cell */
+    className: PropTypes.string,
 
     /** Optional additional data passed to this column's :cellDataGetter */
     columnData: PropTypes.object,
@@ -135,6 +69,9 @@ export default class Column extends Component {
 
     /** Minimum width of column. */
     minWidth: PropTypes.number,
+
+    /** Optional inline style to apply to cell */
+    style: PropTypes.object,
 
     /** Flex basis (width) for this column; This value can grow or shrink based on :flexGrow and :flexShrink properties. */
     width: PropTypes.number.isRequired

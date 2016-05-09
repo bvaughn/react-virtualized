@@ -6,17 +6,18 @@ This component renders a virtualized list of elements with either fixed or dynam
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| className | String |  | CSS class name |
+| className | String |  | Optional custom CSS class name to attach to root `VirtualScroll` element. |
 | height | Number | ✓ | Height constraint for list (determines how many actual rows are rendered) |
-| noRowsRenderer | Function |  | Callback used to render placeholder content when `rowsCount` is 0 |
-| onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }): void` |
-| onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight, scrollHeight, scrollTop }): void` |
-| overscanRowsCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
-| rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `(index: number): number` |
-| rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Signature should look like `(index: number): React.PropTypes.node` |
-| rowsCount | Number | ✓ | Number of rows in list. |
+| noRowsRenderer | Function |  | Callback used to render placeholder content when `rowCount` is 0 |
+| onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
+| onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, scrollHeight: number, scrollTop: number }): void` |
+| overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
+| rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
+| rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Signature should look like `({ index: number, isScrolling: boolean }): React.PropTypes.node` |
+| rowCount | Number | ✓ | Number of rows in list. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
-| scrollTop | Number |  | Vertical offset |
+| scrollTop | Number |  | Forced vertical scroll offset; can be used to synchronize scrolling between components |
+| style | Object |  | Optional custom inline style to attach to root `VirtualScroll` element. |
 | width | Number | ✓ | Width of the list |
 
 ### Public Methods
@@ -61,10 +62,10 @@ ReactDOM.render(
   <VirtualScroll
     width={300}
     height={300}
-    rowsCount={list.length}
+    rowCount={list.length}
     rowHeight={20}
     rowRenderer={
-      index => list[index] // Could also be a DOM element
+      ({ index, isScrolling }) => list[index] // Could also be a DOM element
     }
   />,
   document.getElementById('example')

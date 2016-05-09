@@ -20,9 +20,9 @@ export default class InfiniteLoaderExample extends Component {
     super(props)
 
     this.state = {
-      loadedRowsCount: 0,
+      loadedRowCount: 0,
       loadedRowsMap: {},
-      loadingRowsCount: 0,
+      loadingRowCount: 0,
       randomScrollToIndex: null
     }
 
@@ -42,7 +42,7 @@ export default class InfiniteLoaderExample extends Component {
 
   render () {
     const { list, ...props } = this.props
-    const { loadedRowsCount, loadingRowsCount, randomScrollToIndex } = this.state
+    const { loadedRowCount, loadingRowCount, randomScrollToIndex } = this.state
 
     return (
       <ContentBox {...props}>
@@ -67,7 +67,7 @@ export default class InfiniteLoaderExample extends Component {
             </button>
 
             <div className={styles.cacheCountRow}>
-              {`${loadingRowsCount} loading, ${loadedRowsCount} loaded`}
+              {`${loadingRowCount} loading, ${loadedRowCount} loaded`}
             </div>
           </div>
         </ContentBoxParagraph>
@@ -75,7 +75,7 @@ export default class InfiniteLoaderExample extends Component {
         <InfiniteLoader
           isRowLoaded={this._isRowLoaded}
           loadMoreRows={this._loadMoreRows}
-          rowsCount={list.size}
+          rowCount={list.size}
         >
           {({ onRowsRendered, registerChild }) => (
             <AutoSizer disableHeight>
@@ -85,7 +85,7 @@ export default class InfiniteLoaderExample extends Component {
                   className={styles.VirtualScroll}
                   height={200}
                   onRowsRendered={onRowsRendered}
-                  rowsCount={list.size}
+                  rowCount={list.size}
                   rowHeight={30}
                   rowRenderer={this._rowRenderer}
                   scrollToIndex={randomScrollToIndex}
@@ -105,19 +105,19 @@ export default class InfiniteLoaderExample extends Component {
 
   _clearData () {
     this.setState({
-      loadedRowsCount: 0,
+      loadedRowCount: 0,
       loadedRowsMap: {},
-      loadingRowsCount: 0
+      loadingRowCount: 0
     })
   }
 
-  _isRowLoaded (index) {
+  _isRowLoaded ({ index }) {
     const { loadedRowsMap } = this.state
     return !!loadedRowsMap[index] // STATUS_LOADING or STATUS_LOADED
   }
 
   _loadMoreRows ({ startIndex, stopIndex }) {
-    const { loadedRowsMap, loadingRowsCount } = this.state
+    const { loadedRowsMap, loadingRowCount } = this.state
     const increment = stopIndex - startIndex + 1
 
     for (var i = startIndex; i <= stopIndex; i++) {
@@ -125,11 +125,11 @@ export default class InfiniteLoaderExample extends Component {
     }
 
     this.setState({
-      loadingRowsCount: loadingRowsCount + increment
+      loadingRowCount: loadingRowCount + increment
     })
 
     const timeoutId = setTimeout(() => {
-      const { loadedRowsCount, loadingRowsCount } = this.state
+      const { loadedRowCount, loadingRowCount } = this.state
 
       delete this._timeoutIdMap[timeoutId]
 
@@ -138,8 +138,8 @@ export default class InfiniteLoaderExample extends Component {
       }
 
       this.setState({
-        loadingRowsCount: loadingRowsCount - increment,
-        loadedRowsCount: loadedRowsCount + increment
+        loadingRowCount: loadingRowCount - increment,
+        loadedRowCount: loadedRowCount + increment
       })
 
       promiseResolver()
@@ -152,7 +152,7 @@ export default class InfiniteLoaderExample extends Component {
     return new Promise(resolve => promiseResolver = resolve)
   }
 
-  _rowRenderer (index) {
+  _rowRenderer ({ index }) {
     const { list } = this.props
     const { loadedRowsMap } = this.state
 

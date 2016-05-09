@@ -2,16 +2,15 @@
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
+import CellSizeAndPositionManager from './utils/CellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
-import getNearestIndex from './utils/getNearestIndex'
 import getOverscanIndices from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import getUpdatedOffsetForIndex from '../utils/getUpdatedOffsetForIndex'
-import getVisibleCellIndices from './utils/getVisibleCellIndices'
-import initCellMetadata from '../utils/initCellMetadata'
 import raf from 'raf'
 import shallowCompare from 'react-addons-shallow-compare'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
+import defaultCellRangeRenderer from './defaultCellRangeRenderer'
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -37,6 +36,28 @@ export default class Grid extends Component {
     'aria-label': PropTypes.string,
 
     /**
+     * Responsible for rendering a cell given an row and column index.
+     * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
+     */
+    cellRenderer: PropTypes.func.isRequired,
+
+    /**
+     * Responsible for rendering a group of cells given their index ranges.
+     * Should implement the following interface: ({
+     *   cellCache: Map,
+     *   cellRenderer: Function,
+     *   columnSizeAndPositionManager: CellSizeAndPositionManager,
+     *   columnStartIndex: number,
+     *   columnStopIndex: number,
+     *   isScrolling: boolean,
+     *   rowSizeAndPositionManager: CellSizeAndPositionManager,
+     *   rowStartIndex: number,
+     *   rowStopIndex: number
+     * }): Array<PropTypes.node>
+     */
+    cellRangeRenderer: PropTypes.func.isRequired,
+
+    /**
      * Optional custom CSS class name to attach to root Grid element.
      */
     className: PropTypes.string,
@@ -44,7 +65,7 @@ export default class Grid extends Component {
     /**
      * Number of columns in grid.
      */
-    columnsCount: PropTypes.number.isRequired,
+    columnCount: PropTypes.number.isRequired,
 
     /**
      * Either a fixed column width (number) or a function that returns the width of a column given its index.
@@ -53,12 +74,24 @@ export default class Grid extends Component {
     columnWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
     /**
+     * Used to estimate the total width of a Grid before all of its columns have actually been measured.
+     * The estimated total width is adjusted as columns are rendered.
+     */
+    estimatedColumnSize: PropTypes.number.isRequired,
+
+    /**
+     * Used to estimate the total height of a Grid before all of its rows have actually been measured.
+     * The estimated total height is adjusted as rows are rendered.
+     */
+    estimatedRowSize: PropTypes.number.isRequired,
+
+    /**
      * Height of Grid; this property determines the number of visible (vs virtualized) rows.
      */
     height: PropTypes.number.isRequired,
 
     /**
-     * Optional renderer to be used in place of rows when either :rowsCount or :columnsCount is 0.
+     * Optional renderer to be used in place of rows when either :rowCount or :columnCount is 0.
      */
     noContentRenderer: PropTypes.func.isRequired,
 
@@ -79,44 +112,24 @@ export default class Grid extends Component {
      * Number of columns to render before/after the visible section of the grid.
      * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
      */
-    overscanColumnsCount: PropTypes.number.isRequired,
+    overscanColumnCount: PropTypes.number.isRequired,
 
     /**
      * Number of rows to render above/below the visible section of the grid.
      * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
      */
-    overscanRowsCount: PropTypes.number.isRequired,
-
-    /**
-     * Responsible for rendering a cell given an row and column index.
-     * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
-     */
-    renderCell: PropTypes.func.isRequired,
-
-    /**
-     * Responsible for rendering a group of cells given their index ranges.
-     * Should implement the following interface: ({
-     *   columnMetadata:Array<Object>,
-     *   columnStartIndex: number,
-     *   columnStopIndex: number,
-     *   renderCell: Function,
-     *   rowMetadata:Array<Object>,
-     *   rowStartIndex: number,
-     *   rowStopIndex: number
-     * }): Array<PropTypes.node>
-     */
-    renderCellRanges: PropTypes.func.isRequired,
+    overscanRowCount: PropTypes.number.isRequired,
 
     /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
-     * Should implement the following interface: (index: number): number
+     * Should implement the following interface: ({ index: number }): number
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
     /**
      * Number of rows in grid.
      */
-    rowsCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired,
 
     /** Horizontal offset. */
     scrollLeft: PropTypes.number,
@@ -134,6 +147,9 @@ export default class Grid extends Component {
      */
     scrollToRow: PropTypes.number,
 
+    /** Optional inline style */
+    style: PropTypes.object,
+
     /**
      * Width of Grid; this property determines the number of visible (vs virtualized) columns.
      */
@@ -142,19 +158,21 @@ export default class Grid extends Component {
 
   static defaultProps = {
     'aria-label': 'grid',
+    cellRangeRenderer: defaultCellRangeRenderer,
+    estimatedColumnSize: 100,
+    estimatedRowSize: 30,
     noContentRenderer: () => null,
     onScroll: () => null,
     onSectionRendered: () => null,
-    overscanColumnsCount: 0,
-    overscanRowsCount: 10,
-    renderCellRanges: defaultRenderCellRanges
+    overscanColumnCount: 0,
+    overscanRowCount: 10,
+    style: {}
   };
 
   constructor (props, context) {
     super(props, context)
 
     this.state = {
-      computeGridMetadataOnNextUpdate: false,
       isScrolling: false,
       scrollLeft: 0,
       scrollTop: 0
@@ -165,23 +183,37 @@ export default class Grid extends Component {
     this._onScrollMemoizer = createCallbackMemoizer(false)
 
     // Bind functions to instance so they don't lose context when passed around
-    this._computeColumnMetadata = this._computeColumnMetadata.bind(this)
-    this._computeRowMetadata = this._computeRowMetadata.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
+
+    this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth)
+    this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight)
+
+    this._columnSizeAndPositionManager = new CellSizeAndPositionManager({
+      cellCount: props.columnCount,
+      cellSizeGetter: (index) => this._columnWidthGetter(index),
+      estimatedCellSize: this._getEstimatedColumnSize(props)
+    })
+    this._rowSizeAndPositionManager = new CellSizeAndPositionManager({
+      cellCount: props.rowCount,
+      cellSizeGetter: (index) => this._rowHeightGetter(index),
+      estimatedCellSize: this._getEstimatedRowSize(props)
+    })
+
+    // See defaultCellRangeRenderer() for more information on the usage of this cache
+    this._cellCache = {}
   }
 
   /**
    * Forced recompute of row heights and column widths.
    * This function should be called if dynamic column or row sizes have changed but nothing else has.
-   * Since Grid only receives :columnsCount and :rowsCount it has no way of detecting when the underlying data changes.
+   * Since Grid only receives :columnCount and :rowCount it has no way of detecting when the underlying data changes.
    */
   recomputeGridSize () {
-    this.setState({
-      computeGridMetadataOnNextUpdate: true
-    })
+    this._columnSizeAndPositionManager.resetCell(0)
+    this._rowSizeAndPositionManager.resetCell(0)
   }
 
   componentDidMount () {
@@ -205,8 +237,8 @@ export default class Grid extends Component {
     this._invokeOnScrollMemoizer({
       scrollLeft: scrollLeft || 0,
       scrollTop: scrollTop || 0,
-      totalColumnsWidth: this._getTotalColumnsWidth(),
-      totalRowsHeight: this._getTotalRowsHeight()
+      totalColumnsWidth: this._columnSizeAndPositionManager.getTotalSize(),
+      totalRowsHeight: this._rowSizeAndPositionManager.getTotalSize()
     })
   }
 
@@ -216,7 +248,7 @@ export default class Grid extends Component {
    * 1) New scroll-to-cell props have been set
    */
   componentDidUpdate (prevProps, prevState) {
-    const { columnsCount, columnWidth, height, rowHeight, rowsCount, scrollToColumn, scrollToRow, width } = this.props
+    const { height, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
@@ -244,10 +276,8 @@ export default class Grid extends Component {
     // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
     // @TODO Do we also need this check or can the one in componentWillUpdate() suffice?
     updateScrollIndexHelper({
-      cellCount: columnsCount,
-      cellMetadata: this._columnMetadata,
-      cellSize: columnWidth,
-      previousCellsCount: prevProps.columnsCount,
+      cellSizeAndPositionManager: this._columnSizeAndPositionManager,
+      previousCellsCount: prevProps.columnCount,
       previousCellSize: prevProps.columnWidth,
       previousScrollToIndex: prevProps.scrollToColumn,
       previousSize: prevProps.width,
@@ -257,10 +287,8 @@ export default class Grid extends Component {
       updateScrollIndexCallback: (scrollToColumn) => this._updateScrollLeftForScrollToColumn({ ...this.props, scrollToColumn })
     })
     updateScrollIndexHelper({
-      cellCount: rowsCount,
-      cellMetadata: this._rowMetadata,
-      cellSize: rowHeight,
-      previousCellsCount: prevProps.rowsCount,
+      cellSizeAndPositionManager: this._rowSizeAndPositionManager,
+      previousCellsCount: prevProps.rowCount,
       previousCellSize: prevProps.rowHeight,
       previousScrollToIndex: prevProps.scrollToRow,
       previousSize: prevProps.height,
@@ -272,11 +300,6 @@ export default class Grid extends Component {
 
     // Update onRowsRendered callback if start/stop indices have changed
     this._invokeOnGridRenderedHelper()
-  }
-
-  componentWillMount () {
-    this._computeColumnMetadata(this.props)
-    this._computeRowMetadata(this.props)
   }
 
   componentWillUnmount () {
@@ -298,9 +321,9 @@ export default class Grid extends Component {
    */
   componentWillUpdate (nextProps, nextState) {
     if (
-      nextProps.columnsCount === 0 &&
+      nextProps.columnCount === 0 &&
       nextState.scrollLeft !== 0 ||
-      nextProps.rowsCount === 0 &&
+      nextProps.rowCount === 0 &&
       nextState.scrollTop !== 0
     ) {
       this._setScrollPosition({
@@ -317,48 +340,55 @@ export default class Grid extends Component {
       })
     }
 
+    this._columnWidthGetter = this._wrapSizeGetter(nextProps.columnWidth)
+    this._rowHeightGetter = this._wrapSizeGetter(nextProps.rowHeight)
+
+    this._columnSizeAndPositionManager.configure({
+      cellCount: nextProps.columnCount,
+      estimatedCellSize: this._getEstimatedColumnSize(nextProps)
+    })
+    this._rowSizeAndPositionManager.configure({
+      cellCount: nextProps.rowCount,
+      estimatedCellSize: this._getEstimatedRowSize(nextProps)
+    })
+
     // Update scroll offsets if the size or number of cells have changed, invalidating the previous value
     calculateSizeAndPositionDataAndUpdateScrollOffset({
-      cellCount: this.props.columnsCount,
+      cellCount: this.props.columnCount,
       cellSize: this.props.columnWidth,
-      computeMetadataCallback: this._computeColumnMetadata,
+      computeMetadataCallback: () => this._columnSizeAndPositionManager.resetCell(0),
       computeMetadataCallbackProps: nextProps,
-      computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
-      nextCellsCount: nextProps.columnsCount,
+      nextCellsCount: nextProps.columnCount,
       nextCellSize: nextProps.columnWidth,
       nextScrollToIndex: nextProps.scrollToColumn,
       scrollToIndex: this.props.scrollToColumn,
       updateScrollOffsetForScrollToIndex: () => this._updateScrollLeftForScrollToColumn(nextProps, nextState)
     })
     calculateSizeAndPositionDataAndUpdateScrollOffset({
-      cellCount: this.props.rowsCount,
+      cellCount: this.props.rowCount,
       cellSize: this.props.rowHeight,
-      computeMetadataCallback: this._computeRowMetadata,
+      computeMetadataCallback: () => this._rowSizeAndPositionManager.resetCell(0),
       computeMetadataCallbackProps: nextProps,
-      computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
-      nextCellsCount: nextProps.rowsCount,
+      nextCellsCount: nextProps.rowCount,
       nextCellSize: nextProps.rowHeight,
       nextScrollToIndex: nextProps.scrollToRow,
       scrollToIndex: this.props.scrollToRow,
       updateScrollOffsetForScrollToIndex: () => this._updateScrollTopForScrollToRow(nextProps, nextState)
     })
-
-    this.setState({
-      computeGridMetadataOnNextUpdate: false
-    })
   }
 
   render () {
     const {
+      cellRenderer,
+      cellRangeRenderer,
       className,
-      columnsCount,
+      columnCount,
       height,
       noContentRenderer,
-      overscanColumnsCount,
-      overscanRowsCount,
-      renderCell,
-      renderCellRanges,
-      rowsCount,
+      overscanColumnCount,
+      overscanRowCount,
+      rowCount,
+      style,
       width
     } = this.props
 
@@ -372,16 +402,14 @@ export default class Grid extends Component {
 
     // Render only enough columns and rows to cover the visible area of the grid.
     if (height > 0 && width > 0) {
-      const visibleColumnIndices = getVisibleCellIndices({
-        cellMetadata: this._columnMetadata,
+      const visibleColumnIndices = this._columnSizeAndPositionManager.getVisibleCellRange({
         containerSize: width,
-        currentOffset: scrollLeft
+        offset: scrollLeft
       })
 
-      const visibleRowIndices = getVisibleCellIndices({
-        cellMetadata: this._rowMetadata,
+      const visibleRowIndices = this._rowSizeAndPositionManager.getVisibleCellRange({
         containerSize: height,
-        currentOffset: scrollTop
+        offset: scrollTop
       })
 
       // Store for _invokeOnGridRenderedHelper()
@@ -391,15 +419,15 @@ export default class Grid extends Component {
       this._renderedRowStopIndex = visibleRowIndices.stop
 
       const overscanColumnIndices = getOverscanIndices({
-        cellCount: columnsCount,
-        overscanCellsCount: overscanColumnsCount,
+        cellCount: columnCount,
+        overscanCellsCount: overscanColumnCount,
         startIndex: this._renderedColumnStartIndex,
         stopIndex: this._renderedColumnStopIndex
       })
 
       const overscanRowIndices = getOverscanIndices({
-        cellCount: rowsCount,
-        overscanCellsCount: overscanRowsCount,
+        cellCount: rowCount,
+        overscanCellsCount: overscanRowCount,
         startIndex: this._renderedRowStartIndex,
         stopIndex: this._renderedRowStopIndex
       })
@@ -410,24 +438,27 @@ export default class Grid extends Component {
       this._rowStartIndex = overscanRowIndices.overscanStartIndex
       this._rowStopIndex = overscanRowIndices.overscanStopIndex
 
-      childrenToDisplay = renderCellRanges({
-        columnMetadata: this._columnMetadata,
+      childrenToDisplay = cellRangeRenderer({
+        cellCache: this._cellCache,
+        cellRenderer,
+        columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
-        renderCell,
-        rowMetadata: this._rowMetadata,
+        isScrolling,
+        rowSizeAndPositionManager: this._rowSizeAndPositionManager,
         rowStartIndex: this._rowStartIndex,
         rowStopIndex: this._rowStopIndex
       })
     }
 
     const gridStyle = {
-      height: height,
-      width: width
+      ...style,
+      height,
+      width
     }
 
-    const totalColumnsWidth = this._getTotalColumnsWidth()
-    const totalRowsHeight = this._getTotalRowsHeight()
+    const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
+    const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
 
     // Force browser to hide scrollbars when we know they aren't necessary.
     // Otherwise once scrollbars appear they may not disappear again.
@@ -477,24 +508,6 @@ export default class Grid extends Component {
 
   /* ---------------------------- Helper methods ---------------------------- */
 
-  _computeColumnMetadata (props) {
-    const { columnsCount, columnWidth } = props
-
-    this._columnMetadata = initCellMetadata({
-      cellCount: columnsCount,
-      size: columnWidth
-    })
-  }
-
-  _computeRowMetadata (props) {
-    const { rowHeight, rowsCount } = props
-
-    this._rowMetadata = initCellMetadata({
-      cellCount: rowsCount,
-      size: rowHeight
-    })
-  }
-
   /**
    * Sets an :isScrolling flag for a small window of time.
    * This flag is used to disable pointer events on the scrollable portion of the Grid.
@@ -507,28 +520,26 @@ export default class Grid extends Component {
 
     this._disablePointerEventsTimeoutId = setTimeout(() => {
       this._disablePointerEventsTimeoutId = null
+
+      // Throw away cell cache once scrolling is complete
+      this._cellCache = {}
+
       this.setState({
         isScrolling: false
       })
     }, IS_SCROLLING_TIMEOUT)
   }
 
-  _getTotalColumnsWidth () {
-    if (this._columnMetadata.length === 0) {
-      return 0
-    }
-
-    const datum = this._columnMetadata[this._columnMetadata.length - 1]
-    return datum.offset + datum.size
+  _getEstimatedColumnSize (props) {
+    return typeof props.columnWidth === 'number'
+      ? props.columnWidth
+      : props.estimatedColumnSize
   }
 
-  _getTotalRowsHeight () {
-    if (this._rowMetadata.length === 0) {
-      return 0
-    }
-
-    const datum = this._rowMetadata[this._rowMetadata.length - 1]
-    return datum.offset + datum.size
+  _getEstimatedRowSize (props) {
+    return typeof props.rowHeight === 'number'
+      ? props.rowHeight
+      : props.estimatedRowSize
   }
 
   _invokeOnGridRenderedHelper () {
@@ -607,21 +618,24 @@ export default class Grid extends Component {
     }
   }
 
+  _wrapSizeGetter (size) {
+    return typeof size === 'function'
+      ? size
+      : () => size
+  }
+
   _updateScrollLeftForScrollToColumn (props = null, state = null) {
-    const { columnsCount, scrollToColumn, width } = props || this.props
+    const { columnCount, scrollToColumn, width } = props || this.props
     const { scrollLeft } = state || this.state
 
-    if (scrollToColumn >= 0 && columnsCount > 0) {
-      const targetIndex = getNearestIndex({
-        cellCount: this._columnMetadata.length,
-        targetIndex: scrollToColumn
-      })
+    if (scrollToColumn >= 0 && columnCount > 0) {
+      const targetIndex = Math.max(0, Math.min(columnCount - 1, scrollToColumn))
 
-      const columnMetadata = this._columnMetadata[targetIndex]
+      const columnMetadatum = this._columnSizeAndPositionManager.getSizeAndPositionOfCell(targetIndex)
 
       const calculatedScrollLeft = getUpdatedOffsetForIndex({
-        cellOffset: columnMetadata.offset,
-        cellSize: columnMetadata.size,
+        cellOffset: columnMetadatum.offset,
+        cellSize: columnMetadatum.size,
         containerSize: width,
         currentOffset: scrollLeft,
         targetIndex: scrollToColumn
@@ -636,20 +650,17 @@ export default class Grid extends Component {
   }
 
   _updateScrollTopForScrollToRow (props = null, state = null) {
-    const { height, rowsCount, scrollToRow } = props || this.props
+    const { height, rowCount, scrollToRow } = props || this.props
     const { scrollTop } = state || this.state
 
-    if (scrollToRow >= 0 && rowsCount > 0) {
-      const targetIndex = getNearestIndex({
-        cellCount: this._rowMetadata.length,
-        targetIndex: scrollToRow
-      })
+    if (scrollToRow >= 0 && rowCount > 0) {
+      const targetIndex = Math.max(0, Math.min(rowCount - 1, scrollToRow))
 
-      const rowMetadata = this._rowMetadata[targetIndex]
+      const rowMetadatum = this._rowSizeAndPositionManager.getSizeAndPositionOfCell(targetIndex)
 
       const calculatedScrollTop = getUpdatedOffsetForIndex({
-        cellOffset: rowMetadata.offset,
-        cellSize: rowMetadata.size,
+        cellOffset: rowMetadatum.offset,
+        cellSize: rowMetadatum.size,
         containerSize: height,
         currentOffset: scrollTop,
         targetIndex: scrollToRow
@@ -680,8 +691,8 @@ export default class Grid extends Component {
     // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
     const { height, width } = this.props
     const scrollbarSize = this._scrollbarSize
-    const totalRowsHeight = this._getTotalRowsHeight()
-    const totalColumnsWidth = this._getTotalColumnsWidth()
+    const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
+    const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
     const scrollLeft = Math.min(totalColumnsWidth - width + scrollbarSize, event.target.scrollLeft)
     const scrollTop = Math.min(totalRowsHeight - height + scrollbarSize, event.target.scrollTop)
 
@@ -717,49 +728,4 @@ export default class Grid extends Component {
 
     this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
   }
-}
-
-function defaultRenderCellRanges ({
-  columnMetadata,
-  columnStartIndex,
-  columnStopIndex,
-  renderCell,
-  rowMetadata,
-  rowStartIndex,
-  rowStopIndex
-}) {
-  const renderedCells = []
-
-  for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
-    let rowDatum = rowMetadata[rowIndex]
-
-    for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
-      let columnDatum = columnMetadata[columnIndex]
-      let renderedCell = renderCell({ columnIndex, rowIndex })
-      let key = `${rowIndex}-${columnIndex}`
-
-      if (renderedCell == null || renderedCell === false) {
-        continue
-      }
-
-      let child = (
-        <div
-          key={key}
-          className='Grid__cell'
-          style={{
-            height: rowDatum.size,
-            left: columnDatum.offset,
-            top: rowDatum.offset,
-            width: columnDatum.size
-          }}
-        >
-          {renderedCell}
-        </div>
-      )
-
-      renderedCells.push(child)
-    }
-  }
-
-  return renderedCells
 }

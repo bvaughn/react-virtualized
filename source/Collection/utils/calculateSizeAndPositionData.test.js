@@ -3,7 +3,7 @@ import calculateSizeAndPositionData from './calculateSizeAndPositionData'
 describe('calculateSizeAndPositionData', () => {
   it('should query for size and position of each cell', () => {
     const cellSizeAndPositionGetterCalls = []
-    function cellSizeAndPositionGetter (index) {
+    function cellSizeAndPositionGetter ({ index }) {
       cellSizeAndPositionGetterCalls.push(index)
       return {
         x: index * 50,
@@ -24,7 +24,7 @@ describe('calculateSizeAndPositionData', () => {
     expect(() => (
       calculateSizeAndPositionData({
         cellCount: 3,
-        cellSizeAndPositionGetter: (index) => {}
+        cellSizeAndPositionGetter: ({ index }) => {}
       })
     )).toThrow()
   })

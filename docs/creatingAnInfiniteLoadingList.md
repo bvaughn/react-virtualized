@@ -17,7 +17,7 @@ function MyComponent ({
   loadNextPage
 }) {
   // If there are more items to be loaded then add an extra row to hold a loading indicator.
-  const rowsCount = hasNextPage
+  const rowCount = hasNextPage
     ? list.size + 1
     : list.size
 
@@ -43,7 +43,7 @@ function MyComponent ({
     <InfiniteLoader
       isRowLoaded={isRowLoaded}
       loadMoreRows={loadMoreRows}
-      rowsCount={rowsCount}
+      rowCount={rowCount}
     >
       {({ onRowsRendered, registerChild }) => (
         <VirtualScroll

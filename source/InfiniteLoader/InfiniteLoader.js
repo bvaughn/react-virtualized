@@ -21,7 +21,7 @@ export default class InfiniteLoader extends Component {
 
     /**
      * Function responsible for tracking the loaded state of each row.
-     * It should implement the following signature: (index: number): boolean
+     * It should implement the following signature: ({ index: number }): boolean
      */
     isRowLoaded: PropTypes.func.isRequired,
 
@@ -43,7 +43,7 @@ export default class InfiniteLoader extends Component {
     /**
      * Number of rows in list; can be arbitrary high number if actual number is unknown.
      */
-    rowsCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired,
 
     /**
      * Threshold at which to pre-fetch data.
@@ -55,7 +55,7 @@ export default class InfiniteLoader extends Component {
 
   static defaultProps = {
     minimumBatchSize: 10,
-    rowsCount: 0,
+    rowCount: 0,
     threshold: 15
   }
 
@@ -80,7 +80,7 @@ export default class InfiniteLoader extends Component {
   }
 
   _onRowsRendered ({ startIndex, stopIndex }) {
-    const { isRowLoaded, loadMoreRows, minimumBatchSize, rowsCount, threshold } = this.props
+    const { isRowLoaded, loadMoreRows, minimumBatchSize, rowCount, threshold } = this.props
 
     this._lastRenderedStartIndex = startIndex
     this._lastRenderedStopIndex = stopIndex
@@ -88,9 +88,9 @@ export default class InfiniteLoader extends Component {
     const unloadedRanges = scanForUnloadedRanges({
       isRowLoaded,
       minimumBatchSize,
-      rowsCount,
+      rowCount,
       startIndex: Math.max(0, startIndex - threshold),
-      stopIndex: Math.min(rowsCount - 1, stopIndex + threshold)
+      stopIndex: Math.min(rowCount - 1, stopIndex + threshold)
     })
 
     unloadedRanges.forEach(unloadedRange => {
@@ -139,7 +139,7 @@ export function isRangeVisible ({
 export function scanForUnloadedRanges ({
   isRowLoaded,
   minimumBatchSize,
-  rowsCount,
+  rowCount,
   startIndex,
   stopIndex
 }) {
@@ -148,13 +148,13 @@ export function scanForUnloadedRanges ({
   let rangeStartIndex = null
   let rangeStopIndex = null
 
-  for (let i = startIndex; i <= stopIndex; i++) {
-    let loaded = isRowLoaded(i)
+  for (let index = startIndex; index <= stopIndex; index++) {
+    let loaded = isRowLoaded({ index })
 
     if (!loaded) {
-      rangeStopIndex = i
+      rangeStopIndex = index
       if (rangeStartIndex === null) {
-        rangeStartIndex = i
+        rangeStartIndex = index
       }
     } else if (rangeStopIndex !== null) {
       unloadedRanges.push({
@@ -167,18 +167,18 @@ export function scanForUnloadedRanges ({
   }
 
   if (rangeStopIndex !== null) {
-    // Attempt to satisfy :minimumBatchSize requirement but don't exceed :rowsCount
+    // Attempt to satisfy :minimumBatchSize requirement but don't exceed :rowCount
     const potentialStopIndex = Math.min(
       Math.max(
         rangeStopIndex,
         rangeStartIndex + minimumBatchSize - 1
       ),
-      rowsCount - 1
+      rowCount - 1
     )
 
-    for (let i = rangeStopIndex + 1; i <= potentialStopIndex; i++) {
-      if (!isRowLoaded(i)) {
-        rangeStopIndex = i
+    for (let index = rangeStopIndex + 1; index <= potentialStopIndex; index++) {
+      if (!isRowLoaded({ index })) {
+        rangeStopIndex = index
       } else {
         break
       }

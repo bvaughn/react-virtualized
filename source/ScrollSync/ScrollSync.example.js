@@ -25,12 +25,12 @@ export default class GridExample extends Component {
 
     this.state = {
       columnWidth: 75,
-      columnsCount: 50,
+      columnCount: 50,
       height: 300,
-      overscanColumnsCount: 0,
-      overscanRowsCount: 5,
+      overscanColumnCount: 0,
+      overscanRowCount: 5,
       rowHeight: 40,
-      rowsCount: 100
+      rowCount: 100
     }
 
     this._renderBodyCell = this._renderBodyCell.bind(this)
@@ -42,13 +42,13 @@ export default class GridExample extends Component {
     const { list, ...props } = this.props
 
     const {
-      columnsCount,
+      columnCount,
       columnWidth,
       height,
-      overscanColumnsCount,
-      overscanRowsCount,
+      overscanColumnCount,
+      overscanRowCount,
       rowHeight,
-      rowsCount
+      rowCount
     } = this.state
 
     return (
@@ -93,14 +93,14 @@ export default class GridExample extends Component {
                   }}
                 >
                   <Grid
-                    renderCell={this._renderLeftHeaderCell}
+                    cellRenderer={this._renderLeftHeaderCell}
                     className={styles.HeaderGrid}
                     width={columnWidth}
                     height={rowHeight}
                     rowHeight={rowHeight}
                     columnWidth={columnWidth}
-                    rowsCount={1}
-                    columnsCount={1}
+                    rowCount={1}
+                    columnCount={1}
                   />
                 </div>
                 <div
@@ -114,15 +114,15 @@ export default class GridExample extends Component {
                   }}
                 >
                   <Grid
-                    overscanColumnsCount={overscanColumnsCount}
-                    overscanRowsCount={overscanRowsCount}
-                    renderCell={this._renderLeftSideCell}
+                    overscanColumnCount={overscanColumnCount}
+                    overscanRowCount={overscanRowCount}
+                    cellRenderer={this._renderLeftSideCell}
                     columnWidth={columnWidth}
-                    columnsCount={1}
+                    columnCount={1}
                     className={styles.LeftSideGrid}
                     height={height - scrollbarSize()}
                     rowHeight={rowHeight}
-                    rowsCount={rowsCount}
+                    rowCount={rowCount}
                     scrollTop={scrollTop}
                     width={columnWidth}
                   />
@@ -140,12 +140,12 @@ export default class GridExample extends Component {
                           <Grid
                             className={styles.HeaderGrid}
                             columnWidth={columnWidth}
-                            columnsCount={columnsCount}
+                            columnCount={columnCount}
                             height={rowHeight}
-                            overscanColumnsCount={overscanColumnsCount}
-                            renderCell={this._renderHeaderCell}
+                            overscanColumnCount={overscanColumnCount}
+                            cellRenderer={this._renderHeaderCell}
                             rowHeight={rowHeight}
-                            rowsCount={1}
+                            rowCount={1}
                             scrollLeft={scrollLeft}
                             width={width - scrollbarSize()}
                           />
@@ -161,14 +161,14 @@ export default class GridExample extends Component {
                           <Grid
                             className={styles.BodyGrid}
                             columnWidth={columnWidth}
-                            columnsCount={columnsCount}
+                            columnCount={columnCount}
                             height={height}
                             onScroll={onScroll}
-                            overscanColumnsCount={overscanColumnsCount}
-                            overscanRowsCount={overscanRowsCount}
-                            renderCell={this._renderBodyCell}
+                            overscanColumnCount={overscanColumnCount}
+                            overscanRowCount={overscanRowCount}
+                            cellRenderer={this._renderBodyCell}
                             rowHeight={rowHeight}
-                            rowsCount={rowsCount}
+                            rowCount={rowCount}
                             width={width}
                           />
                         </div>

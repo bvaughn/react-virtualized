@@ -15,17 +15,18 @@ describe('VirtualScroll', () => {
   function getMarkup ({
     className,
     height = 100,
-    noRowsRenderer = undefined,
-    onRowsRendered = undefined,
-    onScroll = undefined,
-    overscanRowsCount = 0,
+    noRowsRenderer,
+    onRowsRendered,
+    onScroll,
+    overscanRowCount = 0,
     rowHeight = 10,
-    rowsCount = rendered.size,
-    scrollToIndex = undefined,
-    scrollTop = undefined,
+    rowCount = rendered.size,
+    scrollToIndex,
+    scrollTop,
+    style,
     width = 100
   } = {}) {
-    function rowRenderer (index) {
+    function rowRenderer ({ index }) {
       return (
         <div
           key={index}
@@ -43,12 +44,13 @@ describe('VirtualScroll', () => {
         noRowsRenderer={noRowsRenderer}
         onRowsRendered={onRowsRendered}
         onScroll={onScroll}
-        overscanRowsCount={overscanRowsCount}
+        overscanRowCount={overscanRowCount}
         rowHeight={rowHeight}
         rowRenderer={rowRenderer}
-        rowsCount={rowsCount}
+        rowCount={rowCount}
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
+        style={style}
         width={width}
       />
     )
@@ -61,7 +63,7 @@ describe('VirtualScroll', () => {
     })
 
     it('should not render more children than available if the list is not filled', () => {
-      const rendered = findDOMNode(render(getMarkup({ rowsCount: 5 })))
+      const rendered = findDOMNode(render(getMarkup({ rowCount: 5 })))
       expect(rendered.querySelectorAll('.listItem').length).toEqual(5)
     })
   })
@@ -117,23 +119,23 @@ describe('VirtualScroll', () => {
     it('should update scroll position if size shrinks smaller than the current scroll', () => {
       findDOMNode(render(getMarkup({ scrollToIndex: 500 })))
       findDOMNode(render(getMarkup()))
-      const rendered = findDOMNode(render(getMarkup({ scrollToIndex: 500, rowsCount: 10 })))
+      const rendered = findDOMNode(render(getMarkup({ scrollToIndex: 500, rowCount: 10 })))
       expect(rendered.textContent).toContain('Name 9')
     })
   })
 
   describe('noRowsRenderer', () => {
-    it('should call :noRowsRenderer if :rowsCount is 0', () => {
+    it('should call :noRowsRenderer if :rowCount is 0', () => {
       let rendered = findDOMNode(render(getMarkup({
         noRowsRenderer: () => <div>No rows!</div>,
-        rowsCount: 0
+        rowCount: 0
       })))
       expect(rendered.textContent).toEqual('No rows!')
     })
 
-    it('should render an empty body if :rowsCount is 0 and there is no :noRowsRenderer', () => {
+    it('should render an empty body if :rowCount is 0 and there is no :noRowsRenderer', () => {
       let rendered = findDOMNode(render(getMarkup({
-        rowsCount: 0
+        rowCount: 0
       })))
       expect(rendered.textContent).toEqual('')
     })
@@ -240,9 +242,15 @@ describe('VirtualScroll', () => {
       const node = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(node.className).toContain('foo')
     })
+
+    it('should use a custom :style if specified', () => {
+      const style = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ style })))
+      expect(rendered.style.backgroundColor).toEqual('red')
+    })
   })
 
-  describe('overscanRowsCount', () => {
+  describe('overscanRowCount', () => {
     it('should not overscan by default', () => {
       let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
       render(getMarkup({
@@ -256,7 +264,7 @@ describe('VirtualScroll', () => {
       let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
       render(getMarkup({
         onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowsCount: 10,
+        overscanRowCount: 10,
         scrollToIndex: 30
       }))
       expect(overscanStartIndex).toEqual(11)
@@ -269,7 +277,7 @@ describe('VirtualScroll', () => {
       let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
       render(getMarkup({
         onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowsCount: 10
+        overscanRowCount: 10
       }))
       expect(overscanStartIndex).toEqual(0)
       expect(startIndex).toEqual(0)
@@ -281,8 +289,8 @@ describe('VirtualScroll', () => {
       let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
       render(getMarkup({
         onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowsCount: 10,
-        rowsCount: 15
+        overscanRowCount: 10,
+        rowCount: 15
       }))
       expect(overscanStartIndex).toEqual(0)
       expect(startIndex).toEqual(0)
@@ -314,8 +322,7 @@ describe('VirtualScroll', () => {
       }
       rendered.refs.Grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
       Simulate.scroll(findDOMNode(rendered), { target })
-      expect(onScrollCalls.length).toEqual(2)
-      expect(onScrollCalls[1]).toEqual({
+      expect(onScrollCalls[onScrollCalls.length - 1]).toEqual({
         clientHeight: 100,
         scrollHeight: 1000,
         scrollTop: 100
@@ -326,17 +333,23 @@ describe('VirtualScroll', () => {
   describe('recomputeRowHeights', () => {
     it('should recompute row heights and other values when called', () => {
       let highestRowIndex = 0
-      const rowHeight = (index) => {
+      const rowHeight = ({ index }) => {
         highestRowIndex = Math.max(index, highestRowIndex)
         return 10
       }
       const component = render(getMarkup({
         rowHeight,
-        rowsCount: 50
+        rowCount: 50
       }))
       highestRowIndex = 0
       component.recomputeRowHeights()
-      expect(highestRowIndex).toEqual(49)
+      // Rows won't actually be remeasured until the VirtualScroll is next rendered.
+      render(getMarkup({
+        rowHeight,
+        rowCount: 50
+      }))
+      // And then only the rows necessary to fill the visible region.
+      expect(highestRowIndex).toEqual(9)
     })
   })
 })

@@ -31,13 +31,13 @@ export default class Collection extends Component {
 
     /**
      * Responsible for rendering a cell given an row and column index.
-     * Should implement the following interface: (index: number): PropTypes.node
+     * Should implement the following interface: ({ index: number }): PropTypes.element
      */
     cellRenderer: PropTypes.func.isRequired,
 
     /**
      * Callback responsible for returning size and offset/position information for a given cell (index).
-     * (index): { height: number, width: number, x: number, y: number }
+     * ({ index: number }): { height: number, width: number, x: number, y: number }
      */
     cellSizeAndPositionGetter: PropTypes.func.isRequired,
 
@@ -149,7 +149,7 @@ export default class Collection extends Component {
     }
   }
 
-  renderCells ({
+  cellRenderers ({
     height,
     isScrolling,
     width,
@@ -168,8 +168,9 @@ export default class Collection extends Component {
 
     return cellGroupRenderer({
       cellRenderer,
-      cellSizeAndPositionGetter: (index) => this._sectionManager.getCellMetadata(index),
-      indices: this._lastRenderedCellIndices
+      cellSizeAndPositionGetter: ({ index }) => this._sectionManager.getCellMetadata({ index }),
+      indices: this._lastRenderedCellIndices,
+      isScrolling
     })
   }
 }
@@ -177,12 +178,16 @@ export default class Collection extends Component {
 function defaultCellGroupRenderer ({
   cellRenderer,
   cellSizeAndPositionGetter,
-  indices
+  indices,
+  isScrolling
 }) {
   return indices
     .map((index) => {
-      const cellMetadata = cellSizeAndPositionGetter(index)
-      const renderedCell = cellRenderer(index)
+      const cellMetadata = cellSizeAndPositionGetter({ index })
+      const renderedCell = cellRenderer({
+        index,
+        isScrolling
+      })
 
       if (renderedCell == null || renderedCell === false) {
         return null

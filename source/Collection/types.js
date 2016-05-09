@@ -1,5 +1,9 @@
 /** @flow */
 
+export type Index = {
+  index: number
+};
+
 export type PositionInfo = {
   x: number,
   y: number

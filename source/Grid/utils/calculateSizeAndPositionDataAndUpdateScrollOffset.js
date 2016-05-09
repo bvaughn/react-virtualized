@@ -5,7 +5,6 @@
  * @param cellsSize Width or height of cells for the current axis
  * @param computeMetadataCallback Method to invoke if cell metadata should be recalculated
  * @param computeMetadataCallbackProps Parameters to pass to :computeMetadataCallback
- * @param computeMetadataOnNextUpdate Flag specifying that metadata should be recalculated
  * @param nextCellsCount Newly updated number of rows or columns in the current axis
  * @param nextCellsSize Newly updated width or height of cells for the current axis
  * @param nextScrollToIndex Newly updated scroll-to-index
@@ -17,7 +16,6 @@ export default function calculateSizeAndPositionDataAndUpdateScrollOffset ({
   cellSize,
   computeMetadataCallback,
   computeMetadataCallbackProps,
-  computeMetadataOnNextUpdate,
   nextCellsCount,
   nextCellSize,
   nextScrollToIndex,
@@ -27,7 +25,6 @@ export default function calculateSizeAndPositionDataAndUpdateScrollOffset ({
   // Don't compare cell sizes if they are functions because inline functions would cause infinite loops.
   // In that event users should use the manual recompute methods to inform of changes.
   if (
-    computeMetadataOnNextUpdate ||
     cellCount !== nextCellsCount ||
     (
       (

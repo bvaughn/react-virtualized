@@ -187,4 +187,30 @@ describe('createCallbackMemoizer', () => {
     expect(numCalls).toEqual(2)
     expect(indices).toEqual([0, 1])
   })
+
+  it('should support an attribute containing an array of indices', () => {
+    let numCalls = 0
+    let indices
+    const callback = params => {
+      indices = params.indices
+      numCalls++
+    }
+    const helper = createCallbackMemoizer()
+    helper({
+      callback,
+      indices: {
+        indices: [0, 1, 2]
+      }
+    })
+    expect(numCalls).toEqual(1)
+    expect(indices).toEqual([0, 1, 2])
+    helper({
+      callback,
+      indices: {
+        indices: [0, 1]
+      }
+    })
+    expect(numCalls).toEqual(2)
+    expect(indices).toEqual([0, 1])
+  })
 })

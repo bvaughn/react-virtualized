@@ -61,6 +61,7 @@ There are also a couple of how-to guides:
 * [Displaying items in reverse order](docs/reverseList.md)
 * [Using AutoSizer](docs/usingAutoSizer.md)
 * [Creating an infinite-loading list](docs/creatingAnInfiniteLoadingList.md)
+* [Displaying a reverse list](docs/reverseList.md)
 
 Examples
 ---------------
@@ -71,6 +72,7 @@ Here are some online demos of each component:
 
 * [ArrowKeyStepper](https://bvaughn.github.io/react-virtualized/?component=ArrowKeyStepper)
 * [AutoSizer](https://bvaughn.github.io/react-virtualized/?component=AutoSizer)
+* [CellMeasurer](https://bvaughn.github.io/react-virtualized/?component=CellMeasurer)
 * [Collection](https://bvaughn.github.io/react-virtualized/?component=Collection)
 * [ColumnSizer](https://bvaughn.github.io/react-virtualized/?component=ColumnSizer)
 * [FlexTable](https://bvaughn.github.io/react-virtualized/?component=FlexTable)
@@ -82,6 +84,8 @@ Here are some online demos of each component:
 And here are some "recipe" type demos:
 * [Collapsable tree view](https://rawgit.com/bvaughn/react-virtualized/master/playground/tree.html)
 * [Full-page grid (spreadsheet)](https://rawgit.com/bvaughn/react-virtualized/master/playground/grid.html)
+* [Dyanmic cell measuring](https://rawgit.com/bvaughn/react-virtualized/master/playground/chat.html)
+* [Cell hover effects](https://rawgit.com/bvaughn/react-virtualized/master/playground/hover.html)
 
 Contributions
 ------------

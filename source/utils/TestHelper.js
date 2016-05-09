@@ -15,6 +15,6 @@ export function getCellMetadata () {
   ]
   return initCellMetadata({
     cellCount: cellSizes.length,
-    size: index => cellSizes[index]
+    size: ({ index }) => cellSizes[index]
   })
 }

@@ -9,10 +9,22 @@ export default function createCallbackMemoizer (requireAllKeys = true) {
     indices
   }) => {
     const keys = Object.keys(indices)
-    const allInitialized = !requireAllKeys || keys.every(key => indices[key] >= 0)
+    const allInitialized = !requireAllKeys || keys.every(key => {
+      const value = indices[key]
+      return Array.isArray(value)
+        ? value.length > 0
+        : value >= 0
+    })
     const indexChanged =
       keys.length !== Object.keys(cachedIndices).length ||
-      keys.some(key => cachedIndices[key] !== indices[key])
+      keys.some(key => {
+        const cachedValue = cachedIndices[key]
+        const value = indices[key]
+
+        return Array.isArray(value)
+          ? cachedValue.join(',') !== value.join(',')
+          : cachedValue !== value
+      })
 
     cachedIndices = indices
 

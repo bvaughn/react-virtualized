@@ -25,7 +25,8 @@ export default class CollectionExample extends Component {
       cellCount: props.list.size,
       columnCount: this._getColumnCount(props.list.size),
       height: 300,
-      scrollToCell: undefined
+      scrollToCell: undefined,
+      showScrollingPlaceholder: false
     }
 
     this._columnYMap = []
@@ -39,7 +40,7 @@ export default class CollectionExample extends Component {
   }
 
   render () {
-    const { cellCount, height, scrollToCell } = this.state
+    const { cellCount, height, scrollToCell, showScrollingPlaceholder } = this.state
 
     return (
       <ContentBox {...this.props}>
@@ -52,6 +53,19 @@ export default class CollectionExample extends Component {
         <ContentBoxParagraph>
           Renders scattered or non-linear data.
           Unlike <code>Grid</code>, which renders checkerboard data, <code>Collection</code> can render arbitrarily positioned- even overlapping- data.
+        </ContentBoxParagraph>
+
+        <ContentBoxParagraph>
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Show placeholder while scrolling?'
+              checked={showScrollingPlaceholder}
+              className={styles.checkbox}
+              type='checkbox'
+              onChange={event => this.setState({ showScrollingPlaceholder: event.target.checked })}
+            />
+            Show placeholder while scrolling?
+          </label>
         </ContentBoxParagraph>
 
         <InputRow>
@@ -98,8 +112,10 @@ export default class CollectionExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _cellRenderer (index) {
+  _cellRenderer ({ index, isScrolling }) {
     const { list } = this.props
+    const { showScrollingPlaceholder } = this.state
+
     const datum = list.get(index % list.size)
 
     return (
@@ -109,12 +125,12 @@ export default class CollectionExample extends Component {
           backgroundColor: datum.color
         }}
       >
-        {index}
+        {showScrollingPlaceholder && isScrolling ? '...' : index}
       </div>
     )
   }
 
-  _cellSizeAndPositionGetter (index) {
+  _cellSizeAndPositionGetter ({ index }) {
     const { list } = this.props
     const { columnCount } = this.state
 
