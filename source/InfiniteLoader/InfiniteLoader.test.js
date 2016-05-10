@@ -29,7 +29,7 @@ describe('InfiniteLoader', () => {
   function rowRenderer (index) {
     rowRendererCalls.push(index)
     return (
-      <div key={index}/>
+      <div key={index} />
     )
   }
 
@@ -91,13 +91,15 @@ describe('InfiniteLoader', () => {
   })
 
   it('should :forceUpdate once rows have loaded if :loadMoreRows returns a Promise', async (done) => {
-    let resolve
+    let savedResolve
     function loadMoreRows () {
-      return new Promise((innerResolve) => resolve = innerResolve)
+      return new Promise((resolve) => {
+        savedResolve = resolve
+      })
     }
     render(getMarkup({ loadMoreRows }))
     rowRendererCalls.splice(0)
-    await resolve()
+    await savedResolve()
     expect(rowRendererCalls.length > 0).toEqual(true)
     done()
   })
@@ -105,7 +107,9 @@ describe('InfiniteLoader', () => {
   it('should not :forceUpdate once rows have loaded rows are no longer visible', async (done) => {
     let resolves = []
     function loadMoreRows () {
-      return new Promise((innerResolve) => resolves.push(innerResolve))
+      return new Promise((resolve) => {
+        resolves.push(resolve)
+      })
     }
     render(getMarkup({ loadMoreRows }))
     // Simulate a new range of rows being loaded

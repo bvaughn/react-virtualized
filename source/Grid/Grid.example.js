@@ -44,8 +44,6 @@ export default class GridExample extends Component {
   }
 
   render () {
-    const { list, ...props } = this.props
-
     const {
       columnCount,
       height,
@@ -59,7 +57,7 @@ export default class GridExample extends Component {
     } = this.state
 
     return (
-      <ContentBox {...props}>
+      <ContentBox {...this.props}>
         <ContentBoxHeader
           text='Grid'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/Grid.example.js'
@@ -217,7 +215,7 @@ export default class GridExample extends Component {
         content = (
           <div>
             c:{columnIndex}
-            <br/>
+            <br />
             r:{rowIndex}
           </div>
         )

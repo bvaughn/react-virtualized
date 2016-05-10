@@ -127,7 +127,7 @@ describe('FlexTable', () => {
 
     it('should not accept non-FlexColumn children', () => {
       const children = [
-        <div/>
+        <div />
       ]
       const result = FlexTable.propTypes.children({ children }, 'children', 'FlexTable')
       expect(result instanceof Error).toEqual(true)

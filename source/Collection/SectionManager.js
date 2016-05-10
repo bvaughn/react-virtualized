@@ -41,7 +41,9 @@ export default class SectionManager {
     this.getSections({ height, width, x, y })
       .forEach(
         (section) => section.getCellIndices().forEach(
-          (index) => indices[index] = index
+          (index) => {
+            indices[index] = index
+          }
         )
       )
 

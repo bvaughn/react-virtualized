@@ -149,7 +149,9 @@ export default class InfiniteLoaderExample extends Component {
 
     let promiseResolver
 
-    return new Promise(resolve => promiseResolver = resolve)
+    return new Promise(resolve => {
+      promiseResolver = resolve
+    })
   }
 
   _rowRenderer ({ index }) {

@@ -243,7 +243,7 @@ export default class FlexTableExample extends Component {
       <div>
         Full Name
         {sortBy === dataKey &&
-          <SortIndicator sortDirection={sortDirection}/>
+          <SortIndicator sortDirection={sortDirection} />
         }
       </div>
     )

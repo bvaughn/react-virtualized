@@ -20,7 +20,7 @@ export default class FlexTable extends Component {
       const children = React.Children.toArray(props.children)
       for (let i = 0; i < children.length; i++) {
         if (children[i].type !== FlexColumn) {
-          return new Error(`FlexTable only accepts children of type FlexColumn`)
+          return new Error('FlexTable only accepts children of type FlexColumn')
         }
       }
     },
