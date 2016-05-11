@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.0.3
+Added `box-sizing: border-box` rules to `.FlexTable__headerRow` and `.FlexTable__Grid` classes to fix edge-case scrollbar bug experienced by some users.
+
 ##### 7.0.2
 Added `recomputeCellSizesAndPositions` method to `Collection` (to pass through to inner `CollectionView`).
 
