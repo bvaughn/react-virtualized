@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.0.2
+Added `recomputeCellSizesAndPositions` method to `Collection` (to pass through to inner `CollectionView`).
+
 ##### 7.0.1
 Replaced single occurence of `Number.isNaN` with `isNaN` to avoid IE compatibility issues.
 
