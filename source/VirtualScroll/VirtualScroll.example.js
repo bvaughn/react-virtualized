@@ -95,7 +95,7 @@ export default class VirtualScrollExample extends Component {
             name='onScrollToRow'
             placeholder='Index...'
             onChange={this._onScrollToRowChange}
-            value={scrollToIndex}
+            value={scrollToIndex || ''}
           />
           <LabeledInput
             label='List height'

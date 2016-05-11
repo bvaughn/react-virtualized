@@ -100,14 +100,14 @@ export default class GridExample extends Component {
             name='onScrollToColumn'
             placeholder='Index...'
             onChange={this._onScrollToColumnChange}
-            value={scrollToColumn}
+            value={scrollToColumn || ''}
           />
           <LabeledInput
             label='Scroll to row'
             name='onScrollToRow'
             placeholder='Index...'
             onChange={this._onScrollToRowChange}
-            value={scrollToRow}
+            value={scrollToRow || ''}
           />
           <LabeledInput
             label='List height'

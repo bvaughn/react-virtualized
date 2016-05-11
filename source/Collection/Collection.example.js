@@ -80,7 +80,7 @@ export default class CollectionExample extends Component {
             name='onScrollToCell'
             placeholder='Index...'
             onChange={this._onScrollToCellChange}
-            value={scrollToCell}
+            value={scrollToCell || ''}
           />
           <LabeledInput
             label='Height'
