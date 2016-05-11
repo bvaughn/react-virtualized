@@ -59,6 +59,11 @@ export default class Collection extends Component {
     this._lastRenderedCellIndices = []
   }
 
+  /** See Collection#recomputeCellSizesAndPositions */
+  recomputeCellSizesAndPositions () {
+    this.refs.CollectionView.recomputeCellSizesAndPositions()
+  }
+
   /** React lifecycle methods */
 
   render () {
