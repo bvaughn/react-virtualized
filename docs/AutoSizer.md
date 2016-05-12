@@ -6,7 +6,7 @@ High-order component that automatically adjusts the width and height of a single
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| children | Function | ✓ | Function respondible for rendering children. This function should implement the following signature: `({ height: number, width: number }) => PropTypes.element` |
+| children | Function | ✓ | Function responsible for rendering children. This function should implement the following signature: `({ height: number, width: number }) => PropTypes.element` |
 | disableHeight | Boolean |  | Fixed `height`; if specified, the child's `height` property will not be managed |
 | disableWidth | Boolean |  | Fixed `width`; if specified, the child's `width` property will not be managed |
 | onResize | Function |  | Callback to be invoked on-resize; it is passed the following named parameters: `({ height: number, width: number })`. | 
