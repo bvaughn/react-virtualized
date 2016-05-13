@@ -204,6 +204,8 @@ export default class Grid extends Component {
 
     // See defaultCellRangeRenderer() for more information on the usage of this cache
     this._cellCache = {}
+
+    this._scrollbarSize = getScrollbarSize()
   }
 
   /**
@@ -218,8 +220,6 @@ export default class Grid extends Component {
 
   componentDidMount () {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
-
-    this._scrollbarSize = getScrollbarSize()
 
     if (scrollLeft >= 0 || scrollTop >= 0) {
       this._setScrollPosition({ scrollLeft, scrollTop })
@@ -463,11 +463,11 @@ export default class Grid extends Component {
     // Force browser to hide scrollbars when we know they aren't necessary.
     // Otherwise once scrollbars appear they may not disappear again.
     // For more info see issue #116
-    if (totalColumnsWidth <= width) {
+    if (totalColumnsWidth + (totalRowsHeight > height ? this._scrollbarSize : 0) <= width) {
       gridStyle.overflowX = 'hidden'
     }
 
-    if (totalRowsHeight <= height) {
+    if (totalRowsHeight + (totalColumnsWidth > width ? this._scrollbarSize : 0) <= height) {
       gridStyle.overflowY = 'hidden'
     }
 
