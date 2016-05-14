@@ -7,7 +7,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| cellRangeRenderer | Function |  | Responsible for rendering a group of cells given their index ranges.: `({ cellCache: Map, cellRenderer: Function, columnSizeAndPositionManager: CellSizeAndPositionManager, columnStartIndex: number, columnStopIndex: number, isScrolling: boolean, rowSizeAndPositionManager: CellSizeAndPositionManager, rowStartIndex: number, rowStopIndex: number }): Array<PropTypes.node>`. [Learn more](#cellRangeRenderer) |
+| cellRangeRenderer | Function |  | Responsible for rendering a group of cells given their index ranges.: `({ cellCache: Map, cellRenderer: Function, columnSizeAndPositionManager: CellSizeAndPositionManager, columnStartIndex: number, columnStopIndex: number, isScrolling: boolean, rowSizeAndPositionManager: CellSizeAndPositionManager, rowStartIndex: number, rowStopIndex: number, scrollLeft: number, scrollTop: number }): Array<PropTypes.node>`. [Learn more](#cellRangeRenderer) |
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, isScrolling: boolean, rowIndex: number }): PropTypes.node` |
 | className | String |  | Optional custom CSS class name to attach to root `Grid` element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
@@ -65,7 +65,9 @@ function cellRangeRenderer ({
   isScrolling,
   rowSizeAndPositionManager,
   rowStartIndex,
-  rowStopIndex
+  rowStopIndex,
+  scrollLeft: number,
+  scrollTop: number
 }) {
   const renderedCells = []
 

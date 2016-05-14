@@ -52,7 +52,9 @@ export default class Grid extends Component {
      *   isScrolling: boolean,
      *   rowSizeAndPositionManager: CellSizeAndPositionManager,
      *   rowStartIndex: number,
-     *   rowStopIndex: number
+     *   rowStopIndex: number,
+     *   scrollLeft: number,
+     *   scrollTop: number
      * }): Array<PropTypes.node>
      */
     cellRangeRenderer: PropTypes.func.isRequired,
@@ -447,7 +449,9 @@ export default class Grid extends Component {
         isScrolling,
         rowSizeAndPositionManager: this._rowSizeAndPositionManager,
         rowStartIndex: this._rowStartIndex,
-        rowStopIndex: this._rowStopIndex
+        rowStopIndex: this._rowStopIndex,
+        scrollLeft,
+        scrollTop
       })
     }
 

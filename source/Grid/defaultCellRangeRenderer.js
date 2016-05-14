@@ -15,7 +15,9 @@ export default function defaultCellRangeRenderer ({
   isScrolling,
   rowSizeAndPositionManager,
   rowStartIndex,
-  rowStopIndex
+  rowStopIndex,
+  scrollLeft,
+  scrollTop
 }: DefaultCellRangeRendererParams) {
   const renderedCells = []
 
@@ -85,5 +87,7 @@ type DefaultCellRangeRendererParams = {
   isScrolling: boolean,
   rowSizeAndPositionManager: CellSizeAndPositionManager,
   rowStartIndex: number,
-  rowStopIndex: number
+  rowStopIndex: number,
+  scrollLeft: number,
+  scrollTop: number
 };
