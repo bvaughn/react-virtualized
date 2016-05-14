@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.0.5
+Fixed edge-case bug where `InfiniteLoader` did not respect `minBatchSize` setting when a user was scrolling up.
+
 ##### 7.0.4
 Added `scrollLeft` and `scrollTop` parameters to `cellRangeRenderer` callback for `Grid`.
 
