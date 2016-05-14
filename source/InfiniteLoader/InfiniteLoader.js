@@ -191,7 +191,7 @@ export function scanForUnloadedRanges ({
     })
   }
 
-  // TODO Comment what we are checking for here.
+  // Check to see if our first range ended prematurely.
   // In this case we should scan backwards to try filling our :minimumBatchSize.
   if (unloadedRanges.length) {
     const firstUnloadedRange = unloadedRanges[0]
