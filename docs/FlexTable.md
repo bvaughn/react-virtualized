@@ -80,7 +80,7 @@ ReactDOM.render(
     headerHeight={20}
     rowHeight={30}
     rowCount={list.length}
-    rowGetter={index => list[index]}
+    rowGetter={({index}) => list[index]}
   >
     <FlexColumn
       label='Name'
