@@ -12,7 +12,7 @@ export default function defaultCellRenderer ({
   rowData,
   rowIndex
 }: CellRendererParams): string {
-  if (cellData === null || cellData === undefined) {
+  if (cellData == null) {
     return ''
   } else {
     return String(cellData)
