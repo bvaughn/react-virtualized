@@ -628,9 +628,9 @@ export default class Grid extends Component {
       : () => size
   }
 
-  _updateScrollLeftForScrollToColumn (props = null, state = null) {
-    const { columnCount, scrollToColumn, width } = props || this.props
-    const { scrollLeft } = state || this.state
+  _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {
+    const { columnCount, scrollToColumn, width } = props
+    const { scrollLeft } = state
 
     if (scrollToColumn >= 0 && columnCount > 0) {
       const targetIndex = Math.max(0, Math.min(columnCount - 1, scrollToColumn))
@@ -653,9 +653,9 @@ export default class Grid extends Component {
     }
   }
 
-  _updateScrollTopForScrollToRow (props = null, state = null) {
-    const { height, rowCount, scrollToRow } = props || this.props
-    const { scrollTop } = state || this.state
+  _updateScrollTopForScrollToRow (props = this.props, state = this.state) {
+    const { height, rowCount, scrollToRow } = props
+    const { scrollTop } = state
 
     if (scrollToRow >= 0 && rowCount > 0) {
       const targetIndex = Math.max(0, Math.min(rowCount - 1, scrollToRow))
