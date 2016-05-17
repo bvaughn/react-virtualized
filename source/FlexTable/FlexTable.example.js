@@ -24,7 +24,7 @@ export default class FlexTableExample extends Component {
       headerHeight: 30,
       height: 270,
       hideIndexRow: false,
-      overscanRowCount: 0,
+      overscanRowCount: 10,
       rowHeight: 40,
       rowCount: 1000,
       scrollToIndex: undefined,

@@ -22,7 +22,7 @@ export default class GridExample extends Component {
       columnCount: 1000,
       height: 300,
       overscanColumnCount: 0,
-      overscanRowCount: 5,
+      overscanRowCount: 10,
       rowHeight: 40,
       rowCount: 1000,
       scrollToColumn: undefined,
