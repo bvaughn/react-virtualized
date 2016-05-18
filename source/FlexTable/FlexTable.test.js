@@ -133,7 +133,7 @@ describe('FlexTable', () => {
       expect(result instanceof Error).toEqual(true)
     })
 
-    it('should accept falsy children to allow easier dyanmic showing/hiding of columns', () => {
+    it('should accept falsy children to allow easier dynamic showing/hiding of columns', () => {
       const children = [
         false,
         <FlexColumn
