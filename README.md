@@ -84,7 +84,7 @@ Here are some online demos of each component:
 And here are some "recipe" type demos:
 * [Collapsable tree view](https://rawgit.com/bvaughn/react-virtualized/master/playground/tree.html)
 * [Full-page grid (spreadsheet)](https://rawgit.com/bvaughn/react-virtualized/master/playground/grid.html)
-* [Dyanmic cell measuring](https://rawgit.com/bvaughn/react-virtualized/master/playground/chat.html)
+* [Dynamic cell measuring](https://rawgit.com/bvaughn/react-virtualized/master/playground/chat.html)
 * [Cell hover effects](https://rawgit.com/bvaughn/react-virtualized/master/playground/hover.html)
 
 Contributions
