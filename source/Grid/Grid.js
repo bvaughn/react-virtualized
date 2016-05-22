@@ -479,12 +479,14 @@ export default class Grid extends Component {
     // Force browser to hide scrollbars when we know they aren't necessary.
     // Otherwise once scrollbars appear they may not disappear again.
     // For more info see issue #116
-    if (totalColumnsWidth <= width) {
-      gridStyle.overflowX = 'hidden'
-    }
+    if (this._scrollbarSize !== undefined) {
+      if (totalColumnsWidth + (totalRowsHeight > height ? this._scrollbarSize : 0) <= width) {
+        gridStyle.overflowX = 'hidden'
+      }
 
-    if (totalRowsHeight <= height) {
-      gridStyle.overflowY = 'hidden'
+      if (totalRowsHeight + (totalColumnsWidth > width ? this._scrollbarSize : 0) <= height) {
+        gridStyle.overflowY = 'hidden'
+      }
     }
 
     return (
