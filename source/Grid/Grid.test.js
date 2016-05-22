@@ -1,7 +1,8 @@
+import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import React from 'react'
 import { findDOMNode } from 'react-dom'
-import { render } from '../TestUtils'
 import { Simulate } from 'react-addons-test-utils'
+import { render } from '../TestUtils'
 import Grid from './Grid'
 
 const NUM_ROWS = 100
@@ -119,23 +120,75 @@ describe('Grid', () => {
   })
 
   describe('shows and hides scrollbars based on rendered content', () => {
-    it('should set overflowX:hidden on scroll-container if columns fit within the available width', () => {
-      const rendered = findDOMNode(render(getMarkup({ columnCount: 4 })))
+    let scrollbarSize
+
+    beforeAll(() => {
+      scrollbarSize = getScrollbarSize()
+    })
+
+    it('should set overflowX:hidden if columns fit within the available width and y-axis has no scrollbar', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnCount: 4,
+        rowCount: 5
+      })))
       expect(rendered.style.overflowX).toEqual('hidden')
     })
 
-    it('should leave overflowX:auto on scroll-container if columns require more than the available width', () => {
-      const rendered = findDOMNode(render(getMarkup({ columnCount: 25 })))
+    it('should set overflowX:hidden if columns and y-axis scrollbar fit within the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnCount: 4,
+        width: 200 + scrollbarSize
+      })))
+      expect(rendered.style.overflowX).toEqual('hidden')
+    })
+
+    it('should leave overflowX:auto if columns require more than the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnCount: 4,
+        width: 200 - 1,
+        rowCount: 5
+      })))
       expect(rendered.style.overflowX).not.toEqual('hidden')
     })
 
-    it('should set overflowY:hidden on scroll-container if rows fit within the available height', () => {
-      const rendered = findDOMNode(render(getMarkup({ rowCount: 5 })))
+    it('should leave overflowX:auto if columns and y-axis scrollbar require more than the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnCount: 4,
+        width: 200 + scrollbarSize - 1
+      })))
+      expect(rendered.style.overflowX).not.toEqual('hidden')
+    })
+
+    it('should set overflowY:hidden if rows fit within the available width and xaxis has no scrollbar', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 5,
+        columnCount: 4
+      })))
       expect(rendered.style.overflowY).toEqual('hidden')
     })
 
-    it('should leave overflowY:auto on scroll-container if rows require more than the available height', () => {
-      const rendered = findDOMNode(render(getMarkup({ rowCount: 25 })))
+    it('should set overflowY:hidden if rows and x-axis scrollbar fit within the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 5,
+        height: 100 + scrollbarSize
+      })))
+      expect(rendered.style.overflowY).toEqual('hidden')
+    })
+
+    it('should leave overflowY:auto if rows require more than the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 5,
+        height: 100 - 1,
+        columnCount: 4
+      })))
+      expect(rendered.style.overflowY).not.toEqual('hidden')
+    })
+
+    it('should leave overflowY:auto if rows and x-axis scrollbar require more than the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 5,
+        height: 100 + scrollbarSize - 1
+      })))
       expect(rendered.style.overflowY).not.toEqual('hidden')
     })
   })

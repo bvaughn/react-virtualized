@@ -229,7 +229,13 @@ export default class Grid extends Component {
   componentDidMount () {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
 
-    this._scrollbarSize = getScrollbarSize()
+    // If this component was first rendered server-side, scrollbar size will be undefined.
+    // In that event we need to remeasure.
+    if (!this._scrollbarSizeMeasured) {
+      this._scrollbarSize = getScrollbarSize()
+      this._scrollbarSizeMeasured = true
+      this.setState({})
+    }
 
     if (scrollLeft >= 0 || scrollTop >= 0) {
       this._setScrollPosition({ scrollLeft, scrollTop })
@@ -314,6 +320,18 @@ export default class Grid extends Component {
 
     // Update onRowsRendered callback if start/stop indices have changed
     this._invokeOnGridRenderedHelper()
+  }
+
+  componentWillMount () {
+    // If this component is being rendered server-side, getScrollbarSize() will return undefined.
+    // We handle this case in componentDidMount()
+    this._scrollbarSize = getScrollbarSize()
+    if (this._scrollbarSize === undefined) {
+      this._scrollbarSizeMeasured = false
+      this._scrollbarSize = 0
+    } else {
+      this._scrollbarSizeMeasured = true
+    }
   }
 
   componentWillUnmount () {
@@ -479,11 +497,14 @@ export default class Grid extends Component {
     // Force browser to hide scrollbars when we know they aren't necessary.
     // Otherwise once scrollbars appear they may not disappear again.
     // For more info see issue #116
-    if (totalColumnsWidth <= width) {
+    const verticalScrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0
+    const horizontalScrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0
+
+    if (totalColumnsWidth + verticalScrollBarSize <= width) {
       gridStyle.overflowX = 'hidden'
     }
 
-    if (totalRowsHeight <= height) {
+    if (totalRowsHeight + horizontalScrollBarSize <= height) {
       gridStyle.overflowY = 'hidden'
     }
 

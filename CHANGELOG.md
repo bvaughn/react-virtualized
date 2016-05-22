@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 7.1.1
+Resolved edge-case bug that caused the bottom/right cells in a `Grid` to be partially overlapped by a scrollbar.
+Thanks to @anjianshi for reporting this and collaborating on the fix!
+
 ##### 7.1.0
 Added `scrollToAlignment` property to `Collection`, `Grid`, `FlexTable`, and `VirtualScroll` to offer finer-grained control of how scrolled-to cells are aligned.
 Default behavior ("_auto_") remains unchanged- the least amount of scrolling will occur to ensure that the specified cell is visible.
