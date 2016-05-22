@@ -56,6 +56,9 @@ export default class VirtualScroll extends Component {
     /** Number of rows in list. */
     rowCount: PropTypes.number.isRequired,
 
+    /** See Grid#scrollToAlignment */
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start']).isRequired,
+
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
 
@@ -74,6 +77,7 @@ export default class VirtualScroll extends Component {
     onRowsRendered: () => null,
     onScroll: () => null,
     overscanRowCount: 10,
+    scrollToAlignment: 'auto',
     style: {}
   }
 
@@ -93,6 +97,7 @@ export default class VirtualScroll extends Component {
       rowRenderer,
       overscanRowCount,
       rowCount,
+      scrollToAlignment,
       scrollToIndex,
       scrollTop,
       style,
@@ -124,6 +129,7 @@ export default class VirtualScroll extends Component {
         })}
         rowHeight={rowHeight}
         rowCount={rowCount}
+        scrollToAlignment={scrollToAlignment}
         scrollToRow={scrollToIndex}
         scrollTop={scrollTop}
         style={style}

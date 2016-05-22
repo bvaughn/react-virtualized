@@ -43,6 +43,7 @@ describe('Grid', () => {
     rowHeight = 20,
     rowCount = NUM_ROWS,
     scrollLeft,
+    scrollToAlignment,
     scrollToColumn,
     scrollToRow,
     scrollTop,
@@ -67,6 +68,7 @@ describe('Grid', () => {
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollLeft={scrollLeft}
+        scrollToAlignment={scrollToAlignment}
         scrollToColumn={scrollToColumn}
         scrollToRow={scrollToRow}
         scrollTop={scrollTop}
@@ -209,6 +211,40 @@ describe('Grid', () => {
       }))
       expect(grid.state.scrollLeft).toEqual(2350)
       expect(grid.state.scrollTop).toEqual(1920)
+    })
+
+    it('should scroll to the correct position for :scrollToAlignment "start"', () => {
+      const grid = render(getMarkup({
+        scrollToAlignment: 'start',
+        scrollToColumn: 24,
+        scrollToRow: 49
+      }))
+      // 100 columns * 50 item width = 5,000 total item width
+      // 100 rows * 20 item height = 2,000 total item height
+      // 4 columns and 5 rows can be visible at a time.
+      // The minimum amount of scrolling leaves the specified cell in the bottom/right corner (just scrolled into view).
+      // Since alignment is set to "start" we should scroll past this point until the cell is aligned top/left.
+      expect(grid.state.scrollLeft).toEqual(1200)
+      expect(grid.state.scrollTop).toEqual(980)
+    })
+
+    it('should scroll to the correct position for :scrollToAlignment "end"', () => {
+      render(getMarkup({
+        scrollToColumn: 99,
+        scrollToRow: 99
+      }))
+      const grid = render(getMarkup({
+        scrollToAlignment: 'end',
+        scrollToColumn: 24,
+        scrollToRow: 49
+      }))
+      // 100 columns * 50 item width = 5,000 total item width
+      // 100 rows * 20 item height = 2,000 total item height
+      // We first scroll past the specified cell and then back.
+      // The minimum amount of scrolling then should leave the specified cell in the top/left corner (just scrolled into view).
+      // Since alignment is set to "end" we should scroll past this point until the cell is aligned bottom/right.
+      expect(grid.state.scrollLeft).toEqual(1050)
+      expect(grid.state.scrollTop).toEqual(900)
     })
   })
 

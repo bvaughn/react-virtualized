@@ -137,6 +137,13 @@ export default class Grid extends Component {
     scrollLeft: PropTypes.number,
 
     /**
+     * Controls scroll-to-cell behavior of the Grid.
+     * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
+     * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
+     */
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start']).isRequired,
+
+    /**
      * Column index to ensure visible (by forcefully scrolling if necessary)
      */
     scrollToColumn: PropTypes.number,
@@ -168,6 +175,7 @@ export default class Grid extends Component {
     onSectionRendered: () => null,
     overscanColumnCount: 0,
     overscanRowCount: 10,
+    scrollToAlignment: 'auto',
     style: {}
   };
 
@@ -250,7 +258,7 @@ export default class Grid extends Component {
    * 1) New scroll-to-cell props have been set
    */
   componentDidUpdate (prevProps, prevState) {
-    const { height, scrollToColumn, scrollToRow, width } = this.props
+    const { height, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
@@ -281,9 +289,11 @@ export default class Grid extends Component {
       cellSizeAndPositionManager: this._columnSizeAndPositionManager,
       previousCellsCount: prevProps.columnCount,
       previousCellSize: prevProps.columnWidth,
+      previousScrollToAlignment: prevProps.scrollToAlignment,
       previousScrollToIndex: prevProps.scrollToColumn,
       previousSize: prevProps.width,
       scrollOffset: scrollLeft,
+      scrollToAlignment,
       scrollToIndex: scrollToColumn,
       size: width,
       updateScrollIndexCallback: (scrollToColumn) => this._updateScrollLeftForScrollToColumn({ ...this.props, scrollToColumn })
@@ -292,9 +302,11 @@ export default class Grid extends Component {
       cellSizeAndPositionManager: this._rowSizeAndPositionManager,
       previousCellsCount: prevProps.rowCount,
       previousCellSize: prevProps.rowHeight,
+      previousScrollToAlignment: prevProps.scrollToAlignment,
       previousScrollToIndex: prevProps.scrollToRow,
       previousSize: prevProps.height,
       scrollOffset: scrollTop,
+      scrollToAlignment,
       scrollToIndex: scrollToRow,
       size: height,
       updateScrollIndexCallback: (scrollToRow) => this._updateScrollTopForScrollToRow({ ...this.props, scrollToRow })
@@ -629,7 +641,7 @@ export default class Grid extends Component {
   }
 
   _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {
-    const { columnCount, scrollToColumn, width } = props
+    const { columnCount, scrollToAlignment, scrollToColumn, width } = props
     const { scrollLeft } = state
 
     if (scrollToColumn >= 0 && columnCount > 0) {
@@ -638,6 +650,7 @@ export default class Grid extends Component {
       const columnMetadatum = this._columnSizeAndPositionManager.getSizeAndPositionOfCell(targetIndex)
 
       const calculatedScrollLeft = getUpdatedOffsetForIndex({
+        align: scrollToAlignment,
         cellOffset: columnMetadatum.offset,
         cellSize: columnMetadatum.size,
         containerSize: width,
@@ -654,7 +667,7 @@ export default class Grid extends Component {
   }
 
   _updateScrollTopForScrollToRow (props = this.props, state = this.state) {
-    const { height, rowCount, scrollToRow } = props
+    const { height, rowCount, scrollToAlignment, scrollToRow } = props
     const { scrollTop } = state
 
     if (scrollToRow >= 0 && rowCount > 0) {
@@ -663,6 +676,7 @@ export default class Grid extends Component {
       const rowMetadatum = this._rowSizeAndPositionManager.getSizeAndPositionOfCell(targetIndex)
 
       const calculatedScrollTop = getUpdatedOffsetForIndex({
+        align: scrollToAlignment,
         cellOffset: rowMetadatum.offset,
         cellSize: rowMetadatum.size,
         containerSize: height,

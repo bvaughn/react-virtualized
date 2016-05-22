@@ -53,6 +53,7 @@ describe('FlexTable', () => {
     rowGetter = immutableRowGetter,
     rowHeight = 10,
     rowStyle,
+    scrollToAlignment,
     scrollToIndex,
     scrollTop,
     sort,
@@ -79,6 +80,7 @@ describe('FlexTable', () => {
         rowGetter={rowGetter}
         rowHeight={rowHeight}
         rowStyle={rowStyle}
+        scrollToAlignment={scrollToAlignment}
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
         sort={sort}

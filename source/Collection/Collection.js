@@ -110,6 +110,7 @@ export default class Collection extends Component {
    * Calculates the minimum amount of change from the current scroll position to ensure the specified cell is (fully) visible.
    */
   getScrollPositionForCell ({
+    align,
     cellIndex,
     height,
     scrollLeft,
@@ -125,6 +126,7 @@ export default class Collection extends Component {
       const cellMetadata = this._cellMetadata[cellIndex]
 
       scrollLeft = getUpdatedOffsetForIndex({
+        align,
         cellOffset: cellMetadata.x,
         cellSize: cellMetadata.width,
         containerSize: width,
@@ -133,6 +135,7 @@ export default class Collection extends Component {
       })
 
       scrollTop = getUpdatedOffsetForIndex({
+        align,
         cellOffset: cellMetadata.y,
         cellSize: cellMetadata.height,
         containerSize: height,

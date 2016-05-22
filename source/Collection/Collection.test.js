@@ -30,6 +30,7 @@ describe('Collection', () => {
     onScroll,
     sectionSize = SECTION_SIZE,
     scrollLeft,
+    scrollToAlignment,
     scrollToCell,
     scrollTop,
     style,
@@ -54,6 +55,7 @@ describe('Collection', () => {
         onScroll={onScroll}
         sectionSize={sectionSize}
         scrollLeft={scrollLeft}
+        scrollToAlignment={scrollToAlignment}
         scrollToCell={scrollToCell}
         scrollTop={scrollTop}
         style={style}
@@ -144,6 +146,26 @@ describe('Collection', () => {
       const grid = render(getMarkup({ scrollToCell: 9 }))
       expect(grid.refs.CollectionView.state.scrollLeft).toEqual(2)
       expect(grid.refs.CollectionView.state.scrollTop).toEqual(2)
+    })
+
+    it('should honor the specified :scrollToAlignment', () => {
+      let grid = render(getMarkup({
+        scrollToAlignment: 'start',
+        scrollToCell: 2,
+        width: SECTION_SIZE
+      }))
+      // Minimum amount of scrolling ("auto") would be 0,0
+      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(2)
+      expect(grid.refs.CollectionView.state.scrollTop).toEqual(1)
+
+      grid = render(getMarkup({
+        scrollToAlignment: 'end',
+        scrollToCell: 2,
+        width: SECTION_SIZE
+      }))
+      // This cell would already by visible by "auto" rules
+      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(1)
+      expect(grid.refs.CollectionView.state.scrollTop).toEqual(0)
     })
 
     it('should scroll to a cell just added', () => {

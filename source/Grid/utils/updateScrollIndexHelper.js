@@ -20,9 +20,11 @@ export default function updateScrollIndexHelper ({
   cellSizeAndPositionManager,
   previousCellsCount,
   previousCellSize,
+  previousScrollToAlignment,
   previousScrollToIndex,
   previousSize,
   scrollOffset,
+  scrollToAlignment,
   scrollToIndex,
   size,
   updateScrollIndexCallback
@@ -44,6 +46,7 @@ export default function updateScrollIndexHelper ({
     hasScrollToIndex &&
     (
       sizeHasChanged ||
+      scrollToAlignment !== previousScrollToAlignment ||
       scrollToIndex !== previousScrollToIndex
     )
   ) {

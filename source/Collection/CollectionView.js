@@ -75,6 +75,13 @@ export default class CollectionView extends Component {
     scrollLeft: PropTypes.number,
 
     /**
+     * Controls scroll-to-cell behavior of the Grid.
+     * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
+     * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
+     */
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start']).isRequired,
+
+    /**
      * Cell index to ensure visible (by forcefully scrolling if necessary).
      */
     scrollToCell: PropTypes.number,
@@ -100,6 +107,7 @@ export default class CollectionView extends Component {
     noContentRenderer: () => null,
     onScroll: () => null,
     onSectionRendered: () => null,
+    scrollToAlignment: 'auto',
     style: {}
   };
 
@@ -166,7 +174,7 @@ export default class CollectionView extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     const { height, scrollToCell, width } = this.props
-    const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
+    const { scrollLeft, scrollPositionChangeReason, scrollToAlignment, scrollTop } = this.state
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
     // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
@@ -193,6 +201,7 @@ export default class CollectionView extends Component {
     // Update scroll offsets if the current :scrollToCell values requires it
     if (
       height !== prevProps.height ||
+      scrollToAlignment !== prevProps.scrollToAlignment ||
       scrollToCell !== prevProps.scrollToCell ||
       width !== prevProps.width
     ) {
@@ -440,11 +449,12 @@ export default class CollectionView extends Component {
   }
 
   _updateScrollPositionForScrollToCell () {
-    const { cellLayoutManager, height, scrollToCell, width } = this.props
+    const { cellLayoutManager, height, scrollToAlignment, scrollToCell, width } = this.props
     const { scrollLeft, scrollTop } = this.state
 
     if (scrollToCell >= 0) {
       const scrollPosition = cellLayoutManager.getScrollPositionForCell({
+        align: scrollToAlignment,
         cellIndex: scrollToCell,
         height,
         scrollLeft,

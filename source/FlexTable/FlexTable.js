@@ -102,6 +102,9 @@ export default class FlexTable extends Component {
     /** Optional custom inline style to attach to table rows. */
     rowStyle: PropTypes.object,
 
+    /** See Grid#scrollToAlignment */
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start']).isRequired,
+
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
 
@@ -136,6 +139,7 @@ export default class FlexTable extends Component {
     onScroll: () => null,
     overscanRowCount: 10,
     rowStyle: {},
+    scrollToAlignment: 'auto',
     style: {}
   }
 
@@ -176,6 +180,7 @@ export default class FlexTable extends Component {
       rowHeight,
       rowCount,
       rowStyle,
+      scrollToAlignment,
       scrollToIndex,
       scrollTop,
       style,
@@ -237,6 +242,7 @@ export default class FlexTable extends Component {
           })}
           rowHeight={rowHeight}
           rowCount={rowCount}
+          scrollToAlignment={scrollToAlignment}
           scrollToRow={scrollToIndex}
           scrollTop={scrollTop}
           width={width}
