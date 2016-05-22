@@ -147,7 +147,13 @@ export default class CollectionView extends Component {
   componentDidMount () {
     const { cellLayoutManager, scrollLeft, scrollToCell, scrollTop } = this.props
 
-    this._scrollbarSize = getScrollbarSize()
+    // If this component was first rendered server-side, scrollbar size will be undefined.
+    // In that event we need to remeasure.
+    if (!this._scrollbarSizeMeasured) {
+      this._scrollbarSize = getScrollbarSize()
+      this._scrollbarSizeMeasured = true
+      this.setState({})
+    }
 
     if (scrollToCell >= 0) {
       this._updateScrollPositionForScrollToCell()
@@ -216,6 +222,16 @@ export default class CollectionView extends Component {
     const { cellLayoutManager } = this.props
 
     cellLayoutManager.calculateSizeAndPositionData()
+
+    // If this component is being rendered server-side, getScrollbarSize() will return undefined.
+    // We handle this case in componentDidMount()
+    this._scrollbarSize = getScrollbarSize()
+    if (this._scrollbarSize === undefined) {
+      this._scrollbarSizeMeasured = false
+      this._scrollbarSize = 0
+    } else {
+      this._scrollbarSizeMeasured = true
+    }
   }
 
   componentWillUnmount () {
@@ -311,11 +327,13 @@ export default class CollectionView extends Component {
     // Force browser to hide scrollbars when we know they aren't necessary.
     // Otherwise once scrollbars appear they may not disappear again.
     // For more info see issue #116
-    if (totalHeight <= height) {
-      collectionStyle.overflowY = 'hidden'
-    }
-    if (totalWidth <= width) {
+    const verticalScrollBarSize = totalHeight > height ? this._scrollbarSize : 0
+    const horizontalScrollBarSize = totalWidth > width ? this._scrollbarSize : 0
+    if (totalWidth + verticalScrollBarSize <= width) {
       collectionStyle.overflowX = 'hidden'
+    }
+    if (totalHeight + horizontalScrollBarSize <= height) {
+      collectionStyle.overflowY = 'hidden'
     }
 
     return (

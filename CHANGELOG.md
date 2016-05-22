@@ -2,7 +2,7 @@ Changelog
 ------------
 
 ##### 7.1.1
-Resolved edge-case bug that caused the bottom/right cells in a `Grid` to be partially overlapped by a scrollbar.
+Resolved edge-case bug that caused the bottom/right cells in a `Grid` or `Collection` to be partially overlapped by a scrollbar.
 Thanks to @anjianshi for reporting this and collaborating on the fix!
 
 ##### 7.1.0

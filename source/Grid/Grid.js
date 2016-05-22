@@ -499,11 +499,9 @@ export default class Grid extends Component {
     // For more info see issue #116
     const verticalScrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0
     const horizontalScrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0
-
     if (totalColumnsWidth + verticalScrollBarSize <= width) {
       gridStyle.overflowX = 'hidden'
     }
-
     if (totalRowsHeight + horizontalScrollBarSize <= height) {
       gridStyle.overflowY = 'hidden'
     }
