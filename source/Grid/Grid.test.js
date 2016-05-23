@@ -314,7 +314,7 @@ describe('Grid', () => {
       // 100 rows * 20 item height = 2,000 total item height
       // We first scroll past the specified cell and then back.
       // The minimum amount of scrolling then should leave the specified cell in the middle (just scrolled into view).
-      // Since alignment is set to "middle" we should scroll past this point until the cell is aligned center.
+      // Since alignment is set to "center" we should scroll past this point until the cell is aligned center.
       expect(grid.state.scrollLeft).toEqual(1075)
       expect(grid.state.scrollTop).toEqual(920)
     })

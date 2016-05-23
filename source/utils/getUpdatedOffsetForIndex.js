@@ -19,7 +19,6 @@ export default function getUpdatedOffsetForIndex ({
 }) {
   const maxOffset = cellOffset
   const minOffset = maxOffset - containerSize + cellSize
-  const midOffset = maxOffset - (containerSize + cellSize) / 2
 
   switch (align) {
     case 'start':
@@ -27,7 +26,7 @@ export default function getUpdatedOffsetForIndex ({
     case 'end':
       return minOffset
     case 'center':
-      return midOffset
+      return maxOffset - (containerSize + cellSize) / 2
     default:
       return Math.max(minOffset, Math.min(maxOffset, currentOffset))
   }

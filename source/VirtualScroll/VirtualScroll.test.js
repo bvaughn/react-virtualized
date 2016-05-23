@@ -124,7 +124,7 @@ describe('VirtualScroll', () => {
         scrollToAlignment: 'center',
         scrollToIndex: 49
       })))
-      // 100 items * 10 item height = 1,000 total item height; 10 items can be visible at a time.
+      // 100 items * 10 item height = 1,000 total item height; 11 items can be visible at a time (the first and last item are only partially visible)
       expect(rendered.textContent).toContain('Name 43')
       expect(rendered.textContent).toContain('Name 53')
     })
