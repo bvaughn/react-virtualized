@@ -412,6 +412,19 @@ describe('Grid', () => {
       })))
       expect(list.textContent).toEqual('')
     })
+
+    it('should render an empty body there is a :noContentRenderer but :height or :width are 0', () => {
+      let list = findDOMNode(render(getMarkup({
+        height: 0,
+        noContentRenderer: () => <div>No data</div>
+      })))
+      expect(list.textContent).toEqual('')
+      list = findDOMNode(render(getMarkup({
+        noContentRenderer: () => <div>No data</div>,
+        width: 0
+      })))
+      expect(list.textContent).toEqual('')
+    })
   })
 
   describe('onSectionRendered', () => {
