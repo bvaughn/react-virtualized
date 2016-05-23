@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+##### 7.1.2
+Added "_center_" option for `scrollToAlignment` property of `Collection`, `Grid`, `FlexTable`, and `VirtualScroll`.
+Thanks to @edulan for the contribution!
+
+Also added a check to avoid rendering content frmo `noContentRenderer` if `width` or `height` are 0.
+
 ##### 7.1.1
 Resolved edge-case bug that caused the bottom/right cells in a `Grid` or `Collection` to be partially overlapped by a scrollbar.
 Thanks to @anjianshi for reporting this and collaborating on the fix!
