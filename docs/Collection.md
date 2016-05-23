@@ -19,7 +19,7 @@ Unlike `Grid`, which renders checkerboard data, `Collection` can render arbitrar
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Collection that was just rendered: `({ indices: Array<number> }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, clientWidth: number, scrollHeight: number, scrollLeft: number, scrollTop: number, scrollWidth: number }): void` |
 | scrollLeft | Number |  | Horizontal offset |
-| scrollToAlignment | String |  | Controls the alignment of scrolled-to-cells. The default ("_auto_") scrolls the least amount possible to ensure that the specified cell is fully visible. Use "_start_" to always align cells to the top/left of the `Collection` and "_end_" to align them bottom/right. |
+| scrollToAlignment | String |  | Controls the alignment of scrolled-to-cells. The default ("_auto_") scrolls the least amount possible to ensure that the specified cell is fully visible. Use "_start_" to always align cells to the top/left of the `Collection` and "_end_" to align them bottom/right. Use "_center_" to align specified cell in the middle of container. |
 | scrollToCell | Number |  | Cell index to ensure visible (by scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
 | sectionSize | Number |  | Optionally override the size of the sections a Collection's cells are split into. This is an advanced option and should only be used for performance tuning purposes. |
