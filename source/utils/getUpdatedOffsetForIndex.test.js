@@ -60,5 +60,12 @@ describe('getUpdatedOffsetForIndex', () => {
       containerSize: 50,
       currentOffset: 100
     })).toEqual(10)
+    expect(getUpdatedOffsetForIndex({
+      align: 'center',
+      cellOffset: 50,
+      cellSize: 10,
+      containerSize: 50,
+      currentOffset: 100
+    })).toEqual(20)
   })
 })

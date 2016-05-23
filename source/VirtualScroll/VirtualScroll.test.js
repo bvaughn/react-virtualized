@@ -115,6 +115,19 @@ describe('VirtualScroll', () => {
       expect(rendered.textContent).toContain('Name 40')
       expect(rendered.textContent).toContain('Name 49')
     })
+
+    it('should scroll to the correct position for :scrollToAlignment "center"', () => {
+      render(getMarkup({
+        scrollToIndex: 99
+      }))
+      const rendered = findDOMNode(render(getMarkup({
+        scrollToAlignment: 'center',
+        scrollToIndex: 49
+      })))
+      // 100 items * 10 item height = 1,000 total item height; 10 items can be visible at a time.
+      expect(rendered.textContent).toContain('Name 43')
+      expect(rendered.textContent).toContain('Name 53')
+    })
   })
 
   describe('property updates', () => {
