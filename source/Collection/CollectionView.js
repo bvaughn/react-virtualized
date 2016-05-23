@@ -79,7 +79,7 @@ export default class CollectionView extends Component {
      * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
      * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
      */
-    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start']).isRequired,
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
     /**
      * Cell index to ensure visible (by forcefully scrolling if necessary).

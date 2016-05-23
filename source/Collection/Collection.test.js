@@ -215,6 +215,15 @@ describe('Collection', () => {
       // This cell would already by visible by "auto" rules
       expect(grid.refs.CollectionView.state.scrollLeft).toEqual(1)
       expect(grid.refs.CollectionView.state.scrollTop).toEqual(0)
+
+      grid = render(getMarkup({
+        scrollToAlignment: 'center',
+        scrollToCell: 4,
+        width: SECTION_SIZE
+      }))
+      // This cell would already by visible by "auto" rules
+      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(1)
+      expect(grid.refs.CollectionView.state.scrollTop).toEqual(0)
     })
 
     it('should scroll to a cell just added', () => {

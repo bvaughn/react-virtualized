@@ -25,6 +25,8 @@ export default function getUpdatedOffsetForIndex ({
       return maxOffset
     case 'end':
       return minOffset
+    case 'center':
+      return maxOffset - (containerSize + cellSize) / 2
     default:
       return Math.max(minOffset, Math.min(maxOffset, currentOffset))
   }

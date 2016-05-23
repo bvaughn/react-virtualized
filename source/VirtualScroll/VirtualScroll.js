@@ -57,7 +57,7 @@ export default class VirtualScroll extends Component {
     rowCount: PropTypes.number.isRequired,
 
     /** See Grid#scrollToAlignment */
-    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start']).isRequired,
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
