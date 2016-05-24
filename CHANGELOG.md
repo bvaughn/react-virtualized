@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.1.3
+The inner javascript-detect-element-resize library used by `AutoSizer` now passes the proper `useCapture` value when removing listeners as well. This should prevent lingering event listeners in certain cases. Thanks to @cyberxndr for this fix.
+
 ##### 7.1.2
 Added "_center_" option for `scrollToAlignment` property of `Collection`, `Grid`, `FlexTable`, and `VirtualScroll`.
 Thanks to @edulan for the contribution!
