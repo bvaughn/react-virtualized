@@ -36,10 +36,13 @@
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.2/react.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.2/react-dom.js"></script>
-  <script src="../dist/umd/react-virtualized.js"></script>
 </head>
 <body>
   <div id="mount"></div>
-  <script src="chat.js" class="chat"></script>
+
+  <script src="helper.js"></script>
+  <script>
+    loadScriptsAndStyles('chat.js');
+  </script>
 </body>
 </html>
