@@ -623,6 +623,58 @@ describe('Grid', () => {
         scrollWidth: 2500
       })
     })
+
+    it('should trigger callback with scrollLeft of 0 when total columns width is less than width', () => {
+      const onScrollCalls = []
+      const grid = render(getMarkup({
+        columnCount: 1,
+        columnWidth: 50,
+        onScroll: params => onScrollCalls.push(params),
+        scrollLeft: 0,
+        scrollTop: 10,
+        width: 200
+      }))
+      simulateScroll({
+        grid,
+        scrollLeft: 0,
+        scrollTop: 0
+      })
+      expect(onScrollCalls.length).toEqual(2)
+      expect(onScrollCalls[1]).toEqual({
+        clientHeight: 100,
+        clientWidth: 200,
+        scrollHeight: 2000,
+        scrollLeft: 0,
+        scrollTop: 0,
+        scrollWidth: 50
+      })
+    })
+
+    it('should trigger callback with scrollTop of 0 when total rows height is less than height', () => {
+      const onScrollCalls = []
+      const grid = render(getMarkup({
+        rowCount: 1,
+        rowHeight: 50,
+        onScroll: params => onScrollCalls.push(params),
+        scrollLeft: 0,
+        scrollTop: 10,
+        height: 200
+      }))
+      simulateScroll({
+        grid,
+        scrollLeft: 0,
+        scrollTop: 0
+      })
+      expect(onScrollCalls.length).toEqual(2)
+      expect(onScrollCalls[1]).toEqual({
+        clientHeight: 200,
+        clientWidth: 200,
+        scrollHeight: 50,
+        scrollLeft: 0,
+        scrollTop: 0,
+        scrollWidth: 2500
+      })
+    })
   })
 
   describe('overscanRowCount', () => {
