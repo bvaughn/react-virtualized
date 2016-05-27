@@ -35,6 +35,7 @@ describe('FlexTable', () => {
     className,
     columnData = { data: 123 },
     disableSort = false,
+    estimatedRowSize,
     headerClassName,
     headerHeight = 20,
     headerRenderer,
@@ -65,6 +66,7 @@ describe('FlexTable', () => {
     return (
       <FlexTable
         className={className}
+        estimatedRowSize={estimatedRowSize}
         headerClassName={headerClassName}
         headerHeight={headerHeight}
         headerStyle={headerStyle}
@@ -213,6 +215,21 @@ describe('FlexTable', () => {
       const emailColumn = columns[1]
       expect(Number.parseInt(emailColumn.style.maxWidth, 10)).toEqual(75)
       expect(Number.parseInt(emailColumn.style.minWidth, 10)).toEqual(25)
+    })
+  })
+
+  describe('measureAllRows', () => {
+    it('should measure any unmeasured rows', () => {
+      const rendered = render(getMarkup({
+        estimatedRowSize: 15,
+        height: 0,
+        rowCount: 10,
+        rowHeight: () => 20,
+        width: 0
+      }))
+      expect(rendered.refs.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150)
+      rendered.measureAllRows()
+      expect(rendered.refs.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200)
     })
   })
 

@@ -10,6 +10,7 @@ This component expects explicit width, height, and padding parameters.
 | children | [FlexColumn](FlexColumn.md) | ✓ | One or more FlexColumns describing the data displayed in this table |
 | className | String |  | Optional custom CSS class name to attach to root `FlexTable` element. |
 | disableHeader | Boolean |  | Do not render the table header (only the rows) |
+| estimatedRowSize | Number |  | Used to estimate the total height of a `FlexTable` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | headerClassName | String |  | CSS class to apply to all column headers |
 | headerHeight | Number | ✓ | Fixed height of header row |
 | headerStyle | Object |  | Optional custom inline style to attach to table header columns. |
@@ -35,6 +36,12 @@ This component expects explicit width, height, and padding parameters.
 | width | Number | ✓ | Width of the table |
 
 ### Public Methods
+
+##### measureAllRows
+Pre-measure all rows in a `FlexTable`.
+
+Typically rows are only measured as needed and estimated heights are used for cells that have not yet been measured.
+This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
 
 ##### recomputeRowHeights
 Recompute row heights and offsets.

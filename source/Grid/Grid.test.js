@@ -884,4 +884,59 @@ describe('Grid', () => {
       done()
     })
   })
+
+  describe('measureAllCells', () => {
+    it('should measure any unmeasured columns and rows', () => {
+      const grid = render(getMarkup({
+        columnCount: 10,
+        columnWidth: () => 100,
+        estimatedColumnSize: 150,
+        estimatedRowSize: 15,
+        height: 0,
+        rowCount: 10,
+        rowHeight: () => 20,
+        width: 0
+      }))
+      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1500)
+      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150)
+      grid.measureAllCells()
+      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1000)
+      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200)
+    })
+  })
+
+  describe('recomputeGridSize', () => {
+    it('should recompute cell sizes and other values when called', () => {
+      let highestColumnIndex = 0
+      let highestRowIndex = 0
+      function columnWidth ({ index }) {
+        highestColumnIndex = Math.max(index, highestColumnIndex)
+        return 10
+      }
+      function rowHeight ({ index }) {
+        highestRowIndex = Math.max(index, highestRowIndex)
+        return 10
+      }
+      const props = {
+        columnCount: 50,
+        columnWidth,
+        height: 50,
+        rowHeight,
+        rowCount: 50,
+        width: 100
+      }
+      const component = render(getMarkup(props))
+      highestColumnIndex = 0
+      highestRowIndex = 0
+      component.recomputeGridSize()
+      // Cells won't actually be remeasured until the Grid is next rendered.
+      render(getMarkup({
+        ...props,
+        rowCount: 51
+      }))
+      // And then only the rows necessary to fill the visible region.
+      expect(highestColumnIndex).toEqual(9)
+      expect(highestRowIndex).toEqual(4)
+    })
+  })
 })

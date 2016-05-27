@@ -7,6 +7,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | className | String |  | Optional custom CSS class name to attach to root `VirtualScroll` element. |
+| estimatedRowSize | Number |  | Used to estimate the total height of a `VirtualScroll` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | height | Number | ✓ | Height constraint for list (determines how many actual rows are rendered) |
 | noRowsRenderer | Function |  | Callback used to render placeholder content when `rowCount` is 0 |
 | onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
@@ -22,6 +23,12 @@ This component renders a virtualized list of elements with either fixed or dynam
 | width | Number | ✓ | Width of the list |
 
 ### Public Methods
+
+##### measureAllRows
+Pre-measure all rows in a `VirtualScroll`.
+
+Typically rows are only measured as needed and estimated heights are used for cells that have not yet been measured.
+This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
 
 ##### recomputeRowHeights
 Recompute row heights and offsets.
