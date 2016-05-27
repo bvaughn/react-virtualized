@@ -510,8 +510,8 @@ export default class CollectionView extends Component {
       height: totalHeight,
       width: totalWidth
     } = cellLayoutManager.getTotalSize()
-    const scrollLeft = Math.min(totalWidth - width + scrollbarSize, event.target.scrollLeft)
-    const scrollTop = Math.min(totalHeight - height + scrollbarSize, event.target.scrollTop)
+    const scrollLeft = Math.max(0, Math.min(totalWidth - width + scrollbarSize, event.target.scrollLeft))
+    const scrollTop = Math.max(0, Math.min(totalHeight - height + scrollbarSize, event.target.scrollTop))
 
     // Certain devices (like Apple touchpad) rapid-fire duplicate events.
     // Don't force a re-render if this is the case.

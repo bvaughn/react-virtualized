@@ -453,6 +453,21 @@ describe('Collection', () => {
         scrollWidth: 6
       })
     })
+
+    it('should not allow negative scroll values', () => {
+      const onScrollCalls = []
+      const collection = render(getMarkup({
+        onScroll: params => onScrollCalls.push(params)
+      }))
+      simulateScroll({
+        collection,
+        scrollLeft: -1,
+        scrollTop: -1
+      })
+      expect(onScrollCalls.length).toEqual(1)
+      expect(onScrollCalls[0].scrollLeft).toEqual(0)
+      expect(onScrollCalls[0].scrollTop).toEqual(0)
+    })
   })
 
   describe('cellGroupRenderer', () => {
