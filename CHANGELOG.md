@@ -1,6 +1,14 @@
 Changelog
 ------------
 
+##### 7.2.0
+Added new method- `measureAllCells`- to `Grid`, `FlexTable`, and `VirtualScroll` to force-measure all cells.
+This supports special use-cases where deferred measuring is not desired.
+
+Added `estimatedRowSize` property to `FlexTable` and `VirtualScroll` to be passed through to the inner `Grid`.
+
+Also added guard to ensure the `onScroll` callback for `Collection`, `Grid`, `FlexTable`, and `VirtualScroll` is never called with a negative number.
+
 ##### 7.1.3
 The inner javascript-detect-element-resize library used by `AutoSizer` now passes the proper `useCapture` value when removing listeners as well. This should prevent lingering event listeners in certain cases. Thanks to @cyberxndr for this fix.
 
