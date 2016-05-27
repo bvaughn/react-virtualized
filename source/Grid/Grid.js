@@ -748,8 +748,8 @@ export default class Grid extends Component {
     const scrollbarSize = this._scrollbarSize
     const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
     const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
-    const scrollLeft = Math.min(totalColumnsWidth - width + scrollbarSize, event.target.scrollLeft)
-    const scrollTop = Math.min(totalRowsHeight - height + scrollbarSize, event.target.scrollTop)
+    const scrollLeft = Math.min(Math.max(0, totalColumnsWidth - width + scrollbarSize), event.target.scrollLeft)
+    const scrollTop = Math.min(Math.max(0, totalRowsHeight - height + scrollbarSize), event.target.scrollTop)
 
     // Certain devices (like Apple touchpad) rapid-fire duplicate events.
     // Don't force a re-render if this is the case.
