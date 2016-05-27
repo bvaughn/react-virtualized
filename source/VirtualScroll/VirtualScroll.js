@@ -19,6 +19,12 @@ export default class VirtualScroll extends Component {
     /** Optional CSS class name */
     className: PropTypes.string,
 
+    /**
+     * Used to estimate the total height of a VirtualScroll before all of its rows have actually been measured.
+     * The estimated total height is adjusted as rows are rendered.
+     */
+    estimatedRowSize: PropTypes.number.isRequired,
+
     /** Height constraint for list (determines how many actual rows are rendered) */
     height: PropTypes.number.isRequired,
 
@@ -73,12 +79,18 @@ export default class VirtualScroll extends Component {
   }
 
   static defaultProps = {
+    estimatedRowSize: 30,
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
     style: {}
+  }
+
+  /** See Grid#measureAllCells */
+  measureAllRows () {
+    this.refs.Grid.measureAllCells()
   }
 
   /** See Grid#recomputeGridSize */
@@ -89,6 +101,7 @@ export default class VirtualScroll extends Component {
   render () {
     const {
       className,
+      estimatedRowSize,
       height,
       noRowsRenderer,
       onRowsRendered,
@@ -111,8 +124,13 @@ export default class VirtualScroll extends Component {
         ref='Grid'
         aria-label={this.props['aria-label']}
         className={classNames}
+        cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
+          index: rowIndex,
+          isScrolling
+        })}
         columnWidth={width}
         columnCount={1}
+        estimatedRowSize={estimatedRowSize}
         height={height}
         noContentRenderer={noRowsRenderer}
         onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
@@ -123,10 +141,6 @@ export default class VirtualScroll extends Component {
           stopIndex: rowStopIndex
         })}
         overscanRowCount={overscanRowCount}
-        cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
-          index: rowIndex,
-          isScrolling
-        })}
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollToAlignment={scrollToAlignment}

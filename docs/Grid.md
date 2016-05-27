@@ -12,6 +12,8 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | className | String |  | Optional custom CSS class name to attach to root `Grid` element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
 | columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number` |
+| estimatedColumnSize | Number |  | Used to estimate the total width of a `Grid` before all of its columns have actually been measured. The estimated total width is adjusted as columns are rendered. |
+| estimatedRowSize | Number |  | Used to estimate the total height of a `Grid` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | height | Number | ✓ | Height of Grid; this property determines the number of visible (vs virtualized) rows. |
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowCount` or `columnCount` is empty: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered: `({ columnOverscanStartIndex: number, columnOverscanStopIndex: number, columnStartIndex: number, columnStopIndex: number, rowOverscanStartIndex: number, rowOverscanStopIndex: number, rowStartIndex: number, rowStopIndex: number }): void` |
@@ -29,6 +31,13 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | width | Number | ✓ | Width of Grid; this property determines the number of visible (vs virtualized) columns. |
 
 ### Public Methods
+
+##### measureAllCells
+
+Pre-measure all columns and rows in a `Grid`.
+
+Typically cells are only measured as needed and estimated sizes are used for cells that have not yet been measured.
+This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
 
 ##### recomputeGridSize
 

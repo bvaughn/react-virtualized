@@ -217,6 +217,18 @@ export default class Grid extends Component {
   }
 
   /**
+   * Pre-measure all columns and rows in a Grid.
+   * Typically cells are only measured as needed and estimated sizes are used for cells that have not yet been measured.
+   * This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
+   */
+  measureAllCells () {
+    const { columnCount, rowCount } = this.props
+
+    this._columnSizeAndPositionManager.getSizeAndPositionOfCell(columnCount - 1)
+    this._rowSizeAndPositionManager.getSizeAndPositionOfCell(rowCount - 1)
+  }
+
+  /**
    * Forced recompute of row heights and column widths.
    * This function should be called if dynamic column or row sizes have changed but nothing else has.
    * Since Grid only receives :columnCount and :rowCount it has no way of detecting when the underlying data changes.

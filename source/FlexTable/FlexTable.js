@@ -31,6 +31,12 @@ export default class FlexTable extends Component {
     /** Disable rendering the header at all */
     disableHeader: PropTypes.bool,
 
+    /**
+     * Used to estimate the total height of a FlexTable before all of its rows have actually been measured.
+     * The estimated total height is adjusted as rows are rendered.
+     */
+    estimatedRowSize: PropTypes.number.isRequired,
+
     /** Optional CSS class to apply to all column headers */
     headerClassName: PropTypes.string,
 
@@ -132,6 +138,7 @@ export default class FlexTable extends Component {
 
   static defaultProps = {
     disableHeader: false,
+    estimatedRowSize: 30,
     headerHeight: 0,
     headerStyle: {},
     noRowsRenderer: () => null,
@@ -153,6 +160,11 @@ export default class FlexTable extends Component {
     this._createRow = this._createRow.bind(this)
   }
 
+  /** See Grid#measureAllCells */
+  measureAllRows () {
+    this.refs.Grid.measureAllCells()
+  }
+
   /** See Grid#recomputeGridSize */
   recomputeRowHeights () {
     this.refs.Grid.recomputeGridSize()
@@ -170,6 +182,7 @@ export default class FlexTable extends Component {
     const {
       className,
       disableHeader,
+      estimatedRowSize,
       headerHeight,
       height,
       noRowsRenderer,
@@ -222,10 +235,14 @@ export default class FlexTable extends Component {
 
         <Grid
           aria-label={this.props['aria-label']}
-          ref='Grid'
           className={'FlexTable__Grid'}
+          cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
+            index: rowIndex,
+            isScrolling
+          })}
           columnWidth={width}
           columnCount={1}
+          estimatedRowSize={estimatedRowSize}
           height={availableRowsHeight}
           noContentRenderer={noRowsRenderer}
           onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
@@ -236,10 +253,7 @@ export default class FlexTable extends Component {
             stopIndex: rowStopIndex
           })}
           overscanRowCount={overscanRowCount}
-          cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
-            index: rowIndex,
-            isScrolling
-          })}
+          ref='Grid'
           rowHeight={rowHeight}
           rowCount={rowCount}
           scrollToAlignment={scrollToAlignment}

@@ -14,6 +14,7 @@ describe('VirtualScroll', () => {
 
   function getMarkup ({
     className,
+    estimatedRowSize,
     height = 100,
     noRowsRenderer,
     onRowsRendered,
@@ -41,6 +42,7 @@ describe('VirtualScroll', () => {
     return (
       <VirtualScroll
         className={className}
+        estimatedRowSize={estimatedRowSize}
         height={height}
         noRowsRenderer={noRowsRenderer}
         onRowsRendered={onRowsRendered}
@@ -365,6 +367,21 @@ describe('VirtualScroll', () => {
         scrollHeight: 1000,
         scrollTop: 100
       })
+    })
+  })
+
+  describe('measureAllRows', () => {
+    it('should measure any unmeasured rows', () => {
+      const rendered = render(getMarkup({
+        estimatedRowSize: 15,
+        height: 0,
+        rowCount: 10,
+        rowHeight: () => 20,
+        width: 0
+      }))
+      expect(rendered.refs.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150)
+      rendered.measureAllRows()
+      expect(rendered.refs.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200)
     })
   })
 
