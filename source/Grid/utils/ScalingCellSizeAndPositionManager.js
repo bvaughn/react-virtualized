@@ -47,6 +47,18 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
   /**
    * @TODO
    */
+  getUpdatedOffsetForIndex (params) {
+    const offset = super.getUpdatedOffsetForIndex(params)
+
+    return this._getUnscaledOffset({
+      containerSize: params.containerSize,
+      offset
+    })
+  }
+
+  /**
+   * @TODO
+   */
   getVisibleCellRange ({
     containerSize,
     offset
@@ -75,6 +87,22 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
       const scrolledFraction = offset / (totalSize - containerSize)
 
       return (offset * unboundTotalSize / totalSize) + (scrolledFraction * containerSize)
+    }
+  }
+
+  _getUnscaledOffset ({
+    containerSize,
+    offset
+  }: ContainerSizeAndOffset): number {
+    const unboundTotalSize = super.getTotalSize()
+    const totalSize = this.getTotalSize()
+
+    if (unboundTotalSize === totalSize) {
+      return offset
+    } else {
+      const scrolledFraction = offset / (unboundTotalSize - containerSize)
+
+      return scrolledFraction * (totalSize - containerSize)
     }
   }
 }

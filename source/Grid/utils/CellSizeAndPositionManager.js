@@ -95,6 +95,38 @@ export default class CellSizeAndPositionManager {
     return lastMeasuredCellSizeAndPosition.offset + lastMeasuredCellSizeAndPosition.size + (this._cellCount - this._lastMeasuredIndex - 1) * this._estimatedCellSize
   }
 
+  /**
+   * Determines a new offset that ensures a certain cell is visible, given the current offset.
+   * If the cell is already visible then the current offset will be returned.
+   * If the current offset is too great or small, it will be adjusted just enough to ensure the specified index is visible.
+   *
+   * @param align Desired alignment within container; one of "auto" (default), "start", or "end"
+   * @param containerSize Total size (width or height) of the container
+   * @param currentOffset Container's current (x or y) offset
+   * @return Offset to use to ensure the specified cell is visible
+   */
+  getUpdatedOffsetForIndex ({
+    align = 'auto',
+    containerSize,
+    currentOffset,
+    targetIndex
+  }) {
+    const datum = this.getSizeAndPositionOfCell(targetIndex)
+    const maxOffset = datum.offset
+    const minOffset = maxOffset - containerSize + datum.size
+
+    switch (align) {
+      case 'start':
+        return maxOffset
+      case 'end':
+        return minOffset
+      case 'center':
+        return maxOffset - (containerSize + datum.size) / 2
+      default:
+        return Math.max(minOffset, Math.min(maxOffset, currentOffset))
+    }
+  }
+
   getVisibleCellRange ({
     containerSize,
     offset
