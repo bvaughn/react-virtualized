@@ -450,14 +450,14 @@ export default class Grid extends Component {
         containerSize: width,
         offset: scrollLeft
       })
-      const horizontalOffsetAdjustment = this._rowSizeAndPositionManager.getOffsetAdjustment({
-        containerSize: width,
-        offset: scrollLeft
-      })
-
       const visibleRowIndices = this._rowSizeAndPositionManager.getVisibleCellRange({
         containerSize: height,
         offset: scrollTop
+      })
+
+      const horizontalOffsetAdjustment = this._columnSizeAndPositionManager.getOffsetAdjustment({
+        containerSize: width,
+        offset: scrollLeft
       })
       const verticalOffsetAdjustment = this._rowSizeAndPositionManager.getOffsetAdjustment({
         containerSize: height,
