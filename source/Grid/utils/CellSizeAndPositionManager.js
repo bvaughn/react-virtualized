@@ -1,5 +1,12 @@
 /** @flow */
-import { MAX_SIZE } from './MaxOffsetHelper'
+
+/**
+ * Browsers have scroll offset limitations.
+ * After a certain position, the browser won't allow the user to scroll further (even via JavaScript scroll offset adjustments).
+ * This util picks a lower ceiling for max size and artificially adjusts positions within to make it transparent for users.
+ * @TODO Pick a less arbitrary ceiling that's safe for all browsers?
+ */
+export const DEFAULT_MAX_SCROLL_SIZE = 1000000
 
 /**
  * Just-in-time calculates and caches size and position information for a collection of cells.
@@ -8,11 +15,13 @@ export default class CellSizeAndPositionManager {
   constructor ({
     cellCount,
     cellSizeGetter,
-    estimatedCellSize
+    estimatedCellSize,
+    maxScrollSize = DEFAULT_MAX_SCROLL_SIZE
   }: CellSizeAndPositionManagerConstructorParams) {
     this._cellSizeGetter = cellSizeGetter
     this._cellCount = cellCount
     this._estimatedCellSize = estimatedCellSize
+    this._maxScrollSize = maxScrollSize
 
     // Cache of size and position data for cells, mapped by cell index.
     // Note that invalid values may exist in this map so only rely on cells up to this._lastMeasuredIndex
@@ -144,7 +153,7 @@ export default class CellSizeAndPositionManager {
    * @TODO Add more comments here I'm too tired.
    */
   getTotalSize (): number {
-    return Math.min(MAX_SIZE, this._getUnboundTotalSize())
+    return Math.min(this._maxScrollSize, this._getUnboundTotalSize())
   }
 
   getVisibleCellRange ({
