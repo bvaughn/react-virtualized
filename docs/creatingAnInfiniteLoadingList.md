@@ -28,7 +28,7 @@ function MyComponent ({
     : loadNextPage
 
   // Every row is loaded except for our loading indicator row.
-  const isRowLoaded (index) => !hasNextPage || index < list.size
+  const isRowLoaded = ({ index }) => !hasNextPage || index < list.size
 
   // Render a list item or a loading indicator.
   const rowRenderer = (index) => {

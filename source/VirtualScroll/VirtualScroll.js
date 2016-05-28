@@ -19,6 +19,12 @@ export default class VirtualScroll extends Component {
     /** Optional CSS class name */
     className: PropTypes.string,
 
+    /**
+     * Used to estimate the total height of a VirtualScroll before all of its rows have actually been measured.
+     * The estimated total height is adjusted as rows are rendered.
+     */
+    estimatedRowSize: PropTypes.number.isRequired,
+
     /** Height constraint for list (determines how many actual rows are rendered) */
     height: PropTypes.number.isRequired,
 
@@ -56,26 +62,35 @@ export default class VirtualScroll extends Component {
     /** Number of rows in list. */
     rowCount: PropTypes.number.isRequired,
 
+    /** See Grid#scrollToAlignment */
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
+
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
 
     /** Vertical offset. */
     scrollTop: PropTypes.number,
 
+    /** Optional inline style */
+    style: PropTypes.object,
+
     /** Width of list */
     width: PropTypes.number.isRequired
   }
 
   static defaultProps = {
+    estimatedRowSize: 30,
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
-    overscanRowCount: 10
+    overscanRowCount: 10,
+    scrollToAlignment: 'auto',
+    style: {}
   }
 
-  /** See Grid#clearCellCache */
-  clearCellCache () {
-    this.refs.Grid.clearCellCache()
+  /** See Grid#measureAllCells */
+  measureAllRows () {
+    this.refs.Grid.measureAllCells()
   }
 
   /** See Grid#recomputeGridSize */
@@ -86,6 +101,7 @@ export default class VirtualScroll extends Component {
   render () {
     const {
       className,
+      estimatedRowSize,
       height,
       noRowsRenderer,
       onRowsRendered,
@@ -94,8 +110,10 @@ export default class VirtualScroll extends Component {
       rowRenderer,
       overscanRowCount,
       rowCount,
+      scrollToAlignment,
       scrollToIndex,
       scrollTop,
+      style,
       width
     } = this.props
 
@@ -106,8 +124,13 @@ export default class VirtualScroll extends Component {
         ref='Grid'
         aria-label={this.props['aria-label']}
         className={classNames}
+        cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
+          index: rowIndex,
+          isScrolling
+        })}
         columnWidth={width}
         columnCount={1}
+        estimatedRowSize={estimatedRowSize}
         height={height}
         noContentRenderer={noRowsRenderer}
         onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
@@ -118,11 +141,12 @@ export default class VirtualScroll extends Component {
           stopIndex: rowStopIndex
         })}
         overscanRowCount={overscanRowCount}
-        cellRenderer={({ columnIndex, rowIndex }) => rowRenderer({ index: rowIndex })}
         rowHeight={rowHeight}
         rowCount={rowCount}
+        scrollToAlignment={scrollToAlignment}
         scrollToRow={scrollToIndex}
         scrollTop={scrollTop}
+        style={style}
         width={width}
       />
     )

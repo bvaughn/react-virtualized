@@ -1,6 +1,5 @@
 /** @flow */
-import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from '../AutoSizer'
 import Grid from '../Grid'
@@ -16,10 +15,6 @@ const TOP_COLOR_FROM = hexToRgb('#000000')
 const TOP_COLOR_TO = hexToRgb('#333333')
 
 export default class GridExample extends Component {
-  static propTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
-  }
-
   constructor (props, context) {
     super(props, context)
 
@@ -39,8 +34,6 @@ export default class GridExample extends Component {
   }
 
   render () {
-    const { list, ...props } = this.props
-
     const {
       columnCount,
       columnWidth,
@@ -52,7 +45,7 @@ export default class GridExample extends Component {
     } = this.state
 
     return (
-      <ContentBox {...props}>
+      <ContentBox {...this.props}>
         <ContentBoxHeader
           text='ScrollSync'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/ScrollSync/ScrollSync.example.js'
@@ -74,14 +67,14 @@ export default class GridExample extends Component {
             const y = scrollTop / (scrollHeight - clientHeight)
 
             const leftBackgroundColor = mixColors(LEFT_COLOR_FROM, LEFT_COLOR_TO, y)
-            const leftColor = `#ffffff`
+            const leftColor = '#ffffff'
             const topBackgroundColor = mixColors(TOP_COLOR_FROM, TOP_COLOR_TO, x)
-            const topColor = `#ffffff`
+            const topColor = '#ffffff'
             const middleBackgroundColor = mixColors(leftBackgroundColor, topBackgroundColor, 0.5)
-            const middleColor = `#ffffff`
+            const middleColor = '#ffffff'
 
             return (
-              <div className={styles.GridRow }>
+              <div className={styles.GridRow}>
                 <div
                   className={styles.LeftSideGridContainer}
                   style={{

@@ -1,8 +1,7 @@
 /**
  * @flow
  */
-import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import styles from './ColumnSizer.example.css'
 import AutoSizer from '../AutoSizer'
 import ColumnSizer from './ColumnSizer'
@@ -12,10 +11,6 @@ import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import shallowCompare from 'react-addons-shallow-compare'
 
 export default class ColumnSizerExample extends Component {
-  static propTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
-  }
-
   constructor (props) {
     super(props)
 
@@ -33,8 +28,6 @@ export default class ColumnSizerExample extends Component {
   }
 
   render () {
-    const { list, ...props } = this.props
-
     const {
       columnMaxWidth,
       columnMinWidth,
@@ -42,7 +35,7 @@ export default class ColumnSizerExample extends Component {
     } = this.state
 
     return (
-      <ContentBox {...props}>
+      <ContentBox {...this.props}>
         <ContentBoxHeader
           text='ColumnSizer'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/ColumnSizer/ColumnSizer.example.js'

@@ -26,10 +26,8 @@ export default class CellMeasurerExample extends Component {
   }
 
   render () {
-    const { list, ...props } = this.props
-
     return (
-      <ContentBox {...props}>
+      <ContentBox {...this.props}>
         <ContentBoxHeader
           text='CellMeasurer'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/CellMeasurer.example.js'
@@ -49,7 +47,9 @@ export default class CellMeasurerExample extends Component {
                 cellRenderer={this._cellRenderer}
                 columnCount={COLUMN_COUNT}
                 height={ROW_HEIGHT}
-                ref={(ref) => this._columnWidthMeasurerRef = ref}
+                ref={(ref) => {
+                  this._columnWidthMeasurerRef = ref
+                }}
                 rowCount={ROW_COUNT}
               >
                 {({ getColumnWidth }) => (

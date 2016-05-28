@@ -178,7 +178,7 @@ class Application extends Component {
 }
 
 render(
-  <Application/>,
+  <Application />,
   document.getElementById('root')
 )
 

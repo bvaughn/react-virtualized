@@ -5,6 +5,7 @@
 }
 
 .row {
+  height: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -51,9 +52,16 @@
 }
 
 .checkboxLabel {
-  display: flex;
-  align-items: center;
+  margin-left: .5rem;
+}
+.checkboxLabel:first-of-type {
+  margin-left: 0;
 }
 .checkbox {
   margin-right: 5px;
+}
+
+.isScrollingPlaceholder {
+  color: #DDD;
+  font-style: italic;
 }

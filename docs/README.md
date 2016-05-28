@@ -11,8 +11,10 @@ Documentation
 * [VirtualScroll](VirtualScroll.md)
 
 ### High-Order Components
+
 * [ArrowKeyStepper](ArrowKeyStepper.md)
 * [AutoSizer](AutoSizer.md)
+* [CellMeasurer](CellMeasurer.md)
 * [ColumnSizer](ColumnSizer.md)
 * [InfiniteLoader](InfiniteLoader.md)
 * [ScrollSync](ScrollSync.md)
@@ -23,3 +25,4 @@ Documentation
 * [Displaying items in reverse order](reverseList.md)
 * [Using AutoSizer](usingAutoSizer.md)
 * [Creating an infinite-loading list](creatingAnInfiniteLoadingList.md)
+* [Displaying a reverse list](reverseList.md)

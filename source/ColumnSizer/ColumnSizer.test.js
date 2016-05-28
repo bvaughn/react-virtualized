@@ -116,7 +116,7 @@ describe('ColumnSizer', () => {
           width={100}
         >
           {({ adjustedWidth, getColumnWidth, registerChild }) => (
-            <div ref={registerChild}/>
+            <div ref={registerChild} />
           )}
         </ColumnSizer>
       )

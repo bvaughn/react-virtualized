@@ -20,7 +20,7 @@ export default class FlexTable extends Component {
       const children = React.Children.toArray(props.children)
       for (let i = 0; i < children.length; i++) {
         if (children[i].type !== FlexColumn) {
-          return new Error(`FlexTable only accepts children of type FlexColumn`)
+          return new Error('FlexTable only accepts children of type FlexColumn')
         }
       }
     },
@@ -30,6 +30,12 @@ export default class FlexTable extends Component {
 
     /** Disable rendering the header at all */
     disableHeader: PropTypes.bool,
+
+    /**
+     * Used to estimate the total height of a FlexTable before all of its rows have actually been measured.
+     * The estimated total height is adjusted as rows are rendered.
+     */
+    estimatedRowSize: PropTypes.number.isRequired,
 
     /** Optional CSS class to apply to all column headers */
     headerClassName: PropTypes.string,
@@ -48,6 +54,9 @@ export default class FlexTable extends Component {
     * ({ columnData: any, dataKey: string }): void
     */
     onHeaderClick: PropTypes.func,
+
+    /** Optional custom inline style to attach to table header columns. */
+    headerStyle: PropTypes.object,
 
     /**
      * Callback invoked when a user clicks on a table row.
@@ -96,6 +105,12 @@ export default class FlexTable extends Component {
     /** Number of rows in table. */
     rowCount: PropTypes.number.isRequired,
 
+    /** Optional custom inline style to attach to table rows. */
+    rowStyle: PropTypes.object,
+
+    /** See Grid#scrollToAlignment */
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
+
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
 
@@ -114,17 +129,25 @@ export default class FlexTable extends Component {
     /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
     sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
 
+    /** Optional inline style */
+    style: PropTypes.object,
+
     /** Width of list */
     width: PropTypes.number.isRequired
   }
 
   static defaultProps = {
     disableHeader: false,
+    estimatedRowSize: 30,
     headerHeight: 0,
+    headerStyle: {},
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
-    overscanRowCount: 10
+    overscanRowCount: 10,
+    rowStyle: {},
+    scrollToAlignment: 'auto',
+    style: {}
   }
 
   constructor (props) {
@@ -137,9 +160,9 @@ export default class FlexTable extends Component {
     this._createRow = this._createRow.bind(this)
   }
 
-  /** See Grid#clearCellCache */
-  clearCellCache () {
-    this.refs.Grid.clearCellCache()
+  /** See Grid#measureAllCells */
+  measureAllRows () {
+    this.refs.Grid.measureAllCells()
   }
 
   /** See Grid#recomputeGridSize */
@@ -159,6 +182,7 @@ export default class FlexTable extends Component {
     const {
       className,
       disableHeader,
+      estimatedRowSize,
       headerHeight,
       height,
       noRowsRenderer,
@@ -168,8 +192,11 @@ export default class FlexTable extends Component {
       rowClassName,
       rowHeight,
       rowCount,
+      rowStyle,
+      scrollToAlignment,
       scrollToIndex,
       scrollTop,
+      style,
       width
     } = this.props
     const { scrollbarWidth } = this.state
@@ -178,8 +205,11 @@ export default class FlexTable extends Component {
 
     // This row-renderer wrapper function is necessary in order to trigger re-render when the
     // sort-by or sort-direction have changed (else Grid will not see any props changes)
-    const rowRenderer = index => {
-      return this._createRow(index)
+    const rowRenderer = ({ index, isScrolling }) => {
+      return this._createRow({
+        index,
+        isScrolling
+      })
     }
 
     const rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName
@@ -187,11 +217,13 @@ export default class FlexTable extends Component {
     return (
       <div
         className={cn('FlexTable', className)}
+        style={style}
       >
         {!disableHeader && (
           <div
             className={cn('FlexTable__headerRow', rowClass)}
             style={{
+              ...rowStyle,
               height: headerHeight,
               paddingRight: scrollbarWidth,
               width: width
@@ -203,10 +235,14 @@ export default class FlexTable extends Component {
 
         <Grid
           aria-label={this.props['aria-label']}
-          ref='Grid'
           className={'FlexTable__Grid'}
+          cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
+            index: rowIndex,
+            isScrolling
+          })}
           columnWidth={width}
           columnCount={1}
+          estimatedRowSize={estimatedRowSize}
           height={availableRowsHeight}
           noContentRenderer={noRowsRenderer}
           onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
@@ -217,9 +253,10 @@ export default class FlexTable extends Component {
             stopIndex: rowStopIndex
           })}
           overscanRowCount={overscanRowCount}
-          cellRenderer={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
+          ref='Grid'
           rowHeight={rowHeight}
           rowCount={rowCount}
+          scrollToAlignment={scrollToAlignment}
           scrollToRow={scrollToIndex}
           scrollTop={scrollTop}
           width={width}
@@ -232,18 +269,26 @@ export default class FlexTable extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _createColumn (column, columnIndex, rowData, rowIndex) {
+  _createColumn ({
+    column,
+    columnIndex,
+    isScrolling,
+    rowData,
+    rowIndex
+  }) {
     const {
-      cellClassName,
       cellDataGetter,
+      cellRenderer,
+      className,
       columnData,
       dataKey,
-      cellRenderer
+      style: cellStyle
     } = column.props
-    const cellData = cellDataGetter({ columnData, dataKey, rowData })
-    const renderedCell = cellRenderer({ cellData, columnData, dataKey, rowData, rowIndex })
 
-    const style = this._getFlexStyleForColumn(column)
+    const cellData = cellDataGetter({ columnData, dataKey, rowData })
+    const renderedCell = cellRenderer({ cellData, columnData, dataKey, isScrolling, rowData, rowIndex })
+
+    const style = this._getFlexStyleForColumn(column, cellStyle)
 
     const title = typeof renderedCell === 'string'
       ? renderedCell
@@ -252,7 +297,7 @@ export default class FlexTable extends Component {
     return (
       <div
         key={`Row${rowIndex}-Col${columnIndex}`}
-        className={cn('FlexTable__rowColumn', cellClassName)}
+        className={cn('FlexTable__rowColumn', className)}
         style={style}
       >
         <div
@@ -266,7 +311,7 @@ export default class FlexTable extends Component {
   }
 
   _createHeader (column, columnIndex) {
-    const { headerClassName, onHeaderClick, sort, sortBy, sortDirection } = this.props
+    const { headerClassName, headerStyle, onHeaderClick, sort, sortBy, sortDirection } = this.props
     const { dataKey, disableSort, headerRenderer, label, columnData } = column.props
     const sortEnabled = !disableSort && sort
 
@@ -278,7 +323,7 @@ export default class FlexTable extends Component {
         'FlexTable__sortableHeaderColumn': sortEnabled
       }
     )
-    const style = this._getFlexStyleForColumn(column)
+    const style = this._getFlexStyleForColumn(column, headerStyle)
 
     const renderedHeader = headerRenderer({
       columnData,
@@ -330,12 +375,16 @@ export default class FlexTable extends Component {
     )
   }
 
-  _createRow (index) {
+  _createRow ({
+    index,
+    isScrolling
+  }) {
     const {
       children,
       onRowClick,
       rowClassName,
-      rowGetter
+      rowGetter,
+      rowStyle
     } = this.props
     const { scrollbarWidth } = this.state
 
@@ -343,12 +392,13 @@ export default class FlexTable extends Component {
     const rowData = rowGetter({ index })
 
     const renderedRow = React.Children.toArray(children).map(
-      (column, columnIndex) => this._createColumn(
+      (column, columnIndex) => this._createColumn({
         column,
         columnIndex,
+        isScrolling,
         rowData,
-        index
-      )
+        rowIndex: index
+      })
     )
 
     const a11yProps = {}
@@ -366,6 +416,7 @@ export default class FlexTable extends Component {
         key={index}
         className={cn('FlexTable__row', rowClass)}
         style={{
+          ...rowStyle,
           height: this._getRowHeight(index),
           paddingRight: scrollbarWidth
         }}
@@ -378,10 +429,11 @@ export default class FlexTable extends Component {
   /**
    * Determines the flex-shrink, flex-grow, and width values for a cell (header or column).
    */
-  _getFlexStyleForColumn (column) {
+  _getFlexStyleForColumn (column, customStyle = {}) {
     const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${column.props.width}px`
 
     const style = {
+      ...customStyle,
       flex: flexValue,
       msFlex: flexValue,
       WebkitFlex: flexValue

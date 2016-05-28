@@ -1,7 +1,7 @@
 var REACT_VIRTUALIZED_BANNER = 'https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png'
 
-function getColumnWidth (columnIndex) {
-  switch (columnIndex % 3) {
+function getColumnWidth (params) {
+  switch (params.index % 3) {
     case 0:
       return 65
     case 1:

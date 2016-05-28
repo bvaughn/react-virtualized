@@ -32,9 +32,11 @@ describe('updateScrollIndexHelper', () => {
     cellSize = 10,
     previousCellsCount = 100,
     previousCellSize = 10,
+    previousScrollToAlignment = 'auto',
     previousScrollToIndex,
     previousSize = 50,
     scrollOffset = 0,
+    scrollToAlignment = 'auto',
     scrollToIndex,
     size = 50
   } = {}) {
@@ -55,9 +57,11 @@ describe('updateScrollIndexHelper', () => {
       cellSize,
       previousCellsCount,
       previousCellSize,
+      previousScrollToAlignment,
       previousScrollToIndex,
       previousSize,
       scrollOffset,
+      scrollToAlignment,
       scrollToIndex,
       size,
       updateScrollIndexCallback
@@ -130,6 +134,21 @@ describe('updateScrollIndexHelper', () => {
     expect(helper({
       previousSize: 50,
       size: 100
+    })).toEqual(false)
+  })
+
+  it('should call :updateScrollIndexCallback if :scrollToAlignment has changed', () => {
+    expect(helper({
+      previousScrollToAlignment: 'start',
+      scrollToAlignment: 'end',
+      scrollToIndex: 5
+    })).toEqual(true)
+  })
+
+  it('should not call :updateScrollIndexCallback if :scrollToAlignment has changed but there is no :scrollToIndex', () => {
+    expect(helper({
+      previousScrollToAlignment: 'start',
+      scrollToAlignment: 'end'
     })).toEqual(false)
   })
 })

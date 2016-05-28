@@ -1,6 +1,5 @@
 /** @flow */
-import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import ArrowKeyStepper from './ArrowKeyStepper'
 import AutoSizer from '../AutoSizer'
@@ -10,10 +9,6 @@ import cn from 'classnames'
 import styles from './ArrowKeyStepper.example.css'
 
 export default class ArrowKeyStepperExample extends Component {
-  static propTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
-  }
-
   constructor (props) {
     super(props)
 
@@ -23,10 +18,8 @@ export default class ArrowKeyStepperExample extends Component {
   }
 
   render () {
-    const { list, ...props } = this.props
-
     return (
-      <ContentBox {...props}>
+      <ContentBox {...this.props}>
         <ContentBoxHeader
           text='ArrowKeyStepper'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/ArrowKeyStepper/ArrowKeyStepper.example.js'
@@ -60,7 +53,7 @@ export default class ArrowKeyStepperExample extends Component {
                     columnCount={100}
                     height={200}
                     onSectionRendered={onSectionRendered}
-                    cellRenderer={({ columnIndex, rowIndex }) => this._cellRenderer({ columnIndex, rowIndex, scrollToColumn, scrollToRow }) }
+                    cellRenderer={({ columnIndex, rowIndex }) => this._cellRenderer({ columnIndex, rowIndex, scrollToColumn, scrollToRow })}
                     rowHeight={this._getRowHeight}
                     rowCount={100}
                     scrollToColumn={scrollToColumn}

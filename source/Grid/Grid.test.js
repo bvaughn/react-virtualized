@@ -1,14 +1,15 @@
+import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import React from 'react'
 import { findDOMNode } from 'react-dom'
-import { render } from '../TestUtils'
 import { Simulate } from 'react-addons-test-utils'
+import { render } from '../TestUtils'
 import Grid from './Grid'
 
 const NUM_ROWS = 100
 const NUM_COLUMNS = 50
 
 describe('Grid', () => {
-  function defaultRenderCell ({ columnIndex, rowIndex }) {
+  function defaultCellRenderer ({ columnIndex, rowIndex }) {
     return (
       <div className='gridItem'>
         {`row:${rowIndex}, column:${columnIndex}`}
@@ -16,8 +17,18 @@ describe('Grid', () => {
     )
   }
 
+  function simulateScroll ({
+    grid,
+    scrollLeft = 0,
+    scrollTop = 0
+  }) {
+    const target = { scrollLeft, scrollTop }
+    grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
+    Simulate.scroll(findDOMNode(grid), { target })
+  }
+
   function getMarkup ({
-    cellRenderer = defaultRenderCell,
+    cellRenderer = defaultCellRenderer,
     cellRangeRenderer,
     className,
     columnCount = NUM_COLUMNS,
@@ -32,15 +43,17 @@ describe('Grid', () => {
     overscanRowCount = 0,
     rowHeight = 20,
     rowCount = NUM_ROWS,
-    scrollLeft = undefined,
+    scrollLeft,
+    scrollToAlignment,
     scrollToColumn,
     scrollToRow,
-    scrollTop = undefined,
+    scrollTop,
+    style,
     width = 200
   } = {}) {
     return (
       <Grid
-        cellRenderer={cellRenderer || defaultRenderCell}
+        cellRenderer={cellRenderer || defaultCellRenderer}
         cellRangeRenderer={cellRangeRenderer}
         className={className}
         columnCount={columnCount}
@@ -56,9 +69,11 @@ describe('Grid', () => {
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollLeft={scrollLeft}
+        scrollToAlignment={scrollToAlignment}
         scrollToColumn={scrollToColumn}
         scrollToRow={scrollToRow}
         scrollTop={scrollTop}
+        style={style}
         width={width}
       />
     )
@@ -105,23 +120,75 @@ describe('Grid', () => {
   })
 
   describe('shows and hides scrollbars based on rendered content', () => {
-    it('should set overflowX:hidden on scroll-container if columns fit within the available width', () => {
-      const rendered = findDOMNode(render(getMarkup({ columnCount: 4 })))
+    let scrollbarSize
+
+    beforeAll(() => {
+      scrollbarSize = getScrollbarSize()
+    })
+
+    it('should set overflowX:hidden if columns fit within the available width and y-axis has no scrollbar', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnCount: 4,
+        rowCount: 5
+      })))
       expect(rendered.style.overflowX).toEqual('hidden')
     })
 
-    it('should leave overflowX:auto on scroll-container if columns require more than the available width', () => {
-      const rendered = findDOMNode(render(getMarkup({ columnCount: 25 })))
+    it('should set overflowX:hidden if columns and y-axis scrollbar fit within the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnCount: 4,
+        width: 200 + scrollbarSize
+      })))
+      expect(rendered.style.overflowX).toEqual('hidden')
+    })
+
+    it('should leave overflowX:auto if columns require more than the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnCount: 4,
+        width: 200 - 1,
+        rowCount: 5
+      })))
       expect(rendered.style.overflowX).not.toEqual('hidden')
     })
 
-    it('should set overflowY:hidden on scroll-container if rows fit within the available height', () => {
-      const rendered = findDOMNode(render(getMarkup({ rowCount: 5 })))
+    it('should leave overflowX:auto if columns and y-axis scrollbar require more than the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnCount: 4,
+        width: 200 + scrollbarSize - 1
+      })))
+      expect(rendered.style.overflowX).not.toEqual('hidden')
+    })
+
+    it('should set overflowY:hidden if rows fit within the available width and xaxis has no scrollbar', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 5,
+        columnCount: 4
+      })))
       expect(rendered.style.overflowY).toEqual('hidden')
     })
 
-    it('should leave overflowY:auto on scroll-container if rows require more than the available height', () => {
-      const rendered = findDOMNode(render(getMarkup({ rowCount: 25 })))
+    it('should set overflowY:hidden if rows and x-axis scrollbar fit within the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 5,
+        height: 100 + scrollbarSize
+      })))
+      expect(rendered.style.overflowY).toEqual('hidden')
+    })
+
+    it('should leave overflowY:auto if rows require more than the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 5,
+        height: 100 - 1,
+        columnCount: 4
+      })))
+      expect(rendered.style.overflowY).not.toEqual('hidden')
+    })
+
+    it('should leave overflowY:auto if rows and x-axis scrollbar require more than the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 5,
+        height: 100 + scrollbarSize - 1
+      })))
       expect(rendered.style.overflowY).not.toEqual('hidden')
     })
   })
@@ -197,6 +264,59 @@ describe('Grid', () => {
       }))
       expect(grid.state.scrollLeft).toEqual(2350)
       expect(grid.state.scrollTop).toEqual(1920)
+    })
+
+    it('should scroll to the correct position for :scrollToAlignment "start"', () => {
+      const grid = render(getMarkup({
+        scrollToAlignment: 'start',
+        scrollToColumn: 24,
+        scrollToRow: 49
+      }))
+      // 100 columns * 50 item width = 5,000 total item width
+      // 100 rows * 20 item height = 2,000 total item height
+      // 4 columns and 5 rows can be visible at a time.
+      // The minimum amount of scrolling leaves the specified cell in the bottom/right corner (just scrolled into view).
+      // Since alignment is set to "start" we should scroll past this point until the cell is aligned top/left.
+      expect(grid.state.scrollLeft).toEqual(1200)
+      expect(grid.state.scrollTop).toEqual(980)
+    })
+
+    it('should scroll to the correct position for :scrollToAlignment "end"', () => {
+      render(getMarkup({
+        scrollToColumn: 99,
+        scrollToRow: 99
+      }))
+      const grid = render(getMarkup({
+        scrollToAlignment: 'end',
+        scrollToColumn: 24,
+        scrollToRow: 49
+      }))
+      // 100 columns * 50 item width = 5,000 total item width
+      // 100 rows * 20 item height = 2,000 total item height
+      // We first scroll past the specified cell and then back.
+      // The minimum amount of scrolling then should leave the specified cell in the top/left corner (just scrolled into view).
+      // Since alignment is set to "end" we should scroll past this point until the cell is aligned bottom/right.
+      expect(grid.state.scrollLeft).toEqual(1050)
+      expect(grid.state.scrollTop).toEqual(900)
+    })
+
+    it('should scroll to the correct position for :scrollToAlignment "center"', () => {
+      render(getMarkup({
+        scrollToColumn: 99,
+        scrollToRow: 99
+      }))
+      const grid = render(getMarkup({
+        scrollToAlignment: 'center',
+        scrollToColumn: 24,
+        scrollToRow: 49
+      }))
+      // 100 columns * 50 item width = 5,000 total item width
+      // 100 rows * 20 item height = 2,000 total item height
+      // We first scroll past the specified cell and then back.
+      // The minimum amount of scrolling then should leave the specified cell in the middle (just scrolled into view).
+      // Since alignment is set to "center" we should scroll past this point until the cell is aligned center.
+      expect(grid.state.scrollLeft).toEqual(1075)
+      expect(grid.state.scrollTop).toEqual(920)
     })
   })
 
@@ -289,6 +409,19 @@ describe('Grid', () => {
     it('should render an empty body if :rowCount is 0 and there is no :noContentRenderer', () => {
       let list = findDOMNode(render(getMarkup({
         rowCount: 0
+      })))
+      expect(list.textContent).toEqual('')
+    })
+
+    it('should render an empty body there is a :noContentRenderer but :height or :width are 0', () => {
+      let list = findDOMNode(render(getMarkup({
+        height: 0,
+        noContentRenderer: () => <div>No data</div>
+      })))
+      expect(list.textContent).toEqual('')
+      list = findDOMNode(render(getMarkup({
+        noContentRenderer: () => <div>No data</div>,
+        width: 0
       })))
       expect(list.textContent).toEqual('')
     })
@@ -423,15 +556,15 @@ describe('Grid', () => {
       const rendered = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(rendered.className).toContain('foo')
     })
+
+    it('should use a custom :style if specified', () => {
+      const style = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ style })))
+      expect(rendered.style.backgroundColor).toEqual('red')
+    })
   })
 
   describe('onScroll', () => {
-    function helper ({ grid, scrollLeft, scrollTop }) {
-      const target = { scrollLeft, scrollTop }
-      grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
-      Simulate.scroll(findDOMNode(grid), { target })
-    }
-
     it('should trigger callback when component is mounted', () => {
       const onScrollCalls = []
       render(getMarkup({
@@ -454,7 +587,7 @@ describe('Grid', () => {
       const grid = render(getMarkup({
         onScroll: params => onScrollCalls.push(params)
       }))
-      helper({
+      simulateScroll({
         grid,
         scrollLeft: 100,
         scrollTop: 0
@@ -475,7 +608,7 @@ describe('Grid', () => {
       const grid = render(getMarkup({
         onScroll: params => onScrollCalls.push(params)
       }))
-      helper({
+      simulateScroll({
         grid,
         scrollLeft: 0,
         scrollTop: 100
@@ -487,6 +620,58 @@ describe('Grid', () => {
         scrollHeight: 2000,
         scrollLeft: 0,
         scrollTop: 100,
+        scrollWidth: 2500
+      })
+    })
+
+    it('should trigger callback with scrollLeft of 0 when total columns width is less than width', () => {
+      const onScrollCalls = []
+      const grid = render(getMarkup({
+        columnCount: 1,
+        columnWidth: 50,
+        onScroll: params => onScrollCalls.push(params),
+        scrollLeft: 0,
+        scrollTop: 10,
+        width: 200
+      }))
+      simulateScroll({
+        grid,
+        scrollLeft: 0,
+        scrollTop: 0
+      })
+      expect(onScrollCalls.length).toEqual(2)
+      expect(onScrollCalls[1]).toEqual({
+        clientHeight: 100,
+        clientWidth: 200,
+        scrollHeight: 2000,
+        scrollLeft: 0,
+        scrollTop: 0,
+        scrollWidth: 50
+      })
+    })
+
+    it('should trigger callback with scrollTop of 0 when total rows height is less than height', () => {
+      const onScrollCalls = []
+      const grid = render(getMarkup({
+        rowCount: 1,
+        rowHeight: 50,
+        onScroll: params => onScrollCalls.push(params),
+        scrollLeft: 0,
+        scrollTop: 10,
+        height: 200
+      }))
+      simulateScroll({
+        grid,
+        scrollLeft: 0,
+        scrollTop: 0
+      })
+      expect(onScrollCalls.length).toEqual(2)
+      expect(onScrollCalls[1]).toEqual({
+        clientHeight: 200,
+        clientWidth: 200,
+        scrollHeight: 50,
+        scrollLeft: 0,
+        scrollTop: 0,
         scrollWidth: 2500
       })
     })
@@ -617,12 +802,27 @@ describe('Grid', () => {
     })
   })
 
+  it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', () => {
+    const cellRendererCalls = []
+    function cellRenderer ({ columnIndex, isScrolling, rowIndex }) {
+      cellRendererCalls.push(isScrolling)
+      return defaultCellRenderer({ columnIndex, rowIndex })
+    }
+    const grid = render(getMarkup({
+      cellRenderer
+    }))
+    expect(cellRendererCalls[0]).toEqual(false)
+    cellRendererCalls.splice(0)
+    simulateScroll({ grid, scrollTop: 100 })
+    expect(cellRendererCalls[0]).toEqual(true)
+  })
+
   describe('cell caching', () => {
-    it('should cache a cell once it has been rendered', () => {
+    it('should not cache cells if the Grid is not scrolling', () => {
       const cellRendererCalls = []
       function cellRenderer ({ columnIndex, rowIndex }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
-        return defaultRenderCell({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, rowIndex })
       }
       const props = {
         cellRenderer,
@@ -648,8 +848,48 @@ describe('Grid', () => {
         ...props,
         scrollToRow: 1
       }))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+    })
+
+    it('should cache a cell once it has been rendered while scrolling', () => {
+      const cellRendererCalls = []
+      function cellRenderer ({ columnIndex, rowIndex }) {
+        cellRendererCalls.push({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, rowIndex })
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollToRow: 0,
+        width: 100
+      }
+
+      const grid = render(getMarkup({
+        ...props,
+        scrollToRow: 0
+      }))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+
+      simulateScroll({ grid, scrollTop: 1 })
+
+      cellRendererCalls.splice(0)
+
+      // Row 1 is already visible so no new cells are rendered
+      render(getMarkup({
+        ...props,
+        scrollToRow: 1
+      }))
       expect(cellRendererCalls).toEqual([])
 
+      // Row 2 is not yet visible so 1 new cell must be rendered
       render(getMarkup({
         ...props,
         scrollToRow: 2
@@ -663,7 +903,7 @@ describe('Grid', () => {
       const cellRendererCalls = []
       function cellRenderer ({ columnIndex, rowIndex }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
-        return defaultRenderCell({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, rowIndex })
       }
       const props = {
         cellRenderer,
@@ -680,23 +920,75 @@ describe('Grid', () => {
         { columnIndex: 0, rowIndex: 1 }
       ])
 
-      Simulate.scroll(grid.refs.scrollingContainer)
-
-      cellRendererCalls.splice(0)
+      simulateScroll({ grid, scrollTop: 1 })
 
       // Allow scrolling timeout to complete so that cell cache is reset
       await new Promise(resolve => setTimeout(resolve, 500))
+
+      cellRendererCalls.splice(0)
 
       render(getMarkup({
         ...props,
         scrollToRow: 1
       }))
-      expect(cellRendererCalls).toEqual([
-        { columnIndex: 0, rowIndex: 0 },
-        { columnIndex: 0, rowIndex: 1 }
-      ])
+      expect(cellRendererCalls.length).not.toEqual(0)
 
       done()
+    })
+  })
+
+  describe('measureAllCells', () => {
+    it('should measure any unmeasured columns and rows', () => {
+      const grid = render(getMarkup({
+        columnCount: 10,
+        columnWidth: () => 100,
+        estimatedColumnSize: 150,
+        estimatedRowSize: 15,
+        height: 0,
+        rowCount: 10,
+        rowHeight: () => 20,
+        width: 0
+      }))
+      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1500)
+      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150)
+      grid.measureAllCells()
+      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1000)
+      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200)
+    })
+  })
+
+  describe('recomputeGridSize', () => {
+    it('should recompute cell sizes and other values when called', () => {
+      let highestColumnIndex = 0
+      let highestRowIndex = 0
+      function columnWidth ({ index }) {
+        highestColumnIndex = Math.max(index, highestColumnIndex)
+        return 10
+      }
+      function rowHeight ({ index }) {
+        highestRowIndex = Math.max(index, highestRowIndex)
+        return 10
+      }
+      const props = {
+        columnCount: 50,
+        columnWidth,
+        height: 50,
+        rowHeight,
+        rowCount: 50,
+        width: 100
+      }
+      const component = render(getMarkup(props))
+      highestColumnIndex = 0
+      highestRowIndex = 0
+      component.recomputeGridSize()
+      // Cells won't actually be remeasured until the Grid is next rendered.
+      render(getMarkup({
+        ...props,
+        rowCount: 51
+      }))
+      // And then only the rows necessary to fill the visible region.
+      expect(highestColumnIndex).toEqual(9)
+      expect(highestRowIndex).toEqual(4)
     })
   })
 })

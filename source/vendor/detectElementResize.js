@@ -149,7 +149,7 @@ var removeResizeListener = function(element, fn){
   else {
     element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1);
     if (!element.__resizeListeners__.length) {
-        element.removeEventListener('scroll', scrollListener);
+        element.removeEventListener('scroll', scrollListener, true);
         element.__resizeTriggers__ = !element.removeChild(element.__resizeTriggers__);
     }
   }

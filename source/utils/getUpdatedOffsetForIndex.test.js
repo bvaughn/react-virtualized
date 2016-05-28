@@ -30,4 +30,42 @@ describe('getUpdatedOffsetForIndex', () => {
   it('should scroll to the end', () => {
     expect(testHelper(8, 0)).toEqual(110)
   })
+
+  it('should honor specified :align values', () => {
+    expect(getUpdatedOffsetForIndex({
+      align: 'auto',
+      cellOffset: 50,
+      cellSize: 10,
+      containerSize: 50,
+      currentOffset: 0
+    })).toEqual(10)
+    expect(getUpdatedOffsetForIndex({
+      align: 'start',
+      cellOffset: 50,
+      cellSize: 10,
+      containerSize: 50,
+      currentOffset: 0
+    })).toEqual(50)
+    expect(getUpdatedOffsetForIndex({
+      align: 'auto',
+      cellOffset: 50,
+      cellSize: 10,
+      containerSize: 50,
+      currentOffset: 100
+    })).toEqual(50)
+    expect(getUpdatedOffsetForIndex({
+      align: 'end',
+      cellOffset: 50,
+      cellSize: 10,
+      containerSize: 50,
+      currentOffset: 100
+    })).toEqual(10)
+    expect(getUpdatedOffsetForIndex({
+      align: 'center',
+      cellOffset: 50,
+      cellSize: 10,
+      containerSize: 50,
+      currentOffset: 100
+    })).toEqual(20)
+  })
 })

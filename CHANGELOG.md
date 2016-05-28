@@ -1,6 +1,55 @@
 Changelog
 ------------
 
+##### 7.2.0
+Added new method- `measureAllCells`- to `Grid`, `FlexTable`, and `VirtualScroll` to force-measure all cells.
+This supports special use-cases where deferred measuring is not desired.
+
+Added `estimatedRowSize` property to `FlexTable` and `VirtualScroll` to be passed through to the inner `Grid`.
+
+Also added guard to ensure the `onScroll` callback for `Collection`, `Grid`, `FlexTable`, and `VirtualScroll` is never called with a negative number.
+
+##### 7.1.3
+The inner javascript-detect-element-resize library used by `AutoSizer` now passes the proper `useCapture` value when removing listeners as well. This should prevent lingering event listeners in certain cases. Thanks to @cyberxndr for this fix.
+
+##### 7.1.2
+Added "_center_" option for `scrollToAlignment` property of `Collection`, `Grid`, `FlexTable`, and `VirtualScroll`.
+Thanks to @edulan for the contribution!
+
+Also added a check to avoid rendering content frmo `noContentRenderer` if `width` or `height` are 0.
+
+##### 7.1.1
+Resolved edge-case bug that caused the bottom/right cells in a `Grid` or `Collection` to be partially overlapped by a scrollbar.
+Thanks to @anjianshi for reporting this and collaborating on the fix!
+
+##### 7.1.0
+Added `scrollToAlignment` property to `Collection`, `Grid`, `FlexTable`, and `VirtualScroll` to offer finer-grained control of how scrolled-to cells are aligned.
+Default behavior ("_auto_") remains unchanged- the least amount of scrolling will occur to ensure that the specified cell is visible.
+
+##### 7.0.5
+Fixed edge-case bug where `InfiniteLoader` did not respect `minBatchSize` setting when a user was scrolling up.
+
+##### 7.0.4
+Added `scrollLeft` and `scrollTop` parameters to `cellRangeRenderer` callback for `Grid`.
+
+##### 7.0.3
+Added `box-sizing: border-box` rules to `.FlexTable__headerRow` and `.FlexTable__Grid` classes to fix edge-case scrollbar bug experienced by some users.
+
+##### 7.0.2
+Added `recomputeCellSizesAndPositions` method to `Collection` (to pass through to inner `CollectionView`).
+
+##### 7.0.1
+Replaced single occurence of `Number.isNaN` with `isNaN` to avoid IE compatibility issues.
+
+# 7.0.0
+Version 7 changes are described in detail on the [Version 7 Roadmap wiki page](https://github.com/bvaughn/react-virtualized/wiki/Version-7-Roadmap).
+Upgrade instructions and [jscodeshift](https://github.com/facebook/jscodeshift) mods can also be found there.
+
+To run a code mod, check out react-virtualized (or download the codemod) and then...
+```
+jscodeshift -t /path/to/react-virtualized/codemods/6-to-7/rename-properties.js source
+```
+
 ##### 6.3.2
 Fixed edge-case bug in `Collection` where initial `scrollLeft` and `scrollTop` would not correctly adjust inner offsets.
 Thanks @edulan for the contribution!

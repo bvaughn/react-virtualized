@@ -7,36 +7,41 @@ This component expects explicit width, height, and padding parameters.
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| children | [FlexColumn](FlexColumn.md) | ✓ | One or more FlexColumns describing the data displayed in this row |
-| className | String |  | CSS class name |
-| disableHeader | Boolean |  | Disable rendering the header at all |
+| children | [FlexColumn](FlexColumn.md) | ✓ | One or more FlexColumns describing the data displayed in this table |
+| className | String |  | Optional custom CSS class name to attach to root `FlexTable` element. |
+| disableHeader | Boolean |  | Do not render the table header (only the rows) |
+| estimatedRowSize | Number |  | Used to estimate the total height of a `FlexTable` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | headerClassName | String |  | CSS class to apply to all column headers |
 | headerHeight | Number | ✓ | Fixed height of header row |
+| headerStyle | Object |  | Optional custom inline style to attach to table header columns. |
 | height | Number | ✓ | Fixed/available height for out DOM element |
 | noRowsRenderer |  | Function | Callback used to render placeholder content when :rowCount is 0 |
 | onHeaderClick |  | Function | Callback invoked when a user clicks on a table header. `(dataKey: string, columnData: any): void` |
-| onRowClick |  | Function | Callback invoked when a user clicks on a table row. `({ index: number }): void` |
-| onRowsRendered |  | Function | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }): void` |
+| onRowClick |  | Function | Callback invoked when a user clicks on a table row. `({ index: number }): void` |
+| onRowsRendered |  | Function | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
 | overscanRowCount |  | Number | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
-| onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight, scrollHeight, scrollTop }): void` |
+| onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, scrollHeight: number: number, scrollTop: number }): void` |
 | rowClassName | String or Function |  | CSS class to apply to all table rows (including the header row). This value may be either a static string or a function with the signature `({ index: number }): string`. Note that for the header row an index of `-1` is provided. |
+| rowCount | Number | ✓ | Number of rows in table. |
 | rowGetter | Function | ✓ | Callback responsible for returning a data row given an index. `({ index: int }): any` |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
-| rowCount | Number | ✓ | Number of rows in table. |
+| rowStyle | Object |  | Optional custom inline style to attach to table rows. |
+| scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
 | sort | Function |  | Sort function to be called if a sortable header is clicked. `({ sortBy: string, sortDirection: SortDirection }): void` |
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
+| style | Object |  | Optional custom inline style to attach to root `FlexTable` element. |
 | width | Number | ✓ | Width of the table |
 
 ### Public Methods
 
-##### clearCellCache
+##### measureAllRows
+Pre-measure all rows in a `FlexTable`.
 
-Cells are cahced during scrolling to improve performance.
-Once scrolling completes (and after a debounce period) the cache is flushed to avoid memory leaks or stale renders.
-Use this method to forcefeully clear the cell cache and ensure all cells are re-rendered during the next update.
+Typically rows are only measured as needed and estimated heights are used for cells that have not yet been measured.
+This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
 
 ##### recomputeRowHeights
 Recompute row heights and offsets.
@@ -83,7 +88,7 @@ ReactDOM.render(
     headerHeight={20}
     rowHeight={30}
     rowCount={list.length}
-    rowGetter={index => list[index]}
+    rowGetter={({index}) => list[index]}
   >
     <FlexColumn
       label='Name'

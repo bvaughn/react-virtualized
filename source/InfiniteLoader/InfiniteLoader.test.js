@@ -29,7 +29,7 @@ describe('InfiniteLoader', () => {
   function rowRenderer (index) {
     rowRendererCalls.push(index)
     return (
-      <div key={index}/>
+      <div key={index} />
     )
   }
 
@@ -40,6 +40,7 @@ describe('InfiniteLoader', () => {
     minimumBatchSize = 1,
     rowHeight = 20,
     rowCount = 100,
+    scrollToIndex,
     threshold = 10,
     width = 200
   } = {}) {
@@ -62,6 +63,7 @@ describe('InfiniteLoader', () => {
               rowHeight={rowHeight}
               rowRenderer={rowRenderer}
               rowCount={rowCount}
+              scrollToIndex={scrollToIndex}
               width={width}
             />
           )
@@ -91,13 +93,15 @@ describe('InfiniteLoader', () => {
   })
 
   it('should :forceUpdate once rows have loaded if :loadMoreRows returns a Promise', async (done) => {
-    let resolve
+    let savedResolve
     function loadMoreRows () {
-      return new Promise((innerResolve) => resolve = innerResolve)
+      return new Promise((resolve) => {
+        savedResolve = resolve
+      })
     }
     render(getMarkup({ loadMoreRows }))
     rowRendererCalls.splice(0)
-    await resolve()
+    await savedResolve()
     expect(rowRendererCalls.length > 0).toEqual(true)
     done()
   })
@@ -105,7 +109,9 @@ describe('InfiniteLoader', () => {
   it('should not :forceUpdate once rows have loaded rows are no longer visible', async (done) => {
     let resolves = []
     function loadMoreRows () {
-      return new Promise((innerResolve) => resolves.push(innerResolve))
+      return new Promise((resolve) => {
+        resolves.push(resolve)
+      })
     }
     render(getMarkup({ loadMoreRows }))
     // Simulate a new range of rows being loaded
@@ -117,13 +123,30 @@ describe('InfiniteLoader', () => {
   })
 
   describe('minimumBatchSize', () => {
-    it('should respect the specified :minimumBatchSize', () => {
+    it('should respect the specified :minimumBatchSize when scrolling down', () => {
       render(getMarkup({
         minimumBatchSize: 10,
         threshold: 0
       }))
       expect(loadMoreRowsCalls.length).toEqual(1)
       expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 9 }])
+    })
+
+    it('should respect the specified :minimumBatchSize when scrolling up', () => {
+      render(getMarkup({
+        minimumBatchSize: 10,
+        scrollToIndex: 20,
+        threshold: 0
+      }))
+      loadMoreRowsCalls.splice(0)
+      render(getMarkup({
+        isRowLoaded: ({ index }) => index >= 20,
+        minimumBatchSize: 10,
+        scrollToIndex: 15,
+        threshold: 0
+      }))
+      expect(loadMoreRowsCalls.length).toEqual(1)
+      expect(loadMoreRowsCalls).toEqual([{ startIndex: 10, stopIndex: 19 }])
     })
 
     it('should not interfere with :threshold', () => {
@@ -161,7 +184,7 @@ describe('InfiniteLoader', () => {
       ])
     })
 
-    it('should not exceed boundaries if :minimumBatchSize is larger than needed', () => {
+    it('should not exceed ending boundaries if :minimumBatchSize is larger than needed', () => {
       render(getMarkup({
         minimumBatchSize: 10,
         rowCount: 25,
@@ -171,8 +194,25 @@ describe('InfiniteLoader', () => {
       innerOnRowsRendered({ startIndex: 18, stopIndex: 22 })
       expect(loadMoreRowsCalls).toEqual([
         { startIndex: 0, stopIndex: 9 },
-        { startIndex: 18, stopIndex: 24 }
+        { startIndex: 15, stopIndex: 24 }
       ])
+    })
+
+    it('should not exceed beginning boundaries if :minimumBatchSize is larger than needed', () => {
+      render(getMarkup({
+        minimumBatchSize: 10,
+        scrollToIndex: 15,
+        threshold: 0
+      }))
+      loadMoreRowsCalls.splice(0)
+      render(getMarkup({
+        isRowLoaded: ({ index }) => index >= 6,
+        minimumBatchSize: 10,
+        scrollToIndex: 2,
+        threshold: 0
+      }))
+      expect(loadMoreRowsCalls.length).toEqual(1)
+      expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 5 }])
     })
   })
 })

@@ -14,15 +14,18 @@ describe('VirtualScroll', () => {
 
   function getMarkup ({
     className,
+    estimatedRowSize,
     height = 100,
-    noRowsRenderer = undefined,
-    onRowsRendered = undefined,
-    onScroll = undefined,
+    noRowsRenderer,
+    onRowsRendered,
+    onScroll,
     overscanRowCount = 0,
     rowHeight = 10,
     rowCount = rendered.size,
-    scrollToIndex = undefined,
-    scrollTop = undefined,
+    scrollToAlignment,
+    scrollToIndex,
+    scrollTop,
+    style,
     width = 100
   } = {}) {
     function rowRenderer ({ index }) {
@@ -39,6 +42,7 @@ describe('VirtualScroll', () => {
     return (
       <VirtualScroll
         className={className}
+        estimatedRowSize={estimatedRowSize}
         height={height}
         noRowsRenderer={noRowsRenderer}
         onRowsRendered={onRowsRendered}
@@ -47,8 +51,10 @@ describe('VirtualScroll', () => {
         rowHeight={rowHeight}
         rowRenderer={rowRenderer}
         rowCount={rowCount}
+        scrollToAlignment={scrollToAlignment}
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
+        style={style}
         width={width}
       />
     )
@@ -87,6 +93,42 @@ describe('VirtualScroll', () => {
       // 100 items * 10 item height = 1,000 total item height
       // Target height for the last item then is 1000 - 90
       expect(rendered.textContent).toContain('Name 99')
+    })
+
+    it('should scroll to the correct position for :scrollToAlignment "start"', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        scrollToAlignment: 'start',
+        scrollToIndex: 49
+      })))
+      // 100 items * 10 item height = 1,000 total item height; 10 items can be visible at a time.
+      expect(rendered.textContent).toContain('Name 49')
+      expect(rendered.textContent).toContain('Name 58')
+    })
+
+    it('should scroll to the correct position for :scrollToAlignment "end"', () => {
+      render(getMarkup({
+        scrollToIndex: 99
+      }))
+      const rendered = findDOMNode(render(getMarkup({
+        scrollToAlignment: 'end',
+        scrollToIndex: 49
+      })))
+      // 100 items * 10 item height = 1,000 total item height; 10 items can be visible at a time.
+      expect(rendered.textContent).toContain('Name 40')
+      expect(rendered.textContent).toContain('Name 49')
+    })
+
+    it('should scroll to the correct position for :scrollToAlignment "center"', () => {
+      render(getMarkup({
+        scrollToIndex: 99
+      }))
+      const rendered = findDOMNode(render(getMarkup({
+        scrollToAlignment: 'center',
+        scrollToIndex: 49
+      })))
+      // 100 items * 10 item height = 1,000 total item height; 11 items can be visible at a time (the first and last item are only partially visible)
+      expect(rendered.textContent).toContain('Name 43')
+      expect(rendered.textContent).toContain('Name 53')
     })
   })
 
@@ -240,6 +282,12 @@ describe('VirtualScroll', () => {
       const node = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(node.className).toContain('foo')
     })
+
+    it('should use a custom :style if specified', () => {
+      const style = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ style })))
+      expect(rendered.style.backgroundColor).toEqual('red')
+    })
   })
 
   describe('overscanRowCount', () => {
@@ -319,6 +367,21 @@ describe('VirtualScroll', () => {
         scrollHeight: 1000,
         scrollTop: 100
       })
+    })
+  })
+
+  describe('measureAllRows', () => {
+    it('should measure any unmeasured rows', () => {
+      const rendered = render(getMarkup({
+        estimatedRowSize: 15,
+        height: 0,
+        rowCount: 10,
+        rowHeight: () => 20,
+        width: 0
+      }))
+      expect(rendered.refs.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150)
+      rendered.measureAllRows()
+      expect(rendered.refs.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200)
     })
   })
 

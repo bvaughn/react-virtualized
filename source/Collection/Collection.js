@@ -59,6 +59,11 @@ export default class Collection extends Component {
     this._lastRenderedCellIndices = []
   }
 
+  /** See Collection#recomputeCellSizesAndPositions */
+  recomputeCellSizesAndPositions () {
+    this.refs.CollectionView.recomputeCellSizesAndPositions()
+  }
+
   /** React lifecycle methods */
 
   render () {
@@ -105,6 +110,7 @@ export default class Collection extends Component {
    * Calculates the minimum amount of change from the current scroll position to ensure the specified cell is (fully) visible.
    */
   getScrollPositionForCell ({
+    align,
     cellIndex,
     height,
     scrollLeft,
@@ -120,6 +126,7 @@ export default class Collection extends Component {
       const cellMetadata = this._cellMetadata[cellIndex]
 
       scrollLeft = getUpdatedOffsetForIndex({
+        align,
         cellOffset: cellMetadata.x,
         cellSize: cellMetadata.width,
         containerSize: width,
@@ -128,6 +135,7 @@ export default class Collection extends Component {
       })
 
       scrollTop = getUpdatedOffsetForIndex({
+        align,
         cellOffset: cellMetadata.y,
         cellSize: cellMetadata.height,
         containerSize: height,
@@ -169,7 +177,8 @@ export default class Collection extends Component {
     return cellGroupRenderer({
       cellRenderer,
       cellSizeAndPositionGetter: ({ index }) => this._sectionManager.getCellMetadata({ index }),
-      indices: this._lastRenderedCellIndices
+      indices: this._lastRenderedCellIndices,
+      isScrolling
     })
   }
 }
@@ -177,12 +186,16 @@ export default class Collection extends Component {
 function defaultCellGroupRenderer ({
   cellRenderer,
   cellSizeAndPositionGetter,
-  indices
+  indices,
+  isScrolling
 }) {
   return indices
     .map((index) => {
       const cellMetadata = cellSizeAndPositionGetter({ index })
-      const renderedCell = cellRenderer({ index })
+      const renderedCell = cellRenderer({
+        index,
+        isScrolling
+      })
 
       if (renderedCell == null || renderedCell === false) {
         return null

@@ -2,14 +2,23 @@
  * Tests Collection and CollectionView.
  * @flow
  */
+import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import React from 'react'
 import { findDOMNode } from 'react-dom'
-import { render } from '../TestUtils'
 import { Simulate } from 'react-addons-test-utils'
+import { render } from '../TestUtils'
 import Collection from './Collection'
 import { CELLS, SECTION_SIZE } from './TestData'
 
 describe('Collection', () => {
+  function defaultCellRenderer ({ index }) {
+    return (
+      <div className='cell'>
+        cell:{index}
+      </div>
+    )
+  }
+
   function getMarkup ({
     className,
     cellCount = CELLS.length,
@@ -22,18 +31,12 @@ describe('Collection', () => {
     onScroll,
     sectionSize = SECTION_SIZE,
     scrollLeft,
+    scrollToAlignment,
     scrollToCell,
     scrollTop,
+    style,
     width = SECTION_SIZE * 2
   } = {}) {
-    function defaultCellRenderer ({ index }) {
-      return (
-        <div className='cell'>
-          cell:{index}
-        </div>
-      )
-    }
-
     function defaultCellSizeAndPositionGetter ({ index }) {
       index = index % cellCount
 
@@ -53,11 +56,19 @@ describe('Collection', () => {
         onScroll={onScroll}
         sectionSize={sectionSize}
         scrollLeft={scrollLeft}
+        scrollToAlignment={scrollToAlignment}
         scrollToCell={scrollToCell}
         scrollTop={scrollTop}
+        style={style}
         width={width}
       />
     )
+  }
+
+  function simulateScroll ({ collection, scrollLeft, scrollTop }) {
+    const target = { scrollLeft, scrollTop }
+    collection.refs.CollectionView.refs.scrollingContainer = target // HACK to work around _onScroll target check
+    Simulate.scroll(findDOMNode(collection), { target })
   }
 
   function compareArrays (array1, array2) {
@@ -98,23 +109,71 @@ describe('Collection', () => {
   })
 
   describe('shows and hides scrollbars based on rendered content', () => {
-    it('should set overflowX:hidden on scroll-container if columns fit within the available width', () => {
-      const rendered = findDOMNode(render(getMarkup({ width: 6 })))
+    let scrollbarSize
+
+    beforeAll(() => {
+      scrollbarSize = getScrollbarSize()
+    })
+
+    it('should set overflowX:hidden if columns fit within the available width and y-axis has no scrollbar', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        height: 4,
+        width: 6
+      })))
       expect(rendered.style.overflowX).toEqual('hidden')
     })
 
-    it('should leave overflowX:auto on scroll-container if columns require more than the available width', () => {
-      const rendered = findDOMNode(render(getMarkup({ width: 2 })))
+    it('should set overflowX:hidden if columns and y-axis scrollbar fit within the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        height: 1,
+        width: 6 + scrollbarSize
+      })))
+      expect(rendered.style.overflowX).toEqual('hidden')
+    })
+
+    it('should leave overflowX:auto if columns require more than the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        width: 1
+      })))
       expect(rendered.style.overflowX).not.toEqual('hidden')
     })
 
-    it('should set overflowY:hidden on scroll-container if rows fit within the available height', () => {
-      const rendered = findDOMNode(render(getMarkup({ height: 4 })))
+    it('should leave overflowX:auto if columns and y-axis scrollbar require more than the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        height: 1,
+        width: 6 + scrollbarSize - 1
+      })))
+      expect(rendered.style.overflowX).not.toEqual('hidden')
+    })
+
+    it('should set overflowY:hidden if rows fit within the available width and xaxis has no scrollbar', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        height: 4,
+        width: 6
+      })))
       expect(rendered.style.overflowY).toEqual('hidden')
     })
 
-    it('should leave overflowY:auto on scroll-container if rows require more than the available height', () => {
-      const rendered = findDOMNode(render(getMarkup({ height: 2 })))
+    it('should set overflowY:hidden if rows and x-axis scrollbar fit within the available width', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        height: 4 + scrollbarSize,
+        width: 1
+      })))
+      expect(rendered.style.overflowY).toEqual('hidden')
+    })
+
+    it('should leave overflowY:auto if rows require more than the available height', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        height: 1
+      })))
+      expect(rendered.style.overflowY).not.toEqual('hidden')
+    })
+
+    it('should leave overflowY:auto if rows and y-axis scrollbar require more than the available height', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        height: 4 + scrollbarSize - 1,
+        width: 1
+      })))
       expect(rendered.style.overflowY).not.toEqual('hidden')
     })
   })
@@ -136,6 +195,35 @@ describe('Collection', () => {
       const grid = render(getMarkup({ scrollToCell: 9 }))
       expect(grid.refs.CollectionView.state.scrollLeft).toEqual(2)
       expect(grid.refs.CollectionView.state.scrollTop).toEqual(2)
+    })
+
+    it('should honor the specified :scrollToAlignment', () => {
+      let grid = render(getMarkup({
+        scrollToAlignment: 'start',
+        scrollToCell: 2,
+        width: SECTION_SIZE
+      }))
+      // Minimum amount of scrolling ("auto") would be 0,0
+      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(2)
+      expect(grid.refs.CollectionView.state.scrollTop).toEqual(1)
+
+      grid = render(getMarkup({
+        scrollToAlignment: 'end',
+        scrollToCell: 2,
+        width: SECTION_SIZE
+      }))
+      // This cell would already by visible by "auto" rules
+      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(1)
+      expect(grid.refs.CollectionView.state.scrollTop).toEqual(0)
+
+      grid = render(getMarkup({
+        scrollToAlignment: 'center',
+        scrollToCell: 4,
+        width: SECTION_SIZE
+      }))
+      // This cell would already by visible by "auto" rules
+      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(1)
+      expect(grid.refs.CollectionView.state.scrollTop).toEqual(0)
     })
 
     it('should scroll to a cell just added', () => {
@@ -199,7 +287,9 @@ describe('Collection', () => {
     it('should call :onSectionRendered if at least one cell is rendered', () => {
       let indices
       render(getMarkup({
-        onSectionRendered: params => indices = params.indices
+        onSectionRendered: params => {
+          indices = params.indices
+        }
       }))
       compareArrays(indices, [0, 1, 2, 3])
     })
@@ -258,7 +348,9 @@ describe('Collection', () => {
     it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
       let indices
       render(getMarkup({
-        onSectionRendered: params => indices = params.indices,
+        onSectionRendered: params => {
+          indices = params.indices
+        },
         scrollLeft: 2,
         scrollTop: 2
       }))
@@ -268,11 +360,15 @@ describe('Collection', () => {
     it('should render correctly when :scrollLeft and :scrollTop properties are updated', () => {
       let indices
       render(getMarkup({
-        onSectionRendered: params => indices = params.indices
+        onSectionRendered: params => {
+          indices = params.indices
+        }
       }))
       compareArrays(indices, [0, 1, 2, 3])
       render(getMarkup({
-        onSectionRendered: params => indices = params.indices,
+        onSectionRendered: params => {
+          indices = params.indices
+        },
         scrollLeft: 2,
         scrollTop: 2
       }))
@@ -290,15 +386,15 @@ describe('Collection', () => {
       const rendered = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(rendered.className).toContain('foo')
     })
+
+    it('should use a custom :style if specified', () => {
+      const style = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ style })))
+      expect(rendered.style.backgroundColor).toEqual('red')
+    })
   })
 
   describe('onScroll', () => {
-    function helper ({ collection, scrollLeft, scrollTop }) {
-      const target = { scrollLeft, scrollTop }
-      collection.refs.CollectionView.refs.scrollingContainer = target // HACK to work around _onScroll target check
-      Simulate.scroll(findDOMNode(collection), { target })
-    }
-
     it('should trigger callback when component is mounted', () => {
       const onScrollCalls = []
       render(getMarkup({
@@ -321,7 +417,7 @@ describe('Collection', () => {
       const collection = render(getMarkup({
         onScroll: params => onScrollCalls.push(params)
       }))
-      helper({
+      simulateScroll({
         collection,
         scrollLeft: 1,
         scrollTop: 0
@@ -342,7 +438,7 @@ describe('Collection', () => {
       const collection = render(getMarkup({
         onScroll: params => onScrollCalls.push(params)
       }))
-      helper({
+      simulateScroll({
         collection,
         scrollLeft: 0,
         scrollTop: 2
@@ -356,6 +452,21 @@ describe('Collection', () => {
         scrollTop: 2,
         scrollWidth: 6
       })
+    })
+
+    it('should not allow negative scroll values', () => {
+      const onScrollCalls = []
+      const collection = render(getMarkup({
+        onScroll: params => onScrollCalls.push(params)
+      }))
+      simulateScroll({
+        collection,
+        scrollLeft: -1,
+        scrollTop: -1
+      })
+      expect(onScrollCalls.length).toEqual(1)
+      expect(onScrollCalls[0].scrollLeft).toEqual(0)
+      expect(onScrollCalls[0].scrollTop).toEqual(0)
     })
   })
 
@@ -380,5 +491,20 @@ describe('Collection', () => {
       expect(typeof cellGroupRendererParams.cellSizeAndPositionGetter).toEqual('function')
       compareArrays(cellGroupRendererParams.indices, [0, 1, 2, 3])
     })
+  })
+
+  it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', () => {
+    const cellRendererCalls = []
+    function cellRenderer ({ index, isScrolling }) {
+      cellRendererCalls.push(isScrolling)
+      return defaultCellRenderer({ index })
+    }
+    const collection = render(getMarkup({
+      cellRenderer
+    }))
+    expect(cellRendererCalls[0]).toEqual(false)
+    cellRendererCalls.splice(0)
+    simulateScroll({ collection, scrollTop: 100 })
+    expect(cellRendererCalls[0]).toEqual(true)
   })
 })

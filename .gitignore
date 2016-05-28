@@ -1,5 +1,6 @@
 .DS_Store
-node_modules
-npm-debug.log
 build
 coverage
+dist
+node_modules
+npm-debug.log

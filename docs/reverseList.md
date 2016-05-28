@@ -1,9 +1,9 @@
 Displaying Items in Reverse Order
 ---------------
 
-A few people have asked how to display lists in reverse order (see issues #33, #54, #55, #47).
-
-The simplest way to do this to add items to the front of the list (`unshift`) instead of the end (`push`). (You can see a demo of the source code below [here](https://s3.amazonaws.com/brianvaughn/react-virtualized/reverse-list/index.html))
+Sometimes it is desirable to dislpay a list in reverse order.
+The simplest way to do this is to add items to the front of the list (`unshift`) instead of the end (`push`).
+Here is a high level template for doing this:
 
 ```js
 export default class Example extends Component {
@@ -61,3 +61,5 @@ export default class Example extends Component {
   }
 }
 ```
+
+You can see a demo of this [here](https://s3.amazonaws.com/brianvaughn/react-virtualized/reverse-list/index.html).

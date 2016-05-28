@@ -22,7 +22,7 @@ export default class GridExample extends Component {
       columnCount: 1000,
       height: 300,
       overscanColumnCount: 0,
-      overscanRowCount: 5,
+      overscanRowCount: 10,
       rowHeight: 40,
       rowCount: 1000,
       scrollToColumn: undefined,
@@ -44,8 +44,6 @@ export default class GridExample extends Component {
   }
 
   render () {
-    const { list, ...props } = this.props
-
     const {
       columnCount,
       height,
@@ -59,7 +57,7 @@ export default class GridExample extends Component {
     } = this.state
 
     return (
-      <ContentBox {...props}>
+      <ContentBox {...this.props}>
         <ContentBoxHeader
           text='Grid'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/Grid.example.js'
@@ -102,14 +100,14 @@ export default class GridExample extends Component {
             name='onScrollToColumn'
             placeholder='Index...'
             onChange={this._onScrollToColumnChange}
-            value={scrollToColumn}
+            value={scrollToColumn || ''}
           />
           <LabeledInput
             label='Scroll to row'
             name='onScrollToRow'
             placeholder='Index...'
             onChange={this._onScrollToRowChange}
-            value={scrollToRow}
+            value={scrollToRow || ''}
           />
           <LabeledInput
             label='List height'
@@ -217,7 +215,7 @@ export default class GridExample extends Component {
         content = (
           <div>
             c:{columnIndex}
-            <br/>
+            <br />
             r:{rowIndex}
           </div>
         )

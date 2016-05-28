@@ -108,7 +108,6 @@ export default class InfiniteLoader extends Component {
             })
           ) {
             if (this._registeredChild) {
-              this._registeredChild.clearCellCache()
               this._registeredChild.forceUpdate()
             }
           }
@@ -167,8 +166,9 @@ export function scanForUnloadedRanges ({
     }
   }
 
+  // If :rangeStopIndex is not null it means we haven't ran out of unloaded rows.
+  // Scan forward to try filling our :minimumBatchSize.
   if (rangeStopIndex !== null) {
-    // Attempt to satisfy :minimumBatchSize requirement but don't exceed :rowCount
     const potentialStopIndex = Math.min(
       Math.max(
         rangeStopIndex,
@@ -189,6 +189,25 @@ export function scanForUnloadedRanges ({
       startIndex: rangeStartIndex,
       stopIndex: rangeStopIndex
     })
+  }
+
+  // Check to see if our first range ended prematurely.
+  // In this case we should scan backwards to try filling our :minimumBatchSize.
+  if (unloadedRanges.length) {
+    const firstUnloadedRange = unloadedRanges[0]
+
+    while (
+      firstUnloadedRange.stopIndex - firstUnloadedRange.startIndex + 1 < minimumBatchSize &&
+      firstUnloadedRange.startIndex > 0
+    ) {
+      let index = firstUnloadedRange.startIndex - 1
+
+      if (!isRowLoaded({ index })) {
+        firstUnloadedRange.startIndex = index
+      } else {
+        break
+      }
+    }
   }
 
   return unloadedRanges

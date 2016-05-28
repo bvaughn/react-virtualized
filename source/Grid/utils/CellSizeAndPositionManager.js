@@ -36,7 +36,7 @@ export default class CellSizeAndPositionManager {
    * This allows partially visible cells (with offsets just before/above the fold) to be visible.
    */
   findNearestCell (offset: number): number {
-    if (Number.isNaN(offset)) {
+    if (isNaN(offset)) {
       throw Error(`Invalid offset ${offset} specified`)
     }
 

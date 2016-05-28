@@ -49,6 +49,7 @@
 
 .FlexTable__Grid {
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .FlexTable__headerRow {
@@ -68,6 +69,7 @@
       -ms-flex-align: center;
           align-items: center;
   overflow: hidden;
+  box-sizing: border-box;
 }
 .FlexTable__headerTruncatedText {
   white-space: nowrap;
