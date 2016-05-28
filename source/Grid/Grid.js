@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
-import CellSizeAndPositionManager from './utils/CellSizeAndPositionManager'
+import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getOverscanIndices from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
@@ -201,12 +201,12 @@ export default class Grid extends Component {
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth)
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight)
 
-    this._columnSizeAndPositionManager = new CellSizeAndPositionManager({
+    this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.columnCount,
       cellSizeGetter: (index) => this._columnWidthGetter(index),
       estimatedCellSize: this._getEstimatedColumnSize(props)
     })
-    this._rowSizeAndPositionManager = new CellSizeAndPositionManager({
+    this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.rowCount,
       cellSizeGetter: (index) => this._rowHeightGetter(index),
       estimatedCellSize: this._getEstimatedRowSize(props)

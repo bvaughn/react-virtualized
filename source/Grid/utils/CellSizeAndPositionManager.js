@@ -1,27 +1,17 @@
 /** @flow */
 
 /**
- * Browsers have scroll offset limitations.
- * After a certain position, the browser won't allow the user to scroll further (even via JavaScript scroll offset adjustments).
- * This util picks a lower ceiling for max size and artificially adjusts positions within to make it transparent for users.
- * @TODO Pick a less arbitrary ceiling that's safe for all browsers?
- */
-export const DEFAULT_MAX_SCROLL_SIZE = 1000000
-
-/**
  * Just-in-time calculates and caches size and position information for a collection of cells.
  */
 export default class CellSizeAndPositionManager {
   constructor ({
     cellCount,
     cellSizeGetter,
-    estimatedCellSize,
-    maxScrollSize = DEFAULT_MAX_SCROLL_SIZE
+    estimatedCellSize
   }: CellSizeAndPositionManagerConstructorParams) {
     this._cellSizeGetter = cellSizeGetter
     this._cellCount = cellCount
     this._estimatedCellSize = estimatedCellSize
-    this._maxScrollSize = maxScrollSize
 
     // Cache of size and position data for cells, mapped by cell index.
     // Note that invalid values may exist in this map so only rely on cells up to this._lastMeasuredIndex
@@ -39,45 +29,6 @@ export default class CellSizeAndPositionManager {
     this._estimatedCellSize = estimatedCellSize
   }
 
-  /**
-   * Searches for the cell (index) nearest the specified offset.
-   *
-   * If no exact match is found the next lowest cell index will be returned.
-   * This allows partially visible cells (with offsets just before/above the fold) to be visible.
-   */
-  findNearestCell (offset: number): number {
-    if (isNaN(offset)) {
-      throw Error(`Invalid offset ${offset} specified`)
-    }
-
-    // Our search algorithms find the nearest match at or below the specified offset.
-    // So make sure the offset is at least 0 or no match will be found.
-    offset = Math.max(0, offset)
-
-    // Adjust offset to account for max scroll size
-    offset = this._getScaledOffset(offset)
-
-    const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell()
-    const lastMeasuredIndex = Math.max(0, this._lastMeasuredIndex)
-
-    if (lastMeasuredCellSizeAndPosition.offset >= offset) {
-      // If we've already measured cells within this range just use a binary search as it's faster.
-      return this._binarySearch({
-        high: lastMeasuredIndex,
-        low: 0,
-        offset
-      })
-    } else {
-      // If we haven't yet measured this high, fallback to an exponential search with an inner binary search.
-      // The exponential search avoids pre-computing sizes for the full set of cells as a binary search would.
-      // The overall complexity for this approach is O(log n).
-      return this._exponentialSearch({
-        index: lastMeasuredIndex,
-        offset
-      })
-    }
-  }
-
   getCellCount (): number {
     return this._cellCount
   }
@@ -88,22 +39,6 @@ export default class CellSizeAndPositionManager {
 
   getLastMeasuredIndex (): number {
     return this._lastMeasuredIndex
-  }
-
-  /**
-   * @TODO Add more comments here I'm too tired.
-   */
-  getOffsetAdjustment ({
-    containerSize,
-    offset
-  }: GetOffsetAdjustment): number {
-    const unboundTotalSize = this._getUnboundTotalSize()
-    const totalSize = this.getTotalSize()
-    const maxOffset = totalSize - containerSize
-
-    return unboundTotalSize === totalSize
-      ? 0
-      : Math.round((totalSize - unboundTotalSize) * (offset / maxOffset))
   }
 
   /**
@@ -150,10 +85,14 @@ export default class CellSizeAndPositionManager {
   }
 
   /**
-   * @TODO Add more comments here I'm too tired.
+   * Total size of all cells being measured.
+   * This value will be completedly estimated initially.
+   * As cells as measured the estimate will be updated.
    */
   getTotalSize (): number {
-    return Math.min(this._maxScrollSize, this._getUnboundTotalSize())
+    const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell()
+
+    return lastMeasuredCellSizeAndPosition.offset + lastMeasuredCellSizeAndPosition.size + (this._cellCount - this._lastMeasuredIndex - 1) * this._estimatedCellSize
   }
 
   getVisibleCellRange ({
@@ -166,19 +105,15 @@ export default class CellSizeAndPositionManager {
       return {}
     }
 
-    const start = this.findNearestCell(offset)
-
-    // Adjust offset to account for max scroll size
-    offset = this._getScaledOffset(offset)
-
-    const bottom = offset + containerSize
+    const maxOffset = offset + containerSize
+    const start = this._findNearestCell(offset)
 
     const datum = this.getSizeAndPositionOfCell(start)
     offset = datum.offset + datum.size
 
     let stop = start
 
-    while (offset < bottom && stop < this._cellCount - 1) {
+    while (offset < maxOffset && stop < this._cellCount - 1) {
       stop++
 
       offset += this.getSizeAndPositionOfCell(stop).size
@@ -246,25 +181,40 @@ export default class CellSizeAndPositionManager {
     })
   }
 
-  _getScaledOffset (offset: number): number {
-    const unboundTotalSize = this._getUnboundTotalSize()
-    const totalSize = this.getTotalSize()
-
-    // @TODO Does this need to subtract container size?
-    return unboundTotalSize === totalSize
-      ? offset
-      : offset * unboundTotalSize / totalSize
-  }
-
   /**
-   * Total size of all cells being measured.
-   * This value will be completedly estimated initially.
-   * As cells as measured the estimate will be updated.
+   * Searches for the cell (index) nearest the specified offset.
+   *
+   * If no exact match is found the next lowest cell index will be returned.
+   * This allows partially visible cells (with offsets just before/above the fold) to be visible.
    */
-  _getUnboundTotalSize (): number {
-    const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell()
+  _findNearestCell (offset: number): number {
+    if (isNaN(offset)) {
+      throw Error(`Invalid offset ${offset} specified`)
+    }
 
-    return lastMeasuredCellSizeAndPosition.offset + lastMeasuredCellSizeAndPosition.size + (this._cellCount - this._lastMeasuredIndex - 1) * this._estimatedCellSize
+    // Our search algorithms find the nearest match at or below the specified offset.
+    // So make sure the offset is at least 0 or no match will be found.
+    offset = Math.max(0, offset)
+
+    const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell()
+    const lastMeasuredIndex = Math.max(0, this._lastMeasuredIndex)
+
+    if (lastMeasuredCellSizeAndPosition.offset >= offset) {
+      // If we've already measured cells within this range just use a binary search as it's faster.
+      return this._binarySearch({
+        high: lastMeasuredIndex,
+        low: 0,
+        offset
+      })
+    } else {
+      // If we haven't yet measured this high, fallback to an exponential search with an inner binary search.
+      // The exponential search avoids pre-computing sizes for the full set of cells as a binary search would.
+      // The overall complexity for this approach is O(log n).
+      return this._exponentialSearch({
+        index: lastMeasuredIndex,
+        offset
+      })
+    }
   }
 }
 
@@ -277,11 +227,6 @@ type CellSizeAndPositionManagerConstructorParams = {
 type ConfigureParams = {
   cellCount: number,
   estimatedCellSize: number
-};
-
-type GetOffsetAdjustment = {
-  containerSize: number,
-  offset: number
 };
 
 type GetVisibleCellRangeParams = {

@@ -39,35 +39,35 @@ describe('CellSizeAndPositionManager', () => {
   describe('findNearestCell', () => {
     it('should error if given NaN', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(() => cellSizeAndPositionManager.findNearestCell(NaN)).toThrow()
+      expect(() => cellSizeAndPositionManager._findNearestCell(NaN)).toThrow()
     })
 
     it('should gracefully handle offets outisde of bounds (to account for elastic scrolling)', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager.findNearestCell(-100)).toEqual(0)
-      expect(cellSizeAndPositionManager.findNearestCell(1234567890)).toEqual(99)
+      expect(cellSizeAndPositionManager._findNearestCell(-100)).toEqual(0)
+      expect(cellSizeAndPositionManager._findNearestCell(1234567890)).toEqual(99)
     })
 
     it('should find the first cell', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager.findNearestCell(0)).toEqual(0)
-      expect(cellSizeAndPositionManager.findNearestCell(9)).toEqual(0)
+      expect(cellSizeAndPositionManager._findNearestCell(0)).toEqual(0)
+      expect(cellSizeAndPositionManager._findNearestCell(9)).toEqual(0)
     })
 
     it('should find the last cell', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager.findNearestCell(990)).toEqual(99)
-      expect(cellSizeAndPositionManager.findNearestCell(991)).toEqual(99)
+      expect(cellSizeAndPositionManager._findNearestCell(990)).toEqual(99)
+      expect(cellSizeAndPositionManager._findNearestCell(991)).toEqual(99)
     })
 
     it('should find the a cell that exactly matches a specified offset in the middle', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager.findNearestCell(100)).toEqual(10)
+      expect(cellSizeAndPositionManager._findNearestCell(100)).toEqual(10)
     })
 
     it('should find the cell closest to (but before) the specified offset in the middle', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager.findNearestCell(101)).toEqual(10)
+      expect(cellSizeAndPositionManager._findNearestCell(101)).toEqual(10)
     })
   })
 
