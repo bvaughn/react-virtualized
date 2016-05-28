@@ -1,4 +1,5 @@
 /** @flow */
+import { MAX_SIZE } from './MaxOffsetHelper'
 
 /**
  * Just-in-time calculates and caches size and position information for a collection of cells.
