@@ -5,12 +5,11 @@ import CellSizeAndPositionManager from './CellSizeAndPositionManager'
  * Browsers have scroll offset limitations.
  * After a certain position, the browser won't allow the user to scroll further (even via JavaScript scroll offset adjustments).
  * This util picks a lower ceiling for max size and artificially adjusts positions within to make it transparent for users.
- * @TODO Pick a less arbitrary ceiling that's safe for all browsers?
  */
-export const DEFAULT_MAX_SCROLL_SIZE = 1000000
+export const DEFAULT_MAX_SCROLL_SIZE = 1000 // @TODO 1000000 // @TODO Pick a less arbitrary ceiling that's safe for all browsers?
 
 /**
- * Just-in-time calculates and caches size and position information for a collection of cells.
+ * @TODO
  */
 export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositionManager {
   constructor ({
@@ -23,12 +22,12 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
   }
 
   /**
-   * @TODO Add more comments here I'm too tired.
+   * @TODO
    */
   getOffsetAdjustment ({
     containerSize,
     offset
-  }: GetOffsetAdjustment): number {
+  }: ContainerSizeAndOffset): number {
     const unboundTotalSize = super.getTotalSize()
     const totalSize = this.getTotalSize()
     const maxOffset = totalSize - containerSize
@@ -39,18 +38,23 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
   }
 
   /**
-   * @TODO Add more comments here I'm too tired.
+   * @TODO
    */
   getTotalSize (): number {
     return Math.min(this._maxScrollSize, super.getTotalSize())
   }
 
+  /**
+   * @TODO
+   */
   getVisibleCellRange ({
     containerSize,
     offset
-  }: GetVisibleCellRangeParams): VisibleCellRange {
-console.log(`getVisibleCellRange(): ${offset} ~> ${this._offsetToScaledOffset(offset)}`)
-    offset = this._offsetToScaledOffset(offset)
+  }: ContainerSizeAndOffset): VisibleCellRange {
+    offset = this._getScaledOffset({
+      containerSize,
+      offset
+    })
 
     return super.getVisibleCellRange({
       containerSize,
@@ -58,40 +62,26 @@ console.log(`getVisibleCellRange(): ${offset} ~> ${this._offsetToScaledOffset(of
     })
   }
 
-  _offsetToScaledOffset (offset: number): number {
+  _getScaledOffset ({
+    containerSize,
+    offset
+  }: ContainerSizeAndOffset): number {
     const unboundTotalSize = super.getTotalSize()
     const totalSize = this.getTotalSize()
 
-    // @TODO Does this need to subtract container size?
-    return unboundTotalSize === totalSize
-      ? offset
-      : offset * unboundTotalSize / totalSize
-  }
+    if (unboundTotalSize === totalSize) {
+      return offset
+    } else {
+      const scrolledFraction = offset / (totalSize - containerSize)
 
-  _scaledOffsetToOffset (scaledOffset: number): number {
-    const unboundTotalSize = super.getTotalSize()
-    const totalSize = this.getTotalSize()
-
-    // @TODO Does this need to subtract container size?
-    return unboundTotalSize === totalSize
-      ? scaledOffset
-      : scaledOffset * totalSize / unboundTotalSize
+      return (offset * unboundTotalSize / totalSize) + (scrolledFraction * containerSize)
+    }
   }
 }
 
-type GetOffsetAdjustment = {
+type ContainerSizeAndOffset = {
   containerSize: number,
   offset: number
-};
-
-type GetVisibleCellRangeParams = {
-  containerSize: number,
-  offset: number
-};
-
-type SizeAndPositionData = {
-  offset: number,
-  size: number
 };
 
 type VisibleCellRange = {
