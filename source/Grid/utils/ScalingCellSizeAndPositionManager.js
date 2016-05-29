@@ -6,7 +6,7 @@ import CellSizeAndPositionManager from './CellSizeAndPositionManager'
  * After a certain position, the browser won't allow the user to scroll further (even via JavaScript scroll offset adjustments).
  * This util picks a lower ceiling for max size and artificially adjusts positions within to make it transparent for users.
  */
-export const DEFAULT_MAX_SCROLL_SIZE = 1000000 // @TODO Pick a less arbitrary ceiling that's safe for all browsers?
+export const DEFAULT_MAX_SCROLL_SIZE = 100000 // @TODO Pick a less arbitrary ceiling that's safe for all browsers?
 
 /**
  * @TODO
@@ -25,13 +25,17 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     containerSize,
     offset
   }: ContainerSizeAndOffset): number {
-    const unboundTotalSize = super.getTotalSize()
-    const totalSize = this.getTotalSize()
-    const maxOffset = totalSize - containerSize
+    const totalSize = super.getTotalSize()
+    const safeTotalSize = this.getTotalSize()
+    const scrolledFraction = this._getOffsetFraction({
+      containerSize,
+      offset,
+      safeTotalSize
+    })
 
-    return unboundTotalSize === totalSize
+    return totalSize === safeTotalSize
       ? 0
-      : (totalSize - unboundTotalSize) * (offset / maxOffset)
+      : scrolledFraction * (safeTotalSize - totalSize)
   }
 
   getTotalSize (): number {
@@ -62,19 +66,33 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     })
   }
 
+  _getOffsetFraction ({
+    containerSize,
+    offset,
+    safeTotalSize
+  }) {
+    return safeTotalSize <= containerSize
+      ? 0
+      : offset / (safeTotalSize - containerSize)
+  }
+
   _getScaledOffset ({
     containerSize,
     offset
   }: ContainerSizeAndOffset): number {
-    const unboundTotalSize = super.getTotalSize()
-    const totalSize = this.getTotalSize()
+    const totalSize = super.getTotalSize()
+    const safeTotalSize = this.getTotalSize()
 
-    if (unboundTotalSize === totalSize) {
+    if (totalSize === safeTotalSize) {
       return offset
     } else {
-      const scrolledFraction = offset / (totalSize - containerSize)
+      const scrolledFraction = this._getOffsetFraction({
+        containerSize,
+        offset,
+        safeTotalSize
+      })
 
-      return (offset * unboundTotalSize / totalSize) + (scrolledFraction * containerSize)
+      return (offset * totalSize / safeTotalSize) + (scrolledFraction * containerSize)
     }
   }
 
@@ -82,15 +100,19 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     containerSize,
     offset
   }: ContainerSizeAndOffset): number {
-    const unboundTotalSize = super.getTotalSize()
-    const totalSize = this.getTotalSize()
+    const totalSize = super.getTotalSize()
+    const safeTotalSize = this.getTotalSize()
 
-    if (unboundTotalSize === totalSize) {
+    if (totalSize === safeTotalSize) {
       return offset
     } else {
-      const scrolledFraction = offset / (unboundTotalSize - containerSize)
+      const scrolledFraction = this._getOffsetFraction({
+        containerSize,
+        offset,
+        safeTotalSize
+      })
 
-      return scrolledFraction * (totalSize - containerSize)
+      return scrolledFraction * (safeTotalSize - containerSize)
     }
   }
 }
