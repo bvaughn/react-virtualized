@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+##### 7.3.0
+`Grid` (and its HOCs `FlexTable` and `VirtualScroll`) now support larger heights and widths than browsers support natively.
+For example, the current version of Chrome will not allow users to scroll pass ~33.5M pixel offset.
+To work around this limitation, `Grid` increases the density of cells, shifting them as a ratio of what the full scrollable size would be to a browser-safe size.
+This should be more or less transparent to users, although in extreme cases it can lead to _really sensitive_ scroll responsiveness.
+
 ##### 7.2.0
 Added new method- `measureAllCells`- to `Grid`, `FlexTable`, and `VirtualScroll` to force-measure all cells.
 This supports special use-cases where deferred measuring is not desired.

@@ -67,17 +67,19 @@ The general shape of your range renderer function should look something like the
 
 ```js
 function cellRangeRenderer ({
-  cellCache,
-  cellRenderer,
-  columnSizeAndPositionManager,
-  columnStartIndex,
-  columnStopIndex,
-  isScrolling,
-  rowSizeAndPositionManager,
-  rowStartIndex,
-  rowStopIndex,
+  cellCache: Object,
+  cellRenderer: Function,
+  columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
+  columnStartIndex: number,
+  columnStopIndex: number,
+  horizontalOffsetAdjustment: number,
+  isScrolling: boolean,
+  rowSizeAndPositionManager: ScalingCellSizeAndPositionManager,
+  rowStartIndex: number,
+  rowStopIndex: number,
   scrollLeft: number,
-  scrollTop: number
+  scrollTop: number,
+  verticalOffsetAdjustment: number
 }) {
   const renderedCells = []
 
@@ -89,8 +91,18 @@ function cellRangeRenderer ({
       // This contains :offset (left) and :size (width) information for the cell
       let columnDatum = columnSizeAndPositionManager.getSizeAndPositionOfCell(columnIndex)
 
-      // Now render your cell and additional UI as you see fit.
+      // Be sure to adjust cell position in case the total set of cells is too large to be supported by the browser natively.
+      // In this case, Grid will shift cells as a user scrolls to increase cell density.
+      let left = columnDatum.offset + horizontalOffsetAdjustment
+      let top = rowDatum.offset + verticalOffsetAdjustment
+
+      // The rest of the information you need to render the cell are contained in the data.
       // Be sure to provide unique :key attributes.
+      let key = `${rowIndex}-${columnIndex}`
+      let height = rowDatum.size
+      let width = columnDatum.size
+
+      // Now render your cell and additional UI as you see fit.
       // Add all rendered children to the :renderedCells Array.
     }
   }
