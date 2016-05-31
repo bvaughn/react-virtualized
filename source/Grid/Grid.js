@@ -2,11 +2,10 @@
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
-import CellSizeAndPositionManager from './utils/CellSizeAndPositionManager'
+import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getOverscanIndices from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
-import getUpdatedOffsetForIndex from '../utils/getUpdatedOffsetForIndex'
 import raf from 'raf'
 import shallowCompare from 'react-addons-shallow-compare'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
@@ -201,12 +200,12 @@ export default class Grid extends Component {
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth)
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight)
 
-    this._columnSizeAndPositionManager = new CellSizeAndPositionManager({
+    this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.columnCount,
       cellSizeGetter: (index) => this._columnWidthGetter(index),
       estimatedCellSize: this._getEstimatedColumnSize(props)
     })
-    this._rowSizeAndPositionManager = new CellSizeAndPositionManager({
+    this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.rowCount,
       cellSizeGetter: (index) => this._rowHeightGetter(index),
       estimatedCellSize: this._getEstimatedRowSize(props)
@@ -450,8 +449,16 @@ export default class Grid extends Component {
         containerSize: width,
         offset: scrollLeft
       })
-
       const visibleRowIndices = this._rowSizeAndPositionManager.getVisibleCellRange({
+        containerSize: height,
+        offset: scrollTop
+      })
+
+      const horizontalOffsetAdjustment = this._columnSizeAndPositionManager.getOffsetAdjustment({
+        containerSize: width,
+        offset: scrollLeft
+      })
+      const verticalOffsetAdjustment = this._rowSizeAndPositionManager.getOffsetAdjustment({
         containerSize: height,
         offset: scrollTop
       })
@@ -488,12 +495,14 @@ export default class Grid extends Component {
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
+        horizontalOffsetAdjustment,
         isScrolling,
         rowSizeAndPositionManager: this._rowSizeAndPositionManager,
         rowStartIndex: this._rowStartIndex,
         rowStopIndex: this._rowStopIndex,
         scrollLeft,
-        scrollTop
+        scrollTop,
+        verticalOffsetAdjustment
       })
     }
 
@@ -684,15 +693,11 @@ export default class Grid extends Component {
     if (scrollToColumn >= 0 && columnCount > 0) {
       const targetIndex = Math.max(0, Math.min(columnCount - 1, scrollToColumn))
 
-      const columnMetadatum = this._columnSizeAndPositionManager.getSizeAndPositionOfCell(targetIndex)
-
-      const calculatedScrollLeft = getUpdatedOffsetForIndex({
+      const calculatedScrollLeft = this._columnSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
-        cellOffset: columnMetadatum.offset,
-        cellSize: columnMetadatum.size,
         containerSize: width,
         currentOffset: scrollLeft,
-        targetIndex: scrollToColumn
+        targetIndex
       })
 
       if (scrollLeft !== calculatedScrollLeft) {
@@ -710,15 +715,11 @@ export default class Grid extends Component {
     if (scrollToRow >= 0 && rowCount > 0) {
       const targetIndex = Math.max(0, Math.min(rowCount - 1, scrollToRow))
 
-      const rowMetadatum = this._rowSizeAndPositionManager.getSizeAndPositionOfCell(targetIndex)
-
-      const calculatedScrollTop = getUpdatedOffsetForIndex({
+      const calculatedScrollTop = this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
-        cellOffset: rowMetadatum.offset,
-        cellSize: rowMetadatum.size,
         containerSize: height,
         currentOffset: scrollTop,
-        targetIndex: scrollToRow
+        targetIndex
       })
 
       if (scrollTop !== calculatedScrollTop) {

@@ -12,12 +12,14 @@ export default function defaultCellRangeRenderer ({
   columnSizeAndPositionManager,
   columnStartIndex,
   columnStopIndex,
+  horizontalOffsetAdjustment,
   isScrolling,
   rowSizeAndPositionManager,
   rowStartIndex,
   rowStopIndex,
   scrollLeft,
-  scrollTop
+  scrollTop,
+  verticalOffsetAdjustment
 }: DefaultCellRangeRendererParams) {
   const renderedCells = []
 
@@ -62,8 +64,8 @@ export default function defaultCellRangeRenderer ({
           className='Grid__cell'
           style={{
             height: rowDatum.size,
-            left: columnDatum.offset,
-            top: rowDatum.offset,
+            left: columnDatum.offset + horizontalOffsetAdjustment,
+            top: rowDatum.offset + verticalOffsetAdjustment,
             width: columnDatum.size
           }}
         >
