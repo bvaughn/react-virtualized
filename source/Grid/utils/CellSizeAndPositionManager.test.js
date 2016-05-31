@@ -1,3 +1,4 @@
+/** @flow */
 import CellSizeAndPositionManager from './CellSizeAndPositionManager'
 
 describe('CellSizeAndPositionManager', () => {

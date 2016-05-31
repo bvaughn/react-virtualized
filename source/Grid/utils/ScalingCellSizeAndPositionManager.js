@@ -6,10 +6,10 @@ import CellSizeAndPositionManager from './CellSizeAndPositionManager'
  * After a certain position, the browser won't allow the user to scroll further (even via JavaScript scroll offset adjustments).
  * This util picks a lower ceiling for max size and artificially adjusts positions within to make it transparent for users.
  */
-export const DEFAULT_MAX_SCROLL_SIZE = 100000 // @TODO Pick a less arbitrary ceiling that's safe for all browsers?
+export const DEFAULT_MAX_SCROLL_SIZE = 1000000 // @TODO Pick a less arbitrary ceiling that's safe for all browsers?
 
 /**
- * @TODO
+ * Extends CellSizeAndPositionManager and adds scaling behavior for lists that are too large to fit within a browser's native limits.
  */
 export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositionManager {
   constructor ({
@@ -21,41 +21,56 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     this._maxScrollSize = maxScrollSize
   }
 
+  /**
+   * Number of pixels a cell at the given position (offset) should be shifted in order to fit within the scaled container.
+   * The offset passed to this function is scalled (safe) as well.
+   */
   getOffsetAdjustment ({
     containerSize,
-    offset
+    offset // safe
   }: ContainerSizeAndOffset): number {
     const totalSize = super.getTotalSize()
     const safeTotalSize = this.getTotalSize()
-    const scrolledFraction = this._getOffsetFraction({
+    const offsetPercentage = this._getOffsetPercentage({
       containerSize,
       offset,
-      safeTotalSize
+      totalSize: safeTotalSize
     })
 
-    return totalSize === safeTotalSize
-      ? 0
-      : scrolledFraction * (safeTotalSize - totalSize)
+    return Math.round(offsetPercentage * (safeTotalSize - totalSize))
   }
 
+  /** See CellSizeAndPositionManager#getTotalSize */
   getTotalSize (): number {
     return Math.min(this._maxScrollSize, super.getTotalSize())
   }
 
-  getUpdatedOffsetForIndex (params) {
-    const offset = super.getUpdatedOffsetForIndex(params)
+  /** See CellSizeAndPositionManager#getUpdatedOffsetForIndex */
+  getUpdatedOffsetForIndex ({
+    align = 'auto',
+    containerSize,
+    currentOffset, // safe
+    targetIndex
+  }) {
+    currentOffset = this._safeOffsetToOffset({
+      containerSize,
+      offset: currentOffset
+    })
 
-    return this._getUnscaledOffset({
-      containerSize: params.containerSize,
-      offset
+    return super.getUpdatedOffsetForIndex({
+      align,
+      containerSize,
+      currentOffset,
+      targetIndex
     })
   }
 
+  /** See CellSizeAndPositionManager#getVisibleCellRange */
   getVisibleCellRange ({
     containerSize,
-    offset
+    offset // safe
   }: ContainerSizeAndOffset): VisibleCellRange {
-    offset = this._getScaledOffset({
+    offset = this._safeOffsetToOffset({
       containerSize,
       offset
     })
@@ -66,19 +81,19 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     })
   }
 
-  _getOffsetFraction ({
+  _getOffsetPercentage ({
     containerSize,
-    offset,
-    safeTotalSize
+    offset, // safe
+    totalSize
   }) {
-    return safeTotalSize <= containerSize
+    return totalSize <= containerSize
       ? 0
-      : offset / (safeTotalSize - containerSize)
+      : offset / (totalSize - containerSize)
   }
 
-  _getScaledOffset ({
+  _offsetToSafeOffset ({
     containerSize,
-    offset
+    offset // unsafe
   }: ContainerSizeAndOffset): number {
     const totalSize = super.getTotalSize()
     const safeTotalSize = this.getTotalSize()
@@ -86,19 +101,19 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     if (totalSize === safeTotalSize) {
       return offset
     } else {
-      const scrolledFraction = this._getOffsetFraction({
+      const offsetPercentage = this._getOffsetPercentage({
         containerSize,
         offset,
-        safeTotalSize
+        totalSize
       })
 
-      return (offset * totalSize / safeTotalSize) + (scrolledFraction * containerSize)
+      return Math.round(offsetPercentage * (safeTotalSize - containerSize))
     }
   }
 
-  _getUnscaledOffset ({
+  _safeOffsetToOffset ({
     containerSize,
-    offset
+    offset // safe
   }: ContainerSizeAndOffset): number {
     const totalSize = super.getTotalSize()
     const safeTotalSize = this.getTotalSize()
@@ -106,13 +121,13 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     if (totalSize === safeTotalSize) {
       return offset
     } else {
-      const scrolledFraction = this._getOffsetFraction({
+      const offsetPercentage = this._getOffsetPercentage({
         containerSize,
         offset,
-        safeTotalSize
+        totalSize: safeTotalSize
       })
 
-      return scrolledFraction * (safeTotalSize - containerSize)
+      return Math.round(offsetPercentage * (totalSize - containerSize))
     }
   }
 }
