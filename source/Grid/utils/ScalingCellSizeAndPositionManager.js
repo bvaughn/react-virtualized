@@ -57,11 +57,16 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
       offset: currentOffset
     })
 
-    return super.getUpdatedOffsetForIndex({
+    const offset = super.getUpdatedOffsetForIndex({
       align,
       containerSize,
       currentOffset,
       targetIndex
+    })
+
+    return this._offsetToSafeOffset({
+      containerSize,
+      offset
     })
   }
 

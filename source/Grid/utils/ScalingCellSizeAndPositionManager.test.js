@@ -95,8 +95,8 @@ describe('ScalingCellSizeAndPositionManager', () => {
     it('should scroll to a cell before the current range', () => {
       const data = [
         { targetIndex: 0, expectedOffset: 0 },
-        { targetIndex: 1, expectedOffset: 10 },
-        { targetIndex: 2, expectedOffset: 20 }
+        { targetIndex: 1, expectedOffset: 3 }, // (unsafe: 10)
+        { targetIndex: 2, expectedOffset: 6 } // (unsafe: 20)
       ]
       const instance = init()
       data.forEach((datum) => {
@@ -110,14 +110,14 @@ describe('ScalingCellSizeAndPositionManager', () => {
 
     it('should scroll to a cell after the current range', () => {
       const data = [
-        { targetIndex: 7, expectedOffset: 50 },
-        { targetIndex: 9, expectedOffset: 70 }
+        { targetIndex: 7, expectedOffset: 14 }, // (unsafe: 50)
+        { targetIndex: 9, expectedOffset: 20 } // (unsafe: 70)
       ]
       const instance = init()
       data.forEach((datum) => {
         expect(instance.getUpdatedOffsetForIndex({
           containerSize: 30,
-          currentOffset: 10, // (unsafe: 35)
+          currentOffset: 0,
           targetIndex: datum.targetIndex
         })).toBe(datum.expectedOffset)
       })
@@ -129,7 +129,7 @@ describe('ScalingCellSizeAndPositionManager', () => {
         containerSize: 30,
         currentOffset: 10, // (unsafe: 35)
         targetIndex: 4
-      })).toBe(35)
+      })).toBe(10)
     })
   })
 
