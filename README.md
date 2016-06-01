@@ -8,8 +8,8 @@
 [![Codecov badge](https://img.shields.io/codecov/c/github/bvaughn/react-virtualized/master.svg)](https://codecov.io/github/bvaughn/react-virtualized)
 [![Gitter](https://badges.gitter.im/bvaughn/react-virtualized.svg)](https://gitter.im/bvaughn/react-virtualized?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-##### Become a backer and show your support!
-Learn more at [opencollective.com/react-virtualized](https://opencollective.com/react-virtualized).
+#### Become a backer and show your support!
+Learn more at [opencollective.com/react-virtualized](https://opencollective.com/react-virtualized)
 
 Getting started
 ---------------
