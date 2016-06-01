@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.3.1
+Increased the safe-scale size from 1,000,000 to 10,000,000 to make for better UX.
+
 ##### 7.3.0
 `Grid` (and its HOCs `FlexTable` and `VirtualScroll`) now support larger heights and widths than browsers support natively.
 For example, the current version of Chrome will not allow users to scroll pass ~33.5M pixel offset.

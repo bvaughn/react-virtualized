@@ -2,11 +2,11 @@
 import CellSizeAndPositionManager from './CellSizeAndPositionManager'
 
 /**
- * Browsers have scroll offset limitations.
+ * Browsers have scroll offset limitations (eg Chrome stops scrolling at ~33.5M pixels).
  * After a certain position, the browser won't allow the user to scroll further (even via JavaScript scroll offset adjustments).
  * This util picks a lower ceiling for max size and artificially adjusts positions within to make it transparent for users.
  */
-export const DEFAULT_MAX_SCROLL_SIZE = 1000000 // @TODO Pick a less arbitrary ceiling that's safe for all browsers?
+export const DEFAULT_MAX_SCROLL_SIZE = 10000000
 
 /**
  * Extends CellSizeAndPositionManager and adds scaling behavior for lists that are too large to fit within a browser's native limits.
