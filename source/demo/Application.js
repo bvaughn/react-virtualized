@@ -1,5 +1,6 @@
 import ArrowKeyStepperExample from '../ArrowKeyStepper/ArrowKeyStepper.example'
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
+import WindowScrollerExample from '../WindowScroller/WindowScroller.example'
 import CellMeasurerExample from '../CellMeasurer/CellMeasurer.example'
 import CollectionExample from '../Collection/Collection.example'
 import ColumnSizerExample from '../ColumnSizer/ColumnSizer.example'
@@ -19,7 +20,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 import '../../styles.css'
 
 const COMPONENTS = ['Collection', 'Grid', 'FlexTable', 'VirtualScroll']
-const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync']
+const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync', 'WindowScroller']
 
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
@@ -32,7 +33,7 @@ class Application extends Component {
     const matches = window.location.search.match('component=(.+)')
     const activeComponent = matches && (COMPONENTS.includes(matches[1]) || HIGH_ORDER_COMPONENTS.includes(matches[1]))
       ? matches[1]
-      : 'VirtualScroll'
+      : 'WindowScroller'
 
     this.state = {
       activeComponent
@@ -159,6 +160,12 @@ class Application extends Component {
           }
           {activeComponent === 'VirtualScroll' &&
             <VirtualScrollExample
+              className={styles.column}
+              list={list}
+            />
+          }
+          {activeComponent === 'WindowScroller' &&
+            <WindowScrollerExample
               className={styles.column}
               list={list}
             />
