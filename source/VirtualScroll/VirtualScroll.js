@@ -109,6 +109,7 @@ export default class VirtualScroll extends Component {
       rowHeight,
       rowRenderer,
       overscanRowCount,
+      removeScrollContainer,
       rowCount,
       scrollToAlignment,
       scrollToIndex,
@@ -141,6 +142,7 @@ export default class VirtualScroll extends Component {
           stopIndex: rowStopIndex
         })}
         overscanRowCount={overscanRowCount}
+        removeScrollContainer={removeScrollContainer}
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollToAlignment={scrollToAlignment}

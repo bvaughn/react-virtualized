@@ -61,7 +61,7 @@ export default class AutoSizerExample extends Component {
             rowHeight={30}
             rowCount={list.size}
           >
-            {({ height, scrollTop, overrideStyle }) => (
+            {({ height, scrollTop }) => (
               <VirtualScroll
                 className={styles.VirtualScroll}
                 height={height}
@@ -69,7 +69,7 @@ export default class AutoSizerExample extends Component {
                 rowHeight={30}
                 rowRenderer={this._rowRenderer}
                 scrollTop={scrollTop}
-                style={overrideStyle}
+                removeScrollContainer
                 width={460}
               />
             )}

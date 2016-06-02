@@ -18,12 +18,10 @@ export default class WindowScroller extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      scrollTop: window.scrollY,
-      top: Math.max(0, 401.5 - window.scrollY)
+      scrollTop: window.scrollY
     }
 
     this._onScroll = this._onScroll.bind(this)
-    this._windowHeight = props.rowCount * props.rowHeight + 401.5
   }
 
   componentDidMount () {
@@ -56,18 +54,10 @@ export default class WindowScroller extends Component {
     const { scrollTop, top } = this.state
 
     return (
-      <div
-        onScroll={this._onScroll}
-        style={{ height: this._windowHeight }}
-      >
+      <div onScroll={this._onScroll}>
         {children({
           height: window.innerHeight,
-          scrollTop: scrollTop,
-          overrideStyle: {
-            overflow: 'hidden',
-            position: 'fixed',
-            top
-          }
+          scrollTop: scrollTop
         })}
       </div>
     )
@@ -78,10 +68,6 @@ export default class WindowScroller extends Component {
   }
 
   _onScroll (event) {
-    const scrollTop = window.scrollY < this.state.top ? 0 : window.scrollY - this.state.top - 380
-    const top = Math.max(0, 401.5 - window.scrollY)
-    // this._setNextState({ scrollTop, top })
-    console.log(scrollTop, top);
-    this.setState({ scrollTop, top })
+    this.setState({ scrollTop: window.scrollY - this._positionFromTop })
   }
 }
