@@ -10,6 +10,8 @@
 [![OpenCollective](https://opencollective.com/react-virtualized/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/react-virtualized/sponsors/badge.svg)](#sponsors)
 
+Interested in sponsoring react-virtualized development? [Learn more](##open-collective).
+
 Getting started
 ---------------
 
