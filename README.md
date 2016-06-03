@@ -164,7 +164,6 @@ Use [GitHub issues](https://github.com/bvaughn/react-virtualized/issues) for req
 
 I actively welcome pull requests; learn how to [contribute](https://github.com/bvaughn/react-virtualized/blob/master/CONTRIBUTING.md).
 
-
 Changelog
 ---------
 
