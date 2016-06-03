@@ -275,7 +275,7 @@ export default class Grid extends Component {
    * 1) New scroll-to-cell props have been set
    */
   componentDidUpdate (prevProps, prevState) {
-    const { height, scrollToAlignment, scrollToColumn, scrollToRow, width, removeScrollContainer } = this.props
+    const { height, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
@@ -292,7 +292,6 @@ export default class Grid extends Component {
         this.refs.scrollingContainer.scrollLeft = scrollLeft
       }
       if (
-        !removeScrollContainer &&
         scrollTop >= 0 &&
         scrollTop !== prevState.scrollTop &&
         scrollTop !== this.refs.scrollingContainer.scrollTop
@@ -431,7 +430,7 @@ export default class Grid extends Component {
       noContentRenderer,
       overscanColumnCount,
       overscanRowCount,
-      removeScrollContainer,
+      removeHeightContainer,
       rowCount,
       style,
       width
@@ -510,7 +509,7 @@ export default class Grid extends Component {
 
     const gridStyle = {
       ...style,
-      height,
+      height: removeHeightContainer ? 'auto' : height,
       width
     }
 
@@ -535,28 +534,7 @@ export default class Grid extends Component {
       width > 0
     )
 
-    return removeScrollContainer ? (
-      <div>
-        {childrenToDisplay.length > 0 &&
-          <div
-            className='Grid__innerScrollContainer'
-            style={{
-              width: totalColumnsWidth,
-              height: totalRowsHeight,
-              maxWidth: totalColumnsWidth,
-              maxHeight: totalRowsHeight,
-              pointerEvents: isScrolling ? 'none' : 'auto',
-              position: 'relative'
-            }}
-          >
-            {childrenToDisplay}
-          </div>
-        }
-        {showNoContentRenderer &&
-          noContentRenderer()
-        }
-      </div>
-    ) : (
+    return (
       <div
         ref='scrollingContainer'
         aria-label={this.props['aria-label']}
@@ -574,7 +552,8 @@ export default class Grid extends Component {
               height: totalRowsHeight,
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,
-              pointerEvents: isScrolling ? 'none' : 'auto'
+              pointerEvents: isScrolling ? 'none' : 'auto',
+              position: 'relative'
             }}
           >
             {childrenToDisplay}

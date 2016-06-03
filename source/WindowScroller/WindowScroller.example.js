@@ -57,10 +57,7 @@ export default class AutoSizerExample extends Component {
         }
 
         <div className={styles.AutoSizerWrapper}>
-          <WindowScroller
-            rowHeight={30}
-            rowCount={list.size}
-          >
+          <WindowScroller>
             {({ height, scrollTop }) => (
               <VirtualScroll
                 className={styles.VirtualScroll}
@@ -69,7 +66,7 @@ export default class AutoSizerExample extends Component {
                 rowHeight={30}
                 rowRenderer={this._rowRenderer}
                 scrollTop={scrollTop}
-                removeScrollContainer
+                removeHeightContainer
                 width={460}
               />
             )}
