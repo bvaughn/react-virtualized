@@ -149,9 +149,7 @@ export default class CellMeasurer extends Component {
           : container
       )
     } else {
-      const node = ReactDOM.findDOMNode(this)
-
-      return node.ownerDocument.body
+      return document.body
     }
   }
 
@@ -167,6 +165,9 @@ export default class CellMeasurer extends Component {
       columnIndex,
       rowIndex
     })
+
+    // Handle edge case where this method is called before the CellMeasurer has completed its initial render (and mounted).
+    this._renderAndMount()
 
     this._div.innerHTML = ReactDOMServer.renderToString(rendered)
 
