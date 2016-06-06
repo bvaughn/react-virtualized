@@ -36,19 +36,6 @@ export default class AutoSizerExample extends Component {
           docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/WindowScroller.md'
         />
 
-        <ContentBoxParagraph>
-          {/*<label className={styles.checkboxLabel}>
-            <input
-              aria-label='Hide description (to show resize)?'
-              className={styles.checkbox}
-              type='checkbox'
-              value={hideDescription}
-              onChange={event => this.setState({ hideDescription: event.target.checked })}
-            />
-            Hide description (to show resize)?
-          </label>*/}
-        </ContentBoxParagraph>
-
         {!hideDescription &&
           <ContentBoxParagraph>
             This component decorates <code>VirtualScroll</code>, <code>FlexTable</code>, or any other component

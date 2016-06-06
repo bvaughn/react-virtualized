@@ -11,14 +11,15 @@ export default class WindowScroller extends Component {
      * This function should implement the following signature:
      *
      */
-    children: PropTypes.func.isRequired,
+    children: PropTypes.func.isRequired
 
   }
 
   constructor (props) {
     super(props)
     this.state = {
-      scrollTop: window.scrollY
+      scrollTop: 0,
+      height: 0
     }
 
     this._onScroll = this._onScroll.bind(this)
@@ -26,6 +27,7 @@ export default class WindowScroller extends Component {
 
   componentDidMount () {
     this._positionFromTop = ReactDOM.findDOMNode(this).getBoundingClientRect().top
+    this.setState({ height: window.innerHeight })
     window.addEventListener('scroll', this._onScroll.bind(this))
   }
 
@@ -50,14 +52,14 @@ export default class WindowScroller extends Component {
   }
 
   render () {
-    const { children, rowCount, rowHeight } = this.props
-    const { scrollTop, top } = this.state
+    const { children } = this.props
+    const { scrollTop, height } = this.state
 
     return (
       <div onScroll={this._onScroll}>
         {children({
-          height: window.innerHeight,
-          scrollTop: scrollTop
+          height,
+          scrollTop
         })}
       </div>
     )
@@ -68,6 +70,6 @@ export default class WindowScroller extends Component {
   }
 
   _onScroll (event) {
-    this.setState({ scrollTop: Math.max(0, window.scrollY - this._positionFromTop) })
+    this.setState({ scrollTop: Math.max(0, window.scrollY - Math.max(0, this._positionFromTop)) })
   }
 }
