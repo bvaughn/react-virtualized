@@ -70,6 +70,8 @@ export default class WindowScroller extends Component {
   }
 
   _onScroll (event) {
-    this.setState({ scrollTop: Math.max(0, window.scrollY - Math.max(0, this._positionFromTop)) })
+    this._setNextState({
+      scrollTop: Math.max(0, window.scrollY - Math.max(0, this._positionFromTop))
+    })
   }
 }
