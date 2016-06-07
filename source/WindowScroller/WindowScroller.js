@@ -28,11 +28,11 @@ export default class WindowScroller extends Component {
   componentDidMount () {
     this._positionFromTop = ReactDOM.findDOMNode(this).getBoundingClientRect().top
     this.setState({ height: window.innerHeight })
-    window.addEventListener('scroll', this._onScroll.bind(this))
+    window.addEventListener('scroll', this._onScroll, false)
   }
 
   componentWillUnmount () {
-    window.removeEventListener('scroll', this._onScroll)
+    window.removeEventListener('scroll', this._onScroll, false)
   }
 
   /**
@@ -56,7 +56,7 @@ export default class WindowScroller extends Component {
     const { scrollTop, height } = this.state
 
     return (
-      <div onScroll={this._onScroll}>
+      <div>
         {children({
           height,
           scrollTop
