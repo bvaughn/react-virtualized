@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.3.2
+Edge-case bug fix for `CellMeasurer` in the event that its `getRowHeight` or `getColumnWidth` method gets called before the initial render completes.
+
 ##### 7.3.1
 Increased the safe-scale size from 1,000,000 to 10,000,000 to make for better UX.
 
