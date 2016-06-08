@@ -122,6 +122,12 @@ export default class Grid extends Component {
     overscanRowCount: PropTypes.number.isRequired,
 
     /**
+     * Removes fixed height from the scrollingContainer so that the total height
+     * of rows can stretch the window. Intended for use with WindowScroller
+     */
+    removeHeightContainer: PropTypes.bool,
+
+    /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * Should implement the following interface: ({ index: number }): number
      */

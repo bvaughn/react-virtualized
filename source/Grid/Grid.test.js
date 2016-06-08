@@ -41,6 +41,7 @@ describe('Grid', () => {
     onScroll,
     overscanColumnCount = 0,
     overscanRowCount = 0,
+    removeHeightContainer = false,
     rowHeight = 20,
     rowCount = NUM_ROWS,
     scrollLeft,
@@ -66,6 +67,7 @@ describe('Grid', () => {
         onScroll={onScroll}
         overscanColumnCount={overscanColumnCount}
         overscanRowCount={overscanRowCount}
+        removeHeightContainer={removeHeightContainer}
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollLeft={scrollLeft}
@@ -546,7 +548,7 @@ describe('Grid', () => {
     })
   })
 
-  describe('styles and classeNames', () => {
+  describe('styles and classNames', () => {
     it('should use the expected global CSS classNames', () => {
       const rendered = findDOMNode(render(getMarkup()))
       expect(rendered.className).toEqual('Grid')
@@ -989,6 +991,36 @@ describe('Grid', () => {
       // And then only the rows necessary to fill the visible region.
       expect(highestColumnIndex).toEqual(9)
       expect(highestRowIndex).toEqual(4)
+    })
+  })
+
+  describe('removeHeightContainer', () => {
+    it('should set the container height to auto to adjust to innerScrollContainer height', () => {
+      const props = {
+        removeHeightContainer: true
+      }
+      const rendered = findDOMNode(render(getMarkup(props)))
+      expect(rendered.style.height).toEqual('auto')
+    })
+
+    it('should have container height still affecting number of rows rendered', () => {
+      const props = {
+        height: 500,
+        removeHeightContainer: true
+      }
+      const rendered = findDOMNode(render(getMarkup(props)))
+      expect(rendered.querySelectorAll('.gridItem').length).toEqual(100) // 25 rows x 4 columns
+    })
+
+    it('should have innerScrollContainer height to be equal number of rows * rowHeight', () => {
+      const props = {
+        removeHeightContainer: true
+      }
+      const grid = render(getMarkup(props))
+      const rendered = findDOMNode(render(getMarkup(props)))
+
+      expect(rendered.querySelector('.Grid__innerScrollContainer').style.height).toEqual('2000px') // 100 rows * 20px rowHeight
+      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000)
     })
   })
 })
