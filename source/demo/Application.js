@@ -1,3 +1,6 @@
+// IE 10+ compatibility for demo (must come before other imports)
+import 'babel-polyfill'
+
 import ArrowKeyStepperExample from '../ArrowKeyStepper/ArrowKeyStepper.example'
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
 import CellMeasurerExample from '../CellMeasurer/CellMeasurer.example'
