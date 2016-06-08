@@ -87,6 +87,12 @@ And here are some "recipe" type demos:
 * [Dynamic cell measuring](https://rawgit.com/bvaughn/react-virtualized/master/playground/chat.html)
 * [Cell hover effects](https://rawgit.com/bvaughn/react-virtualized/master/playground/hover.html)
 
+Supported Browsers
+---------------
+react-virtualized aims to support all evergreen browsers and recent mobile browsers for iOS and Android. IE 9+ is also supported (although IE 9 will require some user-defined, custom CSS since flexbox layout is not supported).
+
+If you find a browser-specific problem, please report it along with a repro case. The easiest way to do this is probably by forking [this Plunker](https://plnkr.co/edit/6syKo8cx3RfoO96hXFT1).
+
 Open Collective
 ---------------
 
