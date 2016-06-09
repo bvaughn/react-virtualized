@@ -50,7 +50,6 @@
     "production": {
       "comments": false,
       "plugins": [
-        "transform-react-inline-elements"
       ],
       "presets": [
         "es2015",

@@ -11,14 +11,30 @@ export const DEFAULT_MAX_SCROLL_SIZE = 10000000
 /**
  * Extends CellSizeAndPositionManager and adds scaling behavior for lists that are too large to fit within a browser's native limits.
  */
-export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositionManager {
+export default class ScalingCellSizeAndPositionManager {
   constructor ({
     maxScrollSize = DEFAULT_MAX_SCROLL_SIZE,
     ...params
   }) {
-    super(params)
-
+    // Favor composition over inheritance to simplify IE10 support
+    this._cellSizeAndPositionManager = new CellSizeAndPositionManager(params)
     this._maxScrollSize = maxScrollSize
+  }
+
+  configure (params): void {
+    this._cellSizeAndPositionManager.configure(params)
+  }
+
+  getCellCount (): number {
+    return this._cellSizeAndPositionManager.getCellCount()
+  }
+
+  getEstimatedCellSize (): number {
+    return this._cellSizeAndPositionManager.getEstimatedCellSize()
+  }
+
+  getLastMeasuredIndex (): number {
+    return this._cellSizeAndPositionManager.getLastMeasuredIndex()
   }
 
   /**
@@ -29,7 +45,7 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     containerSize,
     offset // safe
   }: ContainerSizeAndOffset): number {
-    const totalSize = super.getTotalSize()
+    const totalSize = this._cellSizeAndPositionManager.getTotalSize()
     const safeTotalSize = this.getTotalSize()
     const offsetPercentage = this._getOffsetPercentage({
       containerSize,
@@ -40,9 +56,17 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     return Math.round(offsetPercentage * (safeTotalSize - totalSize))
   }
 
+  getSizeAndPositionOfCell (index: number) {
+    return this._cellSizeAndPositionManager.getSizeAndPositionOfCell(index)
+  }
+
+  getSizeAndPositionOfLastMeasuredCell () {
+    return this._cellSizeAndPositionManager.getSizeAndPositionOfLastMeasuredCell()
+  }
+
   /** See CellSizeAndPositionManager#getTotalSize */
   getTotalSize (): number {
-    return Math.min(this._maxScrollSize, super.getTotalSize())
+    return Math.min(this._maxScrollSize, this._cellSizeAndPositionManager.getTotalSize())
   }
 
   /** See CellSizeAndPositionManager#getUpdatedOffsetForIndex */
@@ -57,7 +81,7 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
       offset: currentOffset
     })
 
-    const offset = super.getUpdatedOffsetForIndex({
+    const offset = this._cellSizeAndPositionManager.getUpdatedOffsetForIndex({
       align,
       containerSize,
       currentOffset,
@@ -80,10 +104,14 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
       offset
     })
 
-    return super.getVisibleCellRange({
+    return this._cellSizeAndPositionManager.getVisibleCellRange({
       containerSize,
       offset
     })
+  }
+
+  resetCell (index: number): void {
+    this._cellSizeAndPositionManager.resetCell(index)
   }
 
   _getOffsetPercentage ({
@@ -100,7 +128,7 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     containerSize,
     offset // unsafe
   }: ContainerSizeAndOffset): number {
-    const totalSize = super.getTotalSize()
+    const totalSize = this._cellSizeAndPositionManager.getTotalSize()
     const safeTotalSize = this.getTotalSize()
 
     if (totalSize === safeTotalSize) {
@@ -120,7 +148,7 @@ export default class ScalingCellSizeAndPositionManager extends CellSizeAndPositi
     containerSize,
     offset // safe
   }: ContainerSizeAndOffset): number {
-    const totalSize = super.getTotalSize()
+    const totalSize = this._cellSizeAndPositionManager.getTotalSize()
     const safeTotalSize = this.getTotalSize()
 
     if (totalSize === safeTotalSize) {

@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.3.3
+Fixed unintention regression in IE10 support introduced with `ScalingCellSizeAndPositionManager` extending `CellSizeAndPositionManager`.
+Inheritance has been replaced with composition for this case in order to simplify IE10 compatibility.
+Notice that Babel `babel-polyfill` is still required in order to support other ES5 features.
+
 ##### 7.3.2
 Edge-case bug fix for `CellMeasurer` in the event that its `getRowHeight` or `getColumnWidth` method gets called before the initial render completes.
 
