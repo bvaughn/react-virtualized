@@ -14,16 +14,10 @@ export default class AutoSizerExample extends Component {
 
   constructor (props) {
     super(props)
-
-    this.state = {
-      hideDescription: false
-    }
-
     this._rowRenderer = this._rowRenderer.bind(this)
   }
 
   render () {
-    const { hideDescription } = this.state
     const { list, ...props } = this.props
 
     return (
@@ -36,14 +30,12 @@ export default class AutoSizerExample extends Component {
           docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/WindowScroller.md'
         />
 
-        {!hideDescription &&
-          <ContentBoxParagraph>
-            This component decorates <code>VirtualScroll</code>, <code>FlexTable</code>, or any other component
-            and manages the window scroll to scroll through the list
-          </ContentBoxParagraph>
-        }
+        <ContentBoxParagraph>
+          This component decorates <code>VirtualScroll</code>, <code>FlexTable</code>, or any other component
+          and manages the window scroll to scroll through the list
+        </ContentBoxParagraph>
 
-        <div className={styles.AutoSizerWrapper}>
+        <div className={styles.WindowScrollerWrapper}>
           <WindowScroller>
             {({ height, scrollTop }) => (
               <VirtualScroll

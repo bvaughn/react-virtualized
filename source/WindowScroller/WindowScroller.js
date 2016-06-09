@@ -9,10 +9,9 @@ export default class WindowScroller extends Component {
     /**
      * Function respondible for rendering children.
      * This function should implement the following signature:
-     *
+     * ({ height, scrollTop }) => PropTypes.element
      */
     children: PropTypes.func.isRequired
-
   }
 
   constructor (props) {
@@ -29,6 +28,10 @@ export default class WindowScroller extends Component {
     this._positionFromTop = ReactDOM.findDOMNode(this).getBoundingClientRect().top
     this.setState({ height: window.innerHeight })
     window.addEventListener('scroll', this._onScroll, false)
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   componentWillUnmount () {
@@ -63,10 +66,6 @@ export default class WindowScroller extends Component {
         })}
       </div>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _onScroll (event) {
