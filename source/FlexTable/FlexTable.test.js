@@ -46,6 +46,8 @@ describe('FlexTable', () => {
     noRowsRenderer,
     onHeaderClick,
     onRowClick,
+    onRowMouseOver,
+    onRowMouseOut,
     onRowsRendered,
     onScroll,
     overscanRowCount = 0,
@@ -74,6 +76,8 @@ describe('FlexTable', () => {
         noRowsRenderer={noRowsRenderer}
         onHeaderClick={onHeaderClick}
         onRowClick={onRowClick}
+        onRowMouseOver={onRowMouseOver}
+        onRowMouseOut={onRowMouseOut}
         onRowsRendered={onRowsRendered}
         onScroll={onScroll}
         overscanRowCount={overscanRowCount}
@@ -517,6 +521,29 @@ describe('FlexTable', () => {
       Simulate.click(rows[0])
       Simulate.click(rows[3])
       expect(onRowClickCalls).toEqual([0, 3])
+    })
+  })
+
+  describe('onRowMouseOver/Out', () => {
+    it('should call :onRowMouseOver and :onRowMouseOut with the correct :rowIndex when the mouse is moved over rows', () => {
+      let onRowMouseOverCalls = []
+      let onRowMouseOutCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        onRowMouseOver: ({ index }) => onRowMouseOverCalls.push(index),
+        onRowMouseOut: ({ index }) => onRowMouseOutCalls.push(index)
+      })))
+
+      const simulateMouseOver = (from, to) => {
+        Simulate.mouseOut(from, { relatedTarget: to })
+        Simulate.mouseOver(to, { relatedTarget: from })
+      }
+
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      simulateMouseOver(rows[0], rows[1])
+      simulateMouseOver(rows[1], rows[2])
+      simulateMouseOver(rows[2], rows[3])
+      expect(onRowMouseOverCalls).toEqual([1, 2, 3])
+      expect(onRowMouseOutCalls).toEqual([0, 1, 2])
     })
   })
 
