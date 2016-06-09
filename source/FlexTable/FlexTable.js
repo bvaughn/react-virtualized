@@ -65,6 +65,18 @@ export default class FlexTable extends Component {
     onRowClick: PropTypes.func,
 
     /**
+     * Callback invoked when a user moves the mouse over a table row.
+     * ({ index: number }): void
+     */
+    onRowMouseOver: PropTypes.func,
+
+    /**
+     * Callback invoked when the mouse leaves a table row.
+     * ({ index: number }): void
+     */
+    onRowMouseOut: PropTypes.func,
+
+    /**
      * Callback invoked with information about the slice of rows that were just rendered.
      * ({ startIndex, stopIndex }): void
      */
@@ -382,6 +394,8 @@ export default class FlexTable extends Component {
     const {
       children,
       onRowClick,
+      onRowMouseOver,
+      onRowMouseOut,
       rowClassName,
       rowGetter,
       rowStyle
@@ -403,11 +417,19 @@ export default class FlexTable extends Component {
 
     const a11yProps = {}
 
-    if (onRowClick) {
+    if (onRowClick || onRowMouseOver || onRowMouseOut) {
       a11yProps['aria-label'] = 'row'
       a11yProps.role = 'row'
       a11yProps.tabIndex = 0
-      a11yProps.onClick = () => onRowClick({ index })
+      if (onRowClick) {
+        a11yProps.onClick = () => onRowClick({index})
+      }
+      if (onRowMouseOver) {
+        a11yProps.onMouseOver = () => onRowMouseOver({index})
+      }
+      if (onRowMouseOut) {
+        a11yProps.onMouseOut = () => onRowMouseOut({index})
+      }
     }
 
     return (
