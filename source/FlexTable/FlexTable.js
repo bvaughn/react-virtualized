@@ -15,6 +15,12 @@ export default class FlexTable extends Component {
   static propTypes = {
     'aria-label': PropTypes.string,
 
+    /**
+     * Removes fixed height from the scrollingContainer so that the total height
+     * of rows can stretch the window. Intended for use with WindowScroller
+     */
+    autoHeight: PropTypes.bool,
+
     /** One or more FlexColumns describing the data displayed in this row */
     children: (props, propName, componentName) => {
       const children = React.Children.toArray(props.children)
@@ -180,6 +186,7 @@ export default class FlexTable extends Component {
 
   render () {
     const {
+      autoHeight,
       className,
       disableHeader,
       estimatedRowSize,
@@ -235,6 +242,7 @@ export default class FlexTable extends Component {
 
         <Grid
           aria-label={this.props['aria-label']}
+          autoHeight={autoHeight}
           className={'FlexTable__Grid'}
           cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
             index: rowIndex,
