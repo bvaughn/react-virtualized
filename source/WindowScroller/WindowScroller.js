@@ -21,21 +21,20 @@ export default class WindowScroller extends Component {
       height: 0
     }
 
-    this._onScroll = this._onScroll.bind(this)
+    this._onScrollWindow = this._onScrollWindow.bind(this)
+    this._onResizeWindow = this._onResizeWindow.bind(this)
   }
 
   componentDidMount () {
     this._positionFromTop = ReactDOM.findDOMNode(this).getBoundingClientRect().top
     this.setState({ height: window.innerHeight })
-    window.addEventListener('scroll', this._onScroll, false)
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
+    window.addEventListener('scroll', this._onScrollWindow, false)
+    window.addEventListener('resize', this._onResizeWindow, false)
   }
 
   componentWillUnmount () {
-    window.removeEventListener('scroll', this._onScroll, false)
+    window.removeEventListener('scroll', this._onScrollWindow, false)
+    window.removeEventListener('resize', this._onResizeWindow, false)
   }
 
   /**
@@ -68,7 +67,15 @@ export default class WindowScroller extends Component {
     )
   }
 
-  _onScroll (event) {
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
+  }
+
+  _onResizeWindow (event) {
+    this.setState({ height: window.innerHeight })
+  }
+
+  _onScrollWindow (event) {
     this._setNextState({
       scrollTop: Math.max(0, window.scrollY - this._positionFromTop)
     })

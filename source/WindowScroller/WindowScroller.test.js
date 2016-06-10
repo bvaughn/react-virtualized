@@ -41,11 +41,9 @@ describe('WindowScroller', () => {
     // Simulate window scroll by 5000
     document.body.style.height = '10000px'
     window.scrollY = 5000
-    const event = new window.Event('scroll', { bubbles: true, cancelable: false })
-    document.dispatchEvent(event)
-
+    document.dispatchEvent(new window.Event('scroll', { bubbles: true }))
     // Allow scrolling timeout to complete so that the component computes state
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise(resolve => setTimeout(resolve, 150))
 
     const componentScrollTop = window.scrollY - component._positionFromTop
     expect(component.state.scrollTop).toEqual(componentScrollTop)
@@ -58,11 +56,28 @@ describe('WindowScroller', () => {
   it('inherits the window height and passes it to child component', () => {
     window.innerHeight = 500
     const component = render(getMarkup())
+    const rendered = findDOMNode(component)
 
     expect(component.state.height).toEqual(window.innerHeight)
     expect(component.state.height).toEqual(500)
-
-    const rendered = findDOMNode(component)
     expect(rendered.textContent).toContain('height:500')
+  })
+
+  it('should update height when window resizes', () => {
+    const component = render(getMarkup())
+    const rendered = findDOMNode(component)
+
+    // Initial load of the component should have the same window height = 500
+    expect(component.state.height).toEqual(window.innerHeight)
+    expect(component.state.height).toEqual(500)
+    expect(rendered.textContent).toContain('height:500')
+
+    // Simulate window height resizing
+    window.innerHeight = 1000
+    document.dispatchEvent(new window.Event('resize', { bubbles: true }))
+
+    expect(component.state.height).toEqual(window.innerHeight)
+    expect(component.state.height).toEqual(1000)
+    expect(rendered.textContent).toContain('height:1000')
   })
 })
