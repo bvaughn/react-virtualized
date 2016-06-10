@@ -1022,5 +1022,27 @@ describe('Grid', () => {
       expect(rendered.querySelector('.Grid__innerScrollContainer').style.height).toEqual('2000px') // 100 rows * 20px rowHeight
       expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000)
     })
+
+    it('should preserve :scrollTop prop to state when scrolling horizontally and autoHeight is true', () => {
+      const onScrollCalls = []
+      const grid = render(getMarkup({
+        autoHeight: true,
+        scrollTop: 20,
+        onScroll: params => onScrollCalls.push(params)
+      }))
+      simulateScroll({
+        grid,
+        scrollLeft: 20
+      })
+      expect(onScrollCalls.length).toEqual(2)
+      expect(onScrollCalls[1]).toEqual({
+        clientHeight: 100,
+        clientWidth: 200,
+        scrollHeight: 2000,
+        scrollLeft: 20,
+        scrollTop: 20,
+        scrollWidth: 2500
+      })
+    })
   })
 })
