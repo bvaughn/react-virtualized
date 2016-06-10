@@ -41,7 +41,7 @@ describe('Grid', () => {
     onScroll,
     overscanColumnCount = 0,
     overscanRowCount = 0,
-    removeHeightContainer = false,
+    autoHeight = false,
     rowHeight = 20,
     rowCount = NUM_ROWS,
     scrollLeft,
@@ -67,7 +67,7 @@ describe('Grid', () => {
         onScroll={onScroll}
         overscanColumnCount={overscanColumnCount}
         overscanRowCount={overscanRowCount}
-        removeHeightContainer={removeHeightContainer}
+        autoHeight={autoHeight}
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollLeft={scrollLeft}
@@ -994,10 +994,10 @@ describe('Grid', () => {
     })
   })
 
-  describe('removeHeightContainer', () => {
+  describe('autoHeight', () => {
     it('should set the container height to auto to adjust to innerScrollContainer height', () => {
       const props = {
-        removeHeightContainer: true
+        autoHeight: true
       }
       const rendered = findDOMNode(render(getMarkup(props)))
       expect(rendered.style.height).toEqual('auto')
@@ -1006,7 +1006,7 @@ describe('Grid', () => {
     it('should have container height still affecting number of rows rendered', () => {
       const props = {
         height: 500,
-        removeHeightContainer: true
+        autoHeight: true
       }
       const rendered = findDOMNode(render(getMarkup(props)))
       expect(rendered.querySelectorAll('.gridItem').length).toEqual(100) // 25 rows x 4 columns
@@ -1014,7 +1014,7 @@ describe('Grid', () => {
 
     it('should have innerScrollContainer height to be equal number of rows * rowHeight', () => {
       const props = {
-        removeHeightContainer: true
+        autoHeight: true
       }
       const grid = render(getMarkup(props))
       const rendered = findDOMNode(render(getMarkup(props)))
