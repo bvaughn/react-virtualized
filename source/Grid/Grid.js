@@ -752,14 +752,12 @@ export default class Grid extends Component {
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
     // This causes a series of rapid renders that is slow for long lists.
     // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-    const { autoHeight, height, width } = this.props
+    const { height, width } = this.props
     const scrollbarSize = this._scrollbarSize
     const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
     const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
     const scrollLeft = Math.min(Math.max(0, totalColumnsWidth - width + scrollbarSize), event.target.scrollLeft)
-    const scrollTop = this.props.scrollTop && autoHeight
-      ? this.props.scrollTop
-      : Math.min(Math.max(0, totalRowsHeight - height + scrollbarSize), event.target.scrollTop)
+    const scrollTop = Math.min(Math.max(0, totalRowsHeight - height + scrollbarSize), event.target.scrollTop)
 
     // Certain devices (like Apple touchpad) rapid-fire duplicate events.
     // Don't force a re-render if this is the case.
