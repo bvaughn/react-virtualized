@@ -18,6 +18,7 @@ Documentation
 * [ColumnSizer](ColumnSizer.md)
 * [InfiniteLoader](InfiniteLoader.md)
 * [ScrollSync](ScrollSync.md)
+* [WindowScroller](WindowScroller.md)
 
 ### How-to Guides
 

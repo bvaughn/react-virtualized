@@ -27,6 +27,7 @@ export default class WindowScroller extends Component {
 
   constructor (props) {
     super(props)
+
     this.state = {
       scrollTop: 0,
       height: 0
@@ -38,7 +39,9 @@ export default class WindowScroller extends Component {
 
   componentDidMount () {
     this._positionFromTop = ReactDOM.findDOMNode(this).getBoundingClientRect().top
+
     this.setState({ height: window.innerHeight })
+
     window.addEventListener('scroll', this._onScrollWindow, false)
     window.addEventListener('resize', this._onResizeWindow, false)
   }
@@ -86,6 +89,7 @@ export default class WindowScroller extends Component {
     const { onResize } = this.props
 
     const height = window.innerHeight || 0
+
     this.setState({ height })
 
     onResize({ height })
@@ -93,6 +97,7 @@ export default class WindowScroller extends Component {
 
   _onScrollWindow (event) {
     const { onScroll } = this.props
+
     // In IE10+ scrollY is undefined, so we replace that with the latter
     const scrollY = ('scrollY' in window)
       ? window.scrollY
