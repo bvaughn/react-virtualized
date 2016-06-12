@@ -1,5 +1,6 @@
 /** @flow */
 import React from 'react'
+import cn from 'classnames'
 
 /**
  * Default implementation of cellRangeRenderer used by Grid.
@@ -16,6 +17,7 @@ export default function defaultCellRangeRenderer ({
   rowSizeAndPositionManager,
   rowStartIndex,
   rowStopIndex,
+  rowClassName,
   scrollLeft,
   scrollTop,
   verticalOffsetAdjustment
@@ -60,7 +62,7 @@ export default function defaultCellRangeRenderer ({
       let child = (
         <div
           key={key}
-          className='Grid__cell'
+          className={cn('Grid__cell', rowClassName(rowIndex, columnIndex))}
           style={{
             height: rowDatum.size,
             left: columnDatum.offset + horizontalOffsetAdjustment,

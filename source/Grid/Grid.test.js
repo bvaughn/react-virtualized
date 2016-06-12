@@ -43,6 +43,7 @@ describe('Grid', () => {
     overscanRowCount = 0,
     rowHeight = 20,
     rowCount = NUM_ROWS,
+    rowClassName = null,
     scrollLeft,
     scrollToAlignment,
     scrollToColumn,
@@ -68,6 +69,7 @@ describe('Grid', () => {
         overscanRowCount={overscanRowCount}
         rowHeight={rowHeight}
         rowCount={rowCount}
+        rowClassName={rowClassName}
         scrollLeft={scrollLeft}
         scrollToAlignment={scrollToAlignment}
         scrollToColumn={scrollToColumn}
@@ -561,6 +563,44 @@ describe('Grid', () => {
       const style = { backgroundColor: 'red' }
       const rendered = findDOMNode(render(getMarkup({ style })))
       expect(rendered.style.backgroundColor).toEqual('red')
+    })
+
+    it('should use the exceed global CSS classNames for rows', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        columnCount: 1
+      })))
+      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
+        return row.className == 'Grid__cell'
+      })
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :rowClassName if specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        columnCount: 1,
+        rowClassName: 'foo',
+      })))
+      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
+        return row.classList.contains('foo')
+      })
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :rowClassName if function specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        columnCount: 1,
+        rowClassName: ()=> 'foo',
+      })))
+      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
+        return row.classList.contains('foo')
+      })
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
     })
   })
 
