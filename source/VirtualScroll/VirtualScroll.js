@@ -128,7 +128,7 @@ export default class VirtualScroll extends Component {
     } = this.props
 
     const classNames = cn('VirtualScroll', className)
-    
+
     const rowClassName = this._rowClassName()
 
     return (
@@ -169,12 +169,12 @@ export default class VirtualScroll extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
   }
-  
-  _rowClassName (){
+
+  _rowClassName () {
     const {rowClassName} = this.props
-    
+
     return rowClassName instanceof Function
-      ? ({ rowIndex: index })=> rowClassName({ index })
+      ? ({ rowIndex: index }) => rowClassName({ index })
       : rowClassName
   }
 }

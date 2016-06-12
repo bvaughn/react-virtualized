@@ -691,7 +691,7 @@ export default class Grid extends Component {
       this.setState(newState)
     }
   }
-  
+
   _wrapPropertyGetter (value) {
     return value instanceof Function
       ? value
@@ -699,11 +699,11 @@ export default class Grid extends Component {
   }
 
   _wrapSizeGetter (size) {
-    return _wrapPropertyGetter(size)
+    return this._wrapPropertyGetter(size)
   }
-  
+
   _wrapCellClassNameGetter (className) {
-    return _wrapPropertyGetter(className)
+    return this._wrapPropertyGetter(className)
   }
 
   _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {

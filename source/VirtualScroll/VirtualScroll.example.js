@@ -9,7 +9,6 @@ import VirtualScroll from './VirtualScroll'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import shallowCompare from 'react-addons-shallow-compare'
-import cn from 'classnames'
 
 export default class VirtualScrollExample extends Component {
   static propTypes = {
