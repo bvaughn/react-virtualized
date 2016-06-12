@@ -36,7 +36,7 @@ class Application extends Component {
     const matches = window.location.search.match('component=(.+)')
     const activeComponent = matches && (COMPONENTS.includes(matches[1]) || HIGH_ORDER_COMPONENTS.includes(matches[1]))
       ? matches[1]
-      : 'WindowScroller'
+      : 'VirtualScroll'
 
     this.state = {
       activeComponent
