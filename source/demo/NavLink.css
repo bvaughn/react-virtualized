@@ -29,7 +29,14 @@
   border-bottom-color: #409890;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 525px) {
+  .NavLink {
+    padding: 1em .5em .5em;
+    font-size: 1.1em;
+  }
+}
+
+@media (max-width: 475px) {
   .NavLink {
     padding: 1em .5em .5em;
     font-size: .9em;
