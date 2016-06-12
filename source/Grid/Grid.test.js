@@ -571,7 +571,7 @@ describe('Grid', () => {
         columnCount: 1
       })))
       const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
-        return row.className == 'Grid__cell'
+        return row.className === 'Grid__cell'
       })
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
