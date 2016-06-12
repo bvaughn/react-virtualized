@@ -290,7 +290,7 @@ describe('VirtualScroll', () => {
       const rendered = findDOMNode(render(getMarkup({ style })))
       expect(rendered.style.backgroundColor).toEqual('red')
     })
-    
+
     it('should use the expected global CSS classNames for rows', () => {
       const rendered = findDOMNode(render(getMarkup({
         rowCount: 3,
@@ -339,7 +339,7 @@ describe('VirtualScroll', () => {
       })
       expect(rows.length).toEqual(3)
       expect(rows).toEqual(['col-0', 'col-1', 'col-2'])
-    })    
+    })
   })
 
   describe('overscanRowCount', () => {
