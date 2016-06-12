@@ -581,7 +581,7 @@ describe('Grid', () => {
       const rendered = findDOMNode(render(getMarkup({
         rowCount: 3,
         columnCount: 1,
-        rowClassName: 'foo',
+        rowClassName: 'foo'
       })))
       const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
         return row.classList.contains('foo')
@@ -594,7 +594,7 @@ describe('Grid', () => {
       const rendered = findDOMNode(render(getMarkup({
         rowCount: 3,
         columnCount: 1,
-        rowClassName: ()=> 'foo',
+        rowClassName: () => 'foo'
       })))
       const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
         return row.classList.contains('foo')
