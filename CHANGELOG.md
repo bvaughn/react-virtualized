@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.4.0
+Added mouse-over and mouse-out row-level events to `FlexTable`. Thanks to @queeto for the PR!
+
 ##### 7.3.3
 Fixed unintention regression in IE10 support introduced with `ScalingCellSizeAndPositionManager` extending `CellSizeAndPositionManager`.
 Inheritance has been replaced with composition for this case in order to simplify IE10 compatibility.

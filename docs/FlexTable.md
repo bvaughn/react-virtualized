@@ -18,6 +18,8 @@ This component expects explicit width, height, and padding parameters.
 | noRowsRenderer |  | Function | Callback used to render placeholder content when :rowCount is 0 |
 | onHeaderClick |  | Function | Callback invoked when a user clicks on a table header. `(dataKey: string, columnData: any): void` |
 | onRowClick |  | Function | Callback invoked when a user clicks on a table row. `({ index: number }): void` |
+| onRowMouseOut |  | Function | Callback invoked when the mouse leaves a table row. `({ index: number }): void` |
+| onRowMouseOver |  | Function | Callback invoked when a user moves the mouse over a table row. `({ index: number }): void` |
 | onRowsRendered |  | Function | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
 | overscanRowCount |  | Number | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, scrollHeight: number: number, scrollTop: number }): void` |
