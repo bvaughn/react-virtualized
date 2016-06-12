@@ -16,7 +16,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
 | rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Signature should look like `({ index: number, isScrolling: boolean }): React.PropTypes.node` |
 | rowCount | Number | ✓ | Number of rows in list. |
-| rowClassName | String or Function |  | Optional custom CSS class name to attach to `Grid__cell` element. If function given then signature should be look like: ({rowIndex: number, columnIndex: number}): PropTypes.string |
+| rowClassName | String or Function |  | Optional custom CSS class name to attach to `Grid__cell` element. If function given then signature should be look like: ({index: number}): PropTypes.string |
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Forced vertical scroll offset; can be used to synchronize scrolling between components |
