@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import WindowScroller from './WindowScroller'
 import VirtualScroll from '../VirtualScroll'
+import AutoSizer from '../AutoSizer'
 import shallowCompare from 'react-addons-shallow-compare'
 import styles from './WindowScroller.example.css'
 
@@ -38,16 +39,20 @@ export default class AutoSizerExample extends Component {
         <div className={styles.WindowScrollerWrapper}>
           <WindowScroller>
             {({ height, scrollTop }) => (
-              <VirtualScroll
-                autoHeight
-                className={styles.VirtualScroll}
-                height={height}
-                rowCount={list.size}
-                rowHeight={30}
-                rowRenderer={this._rowRenderer}
-                scrollTop={scrollTop}
-                width={460}
-              />
+              <AutoSizer disableHeight>
+                {({ width }) => (
+                  <VirtualScroll
+                    autoHeight
+                    className={styles.VirtualScroll}
+                    height={height}
+                    rowCount={list.size}
+                    rowHeight={30}
+                    rowRenderer={this._rowRenderer}
+                    scrollTop={scrollTop}
+                    width={width}
+                  />
+                )}
+              </AutoSizer>
             )}
           </WindowScroller>
         </div>
