@@ -24,6 +24,7 @@ describe('VirtualScroll', () => {
     rowCount = rendered.size,
     scrollToAlignment,
     scrollToIndex,
+    rowClassName,
     scrollTop,
     style,
     width = 100
@@ -51,6 +52,7 @@ describe('VirtualScroll', () => {
         rowHeight={rowHeight}
         rowRenderer={rowRenderer}
         rowCount={rowCount}
+        rowClassName={rowClassName}
         scrollToAlignment={scrollToAlignment}
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
@@ -288,6 +290,56 @@ describe('VirtualScroll', () => {
       const rendered = findDOMNode(render(getMarkup({ style })))
       expect(rendered.style.backgroundColor).toEqual('red')
     })
+    
+    it('should use the expected global CSS classNames for rows', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        columnCount: 1
+      })))
+      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
+        return row.className === 'Grid__cell'
+      })
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :cellClassName if specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        rowClassName: 'foo'
+      })))
+      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
+        return row.classList.contains('foo')
+      })
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :cellClassName if function specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        rowClassName: () => 'foo'
+      })))
+      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
+        return row.classList.contains('foo')
+      })
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :cellClassName indexes', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        rowClassName: ({index}) => {
+          return `col-${index}`
+        }
+      })))
+      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
+        return row.className.split(' ')[1]
+      })
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual(['col-0', 'col-1', 'col-2'])
+    })    
   })
 
   describe('overscanRowCount', () => {
