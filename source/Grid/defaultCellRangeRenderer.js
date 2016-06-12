@@ -62,7 +62,7 @@ export default function defaultCellRangeRenderer ({
       let child = (
         <div
           key={key}
-          className={cn('Grid__cell', rowClassName(rowIndex, columnIndex))}
+          className={cn('Grid__cell', rowClassName({rowIndex, columnIndex}))}
           style={{
             height: rowDatum.size,
             left: columnDatum.offset + horizontalOffsetAdjustment,
