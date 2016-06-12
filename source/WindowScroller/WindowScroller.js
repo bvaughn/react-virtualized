@@ -76,8 +76,13 @@ export default class WindowScroller extends Component {
   }
 
   _onScrollWindow (event) {
+    // In IE10+ scrollY is undefined, so we replace that with the latter
+    const scrollY = ('scrollY' in window)
+      ? window.scrollY
+      : document.documentElement.scrollTop
+
     this._setNextState({
-      scrollTop: Math.max(0, window.scrollY - this._positionFromTop)
+      scrollTop: Math.max(0, scrollY - this._positionFromTop)
     })
   }
 }
