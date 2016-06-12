@@ -602,6 +602,21 @@ describe('Grid', () => {
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
     })
+
+    it('should use a custom :rowClassName indexes', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 2,
+        columnCount: 2,
+        rowClassName: ({rowIndex, columnIndex}) => {
+          return `col-${rowIndex}-${columnIndex}`
+        }
+      })))
+      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
+        return row.className.split(' ')[1]
+      })
+      expect(rows.length).toEqual(4)
+      expect(rows).toEqual(['col-0-0', 'col-0-1', 'col-1-0', 'col-1-1'])
+    })
   })
 
   describe('onScroll', () => {
