@@ -77,7 +77,7 @@ describe('WindowScroller', () => {
 
       expect(onScrollCalls.length).toEqual(1)
       expect(onScrollCalls[0]).toEqual({
-        scrollTop: 4992
+        scrollTop: 4992 // 5000 - 8 (position from top)
       })
 
       done()
