@@ -11,7 +11,18 @@ export default class WindowScroller extends Component {
      * This function should implement the following signature:
      * ({ height, scrollTop }) => PropTypes.element
      */
-    children: PropTypes.func.isRequired
+    children: PropTypes.func.isRequired,
+
+    /** Callback to be invoked on-resize: ({ height }) */
+    onResize: PropTypes.func.isRequired,
+
+    /** Callback to be invoked on-scroll: ({ scrollTop }) */
+    onScroll: PropTypes.func.isRequired
+  }
+
+  static defaultProps = {
+    onResize: () => {},
+    onScroll: () => {}
   }
 
   constructor (props) {
@@ -72,17 +83,25 @@ export default class WindowScroller extends Component {
   }
 
   _onResizeWindow (event) {
-    this.setState({ height: window.innerHeight })
+    const { onResize } = this.props
+
+    const height = window.innerHeight || 0
+    this.setState({ height })
+
+    onResize({ height })
   }
 
   _onScrollWindow (event) {
+    const { onScroll } = this.props
     // In IE10+ scrollY is undefined, so we replace that with the latter
     const scrollY = ('scrollY' in window)
       ? window.scrollY
       : document.documentElement.scrollTop
 
-    this._setNextState({
-      scrollTop: Math.max(0, scrollY - this._positionFromTop)
-    })
+    const scrollTop = Math.max(0, scrollY - this._positionFromTop)
+
+    this._setNextState({ scrollTop })
+
+    onScroll({ scrollTop })
   }
 }
