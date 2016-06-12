@@ -57,13 +57,16 @@
   font-weight: 700;
   text-transform: uppercase;
   display: -webkit-box;
+  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
       -ms-flex-direction: row;
           flex-direction: row;
   -webkit-box-align: center;
+  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   overflow: hidden;
@@ -76,13 +79,16 @@
 }
 .FlexTable__row {
   display: -webkit-box;
+  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
       -ms-flex-direction: row;
           flex-direction: row;
   -webkit-box-align: center;
+  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   overflow: hidden;
@@ -100,13 +106,16 @@
 }
 .FlexTable__headerColumn {
   -webkit-box-align: center;
+  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   display: -webkit-box;
+  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
       -ms-flex-direction: row;
           flex-direction: row;
   overflow: hidden;
@@ -116,13 +125,16 @@
 }
 .FlexTable__rowColumn {
   -webkit-box-pack: center;
+  -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
   display: -webkit-box;
+  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   overflow: hidden;
@@ -131,14 +143,17 @@
 
 .FlexTable__sortableHeaderIconContainer {
   display: -webkit-box;
+  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
+  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
 }
 .FlexTable__sortableHeaderIcon {
   -webkit-box-flex: 0;
+  -webkit-flex: 0 0 24px;
       -ms-flex: 0 0 24px;
           flex: 0 0 24px;
   height: 1em;
