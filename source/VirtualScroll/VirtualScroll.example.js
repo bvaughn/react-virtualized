@@ -131,7 +131,6 @@ export default class VirtualScrollExample extends Component {
                 rowCount={rowCount}
                 rowHeight={useDynamicRowHeight ? this._getRowHeight : virtualScrollRowHeight}
                 rowRenderer={this._rowRenderer}
-                rowClassName={cn('hello', { world: true })}
                 scrollToIndex={scrollToIndex}
                 width={width}
               />

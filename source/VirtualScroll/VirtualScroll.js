@@ -62,8 +62,8 @@ export default class VirtualScroll extends Component {
     /** Number of rows in list. */
     rowCount: PropTypes.number.isRequired,
 
-    /** Static or dynamic class name of row */
-    rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.object]),
+    /** Optional custom CSS class for individual rows */
+    rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
     /** See Grid#scrollToAlignment */
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
@@ -111,7 +111,6 @@ export default class VirtualScroll extends Component {
       onScroll,
       rowHeight,
       rowRenderer,
-      rowClassName,
       overscanRowCount,
       rowCount,
       scrollToAlignment,
@@ -122,6 +121,8 @@ export default class VirtualScroll extends Component {
     } = this.props
 
     const classNames = cn('VirtualScroll', className)
+    
+    const rowClassName = this._rowClassName()
 
     return (
       <Grid
@@ -147,7 +148,7 @@ export default class VirtualScroll extends Component {
         overscanRowCount={overscanRowCount}
         rowHeight={rowHeight}
         rowCount={rowCount}
-        rowClassName={rowClassName}
+        cellClassName={rowClassName}
         scrollToAlignment={scrollToAlignment}
         scrollToRow={scrollToIndex}
         scrollTop={scrollTop}
@@ -159,5 +160,13 @@ export default class VirtualScroll extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
+  }
+  
+  _rowClassName (){
+    const {rowClassName} = this.props
+    
+    return rowClassName instanceof Function
+      ? ({ rowIndex: index })=> rowClassName({ index })
+      : rowClassName
   }
 }

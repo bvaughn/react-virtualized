@@ -22,7 +22,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | overscanRowCount | Number |  | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browers/devices. |
 | rowCount | Number | ✓ | Number of rows in grid. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
-| rowClassName | String or Function |  | Optional custom CSS class name to attach to `Grid__cell` element. If function given then signature should be look like: ({rowIndex: number, columnIndex: number}): PropTypes.string |
+| cellClassName | String or Function |  | Optional custom CSS class name to attach to `Grid__cell` element. If function given then signature should be look like: ({rowIndex: number, columnIndex: number}): PropTypes.string |
 | scrollLeft | Number |  | Horizontal offset |
 | scrollToAlignment | String |  | Controls the alignment of scrolled-to-cells. The default ("_auto_") scrolls the least amount possible to ensure that the specified cell is fully visible. Use "_start_" to always align cells to the top/left of the `Grid` and "_end_" to align them bottom/right. Use "_center_" to align specified cell in the middle of container. |
 | scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary) |
