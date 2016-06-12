@@ -16,6 +16,12 @@ export default class VirtualScroll extends Component {
   static propTypes = {
     'aria-label': PropTypes.string,
 
+    /**
+     * Removes fixed height from the scrollingContainer so that the total height
+     * of rows can stretch the window. Intended for use with WindowScroller
+     */
+    autoHeight: PropTypes.bool,
+
     /** Optional CSS class name */
     className: PropTypes.string,
 
@@ -112,6 +118,7 @@ export default class VirtualScroll extends Component {
       rowHeight,
       rowRenderer,
       overscanRowCount,
+      autoHeight,
       rowCount,
       scrollToAlignment,
       scrollToIndex,
@@ -146,6 +153,7 @@ export default class VirtualScroll extends Component {
           stopIndex: rowStopIndex
         })}
         overscanRowCount={overscanRowCount}
+        autoHeight={autoHeight}
         rowHeight={rowHeight}
         rowCount={rowCount}
         cellClassName={rowClassName}

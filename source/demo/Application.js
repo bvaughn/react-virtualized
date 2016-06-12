@@ -3,6 +3,7 @@ import 'babel-polyfill'
 
 import ArrowKeyStepperExample from '../ArrowKeyStepper/ArrowKeyStepper.example'
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
+import WindowScrollerExample from '../WindowScroller/WindowScroller.example'
 import CellMeasurerExample from '../CellMeasurer/CellMeasurer.example'
 import CollectionExample from '../Collection/Collection.example'
 import ColumnSizerExample from '../ColumnSizer/ColumnSizer.example'
@@ -22,7 +23,20 @@ import shallowCompare from 'react-addons-shallow-compare'
 import '../../styles.css'
 
 const COMPONENTS = ['Collection', 'Grid', 'FlexTable', 'VirtualScroll']
-const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync']
+const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync', 'WindowScroller']
+const COMPONENT_EXAMPLES_MAP = {
+  ArrowKeyStepper: ArrowKeyStepperExample,
+  AutoSizer: AutoSizerExample,
+  CellMeasurer: CellMeasurerExample,
+  Collection: CollectionExample,
+  ColumnSizer: ColumnSizerExample,
+  FlexTable: FlexTableExample,
+  Grid: GridExample,
+  InfiniteLoader: InfiniteLoaderExample,
+  ScrollSync: ScrollSyncExample,
+  VirtualScroll: VirtualScrollExample,
+  WindowScroller: WindowScrollerExample
+}
 
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
@@ -46,6 +60,8 @@ class Application extends Component {
     const { activeComponent } = this.state
 
     const setActiveComponent = component => this.setState({ activeComponent: component })
+
+    const ActiveComponent = COMPONENT_EXAMPLES_MAP[activeComponent]
 
     return (
       <div className={styles.demo}>
@@ -106,66 +122,10 @@ class Application extends Component {
         </div>
 
         <div className={styles.row}>
-          {activeComponent === 'ArrowKeyStepper' &&
-            <ArrowKeyStepperExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'AutoSizer' &&
-            <AutoSizerExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'CellMeasurer' &&
-            <CellMeasurerExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'Collection' &&
-            <CollectionExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'ColumnSizer' &&
-            <ColumnSizerExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'FlexTable' &&
-            <FlexTableExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'Grid' &&
-            <GridExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'InfiniteLoader' &&
-            <InfiniteLoaderExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'ScrollSync' &&
-            <ScrollSyncExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'VirtualScroll' &&
-            <VirtualScrollExample
-              className={styles.column}
-              list={list}
-            />
-          }
+          <ActiveComponent
+            className={styles.column}
+            list={list}
+          />
         </div>
 
         <p className={styles.footer}>

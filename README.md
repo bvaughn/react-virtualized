@@ -80,6 +80,7 @@ Here are some online demos of each component:
 * [InfiniteLoader](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader)
 * [ScrollSync](https://bvaughn.github.io/react-virtualized/?component=ScrollSync)
 * [VirtualScroll](https://bvaughn.github.io/react-virtualized/?component=VirtualScroll)
+* [WindowScroller](https://bvaughn.github.io/react-virtualized/?component=WindowScroller)
 
 And here are some "recipe" type demos:
 * [Collapsable tree view](https://rawgit.com/bvaughn/react-virtualized/master/playground/tree.html)

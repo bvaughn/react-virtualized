@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.5.0
+New `WindowScroller` HOC added to enable a `FlexTable` or `VirtualScroll` component to be scrolled based on the window's scroll positions.
+This can be used to create layouts similar to Facebook or Twitter news feeds.
+Big thanks to minheq@ for this contribution!
+
 ##### 7.4.0
 Added mouse-over and mouse-out row-level events to `FlexTable`. Thanks to @queeto for the PR!
 
