@@ -36,6 +36,7 @@
 .Grid__innerScrollContainer {
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
 }
 
 .Grid__cell {
