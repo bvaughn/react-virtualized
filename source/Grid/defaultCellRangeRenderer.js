@@ -1,5 +1,6 @@
 /** @flow */
 import React from 'react'
+import cn from 'classnames'
 
 /**
  * Default implementation of cellRangeRenderer used by Grid.
@@ -7,7 +8,9 @@ import React from 'react'
  */
 export default function defaultCellRangeRenderer ({
   cellCache,
+  cellClassName,
   cellRenderer,
+  cellStyle,
   columnSizeAndPositionManager,
   columnStartIndex,
   columnStopIndex,
@@ -28,6 +31,7 @@ export default function defaultCellRangeRenderer ({
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
       let columnDatum = columnSizeAndPositionManager.getSizeAndPositionOfCell(columnIndex)
       let key = `${rowIndex}-${columnIndex}`
+      let cellStyleObject = cellStyle({ rowIndex, columnIndex })
       let renderedCell
 
       // Avoid re-creating cells while scrolling.
@@ -60,13 +64,13 @@ export default function defaultCellRangeRenderer ({
       let child = (
         <div
           key={key}
-          className='Grid__cell'
-          style={{
+          className={cn('Grid__cell', cellClassName({rowIndex, columnIndex}))}
+          style={Object.assign({}, cellStyleObject, {
             height: rowDatum.size,
             left: columnDatum.offset + horizontalOffsetAdjustment,
             top: rowDatum.offset + verticalOffsetAdjustment,
             width: columnDatum.size
-          }}
+          })}
         >
           {renderedCell}
         </div>

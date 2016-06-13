@@ -65,8 +65,14 @@ export default class VirtualScroll extends Component {
     /** Responsbile for rendering a row given an index; ({ index: number }): node */
     rowRenderer: PropTypes.func.isRequired,
 
+    /** Optional custom CSS class for individual rows */
+    rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
     /** Number of rows in list. */
     rowCount: PropTypes.number.isRequired,
+
+    /** Optional custom styles for individual cells */
+    rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
     /** See Grid#scrollToAlignment */
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
@@ -126,6 +132,10 @@ export default class VirtualScroll extends Component {
 
     const classNames = cn('VirtualScroll', className)
 
+    const rowClassName = this._rowClassName()
+
+    const rowStyle = this._rowStyle()
+
     return (
       <Grid
         ref='Grid'
@@ -135,6 +145,8 @@ export default class VirtualScroll extends Component {
           index: rowIndex,
           isScrolling
         })}
+        cellClassName={rowClassName}
+        cellStyle={rowStyle}
         columnWidth={width}
         columnCount={1}
         estimatedRowSize={estimatedRowSize}
@@ -162,5 +174,21 @@ export default class VirtualScroll extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
+  }
+
+  _propertyIndexAdapter (propName) {
+    const { [propName]: propGetter } = this.props
+
+    return propGetter instanceof Function
+      ? ({ rowIndex: index }) => propGetter({ index })
+      : propGetter
+  }
+
+  _rowClassName () {
+    return this._propertyIndexAdapter('rowClassName')
+  }
+
+  _rowStyle () {
+    return this._propertyIndexAdapter('rowStyle')
   }
 }

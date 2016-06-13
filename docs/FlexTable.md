@@ -28,6 +28,8 @@ This component expects explicit width, height, and padding parameters.
 | rowGetter | Function | ✓ | Callback responsible for returning a data row given an index. `({ index: int }): any` |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
 | rowStyle | Object |  | Optional custom inline style to attach to table rows. |
+| rowWrapperClassName | String or Function |  | Optional custom CSS class name to attach to `Grid__cell` element. If function given then signature should be look like: ({index: number}): PropTypes.string |
+| rowWrapperStyle | Object or Function |  | Optional custom inline style for `Grid__cell` elements. If function given then signature should be look like: ({index: number}): PropTypes.object |
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |

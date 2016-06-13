@@ -40,6 +40,12 @@ export default class Grid extends Component {
      */
     autoHeight: PropTypes.bool,
 
+    /** Optional custom CSS class for individual cells */
+    cellClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
+    /** Optional custom styles for individual cells */
+    cellStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+
     /**
      * Responsible for rendering a cell given an row and column index.
      * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
@@ -428,8 +434,10 @@ export default class Grid extends Component {
 
   render () {
     const {
+      cellClassName,
       cellRenderer,
       cellRangeRenderer,
+      cellStyle,
       className,
       columnCount,
       height,
@@ -498,7 +506,9 @@ export default class Grid extends Component {
 
       childrenToDisplay = cellRangeRenderer({
         cellCache: this._cellCache,
+        cellClassName: this._wrapCellClassNameGetter(cellClassName),
         cellRenderer,
+        cellStyle: this._wrapCellStyleGetter(cellStyle),
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
@@ -687,10 +697,22 @@ export default class Grid extends Component {
     }
   }
 
+  _wrapCellClassNameGetter (className) {
+    return this._wrapPropertyGetter(className)
+  }
+
+  _wrapCellStyleGetter (style) {
+    return this._wrapPropertyGetter(style)
+  }
+
+  _wrapPropertyGetter (value) {
+    return value instanceof Function
+      ? value
+      : () => value
+  }
+
   _wrapSizeGetter (size) {
-    return typeof size === 'function'
-      ? size
-      : () => size
+    return this._wrapPropertyGetter(size)
   }
 
   _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {

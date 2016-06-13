@@ -21,7 +21,9 @@ describe('VirtualScroll', () => {
     onScroll,
     overscanRowCount = 0,
     rowHeight = 10,
+    rowClassName,
     rowCount = rendered.size,
+    rowStyle,
     scrollToAlignment,
     scrollToIndex,
     scrollTop,
@@ -51,6 +53,8 @@ describe('VirtualScroll', () => {
         rowHeight={rowHeight}
         rowRenderer={rowRenderer}
         rowCount={rowCount}
+        rowClassName={rowClassName}
+        rowStyle={rowStyle}
         scrollToAlignment={scrollToAlignment}
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
@@ -287,6 +291,66 @@ describe('VirtualScroll', () => {
       const style = { backgroundColor: 'red' }
       const rendered = findDOMNode(render(getMarkup({ style })))
       expect(rendered.style.backgroundColor).toEqual('red')
+    })
+
+    it('should use the expected global CSS classNames for rows', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        columnCount: 1
+      })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.className === 'Grid__cell')
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :cellClassName if specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        rowClassName: 'foo'
+      })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :cellClassName if function specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        rowClassName: () => 'foo'
+      })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :cellClassName indexes', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        rowClassName: ({index}) => `col-${index}`
+      })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.className.split(' ')[1])
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual(['col-0', 'col-1', 'col-2'])
+    })
+
+    it('should use a custom :rowStyle if specified', () => {
+      const rowStyle = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ rowStyle })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const result = Array.from(cells).map(el => el.style.backgroundColor)
+      expect(result).toEqual((new Array(cells.length)).fill('red'))
+    })
+
+    it('should use a custom :rowStyle if function specified', () => {
+      const rowStyle = () => { return { backgroundColor: 'red' } }
+      const rendered = findDOMNode(render(getMarkup({ rowStyle })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const result = Array.from(cells).map(el => el.style.backgroundColor)
+      expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
   })
 
