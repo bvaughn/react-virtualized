@@ -348,7 +348,7 @@ describe('VirtualScroll', () => {
     })
 
     it('should use a custom :rowStyle if function specified', () => {
-      const rowStyle = (() => { return { backgroundColor: 'red' } })
+      const rowStyle = () => { return { backgroundColor: 'red' } }
       const rendered = findDOMNode(render(getMarkup({ rowStyle })))
       const cells = rendered.querySelectorAll('.Grid__cell')
       const result = Array.from(cells).map(el => el.style.backgroundColor)

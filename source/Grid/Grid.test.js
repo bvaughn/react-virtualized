@@ -627,7 +627,7 @@ describe('Grid', () => {
     })
 
     it('should use a custom :cellStyle if function specified', () => {
-      const cellStyle = (() => { return { backgroundColor: 'red' } })
+      const cellStyle = () => { return { backgroundColor: 'red' } }
       const rendered = findDOMNode(render(getMarkup({ cellStyle })))
       const cells = rendered.querySelectorAll('.Grid__cell')
       const result = Array.from(cells).map(el => el.style.backgroundColor)
