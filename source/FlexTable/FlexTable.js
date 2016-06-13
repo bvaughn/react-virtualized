@@ -126,6 +126,12 @@ export default class FlexTable extends Component {
     /** Optional custom inline style to attach to table rows. */
     rowStyle: PropTypes.object,
 
+    /** Optional custom CSS class for individual rows */
+    rowWrapperClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
+    /** Optional custom CSS class for individual rows */
+    rowWrapperStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+
     /** See Grid#scrollToAlignment */
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
@@ -233,6 +239,10 @@ export default class FlexTable extends Component {
 
     const rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName
 
+    const rowWrapperClassName = this._rowWrapperClassName()
+
+    const rowWrapperStyle = this._rowWrapperStyle()
+
     return (
       <div
         className={cn('FlexTable', className)}
@@ -256,10 +266,12 @@ export default class FlexTable extends Component {
           aria-label={this.props['aria-label']}
           autoHeight={autoHeight}
           className={'FlexTable__Grid'}
+          cellClassName={rowWrapperClassName}
           cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
             index: rowIndex,
             isScrolling
           })}
+          cellStyle={rowWrapperStyle}
           columnWidth={width}
           columnCount={1}
           estimatedRowSize={estimatedRowSize}
@@ -495,6 +507,22 @@ export default class FlexTable extends Component {
     return rowHeight instanceof Function
       ? rowHeight({ index: rowIndex })
       : rowHeight
+  }
+
+  _propertyIndexAdapter (propName) {
+    const { [propName]: propGetter } = this.props
+
+    return propGetter instanceof Function
+      ? ({ rowIndex: index }) => propGetter({ index })
+      : propGetter
+  }
+
+  _rowWrapperClassName () {
+    return this._propertyIndexAdapter('rowWrapperClassName')
+  }
+
+  _rowWrapperStyle () {
+    return this._propertyIndexAdapter('rowWrapperStyle')
   }
 
   _setScrollbarWidth () {

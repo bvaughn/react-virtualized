@@ -329,9 +329,7 @@ describe('VirtualScroll', () => {
     it('should use a custom :cellClassName indexes', () => {
       const rendered = findDOMNode(render(getMarkup({
         rowCount: 3,
-        rowClassName: ({index}) => {
-          return `col-${index}`
-        }
+        rowClassName: ({index}) => `col-${index}`
       })))
       const cells = rendered.querySelectorAll('.Grid__cell')
       const rows = Array.from(cells).map(row => row.className.split(' ')[1])

@@ -608,9 +608,7 @@ describe('Grid', () => {
       const rendered = findDOMNode(render(getMarkup({
         rowCount: 2,
         columnCount: 2,
-        cellClassName: ({rowIndex, columnIndex}) => {
-          return `col-${rowIndex}-${columnIndex}`
-        }
+        cellClassName: ({rowIndex, columnIndex}) => `col-${rowIndex}-${columnIndex}`
       })))
       const cells = rendered.querySelectorAll('.Grid__cell')
       const rows = Array.from(cells).map(row => row.className.split(' ')[1])

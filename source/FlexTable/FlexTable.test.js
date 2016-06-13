@@ -56,6 +56,8 @@ describe('FlexTable', () => {
     rowGetter = immutableRowGetter,
     rowHeight = 10,
     rowStyle,
+    rowWrapperClassName,
+    rowWrapperStyle,
     scrollToAlignment,
     scrollToIndex,
     scrollTop,
@@ -86,6 +88,8 @@ describe('FlexTable', () => {
         rowGetter={rowGetter}
         rowHeight={rowHeight}
         rowStyle={rowStyle}
+        rowWrapperClassName={rowWrapperClassName}
+        rowWrapperStyle={rowWrapperStyle}
         scrollToAlignment={scrollToAlignment}
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
@@ -711,6 +715,69 @@ describe('FlexTable', () => {
       expect(node.querySelector('.FlexTable__headerColumn').style.backgroundColor).toEqual('blue')
       expect(node.querySelector('.FlexTable__row').style.backgroundColor).toEqual('green')
       expect(node.style.backgroundColor).toEqual('orange')
+    })
+
+    it('should use the expected global CSS classNames for rows', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        columnCount: 1
+      })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.className === 'Grid__cell')
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :rowWrapperClassName if specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        columnCount: 1,
+        rowWrapperClassName: 'foo'
+      })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :rowWrapperClassName if function specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 3,
+        columnCount: 1,
+        rowWrapperClassName: () => 'foo'
+      })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
+      expect(rows.length).toEqual(3)
+      expect(rows).toEqual([true, true, true])
+    })
+
+    it('should use a custom :rowWrapperClassName indexes', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowCount: 2,
+        columnCount: 2,
+        rowWrapperClassName: ({index}) => `row-${index}`
+      })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.className.split(' ')[1])
+      expect(rows.length).toEqual(2)
+      expect(rows).toEqual(['row-0', 'row-1'])
+    })
+
+    it('should use a custom :rowWrapperStyle if specified', () => {
+      const rowWrapperStyle = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ rowWrapperStyle })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const result = Array.from(cells).map(el => el.style.backgroundColor)
+      expect(result).toEqual((new Array(cells.length)).fill('red'))
+    })
+
+    it('should use a custom :rowWrapperStyle if function specified', () => {
+      const rowWrapperStyle = () => { return { backgroundColor: 'red' } }
+      const rendered = findDOMNode(render(getMarkup({ rowWrapperStyle })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const result = Array.from(cells).map(el => el.style.backgroundColor)
+      expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
   })
 
