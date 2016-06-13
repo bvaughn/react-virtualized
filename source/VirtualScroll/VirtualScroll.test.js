@@ -21,10 +21,11 @@ describe('VirtualScroll', () => {
     onScroll,
     overscanRowCount = 0,
     rowHeight = 10,
+    rowClassName,
     rowCount = rendered.size,
+    rowStyle,
     scrollToAlignment,
     scrollToIndex,
-    rowClassName,
     scrollTop,
     style,
     width = 100
@@ -53,6 +54,7 @@ describe('VirtualScroll', () => {
         rowRenderer={rowRenderer}
         rowCount={rowCount}
         rowClassName={rowClassName}
+        rowStyle={rowStyle}
         scrollToAlignment={scrollToAlignment}
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
@@ -296,9 +298,8 @@ describe('VirtualScroll', () => {
         rowCount: 3,
         columnCount: 1
       })))
-      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
-        return row.className === 'Grid__cell'
-      })
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.className === 'Grid__cell')
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
     })
@@ -308,9 +309,8 @@ describe('VirtualScroll', () => {
         rowCount: 3,
         rowClassName: 'foo'
       })))
-      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
-        return row.classList.contains('foo')
-      })
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
     })
@@ -320,9 +320,8 @@ describe('VirtualScroll', () => {
         rowCount: 3,
         rowClassName: () => 'foo'
       })))
-      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
-        return row.classList.contains('foo')
-      })
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
     })
@@ -334,11 +333,26 @@ describe('VirtualScroll', () => {
           return `col-${index}`
         }
       })))
-      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
-        return row.className.split(' ')[1]
-      })
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.className.split(' ')[1])
       expect(rows.length).toEqual(3)
       expect(rows).toEqual(['col-0', 'col-1', 'col-2'])
+    })
+
+    it('should use a custom :rowStyle if specified', () => {
+      const rowStyle = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ rowStyle })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const result = Array.from(cells).map(el => el.style.backgroundColor)
+      expect(result).toEqual((new Array(cells.length)).fill('red'))
+    })
+
+    it('should use a custom :rowStyle if function specified', () => {
+      const rowStyle = (() => { return { backgroundColor: 'red' } })
+      const rendered = findDOMNode(render(getMarkup({ rowStyle })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const result = Array.from(cells).map(el => el.style.backgroundColor)
+      expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
   })
 

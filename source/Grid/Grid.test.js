@@ -28,8 +28,10 @@ describe('Grid', () => {
   }
 
   function getMarkup ({
+    cellClassName = null,
     cellRenderer = defaultCellRenderer,
     cellRangeRenderer,
+    cellStyle,
     className,
     columnCount = NUM_COLUMNS,
     columnWidth = 50,
@@ -44,7 +46,6 @@ describe('Grid', () => {
     autoHeight = false,
     rowHeight = 20,
     rowCount = NUM_ROWS,
-    cellClassName = null,
     scrollLeft,
     scrollToAlignment,
     scrollToColumn,
@@ -55,8 +56,10 @@ describe('Grid', () => {
   } = {}) {
     return (
       <Grid
+        cellClassName={cellClassName}
         cellRenderer={cellRenderer || defaultCellRenderer}
         cellRangeRenderer={cellRangeRenderer}
+        cellStyle={cellStyle}
         className={className}
         columnCount={columnCount}
         columnWidth={columnWidth}
@@ -71,7 +74,6 @@ describe('Grid', () => {
         autoHeight={autoHeight}
         rowHeight={rowHeight}
         rowCount={rowCount}
-        cellClassName={cellClassName}
         scrollLeft={scrollLeft}
         scrollToAlignment={scrollToAlignment}
         scrollToColumn={scrollToColumn}
@@ -572,9 +574,8 @@ describe('Grid', () => {
         rowCount: 3,
         columnCount: 1
       })))
-      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
-        return row.className === 'Grid__cell'
-      })
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.className === 'Grid__cell')
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
     })
@@ -585,9 +586,8 @@ describe('Grid', () => {
         columnCount: 1,
         cellClassName: 'foo'
       })))
-      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
-        return row.classList.contains('foo')
-      })
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
     })
@@ -598,9 +598,8 @@ describe('Grid', () => {
         columnCount: 1,
         cellClassName: () => 'foo'
       })))
-      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
-        return row.classList.contains('foo')
-      })
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
     })
@@ -613,11 +612,26 @@ describe('Grid', () => {
           return `col-${rowIndex}-${columnIndex}`
         }
       })))
-      const rows = Array.from(rendered.querySelectorAll('.Grid__cell')).map(row => {
-        return row.className.split(' ')[1]
-      })
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const rows = Array.from(cells).map(row => row.className.split(' ')[1])
       expect(rows.length).toEqual(4)
       expect(rows).toEqual(['col-0-0', 'col-0-1', 'col-1-0', 'col-1-1'])
+    })
+
+    it('should use a custom :cellStyle if specified', () => {
+      const cellStyle = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ cellStyle })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const result = Array.from(cells).map(el => el.style.backgroundColor)
+      expect(result).toEqual((new Array(cells.length)).fill('red'))
+    })
+
+    it('should use a custom :cellStyle if function specified', () => {
+      const cellStyle = (() => { return { backgroundColor: 'red' } })
+      const rendered = findDOMNode(render(getMarkup({ cellStyle })))
+      const cells = rendered.querySelectorAll('.Grid__cell')
+      const result = Array.from(cells).map(el => el.style.backgroundColor)
+      expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
   })
 

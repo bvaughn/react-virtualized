@@ -65,11 +65,14 @@ export default class VirtualScroll extends Component {
     /** Responsbile for rendering a row given an index; ({ index: number }): node */
     rowRenderer: PropTypes.func.isRequired,
 
+    /** Optional custom CSS class for individual rows */
+    rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
     /** Number of rows in list. */
     rowCount: PropTypes.number.isRequired,
 
-    /** Optional custom CSS class for individual rows */
-    rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+    /** Optional custom styles for individual cells */
+    rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
     /** See Grid#scrollToAlignment */
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
@@ -131,6 +134,8 @@ export default class VirtualScroll extends Component {
 
     const rowClassName = this._rowClassName()
 
+    const rowStyle = this._rowStyle()
+
     return (
       <Grid
         ref='Grid'
@@ -140,6 +145,8 @@ export default class VirtualScroll extends Component {
           index: rowIndex,
           isScrolling
         })}
+        cellClassName={rowClassName}
+        cellStyle={rowStyle}
         columnWidth={width}
         columnCount={1}
         estimatedRowSize={estimatedRowSize}
@@ -156,7 +163,6 @@ export default class VirtualScroll extends Component {
         autoHeight={autoHeight}
         rowHeight={rowHeight}
         rowCount={rowCount}
-        cellClassName={rowClassName}
         scrollToAlignment={scrollToAlignment}
         scrollToRow={scrollToIndex}
         scrollTop={scrollTop}
@@ -170,11 +176,19 @@ export default class VirtualScroll extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _rowClassName () {
-    const {rowClassName} = this.props
+  _propertyIndexAdapter (propName) {
+    const { [propName]: propGetter } = this.props
 
-    return rowClassName instanceof Function
-      ? ({ rowIndex: index }) => rowClassName({ index })
-      : rowClassName
+    return propGetter instanceof Function
+      ? ({ rowIndex: index }) => propGetter({ index })
+      : propGetter
+  }
+
+  _rowClassName () {
+    return this._propertyIndexAdapter('rowClassName')
+  }
+
+  _rowStyle () {
+    return this._propertyIndexAdapter('rowStyle')
   }
 }
