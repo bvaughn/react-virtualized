@@ -761,7 +761,7 @@ describe('FlexTable', () => {
       const cells = rendered.querySelectorAll('.Grid__cell')
       const rows = Array.from(cells).map(row => row.className.split(' ')[1])
       expect(rows.length).toEqual(2)
-      expect(rows).toEqual(['row-0', 'row-1'])
+      expect(rows).toEqual(['row--1', 'row-0'])
     })
 
     it('should use a custom :rowWrapperStyle if specified', () => {

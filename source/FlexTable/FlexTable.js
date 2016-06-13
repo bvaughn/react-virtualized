@@ -181,6 +181,8 @@ export default class FlexTable extends Component {
       scrollbarWidth: 0
     }
 
+    this._cellClassName = this._cellClassName.bind(this)
+    this._cellStyle = this._cellStyle.bind(this)
     this._createRow = this._createRow.bind(this)
   }
 
@@ -239,10 +241,6 @@ export default class FlexTable extends Component {
 
     const rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName
 
-    const rowWrapperClassName = this._rowWrapperClassName()
-
-    const rowWrapperStyle = this._rowWrapperStyle()
-
     return (
       <div
         className={cn('FlexTable', className)}
@@ -266,12 +264,12 @@ export default class FlexTable extends Component {
           aria-label={this.props['aria-label']}
           autoHeight={autoHeight}
           className={'FlexTable__Grid'}
-          cellClassName={rowWrapperClassName}
+          cellClassName={this._cellClassName}
           cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
             index: rowIndex,
             isScrolling
           })}
-          cellStyle={rowWrapperStyle}
+          cellStyle={this._cellStyle}
           columnWidth={width}
           columnCount={1}
           estimatedRowSize={estimatedRowSize}
@@ -299,6 +297,22 @@ export default class FlexTable extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
+  }
+
+  _cellClassName ({ rowIndex }) {
+    const { rowWrapperClassName } = this.props
+
+    return rowWrapperClassName instanceof Function
+      ? rowWrapperClassName({ index: rowIndex - 1 })
+      : rowWrapperClassName
+  }
+
+  _cellStyle ({ rowIndex }) {
+    const { rowWrapperStyle } = this.props
+
+    return rowWrapperStyle instanceof Function
+      ? rowWrapperStyle({ index: rowIndex - 1 })
+      : rowWrapperStyle
   }
 
   _createColumn ({
@@ -507,22 +521,6 @@ export default class FlexTable extends Component {
     return rowHeight instanceof Function
       ? rowHeight({ index: rowIndex })
       : rowHeight
-  }
-
-  _propertyIndexAdapter (propName) {
-    const { [propName]: propGetter } = this.props
-
-    return propGetter instanceof Function
-      ? ({ rowIndex: index }) => propGetter({ index })
-      : propGetter
-  }
-
-  _rowWrapperClassName () {
-    return this._propertyIndexAdapter('rowWrapperClassName')
-  }
-
-  _rowWrapperStyle () {
-    return this._propertyIndexAdapter('rowWrapperStyle')
   }
 
   _setScrollbarWidth () {

@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.6.0
+New property added to `Grid`, `FlexTable`, and `VirtualScroll` to enable custom CSS class name and style to be added to the outer cell decorator.
+This can be used to greater customize styles as well as to better implement custom (non-flexbox) styles for IE9.
+Thanks to nicholasrq@ for this contribution!
+
 ##### 7.5.0
 New `WindowScroller` HOC added to enable a `FlexTable` or `VirtualScroll` component to be scrolled based on the window's scroll positions.
 This can be used to create layouts similar to Facebook or Twitter news feeds.

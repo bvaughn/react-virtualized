@@ -178,6 +178,7 @@ export default class Grid extends Component {
 
   static defaultProps = {
     'aria-label': 'grid',
+    cellStyle: {},
     cellRangeRenderer: defaultCellRangeRenderer,
     estimatedColumnSize: 100,
     estimatedRowSize: 30,

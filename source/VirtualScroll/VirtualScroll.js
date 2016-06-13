@@ -100,6 +100,12 @@ export default class VirtualScroll extends Component {
     style: {}
   }
 
+  constructor (props, context) {
+    super(props, context)
+
+    this._wrapIndexGetter = this._wrapIndexGetter.bind(this)
+  }
+
   /** See Grid#measureAllCells */
   measureAllRows () {
     this.refs.Grid.measureAllCells()
@@ -122,7 +128,9 @@ export default class VirtualScroll extends Component {
       rowRenderer,
       overscanRowCount,
       autoHeight,
+      rowClassName,
       rowCount,
+      rowStyle,
       scrollToAlignment,
       scrollToIndex,
       scrollTop,
@@ -131,10 +139,8 @@ export default class VirtualScroll extends Component {
     } = this.props
 
     const classNames = cn('VirtualScroll', className)
-
-    const rowClassName = this._rowClassName()
-
-    const rowStyle = this._rowStyle()
+    const cellClassName = this._wrapIndexGetter(rowClassName)
+    const cellStyle = this._wrapIndexGetter(rowStyle)
 
     return (
       <Grid
@@ -145,8 +151,8 @@ export default class VirtualScroll extends Component {
           index: rowIndex,
           isScrolling
         })}
-        cellClassName={rowClassName}
-        cellStyle={rowStyle}
+        cellClassName={cellClassName}
+        cellStyle={cellStyle}
         columnWidth={width}
         columnCount={1}
         estimatedRowSize={estimatedRowSize}
@@ -176,19 +182,9 @@ export default class VirtualScroll extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _propertyIndexAdapter (propName) {
-    const { [propName]: propGetter } = this.props
-
-    return propGetter instanceof Function
-      ? ({ rowIndex: index }) => propGetter({ index })
-      : propGetter
-  }
-
-  _rowClassName () {
-    return this._propertyIndexAdapter('rowClassName')
-  }
-
-  _rowStyle () {
-    return this._propertyIndexAdapter('rowStyle')
+  _wrapIndexGetter (value) {
+    return value instanceof Function
+      ? ({ rowIndex }) => value({ index: rowIndex })
+      : () => value
   }
 }
