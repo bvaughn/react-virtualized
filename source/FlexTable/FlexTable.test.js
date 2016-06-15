@@ -32,74 +32,23 @@ describe('FlexTable', () => {
     cellDataGetter,
     cellRenderer,
     cellStyle,
-    className,
     columnData = { data: 123 },
     disableSort = false,
-    estimatedRowSize,
-    headerClassName,
-    headerHeight = 20,
     headerRenderer,
-    headerStyle,
-    height = 100,
     maxWidth,
     minWidth,
-    noRowsRenderer,
-    onHeaderClick,
-    onRowClick,
-    onRowMouseOver,
-    onRowMouseOut,
-    onRowsRendered,
-    onScroll,
-    overscanRowCount = 0,
-    rowClassName,
-    rowCount = list.size,
-    rowGetter = immutableRowGetter,
-    rowHeight = 10,
-    rowStyle,
-    rowWrapperClassName,
-    rowWrapperStyle,
-    scrollToAlignment,
-    scrollToIndex,
-    scrollTop,
-    sort,
-    sortBy,
-    sortDirection,
-    style,
-    tabIndex,
-    width = 100
+    ...flexTableProps
   } = {}) {
     return (
       <FlexTable
-        className={className}
-        estimatedRowSize={estimatedRowSize}
-        headerClassName={headerClassName}
-        headerHeight={headerHeight}
-        headerStyle={headerStyle}
-        height={height}
-        noRowsRenderer={noRowsRenderer}
-        onHeaderClick={onHeaderClick}
-        onRowClick={onRowClick}
-        onRowMouseOver={onRowMouseOver}
-        onRowMouseOut={onRowMouseOut}
-        onRowsRendered={onRowsRendered}
-        onScroll={onScroll}
-        overscanRowCount={overscanRowCount}
-        rowClassName={rowClassName}
-        rowCount={rowCount}
-        rowGetter={rowGetter}
-        rowHeight={rowHeight}
-        rowStyle={rowStyle}
-        rowWrapperClassName={rowWrapperClassName}
-        rowWrapperStyle={rowWrapperStyle}
-        scrollToAlignment={scrollToAlignment}
-        scrollToIndex={scrollToIndex}
-        scrollTop={scrollTop}
-        sort={sort}
-        sortBy={sortBy}
-        sortDirection={sortDirection}
-        style={style}
-        tabIndex={tabIndex}
-        width={width}
+        headerHeight={20}
+        height={100}
+        overscanRowCount={0}
+        rowCount={list.size}
+        rowGetter={immutableRowGetter}
+        rowHeight={10}
+        width={100}
+        {...flexTableProps}
       >
         <FlexColumn
           label='Name'

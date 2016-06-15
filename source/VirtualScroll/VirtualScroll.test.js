@@ -10,58 +10,29 @@ describe('VirtualScroll', () => {
   for (var i = 0; i < 100; i++) {
     array.push(`Name ${i}`)
   }
-  const rendered = Immutable.fromJS(array)
+  const names = Immutable.fromJS(array)
 
-  function getMarkup ({
-    className,
-    estimatedRowSize,
-    height = 100,
-    noRowsRenderer,
-    onRowsRendered,
-    onScroll,
-    overscanRowCount = 0,
-    rowHeight = 10,
-    rowClassName,
-    rowCount = rendered.size,
-    rowStyle,
-    scrollToAlignment,
-    scrollToIndex,
-    scrollTop,
-    style,
-    tabIndex,
-    width = 100
-  } = {}) {
+  function getMarkup (props = {}) {
     function rowRenderer ({ index }) {
       return (
         <div
           key={index}
           className='listItem'
         >
-          {rendered.get(index)}
+          {names.get(index)}
         </div>
       )
     }
 
     return (
       <VirtualScroll
-        className={className}
-        estimatedRowSize={estimatedRowSize}
-        height={height}
-        noRowsRenderer={noRowsRenderer}
-        onRowsRendered={onRowsRendered}
-        onScroll={onScroll}
-        overscanRowCount={overscanRowCount}
-        rowHeight={rowHeight}
+        height={100}
+        overscanRowCount={0}
+        rowHeight={10}
+        rowCount={names.size}
         rowRenderer={rowRenderer}
-        rowCount={rowCount}
-        rowClassName={rowClassName}
-        rowStyle={rowStyle}
-        scrollToAlignment={scrollToAlignment}
-        scrollToIndex={scrollToIndex}
-        scrollTop={scrollTop}
-        style={style}
-        tabIndex={tabIndex}
-        width={width}
+        width={100}
+        {...props}
       />
     )
   }

@@ -27,62 +27,20 @@ describe('Grid', () => {
     Simulate.scroll(findDOMNode(grid), { target })
   }
 
-  function getMarkup ({
-    cellClassName = null,
-    cellRenderer = defaultCellRenderer,
-    cellRangeRenderer,
-    cellStyle,
-    className,
-    columnCount = NUM_COLUMNS,
-    columnWidth = 50,
-    estimatedColumnSize,
-    estimatedRowSize,
-    height = 100,
-    noContentRenderer,
-    onSectionRendered,
-    onScroll,
-    overscanColumnCount = 0,
-    overscanRowCount = 0,
-    autoHeight = false,
-    rowHeight = 20,
-    rowCount = NUM_ROWS,
-    scrollLeft,
-    scrollToAlignment,
-    scrollToColumn,
-    scrollToRow,
-    scrollTop,
-    style,
-    tabIndex,
-    width = 200
-  } = {}) {
+  function getMarkup (props = {}) {
     return (
       <Grid
-        cellClassName={cellClassName}
-        cellRenderer={cellRenderer || defaultCellRenderer}
-        cellRangeRenderer={cellRangeRenderer}
-        cellStyle={cellStyle}
-        className={className}
-        columnCount={columnCount}
-        columnWidth={columnWidth}
-        estimatedColumnSize={estimatedColumnSize}
-        estimatedRowSize={estimatedRowSize}
-        height={height}
-        noContentRenderer={noContentRenderer}
-        onSectionRendered={onSectionRendered}
-        onScroll={onScroll}
-        overscanColumnCount={overscanColumnCount}
-        overscanRowCount={overscanRowCount}
-        autoHeight={autoHeight}
-        rowHeight={rowHeight}
-        rowCount={rowCount}
-        scrollLeft={scrollLeft}
-        scrollToAlignment={scrollToAlignment}
-        scrollToColumn={scrollToColumn}
-        scrollToRow={scrollToRow}
-        scrollTop={scrollTop}
-        style={style}
-        tabIndex={tabIndex}
-        width={width}
+        cellRenderer={defaultCellRenderer}
+        columnCount={NUM_COLUMNS}
+        columnWidth={50}
+        height={100}
+        overscanColumnCount={0}
+        overscanRowCount={0}
+        autoHeight={false}
+        rowHeight={20}
+        rowCount={NUM_ROWS}
+        width={200}
+        {...props}
       />
     )
   }

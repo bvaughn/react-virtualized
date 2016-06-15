@@ -15,18 +15,14 @@ function ChildComponent ({ scrollToColumn, scrollToRow }) {
 }
 
 describe('ArrowKeyStepper', () => {
-  function renderHelper ({
-    className,
-    columnCount = 10,
-    rowCount = 10
-  } = {}) {
+  function renderHelper (props = {}) {
     let onSectionRenderedCallback
 
     const node = findDOMNode(render(
       <ArrowKeyStepper
-        className={className}
-        columnCount={columnCount}
-        rowCount={rowCount}
+        columnCount={10}
+        rowCount={10}
+        {...props}
       >
         {({ onSectionRendered, scrollToColumn, scrollToRow }) => {
           onSectionRenderedCallback = onSectionRendered

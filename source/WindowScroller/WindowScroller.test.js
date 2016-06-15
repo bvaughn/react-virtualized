@@ -26,15 +26,9 @@ describe('WindowScroller', () => {
     document.dispatchEvent(new window.Event('resize', { bubbles: true }))
   }
 
-  function getMarkup ({
-    onScroll,
-    onResize
-  } = {}) {
+  function getMarkup (props = {}) {
     return (
-      <WindowScroller
-        onScroll={onScroll}
-        onResize={onResize}
-      >
+      <WindowScroller {...props}>
         {({ height, scrollTop }) => (
           <ChildComponent
             height={height}

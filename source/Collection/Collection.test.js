@@ -19,24 +19,11 @@ describe('Collection', () => {
     )
   }
 
-  function getMarkup ({
-    className,
-    cellCount = CELLS.length,
-    cellGroupRenderer,
-    cellRenderer,
-    cellSizeAndPositionGetter,
-    height = SECTION_SIZE,
-    noContentRenderer,
-    onSectionRendered,
-    onScroll,
-    sectionSize = SECTION_SIZE,
-    scrollLeft,
-    scrollToAlignment,
-    scrollToCell,
-    scrollTop,
-    style,
-    width = SECTION_SIZE * 2
-  } = {}) {
+  function getMarkup (props = {}) {
+    const {
+      cellCount = CELLS.length
+    } = props
+
     function defaultCellSizeAndPositionGetter ({ index }) {
       index = index % cellCount
 
@@ -45,22 +32,13 @@ describe('Collection', () => {
 
     return (
       <Collection
-        className={className}
         cellCount={cellCount}
-        cellGroupRenderer={cellGroupRenderer}
-        cellRenderer={cellRenderer || defaultCellRenderer}
-        cellSizeAndPositionGetter={cellSizeAndPositionGetter || defaultCellSizeAndPositionGetter}
-        height={height}
-        noContentRenderer={noContentRenderer}
-        onSectionRendered={onSectionRendered}
-        onScroll={onScroll}
-        sectionSize={sectionSize}
-        scrollLeft={scrollLeft}
-        scrollToAlignment={scrollToAlignment}
-        scrollToCell={scrollToCell}
-        scrollTop={scrollTop}
-        style={style}
-        width={width}
+        cellRenderer={defaultCellRenderer}
+        cellSizeAndPositionGetter={defaultCellSizeAndPositionGetter}
+        height={SECTION_SIZE}
+        sectionSize={SECTION_SIZE}
+        width={SECTION_SIZE * 2}
+        {...props}
       />
     )
   }
