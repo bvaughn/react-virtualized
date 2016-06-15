@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 7.7.0
+Added configurable `tabIndex` property to `Grid`, `FlexTable`, and `VirtualScroll`.
+Default value remains 0 but can now be overridden.
+
 ##### 7.6.0
 New property added to `Grid`, `FlexTable`, and `VirtualScroll` to enable custom CSS class name and style to be added to the outer cell decorator.
 This can be used to greater customize styles as well as to better implement custom (non-flexbox) styles for IE9.
