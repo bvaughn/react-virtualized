@@ -22,6 +22,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Forced vertical scroll offset; can be used to synchronize scrolling between components |
 | style | Object |  | Optional custom inline style to attach to root `VirtualScroll` element. |
+| tabIndex | Number |  | Optional override of tab index default; defaults to 0. |
 | width | Number | ✓ | Width of the list |
 
 ### Public Methods
