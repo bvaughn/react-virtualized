@@ -28,6 +28,7 @@ describe('VirtualScroll', () => {
     scrollToIndex,
     scrollTop,
     style,
+    tabIndex,
     width = 100
   } = {}) {
     function rowRenderer ({ index }) {
@@ -59,6 +60,7 @@ describe('VirtualScroll', () => {
         scrollToIndex={scrollToIndex}
         scrollTop={scrollTop}
         style={style}
+        tabIndex={tabIndex}
         width={width}
       />
     )
@@ -469,6 +471,20 @@ describe('VirtualScroll', () => {
       }))
       // And then only the rows necessary to fill the visible region.
       expect(highestRowIndex).toEqual(9)
+    })
+  })
+
+  describe('tabIndex', () => {
+    it('should be focusable (tabIndex === 0) by default', () => {
+      const rendered = findDOMNode(render(getMarkup()))
+      expect(rendered.tabIndex).toEqual(0)
+    })
+
+    it('should allow tabIndex to be overridden', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        tabIndex: -1
+      })))
+      expect(rendered.tabIndex).toEqual(-1)
     })
   })
 })

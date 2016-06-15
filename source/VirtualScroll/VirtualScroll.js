@@ -86,6 +86,9 @@ export default class VirtualScroll extends Component {
     /** Optional inline style */
     style: PropTypes.object,
 
+    /** Tab index for focus */
+    tabIndex: PropTypes.number,
+
     /** Width of list */
     width: PropTypes.number.isRequired
   }
@@ -135,6 +138,7 @@ export default class VirtualScroll extends Component {
       scrollToIndex,
       scrollTop,
       style,
+      tabIndex,
       width
     } = this.props
 
@@ -173,6 +177,7 @@ export default class VirtualScroll extends Component {
         scrollToRow={scrollToIndex}
         scrollTop={scrollTop}
         style={style}
+        tabIndex={tabIndex}
         width={width}
       />
     )

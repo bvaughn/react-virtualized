@@ -52,6 +52,7 @@ describe('Grid', () => {
     scrollToRow,
     scrollTop,
     style,
+    tabIndex,
     width = 200
   } = {}) {
     return (
@@ -80,6 +81,7 @@ describe('Grid', () => {
         scrollToRow={scrollToRow}
         scrollTop={scrollTop}
         style={style}
+        tabIndex={tabIndex}
         width={width}
       />
     )
@@ -1088,6 +1090,20 @@ describe('Grid', () => {
 
       expect(rendered.querySelector('.Grid__innerScrollContainer').style.height).toEqual('2000px') // 100 rows * 20px rowHeight
       expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000)
+    })
+  })
+
+  describe('tabIndex', () => {
+    it('should be focusable (tabIndex === 0) by default', () => {
+      const rendered = findDOMNode(render(getMarkup()))
+      expect(rendered.tabIndex).toEqual(0)
+    })
+
+    it('should allow tabIndex to be overridden', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        tabIndex: -1
+      })))
+      expect(rendered.tabIndex).toEqual(-1)
     })
   })
 })

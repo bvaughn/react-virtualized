@@ -156,6 +156,9 @@ export default class FlexTable extends Component {
     /** Optional inline style */
     style: PropTypes.object,
 
+    /** Tab index for focus */
+    tabIndex: PropTypes.number,
+
     /** Width of list */
     width: PropTypes.number.isRequired
   }
@@ -224,6 +227,7 @@ export default class FlexTable extends Component {
       scrollToIndex,
       scrollTop,
       style,
+      tabIndex,
       width
     } = this.props
     const { scrollbarWidth } = this.state
@@ -289,6 +293,7 @@ export default class FlexTable extends Component {
           scrollToAlignment={scrollToAlignment}
           scrollToRow={scrollToIndex}
           scrollTop={scrollTop}
+          tabIndex={tabIndex}
           width={width}
         />
       </div>

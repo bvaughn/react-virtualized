@@ -65,6 +65,7 @@ describe('FlexTable', () => {
     sortBy,
     sortDirection,
     style,
+    tabIndex,
     width = 100
   } = {}) {
     return (
@@ -97,6 +98,7 @@ describe('FlexTable', () => {
         sortBy={sortBy}
         sortDirection={sortDirection}
         style={style}
+        tabIndex={tabIndex}
         width={width}
       >
         <FlexColumn
@@ -902,6 +904,20 @@ describe('FlexTable', () => {
       expect(row.getAttribute('aria-label')).toEqual(null)
       expect(row.getAttribute('role')).toEqual(null)
       expect(row.tabIndex).toEqual(-1)
+    })
+  })
+
+  describe('tabIndex', () => {
+    it('should be focusable (tabIndex === 0) by default', () => {
+      const rendered = findDOMNode(render(getMarkup()))
+      expect(rendered.querySelector('.Grid').tabIndex).toEqual(0)
+    })
+
+    it('should allow tabIndex to be overridden', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        tabIndex: -1
+      })))
+      expect(rendered.querySelector('.Grid').tabIndex).toEqual(-1)
     })
   })
 })

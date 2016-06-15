@@ -170,6 +170,9 @@ export default class Grid extends Component {
     /** Optional inline style */
     style: PropTypes.object,
 
+    /** Tab index for focus */
+    tabIndex: PropTypes.number,
+
     /**
      * Width of Grid; this property determines the number of visible (vs virtualized) columns.
      */
@@ -188,7 +191,8 @@ export default class Grid extends Component {
     overscanColumnCount: 0,
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
-    style: {}
+    style: {},
+    tabIndex: 0
   };
 
   constructor (props, context) {
@@ -448,6 +452,7 @@ export default class Grid extends Component {
       autoHeight,
       rowCount,
       style,
+      tabIndex,
       width
     } = this.props
 
@@ -559,7 +564,7 @@ export default class Grid extends Component {
         onScroll={this._onScroll}
         role='grid'
         style={gridStyle}
-        tabIndex={0}
+        tabIndex={tabIndex}
       >
         {childrenToDisplay.length > 0 &&
           <div
