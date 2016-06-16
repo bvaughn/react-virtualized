@@ -36,7 +36,6 @@ var App = React.createClass({
           ReactVirtualized.FlexTable,
           {
             height: params.height,
-            overscanRowCount: 0,
             rowGetter,
             rowHeight: 30,
             rowCount: 1000,
