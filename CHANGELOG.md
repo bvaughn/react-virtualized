@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.7.1
+Export the `defaultCellRangeRenderer` used by `Grid` in order to enable easier composition.
+
 ##### 7.7.0
 Added configurable `tabIndex` property to `Grid`, `FlexTable`, and `VirtualScroll`.
 Default value remains 0 but can now be overridden.

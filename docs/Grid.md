@@ -64,9 +64,34 @@ The Grid component supports the following static class names
 This is an advanced property.
 It is useful for situations where the `Grid` requires additional, overlayed UI (such as a Gantt chart or a calendar application).
 Many use cases can be solved more easily using the `onScroll` callback or the `ScrollSync` HOC.
-If you do choose to implement your own range renderer though, consider starting by forking the [`defaultCellRangeRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/defaultCellRangeRenderer.js) function.
 
-The general shape of your range renderer function should look something like the following:
+If you do want to override `cellRangeRenderer` the easiest way is to decorate the default implementation like so:
+
+```js
+import { defaultCellRangeRenderer, Grid } from '../'
+
+function cellRangeRenderer (props) {
+  const children = defaultCellRangeRenderer(props)
+  children.push(
+    <div>My custom overlay</div>
+  )
+  return children
+}
+
+function CustomizedGrid (props) {
+  return (
+    <Grid
+      cellRangeRenderer={cellRangeRenderer}
+      {...props}
+    />
+  )
+}
+```
+
+
+If you require greater customization, you may want to fork the [`defaultCellRangeRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/defaultCellRangeRenderer.js) function.
+
+This function accepts the following named parameters:
 
 ```js
 function cellRangeRenderer ({
@@ -111,7 +136,6 @@ function cellRangeRenderer ({
   }
 
   return renderedCells
-}
 }
 ```
 
