@@ -157,7 +157,7 @@ export default class VirtualScroll extends Component {
         })}
         cellClassName={cellClassName}
         cellStyle={cellStyle}
-        columnWidth={width}
+        columnWidth='100%'
         columnCount={1}
         estimatedRowSize={estimatedRowSize}
         height={height}

@@ -56,6 +56,10 @@ export default class ScalingCellSizeAndPositionManager {
     return Math.round(offsetPercentage * (safeTotalSize - totalSize))
   }
 
+  getUnit (): string {
+    return this._cellSizeAndPositionManager.getUnit()
+  }
+
   getSizeAndPositionOfCell (index: number) {
     return this._cellSizeAndPositionManager.getSizeAndPositionOfCell(index)
   }

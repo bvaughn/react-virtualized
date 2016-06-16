@@ -33,6 +33,7 @@
   flex-direction: column;
   justify-content: center;
   padding: 0 .5em;
+  overflow: hidden;
 }
 .cell {
   border-right: 1px solid #e0e0e0;
@@ -64,4 +65,11 @@
   justify-content: center;
   font-size: 1em;
   color: #bdbdbd;
+}
+
+.checkboxLabel {
+  margin-left: .5rem;
+}
+.checkboxLabel:first-of-type {
+  margin-left: 0;
 }

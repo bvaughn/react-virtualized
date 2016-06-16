@@ -1,5 +1,7 @@
 /** @flow */
 
+import parseSize from './parseSize'
+
 /**
  * Just-in-time calculates and caches size and position information for a collection of cells.
  */
@@ -41,6 +43,10 @@ export default class CellSizeAndPositionManager {
     return this._lastMeasuredIndex
   }
 
+  getUnit (): string {
+    return 'px'
+  }
+
   /**
    * This method returns the size and position for the cell at the specified index.
    * It just-in-time calculates (or used cached values) for cells leading up to the index.
@@ -55,12 +61,14 @@ export default class CellSizeAndPositionManager {
       let offset = lastMeasuredCellSizeAndPosition.offset + lastMeasuredCellSizeAndPosition.size
 
       for (var i = this._lastMeasuredIndex + 1; i <= index; i++) {
-        let size = this._cellSizeGetter({ index: i })
+        const rawSize = this._cellSizeGetter({ index: i })
+        const parsedSize = parseSize(rawSize)
 
-        if (size == null || isNaN(size)) {
-          throw Error(`Invalid size returned for cell ${i} of value ${size}`)
+        if (parsedSize == null || parsedSize.unit !== 'px') {
+          throw Error(`Invalid size returned for cell ${i} of value ${rawSize}`)
         }
 
+        const size = parsedSize.value
         this._cellSizeAndPositionData[i] = {
           offset,
           size

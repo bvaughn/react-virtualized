@@ -2,6 +2,10 @@
 import React from 'react'
 import cn from 'classnames'
 
+function withUnit (unit: string): Function {
+  return unit === '%' ? v => v + unit : v => v
+}
+
 /**
  * Default implementation of cellRangeRenderer used by Grid.
  * This renderer supports cell-caching while the user is scrolling.
@@ -24,6 +28,9 @@ export default function defaultCellRangeRenderer ({
   verticalOffsetAdjustment
 }: DefaultCellRangeRendererParams) {
   const renderedCells = []
+
+  const withRowUnit = withUnit(rowSizeAndPositionManager.getUnit())
+  const withColumnUnit = withUnit(columnSizeAndPositionManager.getUnit())
 
   for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
     let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex)
@@ -69,10 +76,10 @@ export default function defaultCellRangeRenderer ({
           className={cn('Grid__cell', className)}
           style={{
             ...cellStyleObject,
-            height: rowDatum.size,
-            left: columnDatum.offset + horizontalOffsetAdjustment,
-            top: rowDatum.offset + verticalOffsetAdjustment,
-            width: columnDatum.size
+            height: withRowUnit(rowDatum.size),
+            left: withColumnUnit(columnDatum.offset + horizontalOffsetAdjustment),
+            top: withRowUnit(rowDatum.offset + verticalOffsetAdjustment),
+            width: withColumnUnit(columnDatum.size)
           }}
         >
           {renderedCell}
