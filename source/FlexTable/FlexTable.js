@@ -213,6 +213,7 @@ export default class FlexTable extends Component {
   render () {
     const {
       autoHeight,
+      children,
       className,
       disableHeader,
       estimatedRowSize,
@@ -238,6 +239,12 @@ export default class FlexTable extends Component {
     const availableRowsHeight = height - headerHeight
 
     const rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName
+
+    // Precompute and cache column styles before rendering rows and columns to speed things up
+    this._cachedColumnStyles = []
+    React.Children.toArray(children).forEach((column, index) => {
+      this._cachedColumnStyles[index] = this._getFlexStyleForColumn(column, column.props.style)
+    })
 
     return (
       <div
@@ -320,15 +327,13 @@ export default class FlexTable extends Component {
       cellRenderer,
       className,
       columnData,
-      dataKey,
-      style: cellStyle
+      dataKey
     } = column.props
 
     const cellData = cellDataGetter({ columnData, dataKey, rowData })
     const renderedCell = cellRenderer({ cellData, columnData, dataKey, isScrolling, rowData, rowIndex })
 
-    // @TODO We could pre-compute and cache these styles rather than computing them for each row
-    const style = this._getFlexStyleForColumn(column, cellStyle)
+    const style = this._cachedColumnStyles[columnIndex]
 
     const title = typeof renderedCell === 'string'
       ? renderedCell
