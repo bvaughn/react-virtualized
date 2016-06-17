@@ -36,7 +36,7 @@ var App = React.createClass({
             overscanRowCount: 0,
             rowGetter,
             rowHeight: 30,
-            rowCount: 100000,
+            rowCount: 1000,
             width: params.width
           },
           null,
@@ -82,7 +82,7 @@ function testCase (completedCallback) {
   incrementScrollTop()
 }
 
-const testRunner = new TestRunner(testCase)
+const testRunner = new TestRunner(testCase, 10)
 
 document.body.addEventListener('keypress', function (event) {
   if (event.keyCode === 84 || event.keyCode === 116) { // 't'
