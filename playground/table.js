@@ -84,12 +84,10 @@ function testCase (completedCallback) {
 
 const testRunner = new TestRunner(testCase, 5)
 
-document.body.addEventListener('keypress', function (event) {
-  if (event.keyCode === 84 || event.keyCode === 116) { // 't'
-    if (testRunner.isRunning) {
-      testRunner.stop()
-    } else {
-      testRunner.start()
-    }
+document.body.addEventListener('click', function (event) {
+  if (testRunner.isRunning) {
+    testRunner.stop()
+  } else {
+    testRunner.start()
   }
 })
