@@ -49,6 +49,8 @@ Recomputes row heights and column widths.
 This function should be called if dynamic column or row sizes have changed but nothing else has.
 Since Grid only receives `columnCount` and `rowCount` it has no way of detecting when the underlying data changes.
 
+This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered grid.
+
 ### Class names
 
 The Grid component supports the following static class names

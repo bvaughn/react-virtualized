@@ -187,6 +187,7 @@ export default class FlexTable extends Component {
     this._cellClassName = this._cellClassName.bind(this)
     this._cellStyle = this._cellStyle.bind(this)
     this._createRow = this._createRow.bind(this)
+    this._onScroll = this._onScroll.bind(this)
     this._onSectionRendered = this._onSectionRendered.bind(this)
   }
 
@@ -198,6 +199,7 @@ export default class FlexTable extends Component {
   /** See Grid#recomputeGridSize */
   recomputeRowHeights () {
     this.refs.Grid.recomputeGridSize()
+    this.refs.Grid.forceUpdate()
   }
 
   componentDidMount () {
@@ -217,7 +219,6 @@ export default class FlexTable extends Component {
       headerHeight,
       height,
       noRowsRenderer,
-      onScroll,
       overscanRowCount,
       rowClassName,
       rowHeight,
@@ -269,7 +270,7 @@ export default class FlexTable extends Component {
           estimatedRowSize={estimatedRowSize}
           height={availableRowsHeight}
           noContentRenderer={noRowsRenderer}
-          onScroll={onScroll}
+          onScroll={this._onScroll}
           onSectionRendered={this._onSectionRendered}
           overscanRowCount={overscanRowCount}
           ref='Grid'
@@ -419,7 +420,6 @@ export default class FlexTable extends Component {
     isScrolling
   }) {
     const {
-      cellRenderer,
       children,
       onRowClick,
       onRowMouseOver,
@@ -515,6 +515,12 @@ export default class FlexTable extends Component {
     return rowHeight instanceof Function
       ? rowHeight({ index: rowIndex })
       : rowHeight
+  }
+
+  _onScroll ({ clientHeight, scrollHeight, scrollTop }) {
+    const { onScroll } = this.props
+
+    onScroll({ clientHeight, scrollHeight, scrollTop })
   }
 
   _onSectionRendered ({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) {

@@ -53,6 +53,8 @@ Recompute row heights and offsets.
 
 VirtualScroll has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property. If the `rowHeight` is a number it can compare before and after values but if it is a function that comparison is error prone. In the event that a dynamic `rowHeight` function is in use and the row heights have changed this function should be manually called by the "smart" container parent.
 
+This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered table.
+
 ### Class names
 
 The FlexTable component supports the following static class names

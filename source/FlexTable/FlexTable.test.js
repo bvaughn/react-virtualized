@@ -205,12 +205,7 @@ describe('FlexTable', () => {
       }))
       highestRowIndex = 0
       component.recomputeRowHeights()
-      // Rows won't actually be remeasured until the FlexTable is next rendered.
-      render(getMarkup({
-        rowHeight,
-        rowCount: 50
-      }))
-      // And then only the rows necessary to fill the visible region.
+      // Only the rows required to fill the current viewport will be rendered
       expect(highestRowIndex).toEqual(7)
     })
   })
@@ -857,16 +852,16 @@ describe('FlexTable', () => {
   })
 
   describe('tabIndex', () => {
-    it('should be focusable (tabIndex === 0) by default', () => {
+    it('should not be focusable by default', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      expect(rendered.querySelector('.Grid').tabIndex).toEqual(0)
+      expect(rendered.querySelector('.Grid').tabIndex).toEqual(-1)
     })
 
     it('should allow tabIndex to be overridden', () => {
       const rendered = findDOMNode(render(getMarkup({
-        tabIndex: -1
+        tabIndex: 0
       })))
-      expect(rendered.querySelector('.Grid').tabIndex).toEqual(-1)
+      expect(rendered.querySelector('.Grid').tabIndex).toEqual(0)
     })
   })
 })

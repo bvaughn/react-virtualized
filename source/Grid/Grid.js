@@ -253,6 +253,7 @@ export default class Grid extends Component {
   recomputeGridSize () {
     this._columnSizeAndPositionManager.resetCell(0)
     this._rowSizeAndPositionManager.resetCell(0)
+    this.forceUpdate()
   }
 
   componentDidMount () {
