@@ -14,9 +14,8 @@ function FramerateMeasurer () {
     }
 
     return {
-      beginTime: this._beginTime,
-      endTime,
-      framerate: (this._frames * 1000) / (endTime - this._beginTime),
+      duration: this._format((endTime - this._beginTime) / 1000),
+      framerate: this._format((this._frames * 1000) / (endTime - this._beginTime)),
       frames: this._frames
     }
   }.bind(this)
@@ -25,6 +24,10 @@ function FramerateMeasurer () {
     this._frames++
     this._animationFrameId = requestAnimationFrame(this._loop)
   }.bind(this)
+
+  this._format = function format (number) {
+    return Math.round(number * 1000) / 1000
+  }
 }
 
 /** Runs an async test and measures its framerate until a confidence interface is achieved */
@@ -34,6 +37,7 @@ function TestRunner (testCase, minSampleSize) {
   const framerateMeasurer = new FramerateMeasurer()
 
   this.start  = function start () {
+    this._durations = []
     this._framerates = []
     this.isRunning = true
 
@@ -43,7 +47,15 @@ function TestRunner (testCase, minSampleSize) {
   this.stop  = function stop () {
     this.isRunning = false
 
-    console.log(`${this._framerates.length} framerate measurements taken, mean is: ${Statistics.calculateMean(this._framerates)}`)
+    const duration = Statistics.calculateMean(this._durations)
+    const framerate = Statistics.calculateMean(this._framerates)
+
+    console.log(`${this._framerates.length} measurements, mean framerate: ${framerate} fps, mean duration: ${duration} s`)
+
+    return {
+      duration,
+      framerate
+    }
   }.bind(this)
 
   this._getTestConfidence  = function _getTestConfidence () {
@@ -80,8 +92,9 @@ function TestRunner (testCase, minSampleSize) {
 
     const measurements = framerateMeasurer.stop()
 
-    console.log(`${measurements.frames} frames, framerate: ${measurements.framerate}`)
+    console.log(`${this._framerates.length}: framerate: ${measurements.framerate} fps, duration: ${measurements.duration} s`)
 
+    this._durations.push(measurements.duration)
     this._framerates.push(measurements.framerate)
 
     const isConfident = this._getTestConfidence(this._framerates, minSampleSize)
