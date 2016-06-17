@@ -30,7 +30,7 @@ function FramerateMeasurer () {
   }
 }
 
-/** Runs an async test and measures its framerate until a confidence interface is achieved */
+/** Runs an async test and measures its framerate until a confidence interval is achieved */
 function TestRunner (testCase, minSampleSize) {
   minSampleSize = minSampleSize || 5
 

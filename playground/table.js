@@ -82,7 +82,7 @@ function testCase (completedCallback) {
   incrementScrollTop()
 }
 
-const testRunner = new TestRunner(testCase, 10)
+const testRunner = new TestRunner(testCase, 5)
 
 document.body.addEventListener('keypress', function (event) {
   if (event.keyCode === 84 || event.keyCode === 116) { // 't'
