@@ -1,46 +1,25 @@
-const NUM_COLUMNS = 40
-
-function rowGetter (params) {
-  return new Array(NUM_COLUMNS).fill('').map(
-    function (_, index) {
-      return index
-    })
+function cellRenderer (params) {
+  return params.columnIndex
 }
 
 var App = React.createClass({
   render: function() {
-    const flexColumns = []
-
-    for (var i = 0; i < NUM_COLUMNS; i++) {
-      flexColumns.push(
-        React.createElement(
-          ReactVirtualized.FlexColumn,
-          {
-            dataKey: i,
-            flexGrow: 1,
-            key: i,
-            width: 50
-          }
-        )
-      )
-    }
-
     return React.createElement(
       ReactVirtualized.AutoSizer,
       null,
       function (params) {
         return React.createElement(
-          ReactVirtualized.FlexTable,
+          ReactVirtualized.Grid,
           {
+            columnCount: 1000,
+            columnWidth: 35,
             height: params.height,
             overscanRowCount: 0,
-            rowGetter,
+            cellRenderer: cellRenderer,
             rowHeight: 30,
-            rowCount: 1000,
+            rowCount: 500,
             width: params.width
-          },
-          null,
-          flexColumns
+          }
         )
       }
     )
@@ -54,7 +33,7 @@ ReactDOM.render(
 
 /** Tests a specific use case- scrolling a large FlexTable */
 function testCase (completedCallback) {
-  const flexTable = document.querySelector('.FlexTable__Grid')
+  const flexTable = document.querySelector('.Grid')
   flexTable.scrollTop = 0
 
   const maxScrollTop = flexTable.scrollHeight
@@ -82,7 +61,7 @@ function testCase (completedCallback) {
   incrementScrollTop()
 }
 
-const testRunner = new TestRunner(testCase, 5)
+const testRunner = new TestRunner(testCase)
 
 document.body.addEventListener('click', function (event) {
   if (testRunner.isRunning) {
