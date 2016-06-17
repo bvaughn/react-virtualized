@@ -37,12 +37,14 @@ function loadScriptsAndStyles (source) {
 
 function loadReact () {
   var matches = window.location.search.match('react=([^&]+)');
-  var reactVersion = '15.1.0'
+  var baseDir = 'https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0'
 
   if (matches) {
-    reactVersion = matches[1]
+    baseDir = matches[1] === 'latest'
+      ? 'http://react.zpao.com/builds/master/latest'
+      : `https://cdnjs.cloudflare.com/ajax/libs/react/${matches[1]}`
   }
 
-  loadScript(`https://cdnjs.cloudflare.com/ajax/libs/react/${reactVersion}/react.js`);
-  loadScript(`https://cdnjs.cloudflare.com/ajax/libs/react/${reactVersion}/react-dom.js`);
+  loadScript(`${baseDir}/react.min.js`);
+  loadScript(`${baseDir}/react-dom.min.js`);
 }
