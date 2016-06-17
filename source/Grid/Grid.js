@@ -192,7 +192,7 @@ export default class Grid extends Component {
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
     style: {},
-    tabIndex: 0
+    tabIndex: null
   };
 
   constructor (props, context) {
@@ -209,6 +209,7 @@ export default class Grid extends Component {
     this._onScrollMemoizer = createCallbackMemoizer(false)
 
     // Bind functions to instance so they don't lose context when passed around
+    this._enablePointerEventsAfterDelayCallback = this._enablePointerEventsAfterDelayCallback.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
@@ -603,16 +604,21 @@ export default class Grid extends Component {
       clearTimeout(this._disablePointerEventsTimeoutId)
     }
 
-    this._disablePointerEventsTimeoutId = setTimeout(() => {
-      this._disablePointerEventsTimeoutId = null
+    this._disablePointerEventsTimeoutId = setTimeout(
+      this._enablePointerEventsAfterDelayCallback,
+      IS_SCROLLING_TIMEOUT
+    )
+  }
 
-      // Throw away cell cache once scrolling is complete
-      this._cellCache = {}
+  _enablePointerEventsAfterDelayCallback () {
+    this._disablePointerEventsTimeoutId = null
 
-      this.setState({
-        isScrolling: false
-      })
-    }, IS_SCROLLING_TIMEOUT)
+    // Throw away cell cache once scrolling is complete
+    this._cellCache = {}
+
+    this.setState({
+      isScrolling: false
+    })
   }
 
   _getEstimatedColumnSize (props) {
