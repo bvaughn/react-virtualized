@@ -344,13 +344,9 @@ export default class FlexTable extends Component {
         key={`Row${rowIndex}-Col${columnIndex}`}
         className={cn('FlexTable__rowColumn', className)}
         style={style}
+        title={title}
       >
-        <div
-          className='FlexTable__truncatedColumnText'
-          title={title}
-        >
-          {renderedCell}
-        </div>
+        {renderedCell}
       </div>
     )
   }

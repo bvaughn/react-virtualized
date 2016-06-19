@@ -62,11 +62,6 @@
   overflow: hidden;
   box-sizing: border-box;
 }
-.FlexTable__headerTruncatedText {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
 .FlexTable__row {
   display: flex;
   flex-direction: row;
@@ -76,6 +71,9 @@
 
 .FlexTable__headerColumn,
 .FlexTable__rowColumn {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   margin-right: 10px;
   min-width: 0px;
 }
@@ -84,21 +82,8 @@
 .FlexTable__rowColumn:first-of-type {
   margin-left: 10px;
 }
-.FlexTable__headerColumn {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;
-}
 .FlexTable__sortableHeaderColumn {
   cursor: pointer;
-}
-.FlexTable__rowColumn {
-  justify-content: center;
-  flex-direction: column;
-  display: flex;
-  overflow: hidden;
-  height: 100%;
 }
 
 .FlexTable__sortableHeaderIconContainer {
@@ -112,11 +97,6 @@
   fill: currentColor;
 }
 
-.FlexTable__truncatedColumnText {
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
 /* VirtualScroll default theme */
 
 .VirtualScroll {
@@ -124,13 +104,4 @@
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-}
-
-.VirtualScroll__innerScrollContainer {
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.VirtualScroll__row {
-  position: absolute;
 }

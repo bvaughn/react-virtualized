@@ -64,12 +64,10 @@ The FlexTable component supports the following static class names
 | FlexTable | Main (outer) element |
 | FlexTable__headerColumn | Header cell (similar to `thead > tr > th`) |
 | FlexTable__headerRow | Header row (similar to `thead > tr`) |
-| FlexTable__headerTruncatedText | Element within header cell responsible for truncating text |
 | FlexTable__row | Table row (akin to `tbody > tr`) |
 | FlexTable__rowColumn | Table column (akin to `tbody > tr > td`) |
 | FlexTable__sortableHeaderColumn | Applied to header columns that are sortable |
 | FlexTable__sortableHeaderIcon | SVG sort indicator |
-| FlexTable__truncatedColumnText | Element within table column responsible for truncating text |
 
 ### Examples
 
