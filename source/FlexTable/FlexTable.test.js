@@ -237,7 +237,7 @@ describe('FlexTable', () => {
         cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex }) => 'Custom'
       })))
       const nameColumn = rendered.querySelector('.FlexTable__rowColumn:first-of-type')
-      expect(nameColumn.children[0].getAttribute('title')).toContain('Custom')
+      expect(nameColumn.getAttribute('title')).toContain('Custom')
     })
 
     it('should not set a cell :title if the rendered cell content is not a string', () => {
@@ -245,7 +245,7 @@ describe('FlexTable', () => {
         cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex }) => <div>Custom</div>
       })))
       const nameColumn = rendered.querySelector('.FlexTable__rowColumn:first-of-type')
-      expect(nameColumn.children[0].getAttribute('title')).toEqual(null)
+      expect(nameColumn.getAttribute('title')).toEqual(null)
     })
   })
 
@@ -627,9 +627,7 @@ describe('FlexTable', () => {
       expect(node.className).toEqual('FlexTable')
       expect(node.querySelector('.FlexTable__headerRow')).toBeTruthy()
       expect(node.querySelector('.FlexTable__rowColumn')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__truncatedColumnText')).toBeTruthy()
       expect(node.querySelector('.FlexTable__headerColumn')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__headerTruncatedText')).toBeTruthy()
       expect(node.querySelector('.FlexTable__row')).toBeTruthy()
       expect(node.querySelector('.FlexTable__sortableHeaderColumn')).toBeTruthy()
       expect(node.querySelector('.FlexTable__sortableHeaderIcon')).toBeTruthy()
