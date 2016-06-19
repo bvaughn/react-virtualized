@@ -22,7 +22,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Forced vertical scroll offset; can be used to synchronize scrolling between components |
 | style | Object |  | Optional custom inline style to attach to root `VirtualScroll` element. |
-| tabIndex | Number |  | Optional override of tab index default; defaults to 0. |
+| tabIndex | Number |  | Optional override of tab index default; defaults to `null`. |
 | width | Number | ✓ | Width of the list |
 
 ### Public Methods
@@ -38,6 +38,8 @@ Recompute row heights and offsets.
 
 VirtualScroll has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property. If the `rowHeight` is a number it can compare before and after values but if it is a function that comparison is error prone. In the event that a dynamic `rowHeight` function is in use and the row heights have changed this function should be manually called by the "smart" container parent.
 
+This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered list.
+
 ### Class names
 
 The VirtualScroll component supports the following static class names
@@ -45,8 +47,6 @@ The VirtualScroll component supports the following static class names
 | Property | Description |
 |:---|:---|
 | VirtualScroll | Main (outer) element |
-| VirtualScroll__innerScrollContainer | Inner element on which virtual items are positioned |
-| VirtualScroll__row | Individual row |
 
 ### Examples
 

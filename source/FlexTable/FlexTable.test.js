@@ -205,12 +205,7 @@ describe('FlexTable', () => {
       }))
       highestRowIndex = 0
       component.recomputeRowHeights()
-      // Rows won't actually be remeasured until the FlexTable is next rendered.
-      render(getMarkup({
-        rowHeight,
-        rowCount: 50
-      }))
-      // And then only the rows necessary to fill the visible region.
+      // Only the rows required to fill the current viewport will be rendered
       expect(highestRowIndex).toEqual(7)
     })
   })
@@ -242,7 +237,7 @@ describe('FlexTable', () => {
         cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex }) => 'Custom'
       })))
       const nameColumn = rendered.querySelector('.FlexTable__rowColumn:first-of-type')
-      expect(nameColumn.children[0].getAttribute('title')).toContain('Custom')
+      expect(nameColumn.getAttribute('title')).toContain('Custom')
     })
 
     it('should not set a cell :title if the rendered cell content is not a string', () => {
@@ -250,7 +245,7 @@ describe('FlexTable', () => {
         cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex }) => <div>Custom</div>
       })))
       const nameColumn = rendered.querySelector('.FlexTable__rowColumn:first-of-type')
-      expect(nameColumn.children[0].getAttribute('title')).toEqual(null)
+      expect(nameColumn.getAttribute('title')).toEqual(null)
     })
   })
 
@@ -632,9 +627,7 @@ describe('FlexTable', () => {
       expect(node.className).toEqual('FlexTable')
       expect(node.querySelector('.FlexTable__headerRow')).toBeTruthy()
       expect(node.querySelector('.FlexTable__rowColumn')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__truncatedColumnText')).toBeTruthy()
       expect(node.querySelector('.FlexTable__headerColumn')).toBeTruthy()
-      expect(node.querySelector('.FlexTable__headerTruncatedText')).toBeTruthy()
       expect(node.querySelector('.FlexTable__row')).toBeTruthy()
       expect(node.querySelector('.FlexTable__sortableHeaderColumn')).toBeTruthy()
       expect(node.querySelector('.FlexTable__sortableHeaderIcon')).toBeTruthy()
@@ -857,16 +850,16 @@ describe('FlexTable', () => {
   })
 
   describe('tabIndex', () => {
-    it('should be focusable (tabIndex === 0) by default', () => {
+    it('should not be focusable by default', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      expect(rendered.querySelector('.Grid').tabIndex).toEqual(0)
+      expect(rendered.querySelector('.Grid').tabIndex).toEqual(-1)
     })
 
     it('should allow tabIndex to be overridden', () => {
       const rendered = findDOMNode(render(getMarkup({
-        tabIndex: -1
+        tabIndex: 0
       })))
-      expect(rendered.querySelector('.Grid').tabIndex).toEqual(-1)
+      expect(rendered.querySelector('.Grid').tabIndex).toEqual(0)
     })
   })
 })

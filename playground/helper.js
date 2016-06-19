@@ -20,7 +20,7 @@ function loadScriptsAndStyles (source) {
   if (matches) {
     baseDir = matches[1] === 'local'
       ? '../'
-      : matches[1]
+      : `https://npmcdn.com/react-virtualized@${matches[1]}/`
   }
 
 

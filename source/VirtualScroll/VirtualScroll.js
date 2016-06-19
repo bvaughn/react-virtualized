@@ -106,6 +106,9 @@ export default class VirtualScroll extends Component {
   constructor (props, context) {
     super(props, context)
 
+    this._cellRenderer = this._cellRenderer.bind(this)
+    this._onScroll = this._onScroll.bind(this)
+    this._onSectionRendered = this._onSectionRendered.bind(this)
     this._wrapIndexGetter = this._wrapIndexGetter.bind(this)
   }
 
@@ -117,6 +120,7 @@ export default class VirtualScroll extends Component {
   /** See Grid#recomputeGridSize */
   recomputeRowHeights () {
     this.refs.Grid.recomputeGridSize()
+    this.refs.Grid.forceUpdate()
   }
 
   render () {
@@ -125,10 +129,7 @@ export default class VirtualScroll extends Component {
       estimatedRowSize,
       height,
       noRowsRenderer,
-      onRowsRendered,
-      onScroll,
       rowHeight,
-      rowRenderer,
       overscanRowCount,
       autoHeight,
       rowClassName,
@@ -151,10 +152,7 @@ export default class VirtualScroll extends Component {
         ref='Grid'
         aria-label={this.props['aria-label']}
         className={classNames}
-        cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
-          index: rowIndex,
-          isScrolling
-        })}
+        cellRenderer={this._cellRenderer}
         cellClassName={cellClassName}
         cellStyle={cellStyle}
         columnWidth={width}
@@ -162,13 +160,8 @@ export default class VirtualScroll extends Component {
         estimatedRowSize={estimatedRowSize}
         height={height}
         noContentRenderer={noRowsRenderer}
-        onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
-        onSectionRendered={({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) => onRowsRendered({
-          overscanStartIndex: rowOverscanStartIndex,
-          overscanStopIndex: rowOverscanStopIndex,
-          startIndex: rowStartIndex,
-          stopIndex: rowStopIndex
-        })}
+        onScroll={this._onScroll}
+        onSectionRendered={this._onSectionRendered}
         overscanRowCount={overscanRowCount}
         autoHeight={autoHeight}
         rowHeight={rowHeight}
@@ -185,6 +178,32 @@ export default class VirtualScroll extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
+  }
+
+  _cellRenderer ({ columnIndex, isScrolling, rowIndex }) {
+    const { rowRenderer } = this.props
+
+    return rowRenderer({
+      index: rowIndex,
+      isScrolling
+    })
+  }
+
+  _onScroll ({ clientHeight, scrollHeight, scrollTop }) {
+    const { onScroll } = this.props
+
+    onScroll({ clientHeight, scrollHeight, scrollTop })
+  }
+
+  _onSectionRendered ({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) {
+    const { onRowsRendered } = this.props
+
+    onRowsRendered({
+      overscanStartIndex: rowOverscanStartIndex,
+      overscanStopIndex: rowOverscanStopIndex,
+      startIndex: rowStartIndex,
+      stopIndex: rowStopIndex
+    })
   }
 
   _wrapIndexGetter (value) {

@@ -17,7 +17,7 @@ var App = React.createClass({
             overscanRowCount: 0,
             cellRenderer: cellRenderer,
             rowHeight: 30,
-            rowCount: 500,
+            rowCount: 5000,
             width: params.width
           }
         )
@@ -42,11 +42,11 @@ function testCase (completedCallback) {
   var scrollTop = 0
 
   function incrementScrollTop () {
-    if (!testRunner.isRunning) {
+    if (!testRunner.isRunning()) {
       return
     }
 
-    interval *= 1.1
+    interval *= 1.05
     scrollTop = Math.min(scrollTop + interval, maxScrollTop)
 
     flexTable.scrollTop = scrollTop
@@ -61,10 +61,11 @@ function testCase (completedCallback) {
   incrementScrollTop()
 }
 
-const testRunner = new TestRunner(testCase)
+const TestRunner = FpsMeasurer.TestRunner
+const testRunner = new TestRunner(testCase, 5)
 
 document.body.addEventListener('click', function (event) {
-  if (testRunner.isRunning) {
+  if (testRunner.isRunning()) {
     testRunner.stop()
   } else {
     testRunner.start()

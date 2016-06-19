@@ -63,7 +63,7 @@ function testCase (completedCallback) {
   var scrollTop = 0
 
   function incrementScrollTop () {
-    if (!testRunner.isRunning) {
+    if (!testRunner.isRunning()) {
       return
     }
 
@@ -82,10 +82,11 @@ function testCase (completedCallback) {
   incrementScrollTop()
 }
 
+const TestRunner = FpsMeasurer.TestRunner
 const testRunner = new TestRunner(testCase, 5)
 
 document.body.addEventListener('click', function (event) {
-  if (testRunner.isRunning) {
+  if (testRunner.isRunning()) {
     testRunner.stop()
   } else {
     testRunner.start()

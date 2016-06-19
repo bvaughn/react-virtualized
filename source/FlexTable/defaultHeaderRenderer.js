@@ -16,13 +16,13 @@ export default function defaultHeaderRenderer ({
 }: HeaderRendererParams) {
   const showSortIndicator = sortBy === dataKey
   const children = [
-    <div
+    <span
       className='FlexTable__headerTruncatedText'
       key='label'
       title={label}
     >
       {label}
-    </div>
+    </span>
   ]
 
   if (showSortIndicator) {

@@ -37,7 +37,7 @@ This component expects explicit width, height, and padding parameters.
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
 | style | Object |  | Optional custom inline style to attach to root `FlexTable` element. |
-| tabIndex | Number |  | Optional override of inner `Grid` tab index default; defaults to 0. |
+| tabIndex | Number |  | Optional override of inner `Grid` tab index default; defaults to `null`. |
 | width | Number | ✓ | Width of the table |
 
 ### Public Methods
@@ -53,6 +53,8 @@ Recompute row heights and offsets.
 
 VirtualScroll has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property. If the `rowHeight` is a number it can compare before and after values but if it is a function that comparison is error prone. In the event that a dynamic `rowHeight` function is in use and the row heights have changed this function should be manually called by the "smart" container parent.
 
+This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered table.
+
 ### Class names
 
 The FlexTable component supports the following static class names
@@ -62,12 +64,10 @@ The FlexTable component supports the following static class names
 | FlexTable | Main (outer) element |
 | FlexTable__headerColumn | Header cell (similar to `thead > tr > th`) |
 | FlexTable__headerRow | Header row (similar to `thead > tr`) |
-| FlexTable__headerTruncatedText | Element within header cell responsible for truncating text |
 | FlexTable__row | Table row (akin to `tbody > tr`) |
 | FlexTable__rowColumn | Table column (akin to `tbody > tr > td`) |
 | FlexTable__sortableHeaderColumn | Applied to header columns that are sortable |
 | FlexTable__sortableHeaderIcon | SVG sort indicator |
-| FlexTable__truncatedColumnText | Element within table column responsible for truncating text |
 
 ### Examples
 

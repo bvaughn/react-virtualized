@@ -192,7 +192,7 @@ export default class Grid extends Component {
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
     style: {},
-    tabIndex: 0
+    tabIndex: null
   };
 
   constructor (props, context) {
@@ -209,8 +209,10 @@ export default class Grid extends Component {
     this._onScrollMemoizer = createCallbackMemoizer(false)
 
     // Bind functions to instance so they don't lose context when passed around
+    this._enablePointerEventsAfterDelayCallback = this._enablePointerEventsAfterDelayCallback.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
+    this._setNextStateCallback = this._setNextStateCallback.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
 
@@ -252,6 +254,7 @@ export default class Grid extends Component {
   recomputeGridSize () {
     this._columnSizeAndPositionManager.resetCell(0)
     this._rowSizeAndPositionManager.resetCell(0)
+    this.forceUpdate()
   }
 
   componentDidMount () {
@@ -603,16 +606,21 @@ export default class Grid extends Component {
       clearTimeout(this._disablePointerEventsTimeoutId)
     }
 
-    this._disablePointerEventsTimeoutId = setTimeout(() => {
-      this._disablePointerEventsTimeoutId = null
+    this._disablePointerEventsTimeoutId = setTimeout(
+      this._enablePointerEventsAfterDelayCallback,
+      IS_SCROLLING_TIMEOUT
+    )
+  }
 
-      // Throw away cell cache once scrolling is complete
-      this._cellCache = {}
+  _enablePointerEventsAfterDelayCallback () {
+    this._disablePointerEventsTimeoutId = null
 
-      this.setState({
-        isScrolling: false
-      })
-    }, IS_SCROLLING_TIMEOUT)
+    // Throw away cell cache once scrolling is complete
+    this._cellCache = {}
+
+    this.setState({
+      isScrolling: false
+    })
   }
 
   _getEstimatedColumnSize (props) {
@@ -672,14 +680,20 @@ export default class Grid extends Component {
    * This helps performance for bursty events (like onScroll).
    */
   _setNextState (state) {
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
-    }
+    this._nextState = state
 
-    this._setNextStateAnimationFrameId = raf(() => {
-      this._setNextStateAnimationFrameId = null
-      this.setState(state)
-    })
+    if (!this._setNextStateAnimationFrameId) {
+      this._setNextStateAnimationFrameId = raf(this._setNextStateCallback)
+    }
+  }
+
+  _setNextStateCallback () {
+    const state = this._nextState
+
+    this._setNextStateAnimationFrameId = null
+    this._nextState = null
+
+    this.setState(state)
   }
 
   _setScrollPosition ({ scrollLeft, scrollTop }) {

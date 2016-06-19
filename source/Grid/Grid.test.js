@@ -1010,12 +1010,7 @@ describe('Grid', () => {
       highestColumnIndex = 0
       highestRowIndex = 0
       component.recomputeGridSize()
-      // Cells won't actually be remeasured until the Grid is next rendered.
-      render(getMarkup({
-        ...props,
-        rowCount: 51
-      }))
-      // And then only the rows necessary to fill the visible region.
+      // Only the rows required to fill the current viewport will be rendered
       expect(highestColumnIndex).toEqual(9)
       expect(highestRowIndex).toEqual(4)
     })
@@ -1052,16 +1047,16 @@ describe('Grid', () => {
   })
 
   describe('tabIndex', () => {
-    it('should be focusable (tabIndex === 0) by default', () => {
+    it('should not be focusable by default', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      expect(rendered.tabIndex).toEqual(0)
+      expect(rendered.tabIndex).toEqual(-1)
     })
 
     it('should allow tabIndex to be overridden', () => {
       const rendered = findDOMNode(render(getMarkup({
-        tabIndex: -1
+        tabIndex: 0
       })))
-      expect(rendered.tabIndex).toEqual(-1)
+      expect(rendered.tabIndex).toEqual(0)
     })
   })
 })

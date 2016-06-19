@@ -30,7 +30,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
 | style | Object |  | Optional custom inline style to attach to root `Grid` element. |
-| tabIndex | Number |  | Optional override of tab index default; defaults to 0. |
+| tabIndex | Number |  | Optional override of tab index default; defaults to `null`. |
 | width | Number | ✓ | Width of Grid; this property determines the number of visible (vs virtualized) columns. |
 
 ### Public Methods
@@ -48,6 +48,8 @@ Recomputes row heights and column widths.
 
 This function should be called if dynamic column or row sizes have changed but nothing else has.
 Since Grid only receives `columnCount` and `rowCount` it has no way of detecting when the underlying data changes.
+
+This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered grid.
 
 ### Class names
 

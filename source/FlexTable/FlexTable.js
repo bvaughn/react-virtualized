@@ -187,6 +187,8 @@ export default class FlexTable extends Component {
     this._cellClassName = this._cellClassName.bind(this)
     this._cellStyle = this._cellStyle.bind(this)
     this._createRow = this._createRow.bind(this)
+    this._onScroll = this._onScroll.bind(this)
+    this._onSectionRendered = this._onSectionRendered.bind(this)
   }
 
   /** See Grid#measureAllCells */
@@ -197,6 +199,7 @@ export default class FlexTable extends Component {
   /** See Grid#recomputeGridSize */
   recomputeRowHeights () {
     this.refs.Grid.recomputeGridSize()
+    this.refs.Grid.forceUpdate()
   }
 
   componentDidMount () {
@@ -210,14 +213,13 @@ export default class FlexTable extends Component {
   render () {
     const {
       autoHeight,
+      children,
       className,
       disableHeader,
       estimatedRowSize,
       headerHeight,
       height,
       noRowsRenderer,
-      onRowsRendered,
-      onScroll,
       overscanRowCount,
       rowClassName,
       rowHeight,
@@ -226,6 +228,8 @@ export default class FlexTable extends Component {
       scrollToAlignment,
       scrollToIndex,
       scrollTop,
+      sortBy,
+      sortDirection,
       style,
       tabIndex,
       width
@@ -234,16 +238,13 @@ export default class FlexTable extends Component {
 
     const availableRowsHeight = height - headerHeight
 
-    // This row-renderer wrapper function is necessary in order to trigger re-render when the
-    // sort-by or sort-direction have changed (else Grid will not see any props changes)
-    const rowRenderer = ({ index, isScrolling }) => {
-      return this._createRow({
-        index,
-        isScrolling
-      })
-    }
-
     const rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName
+
+    // Precompute and cache column styles before rendering rows and columns to speed things up
+    this._cachedColumnStyles = []
+    React.Children.toArray(children).forEach((column, index) => {
+      this._cachedColumnStyles[index] = this._getFlexStyleForColumn(column, column.props.style)
+    })
 
     return (
       <div
@@ -269,23 +270,15 @@ export default class FlexTable extends Component {
           autoHeight={autoHeight}
           className={'FlexTable__Grid'}
           cellClassName={this._cellClassName}
-          cellRenderer={({ columnIndex, isScrolling, rowIndex }) => rowRenderer({
-            index: rowIndex,
-            isScrolling
-          })}
+          cellRenderer={this._createRow}
           cellStyle={this._cellStyle}
           columnWidth={width}
           columnCount={1}
           estimatedRowSize={estimatedRowSize}
           height={availableRowsHeight}
           noContentRenderer={noRowsRenderer}
-          onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
-          onSectionRendered={({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) => onRowsRendered({
-            overscanStartIndex: rowOverscanStartIndex,
-            overscanStopIndex: rowOverscanStopIndex,
-            startIndex: rowStartIndex,
-            stopIndex: rowStopIndex
-          })}
+          onScroll={this._onScroll}
+          onSectionRendered={this._onSectionRendered}
           overscanRowCount={overscanRowCount}
           ref='Grid'
           rowHeight={rowHeight}
@@ -293,6 +286,8 @@ export default class FlexTable extends Component {
           scrollToAlignment={scrollToAlignment}
           scrollToRow={scrollToIndex}
           scrollTop={scrollTop}
+          sortBy={sortBy}
+          sortDirection={sortDirection}
           tabIndex={tabIndex}
           width={width}
         />
@@ -332,14 +327,13 @@ export default class FlexTable extends Component {
       cellRenderer,
       className,
       columnData,
-      dataKey,
-      style: cellStyle
+      dataKey
     } = column.props
 
     const cellData = cellDataGetter({ columnData, dataKey, rowData })
     const renderedCell = cellRenderer({ cellData, columnData, dataKey, isScrolling, rowData, rowIndex })
 
-    const style = this._getFlexStyleForColumn(column, cellStyle)
+    const style = this._cachedColumnStyles[columnIndex]
 
     const title = typeof renderedCell === 'string'
       ? renderedCell
@@ -350,13 +344,9 @@ export default class FlexTable extends Component {
         key={`Row${rowIndex}-Col${columnIndex}`}
         className={cn('FlexTable__rowColumn', className)}
         style={style}
+        title={title}
       >
-        <div
-          className='FlexTable__truncatedColumnText'
-          title={title}
-        >
-          {renderedCell}
-        </div>
+        {renderedCell}
       </div>
     )
   }
@@ -427,7 +417,7 @@ export default class FlexTable extends Component {
   }
 
   _createRow ({
-    index,
+    rowIndex: index,
     isScrolling
   }) {
     const {
@@ -461,13 +451,13 @@ export default class FlexTable extends Component {
       a11yProps.role = 'row'
       a11yProps.tabIndex = 0
       if (onRowClick) {
-        a11yProps.onClick = () => onRowClick({index})
+        a11yProps.onClick = () => onRowClick({ index })
       }
       if (onRowMouseOut) {
-        a11yProps.onMouseOut = () => onRowMouseOut({index})
+        a11yProps.onMouseOut = () => onRowMouseOut({ index })
       }
       if (onRowMouseOver) {
-        a11yProps.onMouseOver = () => onRowMouseOver({index})
+        a11yProps.onMouseOver = () => onRowMouseOver({ index })
       }
     }
 
@@ -526,6 +516,23 @@ export default class FlexTable extends Component {
     return rowHeight instanceof Function
       ? rowHeight({ index: rowIndex })
       : rowHeight
+  }
+
+  _onScroll ({ clientHeight, scrollHeight, scrollTop }) {
+    const { onScroll } = this.props
+
+    onScroll({ clientHeight, scrollHeight, scrollTop })
+  }
+
+  _onSectionRendered ({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) {
+    const { onRowsRendered } = this.props
+
+    onRowsRendered({
+      overscanStartIndex: rowOverscanStartIndex,
+      overscanStopIndex: rowOverscanStopIndex,
+      startIndex: rowStartIndex,
+      stopIndex: rowStopIndex
+    })
   }
 
   _setScrollbarWidth () {
