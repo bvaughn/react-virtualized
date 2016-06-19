@@ -69,13 +69,23 @@
   overflow: hidden;
 }
 
+.FlexTable__headerTruncatedText {    
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .FlexTable__headerColumn,
+.FlexTable__rowColumn {
+  margin-right: 10px;
+  min-width: 0px;
+}
 .FlexTable__rowColumn {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-right: 10px;
-  min-width: 0px;
 }
 
 .FlexTable__headerColumn:first-of-type,

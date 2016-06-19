@@ -1,6 +1,13 @@
 Changelog
 ------------
 
+##### 7.7.2
+Scrolling performance improvements for `FlexTable` and to a lesser extent `Grid`.
+
+This release removes the `FlexTable__truncatedColumnText` wrapper column and collapses its styles into `FlexTable__rowColumn`.
+If you were depending on the former class you will want to update your dependencies.
+I was on the fence about this in terms of compatibility, but I feel this is more of an internal implementation detail than it is public-facing API.
+
 ##### 7.7.1
 Export the `defaultCellRangeRenderer` used by `Grid` in order to enable easier composition.
 
