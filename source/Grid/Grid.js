@@ -192,7 +192,7 @@ export default class Grid extends Component {
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
     style: {},
-    tabIndex: -1
+    tabIndex: null
   };
 
   constructor (props, context) {
