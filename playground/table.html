@@ -10,38 +10,13 @@
       margin: 0;
       padding: 0;
     }
-    .cell {
-      display: flex;
-      flex-direction: row;
-    }
-    .button,
-    .input,
-    .image {
-      width: 100%;
-      height: 100%;
-    }
-    .button {
-      appearance: none;
-      border: none;
-      background-color: #DDD;
-      border-radius: 4px;
-      display: flex;
-      align-content: center;
-    }
-    .input {
-      box-sizing: border-box;
-    }
-    .image {
-      height: auto;
-      width: 100%;
-    }
   </style>
 </head>
 <body>
   <div id="mount"></div>
 
+  <script src="https://npmcdn.com/fps-measurer/dist/umd/fps-measurer.js"></script>
   <script src="helper.js"></script>
-  <script src="test-runner.js"></script>
   <script>
     loadReact();
     loadScriptsAndStyles('table.js');
