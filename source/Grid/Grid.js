@@ -212,6 +212,7 @@ export default class Grid extends Component {
     this._enablePointerEventsAfterDelayCallback = this._enablePointerEventsAfterDelayCallback.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
+    this._setNextStateCallback = this._setNextStateCallback.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
 
@@ -679,14 +680,20 @@ export default class Grid extends Component {
    * This helps performance for bursty events (like onScroll).
    */
   _setNextState (state) {
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
-    }
+    this._nextState = state
 
-    this._setNextStateAnimationFrameId = raf(() => {
-      this._setNextStateAnimationFrameId = null
-      this.setState(state)
-    })
+    if (!this._setNextStateAnimationFrameId) {
+      this._setNextStateAnimationFrameId = raf(this._setNextStateCallback)
+    }
+  }
+
+  _setNextStateCallback () {
+    const state = this._nextState
+
+    this._setNextStateAnimationFrameId = null
+    this._nextState = null
+
+    this.setState(state)
   }
 
   _setScrollPosition ({ scrollLeft, scrollTop }) {
