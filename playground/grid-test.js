@@ -17,7 +17,7 @@ var App = React.createClass({
             overscanRowCount: 0,
             cellRenderer: cellRenderer,
             rowHeight: 30,
-            rowCount: 500,
+            rowCount: 5000,
             width: params.width
           }
         )
@@ -46,7 +46,7 @@ function testCase (completedCallback) {
       return
     }
 
-    interval *= 1.1
+    interval *= 1.05
     scrollTop = Math.min(scrollTop + interval, maxScrollTop)
 
     flexTable.scrollTop = scrollTop
