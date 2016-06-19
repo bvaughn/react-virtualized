@@ -4,6 +4,9 @@ Changelog
 ##### 7.8.0
 Scrolling performance improvements for `FlexTable` and to a lesser extent `Grid`.
 
+The primary change to `Grid` is that `tabIndex` will be set to `null` by default instead of `0`.
+This improves repainting performance when a `Grid` is being scrolled.
+
 This release removes the `FlexTable__truncatedColumnText` wrapper column and collapses its styles into `FlexTable__rowColumn`.
 If you were depending on the former class you will want to update your dependencies.
 I was on the fence about this in terms of compatibility, but I feel this is more of an internal implementation detail than it is public-facing API.
