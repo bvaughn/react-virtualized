@@ -441,16 +441,16 @@ describe('VirtualScroll', () => {
   })
 
   describe('tabIndex', () => {
-    it('should not be focusable by default', () => {
+    it('should be focusable by default', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      expect(rendered.tabIndex).toEqual(-1)
+      expect(rendered.tabIndex).toEqual(0)
     })
 
     it('should allow tabIndex to be overridden', () => {
       const rendered = findDOMNode(render(getMarkup({
-        tabIndex: 0
+        tabIndex: -1
       })))
-      expect(rendered.tabIndex).toEqual(0)
+      expect(rendered.tabIndex).toEqual(-1)
     })
   })
 })
