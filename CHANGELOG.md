@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+##### 7.8.1
+Reverted default `tabIndex = null` value for `Grid` (introduced in 7.8.0) due to a negative accessibility impact.
+A focused `Grid` paints significantly more while scrolling which impacts FPS.
+Unfortunately it is a necessity to support keyboard scrolling properly and so it's the default once more.
+This can be explicitly disabled by setting `tabIndex = null` if you want.
+
 ##### 7.8.0
 Scrolling performance improvements for `FlexTable` and to a lesser extent `Grid`.
 
