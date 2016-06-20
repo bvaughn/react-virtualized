@@ -292,7 +292,7 @@ export default class Grid extends Component {
    * 1) New scroll-to-cell props have been set
    */
   componentDidUpdate (prevProps, prevState) {
-    const { height, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
+    const { autoHeight, height, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
@@ -300,7 +300,7 @@ export default class Grid extends Component {
     // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
     // So we only set these when we require an adjustment of the scroll position.
     // See issue #2 for more information.
-    if (scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
+    if (!autoHeight && scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
       if (
         scrollLeft >= 0 &&
         scrollLeft !== prevState.scrollLeft &&
