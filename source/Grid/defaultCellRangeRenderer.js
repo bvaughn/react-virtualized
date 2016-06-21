@@ -88,14 +88,18 @@ export default function defaultCellRangeRenderer ({
 
 type DefaultCellRangeRendererParams = {
   cellCache: Object,
+  cellClassName: Function,
   cellRenderer: Function,
+  cellStyle: Function,
   columnSizeAndPositionManager: Object,
   columnStartIndex: number,
   columnStopIndex: number,
+  horizontalOffsetAdjustment: number,
   isScrolling: boolean,
   rowSizeAndPositionManager: Object,
   rowStartIndex: number,
   rowStopIndex: number,
   scrollLeft: number,
-  scrollTop: number
+  scrollTop: number,
+  verticalOffsetAdjustment: number
 };
