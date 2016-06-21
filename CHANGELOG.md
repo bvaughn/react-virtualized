@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 7.8.3
+`Grid` no longer checks `scrollTop` when `autoHeight=true` in order to avoid unnecessary reflows/repaints.
+This change only impacts `WindowScroller` use cases.
+
 ##### 7.8.2
 Fixed edge-case problem with `FlexTable` where changes to the number of children (`FlexColumn`s) didn't update the inner `Grid`.
 
