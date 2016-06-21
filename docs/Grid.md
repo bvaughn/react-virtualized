@@ -98,11 +98,13 @@ This function accepts the following named parameters:
 ```js
 function cellRangeRenderer ({
   cellCache: Object,
+  cellClassName: Function,
   cellRenderer: Function,
+  cellStyle: Function,
   columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
   columnStartIndex: number,
   columnStopIndex: number,
-  horizontalOffsetAdjustment: number,
+  horizontalOffsetAdjustment: number
   isScrolling: boolean,
   rowSizeAndPositionManager: ScalingCellSizeAndPositionManager,
   rowStartIndex: number,
