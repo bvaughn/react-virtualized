@@ -303,7 +303,7 @@ export default class Grid extends Component {
     // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
     // So we only set these when we require an adjustment of the scroll position.
     // See issue #2 for more information.
-    if (!autoHeight && scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
+    if (scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
       if (
         scrollLeft >= 0 &&
         scrollLeft !== prevState.scrollLeft &&
@@ -311,7 +311,11 @@ export default class Grid extends Component {
       ) {
         this.refs.scrollingContainer.scrollLeft = scrollLeft
       }
+
+      // @TRICKY :autoHeight property instructs Grid to leave :scrollTop management to an external HOC (eg WindowScroller).
+      // In this case we should avoid checking scrollingContainer.scrollTop since it forces layout/flow.
       if (
+        !autoHeight &&
         scrollTop >= 0 &&
         scrollTop !== prevState.scrollTop &&
         scrollTop !== this.refs.scrollingContainer.scrollTop

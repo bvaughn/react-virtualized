@@ -41,7 +41,7 @@ export default class WindowScroller extends Component {
 
     this._onScrollWindow = this._onScrollWindow.bind(this)
     this._onResizeWindow = this._onResizeWindow.bind(this)
-    this._originalBodyPointerEvents = null
+    this._enablePointerEventsAfterDelayCallback = this._enablePointerEventsAfterDelayCallback.bind(this)
   }
 
   componentDidMount () {
@@ -92,6 +92,25 @@ export default class WindowScroller extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
+  _enablePointerEventsAfterDelay () {
+    if (this._disablePointerEventsTimeoutId) {
+      clearTimeout(this._disablePointerEventsTimeoutId)
+    }
+
+    this._disablePointerEventsTimeoutId = setTimeout(
+      this._enablePointerEventsAfterDelayCallback,
+      IS_SCROLLING_TIMEOUT
+    )
+  }
+
+  _enablePointerEventsAfterDelayCallback () {
+    this._disablePointerEventsTimeoutId = null
+
+    document.body.style.pointerEvents = this._originalBodyPointerEvents
+
+    this._originalBodyPointerEvents = null
+  }
+
   _onResizeWindow (event) {
     const { onResize } = this.props
 
@@ -100,18 +119,6 @@ export default class WindowScroller extends Component {
     this.setState({ height })
 
     onResize({ height })
-  }
-
-  _enablePointerEventsAfterDelay () {
-    if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId)
-    }
-
-    this._disablePointerEventsTimeoutId = setTimeout(() => {
-      this._disablePointerEventsTimeoutId = null
-      document.body.style.pointerEvents = this._originalBodyPointerEvents
-      this._originalBodyPointerEvents = null
-    }, IS_SCROLLING_TIMEOUT)
   }
 
   _onScrollWindow (event) {
@@ -126,9 +133,11 @@ export default class WindowScroller extends Component {
 
     this._setNextState({ scrollTop })
 
-    if (this._originalBodyPointerEvents === null) {
+    if (this._originalBodyPointerEvents == null) {
       this._originalBodyPointerEvents = document.body.style.pointerEvents
+
       document.body.style.pointerEvents = 'none'
+
       this._enablePointerEventsAfterDelay()
     }
 
