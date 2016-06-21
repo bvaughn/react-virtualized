@@ -295,7 +295,7 @@ export default class Grid extends Component {
    * 1) New scroll-to-cell props have been set
    */
   componentDidUpdate (prevProps, prevState) {
-    const { height, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
+    const { autoHeight, height, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
@@ -311,7 +311,11 @@ export default class Grid extends Component {
       ) {
         this.refs.scrollingContainer.scrollLeft = scrollLeft
       }
+
+      // @TRICKY :autoHeight property instructs Grid to leave :scrollTop management to an external HOC (eg WindowScroller).
+      // In this case we should avoid checking scrollingContainer.scrollTop since it forces layout/flow.
       if (
+        !autoHeight &&
         scrollTop >= 0 &&
         scrollTop !== prevState.scrollTop &&
         scrollTop !== this.refs.scrollingContainer.scrollTop

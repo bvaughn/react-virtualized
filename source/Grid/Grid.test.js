@@ -478,11 +478,11 @@ describe('Grid', () => {
   describe(':scrollLeft and :scrollTop properties', () => {
     it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
       let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex
-      render(getMarkup({
+      findDOMNode(render(getMarkup({
         onSectionRendered: params => ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex } = params),
         scrollLeft: 250,
         scrollTop: 100
-      }))
+      })))
       expect(rowStartIndex).toEqual(5)
       expect(rowStopIndex).toEqual(9)
       expect(columnStartIndex).toEqual(5)

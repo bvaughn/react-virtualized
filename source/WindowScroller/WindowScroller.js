@@ -4,6 +4,12 @@ import ReactDOM from 'react-dom'
 import shallowCompare from 'react-addons-shallow-compare'
 import raf from 'raf'
 
+/**
+ * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
+ * This improves performance and makes scrolling smoother.
+ */
+const IS_SCROLLING_TIMEOUT = 150
+
 export default class WindowScroller extends Component {
   static propTypes = {
     /**
@@ -35,6 +41,7 @@ export default class WindowScroller extends Component {
 
     this._onScrollWindow = this._onScrollWindow.bind(this)
     this._onResizeWindow = this._onResizeWindow.bind(this)
+    this._enablePointerEventsAfterDelayCallback = this._enablePointerEventsAfterDelayCallback.bind(this)
   }
 
   componentDidMount () {
@@ -85,6 +92,25 @@ export default class WindowScroller extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
+  _enablePointerEventsAfterDelay () {
+    if (this._disablePointerEventsTimeoutId) {
+      clearTimeout(this._disablePointerEventsTimeoutId)
+    }
+
+    this._disablePointerEventsTimeoutId = setTimeout(
+      this._enablePointerEventsAfterDelayCallback,
+      IS_SCROLLING_TIMEOUT
+    )
+  }
+
+  _enablePointerEventsAfterDelayCallback () {
+    this._disablePointerEventsTimeoutId = null
+
+    document.body.style.pointerEvents = this._originalBodyPointerEvents
+
+    this._originalBodyPointerEvents = null
+  }
+
   _onResizeWindow (event) {
     const { onResize } = this.props
 
@@ -106,6 +132,14 @@ export default class WindowScroller extends Component {
     const scrollTop = Math.max(0, scrollY - this._positionFromTop)
 
     this._setNextState({ scrollTop })
+
+    if (this._originalBodyPointerEvents == null) {
+      this._originalBodyPointerEvents = document.body.style.pointerEvents
+
+      document.body.style.pointerEvents = 'none'
+
+      this._enablePointerEventsAfterDelay()
+    }
 
     onScroll({ scrollTop })
   }
