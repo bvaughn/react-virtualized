@@ -210,6 +210,21 @@ describe('FlexTable', () => {
     })
   })
 
+  describe('forceUpdateGrid', () => {
+    it('should refresh inner Grid content when called', () => {
+      let marker = 'a'
+      function cellRenderer ({ cellData, columnData, dataKey, rowData, rowIndex }) {
+        return `${rowIndex}${marker}`
+      }
+      const component = render(getMarkup({ cellRenderer }))
+      const node = findDOMNode(component)
+      expect(node.textContent).toContain('1a')
+      marker = 'b'
+      component.forceUpdateGrid()
+      expect(node.textContent).toContain('1b')
+    })
+  })
+
   describe('custom getter functions', () => {
     it('should use a custom cellDataGetter if specified', () => {
       const rendered = findDOMNode(render(getMarkup({

@@ -440,6 +440,21 @@ describe('VirtualScroll', () => {
     })
   })
 
+  describe('forceUpdateGrid', () => {
+    it('should refresh inner Grid content when called', () => {
+      let marker = 'a'
+      function rowRenderer ({ index }) {
+        return `${index}${marker}`
+      }
+      const component = render(getMarkup({ rowRenderer }))
+      const node = findDOMNode(component)
+      expect(node.textContent).toContain('1a')
+      marker = 'b'
+      component.forceUpdateGrid()
+      expect(node.textContent).toContain('1b')
+    })
+  })
+
   describe('tabIndex', () => {
     it('should be focusable by default', () => {
       const rendered = findDOMNode(render(getMarkup()))

@@ -112,6 +112,10 @@ export default class VirtualScroll extends Component {
     this._wrapIndexGetter = this._wrapIndexGetter.bind(this)
   }
 
+  forceUpdateGrid () {
+    this.refs.Grid.forceUpdate()
+  }
+
   /** See Grid#measureAllCells */
   measureAllRows () {
     this.refs.Grid.measureAllCells()
@@ -120,7 +124,7 @@ export default class VirtualScroll extends Component {
   /** See Grid#recomputeGridSize */
   recomputeRowHeights () {
     this.refs.Grid.recomputeGridSize()
-    this.refs.Grid.forceUpdate()
+    this.forceUpdateGrid()
   }
 
   render () {

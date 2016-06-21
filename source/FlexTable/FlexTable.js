@@ -191,6 +191,10 @@ export default class FlexTable extends Component {
     this._onSectionRendered = this._onSectionRendered.bind(this)
   }
 
+  forceUpdateGrid () {
+    this.refs.Grid.forceUpdate()
+  }
+
   /** See Grid#measureAllCells */
   measureAllRows () {
     this.refs.Grid.measureAllCells()
@@ -199,7 +203,7 @@ export default class FlexTable extends Component {
   /** See Grid#recomputeGridSize */
   recomputeRowHeights () {
     this.refs.Grid.recomputeGridSize()
-    this.refs.Grid.forceUpdate()
+    this.forceUpdateGrid()
   }
 
   componentDidMount () {

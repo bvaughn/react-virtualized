@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.9.0
+Added `forceUpdateGrid` method to `FlexTable` and `VirtualScroll` to enable the inner `Grid` to be udpated without resorting to recomputing cached row heights.
+
 ##### 7.8.3
 `Grid` no longer checks `scrollTop` when `autoHeight=true` in order to avoid unnecessary reflows/repaints.
 This change only impacts `WindowScroller` use cases.

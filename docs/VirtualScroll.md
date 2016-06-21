@@ -27,6 +27,13 @@ This component renders a virtualized list of elements with either fixed or dynam
 
 ### Public Methods
 
+##### forceUpdateGrid
+Forcefull re-render the inner `Grid` component.
+
+Calling `forceUpdate` on `VirtualScroll` may not re-render the inner `Grid` since it uses `shallowCompare` as a performance optimization.
+Use this method if you want to manually trigger a re-render.
+This may be appropriate if the underlying row data has changed but the row sizes themselves have not.
+
 ##### measureAllRows
 Pre-measure all rows in a `VirtualScroll`.
 
