@@ -15,7 +15,13 @@ High-order component that automatically adjusts the width and height of a single
 
 Many react-virtualized components require explicit dimensions but sometimes you just want a component to just grow to fill all of the available space.
 The `AutoSizer` component can be useful in this case.
-For example...
+
+One word of caution about using `AutoSizer` with flexbox containers.
+Flex containers don't prevent their children from growing and `AutoSizer` greedily grows to fill as much space as possible.
+Combining the two can cause a loop.
+The simple way to fix this is to nest `AutoSizer` inside of a `block` element (like a `<div>`) rather than putting it as a direct child of the flex container.
+
+Here is a simple example...
 
 ```javascript
 import React from 'react';
