@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.8.2
+Fixed edge-case problem with `FlexTable` where changes to the number of children (`FlexColumn`s) didn't update the inner `Grid`.
+
 ##### 7.8.1
 Reverted default `tabIndex = null` value for `Grid` (introduced in 7.8.0) due to a negative accessibility impact.
 A focused `Grid` paints significantly more while scrolling which impacts FPS.
