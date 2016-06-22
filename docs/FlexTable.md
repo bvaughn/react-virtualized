@@ -11,6 +11,8 @@ This component expects explicit width, height, and padding parameters.
 | className | String |  | Optional custom CSS class name to attach to root `FlexTable` element. |
 | disableHeader | Boolean |  | Do not render the table header (only the rows) |
 | estimatedRowSize | Number |  | Used to estimate the total height of a `FlexTable` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
+| gridClassName | String |  | Optional custom CSS class name to attach to inner Grid element |
+| gridStyle | Object |  | Optional inline style to attach to inner Grid element |
 | headerClassName | String |  | CSS class to apply to all column headers |
 | headerHeight | Number | ✓ | Fixed height of header row |
 | headerStyle | Object |  | Optional custom inline style to attach to table header columns. |

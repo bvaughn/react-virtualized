@@ -43,6 +43,12 @@ export default class FlexTable extends Component {
      */
     estimatedRowSize: PropTypes.number.isRequired,
 
+    /** Optional custom CSS class name to attach to inner Grid element. */
+    gridClassName: PropTypes.string,
+
+    /** Optional inline style to attach to inner Grid element. */
+    gridStyle: PropTypes.object,
+
     /** Optional CSS class to apply to all column headers */
     headerClassName: PropTypes.string,
 
@@ -221,6 +227,8 @@ export default class FlexTable extends Component {
       className,
       disableHeader,
       estimatedRowSize,
+      gridClassName,
+      gridStyle,
       headerHeight,
       height,
       noRowsRenderer,
@@ -275,7 +283,7 @@ export default class FlexTable extends Component {
         <Grid
           aria-label={this.props['aria-label']}
           autoHeight={autoHeight}
-          className={'FlexTable__Grid'}
+          className={cn('FlexTable__Grid', gridClassName)}
           cellClassName={this._cellClassName}
           cellRenderer={this._createRow}
           cellStyle={this._cellStyle}
@@ -297,6 +305,7 @@ export default class FlexTable extends Component {
           scrollTop={scrollTop}
           sortBy={sortBy}
           sortDirection={sortDirection}
+          style={gridStyle}
           tabIndex={tabIndex}
           width={width}
         />

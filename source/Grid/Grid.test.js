@@ -1059,4 +1059,20 @@ describe('Grid', () => {
       expect(rendered.tabIndex).toEqual(-1)
     })
   })
+
+  describe('pure', () => {
+    it('should not re-render unless props have changed', () => {
+      let cellRendererCalled = false
+      function cellRenderer () {
+        cellRendererCalled = true
+        return 'foo'
+      }
+      const markup = getMarkup({ cellRenderer })
+      render(markup)
+      expect(cellRendererCalled).toEqual(true)
+      cellRendererCalled = false
+      render(markup)
+      expect(cellRendererCalled).toEqual(false)
+    })
+  })
 })

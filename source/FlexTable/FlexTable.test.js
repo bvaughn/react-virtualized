@@ -738,6 +738,16 @@ describe('FlexTable', () => {
       const result = Array.from(cells).map(el => el.style.backgroundColor)
       expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
+
+    it('should pass :gridClassName and :gridStyle to the inner Grid', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        gridClassName: 'foo',
+        gridStyle: { backgroundColor: 'red' }
+      })))
+      const grid = rendered.querySelector('.Grid')
+      expect(grid.className).toContain('foo')
+      expect(grid.style.backgroundColor).toEqual('red')
+    })
   })
 
   describe('overscanRowCount', () => {
@@ -875,6 +885,33 @@ describe('FlexTable', () => {
         tabIndex: -1
       })))
       expect(rendered.querySelector('.Grid').tabIndex).toEqual(-1)
+    })
+  })
+
+  describe('pure', () => {
+    it('should not re-render unless props have changed', () => {
+      let headerRendererCalled = false
+      let cellRendererCalled = false
+      function headerRenderer () {
+        headerRendererCalled = true
+        return 'foo'
+      }
+      function cellRenderer () {
+        cellRendererCalled = true
+        return 'foo'
+      }
+      const markup = getMarkup({
+        headerRenderer,
+        cellRenderer
+      })
+      render(markup)
+      expect(headerRendererCalled).toEqual(true)
+      expect(cellRendererCalled).toEqual(true)
+      headerRendererCalled = false
+      cellRendererCalled = false
+      render(markup)
+      expect(headerRendererCalled).toEqual(false)
+      expect(cellRendererCalled).toEqual(false)
     })
   })
 })

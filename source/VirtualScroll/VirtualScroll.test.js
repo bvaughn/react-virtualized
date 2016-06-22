@@ -468,4 +468,20 @@ describe('VirtualScroll', () => {
       expect(rendered.tabIndex).toEqual(-1)
     })
   })
+
+  describe('pure', () => {
+    it('should not re-render unless props have changed', () => {
+      let rowRendererCalled = false
+      function rowRenderer () {
+        rowRendererCalled = true
+        return 'foo'
+      }
+      const markup = getMarkup({ rowRenderer })
+      render(markup)
+      expect(rowRendererCalled).toEqual(true)
+      rowRendererCalled = false
+      render(markup)
+      expect(rowRendererCalled).toEqual(false)
+    })
+  })
 })

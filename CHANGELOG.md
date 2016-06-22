@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.10.0
+New `gridClassName` and `gridStyle` pass-through properties added to `FlexTable`.
+
 ##### 7.9.1
 Fixed edge-case bug in `FlexTable` that caused the inner `Grid` not to update when there was a vertical scrollbar.
 This in turn caused headers to be misaligned.

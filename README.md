@@ -51,6 +51,15 @@ However the following peer dependencies must be specified by your project in ord
 [`react-dom`](https://www.npmjs.com/package/react-dom).
 NPM will not automatically install these for you but it will show you a warning message with instructions on how to install them.
 
+Pure Components
+---------------
+
+By default all react-virtualized components use [`shallowCompare`](https://facebook.github.io/react/docs/shallow-compare.html) to avoid re-rendering unless props or state has changed.
+This ocassionally confuses users when a collection's data changes (eg `['a','b','c']` => `['d','e','f']`) but props do not (eg `array.length`).
+The solution to this is to let react-virtualized know that something external has changed.
+For `Grid` or `Collection` this means calling [`forceUpdate`](https://facebook.github.io/react/docs/component-api.html#forceupdate).
+For `FlexTable` and `VirtualScroll` it means calling [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/FlexTable.md#forceupdategrid)).
+
 Documentation
 ---------------
 

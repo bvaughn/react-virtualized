@@ -129,13 +129,13 @@ export default class VirtualScroll extends Component {
 
   render () {
     const {
+      autoHeight,
       className,
       estimatedRowSize,
       height,
       noRowsRenderer,
       rowHeight,
       overscanRowCount,
-      autoHeight,
       rowClassName,
       rowCount,
       rowStyle,
