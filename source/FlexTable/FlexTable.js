@@ -250,7 +250,7 @@ export default class FlexTable extends Component {
       this._cachedColumnStyles[index] = this._getFlexStyleForColumn(column, column.props.style)
     })
 
-    // Note that we specify :numChildren, :sortBy, and :sortDirection as properties on Grid even though these have nothing to do with Grid.
+    // Note that we specify :numChildren, :scrollbarWidth, :sortBy, and :sortDirection as properties on Grid even though these have nothing to do with Grid.
     // This is done because Grid is a pure component and won't update unless its properties or state has changed.
     // Any property that should trigger a re-render of Grid then is specified here to avoid a stale display.
     return (
@@ -291,6 +291,7 @@ export default class FlexTable extends Component {
           ref='Grid'
           rowHeight={rowHeight}
           rowCount={rowCount}
+          scrollbarWidth={scrollbarWidth}
           scrollToAlignment={scrollToAlignment}
           scrollToRow={scrollToIndex}
           scrollTop={scrollTop}

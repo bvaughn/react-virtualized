@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 7.9.1
+Fixed edge-case bug in `FlexTable` that caused the inner `Grid` not to update when there was a vertical scrollbar.
+This in turn caused headers to be misaligned.
+
 ##### 7.9.0
 Added `forceUpdateGrid` method to `FlexTable` and `VirtualScroll` to enable the inner `Grid` to be udpated without resorting to recomputing cached row heights.
 
