@@ -25,7 +25,8 @@ module.exports = {
       commonjs2: 'react-dom',
       amd: 'react-dom',
       root: 'ReactDOM'
-    }
+    },
+    'react-addons-shallow-compare': 'var React.addons.shallowCompare'
   },
   plugins: [
     new ExtractTextPlugin('../styles.css', {
