@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.11.1
+Updated UMD build to remove `react-addons-shallow-compare` from the build.
+UMD users should use `react-with-addons.min.js` (should have already been using it in fact) instead of `react.min.js`.
+Thanks to @ducky427 for reporting this oversight and updating the Webpack config!
+
 ##### 7.11.0
 The `recomputeRowHeights` method of `FlexTable` and `VirtualScroll` accepts an optional index (defaults to 0) after which to recompute sizes.
 The `recomputeGridSize` method of `Grid` accepts named `columnIndex` and `rowIndex` parameters tha function similarly.
