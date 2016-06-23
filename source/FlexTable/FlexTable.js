@@ -207,8 +207,10 @@ export default class FlexTable extends Component {
   }
 
   /** See Grid#recomputeGridSize */
-  recomputeRowHeights () {
-    this.refs.Grid.recomputeGridSize()
+  recomputeRowHeights (index = 0) {
+    this.refs.Grid.recomputeGridSize({
+      rowIndex: index
+    })
     this.forceUpdateGrid()
   }
 

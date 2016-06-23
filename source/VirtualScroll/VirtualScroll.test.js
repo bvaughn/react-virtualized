@@ -424,19 +424,28 @@ describe('VirtualScroll', () => {
 
   describe('recomputeRowHeights', () => {
     it('should recompute row heights and other values when called', () => {
-      let highestRowIndex = 0
+      const indices = []
       const rowHeight = ({ index }) => {
-        highestRowIndex = Math.max(index, highestRowIndex)
+        indices.push(index)
         return 10
       }
       const component = render(getMarkup({
         rowHeight,
         rowCount: 50
       }))
-      highestRowIndex = 0
+
+      indices.splice(0)
       component.recomputeRowHeights()
+
       // Only the rows required to fill the current viewport will be rendered
-      expect(highestRowIndex).toEqual(9)
+      expect(indices[0]).toEqual(0)
+      expect(indices[indices.length - 1]).toEqual(9)
+
+      indices.splice(0)
+      component.recomputeRowHeights(4)
+
+      expect(indices[0]).toEqual(4)
+      expect(indices[indices.length - 1]).toEqual(9)
     })
   })
 

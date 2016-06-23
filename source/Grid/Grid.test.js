@@ -988,14 +988,14 @@ describe('Grid', () => {
 
   describe('recomputeGridSize', () => {
     it('should recompute cell sizes and other values when called', () => {
-      let highestColumnIndex = 0
-      let highestRowIndex = 0
+      const columnIndices = []
+      const rowIndices = []
       function columnWidth ({ index }) {
-        highestColumnIndex = Math.max(index, highestColumnIndex)
+        columnIndices.push(index)
         return 10
       }
       function rowHeight ({ index }) {
-        highestRowIndex = Math.max(index, highestRowIndex)
+        rowIndices.push(index)
         return 10
       }
       const props = {
@@ -1007,12 +1007,31 @@ describe('Grid', () => {
         width: 100
       }
       const component = render(getMarkup(props))
-      highestColumnIndex = 0
-      highestRowIndex = 0
+
+      columnIndices.splice(0)
+      rowIndices.splice(0)
+
       component.recomputeGridSize()
+
       // Only the rows required to fill the current viewport will be rendered
-      expect(highestColumnIndex).toEqual(9)
-      expect(highestRowIndex).toEqual(4)
+      expect(columnIndices[0]).toEqual(0)
+      expect(columnIndices[columnIndices.length - 1]).toEqual(9)
+      expect(rowIndices[0]).toEqual(0)
+      expect(rowIndices[rowIndices.length - 1]).toEqual(4)
+
+      columnIndices.splice(0)
+      rowIndices.splice(0)
+
+      component.recomputeGridSize({
+        columnIndex: 4,
+        rowIndex: 2
+      })
+
+      // Only the rows required to fill the current viewport will be rendered
+      expect(columnIndices[0]).toEqual(4)
+      expect(columnIndices[columnIndices.length - 1]).toEqual(9)
+      expect(rowIndices[0]).toEqual(2)
+      expect(rowIndices[rowIndices.length - 1]).toEqual(4)
     })
   })
 

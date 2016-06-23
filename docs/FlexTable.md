@@ -57,10 +57,12 @@ Pre-measure all rows in a `FlexTable`.
 Typically rows are only measured as needed and estimated heights are used for cells that have not yet been measured.
 This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
 
-##### recomputeRowHeights
-Recompute row heights and offsets.
+##### recomputeRowHeights (index: number)
+Recompute row heights and offsets after the specified index (defaults to 0).
 
-VirtualScroll has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property. If the `rowHeight` is a number it can compare before and after values but if it is a function that comparison is error prone. In the event that a dynamic `rowHeight` function is in use and the row heights have changed this function should be manually called by the "smart" container parent.
+`FlexTable` has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property.
+If the `rowHeight` is a number it can compare before and after values but if it is a function that comparison is error prone.
+In the event that a dynamic `rowHeight` function is in use and the row heights have changed this function should be manually called by the "smart" container parent.
 
 This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered table.
 

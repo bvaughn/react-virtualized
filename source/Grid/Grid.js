@@ -251,9 +251,12 @@ export default class Grid extends Component {
    * This function should be called if dynamic column or row sizes have changed but nothing else has.
    * Since Grid only receives :columnCount and :rowCount it has no way of detecting when the underlying data changes.
    */
-  recomputeGridSize () {
-    this._columnSizeAndPositionManager.resetCell(0)
-    this._rowSizeAndPositionManager.resetCell(0)
+  recomputeGridSize ({
+    columnIndex = 0,
+    rowIndex = 0
+  } = {}) {
+    this._columnSizeAndPositionManager.resetCell(columnIndex)
+    this._rowSizeAndPositionManager.resetCell(rowIndex)
     this.forceUpdate()
   }
 

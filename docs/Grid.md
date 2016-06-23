@@ -43,12 +43,12 @@ Pre-measure all columns and rows in a `Grid`.
 Typically cells are only measured as needed and estimated sizes are used for cells that have not yet been measured.
 This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
 
-##### recomputeGridSize
+##### recomputeGridSize ({ columnIndex: number, rowIndex: number })
 
-Recomputes row heights and column widths.
+Recomputes row heights and column widths after the specified index (both default to 0).
 
 This function should be called if dynamic column or row sizes have changed but nothing else has.
-Since Grid only receives `columnCount` and `rowCount` it has no way of detecting when the underlying data changes.
+Since `Grid` only receives `columnCount` and `rowCount` it has no way of detecting when the underlying data changes.
 
 This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered grid.
 
