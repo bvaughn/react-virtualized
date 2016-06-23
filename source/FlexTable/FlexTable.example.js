@@ -79,8 +79,8 @@ export default class FlexTableExample extends Component {
 
         <ContentBoxParagraph>
           The table layout below is created with flexboxes.
-          This allows it to have a fixed header scrollable body content.
-          It also makes use of <code>VirtualScroll</code> so that large lists of tabular data can be rendered efficiently.
+          This allows it to have a fixed header and scrollable body content.
+          It also makes use of <code>Grid</code> for windowing table content so that large lists are rendered efficiently.
           Adjust its configurable properties below to see how it reacts.
         </ContentBoxParagraph>
 

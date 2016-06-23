@@ -55,7 +55,7 @@ export default class VirtualScrollExample extends Component {
         />
 
         <ContentBoxParagraph>
-          The list below is virtualized, meaning that only the visible rows are rendered.
+          The list below is windowed (or "virtualized") meaning that only the visible rows are rendered.
           Adjust its configurable properties below to see how it reacts.
         </ContentBoxParagraph>
 
