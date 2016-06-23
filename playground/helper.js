@@ -45,6 +45,6 @@ function loadReact () {
       : `https://cdnjs.cloudflare.com/ajax/libs/react/${matches[1]}`
   }
 
-  loadScript(`${baseDir}/react.min.js`);
+  loadScript(`${baseDir}/react-with-addons.min.js`);
   loadScript(`${baseDir}/react-dom.min.js`);
 }

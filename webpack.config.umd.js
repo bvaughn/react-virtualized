@@ -14,18 +14,8 @@ module.exports = {
     library: 'ReactVirtualized'
   },
   externals: {
-    react: {
-      commonjs: 'react',
-      commonjs2: 'react',
-      amd: 'react',
-      root: 'React'
-    },
-    'react-dom': {
-      commonjs: 'react-dom',
-      commonjs2: 'react-dom',
-      amd: 'react-dom',
-      root: 'ReactDOM'
-    },
+    'react': 'React',
+    'react-dom': 'ReactDOM',
     'react-addons-shallow-compare': 'var React.addons.shallowCompare'
   },
   plugins: [
