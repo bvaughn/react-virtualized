@@ -4,9 +4,13 @@ Changelog
 ##### 7.11.0
 The `recomputeRowHeights` method of `FlexTable` and `VirtualScroll` accepts an optional index (defaults to 0) after which to recompute sizes.
 The `recomputeGridSize` method of `Grid` accepts named `columnIndex` and `rowIndex` parameters tha function similarly.
+
 This allows for a finer grained optimization when invalidating a collection.
 If, for example, a specific row in a table has resized- it is now possible to recompute the positions of only the rows occurring after this row.
-Because of the way react-virtualized just-in-time measures rows, this will also avoid re-measuring any but the visible rows.
+Because of the way react-virtualized just-in-time measures rows, this will also avoid re-measuring any but the visible rows at the time of the change.
+
+If several items in the collection have changed and you are unsure of which, it is safest to recompute all columns/rows.
+This remains the default behavior unless override indices are specified as parameters.
 
 ##### 7.10.0
 New `gridClassName` and `gridStyle` pass-through properties added to `FlexTable`.
