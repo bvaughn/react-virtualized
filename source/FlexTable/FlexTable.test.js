@@ -922,5 +922,56 @@ describe('FlexTable', () => {
       expect(headerRendererCalled).toEqual(false)
       expect(cellRendererCalled).toEqual(false)
     })
+
+    it('should re-render both the FlexTable and the inner Grid whenever an external property changes', () => {
+      let headerRendererCalled = false
+      let cellRendererCalled = false
+      function headerRenderer () {
+        headerRendererCalled = true
+        return 'foo'
+      }
+      function cellRenderer () {
+        cellRendererCalled = true
+        return 'foo'
+      }
+      const initialProperties = {
+        autoHeight: false,
+        cellRenderer,
+        estimatedRowSize: 15,
+        headerRenderer,
+        overscanRowCount: 1,
+        rowHeight: 15,
+        rowCount: 20,
+        scrollToAlignment: 'auto',
+        scrollTop: 0,
+        sortBy: 'name',
+        sortDirection: SortDirection.ASC,
+        tabIndex: null
+      }
+      const changedProperties = {
+        autoHeight: true,
+        estimatedRowSize: 10,
+        overscanRowCount: 0,
+        rowHeight: 10,
+        rowCount: 10,
+        scrollToAlignment: 'center',
+        scrollTop: 1,
+        sortBy: 'email',
+        sortDirection: SortDirection.DESC,
+        tabIndex: 1
+      }
+      Object.entries(changedProperties).forEach(([key, value]) => {
+        render.unmount() // Reset
+        render(getMarkup(initialProperties))
+        headerRendererCalled = true
+        cellRendererCalled = false
+        render(getMarkup({
+          ...initialProperties,
+          [key]: value
+        }))
+        expect(headerRendererCalled).toEqual(true)
+        expect(cellRendererCalled).toEqual(true)
+      })
+    })
   })
 })

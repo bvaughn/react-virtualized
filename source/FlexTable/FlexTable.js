@@ -224,28 +224,18 @@ export default class FlexTable extends Component {
 
   render () {
     const {
-      autoHeight,
       children,
       className,
       disableHeader,
-      estimatedRowSize,
       gridClassName,
       gridStyle,
       headerHeight,
       height,
       noRowsRenderer,
-      overscanRowCount,
       rowClassName,
-      rowHeight,
-      rowCount,
       rowStyle,
-      scrollToAlignment,
       scrollToIndex,
-      scrollTop,
-      sortBy,
-      sortDirection,
       style,
-      tabIndex,
       width
     } = this.props
     const { scrollbarWidth } = this.state
@@ -283,33 +273,21 @@ export default class FlexTable extends Component {
         )}
 
         <Grid
-          aria-label={this.props['aria-label']}
-          autoHeight={autoHeight}
+          {...this.props}
           className={cn('FlexTable__Grid', gridClassName)}
           cellClassName={this._cellClassName}
           cellRenderer={this._createRow}
           cellStyle={this._cellStyle}
           columnWidth={width}
           columnCount={1}
-          estimatedRowSize={estimatedRowSize}
           height={availableRowsHeight}
           noContentRenderer={noRowsRenderer}
-          numChildren={this._cachedColumnStyles.length}
           onScroll={this._onScroll}
           onSectionRendered={this._onSectionRendered}
-          overscanRowCount={overscanRowCount}
           ref='Grid'
-          rowHeight={rowHeight}
-          rowCount={rowCount}
           scrollbarWidth={scrollbarWidth}
-          scrollToAlignment={scrollToAlignment}
           scrollToRow={scrollToIndex}
-          scrollTop={scrollTop}
-          sortBy={sortBy}
-          sortDirection={sortDirection}
           style={gridStyle}
-          tabIndex={tabIndex}
-          width={width}
         />
       </div>
     )

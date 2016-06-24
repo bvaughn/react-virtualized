@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.11.2
+Added more pass-thru props from `FlexTable` to `Grid` to ensure that when `FlexTable` re-renders (due to changed props) so does its inner `Grid`.
+Both components are still "pure" (from a shallow comparison perspective).
+This just avoids the unintuitive use-case where some table properties (eg headers) may change while others (eg rows) do not.
+
 ##### 7.11.1
 Updated UMD build to remove `react-addons-shallow-compare` from the build.
 UMD users should use `react-with-addons.min.js` (should have already been using it in fact) instead of `react.min.js`.
