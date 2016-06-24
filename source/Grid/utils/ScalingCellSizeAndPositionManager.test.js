@@ -70,6 +70,13 @@ describe('ScalingCellSizeAndPositionManager', () => {
     })
   })
 
+  describe('getUnit', () => {
+    it('should return "px"', () => {
+      const instance = init()
+      expect(instance.getUnit()).toEqual('px')
+    })
+  })
+
   describe('getTotalSize', () => {
     it('should return :totalSize if it is not greater than :maxScrollSize', () => {
       const maxScrollSizes = [500, 750]

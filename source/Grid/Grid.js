@@ -2,6 +2,8 @@
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
+import parseSize from './utils/parseSize'
+import PercentCellSizeAndPositionManager from './utils/PercentCellSizeAndPositionManager'
 import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getOverscanIndices from './utils/getOverscanIndices'
@@ -81,10 +83,14 @@ export default class Grid extends Component {
     columnCount: PropTypes.number.isRequired,
 
     /**
-     * Either a fixed column width (number) or a function that returns the width of a column given its index.
-     * Should implement the following interface: (index: number): number
+     * Either a fixed column width (number or string, optionally ending in 'px'
+     * or '%') or a function that returns the width of a column given its index.
+     * Should implement the following interface: ({ index: number }): number | string
      */
-    columnWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+    columnWidth: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+      PropTypes.func]).isRequired,
 
     /**
      * Used to estimate the total width of a Grid before all of its columns have actually been measured.
@@ -134,10 +140,14 @@ export default class Grid extends Component {
     overscanRowCount: PropTypes.number.isRequired,
 
     /**
-     * Either a fixed row height (number) or a function that returns the height of a row given its index.
-     * Should implement the following interface: ({ index: number }): number
+     * Either a fixed row height (number or string, optionally ending in 'px'
+     * or '%') or a function that returns the height of a row given its index.
+     * Should implement the following interface: ({ index: number }): number | string
      */
-    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+    rowHeight: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+      PropTypes.func]).isRequired,
 
     /**
      * Number of rows in grid.
@@ -219,16 +229,21 @@ export default class Grid extends Component {
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth)
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight)
 
-    this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
+    this._columnPercentSized = this._isPercentSized(props.columnWidth, props.columnCount)
+    this._rowPercentSized = this._isPercentSized(props.rowHeight, props.rowCount)
+
+    this._columnSizeAndPositionManager = this._getCellSizeAndPositionManager({
       cellCount: props.columnCount,
       cellSizeGetter: (index) => this._columnWidthGetter(index),
-      estimatedCellSize: this._getEstimatedColumnSize(props)
-    })
-    this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
+      estimatedCellSize: this._getEstimatedColumnSize(props),
+      totalSize: props.width
+    }, this._columnPercentSized)
+    this._rowSizeAndPositionManager = this._getCellSizeAndPositionManager({
       cellCount: props.rowCount,
       cellSizeGetter: (index) => this._rowHeightGetter(index),
-      estimatedCellSize: this._getEstimatedRowSize(props)
-    })
+      estimatedCellSize: this._getEstimatedRowSize(props),
+      totalSize: props.height
+    }, this._rowPercentSized)
 
     // See defaultCellRangeRenderer() for more information on the usage of this cache
     this._cellCache = {}
@@ -413,14 +428,21 @@ export default class Grid extends Component {
     this._columnWidthGetter = this._wrapSizeGetter(nextProps.columnWidth)
     this._rowHeightGetter = this._wrapSizeGetter(nextProps.rowHeight)
 
-    this._columnSizeAndPositionManager.configure({
+    this._columnPercentSized = this._isPercentSized(nextProps.columnWidth, nextProps.columnCount)
+    this._rowPercentSized = this._isPercentSized(nextProps.rowHeight, nextProps.rowCount)
+
+    this._columnSizeAndPositionManager = this._getCellSizeAndPositionManager({
       cellCount: nextProps.columnCount,
-      estimatedCellSize: this._getEstimatedColumnSize(nextProps)
-    })
-    this._rowSizeAndPositionManager.configure({
+      cellSizeGetter: (index) => this._columnWidthGetter(index),
+      estimatedCellSize: this._getEstimatedColumnSize(nextProps),
+      totalSize: nextProps.width
+    }, this._columnPercentSized, this._columnSizeAndPositionManager)
+    this._rowSizeAndPositionManager = this._getCellSizeAndPositionManager({
       cellCount: nextProps.rowCount,
-      estimatedCellSize: this._getEstimatedRowSize(nextProps)
-    })
+      cellSizeGetter: (index) => this._rowHeightGetter(index),
+      estimatedCellSize: this._getEstimatedRowSize(nextProps),
+      totalSize: nextProps.height
+    }, this._rowPercentSized, this._rowSizeAndPositionManager)
 
     // Update scroll offsets if the size or number of cells have changed, invalidating the previous value
     calculateSizeAndPositionDataAndUpdateScrollOffset({
@@ -580,10 +602,8 @@ export default class Grid extends Component {
           <div
             className='Grid__innerScrollContainer'
             style={{
-              width: totalColumnsWidth,
-              height: totalRowsHeight,
-              maxWidth: totalColumnsWidth,
-              maxHeight: totalRowsHeight,
+              width: this._columnPercentSized ? '100%' : totalColumnsWidth,
+              height: this._rowPercentSized ? '100%' : totalRowsHeight,
               pointerEvents: isScrolling ? 'none' : 'auto'
             }}
           >
@@ -740,6 +760,29 @@ export default class Grid extends Component {
 
   _wrapSizeGetter (size) {
     return this._wrapPropertyGetter(size)
+  }
+
+  _isPercentSized (size: number | Function, count: number) {
+    if (size instanceof Function) {
+      // just look at first cell for now; inconsistency will be detected later
+      size = count > 0 ? size({ index: 0 }) : null
+    }
+    const parsedSize = parseSize(size)
+    return parsedSize != null && parsedSize.unit === '%'
+  }
+
+  _getCellSizeAndPositionManager (props, isPercentSized, existing) {
+    let manager
+    if (isPercentSized) {
+      manager = new PercentCellSizeAndPositionManager(props)
+    } else {
+      manager = new ScalingCellSizeAndPositionManager(props)
+    }
+    if (existing && existing.constructor === manager.constructor) {
+      existing.configure(props)
+      return existing
+    }
+    return manager
   }
 
   _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {

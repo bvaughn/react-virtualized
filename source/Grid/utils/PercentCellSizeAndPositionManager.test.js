@@ -1,19 +1,19 @@
 /** @flow */
-import CellSizeAndPositionManager from './CellSizeAndPositionManager'
+import PercentCellSizeAndPositionManager from './PercentCellSizeAndPositionManager'
 
-describe('CellSizeAndPositionManager', () => {
+describe('PercentCellSizeAndPositionManager', () => {
   function getCellSizeAndPositionManager ({
-    cellCount = 100,
-    estimatedCellSize = 15
+    cellCount = 10,
+    totalSize = 200
   } = {}) {
     const cellSizeGetterCalls = []
-    const cellSizeAndPositionManager = new CellSizeAndPositionManager({
+    const cellSizeAndPositionManager = new PercentCellSizeAndPositionManager({
       cellCount,
       cellSizeGetter: ({ index }) => {
         cellSizeGetterCalls.push(index)
         return 10
       },
-      estimatedCellSize
+      totalSize
     })
 
     return {
@@ -23,59 +23,24 @@ describe('CellSizeAndPositionManager', () => {
   }
 
   describe('configure', () => {
-    it('should update inner :cellCount and :estimatedCellSize', () => {
+    it('should update inner :cellCount and :totalSize', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager.getCellCount()).toEqual(100)
-      expect(cellSizeAndPositionManager.getEstimatedCellSize()).toEqual(15)
+      expect(cellSizeAndPositionManager.getCellCount()).toEqual(10)
+      expect(cellSizeAndPositionManager.getTotalSize()).toEqual(200)
 
       cellSizeAndPositionManager.configure({
         cellCount: 20,
-        estimatedCellSize: 30
+        totalSize: 300
       })
       expect(cellSizeAndPositionManager.getCellCount()).toEqual(20)
-      expect(cellSizeAndPositionManager.getEstimatedCellSize()).toEqual(30)
-    })
-  })
-
-  describe('findNearestCell', () => {
-    it('should error if given NaN', () => {
-      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(() => cellSizeAndPositionManager._findNearestCell(NaN)).toThrow()
-    })
-
-    it('should gracefully handle offets outisde of bounds (to account for elastic scrolling)', () => {
-      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager._findNearestCell(-100)).toEqual(0)
-      expect(cellSizeAndPositionManager._findNearestCell(1234567890)).toEqual(99)
-    })
-
-    it('should find the first cell', () => {
-      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager._findNearestCell(0)).toEqual(0)
-      expect(cellSizeAndPositionManager._findNearestCell(9)).toEqual(0)
-    })
-
-    it('should find the last cell', () => {
-      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager._findNearestCell(990)).toEqual(99)
-      expect(cellSizeAndPositionManager._findNearestCell(991)).toEqual(99)
-    })
-
-    it('should find the a cell that exactly matches a specified offset in the middle', () => {
-      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager._findNearestCell(100)).toEqual(10)
-    })
-
-    it('should find the cell closest to (but before) the specified offset in the middle', () => {
-      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager._findNearestCell(101)).toEqual(10)
+      expect(cellSizeAndPositionManager.getTotalSize()).toEqual(300)
     })
   })
 
   describe('getUnit', () => {
-    it('should return "px"', () => {
+    it('should return "%"', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager.getUnit()).toEqual('px')
+      expect(cellSizeAndPositionManager.getUnit()).toEqual('%')
     })
   })
 
@@ -86,7 +51,7 @@ describe('CellSizeAndPositionManager', () => {
       expect(() => cellSizeAndPositionManager.getSizeAndPositionOfCell(100)).toThrow()
     })
 
-    it('should returnt he correct size and position information for the requested cell', () => {
+    it('should return the correct size and position information for the requested cell', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
       expect(cellSizeAndPositionManager.getSizeAndPositionOfCell(0).offset).toEqual(0)
       expect(cellSizeAndPositionManager.getSizeAndPositionOfCell(0).size).toEqual(10)
@@ -110,8 +75,8 @@ describe('CellSizeAndPositionManager', () => {
       const { cellSizeAndPositionManager, cellSizeGetterCalls } = getCellSizeAndPositionManager()
       cellSizeAndPositionManager.getSizeAndPositionOfCell(5)
       cellSizeGetterCalls.splice(0)
-      cellSizeAndPositionManager.getSizeAndPositionOfCell(10)
-      expect(cellSizeGetterCalls).toEqual([6, 7, 8, 9, 10])
+      cellSizeAndPositionManager.getSizeAndPositionOfCell(9)
+      expect(cellSizeGetterCalls).toEqual([6, 7, 8, 9])
     })
 
     it('should return cached size and position data if cell has already been measured', () => {
@@ -143,21 +108,9 @@ describe('CellSizeAndPositionManager', () => {
   })
 
   describe('getTotalSize', () => {
-    it('should calculate total size based purely on :estimatedCellSize if no measurements have been done', () => {
+    it('should return fixed total size', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      expect(cellSizeAndPositionManager.getTotalSize()).toEqual(1500)
-    })
-
-    it('should calculate total size based on a mixture of actual cell sizes and :estimatedCellSize if some cells have been measured', () => {
-      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      cellSizeAndPositionManager.getSizeAndPositionOfCell(49)
-      expect(cellSizeAndPositionManager.getTotalSize()).toEqual(1250)
-    })
-
-    it('should calculate total size based on the actual measured sizes if all cells have been measured', () => {
-      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      cellSizeAndPositionManager.getSizeAndPositionOfCell(99)
-      expect(cellSizeAndPositionManager.getTotalSize()).toEqual(1000)
+      expect(cellSizeAndPositionManager.getTotalSize()).toEqual(200)
     })
   })
 
@@ -177,7 +130,7 @@ describe('CellSizeAndPositionManager', () => {
       expect(stop).toEqual(undefined)
     })
 
-    it('should return a visible range of cells for the beginning of the list', () => {
+    it('should return entire range of cells for non-zero cell count', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
       const {
         start,
@@ -187,34 +140,7 @@ describe('CellSizeAndPositionManager', () => {
         offset: 0
       })
       expect(start).toEqual(0)
-      expect(stop).toEqual(4)
-    })
-
-    it('should return a visible range of cells for the middle of the list where some are partially visible', () => {
-      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      const {
-        start,
-        stop
-      } = cellSizeAndPositionManager.getVisibleCellRange({
-        containerSize: 50,
-        offset: 425
-      })
-      // 42 and 47 are partially visible
-      expect(start).toEqual(42)
-      expect(stop).toEqual(47)
-    })
-
-    it('should return a visible range of cells for the end of the list', () => {
-      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
-      const {
-        start,
-        stop
-      } = cellSizeAndPositionManager.getVisibleCellRange({
-        containerSize: 50,
-        offset: 950
-      })
-      expect(start).toEqual(95)
-      expect(stop).toEqual(99)
+      expect(stop).toEqual(9)
     })
   })
 

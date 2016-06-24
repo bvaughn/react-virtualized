@@ -27,11 +27,13 @@ export default class GridExample extends Component {
       rowCount: 1000,
       scrollToColumn: undefined,
       scrollToRow: undefined,
-      useDynamicRowHeight: false
+      useDynamicRowHeight: false,
+      usePercentColumnWidth: false
     }
 
     this._cellRenderer = this._cellRenderer.bind(this)
     this._getColumnWidth = this._getColumnWidth.bind(this)
+    this._getPercentColumnWidth = this._getPercentColumnWidth.bind(this)
     this._getRowClassName = this._getRowClassName.bind(this)
     this._getRowHeight = this._getRowHeight.bind(this)
     this._noContentRenderer = this._noContentRenderer.bind(this)
@@ -53,7 +55,8 @@ export default class GridExample extends Component {
       rowCount,
       scrollToColumn,
       scrollToRow,
-      useDynamicRowHeight
+      useDynamicRowHeight,
+      usePercentColumnWidth
     } = this.state
 
     return (
@@ -66,7 +69,8 @@ export default class GridExample extends Component {
 
         <ContentBoxParagraph>
           Renders tabular data with virtualization along the vertical and horizontal axes.
-          Row heights and column widths must be calculated ahead of time and specified as a fixed size or returned by a getter function.
+          Row heights and column widths must be calculated ahead of time and specified as
+          a fixed size/percentage or returned by a getter function.
         </ContentBoxParagraph>
 
         <ContentBoxParagraph>
@@ -79,6 +83,17 @@ export default class GridExample extends Component {
               onChange={event => this._updateUseDynamicRowHeights(event.target.checked)}
             />
             Use dynamic row height?
+          </label>
+
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Use percentage column widths?'
+              checked={usePercentColumnWidth}
+              className={styles.checkbox}
+              type='checkbox'
+              onChange={event => this._updateUsePercentColumnWidth(event.target.checked)}
+            />
+            Use percentage column widths?
           </label>
         </ContentBoxParagraph>
 
@@ -96,6 +111,7 @@ export default class GridExample extends Component {
             value={rowCount}
           />
           <LabeledInput
+            disabled={usePercentColumnWidth}
             label='Scroll to column'
             name='onScrollToColumn'
             placeholder='Index...'
@@ -123,6 +139,7 @@ export default class GridExample extends Component {
             value={rowHeight}
           />
           <LabeledInput
+            disabled={usePercentColumnWidth}
             label='Overscan columns'
             name='overscanColumnCount'
             onChange={event => this.setState({ overscanColumnCount: parseInt(event.target.value, 10) || 0 })}
@@ -141,7 +158,7 @@ export default class GridExample extends Component {
             <Grid
               cellRenderer={this._cellRenderer}
               className={styles.BodyGrid}
-              columnWidth={this._getColumnWidth}
+              columnWidth={usePercentColumnWidth ? this._getPercentColumnWidth : this._getColumnWidth}
               columnCount={columnCount}
               height={height}
               noContentRenderer={this._noContentRenderer}
@@ -173,6 +190,19 @@ export default class GridExample extends Component {
         return 300
       default:
         return 50
+    }
+  }
+
+  _getPercentColumnWidth ({ index }) {
+    switch (index) {
+      case 0:
+        return '10%'
+      case 1:
+        return '20%'
+      case 2:
+        return '30%'
+      default:
+        return (40 / (this.state.columnCount - 3)) + '%'
     }
   }
 
@@ -260,6 +290,17 @@ export default class GridExample extends Component {
   _updateUseDynamicRowHeights (value) {
     this.setState({
       useDynamicRowHeight: value
+    })
+  }
+
+  _updateUsePercentColumnWidth (value) {
+    let { columnCount } = this.state
+    if (columnCount > 5) {
+      columnCount = 5
+    }
+    this.setState({
+      columnCount,
+      usePercentColumnWidth: value
     })
   }
 
