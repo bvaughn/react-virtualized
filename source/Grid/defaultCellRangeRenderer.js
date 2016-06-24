@@ -27,7 +27,7 @@ export default function defaultCellRangeRenderer ({
 
   let visibleRows = (rowStopIndex - rowStartIndex) + 1
   let visibleColumns = (columnStopIndex - columnStartIndex) + 1
-  
+
   for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
     let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex)
 
@@ -68,7 +68,7 @@ export default function defaultCellRangeRenderer ({
 
       let child = (
         <div
-          key={`${rowIndex%visibleRows}-${columnIndex%visibleColumns}`}
+          key={`${rowIndex % visibleRows}-${columnIndex % visibleColumns}`}
           className={cn('Grid__cell', className)}
           style={{
             ...cellStyleObject,
