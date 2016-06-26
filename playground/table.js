@@ -52,36 +52,7 @@ ReactDOM.render(
   document.querySelector('#mount')
 )
 
-/** Tests a specific use case- scrolling a large FlexTable */
-function testCase (completedCallback) {
-  const flexTable = document.querySelector('.FlexTable__Grid')
-  flexTable.scrollTop = 0
-
-  const maxScrollTop = flexTable.scrollHeight
-
-  var interval = 1
-  var scrollTop = 0
-
-  function incrementScrollTop () {
-    if (!testRunner.isRunning()) {
-      return
-    }
-
-    interval *= 1.1
-    scrollTop = Math.min(scrollTop + interval, maxScrollTop)
-
-    flexTable.scrollTop = scrollTop
-
-    if (scrollTop < maxScrollTop) {
-      requestAnimationFrame(incrementScrollTop)
-    } else {
-      completedCallback()
-    }
-  }
-
-  incrementScrollTop()
-}
-
+const testCase = createScrollingTestCase(document.querySelector('.Grid'))
 const TestRunner = FpsMeasurer.TestRunner
 const testRunner = new TestRunner(testCase, 5)
 
