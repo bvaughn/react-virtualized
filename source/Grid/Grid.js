@@ -449,6 +449,7 @@ export default class Grid extends Component {
 
   render () {
     const {
+      autoHeight,
       cellClassName,
       cellRenderer,
       cellRangeRenderer,
@@ -459,7 +460,6 @@ export default class Grid extends Component {
       noContentRenderer,
       overscanColumnCount,
       overscanRowCount,
-      autoHeight,
       rowCount,
       style,
       tabIndex,
@@ -580,7 +580,7 @@ export default class Grid extends Component {
           <div
             className='Grid__innerScrollContainer'
             style={{
-              width: totalColumnsWidth,
+              width: columnCount === 1 ? 'auto' : totalColumnsWidth,
               height: totalRowsHeight,
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,

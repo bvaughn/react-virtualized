@@ -155,12 +155,15 @@ export default class VirtualScroll extends Component {
 
     return (
       <Grid
-        ref='Grid'
+        autoHeight={autoHeight}
         aria-label={this.props['aria-label']}
         className={classNames}
         cellRenderer={this._cellRenderer}
         cellClassName={cellClassName}
-        cellStyle={cellStyle}
+        cellStyle={{
+          width: '100%',
+          ...cellStyle
+        }}
         columnWidth={width}
         columnCount={1}
         estimatedRowSize={estimatedRowSize}
@@ -169,7 +172,7 @@ export default class VirtualScroll extends Component {
         onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}
         overscanRowCount={overscanRowCount}
-        autoHeight={autoHeight}
+        ref='Grid'
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollToAlignment={scrollToAlignment}
