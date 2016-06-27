@@ -530,13 +530,13 @@ describe('FlexTable', () => {
         onRowDeselect: ({ index }) => onRowDeselectCalls.push(index)
       })))
       const rows = rendered.querySelectorAll('.FlexTable__row')
-      Simulate.click(rows[0], {shiftKey: true})
-      Simulate.click(rows[3], {shiftKey: true})
+      Simulate.click(rows[0], {metaKey: true})
+      Simulate.click(rows[3], {metaKey: true})
       expect(onRowSelectCalls).toEqual([0, 3])
       expect(onRowDeselectCalls).toEqual([])
     })
 
-    it('should call :onRowSelect and onRowDeselect with the correct :rowIndex when a row is selected and deselected with the shift key', () => {
+    it('should call :onRowSelect and onRowDeselect with the correct :rowIndex when a row is selected and deselected with the meta key', () => {
       const onRowSelectCalls = []
       const onRowDeselectCalls = []
       const rendered = findDOMNode(render(getMarkup({
@@ -545,13 +545,13 @@ describe('FlexTable', () => {
         onRowDeselect: ({ index }) => onRowDeselectCalls.push(index)
       })))
       const rows = rendered.querySelectorAll('.FlexTable__row')
-      Simulate.click(rows[0], {shiftKey: true})
-      Simulate.click(rows[0], {shiftKey: true})
+      Simulate.click(rows[0], {metaKey: true})
+      Simulate.click(rows[0], {metaKey: true})
       expect(onRowSelectCalls).toEqual([0])
       expect(onRowDeselectCalls).toEqual([0])
     })
 
-    it('should call :onRowSelect and onRowDeselect with the correct :rowIndex when a row is selected and deselected with the shift key and with multipleSelections', () => {
+    it('should call :onRowSelect and onRowDeselect with the correct :rowIndex when a row is selected and deselected with the meta key and with multipleSelections', () => {
       const onRowSelectCalls = []
       const onRowDeselectCalls = []
       const rendered = findDOMNode(render(getMarkup({
@@ -560,13 +560,53 @@ describe('FlexTable', () => {
         onRowDeselect: ({ index }) => onRowDeselectCalls.push(index)
       })))
       const rows = rendered.querySelectorAll('.FlexTable__row')
-      Simulate.click(rows[0], {shiftKey: true})
-      Simulate.click(rows[3], {shiftKey: true})
+      Simulate.click(rows[0], {metaKey: true})
+      Simulate.click(rows[3], {metaKey: true})
       expect(onRowSelectCalls).toEqual([0, 3])
       expect(onRowDeselectCalls).toEqual([])
-      Simulate.click(rows[2], {shiftKey: false})
+      Simulate.click(rows[2], {metaKey: false})
       expect(onRowSelectCalls).toEqual([0, 3, 2])
       expect(onRowDeselectCalls).toEqual([0, 3])
+    })
+
+    it('should call :onRowSelect and onRowDeselect with the correct :rowIndex when a row is selected and deselected with the shift key (ASC)', () => {
+      let onRowSelectCalls = []
+      let onRowDeselectCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        allowsMultipleSelection: true,
+        onRowSelect: ({ index }) => onRowSelectCalls.push(index),
+        onRowDeselect: ({ index }) => onRowDeselectCalls.push(index)
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.click(rows[0])
+      Simulate.click(rows[4], {shiftKey: true})
+      expect(onRowSelectCalls).toEqual([0, 1, 2, 3, 4])
+      expect(onRowDeselectCalls).toEqual([])
+      onRowSelectCalls = []
+      onRowDeselectCalls = []
+      Simulate.click(rows[2], {shiftKey: true})
+      expect(onRowSelectCalls).toEqual([])
+      expect(onRowDeselectCalls).toEqual([3, 4])
+    })
+
+    it('should call :onRowSelect and onRowDeselect with the correct :rowIndex when a row is selected and deselected with the shift key (DESC)', () => {
+      let onRowSelectCalls = []
+      let onRowDeselectCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        allowsMultipleSelection: true,
+        onRowSelect: ({ index }) => onRowSelectCalls.push(index),
+        onRowDeselect: ({ index }) => onRowDeselectCalls.push(index)
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.click(rows[4])
+      Simulate.click(rows[0], {shiftKey: true})
+      expect(onRowSelectCalls).toEqual([4, 3, 2, 1, 0])
+      expect(onRowDeselectCalls).toEqual([])
+      onRowSelectCalls = []
+      onRowDeselectCalls = []
+      Simulate.click(rows[2], {shiftKey: true})
+      expect(onRowSelectCalls).toEqual([])
+      expect(onRowDeselectCalls).toEqual([1, 0])
     })
   })
 

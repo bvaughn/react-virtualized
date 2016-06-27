@@ -484,14 +484,25 @@ export default class FlexTable extends Component {
 
       if (onRowClick || onSelectionHandlerUsed) {
         a11yProps.onClick = (event) => {
+          const isMetaEvent = event.metaKey
           const isShiftEvent = event.shiftKey
+
           let currentSelectedRows = this.state.selectedRows
 
-          if (onSelectionHandlerUsed && (!currentSelectedRows.has(index) || currentSelectedRows.has(index) && isShiftEvent)) {
+          if (onSelectionHandlerUsed && (!currentSelectedRows.has(index) || currentSelectedRows.has(index) && (isMetaEvent || isShiftEvent))) {
             let newSelectedRows = new Set()
 
-            if (allowsMultipleSelection && isShiftEvent) newSelectedRows = new Set(currentSelectedRows)
-            if (currentSelectedRows.has(index) && isShiftEvent) newSelectedRows.delete(index)
+            if (allowsMultipleSelection && isShiftEvent && currentSelectedRows.size > 0) {
+              const firstSelectedIndex = currentSelectedRows.values().next().value
+              let i = firstSelectedIndex
+
+              if (index === firstSelectedIndex) newSelectedRows.add(index)
+              else if (index > firstSelectedIndex) for (i = firstSelectedIndex; i <= index; i++) newSelectedRows.add(i)
+              else for (i = firstSelectedIndex; i >= index; i--) newSelectedRows.add(i)
+            }
+
+            if (allowsMultipleSelection && isMetaEvent) newSelectedRows = new Set(currentSelectedRows)
+            if (currentSelectedRows.has(index) && isMetaEvent) newSelectedRows.delete(index)
             if (!currentSelectedRows.has(index)) newSelectedRows.add(index)
             if (onSelectionIndexesForProposedSelection) newSelectedRows = onSelectionIndexesForProposedSelection({indexes: newSelectedRows})
 
