@@ -498,6 +498,121 @@ describe('FlexTable', () => {
     })
   })
 
+  describe('onRowSelect', () => {
+    it('should call :onRowSelect with the correct :rowIndex when a row is selected', () => {
+      const onRowSelectCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        onRowSelect: ({ index }) => onRowSelectCalls.push(index)
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.click(rows[0])
+      Simulate.click(rows[3])
+      expect(onRowSelectCalls).toEqual([0, 3])
+    })
+
+    it('should call :onRowSelect with the correct :rowIndex when a row is selected and changing the indexes in onSelectionIndexesForProposedSelection', () => {
+      const onRowSelectCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        onRowSelect: ({ index }) => onRowSelectCalls.push(index),
+        onSelectionIndexesForProposedSelection: ({ indexes }) => new Set().add(1)
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.click(rows[0])
+      expect(onRowSelectCalls).toEqual([1])
+    })
+
+    it('should call :onRowSelect with the correct :rowIndex when a row is selected with multipleSelection, onRowDeselect should not be called', () => {
+      const onRowSelectCalls = []
+      const onRowDeselectCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        allowsMultipleSelection: true,
+        onRowSelect: ({ index }) => onRowSelectCalls.push(index),
+        onRowDeselect: ({ index }) => onRowDeselectCalls.push(index)
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.click(rows[0], {shiftKey: true})
+      Simulate.click(rows[3], {shiftKey: true})
+      expect(onRowSelectCalls).toEqual([0, 3])
+      expect(onRowDeselectCalls).toEqual([])
+    })
+
+    it('should call :onRowSelect and onRowDeselect with the correct :rowIndex when a row is selected and deselected with the shift key', () => {
+      const onRowSelectCalls = []
+      const onRowDeselectCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        allowsMultipleSelection: true,
+        onRowSelect: ({ index }) => onRowSelectCalls.push(index),
+        onRowDeselect: ({ index }) => onRowDeselectCalls.push(index)
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.click(rows[0], {shiftKey: true})
+      Simulate.click(rows[0], {shiftKey: true})
+      expect(onRowSelectCalls).toEqual([0])
+      expect(onRowDeselectCalls).toEqual([0])
+    })
+
+    it('should call :onRowSelect and onRowDeselect with the correct :rowIndex when a row is selected and deselected with the shift key and with multipleSelections', () => {
+      const onRowSelectCalls = []
+      const onRowDeselectCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        allowsMultipleSelection: true,
+        onRowSelect: ({ index }) => onRowSelectCalls.push(index),
+        onRowDeselect: ({ index }) => onRowDeselectCalls.push(index)
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.click(rows[0], {shiftKey: true})
+      Simulate.click(rows[3], {shiftKey: true})
+      expect(onRowSelectCalls).toEqual([0, 3])
+      expect(onRowDeselectCalls).toEqual([])
+      Simulate.click(rows[2], {shiftKey: false})
+      expect(onRowSelectCalls).toEqual([0, 3, 2])
+      expect(onRowDeselectCalls).toEqual([0, 3])
+    })
+  })
+
+  describe('onRowDeselect', () => {
+    it('should call :onRowDeselect with the correct :rowIndex when a row is deselected', () => {
+      const onRowDeselectCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        onRowDeselect: ({ index }) => onRowDeselectCalls.push(index)
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.click(rows[0])
+      Simulate.click(rows[3])
+      Simulate.click(rows[2])
+      expect(onRowDeselectCalls).toEqual([0, 3])
+    })
+
+    it('should call :onRowDeselect with the correct :rowIndex when a row is deselected and changing the indexes in onSelectionIndexesForProposedSelection', () => {
+      const onRowDeselectCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        onRowDeselect: ({ index }) => onRowDeselectCalls.push(index),
+        onSelectionIndexesForProposedSelection: ({ indexes }) => new Set().add(0)
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.click(rows[0])
+      Simulate.click(rows[3])
+      expect(onRowDeselectCalls).toEqual([])
+    })
+  })
+
+  describe('onSelectionIndexesForProposedSelection', () => {
+    it('should call :onSelectionIndexesForProposedSelection with the correct :rowIndexes when a row is selected', () => {
+      const onSelectionIndexesForProposedSelectionCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        onSelectionIndexesForProposedSelection: ({ indexes }) => {
+          onSelectionIndexesForProposedSelectionCalls.push(indexes)
+          return indexes
+        }
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.click(rows[0])
+      Simulate.click(rows[3])
+      expect(onSelectionIndexesForProposedSelectionCalls[0].has(0)).toEqual(true)
+      expect(onSelectionIndexesForProposedSelectionCalls[1].has(3)).toEqual(true)
+    })
+  })
+
   describe('onRowMouseOver/Out', () => {
     it('should call :onRowMouseOver and :onRowMouseOut with the correct :rowIndex when the mouse is moved over rows', () => {
       let onRowMouseOverCalls = []
@@ -854,6 +969,66 @@ describe('FlexTable', () => {
     it('should not attach a11y properties to a row if no :onRowClick is specified', () => {
       const rendered = findDOMNode(render(getMarkup({
         onRowClick: null
+      })))
+      const row = rendered.querySelector('.FlexTable__row')
+      expect(row.getAttribute('aria-label')).toEqual(null)
+      expect(row.getAttribute('role')).toEqual(null)
+      expect(row.tabIndex).toEqual(-1)
+    })
+
+    it('should attach a11y properties to a row if :onRowSelect is specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        onRowSelect: () => {}
+      })))
+      const row = rendered.querySelector('.FlexTable__row')
+      expect(row.getAttribute('aria-label')).toEqual('row')
+      expect(row.getAttribute('role')).toEqual('row')
+      expect(row.tabIndex).toEqual(0)
+    })
+
+    it('should not attach a11y properties to a row if no :onRowSelect is specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        onRowSelect: null
+      })))
+      const row = rendered.querySelector('.FlexTable__row')
+      expect(row.getAttribute('aria-label')).toEqual(null)
+      expect(row.getAttribute('role')).toEqual(null)
+      expect(row.tabIndex).toEqual(-1)
+    })
+
+    it('should attach a11y properties to a row if :onRowDeselect is specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        onRowDeselect: () => {}
+      })))
+      const row = rendered.querySelector('.FlexTable__row')
+      expect(row.getAttribute('aria-label')).toEqual('row')
+      expect(row.getAttribute('role')).toEqual('row')
+      expect(row.tabIndex).toEqual(0)
+    })
+
+    it('should not attach a11y properties to a row if no :onRowDeselect is specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        onRowDeselect: null
+      })))
+      const row = rendered.querySelector('.FlexTable__row')
+      expect(row.getAttribute('aria-label')).toEqual(null)
+      expect(row.getAttribute('role')).toEqual(null)
+      expect(row.tabIndex).toEqual(-1)
+    })
+
+    it('should attach a11y properties to a row if :onSelectionIndexesForProposedSelection is specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        onSelectionIndexesForProposedSelection: () => {}
+      })))
+      const row = rendered.querySelector('.FlexTable__row')
+      expect(row.getAttribute('aria-label')).toEqual('row')
+      expect(row.getAttribute('role')).toEqual('row')
+      expect(row.tabIndex).toEqual(0)
+    })
+
+    it('should not attach a11y properties to a row if no :onSelectionIndexesForProposedSelection is specified', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        onSelectionIndexesForProposedSelection: null
       })))
       const row = rendered.querySelector('.FlexTable__row')
       expect(row.getAttribute('aria-label')).toEqual(null)
