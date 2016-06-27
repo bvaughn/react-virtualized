@@ -68,11 +68,11 @@ export default function defaultCellRangeRenderer ({
           key={key}
           className={cn('Grid__cell', className)}
           style={{
-            ...cellStyleObject,
             height: rowDatum.size,
             left: columnDatum.offset + horizontalOffsetAdjustment,
             top: rowDatum.offset + verticalOffsetAdjustment,
-            width: columnDatum.size
+            width: columnDatum.size,
+            ...cellStyleObject
           }}
         >
           {renderedCell}
