@@ -9,7 +9,6 @@ export default class SelectableGridComponent extends Component {
       selectedRows: props.selectedRows
     }
 
-    this.handleCellStyle = this.handleCellStyle.bind(this)
     this.handleOnSelect = this.handleOnSelect.bind(this)
   }
 
@@ -33,15 +32,6 @@ export default class SelectableGridComponent extends Component {
     onRowDeselect: PropTypes.func,
 
     /**
-     * Callback invoked when a user clicks on a table row.
-     * ({ index: number }): void
-     */
-    onRowClick: PropTypes.func,
-
-    /** Optional custom CSS class for individual rows */
-    rowWrapperStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-
-    /**
     * Optional callback when a row is deselected
     * The callback should return a set of the next rows to select
     * ({ indexes: object }): object
@@ -57,20 +47,11 @@ export default class SelectableGridComponent extends Component {
     selectedRows: new Set()
   }
 
-  handleCellStyle (index) {
-    const { rowWrapperStyle } = this.props
-
-    return rowWrapperStyle instanceof Function
-      ? rowWrapperStyle({ index: index.index + 1, isSelected: this.state.selectedRows.has(index.index + 1) })
-      : rowWrapperStyle
-  }
-
   handleOnSelect (rowIndex, event) {
     const {
       allowsMultipleSelection,
       onRowSelect,
       onRowDeselect,
-      onRowClick,
       onSelectionIndexesForProposedSelection
     } = this.props
 
@@ -79,7 +60,6 @@ export default class SelectableGridComponent extends Component {
     const index = rowIndex.index
 
     let currentSelectedRows = this.state.selectedRows
-
     let newSelectedRows = new Set()
 
     if (allowsMultipleSelection && isShiftEvent && currentSelectedRows.size > 0) {
@@ -108,15 +88,12 @@ export default class SelectableGridComponent extends Component {
     this.setState({
       selectedRows: newSelectedRows
     })
-
-    if (onRowClick) onRowClick({ index })
   }
 
   render () {
     const { children } = this.props
 
     return children({
-      rowWrapperStyle: this.handleCellStyle,
       onRowClick: this.handleOnSelect
     })
   }

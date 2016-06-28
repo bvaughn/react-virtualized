@@ -173,10 +173,11 @@ export default class SelectableGridComponentExample extends Component {
                   if (row.isSelected) return { backgroundColor: '#4DB6AD' }
                   return { backgroundColor: 'white' }
                 }}>
-                {({ rowWrapperStyle, onRowClick }) => (
+                {({ onRowClick }) => (
                   <FlexTable
-                    onRowClick={onRowClick}
-                    rowWrapperStyle={rowWrapperStyle}
+                    onRowClick={(index, event) => {
+                      onRowClick(index, event)
+                    }}
                     ref='Table'
                     disableHeader={disableHeader}
                     headerClassName={styles.headerColumn}

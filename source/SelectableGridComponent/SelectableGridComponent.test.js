@@ -29,7 +29,7 @@ describe('SelectableGridComponent', () => {
     return (
       <SelectableGridComponent
         {...selectableGridComponentProps}>
-        {({ rowWrapperStyle, onRowClick }) => (
+        {({ onRowClick }) => (
           <FlexTable
             headerHeight={20}
             height={100}
@@ -37,8 +37,9 @@ describe('SelectableGridComponent', () => {
             rowCount={list.size}
             rowHeight={10}
             width={100}
-            rowWrapperStyle={rowWrapperStyle}
-            onRowClick={onRowClick}
+            onRowClick={(index, event) => {
+              onRowClick(index, event)
+            }}
             rowGetter={immutableRowGetter}
           >
             <FlexColumn
@@ -60,19 +61,6 @@ describe('SelectableGridComponent', () => {
       </SelectableGridComponent>
     )
   }
-
-  describe('onRowClick', () => {
-    it('should call :onRowClick with the correct :rowIndex when a row is clicked', () => {
-      const onRowClickCalls = []
-      const rendered = findDOMNode(render(getMarkup({
-        onRowClick: ({ index }) => onRowClickCalls.push(index)
-      })))
-      const rows = rendered.querySelectorAll('.FlexTable__row')
-      Simulate.click(rows[0])
-      Simulate.click(rows[3])
-      expect(onRowClickCalls).toEqual([0, 3])
-    })
-  })
 
   describe('onRowSelect', () => {
     it('should call :onRowSelect with the correct :rowIndex when a row is selected', () => {
@@ -226,24 +214,6 @@ describe('SelectableGridComponent', () => {
       Simulate.click(rows[3])
       expect(onSelectionIndexesForProposedSelectionCalls[0].has(0)).toEqual(true)
       expect(onSelectionIndexesForProposedSelectionCalls[1].has(3)).toEqual(true)
-    })
-  })
-
-  describe('styles and classeNames', () => {
-    it('should use a custom :rowWrapperStyle if specified', () => {
-      const rowWrapperStyle = { backgroundColor: 'red' }
-      const rendered = findDOMNode(render(getMarkup({ rowWrapperStyle })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const result = Array.from(cells).map(el => el.style.backgroundColor)
-      expect(result).toEqual((new Array(cells.length)).fill('red'))
-    })
-
-    it('should use a custom :rowWrapperStyle if function specified', () => {
-      const rowWrapperStyle = () => { return { backgroundColor: 'red' } }
-      const rendered = findDOMNode(render(getMarkup({ rowWrapperStyle })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const result = Array.from(cells).map(el => el.style.backgroundColor)
-      expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
   })
 })
