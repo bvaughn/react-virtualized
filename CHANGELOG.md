@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.11.3
+Updated `Grid` and `VirtualScroll` so that the width of rows in a `VirtualScroll` does not stretch beneath a scrollbar (if one is visible).
+
 ##### 7.11.2
 Added more pass-thru props from `FlexTable` to `Grid` to ensure that when `FlexTable` re-renders (due to changed props) so does its inner `Grid`.
 Both components are still "pure" (from a shallow comparison perspective).
