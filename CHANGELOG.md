@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 7.11.4
+Added more pass-thru props from `VirtualScroll` to `Grid` to ensure that when `VirtualScroll` re-renders (due to changed props) so does its inner `Grid`.
+Both components are still "pure" (from a shallow comparison perspective).
+
 ##### 7.11.3
 Updated `Grid` and `VirtualScroll` so that the width of rows in a `VirtualScroll` does not stretch beneath a scrollbar (if one is visible).
 

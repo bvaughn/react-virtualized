@@ -132,19 +132,9 @@ export default class VirtualScroll extends Component {
 
   render () {
     const {
-      autoHeight,
       className,
-      estimatedRowSize,
-      height,
       noRowsRenderer,
-      rowHeight,
-      overscanRowCount,
-      rowCount,
-      scrollToAlignment,
       scrollToIndex,
-      scrollTop,
-      style,
-      tabIndex,
       width
     } = this.props
 
@@ -152,29 +142,18 @@ export default class VirtualScroll extends Component {
 
     return (
       <Grid
-        autoHeight={autoHeight}
-        aria-label={this.props['aria-label']}
-        className={classNames}
+        {...this.props}
         cellRenderer={this._cellRenderer}
         cellClassName={this._createRowClassNameGetter()}
         cellStyle={this._createRowStyleGetter()}
+        className={classNames}
         columnWidth={width}
         columnCount={1}
-        estimatedRowSize={estimatedRowSize}
-        height={height}
         noContentRenderer={noRowsRenderer}
         onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}
-        overscanRowCount={overscanRowCount}
         ref='Grid'
-        rowHeight={rowHeight}
-        rowCount={rowCount}
-        scrollToAlignment={scrollToAlignment}
         scrollToRow={scrollToIndex}
-        scrollTop={scrollTop}
-        style={style}
-        tabIndex={tabIndex}
-        width={width}
       />
     )
   }
