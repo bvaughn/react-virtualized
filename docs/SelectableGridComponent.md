@@ -44,8 +44,8 @@ const list = [
 ReactDOM.render(
   <SelectableGridComponent
     allowsMultipleSelection
-    onRowSelect={(index) => console.error('Selected Index : ' + index.index)}
-    onRowDeselect={(index) => console.error('Deselected Index : ' + index.index)}
+    onRowSelect={({ index }) => console.error('Selected Index : ' + index.index)}
+    onRowDeselect={({ index }) => console.error('Deselected Index : ' + index.index)}
     rowWrapperStyle={(row) => {
       if (row.isSelected) return { backgroundColor: '#4DB6AD' }
       return { backgroundColor: 'white' }
