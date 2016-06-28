@@ -325,6 +325,12 @@ describe('VirtualScroll', () => {
       const result = Array.from(cells).map(el => el.style.backgroundColor)
       expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
+
+    it('should set the width of a row to be 100% by default', () => {
+      const rendered = findDOMNode(render(getMarkup()))
+      const cell = rendered.querySelector('.Grid__cell')
+      expect(cell.style.width).toEqual('100%')
+    })
   })
 
   describe('overscanRowCount', () => {
