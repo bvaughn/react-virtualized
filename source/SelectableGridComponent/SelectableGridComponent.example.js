@@ -169,10 +169,7 @@ export default class SelectableGridComponentExample extends Component {
                 allowsMultipleSelection
                 onRowSelect={(index) => console.error('Selected Index : ' + index.index)}
                 onRowDeselect={(index) => console.error('Deselected Index : ' + index.index)}
-                rowWrapperStyle={(row) => {
-                  if (row.isSelected) return { backgroundColor: '#4DB6AD' }
-                  return { backgroundColor: 'white' }
-                }}>
+                ref={(ref) => { this._selectableGridComponent = ref }}>
                 {({ onRowClick }) => (
                   <FlexTable
                     onRowClick={(index, event) => {
@@ -193,7 +190,10 @@ export default class SelectableGridComponentExample extends Component {
                     sortBy={sortBy}
                     sortDirection={sortDirection}
                     width={width}
-                  >
+                    rowWrapperStyle={(index) => {
+                      if (this._isRowSelected(index)) return { backgroundColor: '#4DB6AD' }
+                      return { backgroundColor: 'white' }
+                    }}>
                     {!hideIndexRow &&
                       <FlexColumn
                         label='Index'
@@ -228,6 +228,13 @@ export default class SelectableGridComponentExample extends Component {
           </AutoSizer>
         </div>
       </ContentBox>
+    )
+  }
+
+  _isRowSelected (index) {
+    return (
+      this._selectableGridComponent &&
+      this._selectableGridComponent.isRowSelected(index)
     )
   }
 

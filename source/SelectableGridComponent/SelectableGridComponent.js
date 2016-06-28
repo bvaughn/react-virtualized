@@ -47,6 +47,10 @@ export default class SelectableGridComponent extends Component {
     selectedRows: new Set()
   }
 
+  isRowSelected (index) {
+    return this.state.selectedRows.has(index.index + 1)
+  }
+
   handleOnSelect (rowIndex, event) {
     const {
       allowsMultipleSelection,
