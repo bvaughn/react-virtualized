@@ -107,9 +107,10 @@ export default class VirtualScroll extends Component {
     super(props, context)
 
     this._cellRenderer = this._cellRenderer.bind(this)
+    this._createRowClassNameGetter = this._createRowClassNameGetter.bind(this)
+    this._createRowStyleGetter = this._createRowStyleGetter.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._onSectionRendered = this._onSectionRendered.bind(this)
-    this._wrapIndexGetter = this._wrapIndexGetter.bind(this)
   }
 
   forceUpdateGrid () {
@@ -138,9 +139,7 @@ export default class VirtualScroll extends Component {
       noRowsRenderer,
       rowHeight,
       overscanRowCount,
-      rowClassName,
       rowCount,
-      rowStyle,
       scrollToAlignment,
       scrollToIndex,
       scrollTop,
@@ -150,17 +149,15 @@ export default class VirtualScroll extends Component {
     } = this.props
 
     const classNames = cn('VirtualScroll', className)
-    const cellClassName = this._wrapIndexGetter(rowClassName)
-    const cellStyle = this._wrapIndexGetter(rowStyle)
 
     return (
       <Grid
-        ref='Grid'
+        autoHeight={autoHeight}
         aria-label={this.props['aria-label']}
         className={classNames}
         cellRenderer={this._cellRenderer}
-        cellClassName={cellClassName}
-        cellStyle={cellStyle}
+        cellClassName={this._createRowClassNameGetter()}
+        cellStyle={this._createRowStyleGetter()}
         columnWidth={width}
         columnCount={1}
         estimatedRowSize={estimatedRowSize}
@@ -169,7 +166,7 @@ export default class VirtualScroll extends Component {
         onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}
         overscanRowCount={overscanRowCount}
-        autoHeight={autoHeight}
+        ref='Grid'
         rowHeight={rowHeight}
         rowCount={rowCount}
         scrollToAlignment={scrollToAlignment}
@@ -195,6 +192,28 @@ export default class VirtualScroll extends Component {
     })
   }
 
+  _createRowClassNameGetter () {
+    const { rowClassName } = this.props
+
+    return rowClassName instanceof Function
+      ? ({ rowIndex }) => rowClassName({ index: rowIndex })
+      : () => rowClassName
+  }
+
+  _createRowStyleGetter () {
+    const { rowStyle } = this.props
+
+    const wrapped = rowStyle instanceof Function
+      ? rowStyle
+      : () => rowStyle
+
+    // Default width to 100% to prevent list rows from flowing under the vertical scrollbar
+    return ({ rowIndex }) => ({
+      width: '100%',
+      ...wrapped({ index: rowIndex })
+    })
+  }
+
   _onScroll ({ clientHeight, scrollHeight, scrollTop }) {
     const { onScroll } = this.props
 
@@ -210,11 +229,5 @@ export default class VirtualScroll extends Component {
       startIndex: rowStartIndex,
       stopIndex: rowStopIndex
     })
-  }
-
-  _wrapIndexGetter (value) {
-    return value instanceof Function
-      ? ({ rowIndex }) => value({ index: rowIndex })
-      : () => value
   }
 }
