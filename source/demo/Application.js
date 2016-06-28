@@ -17,13 +17,14 @@ import React, { Component } from 'react'
 import ScrollSyncExample from '../ScrollSync/ScrollSync.example'
 import styles from './Application.css'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
+import SelectableGridComponentExample from '../SelectableGridComponent/SelectableGridComponent.example'
 import { generateRandomList } from './utils'
 import { render } from 'react-dom'
 import shallowCompare from 'react-addons-shallow-compare'
 import '../../styles.css'
 
 const COMPONENTS = ['Collection', 'Grid', 'FlexTable', 'VirtualScroll']
-const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync', 'WindowScroller']
+const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync', 'SelectableGridComponent', 'WindowScroller']
 const COMPONENT_EXAMPLES_MAP = {
   ArrowKeyStepper: ArrowKeyStepperExample,
   AutoSizer: AutoSizerExample,
@@ -33,6 +34,7 @@ const COMPONENT_EXAMPLES_MAP = {
   FlexTable: FlexTableExample,
   Grid: GridExample,
   InfiniteLoader: InfiniteLoaderExample,
+  SelectableGridComponent: SelectableGridComponentExample,
   ScrollSync: ScrollSyncExample,
   VirtualScroll: VirtualScrollExample,
   WindowScroller: WindowScrollerExample

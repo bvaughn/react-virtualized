@@ -15,9 +15,6 @@ export default class FlexTable extends Component {
   static propTypes = {
     'aria-label': PropTypes.string,
 
-    /** Optional option to set if the a FlexTable allows multiple selection*/
-    allowsMultipleSelection: PropTypes.bool,
-
     /**
      * Removes fixed height from the scrollingContainer so that the total height
      * of rows can stretch the window. Intended for use with WindowScroller
@@ -98,25 +95,6 @@ export default class FlexTable extends Component {
     onRowsRendered: PropTypes.func,
 
     /**
-    * Optional callback when a row is selected
-    * ({ index: number }): void
-    */
-    onRowSelect: PropTypes.func,
-
-    /**
-    * Optional callback when a row is deselected
-    * ({ index: number }): void
-    */
-    onRowDeselect: PropTypes.func,
-
-    /**
-    * Optional callback when a row is deselected
-    * The callback should return a set of the next rows to select
-    * ({ indexes: object }): object
-    */
-    onSelectionIndexesForProposedSelection: PropTypes.func,
-
-    /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
      * ({ clientHeight, scrollHeight, scrollTop }): void
@@ -169,9 +147,6 @@ export default class FlexTable extends Component {
     /** Vertical offset. */
     scrollTop: PropTypes.number,
 
-    /** Current selected rows in the FlexTable*/
-    selectedRows: PropTypes.object,
-
     /**
      * Sort function to be called if a sortable header is clicked.
      * ({ sortBy: string, sortDirection: SortDirection }): void
@@ -195,7 +170,6 @@ export default class FlexTable extends Component {
   }
 
   static defaultProps = {
-    allowsMultipleSelection: false,
     disableHeader: false,
     estimatedRowSize: 30,
     headerHeight: 0,
@@ -205,7 +179,6 @@ export default class FlexTable extends Component {
     onScroll: () => null,
     overscanRowCount: 10,
     rowStyle: {},
-    selectedRows: new Set(),
     scrollToAlignment: 'auto',
     style: {}
   }
@@ -214,8 +187,7 @@ export default class FlexTable extends Component {
     super(props)
 
     this.state = {
-      scrollbarWidth: 0,
-      selectedRows: props.selectedRows
+      scrollbarWidth: 0
     }
 
     this._cellClassName = this._cellClassName.bind(this)
@@ -337,7 +309,7 @@ export default class FlexTable extends Component {
     const { rowWrapperStyle } = this.props
 
     return rowWrapperStyle instanceof Function
-      ? rowWrapperStyle({ index: rowIndex - 1, isSelected: this.state.selectedRows.has(rowIndex - 1) })
+      ? rowWrapperStyle({ index: rowIndex - 1 })
       : rowWrapperStyle
   }
 
@@ -447,14 +419,10 @@ export default class FlexTable extends Component {
     isScrolling
   }) {
     const {
-      allowsMultipleSelection,
       children,
       onRowClick,
       onRowMouseOver,
       onRowMouseOut,
-      onRowSelect,
-      onRowDeselect,
-      onSelectionIndexesForProposedSelection,
       rowClassName,
       rowGetter,
       rowStyle
@@ -475,52 +443,14 @@ export default class FlexTable extends Component {
     )
 
     const a11yProps = {}
-    const onSelectionHandlerUsed = onRowDeselect || onRowSelect || onSelectionIndexesForProposedSelection
 
-    if (onRowClick || onSelectionHandlerUsed || onRowMouseOver || onRowMouseOut) {
+    if (onRowClick || onRowMouseOver || onRowMouseOut) {
       a11yProps['aria-label'] = 'row'
       a11yProps.role = 'row'
       a11yProps.tabIndex = 0
 
-      if (onRowClick || onSelectionHandlerUsed) {
-        a11yProps.onClick = (event) => {
-          const isMetaEvent = event.metaKey
-          const isShiftEvent = event.shiftKey
-
-          let currentSelectedRows = this.state.selectedRows
-
-          if (onSelectionHandlerUsed && (!currentSelectedRows.has(index) || currentSelectedRows.has(index) && (isMetaEvent || isShiftEvent))) {
-            let newSelectedRows = new Set()
-
-            if (allowsMultipleSelection && isShiftEvent && currentSelectedRows.size > 0) {
-              const firstSelectedIndex = currentSelectedRows.values().next().value
-              let i = firstSelectedIndex
-
-              if (index === firstSelectedIndex) newSelectedRows.add(index)
-              else if (index > firstSelectedIndex) for (i = firstSelectedIndex; i <= index; i++) newSelectedRows.add(i)
-              else for (i = firstSelectedIndex; i >= index; i--) newSelectedRows.add(i)
-            }
-
-            if (allowsMultipleSelection && isMetaEvent) newSelectedRows = new Set(currentSelectedRows)
-            if (currentSelectedRows.has(index) && isMetaEvent) newSelectedRows.delete(index)
-            if (!currentSelectedRows.has(index)) newSelectedRows.add(index)
-            if (onSelectionIndexesForProposedSelection) newSelectedRows = onSelectionIndexesForProposedSelection({indexes: newSelectedRows})
-
-            currentSelectedRows.forEach((index) => {
-              if (!newSelectedRows.has(index) && onRowDeselect) onRowDeselect({index})
-            })
-
-            newSelectedRows.forEach((index) => {
-              if (!currentSelectedRows.has(index) && onRowSelect) onRowSelect({index})
-            })
-
-            this.setState({
-              selectedRows: newSelectedRows
-            })
-          }
-
-          if (onRowClick) onRowClick({ index })
-        }
+      if (onRowClick) {
+        a11yProps.onClick = (e) => onRowClick({ index }, e)
       }
 
       if (onRowMouseOut) {
