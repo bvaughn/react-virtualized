@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.11.5
+Small change to inline styles for `Grid` to work around obscure bug where an initial scroll offset prop is specified before external CSS stylesheets have loaded.
+
 ##### 7.11.4
 Added more pass-thru props from `VirtualScroll` to `Grid` to ensure that when `VirtualScroll` re-renders (due to changed props) so does its inner `Grid`.
 Both components are still "pure" (from a shallow comparison perspective).

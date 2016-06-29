@@ -553,12 +553,18 @@ export default class Grid extends Component {
     // For more info see issue #116
     const verticalScrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0
     const horizontalScrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0
-    if (totalColumnsWidth + verticalScrollBarSize <= width) {
-      gridStyle.overflowX = 'hidden'
-    }
-    if (totalRowsHeight + horizontalScrollBarSize <= height) {
-      gridStyle.overflowY = 'hidden'
-    }
+
+    // Also explicitly init styles to 'auto' if scrollbars are required.
+    // This works around an obscure edge case where external CSS styles have not yet been loaded,
+    // But an initial scroll index of offset is set as an external prop.
+    // Without this style, Grid would render the correct range of cells but would NOT update its internal offset.
+    // This was originally reported via clauderic/react-infinite-calendar/issues/23
+    gridStyle.overflowX = totalColumnsWidth + verticalScrollBarSize <= width
+      ? 'hidden'
+      : 'auto'
+    gridStyle.overflowY = totalRowsHeight + horizontalScrollBarSize <= height
+      ? 'hidden'
+      : 'auto'
 
     const showNoContentRenderer = (
       childrenToDisplay.length === 0 &&
