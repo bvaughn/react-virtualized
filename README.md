@@ -56,9 +56,29 @@ Pure Components
 
 By default all react-virtualized components use [`shallowCompare`](https://facebook.github.io/react/docs/shallow-compare.html) to avoid re-rendering unless props or state has changed.
 This ocassionally confuses users when a collection's data changes (eg `['a','b','c']` => `['d','e','f']`) but props do not (eg `array.length`).
+
 The solution to this is to let react-virtualized know that something external has changed.
-For `Grid` or `Collection` this means calling [`forceUpdate`](https://facebook.github.io/react/docs/component-api.html#forceupdate).
-For `FlexTable` and `VirtualScroll` it means calling [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/FlexTable.md#forceupdategrid)).
+This can be done a couple of different ways.
+
+###### Pass-thru props
+
+The `shallowCompare` method will detect changes to any props, even if they aren't declared as `propTypes`.
+This means you can also pass through additional properties that affect cell rendering to ensure changes are detected.
+For example, if you're using `VirtualScroll` to render a list of items that may be re-sorted after initial render- react-virtualized would not normally detect the sort operation because none of the properties it deals with change.
+However you can pass through the additional sort property to trigger a re-render.
+For example:
+
+```js
+<VirtualScroll
+  {...virtualScrollProps}
+  sortBy={sortBy}
+/>
+```
+
+###### Public methods
+
+`Grid` and `Collection` components can be forcefully re-rendered using [`forceUpdate`](https://facebook.github.io/react/docs/component-api.html#forceupdate).
+For `FlexTable` and `VirtualScroll`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/FlexTable.md#forceupdategrid)) to ensure that the inner `Grid` is also updated.
 
 Documentation
 ---------------
