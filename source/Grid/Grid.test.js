@@ -23,7 +23,7 @@ describe('Grid', () => {
     scrollTop = 0
   }) {
     const target = { scrollLeft, scrollTop }
-    grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
+    grid._scrollingContainer = target // HACK to work around _onScroll target check
     Simulate.scroll(findDOMNode(grid), { target })
   }
 

@@ -45,7 +45,7 @@ describe('Collection', () => {
 
   function simulateScroll ({ collection, scrollLeft, scrollTop }) {
     const target = { scrollLeft, scrollTop }
-    collection.refs.CollectionView.refs.scrollingContainer = target // HACK to work around _onScroll target check
+    collection._collectionView._scrollingContainer = target // HACK to work around _onScroll target check
     Simulate.scroll(findDOMNode(collection), { target })
   }
 
@@ -159,20 +159,20 @@ describe('Collection', () => {
   describe(':scrollToCell', () => {
     it('should scroll to the top/left', () => {
       const grid = render(getMarkup({ scrollToCell: 0 }))
-      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(0)
-      expect(grid.refs.CollectionView.state.scrollTop).toEqual(0)
+      expect(grid._collectionView.state.scrollLeft).toEqual(0)
+      expect(grid._collectionView.state.scrollTop).toEqual(0)
     })
 
     it('should scroll over to the middle', () => {
       const grid = render(getMarkup({ scrollToCell: 7 }))
-      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(1)
-      expect(grid.refs.CollectionView.state.scrollTop).toEqual(1)
+      expect(grid._collectionView.state.scrollLeft).toEqual(1)
+      expect(grid._collectionView.state.scrollTop).toEqual(1)
     })
 
     it('should scroll to the bottom/right', () => {
       const grid = render(getMarkup({ scrollToCell: 9 }))
-      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(2)
-      expect(grid.refs.CollectionView.state.scrollTop).toEqual(2)
+      expect(grid._collectionView.state.scrollLeft).toEqual(2)
+      expect(grid._collectionView.state.scrollTop).toEqual(2)
     })
 
     it('should honor the specified :scrollToAlignment', () => {
@@ -182,8 +182,8 @@ describe('Collection', () => {
         width: SECTION_SIZE
       }))
       // Minimum amount of scrolling ("auto") would be 0,0
-      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(2)
-      expect(grid.refs.CollectionView.state.scrollTop).toEqual(1)
+      expect(grid._collectionView.state.scrollLeft).toEqual(2)
+      expect(grid._collectionView.state.scrollTop).toEqual(1)
 
       grid = render(getMarkup({
         scrollToAlignment: 'end',
@@ -191,8 +191,8 @@ describe('Collection', () => {
         width: SECTION_SIZE
       }))
       // This cell would already by visible by "auto" rules
-      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(1)
-      expect(grid.refs.CollectionView.state.scrollTop).toEqual(0)
+      expect(grid._collectionView.state.scrollLeft).toEqual(1)
+      expect(grid._collectionView.state.scrollTop).toEqual(0)
 
       grid = render(getMarkup({
         scrollToAlignment: 'center',
@@ -200,22 +200,22 @@ describe('Collection', () => {
         width: SECTION_SIZE
       }))
       // This cell would already by visible by "auto" rules
-      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(1)
-      expect(grid.refs.CollectionView.state.scrollTop).toEqual(0)
+      expect(grid._collectionView.state.scrollLeft).toEqual(1)
+      expect(grid._collectionView.state.scrollTop).toEqual(0)
     })
 
     it('should scroll to a cell just added', () => {
       let grid = render(getMarkup({
         cellCount: 4
       }))
-      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(0)
-      expect(grid.refs.CollectionView.state.scrollTop).toEqual(0)
+      expect(grid._collectionView.state.scrollLeft).toEqual(0)
+      expect(grid._collectionView.state.scrollTop).toEqual(0)
       grid = render(getMarkup({
         cellCount: 8,
         scrollToCell: 7
       }))
-      expect(grid.refs.CollectionView.state.scrollLeft).toEqual(1)
-      expect(grid.refs.CollectionView.state.scrollTop).toEqual(1)
+      expect(grid._collectionView.state.scrollLeft).toEqual(1)
+      expect(grid._collectionView.state.scrollTop).toEqual(1)
     })
   })
 

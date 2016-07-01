@@ -114,17 +114,17 @@ export default class VirtualScroll extends Component {
   }
 
   forceUpdateGrid () {
-    this.refs.Grid.forceUpdate()
+    this._grid.forceUpdate()
   }
 
   /** See Grid#measureAllCells */
   measureAllRows () {
-    this.refs.Grid.measureAllCells()
+    this._grid.measureAllCells()
   }
 
   /** See Grid#recomputeGridSize */
   recomputeRowHeights (index = 0) {
-    this.refs.Grid.recomputeGridSize({
+    this._grid.recomputeGridSize({
       rowIndex: index
     })
     this.forceUpdateGrid()
@@ -152,7 +152,9 @@ export default class VirtualScroll extends Component {
         noContentRenderer={noRowsRenderer}
         onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}
-        ref='Grid'
+        ref={(ref) => {
+          this._grid = ref
+        }}
         scrollToRow={scrollToIndex}
       />
     )

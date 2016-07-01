@@ -61,7 +61,7 @@ export default class Collection extends Component {
 
   /** See Collection#recomputeCellSizesAndPositions */
   recomputeCellSizesAndPositions () {
-    this.refs.CollectionView.recomputeCellSizesAndPositions()
+    this._collectionView.recomputeCellSizesAndPositions()
   }
 
   /** React lifecycle methods */
@@ -72,7 +72,9 @@ export default class Collection extends Component {
     return (
       <CollectionView
         cellLayoutManager={this}
-        ref='CollectionView'
+        ref={(ref) => {
+          this._collectionView = ref
+        }}
         {...props}
       />
     )
