@@ -191,16 +191,16 @@ export default class CollectionView extends Component {
       if (
         scrollLeft >= 0 &&
         scrollLeft !== prevState.scrollLeft &&
-        scrollLeft !== this.refs.scrollingContainer.scrollLeft
+        scrollLeft !== this._scrollingContainer.scrollLeft
       ) {
-        this.refs.scrollingContainer.scrollLeft = scrollLeft
+        this._scrollingContainer.scrollLeft = scrollLeft
       }
       if (
         scrollTop >= 0 &&
         scrollTop !== prevState.scrollTop &&
-        scrollTop !== this.refs.scrollingContainer.scrollTop
+        scrollTop !== this._scrollingContainer.scrollTop
       ) {
-        this.refs.scrollingContainer.scrollTop = scrollTop
+        this._scrollingContainer.scrollTop = scrollTop
       }
     }
 
@@ -338,7 +338,9 @@ export default class CollectionView extends Component {
 
     return (
       <div
-        ref='scrollingContainer'
+        ref={(ref) => {
+          this._scrollingContainer = ref
+        }}
         aria-label={this.props['aria-label']}
         className={cn('Collection', className)}
         onScroll={this._onScroll}
@@ -493,7 +495,7 @@ export default class CollectionView extends Component {
     // In certain edge-cases React dispatches an onScroll event with an invalid target.scrollLeft / target.scrollTop.
     // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
     // See issue #404 for more information.
-    if (event.target !== this.refs.scrollingContainer) {
+    if (event.target !== this._scrollingContainer) {
       return
     }
 

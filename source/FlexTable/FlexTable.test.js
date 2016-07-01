@@ -186,9 +186,9 @@ describe('FlexTable', () => {
         rowHeight: () => 20,
         width: 0
       }))
-      expect(rendered.refs.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150)
+      expect(rendered._grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150)
       rendered.measureAllRows()
-      expect(rendered.refs.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200)
+      expect(rendered._grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200)
     })
   })
 
@@ -442,7 +442,7 @@ describe('FlexTable', () => {
         noRowsRenderer: () => <div>No rows!</div>,
         rowCount: 0
       }))
-      const bodyDOMNode = findDOMNode(rendered.refs.Grid)
+      const bodyDOMNode = findDOMNode(rendered._grid)
       expect(bodyDOMNode.textContent).toEqual('No rows!')
     })
 
@@ -450,7 +450,7 @@ describe('FlexTable', () => {
       const rendered = render(getMarkup({
         rowCount: 0
       }))
-      const bodyDOMNode = findDOMNode(rendered.refs.Grid)
+      const bodyDOMNode = findDOMNode(rendered._grid)
       expect(bodyDOMNode.textContent).toEqual('')
     })
   })
@@ -829,8 +829,8 @@ describe('FlexTable', () => {
       const target = {
         scrollTop: 100
       }
-      rendered.refs.Grid.refs.scrollingContainer = target // HACK to work around _onScroll target check
-      Simulate.scroll(findDOMNode(rendered.refs.Grid), { target })
+      rendered._grid._scrollingContainer = target // HACK to work around _onScroll target check
+      Simulate.scroll(findDOMNode(rendered._grid), { target })
       expect(onScrollCalls.length).toEqual(2)
       expect(onScrollCalls[1]).toEqual({
         clientHeight: 80,

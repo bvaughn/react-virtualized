@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.11.6
+Fixed `CellMeasurer` throws "Only a ReactOwner can have refs" error.
+
 ##### 7.11.5
 Small change to inline styles for `Grid` to work around obscure bug where an initial scroll offset prop is specified before external CSS stylesheets have loaded.
 
