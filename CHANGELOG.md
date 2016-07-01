@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.11.7
+Removed `xmlns` property from `<svg>` tag in `SortEditor` to avoid React 15.2 property warning.
+
 ##### 7.11.6
 Fixed `CellMeasurer` throws "Only a ReactOwner can have refs" error.
 

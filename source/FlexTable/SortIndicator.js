@@ -17,7 +17,6 @@ export default function SortIndicator ({ sortDirection }) {
       width={18}
       height={18}
       viewBox='0 0 24 24'
-      xmlns='http://www.w3.org/2000/svg'
     >
       {sortDirection === SortDirection.ASC
         ? <path d='M7 14l5-5 5 5z' />

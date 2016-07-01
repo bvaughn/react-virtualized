@@ -34,7 +34,7 @@ function loadScriptsAndStyles (source) {
 }
 
 function loadReact () {
-  var baseDir = 'https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0'
+  var baseDir = 'https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0'
   var reactParam = getUrlParam('react')
 
   if (reactParam) {
