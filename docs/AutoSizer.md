@@ -45,7 +45,7 @@ ReactDOM.render(
         rowCount={list.length}
         rowHeight={20}
         rowRenderer={
-          index => list[index] // Could also be a DOM element
+          ({ index }) => list[index] // Could also be a DOM element
         }
       />
     )}
