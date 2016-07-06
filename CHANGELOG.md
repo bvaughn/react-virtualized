@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.11.8
+Fixed edge-case bug previously possible when combining the `scrollToAlignment` property with `scrollToRow` or `scrollToColumn` at the end of a collection.
+Under certain circumstances this caused the grid to scroll too far; that has now been resolved.
+Center-alignment logic has also been improved to better align scrolled cells.
+
 ##### 7.11.7
 Removed `xmlns` property from `<svg>` tag in `SortEditor` to avoid React 15.2 property warning.
 

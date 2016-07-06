@@ -199,9 +199,9 @@ describe('Collection', () => {
         scrollToCell: 4,
         width: SECTION_SIZE
       }))
-      // This cell would already by visible by "auto" rules
-      expect(grid._collectionView.state.scrollLeft).toEqual(1)
-      expect(grid._collectionView.state.scrollTop).toEqual(0)
+      // This cell doesn't fit entirely in the viewport but we center it anyway.
+      expect(grid._collectionView.state.scrollLeft).toEqual(0.5)
+      expect(grid._collectionView.state.scrollTop).toEqual(2)
     })
 
     it('should scroll to a cell just added', () => {

@@ -74,7 +74,8 @@ export default class ScalingCellSizeAndPositionManager {
     align = 'auto',
     containerSize,
     currentOffset, // safe
-    targetIndex
+    targetIndex,
+    totalSize
   }) {
     currentOffset = this._safeOffsetToOffset({
       containerSize,
@@ -85,7 +86,8 @@ export default class ScalingCellSizeAndPositionManager {
       align,
       containerSize,
       currentOffset,
-      targetIndex
+      targetIndex,
+      totalSize
     })
 
     return this._offsetToSafeOffset({

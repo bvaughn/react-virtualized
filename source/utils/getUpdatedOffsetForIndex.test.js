@@ -66,6 +66,6 @@ describe('getUpdatedOffsetForIndex', () => {
       cellSize: 10,
       containerSize: 50,
       currentOffset: 100
-    })).toEqual(20)
+    })).toEqual(30)
   })
 })

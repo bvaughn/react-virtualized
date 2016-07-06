@@ -154,6 +154,122 @@ describe('CellSizeAndPositionManager', () => {
     })
   })
 
+  describe('getUpdatedOffsetForIndex', () => {
+    function getUpdatedOffsetForIndexHelper ({
+      align = 'auto',
+      cellCount = 10,
+      cellSize = 10,
+      containerSize = 50,
+      currentOffset = 0,
+      estimatedCellSize = 15,
+      targetIndex = 0
+    }) {
+      const cellSizeAndPositionManager = new CellSizeAndPositionManager({
+        cellCount,
+        cellSizeGetter: () => cellSize,
+        estimatedCellSize
+      })
+
+      return cellSizeAndPositionManager.getUpdatedOffsetForIndex({
+        align,
+        containerSize,
+        currentOffset,
+        targetIndex
+      })
+    }
+
+    it('should scroll to the beginning', () => {
+      expect(getUpdatedOffsetForIndexHelper({
+        currentOffset: 100,
+        targetIndex: 0
+      })).toEqual(0)
+    })
+
+    it('should scroll to the end', () => {
+      expect(getUpdatedOffsetForIndexHelper({
+        currentOffset: 0,
+        targetIndex: 9
+      })).toEqual(50)
+    })
+
+    it('should scroll forward to the middle', () => {
+      expect(getUpdatedOffsetForIndexHelper({
+        currentOffset: 0,
+        targetIndex: 6
+      })).toEqual(20)
+    })
+
+    it('should scroll backward to the middle', () => {
+      expect(getUpdatedOffsetForIndexHelper({
+        currentOffset: 50,
+        targetIndex: 2
+      })).toEqual(20)
+    })
+
+    it('should not scroll if an item is already visible', () => {
+      expect(getUpdatedOffsetForIndexHelper({
+        currentOffset: 20,
+        targetIndex: 3
+      })).toEqual(20)
+    })
+
+    it('should honor specified :align values', () => {
+      expect(getUpdatedOffsetForIndexHelper({
+        align: 'auto',
+        currentOffset: 0,
+        targetIndex: 5
+      })).toEqual(10)
+      expect(getUpdatedOffsetForIndexHelper({
+        align: 'start',
+        currentOffset: 0,
+        targetIndex: 5
+      })).toEqual(50)
+      expect(getUpdatedOffsetForIndexHelper({
+        align: 'auto',
+        currentOffset: 50,
+        targetIndex: 4
+      })).toEqual(40)
+      expect(getUpdatedOffsetForIndexHelper({
+        align: 'end',
+        currentOffset: 50,
+        targetIndex: 5
+      })).toEqual(10)
+      expect(getUpdatedOffsetForIndexHelper({
+        align: 'center',
+        currentOffset: 50,
+        targetIndex: 5
+      })).toEqual(30)
+    })
+
+    it('should not scroll past the safe bounds even if the specified :align requests it', () => {
+      expect(getUpdatedOffsetForIndexHelper({
+        align: 'end',
+        currentOffset: 50,
+        targetIndex: 0
+      })).toEqual(0)
+      expect(getUpdatedOffsetForIndexHelper({
+        align: 'center',
+        currentOffset: 50,
+        targetIndex: 1
+      })).toEqual(0)
+      expect(getUpdatedOffsetForIndexHelper({
+        align: 'start',
+        currentOffset: 0,
+        targetIndex: 9
+      })).toEqual(50)
+
+      // TRICKY: We would expect this to be positioned at 50.
+      // But since the :estimatedCellSize is 15 and we only measure up to the 8th item,
+      // The helper assumes it can scroll farther than it actually can.
+      // Not sure if this edge case is worth "fixing" or just acknowledging...
+      expect(getUpdatedOffsetForIndexHelper({
+        align: 'center',
+        currentOffset: 0,
+        targetIndex: 8
+      })).toEqual(55)
+    })
+  })
+
   describe('getVisibleCellRange', () => {
     it('should not return any indices if :cellCount is 0', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager({

@@ -277,12 +277,13 @@ describe('Grid', () => {
         scrollToRow: 49
       }))
       // 100 columns * 50 item width = 5,000 total item width
+      // Viewport width is 200
+      // Column 24 starts at 1,200, center point at 1,225, so...
+      expect(grid.state.scrollLeft).toEqual(1125)
       // 100 rows * 20 item height = 2,000 total item height
-      // We first scroll past the specified cell and then back.
-      // The minimum amount of scrolling then should leave the specified cell in the middle (just scrolled into view).
-      // Since alignment is set to "center" we should scroll past this point until the cell is aligned center.
-      expect(grid.state.scrollLeft).toEqual(1075)
-      expect(grid.state.scrollTop).toEqual(920)
+      // Viewport height is 100
+      // Row 49 starts at 980, center point at 990, so...
+      expect(grid.state.scrollTop).toEqual(940)
     })
   })
 

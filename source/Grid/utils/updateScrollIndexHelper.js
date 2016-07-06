@@ -1,5 +1,3 @@
-import getUpdatedOffsetForIndex from '../../utils/getUpdatedOffsetForIndex'
-
 /**
  * Helper function that determines when to update scroll offsets to ensure that a scroll-to-index remains visible.
  * This function also ensures that the scroll ofset isn't past the last column/row of cells.
@@ -64,12 +62,10 @@ export default function updateScrollIndexHelper ({
   ) {
     scrollToIndex = cellCount - 1
 
-    const cellMetadatum = cellSizeAndPositionManager.getSizeAndPositionOfCell(scrollToIndex)
-    const calculatedScrollOffset = getUpdatedOffsetForIndex({
-      cellOffset: cellMetadatum.offset,
-      cellSize: cellMetadatum.size,
+    const calculatedScrollOffset = cellSizeAndPositionManager.getUpdatedOffsetForIndex({
       containerSize: size,
-      currentOffset: scrollOffset
+      currentOffset: scrollOffset,
+      targetIndex: scrollToIndex
     })
 
     // Only adjust the scroll position if we've scrolled below the last set of rows.
