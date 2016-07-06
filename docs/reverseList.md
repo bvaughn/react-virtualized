@@ -54,7 +54,7 @@ export default class Example extends Component {
     this.refs.VirtualScroll.scrollToRow(0)
   }
 
-  _rowRenderer (index) {
+  _rowRenderer ({ index, isScrolling }) {
     return (
       // Your markup goes here
     )

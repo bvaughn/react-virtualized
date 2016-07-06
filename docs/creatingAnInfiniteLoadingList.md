@@ -31,7 +31,7 @@ function MyComponent ({
   const isRowLoaded = ({ index }) => !hasNextPage || index < list.size
 
   // Render a list item or a loading indicator.
-  const rowRenderer = (index) => {
+  const rowRenderer = ({ index }) => {
     if (!isRowLoaded(index)) {
       return 'Loading...'
     } else {
