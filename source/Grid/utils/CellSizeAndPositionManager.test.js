@@ -345,5 +345,16 @@ describe('CellSizeAndPositionManager', () => {
       cellSizeAndPositionManager.getSizeAndPositionOfCell(4)
       expect(cellSizeGetterCalls).toEqual([3, 4])
     })
+
+    it('should not skip over any unmeasured or previously-cleared cells', () => {
+      const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
+      cellSizeAndPositionManager.getSizeAndPositionOfCell(5)
+      cellSizeAndPositionManager.resetCell(2)
+      expect(cellSizeAndPositionManager.getLastMeasuredIndex()).toEqual(1)
+      cellSizeAndPositionManager.resetCell(4)
+      expect(cellSizeAndPositionManager.getLastMeasuredIndex()).toEqual(1)
+      cellSizeAndPositionManager.resetCell(0)
+      expect(cellSizeAndPositionManager.getLastMeasuredIndex()).toEqual(-1)
+    })
   })
 })

@@ -174,7 +174,7 @@ export default class CellSizeAndPositionManager {
    * It will not immediately perform any calculations; they'll be performed the next time getSizeAndPositionOfCell() is called.
    */
   resetCell (index: number): void {
-    this._lastMeasuredIndex = index - 1
+    this._lastMeasuredIndex = Math.min(this._lastMeasuredIndex, index - 1)
   }
 
   _binarySearch ({

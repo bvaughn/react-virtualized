@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 7.12.1
+Fixed unexpected usage of `recomputeRowHeights` / `recomputeGridSize` where method is called with an index higher than the last measured row/cell index.
+Cell measurer now properly updates the value only if the requested index is lower than the most-recently-measured cell.
+
 ##### 7.12.0
 `FlexTable` `rowStyle` property can now be a on Object _or_ a function similar to the `rowClassName` property.
 
