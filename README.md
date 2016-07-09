@@ -123,6 +123,14 @@ react-virtualized aims to support all evergreen browsers and recent mobile brows
 
 If you find a browser-specific problem, please report it along with a repro case. The easiest way to do this is probably by forking [this Plunker](https://plnkr.co/edit/6syKo8cx3RfoO96hXFT1).
 
+Friends
+---------------
+Here are some great components built on top of react-virtualized:
+* [react-infinite-calendar](https://github.com/clauderic/react-infinite-calendar): Infinite scrolling date-picker with localization, themes, keyboard support, and more
+* [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc): Higher-order components to turn any list into an animated, touch-friendly, sortable list
+* [react-virtualized-checkbox](https://github.com/emilebres/react-virtualized-checkbox): Checkbox group component with virtualization for large number of options
+* [react-virtualized-select](https://github.com/bvaughn/react-virtualized-select): Drop-down menu for React with windowing to support large numbers of options.
+
 Open Collective
 ---------------
 
