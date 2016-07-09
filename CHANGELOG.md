@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.12.0
+`FlexTable` `rowStyle` property can now be a on Object _or_ a function similar to the `rowClassName` property.
+
 ##### 7.11.8
 Fixed edge-case bug previously possible when combining the `scrollToAlignment` property with `scrollToRow` or `scrollToColumn` at the end of a collection.
 Under certain circumstances this caused the grid to scroll too far; that has now been resolved.

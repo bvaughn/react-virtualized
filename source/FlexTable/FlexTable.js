@@ -130,7 +130,7 @@ export default class FlexTable extends Component {
     rowCount: PropTypes.number.isRequired,
 
     /** Optional custom inline style to attach to table rows. */
-    rowStyle: PropTypes.object,
+    rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
 
     /** Optional custom CSS class for individual rows */
     rowWrapperClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
@@ -243,6 +243,7 @@ export default class FlexTable extends Component {
     const availableRowsHeight = height - headerHeight
 
     const rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName
+    const rowStyleObject = rowStyle instanceof Function ? rowStyle({ index: -1 }) : rowStyle
 
     // Precompute and cache column styles before rendering rows and columns to speed things up
     this._cachedColumnStyles = []
@@ -262,7 +263,7 @@ export default class FlexTable extends Component {
           <div
             className={cn('FlexTable__headerRow', rowClass)}
             style={{
-              ...rowStyle,
+              ...rowStyleObject,
               height: headerHeight,
               paddingRight: scrollbarWidth,
               width: width
@@ -432,6 +433,7 @@ export default class FlexTable extends Component {
     const { scrollbarWidth } = this.state
 
     const rowClass = rowClassName instanceof Function ? rowClassName({ index }) : rowClassName
+    const rowStyleObject = rowStyle instanceof Function ? rowStyle({ index }) : rowStyle
     const rowData = rowGetter({ index })
 
     const renderedRow = React.Children.toArray(children).map(
@@ -467,7 +469,7 @@ export default class FlexTable extends Component {
         key={index}
         className={cn('FlexTable__row', rowClass)}
         style={{
-          ...rowStyle,
+          ...rowStyleObject,
           height: this._getRowHeight(index),
           paddingRight: scrollbarWidth
         }}

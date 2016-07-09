@@ -685,6 +685,22 @@ describe('FlexTable', () => {
       expect(node.style.backgroundColor).toEqual('orange')
     })
 
+    it('should render dynamic style given :rowStyle as a function', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        rowStyle: ({ index }) => index % 2 === 0
+          ? { backgroundColor: 'red' }
+          : { backgroundColor: 'green' }
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Array.from(rows).forEach((row, index) => {
+        if (index % 2 === 0) {
+          expect(row.style.backgroundColor).toEqual('red')
+        } else {
+          expect(row.style.backgroundColor).toEqual('green')
+        }
+      })
+    })
+
     it('should use the expected global CSS classNames for rows', () => {
       const rendered = findDOMNode(render(getMarkup({
         rowCount: 3,
