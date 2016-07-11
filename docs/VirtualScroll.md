@@ -14,7 +14,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, scrollHeight: number, scrollTop: number }): void` |
 | overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
-| rowRenderer | Function | ✓ | Responsbile for rendering a row given an index. Signature should look like `({ index: number, isScrolling: boolean }): React.PropTypes.node` |
+| rowRenderer | Function | ✓ | Responsible for rendering a row given an index. Signature should look like `({ index: number, isScrolling: boolean }): React.PropTypes.node` |
 | rowClassName | String or Function |  | Optional custom CSS class name to attach to `Grid__cell` element. If function given then signature should be look like: ({ index: number }): PropTypes.string |
 | rowCount | Number | ✓ | Number of rows in list. |
 | rowStyle | Object or Function | | Optional custom inline style for individual row. If function given then signature should be look like: ({ index: number }): PropTypes.object |
