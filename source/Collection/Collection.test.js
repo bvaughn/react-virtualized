@@ -157,13 +157,15 @@ describe('Collection', () => {
 
     it('should accept styles that overwrite calculated ones', () => {
       const rendered = findDOMNode(render(getMarkup({
-        height: 4 + scrollbarSize - 1,
+        height: 1,
         style: {
-          overflowY: 'hidden'
+          overflowX: 'auto',
+          overflowY: 'auto'
         },
         width: 1
       })))
-      expect(rendered.style.overflowY).toEqual('hidden')
+      expect(rendered.style.overflowX).toEqual('auto')
+      expect(rendered.style.overflowY).toEqual('auto')
     })
   })
 

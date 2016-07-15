@@ -160,17 +160,17 @@ describe('Grid', () => {
 
     it('should accept styles that overwrite calculated ones', () => {
       const rendered = findDOMNode(render(getMarkup({
-        columnCount: 4,
-        height: 100 + scrollbarSize - 1,
-        rowCount: 5,
+        columnCount: 1,
+        height: 1,
+        rowCount: 1,
         style: {
-          overflowY: 'hidden',
-          overflowX: 'hidden'
+          overflowY: 'visible',
+          overflowX: 'visible'
         },
-        width: 200 - 1
+        width: 1
       })))
-      expect(rendered.style.overflowY).toEqual('hidden')
-      expect(rendered.style.overflowX).toEqual('hidden')
+      expect(rendered.style.overflowY).toEqual('visible')
+      expect(rendered.style.overflowX).toEqual('visible')
     })
   })
 
