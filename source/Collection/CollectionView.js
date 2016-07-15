@@ -319,7 +319,6 @@ export default class CollectionView extends Component {
     } = cellLayoutManager.getTotalSize()
 
     const collectionStyle = {
-      ...style,
       height,
       width
     }
@@ -345,7 +344,10 @@ export default class CollectionView extends Component {
         className={cn('Collection', className)}
         onScroll={this._onScroll}
         role='grid'
-        style={collectionStyle}
+        style={{
+          ...collectionStyle,
+          ...style
+        }}
         tabIndex={0}
       >
         {childrenToDisplay.length > 0 &&
