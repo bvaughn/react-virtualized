@@ -154,6 +154,19 @@ describe('Collection', () => {
       })))
       expect(rendered.style.overflowY).not.toEqual('hidden')
     })
+
+    it('should accept styles that overwrite calculated ones', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        height: 1,
+        style: {
+          overflowX: 'auto',
+          overflowY: 'auto'
+        },
+        width: 1
+      })))
+      expect(rendered.style.overflowX).toEqual('auto')
+      expect(rendered.style.overflowY).toEqual('auto')
+    })
   })
 
   describe(':scrollToCell', () => {

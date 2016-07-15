@@ -157,6 +157,21 @@ describe('Grid', () => {
       })))
       expect(rendered.style.overflowY).not.toEqual('hidden')
     })
+
+    it('should accept styles that overwrite calculated ones', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnCount: 1,
+        height: 1,
+        rowCount: 1,
+        style: {
+          overflowY: 'visible',
+          overflowX: 'visible'
+        },
+        width: 1
+      })))
+      expect(rendered.style.overflowY).toEqual('visible')
+      expect(rendered.style.overflowX).toEqual('visible')
+    })
   })
 
   /** Tests scrolling via initial props */
