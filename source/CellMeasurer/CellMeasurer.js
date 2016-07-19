@@ -1,7 +1,6 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import ReactDOMServer from 'react-dom/server'
 
 /**
  * Measures a Grid cell's contents by rendering them in a way that is not visible to the user.
@@ -169,12 +168,17 @@ export default class CellMeasurer extends Component {
     // Handle edge case where this method is called before the CellMeasurer has completed its initial render (and mounted).
     this._renderAndMount()
 
-    this._div.innerHTML = ReactDOMServer.renderToString(rendered)
+    ReactDOM.unstable_renderSubtreeIntoContainer(
+      this, rendered, this._div)
 
-    return {
+    const measurements = {
       height: clientHeight && this._div.clientHeight,
       width: clientWidth && this._div.clientWidth
     }
+
+    ReactDOM.unmountComponentAtNode(this._div)
+
+    return measurements
   }
 
   _renderAndMount () {
