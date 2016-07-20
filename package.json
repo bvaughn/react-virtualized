@@ -23,6 +23,7 @@
     "deploy": "gh-pages -d build",
     "lint": "standard",
     "prebuild": "npm run lint",
+    "postbuild": "cp ./circle.yml ./build/",
     "postpublish": "npm run deploy",
     "posttest": "[ -z \"$CI\" ] || codecov",
     "prepublish": "npm run build",
