@@ -370,6 +370,8 @@ export default class Grid extends Component {
     } else {
       this._scrollbarSizeMeasured = true
     }
+
+    this._calculateChildrenToRender()
   }
 
   componentWillUnmount () {
@@ -445,99 +447,23 @@ export default class Grid extends Component {
       scrollToIndex: this.props.scrollToRow,
       updateScrollOffsetForScrollToIndex: () => this._updateScrollTopForScrollToRow(nextProps, nextState)
     })
+
+    this._calculateChildrenToRender(nextProps, nextState)
   }
 
   render () {
     const {
       autoHeight,
-      cellClassName,
-      cellRenderer,
-      cellRangeRenderer,
-      cellStyle,
       className,
       columnCount,
       height,
       noContentRenderer,
-      overscanColumnCount,
-      overscanRowCount,
-      rowCount,
       style,
       tabIndex,
       width
     } = this.props
 
-    const {
-      isScrolling,
-      scrollLeft,
-      scrollTop
-    } = this.state
-
-    let childrenToDisplay = []
-
-    // Render only enough columns and rows to cover the visible area of the grid.
-    if (height > 0 && width > 0) {
-      const visibleColumnIndices = this._columnSizeAndPositionManager.getVisibleCellRange({
-        containerSize: width,
-        offset: scrollLeft
-      })
-      const visibleRowIndices = this._rowSizeAndPositionManager.getVisibleCellRange({
-        containerSize: height,
-        offset: scrollTop
-      })
-
-      const horizontalOffsetAdjustment = this._columnSizeAndPositionManager.getOffsetAdjustment({
-        containerSize: width,
-        offset: scrollLeft
-      })
-      const verticalOffsetAdjustment = this._rowSizeAndPositionManager.getOffsetAdjustment({
-        containerSize: height,
-        offset: scrollTop
-      })
-
-      // Store for _invokeOnGridRenderedHelper()
-      this._renderedColumnStartIndex = visibleColumnIndices.start
-      this._renderedColumnStopIndex = visibleColumnIndices.stop
-      this._renderedRowStartIndex = visibleRowIndices.start
-      this._renderedRowStopIndex = visibleRowIndices.stop
-
-      const overscanColumnIndices = getOverscanIndices({
-        cellCount: columnCount,
-        overscanCellsCount: overscanColumnCount,
-        startIndex: this._renderedColumnStartIndex,
-        stopIndex: this._renderedColumnStopIndex
-      })
-
-      const overscanRowIndices = getOverscanIndices({
-        cellCount: rowCount,
-        overscanCellsCount: overscanRowCount,
-        startIndex: this._renderedRowStartIndex,
-        stopIndex: this._renderedRowStopIndex
-      })
-
-      // Store for _invokeOnGridRenderedHelper()
-      this._columnStartIndex = overscanColumnIndices.overscanStartIndex
-      this._columnStopIndex = overscanColumnIndices.overscanStopIndex
-      this._rowStartIndex = overscanRowIndices.overscanStartIndex
-      this._rowStopIndex = overscanRowIndices.overscanStopIndex
-
-      childrenToDisplay = cellRangeRenderer({
-        cellCache: this._cellCache,
-        cellClassName: this._wrapCellClassNameGetter(cellClassName),
-        cellRenderer,
-        cellStyle: this._wrapCellStyleGetter(cellStyle),
-        columnSizeAndPositionManager: this._columnSizeAndPositionManager,
-        columnStartIndex: this._columnStartIndex,
-        columnStopIndex: this._columnStopIndex,
-        horizontalOffsetAdjustment,
-        isScrolling,
-        rowSizeAndPositionManager: this._rowSizeAndPositionManager,
-        rowStartIndex: this._rowStartIndex,
-        rowStopIndex: this._rowStopIndex,
-        scrollLeft,
-        scrollTop,
-        verticalOffsetAdjustment
-      })
-    }
+    const { isScrolling } = this.state
 
     const gridStyle = {
       height: autoHeight ? 'auto' : height,
@@ -564,6 +490,8 @@ export default class Grid extends Component {
     gridStyle.overflowY = totalRowsHeight + horizontalScrollBarSize <= height
       ? 'hidden'
       : 'auto'
+
+    const childrenToDisplay = this._childrenToDisplay
 
     const showNoContentRenderer = (
       childrenToDisplay.length === 0 &&
@@ -612,6 +540,94 @@ export default class Grid extends Component {
   }
 
   /* ---------------------------- Helper methods ---------------------------- */
+
+  _calculateChildrenToRender (props = this.props, state = this.state) {
+    const {
+      cellClassName,
+      cellRenderer,
+      cellRangeRenderer,
+      cellStyle,
+      columnCount,
+      height,
+      overscanColumnCount,
+      overscanRowCount,
+      rowCount,
+      width
+    } = props
+
+    const {
+      isScrolling,
+      scrollLeft,
+      scrollTop
+    } = state
+
+    this._childrenToDisplay = []
+
+    // Render only enough columns and rows to cover the visible area of the grid.
+    if (height > 0 && width > 0) {
+      const visibleColumnIndices = this._columnSizeAndPositionManager.getVisibleCellRange({
+        containerSize: width,
+        offset: scrollLeft
+      })
+      const visibleRowIndices = this._rowSizeAndPositionManager.getVisibleCellRange({
+        containerSize: height,
+        offset: scrollTop
+      })
+
+      const horizontalOffsetAdjustment = this._columnSizeAndPositionManager.getOffsetAdjustment({
+        containerSize: width,
+        offset: scrollLeft
+      })
+      const verticalOffsetAdjustment = this._rowSizeAndPositionManager.getOffsetAdjustment({
+        containerSize: height,
+        offset: scrollTop
+      })
+
+      // Store for _invokeOnGridRenderedHelper()
+      this._renderedColumnStartIndex = visibleColumnIndices.start
+      this._renderedColumnStopIndex = visibleColumnIndices.stop
+      this._renderedRowStartIndex = visibleRowIndices.start
+      this._renderedRowStopIndex = visibleRowIndices.stop
+
+      const overscanColumnIndices = getOverscanIndices({
+        cellCount: columnCount,
+        overscanCellsCount: overscanColumnCount,
+        startIndex: this._renderedColumnStartIndex,
+        stopIndex: this._renderedColumnStopIndex
+      })
+
+      const overscanRowIndices = getOverscanIndices({
+        cellCount: rowCount,
+        overscanCellsCount: overscanRowCount,
+        startIndex: this._renderedRowStartIndex,
+        stopIndex: this._renderedRowStopIndex
+      })
+
+      // Store for _invokeOnGridRenderedHelper()
+      this._columnStartIndex = overscanColumnIndices.overscanStartIndex
+      this._columnStopIndex = overscanColumnIndices.overscanStopIndex
+      this._rowStartIndex = overscanRowIndices.overscanStartIndex
+      this._rowStopIndex = overscanRowIndices.overscanStopIndex
+
+      this._childrenToDisplay = cellRangeRenderer({
+        cellCache: this._cellCache,
+        cellClassName: this._wrapCellClassNameGetter(cellClassName),
+        cellRenderer,
+        cellStyle: this._wrapCellStyleGetter(cellStyle),
+        columnSizeAndPositionManager: this._columnSizeAndPositionManager,
+        columnStartIndex: this._columnStartIndex,
+        columnStopIndex: this._columnStopIndex,
+        horizontalOffsetAdjustment,
+        isScrolling,
+        rowSizeAndPositionManager: this._rowSizeAndPositionManager,
+        rowStartIndex: this._rowStartIndex,
+        rowStopIndex: this._rowStopIndex,
+        scrollLeft,
+        scrollTop,
+        verticalOffsetAdjustment
+      })
+    }
+  }
 
   /**
    * Sets an :isScrolling flag for a small window of time.
