@@ -371,7 +371,7 @@ export default class Grid extends Component {
       this._scrollbarSizeMeasured = true
     }
 
-    this.calculateChildrenToRender()
+    this._calculateChildrenToRender()
   }
 
   componentWillUnmount () {
@@ -448,10 +448,100 @@ export default class Grid extends Component {
       updateScrollOffsetForScrollToIndex: () => this._updateScrollTopForScrollToRow(nextProps, nextState)
     })
 
-    this.calculateChildrenToRender(nextProps, nextState)
+    this._calculateChildrenToRender(nextProps, nextState)
   }
 
-  calculateChildrenToRender (props = this.props, state = this.state) {
+  render () {
+    const {
+      autoHeight,
+      className,
+      columnCount,
+      height,
+      noContentRenderer,
+      style,
+      tabIndex,
+      width
+    } = this.props
+
+    const { isScrolling } = this.state
+
+    const gridStyle = {
+      height: autoHeight ? 'auto' : height,
+      width
+    }
+
+    const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
+    const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
+
+    // Force browser to hide scrollbars when we know they aren't necessary.
+    // Otherwise once scrollbars appear they may not disappear again.
+    // For more info see issue #116
+    const verticalScrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0
+    const horizontalScrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0
+
+    // Also explicitly init styles to 'auto' if scrollbars are required.
+    // This works around an obscure edge case where external CSS styles have not yet been loaded,
+    // But an initial scroll index of offset is set as an external prop.
+    // Without this style, Grid would render the correct range of cells but would NOT update its internal offset.
+    // This was originally reported via clauderic/react-infinite-calendar/issues/23
+    gridStyle.overflowX = totalColumnsWidth + verticalScrollBarSize <= width
+      ? 'hidden'
+      : 'auto'
+    gridStyle.overflowY = totalRowsHeight + horizontalScrollBarSize <= height
+      ? 'hidden'
+      : 'auto'
+
+    const childrenToDisplay = this._childrenToDisplay
+
+    const showNoContentRenderer = (
+      childrenToDisplay.length === 0 &&
+      height > 0 &&
+      width > 0
+    )
+
+    return (
+      <div
+        ref={(ref) => {
+          this._scrollingContainer = ref
+        }}
+        aria-label={this.props['aria-label']}
+        className={cn('Grid', className)}
+        onScroll={this._onScroll}
+        role='grid'
+        style={{
+          ...gridStyle,
+          ...style
+        }}
+        tabIndex={tabIndex}
+      >
+        {childrenToDisplay.length > 0 &&
+          <div
+            className='Grid__innerScrollContainer'
+            style={{
+              width: columnCount === 1 ? 'auto' : totalColumnsWidth,
+              height: totalRowsHeight,
+              maxWidth: totalColumnsWidth,
+              maxHeight: totalRowsHeight,
+              pointerEvents: isScrolling ? 'none' : 'auto'
+            }}
+          >
+            {childrenToDisplay}
+          </div>
+        }
+        {showNoContentRenderer &&
+          noContentRenderer()
+        }
+      </div>
+    )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
+  }
+
+  /* ---------------------------- Helper methods ---------------------------- */
+
+  _calculateChildrenToRender (props = this.props, state = this.state) {
     const {
       cellClassName,
       cellRenderer,
@@ -538,95 +628,6 @@ export default class Grid extends Component {
       })
     }
   }
-
-  render () {
-    const {
-      autoHeight,
-      className,
-      columnCount,
-      height,
-      noContentRenderer,
-      style,
-      tabIndex,
-      width } = this.props
-
-    const { isScrolling } = this.state
-
-    const childrenToDisplay = this._childrenToDisplay
-
-    const gridStyle = {
-      height: autoHeight ? 'auto' : height,
-      width
-    }
-
-    const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
-    const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
-
-    // Force browser to hide scrollbars when we know they aren't necessary.
-    // Otherwise once scrollbars appear they may not disappear again.
-    // For more info see issue #116
-    const verticalScrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0
-    const horizontalScrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0
-
-    // Also explicitly init styles to 'auto' if scrollbars are required.
-    // This works around an obscure edge case where external CSS styles have not yet been loaded,
-    // But an initial scroll index of offset is set as an external prop.
-    // Without this style, Grid would render the correct range of cells but would NOT update its internal offset.
-    // This was originally reported via clauderic/react-infinite-calendar/issues/23
-    gridStyle.overflowX = totalColumnsWidth + verticalScrollBarSize <= width
-      ? 'hidden'
-      : 'auto'
-    gridStyle.overflowY = totalRowsHeight + horizontalScrollBarSize <= height
-      ? 'hidden'
-      : 'auto'
-
-    const showNoContentRenderer = (
-      childrenToDisplay.length === 0 &&
-      height > 0 &&
-      width > 0
-    )
-
-    return (
-      <div
-        ref={(ref) => {
-          this._scrollingContainer = ref
-        }}
-        aria-label={this.props['aria-label']}
-        className={cn('Grid', className)}
-        onScroll={this._onScroll}
-        role='grid'
-        style={{
-          ...gridStyle,
-          ...style
-        }}
-        tabIndex={tabIndex}
-      >
-        {childrenToDisplay.length > 0 &&
-          <div
-            className='Grid__innerScrollContainer'
-            style={{
-              width: columnCount === 1 ? 'auto' : totalColumnsWidth,
-              height: totalRowsHeight,
-              maxWidth: totalColumnsWidth,
-              maxHeight: totalRowsHeight,
-              pointerEvents: isScrolling ? 'none' : 'auto'
-            }}
-          >
-            {childrenToDisplay}
-          </div>
-        }
-        {showNoContentRenderer &&
-          noContentRenderer()
-        }
-      </div>
-    )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
-  }
-
-  /* ---------------------------- Helper methods ---------------------------- */
 
   /**
    * Sets an :isScrolling flag for a small window of time.
