@@ -452,9 +452,11 @@ export default class FlexTable extends Component {
       a11yProps['aria-label'] = 'row'
       a11yProps.role = 'row'
       a11yProps.tabIndex = 0
+
       if (onRowClick) {
-        a11yProps.onClick = () => onRowClick({ index })
+        a11yProps.onClick = (e) => onRowClick({ index }, e)
       }
+
       if (onRowMouseOut) {
         a11yProps.onMouseOut = () => onRowMouseOut({ index })
       }
