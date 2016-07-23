@@ -1,6 +1,8 @@
 // IE 10+ compatibility for demo (must come before other imports)
 import 'babel-polyfill'
 
+import { render } from 'react-dom'
+import shallowCompare from 'react-addons-shallow-compare'
 import ArrowKeyStepperExample from '../ArrowKeyStepper/ArrowKeyStepper.example'
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
 import WindowScrollerExample from '../WindowScroller/WindowScroller.example'
@@ -18,8 +20,7 @@ import ScrollSyncExample from '../ScrollSync/ScrollSync.example'
 import styles from './Application.css'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
 import { generateRandomList } from './utils'
-import { render } from 'react-dom'
-import shallowCompare from 'react-addons-shallow-compare'
+import Wizard from './Wizard'
 import '../../styles.css'
 
 const COMPONENTS = ['Collection', 'Grid', 'FlexTable', 'VirtualScroll']
@@ -38,28 +39,48 @@ const COMPONENT_EXAMPLES_MAP = {
   WindowScroller: WindowScrollerExample
 }
 
+const NAV_LINKS = {
+  Components: 'Components',
+  Wizard: 'Wizard'
+}
+
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
+
+function getUrlParam ({ defaultValue, name, valueCheck }) {
+  const matches = window.location.search.match(`${name}=(.+)`)
+
+  return matches && valueCheck(matches[1])
+    ? matches[1]
+    : defaultValue
+}
 
 class Application extends Component {
   constructor (props) {
     super(props)
 
-    // Support deep links to specific components
-    const matches = window.location.search.match('component=(.+)')
-    const activeComponent = matches && (COMPONENTS.includes(matches[1]) || HIGH_ORDER_COMPONENTS.includes(matches[1]))
-      ? matches[1]
-      : 'VirtualScroll'
+    const activeComponent = getUrlParam({
+      defaultValue: 'VirtualScroll',
+      name: 'component',
+      valueCheck: (value) => COMPONENTS.includes(value) || HIGH_ORDER_COMPONENTS.includes(value)
+    })
+    const activeNavLink = getUrlParam({
+      defaultValue: NAV_LINKS.Components,
+      name: 'navLink',
+      valueCheck: (value) => NAV_LINKS[value]
+    })
 
     this.state = {
-      activeComponent
+      activeComponent,
+      activeNavLink
     }
   }
 
   render () {
-    const { activeComponent } = this.state
+    const { activeComponent, activeNavLink } = this.state
 
-    const setActiveComponent = component => this.setState({ activeComponent: component })
+    const setActiveComponent = (activeComponent) => this.setState({ activeComponent })
+    const setActiveNavLink = (activeNavLink) => this.setState({ activeNavLink })
 
     const ActiveComponent = COMPONENT_EXAMPLES_MAP[activeComponent]
 
@@ -82,7 +103,14 @@ class Application extends Component {
 
           <ul className={styles.NavList}>
             <NavLink
+              active={activeNavLink === NAV_LINKS.Components}
+              onClick={() => setActiveNavLink(NAV_LINKS.Components)}
               text='Components'
+            />
+            <NavLink
+              active={activeNavLink === NAV_LINKS.Wizard}
+              onClick={() => setActiveNavLink(NAV_LINKS.Wizard)}
+              text='Wizard'
             />
             <NavLink
               text='Source'
@@ -122,10 +150,13 @@ class Application extends Component {
         </div>
 
         <div className={styles.row}>
-          <ActiveComponent
-            className={styles.column}
-            list={list}
-          />
+          {activeNavLink === NAV_LINKS.Components
+            ? <ActiveComponent
+              className={styles.column}
+              list={list}
+            />
+            : <Wizard />
+          }
         </div>
 
         <p className={styles.footer}>

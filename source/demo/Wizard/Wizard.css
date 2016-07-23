@@ -1,0 +1,7 @@
+.Option {
+  padding: 0.25rem 0;
+}
+
+.OptionDisabled {
+  opacity: .5;
+}
