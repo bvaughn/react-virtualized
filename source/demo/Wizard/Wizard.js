@@ -1,8 +1,16 @@
 /* @flow */
 import cn from 'classnames'
+import CodeMirror from 'react-codemirror'
 import React, { Component } from 'react'
 import { ContentBox, ContentBoxHeader } from '../ContentBox'
 import styles from './Wizard.css'
+
+require('codemirror/mode/javascript/javascript')
+
+const codeMirrorOptions = {
+  mode: 'javascript',
+  theme: 'dracula'
+}
 
 // @TODO Clean up this class; it's pretty hacky.
 export default class Wizard extends Component {
@@ -36,8 +44,6 @@ export default class Wizard extends Component {
       hasMultipleRows,
       nonCheckerboardPattern
     } = this._sanitizeState()
-
-    // @TODO Use react-highlighter for markup
 
     return (
       <div>
@@ -107,9 +113,10 @@ export default class Wizard extends Component {
         </ContentBox>
         <ContentBox>
           <ContentBoxHeader text='Suggested Starting Point' />
-          <pre>
-            {this._generateMarkup()}
-          </pre>
+          <CodeMirror
+            options={codeMirrorOptions}
+            value={this._generateMarkup()}
+          />
         </ContentBox>
       </div>
     )
