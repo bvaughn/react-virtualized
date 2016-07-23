@@ -77,6 +77,12 @@ export default class FlexTable extends Component {
     onRowClick: PropTypes.func,
 
     /**
+     * Callback invoked when a user double-clicks on a table row.
+     * ({ index: number }): void
+     */
+    onRowDoubleClick: PropTypes.func,
+
+    /**
      * Callback invoked when the mouse leaves a table row.
      * ({ index: number }): void
      */
@@ -424,6 +430,7 @@ export default class FlexTable extends Component {
     const {
       children,
       onRowClick,
+      onRowDoubleClick,
       onRowMouseOver,
       onRowMouseOut,
       rowClassName,
@@ -448,12 +455,21 @@ export default class FlexTable extends Component {
 
     const a11yProps = {}
 
-    if (onRowClick || onRowMouseOver || onRowMouseOut) {
+    if (
+      onRowClick ||
+      onRowDoubleClick ||
+      onRowMouseOver ||
+      onRowMouseOut
+    ) {
       a11yProps['aria-label'] = 'row'
       a11yProps.role = 'row'
       a11yProps.tabIndex = 0
+
       if (onRowClick) {
         a11yProps.onClick = () => onRowClick({ index })
+      }
+      if (onRowDoubleClick) {
+        a11yProps.onDoubleClick = () => onRowDoubleClick({ index })
       }
       if (onRowMouseOut) {
         a11yProps.onMouseOut = () => onRowMouseOut({ index })

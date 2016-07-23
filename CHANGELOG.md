@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.13.0
+Added `onRowDoubleClick` support to `FlexTable`.
+
 ##### 7.12.3
 `CellMeasurer` implementation changed to use `ReactDOM.unstable_renderSubtreeIntoContainer` instead of `ReactDOMServer.renderToString` in order to support `context`.
 `Grid` has been changed slightly as well to calculate its visible children just before `render` (instead of in it).

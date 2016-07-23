@@ -498,6 +498,19 @@ describe('FlexTable', () => {
     })
   })
 
+  describe('onRowDoubleClick', () => {
+    it('should call :onRowDoubleClick with the correct :rowIndex when a row is clicked', () => {
+      const onRowDoubleClickCalls = []
+      const rendered = findDOMNode(render(getMarkup({
+        onRowDoubleClick: ({ index }) => onRowDoubleClickCalls.push(index)
+      })))
+      const rows = rendered.querySelectorAll('.FlexTable__row')
+      Simulate.doubleClick(rows[0])
+      Simulate.doubleClick(rows[3])
+      expect(onRowDoubleClickCalls).toEqual([0, 3])
+    })
+  })
+
   describe('onRowMouseOver/Out', () => {
     it('should call :onRowMouseOver and :onRowMouseOut with the correct :rowIndex when the mouse is moved over rows', () => {
       let onRowMouseOverCalls = []
