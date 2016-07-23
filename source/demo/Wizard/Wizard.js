@@ -181,29 +181,44 @@ export default class Wizard extends Component {
     // TODO Share these with CellMeasurer?
     const heightValue = collectionHasFixedHeight ? 600 : 'height'
     const widthValue = collectionHasFixedWidth ? 800 : 'width'
-    const columnWidthValue = hasMultipleColumns
-      ? cellsHaveKnownWidth
-        ? cellsHaveUniformWidth
-          ? 100
-          : '({ index }) => 100'
-        : 'getColumnWidth'
-      : widthValue
-    const rowHeightValue = hasMultipleRows
-      ? cellsHaveKnownHeight
-        ? cellsHaveUniformHeight
-          ? 50
-          : '({ index }) => 50'
-        : 'getRowHeight'
-      : heightValue
 
     baseComponent.props.height = heightValue
     baseComponent.props.width = widthValue
 
     if (baseComponent.columnWidthProp) {
-      baseComponent.props[baseComponent.columnWidthProp] = columnWidthValue
+      baseComponent.props[baseComponent.columnWidthProp] =
+        hasMultipleColumns
+          ? cellsHaveKnownWidth
+            ? cellsHaveUniformWidth
+              ? 100
+              : '({ index }) => 100'
+            : 'getColumnWidth'
+          : widthValue
     }
     if (baseComponent.rowHeightProp) {
-      baseComponent.props[baseComponent.rowHeightProp] = rowHeightValue
+      baseComponent.props[baseComponent.rowHeightProp] =
+        hasMultipleRows
+          ? cellsHaveKnownHeight
+            ? cellsHaveUniformHeight
+              ? 50
+              : '({ index }) => 50'
+            : 'getRowHeight'
+          : heightValue
+    }
+
+    if (baseComponent.columnCountProp) {
+      baseComponent.props[baseComponent.columnCountProp] =
+        hasMultipleColumns
+          ? 'numColumns'
+          : '1'
+    }
+    if (baseComponent.rowCountProp) {
+      baseComponent.props[baseComponent.rowCountProp] =
+        hasMultipleRows
+          ? hasMultipleColumns
+            ? 'numRows'
+            : 'collection.size'
+          : '1'
     }
 
     let component = baseComponent
@@ -344,9 +359,9 @@ export default class Wizard extends Component {
       name: 'FlexTable',
       props: {
         headerHeight: 30,
-        rowCount: 'collection.size',
         rowGetter: '({ index }) => collection.get(index)'
       },
+      rowCountProp: 'rowCount',
       rowHeightProp: 'rowHeight',
       children: '<!-- Insert FlexColumn children here -->' // @TODO
     }
@@ -356,11 +371,11 @@ export default class Wizard extends Component {
     return {
       name: 'Grid',
       props: {
-        columnCount: 'numColumns',
-        rowCount: 'numRows',
         cellRenderer: '({ columnIndex, isScrolling, rowIndex }) => <div/>'
       },
+      columnCountProp: 'columnCount',
       columnWidthProp: 'columnWidth',
+      rowCountProp: 'rowCount',
       rowHeightProp: 'rowHeight'
     }
   }
@@ -369,7 +384,6 @@ export default class Wizard extends Component {
     return {
       name: 'VirtualScroll',
       props: {
-        rowCount: 'collection.size',
         rowRenderer: '({ index, isScrolling  }) => collection.getIn([index, "name"])'
       },
       rowHeightProp: 'rowHeight'

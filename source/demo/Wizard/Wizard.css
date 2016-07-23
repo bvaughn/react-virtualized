@@ -5,3 +5,8 @@
 .OptionDisabled {
   opacity: .5;
 }
+
+:global(.CodeMirror) {
+  height: auto;
+  font-size: 0.75rem;
+}
