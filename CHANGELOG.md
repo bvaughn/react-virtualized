@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.14.0
+`WindowScroller` component passes new named argument, `isScrolling`, to its child render function.
+
 ##### 7.13.0
 Added `onRowDoubleClick` support to `FlexTable`.
 

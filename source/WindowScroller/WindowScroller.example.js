@@ -1,4 +1,5 @@
 /** @flow */
+import cn from 'classnames'
 import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
@@ -15,6 +16,7 @@ export default class AutoSizerExample extends Component {
 
   constructor (props) {
     super(props)
+
     this._rowRenderer = this._rowRenderer.bind(this)
   }
 
@@ -38,7 +40,7 @@ export default class AutoSizerExample extends Component {
 
         <div className={styles.WindowScrollerWrapper}>
           <WindowScroller>
-            {({ height, scrollTop }) => (
+            {({ height, isScrolling, scrollTop }) => (
               <AutoSizer disableHeight>
                 {({ width }) => (
                   <VirtualScroll
@@ -47,7 +49,7 @@ export default class AutoSizerExample extends Component {
                     height={height}
                     rowCount={list.size}
                     rowHeight={30}
-                    rowRenderer={this._rowRenderer}
+                    rowRenderer={({ index }) => this._rowRenderer({ index, isScrolling })}
                     scrollTop={scrollTop}
                     width={width}
                   />
@@ -64,14 +66,17 @@ export default class AutoSizerExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _rowRenderer ({ index }) {
+  _rowRenderer ({ index, isScrolling }) {
     const { list } = this.props
     const row = list.get(index)
+    const className = cn(styles.row, {
+      [styles.rowScrolling]: isScrolling
+    })
 
     return (
       <div
         key={index}
-        className={styles.row}
+        className={className}
         style={{ height: 30 }}
       >
         {row.name}

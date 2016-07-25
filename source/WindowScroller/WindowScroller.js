@@ -35,8 +35,9 @@ export default class WindowScroller extends Component {
     super(props)
 
     this.state = {
-      scrollTop: 0,
-      height: 0
+      isScrolling: false,
+      height: 0,
+      scrollTop: 0
     }
 
     this._onScrollWindow = this._onScrollWindow.bind(this)
@@ -76,12 +77,13 @@ export default class WindowScroller extends Component {
 
   render () {
     const { children } = this.props
-    const { scrollTop, height } = this.state
+    const { isScrolling, scrollTop, height } = this.state
 
     return (
       <div>
         {children({
           height,
+          isScrolling,
           scrollTop
         })}
       </div>
@@ -109,6 +111,10 @@ export default class WindowScroller extends Component {
     document.body.style.pointerEvents = this._originalBodyPointerEvents
 
     this._originalBodyPointerEvents = null
+
+    this.setState({
+      isScrolling: false
+    })
   }
 
   _onResizeWindow (event) {
@@ -131,14 +137,23 @@ export default class WindowScroller extends Component {
 
     const scrollTop = Math.max(0, scrollY - this._positionFromTop)
 
-    this._setNextState({ scrollTop })
-
     if (this._originalBodyPointerEvents == null) {
       this._originalBodyPointerEvents = document.body.style.pointerEvents
 
       document.body.style.pointerEvents = 'none'
 
       this._enablePointerEventsAfterDelay()
+    }
+
+    const state = {
+      isScrolling: true,
+      scrollTop
+    }
+
+    if (!this.state.isScrolling) {
+      this.setState(state)
+    } else {
+      this._setNextState(state)
     }
 
     onScroll({ scrollTop })

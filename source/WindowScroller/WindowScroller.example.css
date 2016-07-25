@@ -14,6 +14,11 @@
   background-color: #fff;
   border-bottom: 1px solid #e0e0e0;
 }
+.rowScrolling::after {
+  content: ': scrolling';
+  font-size: 0.65rem;
+  color: #aaa;
+}
 
 .checkboxLabel {
   display: flex;

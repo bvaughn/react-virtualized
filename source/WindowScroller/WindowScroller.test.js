@@ -3,9 +3,9 @@ import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import WindowScroller from './WindowScroller'
 
-function ChildComponent ({ scrollTop, height }) {
+function ChildComponent ({ scrollTop, isScrolling, height }) {
   return (
-    <div>{`scrollTop:${scrollTop}, height:${height}`}</div>
+    <div>{`scrollTop:${scrollTop}, isScrolling:${isScrolling}, height:${height}`}</div>
   )
 }
 
@@ -29,9 +29,10 @@ describe('WindowScroller', () => {
   function getMarkup (props = {}) {
     return (
       <WindowScroller {...props}>
-        {({ height, scrollTop }) => (
+        {({ height, isScrolling, scrollTop }) => (
           <ChildComponent
             height={height}
+            isScrolling={isScrolling}
             scrollTop={scrollTop}
           />
         )}
@@ -66,6 +67,7 @@ describe('WindowScroller', () => {
       }))
 
       simulateWindowScroll({ scrollY: 5000 })
+
       // Allow scrolling timeout to complete so that the component computes state
       await new Promise(resolve => setTimeout(resolve, 150))
 
@@ -85,12 +87,28 @@ describe('WindowScroller', () => {
       expect(rendered.textContent).toContain('scrollTop:0')
 
       simulateWindowScroll({ scrollY: 5000 })
+
       // Allow scrolling timeout to complete so that the component computes state
       await new Promise(resolve => setTimeout(resolve, 150))
 
       const componentScrollTop = window.scrollY - component._positionFromTop
       expect(component.state.scrollTop).toEqual(componentScrollTop)
       expect(rendered.textContent).toContain(`scrollTop:${componentScrollTop}`)
+
+      done()
+    })
+
+    it('should specify :isScrolling when scrolling and reset after scrolling', async (done) => {
+      const component = render(getMarkup())
+      const rendered = findDOMNode(component)
+
+      simulateWindowScroll({ scrollY: 5000 })
+
+      expect(rendered.textContent).toContain('isScrolling:true')
+
+      await new Promise(resolve => setTimeout(resolve, 250))
+
+      expect(rendered.textContent).toContain('isScrolling:false')
 
       done()
     })
