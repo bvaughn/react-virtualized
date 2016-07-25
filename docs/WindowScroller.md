@@ -10,7 +10,7 @@ This may change with a future release but for the time being this HOC is should 
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| children | Function | ✓ | Function responsible for rendering children. This function should implement the following signature: `({ height: number, scrollTop: number }) => PropTypes.element` |
+| children | Function | ✓ | Function responsible for rendering children. This function should implement the following signature: `({ height: number, isScrolling: boolean, scrollTop: number }) => PropTypes.element` |
 | onResize | Function |  | Callback to be invoked on-resize; it is passed the following named parameters: `({ height: number })`. | 
 | onScroll | Function |  | Callback to be invoked on-scroll; it is passed the following named parameters: `({ scrollTop: number })`. | 
 
@@ -24,7 +24,7 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 
 ReactDOM.render(
   <WindowScroller>
-    {({ height, scrollTop }) => (
+    {({ height, isScrolling, scrollTop }) => (
       <VirtualScroll
         autoHeight
         height={height}
