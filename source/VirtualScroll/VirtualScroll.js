@@ -62,7 +62,14 @@ export default class VirtualScroll extends Component {
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
-    /** Responsbile for rendering a row given an index; ({ index: number }): node */
+    /**
+     * Force to recompute row height on component receive new props. It may be usefull when you have a
+     * function in rowHeight property and you change internal values in that function and need's to rerender
+     * the component with the new height getter.
+     */
+    forceRecomputeRowHeights: PropTypes.bool,
+
+    /** Responsible for rendering a row given an index; ({ index: number }): node */
     rowRenderer: PropTypes.func.isRequired,
 
     /** Optional custom CSS class for individual rows */
@@ -100,6 +107,7 @@ export default class VirtualScroll extends Component {
     onScroll: () => null,
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
+    forceRecomputeRowHeights: false,
     style: {}
   }
 
@@ -162,6 +170,12 @@ export default class VirtualScroll extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
+  }
+
+  componentWillReceiveProps (newProps) {
+    if (newProps.forceRecomputeRowHeights) {
+      this.recomputeRowHeights(0)
+    }
   }
 
   _cellRenderer ({ columnIndex, isScrolling, rowIndex }) {
