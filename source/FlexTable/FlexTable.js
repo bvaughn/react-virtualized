@@ -224,17 +224,17 @@ export default class FlexTable extends Component {
   }
 
   forceUpdateGrid () {
-    this._grid.forceUpdate()
+    this.Grid.forceUpdate()
   }
 
   /** See Grid#measureAllCells */
   measureAllRows () {
-    this._grid.measureAllCells()
+    this.Grid.measureAllCells()
   }
 
   /** See Grid#recomputeGridSize */
   recomputeRowHeights (index = 0) {
-    this._grid.recomputeGridSize({
+    this.Grid.recomputeGridSize({
       rowIndex: index
     })
     this.forceUpdateGrid()
@@ -312,7 +312,7 @@ export default class FlexTable extends Component {
           onScroll={this._onScroll}
           onSectionRendered={this._onSectionRendered}
           ref={(ref) => {
-            this._grid = ref
+            this.Grid = ref
           }}
           scrollbarWidth={scrollbarWidth}
           scrollToRow={scrollToIndex}
@@ -556,7 +556,7 @@ export default class FlexTable extends Component {
   }
 
   _setScrollbarWidth () {
-    const Grid = findDOMNode(this._grid)
+    const Grid = findDOMNode(this.Grid)
     const clientWidth = Grid.clientWidth || 0
     const offsetWidth = Grid.offsetWidth || 0
     const scrollbarWidth = offsetWidth - clientWidth

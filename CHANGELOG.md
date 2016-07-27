@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+##### 7.15.1
+Renamed `Grid` refs within `FlexTable` and `VirtualScroll` from `_grid` to `Grid`.
+
+This is done to better support interoperability between `FlexTable` and `react-sortable-hoc` which requires a handle on the inner `Grid`.
+Technically the change is not required but it is more inline with JavaScript naming conventions (since I plan to preserve this proprety from an Api perspective).
+
 ##### 7.15.0
 Added support for greater `FlexTable` customization via a new `rowRenderer` property.
 Also exported default implementation as `defaultFlexTableRowRenderer`.
