@@ -116,6 +116,14 @@ export default class CellMeasurer extends Component {
     this._cachedRowHeights = {}
   }
 
+  resetRowMeasurements (rowIndex) {
+    delete this._cachedRowHeights[rowIndex]
+  }
+
+  resetColumnMeasurements (columnIndex) {
+    delete this._cachedColumnWidths[columnIndex]
+  }
+
   componentDidMount () {
     this._renderAndMount()
   }
