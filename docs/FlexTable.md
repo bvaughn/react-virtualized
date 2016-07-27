@@ -30,6 +30,7 @@ This component expects explicit width, height, and padding parameters.
 | rowCount | Number | ✓ | Number of rows in table. |
 | rowGetter | Function | ✓ | Callback responsible for returning a data row given an index. `({ index: int }): any` |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
+| rowRenderer | Function |  | Responsible for rendering a table row given an array of columns.: `({ className: string, columns: Array, index: number, isScrolling: boolean, onRowClick: ?Function, onRowDoubleClick: ?Function, onRowMouseOver: ?Function, onRowMouseOut: ?Function, rowData: any, style: any }): PropTypes.node`. [Learn more](#rowrenderer) |
 | rowStyle | Object or Function |  | Optional custom inline style to attach to table rows. This value may be either a style object or a function with the signature `({ index: number }): Object`. Note that for the header row an index of `-1` is provided. |
 | rowWrapperClassName | String or Function |  | Optional custom CSS class name to attach to `Grid__cell` element. If function given then signature should be look like: ({ index: number }): PropTypes.string |
 | rowWrapperStyle | Object or Function |  | Optional custom inline style for `Grid__cell` elements. If function given then signature should be look like: ({ index: number }): PropTypes.object |
@@ -80,6 +81,53 @@ The FlexTable component supports the following static class names
 | FlexTable__rowColumn | Table column (akin to `tbody > tr > td`) |
 | FlexTable__sortableHeaderColumn | Applied to header columns that are sortable |
 | FlexTable__sortableHeaderIcon | SVG sort indicator |
+
+### rowRenderer
+
+This is an advanced property.
+It is useful for situations where you require additional hooks into `FlexTable` (eg integration with a library like `react-sortable-hoc`).
+If you do want to override `rowRenderer` the easiest way is to decorate the default implementation like so:
+
+```js
+import { SortableContainer, SortableElement } from 'react-sortable-hoc'
+import { defaultFlexTableRowRenderer, FlexTable } from 'react-virtualized'
+
+const SortableFlexTable = SortableContainer(FlexTable)
+const SortableFlexTableRowRenderer = SortableElement(defaultFlexTableRowRenderer)
+
+function rowRenderer (props) {
+  return <SortableFlexTableRowRenderer {...props} />
+}
+
+function CustomizedFlexTable (props) {
+  return (
+    <SortableFlexTable
+      rowRenderer={rowRenderer}
+      {...props}
+    />
+  )
+}
+```
+
+If you require greater customization, you may want to fork the [`defaultFlexTableRowRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/defaultRowRenderer.js) function.
+
+This function accepts the following named parameters:
+
+```js
+| Property | Description |
+|:---|:---|
+| className | Row-level class name |
+| columns | Array of React nodes |
+| index | Row index |
+| isScrolling | Boolean flag indicating if `FlexTable` is currently being scrolled |
+| onRowClick | Optional row `onClick` handler |
+| onRowDoubleClick | Optional row `onDoubleClick` handler |
+| onRowMouseOver | Optional row `onMouseOver` handler |
+| onRowMouseOut | Optional row `onMouseOut` handler |
+| rowData | Row data |
+| style | Row-level style object |
+})
+```
 
 ### Examples
 

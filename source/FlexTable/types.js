@@ -22,3 +22,16 @@ export type HeaderRendererParams = {
   sortBy: ?string,
   sortDirection: ?string
 };
+
+export type RowRendererParams = {
+  className: string,
+  columns: Array,
+  index: number,
+  isScrolling: boolean,
+  onRowClick: ?Function,
+  onRowDoubleClick: ?Function,
+  onRowMouseOver: ?Function,
+  onRowMouseOut: ?Function,
+  rowData: any,
+  style: any
+};

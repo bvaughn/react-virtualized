@@ -5,6 +5,7 @@ export { CellMeasurer } from './CellMeasurer'
 export { Collection } from './Collection'
 export { ColumnSizer } from './ColumnSizer'
 export {
+  defaultRowRenderer as defaultFlexTableRowRenderer,
   FlexTable,
   FlexColumn,
   SortDirection,

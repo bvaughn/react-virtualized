@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.15.0
+Added support for greater `FlexTable` customization via a new `rowRenderer` property.
+Also exported default implementation as `defaultFlexTableRowRenderer`.
+Learn more [here](docs/FlexTable.md#rowrenderer).
+
 ##### 7.14.0
 `WindowScroller` component passes new named argument, `isScrolling`, to its child render function.
 

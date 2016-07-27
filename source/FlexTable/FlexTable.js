@@ -5,6 +5,7 @@ import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import shallowCompare from 'react-addons-shallow-compare'
 import Grid from '../Grid'
+import defaultRowRenderer from './defaultRowRenderer'
 import SortDirection from './SortDirection'
 
 /**
@@ -135,6 +136,23 @@ export default class FlexTable extends Component {
     /** Number of rows in table. */
     rowCount: PropTypes.number.isRequired,
 
+    /**
+     * Responsible for rendering a table row given an array of columns:
+     * Should implement the following interface: ({
+     *   className: string,
+     *   columns: Array,
+     *   index: number,
+     *   isScrolling: boolean,
+     *   onRowClick: ?Function,
+     *   onRowDoubleClick: ?Function,
+     *   onRowMouseOver: ?Function,
+     *   onRowMouseOut: ?Function,
+     *   rowData: any,
+     *   style: any
+     * }): PropTypes.node
+     */
+    rowRenderer: PropTypes.func,
+
     /** Optional custom inline style to attach to table rows. */
     rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
 
@@ -184,6 +202,7 @@ export default class FlexTable extends Component {
     onRowsRendered: () => null,
     onScroll: () => null,
     overscanRowCount: 10,
+    rowRenderer: defaultRowRenderer,
     rowStyle: {},
     scrollToAlignment: 'auto',
     style: {}
@@ -198,6 +217,7 @@ export default class FlexTable extends Component {
 
     this._cellClassName = this._cellClassName.bind(this)
     this._cellStyle = this._cellStyle.bind(this)
+    this._createColumn = this._createColumn.bind(this)
     this._createRow = this._createRow.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._onSectionRendered = this._onSectionRendered.bind(this)
@@ -358,7 +378,7 @@ export default class FlexTable extends Component {
     )
   }
 
-  _createHeader (column, columnIndex) {
+  _createHeader ({ column, index }) {
     const { headerClassName, headerStyle, onHeaderClick, sort, sortBy, sortDirection } = this.props
     const { dataKey, disableSort, headerRenderer, label, columnData } = column.props
     const sortEnabled = !disableSort && sort
@@ -414,7 +434,7 @@ export default class FlexTable extends Component {
     return (
       <div
         {...a11yProps}
-        key={`Header-Col${columnIndex}`}
+        key={`Header-Col${index}`}
         className={classNames}
         style={style}
       >
@@ -435,64 +455,46 @@ export default class FlexTable extends Component {
       onRowMouseOut,
       rowClassName,
       rowGetter,
+      rowRenderer,
       rowStyle
     } = this.props
+
     const { scrollbarWidth } = this.state
 
     const rowClass = rowClassName instanceof Function ? rowClassName({ index }) : rowClassName
     const rowStyleObject = rowStyle instanceof Function ? rowStyle({ index }) : rowStyle
     const rowData = rowGetter({ index })
 
-    const renderedRow = React.Children.toArray(children).map(
+    const columns = React.Children.toArray(children).map(
       (column, columnIndex) => this._createColumn({
         column,
         columnIndex,
         isScrolling,
         rowData,
-        rowIndex: index
+        rowIndex: index,
+        scrollbarWidth
       })
     )
 
-    const a11yProps = {}
-
-    if (
-      onRowClick ||
-      onRowDoubleClick ||
-      onRowMouseOver ||
-      onRowMouseOut
-    ) {
-      a11yProps['aria-label'] = 'row'
-      a11yProps.role = 'row'
-      a11yProps.tabIndex = 0
-
-      if (onRowClick) {
-        a11yProps.onClick = () => onRowClick({ index })
-      }
-      if (onRowDoubleClick) {
-        a11yProps.onDoubleClick = () => onRowDoubleClick({ index })
-      }
-      if (onRowMouseOut) {
-        a11yProps.onMouseOut = () => onRowMouseOut({ index })
-      }
-      if (onRowMouseOver) {
-        a11yProps.onMouseOver = () => onRowMouseOver({ index })
-      }
+    const className = cn('FlexTable__row', rowClass)
+    const style = {
+      ...rowStyleObject,
+      height: this._getRowHeight(index),
+      paddingRight: scrollbarWidth
     }
 
-    return (
-      <div
-        {...a11yProps}
-        key={index}
-        className={cn('FlexTable__row', rowClass)}
-        style={{
-          ...rowStyleObject,
-          height: this._getRowHeight(index),
-          paddingRight: scrollbarWidth
-        }}
-      >
-        {renderedRow}
-      </div>
-    )
+    return rowRenderer({
+      className,
+      columns,
+      index,
+      isScrolling,
+      onRowClick,
+      onRowDoubleClick,
+      onRowMouseOver,
+      onRowMouseOut,
+      rowData,
+      style
+    })
   }
 
   /**
@@ -524,7 +526,7 @@ export default class FlexTable extends Component {
     const items = disableHeader ? [] : React.Children.toArray(children)
 
     return items.map((column, index) =>
-      this._createHeader(column, index)
+      this._createHeader({ column, index })
     )
   }
 

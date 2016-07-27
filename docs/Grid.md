@@ -71,7 +71,7 @@ Many use cases can be solved more easily using the `onScroll` callback or the `S
 If you do want to override `cellRangeRenderer` the easiest way is to decorate the default implementation like so:
 
 ```js
-import { defaultCellRangeRenderer, Grid } from '../'
+import { defaultCellRangeRenderer, Grid } from 'react-virtualized'
 
 function cellRangeRenderer (props) {
   const children = defaultCellRangeRenderer(props)
@@ -90,7 +90,6 @@ function CustomizedGrid (props) {
   )
 }
 ```
-
 
 If you require greater customization, you may want to fork the [`defaultCellRangeRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/defaultCellRangeRenderer.js) function.
 
