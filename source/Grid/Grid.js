@@ -35,6 +35,12 @@ export default class Grid extends Component {
     'aria-label': PropTypes.string,
 
     /**
+     * Set the width of the inner scrollable container to 'auto'.
+     * This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar.
+     */
+    autoContainerWidth: PropTypes.bool,
+
+    /**
      * Removes fixed height from the scrollingContainer so that the total height
      * of rows can stretch the window. Intended for use with WindowScroller
      */
@@ -453,9 +459,9 @@ export default class Grid extends Component {
 
   render () {
     const {
+      autoContainerWidth,
       autoHeight,
       className,
-      columnCount,
       height,
       noContentRenderer,
       style,
@@ -518,7 +524,7 @@ export default class Grid extends Component {
           <div
             className='Grid__innerScrollContainer'
             style={{
-              width: columnCount === 1 ? 'auto' : totalColumnsWidth,
+              width: autoContainerWidth ? 'auto' : totalColumnsWidth,
               height: totalRowsHeight,
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,

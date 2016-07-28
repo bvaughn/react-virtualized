@@ -1003,4 +1003,9 @@ describe('FlexTable', () => {
       })
     })
   })
+
+  it('should set the width of the single-column inner Grid to auto', () => {
+    const rendered = findDOMNode(render(getMarkup()))
+    expect(rendered.querySelector('.Grid__innerScrollContainer').style.width).toEqual('auto')
+  })
 })

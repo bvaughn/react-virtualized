@@ -1051,6 +1051,24 @@ describe('Grid', () => {
     })
   })
 
+  describe('autoContainerWidth', () => {
+    it('should set the innerScrollContainer width to auto to better support single-column HOCs', () => {
+      const props = {
+        autoContainerWidth: true
+      }
+      const rendered = findDOMNode(render(getMarkup(props)))
+      expect(rendered.querySelector('.Grid__innerScrollContainer').style.width).toEqual('auto')
+    })
+
+    it('should set the innerScrollContainer width to :totalColumnsWidth unless :autoContainerWidth', () => {
+      const props = {
+        autoContainerWidth: false
+      }
+      const rendered = findDOMNode(render(getMarkup(props)))
+      expect(rendered.querySelector('.Grid__innerScrollContainer').style.width).toEqual('2500px') // 50 columns x 50px
+    })
+  })
+
   describe('autoHeight', () => {
     it('should set the container height to auto to adjust to innerScrollContainer height', () => {
       const props = {

@@ -301,6 +301,7 @@ export default class FlexTable extends Component {
 
         <Grid
           {...this.props}
+          autoContainerWidth
           className={cn('FlexTable__Grid', gridClassName)}
           cellClassName={this._cellClassName}
           cellRenderer={this._createRow}

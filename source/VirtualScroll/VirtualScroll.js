@@ -143,6 +143,7 @@ export default class VirtualScroll extends Component {
     return (
       <Grid
         {...this.props}
+        autoContainerWidth
         cellRenderer={this._cellRenderer}
         cellClassName={this._createRowClassNameGetter()}
         cellStyle={this._createRowStyleGetter()}

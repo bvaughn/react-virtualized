@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+##### 7.16.0
+Added new property `autoContainerWidth` to `Grid`.
+It can be used to set the width of the inner scrollable container to 'auto'.
+This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar.
+By default this is disabled but `VirtualScroll` and `FlexTable` both enable it on their inner `Grid`s.
+
 ##### 7.15.1
 Renamed `Grid` refs within `FlexTable` and `VirtualScroll` from `_grid` to `Grid`.
 

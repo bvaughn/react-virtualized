@@ -7,6 +7,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
+| autoContainerWidth | Boolean |  | Set the width of the inner scrollable container to 'auto'. This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar. |
 | autoHeight | Boolean |  | Outer `height` of `Grid` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
 | cellClassName | String or Function |  | Optional custom CSS class name to attach to `Grid__cell` element. If function given then signature should be look like: ({ columnIndex: number, rowIndex: number }): PropTypes.string |
 | cellRangeRenderer | Function |  | Responsible for rendering a group of cells given their index ranges.: `({ cellCache: Map, cellRenderer: Function, columnSizeAndPositionManager: CellSizeAndPositionManager, columnStartIndex: number, columnStopIndex: number, isScrolling: boolean, rowSizeAndPositionManager: CellSizeAndPositionManager, rowStartIndex: number, rowStopIndex: number, scrollLeft: number, scrollTop: number }): Array<PropTypes.node>`. [Learn more](#cellrangerenderer) |
