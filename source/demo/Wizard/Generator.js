@@ -20,7 +20,10 @@ export default function Generator ({
     nonCheckerboardPattern
   })
   const useAutoSizer = !collectionHasFixedHeight || !collectionHasFixedWidth
-  const useCellMeasurer = !cellsHaveKnownWidth || !cellsHaveKnownHeight
+  const useCellMeasurer = (
+    !cellsHaveKnownHeight ||
+    !cellsHaveKnownWidth && !doNotVirtualizeColumns
+  )
 
   // TODO Share these with CellMeasurer?
   const heightValue = collectionHasFixedHeight ? 600 : 'height'
@@ -69,6 +72,9 @@ export default function Generator ({
 
   if (useCellMeasurer) {
     component = getCellMeasurer({
+      cellsHaveKnownHeight,
+      collectionHasFixedHeight,
+      collectionHasFixedWidth,
       child: component,
       indentation: useAutoSizer ? 4 : 0
     })
@@ -175,7 +181,7 @@ function getBaseComponent ({
 }
 
 function getCellMeasurer ({
-  cellsHaveUniformHeight,
+  cellsHaveKnownHeight,
   collectionHasFixedHeight,
   collectionHasFixedWidth,
   child,
@@ -195,7 +201,7 @@ function getCellMeasurer ({
   let methodSignature
 
   // @TODO CellMeasurer doesn't support both dynamic widths and heights. Warn about this.
-  if (cellsHaveUniformHeight) {
+  if (cellsHaveKnownHeight) {
     props.height = heightValue
     methodSignature = '({ getColumnWidth })'
   } else {
