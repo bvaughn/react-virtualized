@@ -113,7 +113,6 @@ If you require greater customization, you may want to fork the [`defaultFlexTabl
 
 This function accepts the following named parameters:
 
-```js
 | Property | Description |
 |:---|:---|
 | className | Row-level class name |
@@ -126,8 +125,6 @@ This function accepts the following named parameters:
 | onRowMouseOut | Optional row `onMouseOut` handler |
 | rowData | Row data |
 | style | Row-level style object |
-})
-```
 
 ### Examples
 
