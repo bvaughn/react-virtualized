@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.17.0
+`CellMeasurer` exposes 2 new public methods: `resetMeasurementForColumn` and `resetMeasurementForRow`.
+These methods allow a finer grain of control over the cell measurement cache.
+Learn more [here](docs/CellMeasurer.md#children-function).
+
 ##### 7.16.0
 Added new property `autoContainerWidth` to `Grid`.
 It can be used to set the width of the inner scrollable container to 'auto'.
