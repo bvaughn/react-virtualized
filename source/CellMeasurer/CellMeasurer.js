@@ -61,6 +61,8 @@ export default class CellMeasurer extends Component {
     this.getColumnWidth = this.getColumnWidth.bind(this)
     this.getRowHeight = this.getRowHeight.bind(this)
     this.resetMeasurements = this.resetMeasurements.bind(this)
+    this.resetMeasurementForColumn = this.resetMeasurementForColumn.bind(this)
+    this.resetMeasurementForRow = this.resetMeasurementForRow.bind(this)
   }
 
   getColumnWidth ({ index }) {
@@ -111,6 +113,14 @@ export default class CellMeasurer extends Component {
     return maxHeight
   }
 
+  resetMeasurementForColumn (columnIndex) {
+    delete this._cachedColumnWidths[columnIndex]
+  }
+
+  resetMeasurementForRow (rowIndex) {
+    delete this._cachedRowHeights[rowIndex]
+  }
+
   resetMeasurements () {
     this._cachedColumnWidths = {}
     this._cachedRowHeights = {}
@@ -134,7 +144,9 @@ export default class CellMeasurer extends Component {
     return children({
       getColumnWidth: this.getColumnWidth,
       getRowHeight: this.getRowHeight,
-      resetMeasurements: this.resetMeasurements
+      resetMeasurements: this.resetMeasurements,
+      resetMeasurementForColumn: this.resetMeasurementForColumn,
+      resetMeasurementForRow: this.resetMeasurementForRow
     })
   }
 
