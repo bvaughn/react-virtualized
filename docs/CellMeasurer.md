@@ -28,9 +28,9 @@ The child function is passed the following named parameters:
 |:---|:---|:---|
 | getColumnWidth | Function | Callback to set as the `columnWidth` property of a `Grid` |
 | getRowHeight | Function | Callback to set as the `rowHeight` property of a `Grid` |
-| resetMeasurements | Function | Use this function to clear cached measurements in `CellRenderer`; its size will be remeasured the next time it is requested. |
-| resetRowMeasurements(rowIndex) | Function | Use this function to clear cached measurements for specific row in `CellRenderer`; its size will be remeasured the next time it is requested. |
-| resetColumnMeasurements(columnIndex) | Function | Use this function to clear cached measurements for specific column in `CellRenderer`; its size will be remeasured the next time it is requested. |
+| resetMeasurementForColumn(index) | Function | Use this function to clear cached measurements for specific column in `CellRenderer`; its size will be remeasured the next time it is requested. |
+| resetMeasurementForRow(index) | Function | Use this function to clear cached measurements for specific row in `CellRenderer`; its size will be remeasured the next time it is requested. |
+| resetMeasurements | Function | Use this function to clear cached measurements in `CellRenderer`; each cell will be remeasured the next time its size is requested. |
 
 ### Examples
 
