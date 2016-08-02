@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.17.1
+Fixed a `Collection` bug that could cause the `noContentRenderer` to be shown when a collection happened to contain no visible children (due to a sparse layout).
+
 ##### 7.17.0
 `CellMeasurer` exposes 2 new public methods: `resetMeasurementForColumn` and `resetMeasurementForRow`.
 These methods allow a finer grain of control over the cell measurement cache.

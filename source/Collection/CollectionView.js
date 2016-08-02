@@ -290,6 +290,7 @@ export default class CollectionView extends Component {
 
   render () {
     const {
+      cellCount,
       cellLayoutManager,
       className,
       height,
@@ -350,7 +351,7 @@ export default class CollectionView extends Component {
         }}
         tabIndex={0}
       >
-        {childrenToDisplay.length > 0 &&
+        {cellCount > 0 &&
           <div
             className='Collection__innerScrollContainer'
             style={{
@@ -364,7 +365,7 @@ export default class CollectionView extends Component {
             {childrenToDisplay}
           </div>
         }
-        {childrenToDisplay.length === 0 &&
+        {cellCount === 0 &&
           noContentRenderer()
         }
       </div>

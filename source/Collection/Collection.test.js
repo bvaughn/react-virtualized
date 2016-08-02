@@ -272,6 +272,21 @@ describe('Collection', () => {
       })))
       expect(list.textContent).toEqual('')
     })
+
+    it('should not show the :noContentRenderer when there are children, even if no children are currently visible (sparse)', () => {
+      const offscreenSizeAndPosition = { x: SECTION_SIZE * 3, y: SECTION_SIZE * 3, width: 1, height: 1 }
+
+      function cellSizeAndPositionGetter ({ index }) {
+        return offscreenSizeAndPosition
+      }
+
+      let list = findDOMNode(render(getMarkup({
+        cellCount: 1,
+        cellSizeAndPositionGetter,
+        noContentRenderer: () => <div>No data</div>
+      })))
+      expect(list.textContent).not.toEqual('No data')
+    })
   })
 
   describe('onSectionRendered', () => {
