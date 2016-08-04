@@ -10,7 +10,73 @@
 [![OpenCollective](https://opencollective.com/react-virtualized/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/react-virtualized/sponsors/badge.svg)](#sponsors)
 
-Interested in sponsoring react-virtualized development? [Learn more](#open-collective).
+### Sponsors
+The following wonderful companies have sponsored react-virtualized:
+
+<a href="https://www.treasuredata.com/"><img width="64" height="64" title="Treasure Data" src="https://cloud.githubusercontent.com/assets/29597/17391516/962647f8-59cb-11e6-83be-aa1bac299dd0.png"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/0/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/1/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/2/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/3/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/4/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/5/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/6/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/7/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/8/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/9/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/9/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/10/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/10/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/11/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/11/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/12/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/12/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/13/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/13/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/14/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/14/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/15/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/15/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/16/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/16/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/17/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/17/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/18/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/18/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/19/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/19/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/20/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/20/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/21/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/21/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/22/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/22/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/23/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/23/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/24/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/24/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/25/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/25/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/26/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/26/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/27/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/27/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/28/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/28/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/sponsor/29/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/29/avatar.svg"></a>
+
+[Learn more about becoming a sponsor!](https://opencollective.com/react-virtualized#sponsor)
+
+<a href="https://opencollective.com/react-virtualized/backer/0/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/0/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/1/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/1/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/2/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/2/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/3/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/3/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/4/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/4/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/5/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/5/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/6/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/6/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/7/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/7/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/8/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/8/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/9/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/9/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/10/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/10/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/11/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/11/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/12/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/12/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/13/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/13/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/14/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/14/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/15/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/15/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/16/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/16/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/17/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/17/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/18/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/18/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/19/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/19/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/20/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/20/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/21/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/21/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/22/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/22/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/23/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/23/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/24/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/24/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/25/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/25/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/26/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/26/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/27/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/27/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/28/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/28/avatar.svg"></a>
+<a href="https://opencollective.com/react-virtualized/backer/29/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/29/avatar.svg"></a>
 
 Getting started
 ---------------
@@ -130,77 +196,6 @@ Here are some great components built on top of react-virtualized:
 * [react-sortable-hoc](https://github.com/clauderic/react-sortable-hoc): Higher-order components to turn any list into an animated, touch-friendly, sortable list
 * [react-virtualized-checkbox](https://github.com/emilebres/react-virtualized-checkbox): Checkbox group component with virtualization for large number of options
 * [react-virtualized-select](https://github.com/bvaughn/react-virtualized-select): Drop-down menu for React with windowing to support large numbers of options.
-
-Open Collective
----------------
-
-##### Backers
-Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/react-virtualized#backer)]
-
-<a href="https://opencollective.com/react-virtualized/backer/0/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/0/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/1/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/1/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/2/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/2/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/3/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/3/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/4/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/4/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/5/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/5/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/6/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/6/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/7/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/7/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/8/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/8/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/9/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/9/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/10/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/10/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/11/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/11/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/12/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/12/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/13/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/13/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/14/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/14/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/15/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/15/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/16/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/16/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/17/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/17/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/18/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/18/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/19/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/19/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/20/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/20/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/21/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/21/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/22/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/22/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/23/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/23/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/24/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/24/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/25/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/25/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/26/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/26/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/27/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/27/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/28/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/28/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/backer/29/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/29/avatar.svg"></a>
-
-##### Sponsors
-Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/react-virtualized#sponsor)]
-
-<a href="https://opencollective.com/react-virtualized/sponsor/0/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/1/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/2/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/3/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/4/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/5/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/6/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/7/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/8/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/9/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/9/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/10/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/10/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/11/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/11/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/12/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/12/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/13/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/13/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/14/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/14/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/15/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/15/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/16/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/16/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/17/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/17/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/18/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/18/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/19/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/19/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/20/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/20/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/21/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/21/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/22/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/22/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/23/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/23/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/24/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/24/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/25/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/25/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/26/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/26/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/27/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/27/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/28/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/28/avatar.svg"></a>
-<a href="https://opencollective.com/react-virtualized/sponsor/29/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/29/avatar.svg"></a>
 
 Contributions
 ------------
