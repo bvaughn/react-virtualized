@@ -2,7 +2,7 @@
 import Grid from '../Grid'
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -13,16 +13,28 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
  * This component renders a virtualized list of elements with either fixed or dynamic heights.
  */
 export default class VirtualScroll extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
+    'aria-label': PropTypes.string,
+
+    /**
+     * Removes fixed height from the scrollingContainer so that the total height
+     * of rows can stretch the window. Intended for use with WindowScroller
+     */
+    autoHeight: PropTypes.bool,
+
     /** Optional CSS class name */
     className: PropTypes.string,
+
+    /**
+     * Used to estimate the total height of a VirtualScroll before all of its rows have actually been measured.
+     * The estimated total height is adjusted as rows are rendered.
+     */
+    estimatedRowSize: PropTypes.number.isRequired,
 
     /** Height constraint for list (determines how many actual rows are rendered) */
     height: PropTypes.number.isRequired,
 
-    /** Optional renderer to be used in place of rows when rowsCount is 0 */
+    /** Optional renderer to be used in place of rows when rowCount is 0 */
     noRowsRenderer: PropTypes.func.isRequired,
 
     /**
@@ -35,7 +47,7 @@ export default class VirtualScroll extends Component {
      * Number of rows to render above/below the visible bounds of the list.
      * These rows can help for smoother scrolling on touch devices.
      */
-    overscanRowsCount: PropTypes.number.isRequired,
+    overscanRowCount: PropTypes.number.isRequired,
 
     /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
@@ -46,15 +58,24 @@ export default class VirtualScroll extends Component {
 
     /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
-     * (index: number): number
+     * ({ index: number }): number
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
-    /** Responsbile for rendering a row given an index */
+    /** Responsbile for rendering a row given an index; ({ index: number }): node */
     rowRenderer: PropTypes.func.isRequired,
 
+    /** Optional custom CSS class for individual rows */
+    rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+
     /** Number of rows in list. */
-    rowsCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired,
+
+    /** Optional custom styles for individual cells */
+    rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+
+    /** See Grid#scrollToAlignment */
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number,
@@ -62,69 +83,57 @@ export default class VirtualScroll extends Component {
     /** Vertical offset. */
     scrollTop: PropTypes.number,
 
+    /** Optional inline style */
+    style: PropTypes.object,
+
+    /** Tab index for focus */
+    tabIndex: PropTypes.number,
+
     /** Width of list */
     width: PropTypes.number.isRequired
   }
 
   static defaultProps = {
+    estimatedRowSize: 30,
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
-    overscanRowsCount: 10
+    overscanRowCount: 10,
+    scrollToAlignment: 'auto',
+    style: {}
   }
 
-  componentDidMount () {
-    const { scrollTop } = this.props
+  constructor (props, context) {
+    super(props, context)
 
-    if (scrollTop >= 0) {
-      this.setScrollTop(scrollTop)
-    }
+    this._cellRenderer = this._cellRenderer.bind(this)
+    this._createRowClassNameGetter = this._createRowClassNameGetter.bind(this)
+    this._createRowStyleGetter = this._createRowStyleGetter.bind(this)
+    this._onScroll = this._onScroll.bind(this)
+    this._onSectionRendered = this._onSectionRendered.bind(this)
   }
 
-  componentWillUpdate (nextProps, nextState) {
-    if (nextProps.scrollTop !== this.props.scrollTop) {
-      this.setScrollTop(nextProps.scrollTop)
-    }
+  forceUpdateGrid () {
+    this.Grid.forceUpdate()
   }
 
-  /**
-   * See Grid#recomputeGridSize
-   */
-  recomputeRowHeights () {
-    this.refs.Grid.recomputeGridSize()
+  /** See Grid#measureAllCells */
+  measureAllRows () {
+    this.Grid.measureAllCells()
   }
 
-  /**
-   * See Grid#scrollToCell
-   */
-  scrollToRow (scrollToIndex) {
-    this.refs.Grid.scrollToCell({
-      scrollToColumn: 0,
-      scrollToRow: scrollToIndex
+  /** See Grid#recomputeGridSize */
+  recomputeRowHeights (index = 0) {
+    this.Grid.recomputeGridSize({
+      rowIndex: index
     })
-  }
-
-  /**
-   * See Grid#setScrollPosition
-   */
-  setScrollTop (scrollTop) {
-    this.refs.Grid.setScrollPosition({
-      scrollLeft: 0,
-      scrollTop
-    })
+    this.forceUpdateGrid()
   }
 
   render () {
     const {
       className,
-      height,
       noRowsRenderer,
-      onRowsRendered,
-      onScroll,
-      rowHeight,
-      rowRenderer,
-      overscanRowsCount,
-      rowsCount,
       scrollToIndex,
       width
     } = this.props
@@ -133,26 +142,74 @@ export default class VirtualScroll extends Component {
 
     return (
       <Grid
-        ref='Grid'
+        {...this.props}
+        autoContainerWidth
+        cellRenderer={this._cellRenderer}
+        cellClassName={this._createRowClassNameGetter()}
+        cellStyle={this._createRowStyleGetter()}
         className={classNames}
         columnWidth={width}
-        columnsCount={1}
-        height={height}
+        columnCount={1}
         noContentRenderer={noRowsRenderer}
-        onScroll={({ clientHeight, scrollHeight, scrollTop }) => onScroll({ clientHeight, scrollHeight, scrollTop })}
-        onSectionRendered={({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) => onRowsRendered({
-          overscanStartIndex: rowOverscanStartIndex,
-          overscanStopIndex: rowOverscanStopIndex,
-          startIndex: rowStartIndex,
-          stopIndex: rowStopIndex
-        })}
-        overscanRowsCount={overscanRowsCount}
-        renderCell={({ columnIndex, rowIndex }) => rowRenderer(rowIndex)}
-        rowHeight={rowHeight}
-        rowsCount={rowsCount}
+        onScroll={this._onScroll}
+        onSectionRendered={this._onSectionRendered}
+        ref={(ref) => {
+          this.Grid = ref
+        }}
         scrollToRow={scrollToIndex}
-        width={width}
       />
     )
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
+  }
+
+  _cellRenderer ({ columnIndex, isScrolling, rowIndex }) {
+    const { rowRenderer } = this.props
+
+    return rowRenderer({
+      index: rowIndex,
+      isScrolling
+    })
+  }
+
+  _createRowClassNameGetter () {
+    const { rowClassName } = this.props
+
+    return rowClassName instanceof Function
+      ? ({ rowIndex }) => rowClassName({ index: rowIndex })
+      : () => rowClassName
+  }
+
+  _createRowStyleGetter () {
+    const { rowStyle } = this.props
+
+    const wrapped = rowStyle instanceof Function
+      ? rowStyle
+      : () => rowStyle
+
+    // Default width to 100% to prevent list rows from flowing under the vertical scrollbar
+    return ({ rowIndex }) => ({
+      width: '100%',
+      ...wrapped({ index: rowIndex })
+    })
+  }
+
+  _onScroll ({ clientHeight, scrollHeight, scrollTop }) {
+    const { onScroll } = this.props
+
+    onScroll({ clientHeight, scrollHeight, scrollTop })
+  }
+
+  _onSectionRendered ({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) {
+    const { onRowsRendered } = this.props
+
+    onRowsRendered({
+      overscanStartIndex: rowOverscanStartIndex,
+      overscanStopIndex: rowOverscanStopIndex,
+      startIndex: rowStartIndex,
+      stopIndex: rowStopIndex
+    })
   }
 }

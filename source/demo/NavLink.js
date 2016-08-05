@@ -2,9 +2,9 @@ import React from 'react'
 import cn from 'classnames'
 import styles from './NavLink.css'
 
-export default function NavLink ({ pathData, text, url }) {
+export default function NavLink ({ active, onClick, pathData, text, url }) {
   const classNames = cn(styles.NavLink, {
-    [styles.ActiveNavLink]: !url
+    [styles.ActiveNavLink]: active
   })
 
   return (
@@ -12,6 +12,7 @@ export default function NavLink ({ pathData, text, url }) {
       <a
         className={classNames}
         href={url}
+        onClick={onClick}
       >
         {text}
       </a>

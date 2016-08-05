@@ -1,4 +1,13 @@
+// IE 10+ compatibility for demo (must come before other imports)
+import 'babel-polyfill'
+
+import { render } from 'react-dom'
+import shallowCompare from 'react-addons-shallow-compare'
+import ArrowKeyStepperExample from '../ArrowKeyStepper/ArrowKeyStepper.example'
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
+import WindowScrollerExample from '../WindowScroller/WindowScroller.example'
+import CellMeasurerExample from '../CellMeasurer/CellMeasurer.example'
+import CollectionExample from '../Collection/Collection.example'
 import ColumnSizerExample from '../ColumnSizer/ColumnSizer.example'
 import ComponentLink from './ComponentLink'
 import GridExample from '../Grid/Grid.example'
@@ -11,37 +20,69 @@ import ScrollSyncExample from '../ScrollSync/ScrollSync.example'
 import styles from './Application.css'
 import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
 import { generateRandomList } from './utils'
-import { render } from 'react-dom'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import Wizard from './Wizard'
 import '../../styles.css'
 
-const COMPONENTS = ['Grid', 'FlexTable', 'VirtualScroll']
-const HIGH_ORDER_COMPONENTS = ['AutoSizer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync']
+const COMPONENTS = ['Collection', 'Grid', 'FlexTable', 'VirtualScroll']
+const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync', 'WindowScroller']
+const COMPONENT_EXAMPLES_MAP = {
+  ArrowKeyStepper: ArrowKeyStepperExample,
+  AutoSizer: AutoSizerExample,
+  CellMeasurer: CellMeasurerExample,
+  Collection: CollectionExample,
+  ColumnSizer: ColumnSizerExample,
+  FlexTable: FlexTableExample,
+  Grid: GridExample,
+  InfiniteLoader: InfiniteLoaderExample,
+  ScrollSync: ScrollSyncExample,
+  VirtualScroll: VirtualScrollExample,
+  WindowScroller: WindowScrollerExample
+}
+
+const NAV_LINKS = {
+  Components: 'Components',
+  Wizard: 'Wizard'
+}
 
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
 
-class Application extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
+function getUrlParam ({ defaultValue, name, valueCheck }) {
+  const matches = window.location.search.match(`${name}=(.+)`)
 
+  return matches && valueCheck(matches[1])
+    ? matches[1]
+    : defaultValue
+}
+
+class Application extends Component {
   constructor (props) {
     super(props)
 
-    // Support deep links to specific components
-    const matches = window.location.search.match('component=(.+)')
-    const activeComponent = matches && (COMPONENTS.includes(matches[1]) || HIGH_ORDER_COMPONENTS.includes(matches[1]))
-      ? matches[1]
-      : 'VirtualScroll'
+    const activeComponent = getUrlParam({
+      defaultValue: 'VirtualScroll',
+      name: 'component',
+      valueCheck: (value) => COMPONENTS.includes(value) || HIGH_ORDER_COMPONENTS.includes(value)
+    })
+    const activeNavLink = getUrlParam({
+      defaultValue: NAV_LINKS.Components,
+      name: 'navLink',
+      valueCheck: (value) => NAV_LINKS[value]
+    })
 
     this.state = {
-      activeComponent
+      activeComponent,
+      activeNavLink
     }
   }
 
   render () {
-    const { activeComponent } = this.state
+    const { activeComponent, activeNavLink } = this.state
 
-    const setActiveComponent = component => this.setState({ activeComponent: component })
+    const setActiveComponent = (activeComponent) => this.setState({ activeComponent })
+    const setActiveNavLink = (activeNavLink) => this.setState({ activeNavLink })
+
+    const ActiveComponent = COMPONENT_EXAMPLES_MAP[activeComponent]
 
     return (
       <div className={styles.demo}>
@@ -62,7 +103,14 @@ class Application extends Component {
 
           <ul className={styles.NavList}>
             <NavLink
+              active={activeNavLink === NAV_LINKS.Components}
+              onClick={() => setActiveNavLink(NAV_LINKS.Components)}
               text='Components'
+            />
+            <NavLink
+              active={activeNavLink === NAV_LINKS.Wizard}
+              onClick={() => setActiveNavLink(NAV_LINKS.Wizard)}
+              text='Wizard'
             />
             <NavLink
               text='Source'
@@ -102,47 +150,12 @@ class Application extends Component {
         </div>
 
         <div className={styles.row}>
-          {activeComponent === 'AutoSizer' &&
-            <AutoSizerExample
+          {activeNavLink === NAV_LINKS.Components
+            ? <ActiveComponent
               className={styles.column}
               list={list}
             />
-          }
-          {activeComponent === 'ColumnSizer' &&
-            <ColumnSizerExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'FlexTable' &&
-            <FlexTableExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'Grid' &&
-            <GridExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'InfiniteLoader' &&
-            <InfiniteLoaderExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'ScrollSync' &&
-            <ScrollSyncExample
-              className={styles.column}
-              list={list}
-            />
-          }
-          {activeComponent === 'VirtualScroll' &&
-            <VirtualScrollExample
-              className={styles.column}
-              list={list}
-            />
+            : <Wizard />
           }
         </div>
 
@@ -152,10 +165,14 @@ class Application extends Component {
       </div>
     )
   }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
+  }
 }
 
 render(
-  <Application/>,
+  <Application />,
   document.getElementById('root')
 )
 

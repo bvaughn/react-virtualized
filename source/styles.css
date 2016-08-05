@@ -1,15 +1,42 @@
+/* Collection default theme */
+
+.Collection {
+  position: relative;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  /* Without this property, Chrome repaints the entire Collection any time a new row or column is added.
+     Firefox only repaints the new row or column (regardless of this property).
+     Safari and IE don't support the property at all. */
+  will-change: transform;
+}
+
+.Collection__innerScrollContainer {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.Collection__cell {
+  position: absolute;
+}
+
 /* Grid default theme */
 
 .Grid {
   position: relative;
   overflow: auto;
-  outline: 0;
   -webkit-overflow-scrolling: touch;
+
+  /* Without this property, Chrome repaints the entire Grid any time a new row or column is added.
+     Firefox only repaints the new row or column (regardless of this property).
+     Safari and IE don't support the property at all. */
+  will-change: transform;
 }
 
 .Grid__innerScrollContainer {
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
 }
 
 .Grid__cell {
@@ -23,6 +50,7 @@
 
 .FlexTable__Grid {
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .FlexTable__headerRow {
@@ -32,11 +60,7 @@
   flex-direction: row;
   align-items: center;
   overflow: hidden;
-}
-.FlexTable__headerTruncatedText {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  box-sizing: border-box;
 }
 .FlexTable__row {
   display: flex;
@@ -45,31 +69,31 @@
   overflow: hidden;
 }
 
+.FlexTable__headerTruncatedText {    
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .FlexTable__headerColumn,
 .FlexTable__rowColumn {
   margin-right: 10px;
   min-width: 0px;
+}
+.FlexTable__rowColumn {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .FlexTable__headerColumn:first-of-type,
 .FlexTable__rowColumn:first-of-type {
   margin-left: 10px;
 }
-.FlexTable__headerColumn {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;
-}
 .FlexTable__sortableHeaderColumn {
   cursor: pointer;
-}
-.FlexTable__rowColumn {
-  justify-content: center;
-  flex-direction: column;
-  display: flex;
-  overflow: hidden;
-  height: 100%;
 }
 
 .FlexTable__sortableHeaderIconContainer {
@@ -83,26 +107,11 @@
   fill: currentColor;
 }
 
-.FlexTable__truncatedColumnText {
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
 /* VirtualScroll default theme */
 
 .VirtualScroll {
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  outline: 0;
   -webkit-overflow-scrolling: touch;
-}
-
-.VirtualScroll__innerScrollContainer {
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.VirtualScroll__row {
-  position: absolute;
 }

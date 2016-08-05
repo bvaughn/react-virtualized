@@ -1,4 +1,5 @@
 .GridRow {
+  position: relative;
   display: flex;
   flex-direction: row;
 }
@@ -9,6 +10,7 @@
 }
 .LeftSideGridContainer {
   flex: 0 0 75px;
+  z-index: 10;
 }
 
 .LeftSideGrid {
@@ -17,7 +19,6 @@
 .HeaderGrid {
   width: 100%;
   overflow: hidden !important;
-  background-color: #fafafa;
 }
 .BodyGrid {
   width: 100%;
@@ -26,7 +27,7 @@
 .evenRow {
 }
 .oddRow {
-  background-color: #f0f0f0;
+  background-color: rgba(0, 0, 0, .1);
 }
 
 .cell,
@@ -43,6 +44,5 @@
 }
 .headerCell,
 .leftCell {
-  background-color: #fafafa;
   font-weight: bold;
 }

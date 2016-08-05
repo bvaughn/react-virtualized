@@ -4,12 +4,10 @@ import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from './AutoSizer'
 import VirtualScroll from '../VirtualScroll'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 import styles from './AutoSizer.example.css'
 
 export default class AutoSizerExample extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -44,6 +42,7 @@ export default class AutoSizerExample extends Component {
         <ContentBoxParagraph>
           <label className={styles.checkboxLabel}>
             <input
+              aria-label='Hide description (to show resize)?'
               className={styles.checkbox}
               type='checkbox'
               value={hideDescription}
@@ -67,7 +66,7 @@ export default class AutoSizerExample extends Component {
               <VirtualScroll
                 className={styles.VirtualScroll}
                 height={height}
-                rowsCount={list.size}
+                rowCount={list.size}
                 rowHeight={30}
                 rowRenderer={this._rowRenderer}
                 width={width}
@@ -79,7 +78,11 @@ export default class AutoSizerExample extends Component {
     )
   }
 
-  _rowRenderer (index) {
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
+  }
+
+  _rowRenderer ({ index }) {
     const { list } = this.props
     const row = list.get(index)
 

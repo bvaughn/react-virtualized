@@ -14,6 +14,38 @@ export function ContentBox ({ className, children, ...props }) {
 }
 
 export function ContentBoxHeader ({ text, sourceLink, docsLink, ...props }) {
+  const links = []
+
+  if (sourceLink) {
+    links.push(
+      <a
+        className={styles.Link}
+        href={sourceLink}
+        key='sourceLink'
+      >
+        Source
+      </a>
+    )
+  }
+
+  if (sourceLink && docsLink) {
+    links.push(
+      <span key='separator'> | </span>
+    )
+  }
+
+  if (docsLink) {
+    links.push(
+      <a
+        className={styles.Link}
+        href={docsLink}
+        key='docsLink'
+      >
+        Docs
+      </a>
+    )
+  }
+
   return (
     <h1
       className={styles.Header}
@@ -21,21 +53,11 @@ export function ContentBoxHeader ({ text, sourceLink, docsLink, ...props }) {
     >
       {text}
 
-      <small className={styles.Small}>
-        <a
-          className={styles.Link}
-          href={sourceLink}
-        >
-          Source
-        </a>
-        <span> | </span>
-        <a
-          className={styles.Link}
-          href={docsLink}
-        >
-          Docs
-        </a>
-      </small>
+      {links.length > 0 && (
+        <small className={styles.Small}>
+          {links}
+        </small>
+      )}
     </h1>
   )
 }

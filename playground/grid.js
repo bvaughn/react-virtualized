@@ -1,36 +1,38 @@
-function renderCell (params) {
-  // return React.DOM.span(null, `column:${params.columnIndex}, row:${params.rowIndex}`)
-  return React.DOM.input({
-    className: 'input',
-    onChange: function () {},
-    defaultValue: `column:${params.columnIndex}, row:${params.rowIndex}`
-  })
-}
+var REACT_VIRTUALIZED_BANNER = 'https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png'
 
-/*
-function measurePerformance () {
-  console.log('measurePerformance()')
-  var measurements = React.addons.Perf.getLastMeasurements()
-  if (measurements.length > 0) {
-    console.group('printDOM')
-    React.addons.Perf.printDOM(measurements)
-    console.groupEnd()
-
-    console.group('printWasted')
-    React.addons.Perf.printWasted(measurements)
-    console.groupEnd()
-
-    React.addons.Perf.start()
+function getColumnWidth (params) {
+  switch (params.index % 3) {
+    case 0:
+      return 65
+    case 1:
+      return 65
+    case 2:
+      return 100
   }
 }
-*/
+
+function cellRenderer (params) {
+  var key = `c:${params.columnIndex}, r:${params.rowIndex}`
+  switch (params.columnIndex % 3) {
+    case 0:
+      return React.DOM.input({
+        className: 'input',
+        defaultValue: key,
+        onChange: function () {}
+      })
+    case 1:
+      return React.DOM.button({
+        className: 'button'
+      }, key)
+    case 2:
+      return React.DOM.img({
+        className: 'image',
+        src: REACT_VIRTUALIZED_BANNER
+      })
+  }
+}
 
 var App = React.createClass({
-  componentDidMount: function () {
-    // React.addons.Perf.start()
-    // window.Perf = React.addons.Perf
-  },
-
   render: function() {
     return React.createElement(
       ReactVirtualized.AutoSizer,
@@ -39,13 +41,13 @@ var App = React.createClass({
         return React.createElement(
           ReactVirtualized.Grid,
           {
-            columnsCount: 1000,
-            columnWidth: 200,
+            columnCount: 1000,
+            columnWidth: getColumnWidth,
             height: params.height,
-            overscanRowsCount: 0,
-            renderCell: renderCell,
-            rowHeight: 40,
-            rowsCount: 1000,
+            overscanRowCount: 0,
+            cellRenderer: cellRenderer,
+            rowHeight: 30,
+            rowCount: 1000,
             width: params.width
           }
         )

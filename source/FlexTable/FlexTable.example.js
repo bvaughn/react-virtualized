@@ -5,13 +5,13 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import AutoSizer from '../AutoSizer'
 import FlexColumn from './FlexColumn'
-import FlexTable, { SortDirection } from './FlexTable'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import FlexTable from './FlexTable'
+import SortDirection from './SortDirection'
+import SortIndicator from './SortIndicator'
+import shallowCompare from 'react-addons-shallow-compare'
 import styles from './FlexTable.example.css'
 
 export default class FlexTableExample extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -20,31 +20,36 @@ export default class FlexTableExample extends Component {
     super(props, context)
 
     this.state = {
+      disableHeader: false,
       headerHeight: 30,
       height: 270,
-      overscanRowsCount: 0,
+      hideIndexRow: false,
+      overscanRowCount: 10,
       rowHeight: 40,
-      rowsCount: 1000,
+      rowCount: 1000,
       scrollToIndex: undefined,
-      sortBy: 'name',
+      sortBy: 'index',
       sortDirection: SortDirection.ASC,
       useDynamicRowHeight: false
     }
 
     this._getRowHeight = this._getRowHeight.bind(this)
+    this._headerRenderer = this._headerRenderer.bind(this)
     this._noRowsRenderer = this._noRowsRenderer.bind(this)
-    this._onRowsCountChange = this._onRowsCountChange.bind(this)
+    this._onRowCountChange = this._onRowCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
     this._sort = this._sort.bind(this)
   }
 
   render () {
     const {
+      disableHeader,
       headerHeight,
       height,
-      overscanRowsCount,
+      hideIndexRow,
+      overscanRowCount,
       rowHeight,
-      rowsCount,
+      rowCount,
       scrollToIndex,
       sortBy,
       sortDirection,
@@ -54,7 +59,7 @@ export default class FlexTableExample extends Component {
     const { list, ...props } = this.props
     const sortedList = this._isSortEnabled()
       ? list
-        .sortBy(index => list.getIn([index, sortBy]))
+        .sortBy(item => item[sortBy])
         .update(list =>
           sortDirection === SortDirection.DESC
             ? list.reverse()
@@ -62,7 +67,7 @@ export default class FlexTableExample extends Component {
         )
       : list
 
-    const rowGetter = index => this._getDatum(sortedList, index)
+    const rowGetter = ({ index }) => this._getDatum(sortedList, index)
 
     return (
       <ContentBox {...props}>
@@ -74,36 +79,59 @@ export default class FlexTableExample extends Component {
 
         <ContentBoxParagraph>
           The table layout below is created with flexboxes.
-          This allows it to have a fixed header scrollable body content.
-          It also makes use of <code>VirtualScroll</code> so that large lists of tabular data can be rendered efficiently.
+          This allows it to have a fixed header and scrollable body content.
+          It also makes use of <code>Grid</code> for windowing table content so that large lists are rendered efficiently.
           Adjust its configurable properties below to see how it reacts.
         </ContentBoxParagraph>
 
         <ContentBoxParagraph>
           <label className={styles.checkboxLabel}>
             <input
+              aria-label='Use dynamic row heights?'
+              checked={useDynamicRowHeight}
               className={styles.checkbox}
               type='checkbox'
-              value={useDynamicRowHeight}
               onChange={event => this._updateUseDynamicRowHeight(event.target.checked)}
             />
             Use dynamic row heights?
+          </label>
+
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Hide index?'
+              checked={hideIndexRow}
+              className={styles.checkbox}
+              type='checkbox'
+              onChange={event => this.setState({ hideIndexRow: event.target.checked })}
+            />
+            Hide index?
+          </label>
+
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Hide header?'
+              checked={disableHeader}
+              className={styles.checkbox}
+              type='checkbox'
+              onChange={event => this.setState({ disableHeader: event.target.checked })}
+            />
+            Hide header?
           </label>
         </ContentBoxParagraph>
 
         <InputRow>
           <LabeledInput
             label='Num rows'
-            name='rowsCount'
-            onChange={this._onRowsCountChange}
-            value={rowsCount}
+            name='rowCount'
+            onChange={this._onRowCountChange}
+            value={rowCount}
           />
           <LabeledInput
             label='Scroll to'
             name='onScrollToRow'
             placeholder='Index...'
             onChange={this._onScrollToRowChange}
-            value={scrollToIndex}
+            value={scrollToIndex || ''}
           />
           <LabeledInput
             label='List height'
@@ -126,9 +154,9 @@ export default class FlexTableExample extends Component {
           />
           <LabeledInput
             label='Overscan'
-            name='overscanRowsCount'
-            onChange={event => this.setState({ overscanRowsCount: parseInt(event.target.value, 10) || 0 })}
-            value={overscanRowsCount}
+            name='overscanRowCount'
+            onChange={event => this.setState({ overscanRowCount: parseInt(event.target.value, 10) || 0 })}
+            value={overscanRowCount}
           />
         </InputRow>
 
@@ -137,34 +165,37 @@ export default class FlexTableExample extends Component {
             {({ width }) => (
               <FlexTable
                 ref='Table'
+                disableHeader={disableHeader}
                 headerClassName={styles.headerColumn}
                 headerHeight={headerHeight}
                 height={height}
                 noRowsRenderer={this._noRowsRenderer}
-                overscanRowsCount={overscanRowsCount}
+                overscanRowCount={overscanRowCount}
                 rowClassName={::this._rowClassName}
                 rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
                 rowGetter={rowGetter}
-                rowsCount={rowsCount}
+                rowCount={rowCount}
                 scrollToIndex={scrollToIndex}
                 sort={this._sort}
                 sortBy={sortBy}
                 sortDirection={sortDirection}
                 width={width}
               >
+                {!hideIndexRow &&
+                  <FlexColumn
+                    label='Index'
+                    cellDataGetter={
+                      ({ columnData, dataKey, rowData }) => rowData.index
+                    }
+                    dataKey='index'
+                    disableSort={!this._isSortEnabled()}
+                    width={60}
+                  />
+                }
                 <FlexColumn
-                  label='Index'
-                  cellDataGetter={
-                    (dataKey, rowData, columnData) => rowData.index
-                  }
-                  dataKey='index'
-                  disableSort={!this._isSortEnabled()}
-                  width={50}
-                />
-                <FlexColumn
-                  label='Name'
                   dataKey='name'
                   disableSort={!this._isSortEnabled()}
+                  headerRenderer={this._headerRenderer}
                   width={90}
                 />
                 <FlexColumn
@@ -172,9 +203,9 @@ export default class FlexTableExample extends Component {
                   disableSort
                   label='The description label is really long so that it will be truncated'
                   dataKey='random'
-                  cellClassName={styles.exampleColumn}
+                  className={styles.exampleColumn}
                   cellRenderer={
-                    (cellData, cellDataKey, rowData, rowIndex, columnData) => cellData
+                    ({ cellData, columnData, dataKey, rowData, rowIndex }) => cellData
                   }
                   flexGrow={1}
                 />
@@ -186,21 +217,43 @@ export default class FlexTableExample extends Component {
     )
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
+  }
+
   _getDatum (list, index) {
     return list.get(index % list.size)
   }
 
-  _getRowHeight (index) {
+  _getRowHeight ({ index }) {
     const { list } = this.props
 
     return this._getDatum(list, index).size
   }
 
+  _headerRenderer ({
+    columnData,
+    dataKey,
+    disableSort,
+    label,
+    sortBy,
+    sortDirection
+  }) {
+    return (
+      <div>
+        Full Name
+        {sortBy === dataKey &&
+          <SortIndicator sortDirection={sortDirection} />
+        }
+      </div>
+    )
+  }
+
   _isSortEnabled () {
     const { list } = this.props
-    const { rowsCount } = this.state
+    const { rowCount } = this.state
 
-    return rowsCount <= list.size
+    return rowCount <= list.size
   }
 
   _noRowsRenderer () {
@@ -211,15 +264,15 @@ export default class FlexTableExample extends Component {
     )
   }
 
-  _onRowsCountChange (event) {
-    const rowsCount = parseInt(event.target.value, 10) || 0
+  _onRowCountChange (event) {
+    const rowCount = parseInt(event.target.value, 10) || 0
 
-    this.setState({ rowsCount })
+    this.setState({ rowCount })
   }
 
   _onScrollToRowChange (event) {
-    const { rowsCount } = this.state
-    let scrollToIndex = Math.min(rowsCount - 1, parseInt(event.target.value, 10))
+    const { rowCount } = this.state
+    let scrollToIndex = Math.min(rowCount - 1, parseInt(event.target.value, 10))
 
     if (isNaN(scrollToIndex)) {
       scrollToIndex = undefined
@@ -228,7 +281,7 @@ export default class FlexTableExample extends Component {
     this.setState({ scrollToIndex })
   }
 
-  _rowClassName (index) {
+  _rowClassName ({ index }) {
     if (index < 0) {
       return styles.headerRow
     } else {
@@ -236,7 +289,7 @@ export default class FlexTableExample extends Component {
     }
   }
 
-  _sort (sortBy, sortDirection) {
+  _sort ({ sortBy, sortDirection }) {
     this.setState({ sortBy, sortDirection })
   }
 

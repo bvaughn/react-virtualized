@@ -1,6 +1,6 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
@@ -8,8 +8,6 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
  * All other properties will be passed through to the child component.
  */
 export default class AutoSizer extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     /**
      * Function respondible for rendering children.
@@ -41,6 +39,7 @@ export default class AutoSizer extends Component {
     }
 
     this._onResize = this._onResize.bind(this)
+    this._onScroll = this._onScroll.bind(this)
     this._setRef = this._setRef.bind(this)
   }
 
@@ -54,7 +53,9 @@ export default class AutoSizer extends Component {
   }
 
   componentWillUnmount () {
-    this._detectElementResize.removeResizeListener(this._parentNode, this._onResize)
+    if (this._detectElementResize) {
+      this._detectElementResize.removeResizeListener(this._parentNode, this._onResize)
+    }
   }
 
   render () {
@@ -77,6 +78,7 @@ export default class AutoSizer extends Component {
     return (
       <div
         ref={this._setRef}
+        onScroll={this._onScroll}
         style={outerStyle}
       >
         {children({ height, width })}
@@ -84,15 +86,26 @@ export default class AutoSizer extends Component {
     )
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
+  }
+
   _onResize () {
     const { onResize } = this.props
-    const { height, width } = this._parentNode.getBoundingClientRect()
+
+    // Gaurd against AutoSizer component being removed from the DOM immediately after being added.
+    // This can result in invalid style values which can result in NaN values if we don't handle them.
+    // See issue #150 for more context.
+
+    const boundingRect = this._parentNode.getBoundingClientRect()
+    const height = boundingRect.height || 0
+    const width = boundingRect.width || 0
 
     const style = getComputedStyle(this._parentNode)
-    const paddingLeft = parseInt(style.paddingLeft, 10)
-    const paddingRight = parseInt(style.paddingRight, 10)
-    const paddingTop = parseInt(style.paddingTop, 10)
-    const paddingBottom = parseInt(style.paddingBottom, 10)
+    const paddingLeft = parseInt(style.paddingLeft, 10) || 0
+    const paddingRight = parseInt(style.paddingRight, 10) || 0
+    const paddingTop = parseInt(style.paddingTop, 10) || 0
+    const paddingBottom = parseInt(style.paddingBottom, 10) || 0
 
     this.setState({
       height: height - paddingTop - paddingBottom,
@@ -100,6 +113,11 @@ export default class AutoSizer extends Component {
     })
 
     onResize({ height, width })
+  }
+
+  _onScroll (event) {
+    // Prevent detectElementResize library from being triggered by this scroll event.
+    event.stopPropagation()
   }
 
   _setRef (autoSizer) {

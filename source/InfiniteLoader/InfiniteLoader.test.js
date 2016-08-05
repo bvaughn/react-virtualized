@@ -1,41 +1,46 @@
 import InfiniteLoader, { isRangeVisible, scanForUnloadedRanges } from './InfiniteLoader'
 import React from 'react'
 import VirtualScroll from '../VirtualScroll'
-import { findDOMNode, render } from 'react-dom'
+import { render } from '../TestUtils'
 
 describe('InfiniteLoader', () => {
-  beforeAll(() => jasmine.clock().install())
-  afterAll(() => jasmine.clock().uninstall())
-
-  // Used by the renderOrUpdateComponent() helper method
-  var node = null
-  beforeEach(() => {
-    node = document.createElement('div')
-  })
-
+  let innerOnRowsRendered
   let isRowLoadedCalls = []
   let isRowLoadedMap = {}
   let loadMoreRowsCalls = []
+  let rowRendererCalls = []
 
   beforeEach(() => {
     isRowLoadedCalls = []
     isRowLoadedMap = {}
     loadMoreRowsCalls = []
+    rowRendererCalls = []
   })
 
-  function isRowLoaded (index) {
+  function defaultIsRowLoaded ({ index }) {
     isRowLoadedCalls.push(index)
     return !!isRowLoadedMap[index]
   }
 
-  function loadMoreRows ({ startIndex, stopIndex }) {
+  function defaultLoadMoreRows ({ startIndex, stopIndex }) {
     loadMoreRowsCalls.push({ startIndex, stopIndex })
+  }
+
+  function rowRenderer (index) {
+    rowRendererCalls.push(index)
+    return (
+      <div key={index} />
+    )
   }
 
   function getMarkup ({
     height = 100,
+    isRowLoaded = defaultIsRowLoaded,
+    loadMoreRows = defaultLoadMoreRows,
+    minimumBatchSize = 1,
     rowHeight = 20,
-    rowsCount = 100,
+    rowCount = 100,
+    scrollToIndex,
     threshold = 10,
     width = 200
   } = {}) {
@@ -43,47 +48,178 @@ describe('InfiniteLoader', () => {
       <InfiniteLoader
         isRowLoaded={isRowLoaded}
         loadMoreRows={loadMoreRows}
-        rowsCount={rowsCount}
+        minimumBatchSize={minimumBatchSize}
+        rowCount={rowCount}
         threshold={threshold}
       >
-        {({ onRowsRendered, registerChild }) => (
-          <VirtualScroll
-            ref={registerChild}
-            height={height}
-            onRowsRendered={onRowsRendered}
-            rowHeight={rowHeight}
-            rowRenderer={index => <div key={index}/>}
-            rowsCount={rowsCount}
-            width={width}
-          />
-        )}
+        {({ onRowsRendered, registerChild }) => {
+          innerOnRowsRendered = onRowsRendered
+
+          return (
+            <VirtualScroll
+              ref={registerChild}
+              height={height}
+              onRowsRendered={onRowsRendered}
+              rowHeight={rowHeight}
+              rowRenderer={rowRenderer}
+              rowCount={rowCount}
+              scrollToIndex={scrollToIndex}
+              width={width}
+            />
+          )
+        }}
       </InfiniteLoader>
     )
   }
 
-  function renderOrUpdateComponent (props) {
-    const component = findDOMNode(render(getMarkup(props), node))
-
-    // Allow initial setImmediate() to set :scrollTop
-    jasmine.clock().tick()
-
-    return component
-  }
-
   it('should call :isRowLoaded for all rows within the threshold each time a range of rows are rendered', () => {
-    renderOrUpdateComponent()
+    render(getMarkup())
     expect(isRowLoadedCalls).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
   })
 
+  it('should call :isRowLoaded for all rows within the rowCount each time a range of rows are rendered', () => {
+    render(getMarkup({ rowCount: 10 }))
+    expect(isRowLoadedCalls).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+  })
+
   it('should call :loadMoreRows for unloaded rows within the threshold', () => {
-    renderOrUpdateComponent()
+    render(getMarkup())
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 14 }])
+  })
+
+  it('should call :loadMoreRows for unloaded rows within the rowCount', () => {
+    render(getMarkup({ rowCount: 10 }))
+    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 9 }])
+  })
+
+  it('should :forceUpdate once rows have loaded if :loadMoreRows returns a Promise', async (done) => {
+    let savedResolve
+    function loadMoreRows () {
+      return new Promise((resolve) => {
+        savedResolve = resolve
+      })
+    }
+    render(getMarkup({ loadMoreRows }))
+    rowRendererCalls.splice(0)
+    await savedResolve()
+    expect(rowRendererCalls.length > 0).toEqual(true)
+    done()
+  })
+
+  it('should not :forceUpdate once rows have loaded rows are no longer visible', async (done) => {
+    let resolves = []
+    function loadMoreRows () {
+      return new Promise((resolve) => {
+        resolves.push(resolve)
+      })
+    }
+    render(getMarkup({ loadMoreRows }))
+    // Simulate a new range of rows being loaded
+    innerOnRowsRendered({ startIndex: 100, stopIndex: 101 })
+    rowRendererCalls.splice(0)
+    await resolves[0]() // Resolve the first request only, not the simulated row-change
+    expect(rowRendererCalls.length).toEqual(0)
+    done()
+  })
+
+  describe('minimumBatchSize', () => {
+    it('should respect the specified :minimumBatchSize when scrolling down', () => {
+      render(getMarkup({
+        minimumBatchSize: 10,
+        threshold: 0
+      }))
+      expect(loadMoreRowsCalls.length).toEqual(1)
+      expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 9 }])
+    })
+
+    it('should respect the specified :minimumBatchSize when scrolling up', () => {
+      render(getMarkup({
+        minimumBatchSize: 10,
+        scrollToIndex: 20,
+        threshold: 0
+      }))
+      loadMoreRowsCalls.splice(0)
+      render(getMarkup({
+        isRowLoaded: ({ index }) => index >= 20,
+        minimumBatchSize: 10,
+        scrollToIndex: 15,
+        threshold: 0
+      }))
+      expect(loadMoreRowsCalls.length).toEqual(1)
+      expect(loadMoreRowsCalls).toEqual([{ startIndex: 10, stopIndex: 19 }])
+    })
+
+    it('should not interfere with :threshold', () => {
+      render(getMarkup({
+        minimumBatchSize: 10,
+        threshold: 10
+      }))
+      expect(loadMoreRowsCalls.length).toEqual(1)
+      expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 14 }])
+    })
+
+    it('should respect the specified :minimumBatchSize if a user scrolls past the previous range', () => {
+      const isRowLoadedIndices = {}
+
+      function isRowLoaded ({ index }) {
+        if (!isRowLoadedIndices[index]) {
+          isRowLoadedIndices[index] = true
+
+          return false
+        } else {
+          return true
+        }
+      }
+
+      render(getMarkup({
+        isRowLoaded,
+        minimumBatchSize: 10,
+        threshold: 0
+      }))
+      // Simulate a new range of rows being loaded
+      innerOnRowsRendered({ startIndex: 5, stopIndex: 10 })
+      expect(loadMoreRowsCalls).toEqual([
+        { startIndex: 0, stopIndex: 9 },
+        { startIndex: 10, stopIndex: 19 }
+      ])
+    })
+
+    it('should not exceed ending boundaries if :minimumBatchSize is larger than needed', () => {
+      render(getMarkup({
+        minimumBatchSize: 10,
+        rowCount: 25,
+        threshold: 0
+      }))
+      // Simulate a new range of rows being loaded
+      innerOnRowsRendered({ startIndex: 18, stopIndex: 22 })
+      expect(loadMoreRowsCalls).toEqual([
+        { startIndex: 0, stopIndex: 9 },
+        { startIndex: 15, stopIndex: 24 }
+      ])
+    })
+
+    it('should not exceed beginning boundaries if :minimumBatchSize is larger than needed', () => {
+      render(getMarkup({
+        minimumBatchSize: 10,
+        scrollToIndex: 15,
+        threshold: 0
+      }))
+      loadMoreRowsCalls.splice(0)
+      render(getMarkup({
+        isRowLoaded: ({ index }) => index >= 6,
+        minimumBatchSize: 10,
+        scrollToIndex: 2,
+        threshold: 0
+      }))
+      expect(loadMoreRowsCalls.length).toEqual(1)
+      expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 5 }])
+    })
   })
 })
 
 describe('scanForUnloadedRanges', () => {
   function createIsRowLoaded (rows) {
-    return index => rows[index]
+    return ({ index }) => rows[index]
   }
 
   it('should return an empty array for a range of rows that have all been loaded', () => {

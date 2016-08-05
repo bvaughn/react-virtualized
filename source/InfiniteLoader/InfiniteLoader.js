@@ -1,6 +1,6 @@
 /** @flow */
 import { Component, PropTypes } from 'react'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 
 /**
  * Higher-order component that manages lazy-loading for "infinite" data.
@@ -8,8 +8,6 @@ import shouldPureComponentUpdate from 'react-pure-render/function'
  * It is intended as a convenience component; fork it if you'd like finer-grained control over data-loading.
  */
 export default class InfiniteLoader extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     /**
      * Function respondible for rendering a virtualized component.
@@ -23,7 +21,7 @@ export default class InfiniteLoader extends Component {
 
     /**
      * Function responsible for tracking the loaded state of each row.
-     * It should implement the following signature: (index: number): boolean
+     * It should implement the following signature: ({ index: number }): boolean
      */
     isRowLoaded: PropTypes.func.isRequired,
 
@@ -37,9 +35,15 @@ export default class InfiniteLoader extends Component {
     loadMoreRows: PropTypes.func.isRequired,
 
     /**
+     * Minimum number of rows to be loaded at a time.
+     * This property can be used to batch requests to reduce HTTP requests.
+     */
+    minimumBatchSize: PropTypes.number.isRequired,
+
+    /**
      * Number of rows in list; can be arbitrary high number if actual number is unknown.
      */
-    rowsCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired,
 
     /**
      * Threshold at which to pre-fetch data.
@@ -50,7 +54,8 @@ export default class InfiniteLoader extends Component {
   }
 
   static defaultProps = {
-    rowsCount: 0,
+    minimumBatchSize: 10,
+    rowCount: 0,
     threshold: 15
   }
 
@@ -70,16 +75,22 @@ export default class InfiniteLoader extends Component {
     })
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
+  }
+
   _onRowsRendered ({ startIndex, stopIndex }) {
-    const { isRowLoaded, loadMoreRows, rowsCount, threshold } = this.props
+    const { isRowLoaded, loadMoreRows, minimumBatchSize, rowCount, threshold } = this.props
 
     this._lastRenderedStartIndex = startIndex
     this._lastRenderedStopIndex = stopIndex
 
     const unloadedRanges = scanForUnloadedRanges({
       isRowLoaded,
+      minimumBatchSize,
+      rowCount,
       startIndex: Math.max(0, startIndex - threshold),
-      stopIndex: Math.min(rowsCount, stopIndex + threshold)
+      stopIndex: Math.min(rowCount - 1, stopIndex + threshold)
     })
 
     unloadedRanges.forEach(unloadedRange => {
@@ -125,18 +136,25 @@ export function isRangeVisible ({
 /**
  * Returns all of the ranges within a larger range that contain unloaded rows.
  */
-export function scanForUnloadedRanges ({ isRowLoaded, startIndex, stopIndex }) {
+export function scanForUnloadedRanges ({
+  isRowLoaded,
+  minimumBatchSize,
+  rowCount,
+  startIndex,
+  stopIndex
+}) {
   const unloadedRanges = []
+
   let rangeStartIndex = null
   let rangeStopIndex = null
 
-  for (let i = startIndex; i <= stopIndex; i++) {
-    let loaded = isRowLoaded(i)
+  for (let index = startIndex; index <= stopIndex; index++) {
+    let loaded = isRowLoaded({ index })
 
     if (!loaded) {
-      rangeStopIndex = i
+      rangeStopIndex = index
       if (rangeStartIndex === null) {
-        rangeStartIndex = i
+        rangeStartIndex = index
       }
     } else if (rangeStopIndex !== null) {
       unloadedRanges.push({
@@ -148,11 +166,48 @@ export function scanForUnloadedRanges ({ isRowLoaded, startIndex, stopIndex }) {
     }
   }
 
+  // If :rangeStopIndex is not null it means we haven't ran out of unloaded rows.
+  // Scan forward to try filling our :minimumBatchSize.
   if (rangeStopIndex !== null) {
+    const potentialStopIndex = Math.min(
+      Math.max(
+        rangeStopIndex,
+        rangeStartIndex + minimumBatchSize - 1
+      ),
+      rowCount - 1
+    )
+
+    for (let index = rangeStopIndex + 1; index <= potentialStopIndex; index++) {
+      if (!isRowLoaded({ index })) {
+        rangeStopIndex = index
+      } else {
+        break
+      }
+    }
+
     unloadedRanges.push({
       startIndex: rangeStartIndex,
       stopIndex: rangeStopIndex
     })
+  }
+
+  // Check to see if our first range ended prematurely.
+  // In this case we should scan backwards to try filling our :minimumBatchSize.
+  if (unloadedRanges.length) {
+    const firstUnloadedRange = unloadedRanges[0]
+
+    while (
+      firstUnloadedRange.stopIndex - firstUnloadedRange.startIndex + 1 < minimumBatchSize &&
+      firstUnloadedRange.startIndex > 0
+    ) {
+      let index = firstUnloadedRange.startIndex - 1
+
+      if (!isRowLoaded({ index })) {
+        firstUnloadedRange.startIndex = index
+      } else {
+        break
+      }
+    }
   }
 
   return unloadedRanges

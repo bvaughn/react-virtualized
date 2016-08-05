@@ -1,0 +1,12 @@
+.Option {
+  padding: 0.25rem 0;
+}
+
+.OptionDisabled {
+  opacity: .5;
+}
+
+:global(.CodeMirror) {
+  height: auto;
+  font-size: 0.75rem;
+}

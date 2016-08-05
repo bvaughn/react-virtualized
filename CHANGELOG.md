@@ -1,6 +1,373 @@
 Changelog
 ------------
 
+##### 7.17.1
+Fixed a `Collection` bug that could cause the `noContentRenderer` to be shown when a collection happened to contain no visible children (due to a sparse layout).
+
+##### 7.17.0
+`CellMeasurer` exposes 2 new public methods: `resetMeasurementForColumn` and `resetMeasurementForRow`.
+These methods allow a finer grain of control over the cell measurement cache.
+Learn more [here](docs/CellMeasurer.md#children-function).
+
+##### 7.16.0
+Added new property `autoContainerWidth` to `Grid`.
+It can be used to set the width of the inner scrollable container to 'auto'.
+This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar.
+By default this is disabled but `VirtualScroll` and `FlexTable` both enable it on their inner `Grid`s.
+
+##### 7.15.1
+Renamed `Grid` refs within `FlexTable` and `VirtualScroll` from `_grid` to `Grid`.
+
+This is done to better support interoperability between `FlexTable` and `react-sortable-hoc` which requires a handle on the inner `Grid`.
+Technically the change is not required but it is more inline with JavaScript naming conventions (since I plan to preserve this proprety from an Api perspective).
+
+##### 7.15.0
+Added support for greater `FlexTable` customization via a new `rowRenderer` property.
+Also exported default implementation as `defaultFlexTableRowRenderer`.
+Learn more [here](docs/FlexTable.md#rowrenderer).
+
+##### 7.14.0
+`WindowScroller` component passes new named argument, `isScrolling`, to its child render function.
+
+##### 7.13.0
+Added `onRowDoubleClick` support to `FlexTable`.
+
+##### 7.12.3
+`CellMeasurer` implementation changed to use `ReactDOM.unstable_renderSubtreeIntoContainer` instead of `ReactDOMServer.renderToString` in order to support `context`.
+`Grid` has been changed slightly as well to calculate its visible children just before `render` (instead of in it).
+This change is not expected to have any public-facing consequences beyond supporting the `context` property for `CellMeasure`d cells.
+Thanks to @jquense for this contribution!
+
+##### 7.12.2
+User-specified `Grid` and `Collection` styles can now override default style options (eg overflow, height/width).
+
+##### 7.12.1
+Fixed unexpected usage of `recomputeRowHeights` / `recomputeGridSize` where method is called with an index higher than the last measured row/cell index.
+Cell measurer now properly updates the value only if the requested index is lower than the most-recently-measured cell.
+
+##### 7.12.0
+`FlexTable` `rowStyle` property can now be a on Object _or_ a function similar to the `rowClassName` property.
+
+##### 7.11.8
+Fixed edge-case bug previously possible when combining the `scrollToAlignment` property with `scrollToRow` or `scrollToColumn` at the end of a collection.
+Under certain circumstances this caused the grid to scroll too far; that has now been resolved.
+Center-alignment logic has also been improved to better align scrolled cells.
+
+##### 7.11.7
+Removed `xmlns` property from `<svg>` tag in `SortEditor` to avoid React 15.2 property warning.
+
+##### 7.11.6
+Fixed `CellMeasurer` throws "Only a ReactOwner can have refs" error.
+
+##### 7.11.5
+Small change to inline styles for `Grid` to work around obscure bug where an initial scroll offset prop is specified before external CSS stylesheets have loaded.
+
+##### 7.11.4
+Added more pass-thru props from `VirtualScroll` to `Grid` to ensure that when `VirtualScroll` re-renders (due to changed props) so does its inner `Grid`.
+Both components are still "pure" (from a shallow comparison perspective).
+
+##### 7.11.3
+Updated `Grid` and `VirtualScroll` so that the width of rows in a `VirtualScroll` does not stretch beneath a scrollbar (if one is visible).
+
+##### 7.11.2
+Added more pass-thru props from `FlexTable` to `Grid` to ensure that when `FlexTable` re-renders (due to changed props) so does its inner `Grid`.
+Both components are still "pure" (from a shallow comparison perspective).
+This just avoids the unintuitive use-case where some table properties (eg headers) may change while others (eg rows) do not.
+
+##### 7.11.1
+Updated UMD build to remove `react-addons-shallow-compare` from the build.
+UMD users should use `react-with-addons.min.js` (should have already been using it in fact) instead of `react.min.js`.
+Thanks to @ducky427 for reporting this oversight and updating the Webpack config!
+
+##### 7.11.0
+The `recomputeRowHeights` method of `FlexTable` and `VirtualScroll` accepts an optional index (defaults to 0) after which to recompute sizes.
+The `recomputeGridSize` method of `Grid` accepts named `columnIndex` and `rowIndex` parameters tha function similarly.
+
+This allows for a finer grained optimization when invalidating a collection.
+If, for example, a specific row in a table has resized- it is now possible to recompute the positions of only the rows occurring after this row.
+Because of the way react-virtualized just-in-time measures rows, this will also avoid re-measuring any but the visible rows at the time of the change.
+
+If several items in the collection have changed and you are unsure of which, it is safest to recompute all columns/rows.
+This remains the default behavior unless override indices are specified as parameters.
+
+##### 7.10.0
+New `gridClassName` and `gridStyle` pass-through properties added to `FlexTable`.
+
+##### 7.9.1
+Fixed edge-case bug in `FlexTable` that caused the inner `Grid` not to update when there was a vertical scrollbar.
+This in turn caused headers to be misaligned.
+
+##### 7.9.0
+Added `forceUpdateGrid` method to `FlexTable` and `VirtualScroll` to enable the inner `Grid` to be udpated without resorting to recomputing cached row heights.
+
+##### 7.8.3
+`Grid` no longer checks `scrollTop` when `autoHeight=true` in order to avoid unnecessary reflows/repaints.
+This change only impacts `WindowScroller` use cases.
+
+##### 7.8.2
+Fixed edge-case problem with `FlexTable` where changes to the number of children (`FlexColumn`s) didn't update the inner `Grid`.
+
+##### 7.8.1
+Reverted default `tabIndex = null` value for `Grid` (introduced in 7.8.0) due to a negative accessibility impact.
+A focused `Grid` paints significantly more while scrolling which impacts FPS.
+Unfortunately it is a necessity to support keyboard scrolling properly and so it's the default once more.
+This can be explicitly disabled by setting `tabIndex = null` if you want.
+
+##### 7.8.0
+Scrolling performance improvements for `FlexTable` and to a lesser extent `Grid`.
+
+The primary change to `Grid` is that `tabIndex` will be set to `null` by default instead of `0`.
+This improves repainting performance when a `Grid` is being scrolled.
+
+This release removes the `FlexTable__truncatedColumnText` wrapper column and collapses its styles into `FlexTable__rowColumn`.
+If you were depending on the former class you will want to update your dependencies.
+I was on the fence about this in terms of compatibility, but I feel this is more of an internal implementation detail than it is public-facing API.
+
+This release also changes the primary `FlexTable` cell from a flex container to a block.
+This means that if you were right-aligning text within a column you will need to change from `align-items: flex-end` to `text-align: right`.
+
+##### 7.7.1
+Export the `defaultCellRangeRenderer` used by `Grid` in order to enable easier composition.
+
+##### 7.7.0
+Added configurable `tabIndex` property to `Grid`, `FlexTable`, and `VirtualScroll`.
+Default value remains 0 but can now be overridden.
+
+##### 7.6.0
+New property added to `Grid`, `FlexTable`, and `VirtualScroll` to enable custom CSS class name and style to be added to the outer cell decorator.
+This can be used to greater customize styles as well as to better implement custom (non-flexbox) styles for IE9.
+Thanks to nicholasrq@ for this contribution!
+
+##### 7.5.0
+New `WindowScroller` HOC added to enable a `FlexTable` or `VirtualScroll` component to be scrolled based on the window's scroll positions.
+This can be used to create layouts similar to Facebook or Twitter news feeds.
+Big thanks to minheq@ for this contribution!
+
+##### 7.4.0
+Added mouse-over and mouse-out row-level events to `FlexTable`. Thanks to @queeto for the PR!
+
+##### 7.3.3
+Fixed unintention regression in IE10 support introduced with `ScalingCellSizeAndPositionManager` extending `CellSizeAndPositionManager`.
+Inheritance has been replaced with composition for this case in order to simplify IE10 compatibility.
+Notice that Babel `babel-polyfill` is still required in order to support other ES5 features.
+
+##### 7.3.2
+Edge-case bug fix for `CellMeasurer` in the event that its `getRowHeight` or `getColumnWidth` method gets called before the initial render completes.
+
+##### 7.3.1
+Increased the safe-scale size from 1,000,000 to 10,000,000 to make for better UX.
+
+##### 7.3.0
+`Grid` (and its HOCs `FlexTable` and `VirtualScroll`) now support larger heights and widths than browsers support natively.
+For example, the current version of Chrome will not allow users to scroll pass ~33.5M pixel offset.
+To work around this limitation, `Grid` increases the density of cells, shifting them as a ratio of what the full scrollable size would be to a browser-safe size.
+This should be more or less transparent to users, although in extreme cases it can lead to _really sensitive_ scroll responsiveness.
+
+##### 7.2.0
+Added new method- `measureAllCells`- to `Grid`, `FlexTable`, and `VirtualScroll` to force-measure all cells.
+This supports special use-cases where deferred measuring is not desired.
+
+Added `estimatedRowSize` property to `FlexTable` and `VirtualScroll` to be passed through to the inner `Grid`.
+
+Also added guard to ensure the `onScroll` callback for `Collection`, `Grid`, `FlexTable`, and `VirtualScroll` is never called with a negative number.
+
+##### 7.1.3
+The inner javascript-detect-element-resize library used by `AutoSizer` now passes the proper `useCapture` value when removing listeners as well. This should prevent lingering event listeners in certain cases. Thanks to @cyberxndr for this fix.
+
+##### 7.1.2
+Added "_center_" option for `scrollToAlignment` property of `Collection`, `Grid`, `FlexTable`, and `VirtualScroll`.
+Thanks to @edulan for the contribution!
+
+Also added a check to avoid rendering content frmo `noContentRenderer` if `width` or `height` are 0.
+
+##### 7.1.1
+Resolved edge-case bug that caused the bottom/right cells in a `Grid` or `Collection` to be partially overlapped by a scrollbar.
+Thanks to @anjianshi for reporting this and collaborating on the fix!
+
+##### 7.1.0
+Added `scrollToAlignment` property to `Collection`, `Grid`, `FlexTable`, and `VirtualScroll` to offer finer-grained control of how scrolled-to cells are aligned.
+Default behavior ("_auto_") remains unchanged- the least amount of scrolling will occur to ensure that the specified cell is visible.
+
+##### 7.0.5
+Fixed edge-case bug where `InfiniteLoader` did not respect `minBatchSize` setting when a user was scrolling up.
+
+##### 7.0.4
+Added `scrollLeft` and `scrollTop` parameters to `cellRangeRenderer` callback for `Grid`.
+
+##### 7.0.3
+Added `box-sizing: border-box` rules to `.FlexTable__headerRow` and `.FlexTable__Grid` classes to fix edge-case scrollbar bug experienced by some users.
+
+##### 7.0.2
+Added `recomputeCellSizesAndPositions` method to `Collection` (to pass through to inner `CollectionView`).
+
+##### 7.0.1
+Replaced single occurence of `Number.isNaN` with `isNaN` to avoid IE compatibility issues.
+
+# 7.0.0
+Version 7 changes are described in detail on the [Version 7 Roadmap wiki page](https://github.com/bvaughn/react-virtualized/wiki/Version-7-Roadmap).
+Upgrade instructions and [jscodeshift](https://github.com/facebook/jscodeshift) mods can also be found there.
+
+To run a code mod, check out react-virtualized (or download the codemod) and then...
+```
+jscodeshift -t /path/to/react-virtualized/codemods/6-to-7/rename-properties.js source
+```
+
+##### 6.3.2
+Fixed edge-case bug in `Collection` where initial `scrollLeft` and `scrollTop` would not correctly adjust inner offsets.
+Thanks @edulan for the contribution!
+
+##### 6.3.1
+Added better checks against invalid style properties in `AutoSizer` to protected against the case when it is removed from the DOM immediately after being added.
+
+##### 6.3.0
+Added new `minimumBatchSize` property to `InfiniteLoader` to simplify HTTP request batching.
+Fixed edge-case NPE with `AutoSizer` when it is unmounted immediately after being mounted.
+
+##### 6.2.2
+Fixed off-by-one for `InfiniteLoader` that caused it to request one too many rows when scrolled to the end of the list.
+
+##### 6.2.1
+`FlexTable` supports `true`, `false`, `undefined`, and `null` children now to more easily enable support for dynamic columns (see issue #174).
+Improved edge-case handling for changes to cell counts when scroll-to-index properties have been set.
+
+### 6.2.0
+Added new `Collection` component for rendering non-checkboard data.
+This component's cells can be positioned in any arrangement, even overlapping.
+Note that because it has fewer constraints, `Collection` cannot compute positioning and layout data as fast as `Grid`.
+
+##### 6.1.2
+Moved `react-addons-shallow-compare` from `dependencies` to `peerDependencies`.
+
+##### 6.1.1
+Updated React dependency ranges now that 15.0 has been released.
+
+### 6.1.0
+`Grid` supports a new `renderCellRanges` property for customizing the rendering of a window of cells.
+This function should implement the following signature:
+```js
+function renderCellRanges ({
+  columnMetadata:Array<Object>,
+  columnStartIndex: number,
+  columnStopIndex: number,
+  renderCell: Function,
+  rowMetadata:Array<Object>,
+  rowStartIndex: number,
+  rowStopIndex: number
+}): Array<PropTypes.node>
+```
+
+##### 6.0.8
+Fixed dependency ranges for `react-addons-shallow-compare` and `react-dom`.
+
+##### 6.0.7
+Added key handling to sortable `FlexTable` headers so that ENTER and SPACE keys can be used to toggle sort direction.
+
+##### 6.0.6
+Added conditional checks to when `aria-label`, `role`, and `tabIndex` get attached to `FlexTable` headers and rows.
+These a11y properties are only added when on-click or sort handlers are present.
+
+##### 6.0.5
+Added `aria-label` and `role` attributes to `FlexTable`, `Grid`, and `VirtualScroll` components to fix a11y issues reported by [reactjs/react-a11y](https://github.com/reactjs/react-a11y).
+Thanks to @globexdesigns for the contributions!
+
+##### 6.0.4
+Separated horiontal and vertical `Grid` metadata calculation to avoid unnecessarily recomputing row metadata for `FlexTable`s and `VirtualScroll`s when a browser's window is resized, for example.
+Also replaced `columnWidth` and `rowHeight` getter uses in `Grid.render` in favor of cached cell metadata instead.
+
+##### 6.0.3
+Small update to `FlexTable` to move the `rowGetter` call outside of the column loop to reduce the number of times that method gets called.
+
+##### 6.0.2
+Added [transform-react-inline-elements](http://babeljs.io/docs/plugins/transform-react-inline-elements/) to UMD build for minor runtime performance improvements.
+This change does not effect CommonJS or ES6 module builds because I did not want to remove prop-type checks.
+You should apply this transformation step as part of your own production build pipeline.
+
+##### 6.0.1
+Removed lingering references to `react-pure-render` with with [`shallowCompare`](https://facebook.github.io/react/docs/shallow-compare.html).
+This was meant to be part of the initial 6.0 release but was left out accidentally.
+
+# 6.0.0
+
+Version 6 includes the following changes.
+(For more background information refer to the [Version 6 Roadmap wiki page](https://github.com/bvaughn/react-virtualized/wiki/Version-6-Roadmap).)
+At a high-level the purpose of this release is to improve customization and flexibility with regard to arrow-key event handling.
+
+### Backwards-incompatible changes
+* Refactored `Grid` to remove arrow-key scroll-snapping. Instead this feature is implemented in a HOC, `ArrowKeyStepper`. The upgrade path from React 5.x to 6.x if you want to maintain arrow-key navigation behavior is as follows:
+
+```js
+// Before...
+<Grid {...gridProps}/>
+
+// After...
+<ArrowKeyStepper
+  columnsCount={columnsCount}
+  rowsCount={rowsCount}
+>
+  {({ onSectionRendered, scrollToColumn, scrollToRow }) => (
+    <Grid
+      columnsCount={columnsCount}
+      onSectionRendered={onSectionRendered}
+      rowsCount={rowsCount}
+      scrollToColumn={scrollToColumn}
+      scrollToRow={scrollToRow}
+      {...otherGridProps}
+    />
+  )}
+</ArrowKeyStepper>
+```
+* The following public methods have also be removed from components:
+  * `FlexTable`: `scrollToRow` (use `scrollToIndex` prop instead), `setScrollTop` (use `scrollTop` prop instead)
+  * `Grid`: `scrollToCell` (use `scrollToColumn` and `scrollToRow` props instead), `setScrollPosition` (use `scrollLeft` and `scrollTop` props instead)
+  * `VirtualScroll`: `scrollToRow` (use `scrollToIndex` prop instead), `setScrollTop` (use `scrollTop` prop instead)
+
+### Backwards-compatible changes
+* Replaced (the now unsupported) `react-pure-render` with [`shallowCompare`](https://facebook.github.io/react/docs/shallow-compare.html).
+
+##### 5.5.6
+Max scroll position logic in `Grid` now takes scrollbar size into consideration.
+Also includes a small `render` optimization for null cells.
+This release made possible by @jquense!
+
+##### 5.5.5
+Updated `package.json` to support React `^0.14.0` as well as `^15.0.0-rc.1`.
+Thanks to @opichals for the PR.
+
+##### 5.5.4
+Changed key-down event handler in `VirtualScroll`, `FlexTable`, and `Grid` to no longer call `event.preventDefault()` for arrow-key events.
+This was causing poor user interactions for `<input>` elements within `VirtualScroll` and `FlexTable` components.
+Note that this issue still occurs for `<input>` elements in a `Grid` component.
+
+This release also removes the `outline: 0` default style for `Grid`.
+After consideration I think that's a harmful default behavior.
+
+##### 5.5.3
+Added `will-change` property to `Grid` to work around a Chrome bug(?) that caused the entire grid to be repainted whenever a new row or column was added. This was negatively impacting scrolling performance for Chrome under certain conditions. This change is not expected to impact Firefox, Safari, or IE.
+
+Also trapped scroll events inside of `AutoSizer` so that `sdecima/javascript-detect-element-resize` did not treat them as potential resizes and unnecessarily force a sync DOM layout.
+
+##### 5.5.2
+Removed two unnecessary method calls in `Grid` and replaced them with cached properties. Should offer a minor performance boost.
+Added better bounds-checking to util function `getVisibleCellIndices()`
+
+##### 5.5.1
+Removed unnecessary `setImmediate` in `Grid` initialization code.
+This prevents a possible edge-case runtime error when a `Grid` is mounted and then removed before `setImmediate` is invoked.
+
+### 5.5.0
+`ScrollSync` passes additional parameters to child function in order to enable more complex scroll-driven UI changes.
+
+### 5.4.0
+Added optional `headerRenderer` property to `FlexColumn` to enable custom `FlexTable` header cells.
+
+##### 5.3.2
+Decoupled x/y axes in `Grid` when determining whether or not to enable overflow.
+This results in more robustly handling issues like the one reported in PR #133.
+It also comes with the small cost of partially obscuring a small part of cells (the area used by a scrollbar).
+
+##### 5.3.1
+Fixed edge-case where always-on scrollbars were not hidden once shown (see issue #116).
+
 ### 5.3.0
 Separated CommonJS and UMD builds and pointed package.json's `main` target at the CommonJS build.
 Also moved the ES6 modules build from `/es` to `/dist/es` to reduce the amount of clutter in the packaged dir.

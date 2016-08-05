@@ -1,12 +1,10 @@
 import { Component, PropTypes } from 'react'
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import shallowCompare from 'react-addons-shallow-compare'
 
 /**
  * HOC that simplifies the process of synchronizing scrolling between two or more virtualized components.
  */
 export default class ScrollSync extends Component {
-  shouldComponentUpdate = shouldPureComponentUpdate
-
   static propTypes = {
     /**
      * Function respondible for rendering 2 or more virtualized components.
@@ -20,8 +18,12 @@ export default class ScrollSync extends Component {
     super(props, context)
 
     this.state = {
+      clientHeight: 0,
+      clientWidth: 0,
+      scrollHeight: 0,
       scrollLeft: 0,
-      scrollTop: 0
+      scrollTop: 0,
+      scrollWidth: 0
     }
 
     this._onScroll = this._onScroll.bind(this)
@@ -29,16 +31,24 @@ export default class ScrollSync extends Component {
 
   render () {
     const { children } = this.props
-    const { scrollLeft, scrollTop } = this.state
+    const { clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth } = this.state
 
     return children({
+      clientHeight,
+      clientWidth,
       onScroll: this._onScroll,
+      scrollHeight,
       scrollLeft,
-      scrollTop
+      scrollTop,
+      scrollWidth
     })
   }
 
-  _onScroll ({ scrollLeft, scrollTop }) {
-    this.setState({ scrollLeft, scrollTop })
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
+  }
+
+  _onScroll ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) {
+    this.setState({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth })
   }
 }
