@@ -72,7 +72,7 @@ export default class Wizard extends Component {
           <Option
             checked={nonCheckerboardPattern}
             disabled={!hasMultipleColumns || !hasMultipleRows}
-            label='Is your data scattered (not in a checkberboard pattern)?'
+            label='Is your data scattered (not in a checkerboard pattern)?'
             onChange={(nonCheckerboardPattern) => this.setState({ nonCheckerboardPattern })}
           />
           <Option
