@@ -2,18 +2,18 @@ import React from 'react'
 import cn from 'classnames'
 import styles from './ContentBox.css'
 
-export function ContentBox ({ className, children, ...props }) {
+export function ContentBox ({ className, children, style }) {
   return (
     <div
       className={cn(styles.ContentBox, className)}
-      {...props}
+      style={style}
     >
       {children}
     </div>
   )
 }
 
-export function ContentBoxHeader ({ text, sourceLink, docsLink, ...props }) {
+export function ContentBoxHeader ({ text, sourceLink, docsLink }) {
   const links = []
 
   if (sourceLink) {
@@ -47,10 +47,7 @@ export function ContentBoxHeader ({ text, sourceLink, docsLink, ...props }) {
   }
 
   return (
-    <h1
-      className={styles.Header}
-      {...props}
-    >
+    <h1 className={styles.Header}>
       {text}
 
       {links.length > 0 && (
@@ -62,12 +59,9 @@ export function ContentBoxHeader ({ text, sourceLink, docsLink, ...props }) {
   )
 }
 
-export function ContentBoxParagraph ({ children, ...props }) {
+export function ContentBoxParagraph ({ children }) {
   return (
-    <div
-      className={styles.Paragraph}
-      {...props}
-    >
+    <div className={styles.Paragraph}>
       {children}
     </div>
   )
