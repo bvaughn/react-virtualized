@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.18.0
+Added named exports for `defaultFlexTableCellDataGetter`, `defaultFlexTableCellRenderer`, and `defaultFlexTableHeaderRenderer` due to user request.
+
 ##### 7.17.1
 Fixed a `Collection` bug that could cause the `noContentRenderer` to be shown when a collection happened to contain no visible children (due to a sparse layout).
 
