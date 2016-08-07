@@ -4,10 +4,21 @@ CellMeasurer
 High-order component for automatically measuring a cell's contents by rendering it in a way that is not visible to the user.
 Specify a fixed width or height constraint if you only want to measure one dimension.
 
-**Warning**: This HOC is fairly experimental and may change in future releases.
-At this time it is only intended for use with a `Grid` (not `VirtualScroll` or `FlexTable` as their item rendering and cell measuring signatures are different).
+This HOC is mainly intended for use with a `Grid`. If you want to use it with `VirtualScroll` or `FlexTable`, you'll need to provide an adapter method that converts the incoming `rowRenderer` params to those expected by `cellRenderer`. For example:
+
+```js
+function rowRenderer ({ index }) {
+  return cellRenderer({
+    columnIndex: 1,
+    rowIndex: index
+  })
+}
+```
+
 Also note that in order to measure a column's width for a `Grid`, that column's content must be rendered for all rows in order to determine the maximum width.
 For this reason it may not be a good idea to use this HOC for `Grid`s containing a large number of both columns _and_ cells.
+
+**Warning**: Certain box-sizing settings (eg `box-sizing: border-box`) may cause slight discrepencies if borders are applied to a `Grid` whose cells are being measured. For this reason, it is recommended that you avoid placing borders on a `Grid` that uses a `CellMeasurer` and instead style its parent container. (See [issue 338](https://github.com/bvaughn/react-virtualized/issues/338) for more background information.)
 
 ### Prop Types
 | Property | Type | Required? | Description |

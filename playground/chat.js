@@ -118,7 +118,17 @@ for (var i = 0; i < 1000; i++) {
   })
 }
 
+const mount = document.querySelector('#mount')
+
 ReactDOM.render(
   React.createElement(App),
-  document.querySelector('#mount')
+  mount
 )
+
+document.body.addEventListener('click', function () {
+  const bodyWidth = document.body.getBoundingClientRect().width
+  const minWidth = 300
+
+  mount.style.display = 'inline-block'
+  mount.style.maxWidth = `${minWidth + Math.round(Math.random() * (bodyWidth - minWidth))}px`
+})
