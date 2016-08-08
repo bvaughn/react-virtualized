@@ -25,8 +25,10 @@ export default class CollectionExample extends Component {
       cellCount: props.list.size,
       columnCount: this._getColumnCount(props.list.size),
       height: 300,
+      horizontalOverscanSize: 0,
       scrollToCell: undefined,
-      showScrollingPlaceholder: false
+      showScrollingPlaceholder: false,
+      verticalOverscanSize: 0
     }
 
     this._columnYMap = []
@@ -36,11 +38,13 @@ export default class CollectionExample extends Component {
     this._noContentRenderer = this._noContentRenderer.bind(this)
     this._onCellCountChange = this._onCellCountChange.bind(this)
     this._onHeightChange = this._onHeightChange.bind(this)
+    this._onHorizontalOverscanSizeChange = this._onHorizontalOverscanSizeChange.bind(this)
     this._onScrollToCellChange = this._onScrollToCellChange.bind(this)
+    this._onVerticalOverscanSizeChange = this._onVerticalOverscanSizeChange.bind(this)
   }
 
   render () {
-    const { cellCount, height, scrollToCell, showScrollingPlaceholder } = this.state
+    const { cellCount, height, horizontalOverscanSize, scrollToCell, showScrollingPlaceholder, verticalOverscanSize } = this.state
 
     return (
       <ContentBox {...this.props}>
@@ -88,6 +92,18 @@ export default class CollectionExample extends Component {
             onChange={this._onHeightChange}
             value={height}
           />
+          <LabeledInput
+            label='Horizontal Overscan'
+            name='horizontalOverscanSize'
+            onChange={this._onHorizontalOverscanSizeChange}
+            value={horizontalOverscanSize}
+          />
+          <LabeledInput
+            label='Vertical Overscan'
+            name='verticalOverscanSize'
+            onChange={this._onVerticalOverscanSizeChange}
+            value={verticalOverscanSize}
+          />
         </InputRow>
 
         <AutoSizer disableHeight>
@@ -98,8 +114,10 @@ export default class CollectionExample extends Component {
               cellSizeAndPositionGetter={this._cellSizeAndPositionGetter}
               className={styles.collection}
               height={height}
+              horizontalOverscanSize={horizontalOverscanSize}
               noContentRenderer={this._noContentRenderer}
               scrollToCell={scrollToCell}
+              verticalOverscanSize={verticalOverscanSize}
               width={width}
             />
           )}
@@ -157,6 +175,12 @@ export default class CollectionExample extends Component {
     return Math.round(Math.sqrt(cellCount))
   }
 
+  _onHorizontalOverscanSizeChange (event) {
+    const horizontalOverscanSize = parseInt(event.target.value, 10) || 0
+
+    this.setState({ horizontalOverscanSize })
+  }
+
   _noContentRenderer () {
     return (
       <div className={styles.noCells}>
@@ -192,5 +216,11 @@ export default class CollectionExample extends Component {
     }
 
     this.setState({ scrollToCell })
+  }
+
+  _onVerticalOverscanSizeChange (event) {
+    const verticalOverscanSize = parseInt(event.target.value, 10) || 0
+
+    this.setState({ verticalOverscanSize })
   }
 }

@@ -1,6 +1,14 @@
 Changelog
 ------------
 
+##### 7.19.0
+`CellMeasurer` now properly uses `shallowCompare`.
+It also supports a custom caching strategy for measured cell sizes (see `cellSizeCache` prop).
+
+`Collection` supports 2 new properties: `horizontalOverscanSize` and `verticalOverscanSize`.
+These properties enable the `Collection` to "overscan" its content similar to how `Grid` does.
+This can reduce flicker around the edges when a user scrolls quickly.
+
 ##### 7.18.1
 Fixed edge-case scroll-to-cell bug in `Grid` when row or column count increases from 0 after a scroll-offset was previous assigned.
 For more info see issue #218.

@@ -52,8 +52,8 @@ describe('Collection', () => {
   function compareArrays (array1, array2) {
     expect(array1.length).toEqual(array2.length)
 
-    array1.forEach(value => {
-      expect(array2).toContain(value)
+    array2.forEach(value => {
+      expect(array1).toContain(value)
     })
   }
 
@@ -512,5 +512,58 @@ describe('Collection', () => {
     cellRendererCalls.splice(0)
     simulateScroll({ collection, scrollTop: 100 })
     expect(cellRendererCalls[0]).toEqual(true)
+  })
+
+  describe('horizontalOverscanSize and verticalOverscanSize', () => {
+    it('should include the horizontal and vertical overscan size when rendering cells', () => {
+      let indices
+      render(getMarkup({
+        onSectionRendered: params => {
+          indices = params.indices
+        },
+        height: 1,
+        horizontalOverscanSize: 2,
+        sectionSize: 1,
+        scrollLeft: 2,
+        scrollTop: 2,
+        width: 1,
+        verticalOverscanSize: 1
+      }))
+      compareArrays(indices, [0, 2, 3, 4, 5, 6, 7, 9])
+    })
+
+    it('should not exceed the top/left borders regardless of overscan size', () => {
+      let indices
+      render(getMarkup({
+        onSectionRendered: params => {
+          indices = params.indices
+        },
+        height: 2,
+        horizontalOverscanSize: 1,
+        sectionSize: 1,
+        scrollLeft: 0,
+        scrollTop: 0,
+        width: 1,
+        verticalOverscanSize: 2
+      }))
+      compareArrays(indices, [0, 4])
+    })
+
+    it('should not exceed the bottom/right borders regardless of overscan size', () => {
+      let indices
+      render(getMarkup({
+        onSectionRendered: params => {
+          indices = params.indices
+        },
+        height: 2,
+        horizontalOverscanSize: 1,
+        sectionSize: 1,
+        scrollLeft: 5,
+        scrollTop: 2,
+        width: 1,
+        verticalOverscanSize: 2
+      }))
+      compareArrays(indices, [6, 7, 8, 9])
+    })
   })
 })

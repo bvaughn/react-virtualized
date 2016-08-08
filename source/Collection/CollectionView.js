@@ -52,6 +52,12 @@ export default class CollectionView extends Component {
     height: PropTypes.number.isRequired,
 
     /**
+     * Enables the `Collection` to horiontally "overscan" its content similar to how `Grid` does.
+     * This can reduce flicker around the edges when a user scrolls quickly.
+     */
+    horizontalOverscanSize: PropTypes.number.isRequired,
+
+    /**
      * Optional renderer to be used in place of rows when either :rowCount or :cellCount is 0.
      */
     noContentRenderer: PropTypes.func.isRequired,
@@ -97,6 +103,12 @@ export default class CollectionView extends Component {
     style: PropTypes.object,
 
     /**
+     * Enables the `Collection` to vertically "overscan" its content similar to how `Grid` does.
+     * This can reduce flicker around the edges when a user scrolls quickly.
+     */
+    verticalOverscanSize: PropTypes.number.isRequired,
+
+    /**
      * Width of Collection; this property determines the number of visible (vs virtualized) columns.
      */
     width: PropTypes.number.isRequired
@@ -104,11 +116,13 @@ export default class CollectionView extends Component {
 
   static defaultProps = {
     'aria-label': 'grid',
+    horizontalOverscanSize: 0,
     noContentRenderer: () => null,
     onScroll: () => null,
     onSectionRendered: () => null,
     scrollToAlignment: 'auto',
-    style: {}
+    style: {},
+    verticalOverscanSize: 0
   };
 
   constructor (props, context) {
@@ -294,8 +308,10 @@ export default class CollectionView extends Component {
       cellLayoutManager,
       className,
       height,
+      horizontalOverscanSize,
       noContentRenderer,
       style,
+      verticalOverscanSize,
       width
     } = this.props
 
@@ -305,19 +321,25 @@ export default class CollectionView extends Component {
       scrollTop
     } = this.state
 
-    const childrenToDisplay = height > 0 && width > 0
-      ? cellLayoutManager.cellRenderers({
-        height,
-        isScrolling,
-        width,
-        x: scrollLeft,
-        y: scrollTop
-      }) : []
-
     const {
       height: totalHeight,
       width: totalWidth
     } = cellLayoutManager.getTotalSize()
+
+    // Safely expand the rendered area by the specified overscan amount
+    const left = Math.max(0, scrollLeft - horizontalOverscanSize)
+    const top = Math.max(0, scrollTop - verticalOverscanSize)
+    const right = Math.min(totalWidth, scrollLeft + width + horizontalOverscanSize)
+    const bottom = Math.min(totalHeight, scrollTop + height + verticalOverscanSize)
+
+    const childrenToDisplay = height > 0 && width > 0
+      ? cellLayoutManager.cellRenderers({
+        height: bottom - top,
+        isScrolling,
+        width: right - left,
+        x: left,
+        y: top
+      }) : []
 
     const collectionStyle = {
       height,
