@@ -32,7 +32,7 @@ Only a small number of cells are rendered based on the horizontal and vertical s
 | scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
 | style | Object |  | Optional custom inline style to attach to root `Grid` element. |
-| tabIndex | Number |  | Optional override of tab index default; defaults to `null`. |
+| tabIndex | Number |  | Optional override of tab index default; defaults to `0`. |
 | width | Number | ✓ | Width of Grid; this property determines the number of visible (vs virtualized) columns. |
 
 ### Public Methods

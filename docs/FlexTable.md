@@ -41,7 +41,7 @@ This component expects explicit width, height, and padding parameters.
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
 | style | Object |  | Optional custom inline style to attach to root `FlexTable` element. |
-| tabIndex | Number |  | Optional override of inner `Grid` tab index default; defaults to `null`. |
+| tabIndex | Number |  | Optional override of inner `Grid` tab index default; defaults to `0`. |
 | width | Number | ✓ | Width of the table |
 
 ### Public Methods
