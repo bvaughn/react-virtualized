@@ -24,6 +24,7 @@ For this reason it may not be a good idea to use this HOC for `Grid`s containing
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | cellRenderer | Function | ✓ | Renders a cell given its indices. `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
+| cellSizeCache | Object |  | Optional, custom caching strategy for cell sizes. |
 | children | Function | ✓ | Function respondible for rendering a virtualized component; `({ getColumnWidth: Function, getRowHeight: Function, resetMeasurements: Function }) => PropTypes.element` |
 | columnCount | number | ✓ | Number of columns in the `Grid`; in order to measure a row's height, all of that row's columns must be rendered. |
 | container |  |  | A Node, Component instance, or function that returns either. If this property is not specified the document body will be used. |
@@ -42,6 +43,27 @@ The child function is passed the following named parameters:
 | resetMeasurementForColumn(index) | Function | Use this function to clear cached measurements for specific column in `CellRenderer`; its size will be remeasured the next time it is requested. |
 | resetMeasurementForRow(index) | Function | Use this function to clear cached measurements for specific row in `CellRenderer`; its size will be remeasured the next time it is requested. |
 | resetMeasurements | Function | Use this function to clear cached measurements in `CellRenderer`; each cell will be remeasured the next time its size is requested. |
+
+### CellSizeCache
+
+If you choose to override the `cellSizeCache` property your cache should support the following operations:
+
+```js
+class CellSizeCache {
+  clearAllColumnWidths (): void;
+  clearAllRowHeights (): void;
+  clearColumnWidth (index: number): void;
+  clearRowHeight (index: number): void;
+  getColumnWidth (index: number): number;
+  getRowHeight (index: number): number;
+  hasColumnWidth (index: number): boolean;
+  hasRowHeight (index: number): boolean;
+  setColumnWidth (index: number, width: number): void;
+  setRowHeight (index: number, height: number): void;
+}
+```
+
+The [default caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/defaultCellSizeCache.js) is exported as `defaultCellMeasurerCellSizeCache` should you wish to decorate it.
 
 ### Examples
 

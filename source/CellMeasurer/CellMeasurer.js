@@ -1,19 +1,25 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
+import shallowCompare from 'react-addons-shallow-compare'
 import ReactDOM from 'react-dom'
+import CellSizeCache from './defaultCellSizeCache'
 
 /**
  * Measures a Grid cell's contents by rendering them in a way that is not visible to the user.
  * Either a fixed width or height may be provided if it is desirable to measure only in one direction.
  */
 export default class CellMeasurer extends Component {
-
   static propTypes = {
     /**
      * Renders a cell given its indices.
      * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
      */
     cellRenderer: PropTypes.func.isRequired,
+
+    /**
+     * Optional, custom caching strategy for cell sizes.
+     */
+    cellSizeCache: PropTypes.object,
 
     /**
      * Function respondible for rendering a virtualized component.
@@ -55,8 +61,7 @@ export default class CellMeasurer extends Component {
   constructor (props, state) {
     super(props, state)
 
-    this._cachedColumnWidths = {}
-    this._cachedRowHeights = {}
+    this._cellSizeCache = props.cellSizeCache || new CellSizeCache()
 
     this.getColumnWidth = this.getColumnWidth.bind(this)
     this.getRowHeight = this.getRowHeight.bind(this)
@@ -66,8 +71,8 @@ export default class CellMeasurer extends Component {
   }
 
   getColumnWidth ({ index }) {
-    if (this._cachedColumnWidths[index]) {
-      return this._cachedColumnWidths[index]
+    if (this._cellSizeCache.hasColumnWidth(index)) {
+      return this._cellSizeCache.getColumnWidth(index)
     }
 
     const { rowCount } = this.props
@@ -84,14 +89,14 @@ export default class CellMeasurer extends Component {
       maxWidth = Math.max(maxWidth, width)
     }
 
-    this._cachedColumnWidths[index] = maxWidth
+    this._cellSizeCache.setColumnWidth(index, maxWidth)
 
     return maxWidth
   }
 
   getRowHeight ({ index }) {
-    if (this._cachedRowHeights[index]) {
-      return this._cachedRowHeights[index]
+    if (this._cellSizeCache.hasRowHeight(index)) {
+      return this._cellSizeCache.getRowHeight(index)
     }
 
     const { columnCount } = this.props
@@ -108,22 +113,22 @@ export default class CellMeasurer extends Component {
       maxHeight = Math.max(maxHeight, height)
     }
 
-    this._cachedRowHeights[index] = maxHeight
+    this._cellSizeCache.setRowHeight(index, maxHeight)
 
     return maxHeight
   }
 
   resetMeasurementForColumn (columnIndex) {
-    delete this._cachedColumnWidths[columnIndex]
+    this._cellSizeCache.clearColumnWidth(columnIndex)
   }
 
   resetMeasurementForRow (rowIndex) {
-    delete this._cachedRowHeights[rowIndex]
+    this._cellSizeCache.clearRowHeight(rowIndex)
   }
 
   resetMeasurements () {
-    this._cachedColumnWidths = {}
-    this._cachedRowHeights = {}
+    this._cellSizeCache.clearAllColumnWidths()
+    this._cellSizeCache.clearAllRowHeights()
   }
 
   componentDidMount () {
@@ -131,6 +136,12 @@ export default class CellMeasurer extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    const { cellSizeCache } = this.props
+
+    if (cellSizeCache !== nextProps.cellSizeCache) {
+      this._cellSizeCache = nextProps.cellSizeCache
+    }
+
     this._updateDivDimensions(nextProps)
   }
 
@@ -148,6 +159,10 @@ export default class CellMeasurer extends Component {
       resetMeasurementForColumn: this.resetMeasurementForColumn,
       resetMeasurementForRow: this.resetMeasurementForRow
     })
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   _getContainerNode (props) {

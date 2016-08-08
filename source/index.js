@@ -1,7 +1,10 @@
 /* @flow */
 export { ArrowKeyStepper } from './ArrowKeyStepper'
 export { AutoSizer } from './AutoSizer'
-export { CellMeasurer } from './CellMeasurer'
+export {
+  CellMeasurer,
+  defaultCellSizeCache as defaultCellMeasurerCellSizeCache
+} from './CellMeasurer'
 export { Collection } from './Collection'
 export { ColumnSizer } from './ColumnSizer'
 export {

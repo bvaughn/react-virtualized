@@ -1,6 +1,7 @@
 import React from 'react'
 import { render } from '../TestUtils'
 import CellMeasurer from './CellMeasurer'
+import CellSizeCache from './defaultCellSizeCache'
 
 const HEIGHTS = [75, 50, 125, 100, 150]
 const WIDTHS = [125, 50, 200, 175, 100]
@@ -27,6 +28,7 @@ function createCellRenderer () {
 
 function renderHelper ({
   cellRenderer,
+  cellSizeCache,
   columnCount = 1,
   columnWidth,
   rowCount = 1,
@@ -37,6 +39,7 @@ function renderHelper ({
     <div>
       <CellMeasurer
         cellRenderer={cellRenderer}
+        cellSizeCache={cellSizeCache}
         columnCount={columnCount}
         height={rowHeight}
         rowCount={rowCount}
@@ -244,5 +247,77 @@ describe('CellMeasurer', () => {
       { columnIndex: 0, rowIndex: 1 },
       { columnIndex: 0, rowIndex: 0 }
     ])
+  })
+
+  it('should allow a custom caching strategy to be specified', () => {
+    const customCellSizeCache = new CellSizeCache()
+    const {
+      cellRenderer,
+      cellRendererParams
+    } = createCellRenderer()
+    const {
+      getColumnWidth,
+      getRowHeight
+    } = renderHelper({
+      cellRenderer,
+      cellSizeCache: customCellSizeCache,
+      columnCount: 5,
+      columnWidth: 200,
+      rowCount: 2,
+      rowHeight: 50
+    })
+
+    expect(customCellSizeCache.hasColumnWidth(0)).toEqual(false)
+    expect(cellRendererParams.length).toEqual(0)
+    expect(getColumnWidth({ index: 0 })).toEqual(200)
+    expect(customCellSizeCache.hasColumnWidth(0)).toEqual(true)
+    expect(customCellSizeCache.getColumnWidth(0)).toEqual(200)
+    expect(cellRendererParams.length).toEqual(2)
+    expect(getColumnWidth({ index: 0 })).toEqual(200)
+    expect(cellRendererParams.length).toEqual(2)
+
+    expect(customCellSizeCache.hasRowHeight(0)).toEqual(false)
+    expect(cellRendererParams.length).toEqual(2)
+    expect(getRowHeight({ index: 0 })).toEqual(50)
+    expect(customCellSizeCache.hasRowHeight(0)).toEqual(true)
+    expect(customCellSizeCache.getRowHeight(0)).toEqual(50)
+    expect(cellRendererParams.length).toEqual(7)
+    expect(getRowHeight({ index: 0 })).toEqual(50)
+    expect(cellRendererParams.length).toEqual(7)
+  })
+
+  it('should support changing the custom caching strategy after initialization', () => {
+    const customCellSizeCacheA = new CellSizeCache()
+    const customCellSizeCacheB = new CellSizeCache()
+    const { cellRenderer } = createCellRenderer()
+    const { getColumnWidth: getColumnWidthA } = renderHelper({
+      cellRenderer,
+      cellSizeCache: customCellSizeCacheA,
+      columnCount: 5,
+      columnWidth: 200
+    })
+    expect(customCellSizeCacheA.hasColumnWidth(0)).toEqual(false)
+    expect(getColumnWidthA({ index: 0 })).toEqual(200)
+    expect(customCellSizeCacheA.hasColumnWidth(0)).toEqual(true)
+
+    const { getColumnWidth: getColumnWidthB } = renderHelper({
+      cellRenderer,
+      cellSizeCache: customCellSizeCacheA,
+      columnCount: 5,
+      columnWidth: 100
+    })
+    expect(customCellSizeCacheA.hasColumnWidth(0)).toEqual(true)
+    expect(getColumnWidthB({ index: 0 })).toEqual(200)
+    expect(customCellSizeCacheA.hasColumnWidth(0)).toEqual(true)
+
+    const { getColumnWidth: getColumnWidthC } = renderHelper({
+      cellRenderer,
+      cellSizeCache: customCellSizeCacheB,
+      columnCount: 5,
+      columnWidth: 50
+    })
+    expect(customCellSizeCacheB.hasColumnWidth(0)).toEqual(false)
+    expect(getColumnWidthC({ index: 0 })).toEqual(50)
+    expect(customCellSizeCacheB.hasColumnWidth(0)).toEqual(true)
   })
 })
