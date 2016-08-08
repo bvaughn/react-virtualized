@@ -132,6 +132,7 @@ class Application extends Component {
                 key={component}
                 activeComponent={activeComponent}
                 component={component}
+                disabled={activeNavLink === NAV_LINKS.Wizard}
                 setActiveComponent={setActiveComponent}
               />
             ))}
@@ -143,6 +144,7 @@ class Application extends Component {
                 key={component}
                 activeComponent={activeComponent}
                 component={component}
+                disabled={activeNavLink === NAV_LINKS.Wizard}
                 setActiveComponent={setActiveComponent}
               />
             ))}

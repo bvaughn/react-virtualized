@@ -2,9 +2,10 @@ import React from 'react'
 import cn from 'classnames'
 import styles from './ComponentLink.css'
 
-export default function ComponentLink ({ activeComponent, component, setActiveComponent }) {
+export default function ComponentLink ({ activeComponent, component, disabled, setActiveComponent }) {
   const classNames = cn(styles.ComponentLink, {
-    [styles.ActiveComponentLink]: activeComponent === component
+    [styles.ActiveComponentLink]: activeComponent === component,
+    [styles.DisabledComponentLink]: disabled
   })
 
   return (
