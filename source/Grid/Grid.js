@@ -414,6 +414,11 @@ export default class Grid extends Component {
    * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
    */
   componentWillUpdate (nextProps, nextState) {
+    if (nextProps.backingData !== this.props.backingData) {
+      // reset memoization so that load status will be queried again
+      this._onGridRenderedMemoizer = createCallbackMemoizer()
+      this._onScrollMemoizer = createCallbackMemoizer(false)
+    }
     if (
       nextProps.columnCount === 0 &&
       nextState.scrollLeft !== 0 ||

@@ -168,6 +168,31 @@ describe('VirtualScroll', () => {
       expect(stopIndex).toEqual(9)
     })
 
+    it('should call :onRowsRendered even if start or stop indices have not changed when props.backingData changes', () => {
+      let numCalls = 0
+      const onRowsRendered = params => {
+        numCalls++
+      }
+      findDOMNode(render(getMarkup({ onRowsRendered, backingData: {} })))
+      expect(numCalls).toEqual(1)
+
+      findDOMNode(render(getMarkup({ onRowsRendered, backingData: {} })))
+      expect(numCalls).toEqual(2)
+    })
+
+    it('should not call :onRowsRendered even if start or stop indices when props.backingData does not change', () => {
+      const backingData = {}
+      let numCalls = 0
+      const onRowsRendered = params => {
+        numCalls++
+      }
+      findDOMNode(render(getMarkup({ onRowsRendered, backingData: backingData })))
+      expect(numCalls).toEqual(1)
+
+      findDOMNode(render(getMarkup({ onRowsRendered, backingData: backingData })))
+      expect(numCalls).toEqual(1)
+    })
+
     it('should not call :onRowsRendered unless the start or stop indices have changed', () => {
       let numCalls = 0
       let startIndex
