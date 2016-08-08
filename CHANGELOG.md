@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 7.18.1
+Fixed edge-case scroll-to-cell bug in `Grid` when row or column count increases from 0 after a scroll-offset was previous assigned.
+For more info see issue #218.
+
 ##### 7.18.0
 Added named exports for `defaultFlexTableCellDataGetter`, `defaultFlexTableCellRenderer`, and `defaultFlexTableHeaderRenderer` due to user request.
 

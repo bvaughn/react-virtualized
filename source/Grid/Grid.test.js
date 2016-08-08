@@ -5,6 +5,10 @@ import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
 import Grid from './Grid'
 
+const DEFAULT_COLUMN_WIDTH = 50
+const DEFAULT_HEIGHT = 100
+const DEFAULT_ROW_HEIGHT = 20
+const DEFAULT_WIDTH = 200
 const NUM_ROWS = 100
 const NUM_COLUMNS = 50
 
@@ -32,14 +36,14 @@ describe('Grid', () => {
       <Grid
         cellRenderer={defaultCellRenderer}
         columnCount={NUM_COLUMNS}
-        columnWidth={50}
-        height={100}
+        columnWidth={DEFAULT_COLUMN_WIDTH}
+        height={DEFAULT_HEIGHT}
         overscanColumnCount={0}
         overscanRowCount={0}
         autoHeight={false}
-        rowHeight={20}
+        rowHeight={DEFAULT_ROW_HEIGHT}
         rowCount={NUM_ROWS}
-        width={200}
+        width={DEFAULT_WIDTH}
         {...props}
       />
     )
@@ -299,6 +303,23 @@ describe('Grid', () => {
       // Viewport height is 100
       // Row 49 starts at 980, center point at 990, so...
       expect(grid.state.scrollTop).toEqual(940)
+    })
+
+    // Tests issue #218
+    it('should set the correct :scrollTop after row and column counts increase from 0', () => {
+      const expectedScrollTop = 100 * DEFAULT_ROW_HEIGHT - DEFAULT_HEIGHT + DEFAULT_ROW_HEIGHT
+      render(getMarkup({
+        columnCount: 0,
+        rowCount: 150,
+        scrollToRow: 100
+      }))
+      expect(
+        findDOMNode(render(getMarkup({
+          columnCount: 150,
+          rowCount: 150,
+          scrollToRow: 100
+        }))).scrollTop
+      ).toEqual(expectedScrollTop)
     })
   })
 

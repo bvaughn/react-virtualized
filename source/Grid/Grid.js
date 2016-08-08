@@ -304,8 +304,18 @@ export default class Grid extends Component {
    * 1) New scroll-to-cell props have been set
    */
   componentDidUpdate (prevProps, prevState) {
-    const { autoHeight, height, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
+    const { autoHeight, columnCount, height, rowCount, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
+
+    // Handle edge case where column or row count has only just increased over 0.
+    // In this case we may have to restore a previously-specified scroll offset.
+    // For more info see bvaughn/react-virtualized/issues/218
+    const columnOrRowCountJustIncreasedFromZero = (
+      columnCount > 0 &&
+      prevProps.columnCount === 0 ||
+      rowCount > 0 &&
+      prevProps.rowCount === 0
+    )
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
     // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
@@ -315,8 +325,11 @@ export default class Grid extends Component {
     if (scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
       if (
         scrollLeft >= 0 &&
-        scrollLeft !== prevState.scrollLeft &&
-        scrollLeft !== this._scrollingContainer.scrollLeft
+        (
+          scrollLeft !== prevState.scrollLeft &&
+          scrollLeft !== this._scrollingContainer.scrollLeft ||
+          columnOrRowCountJustIncreasedFromZero
+        )
       ) {
         this._scrollingContainer.scrollLeft = scrollLeft
       }
@@ -326,8 +339,11 @@ export default class Grid extends Component {
       if (
         !autoHeight &&
         scrollTop >= 0 &&
-        scrollTop !== prevState.scrollTop &&
-        scrollTop !== this._scrollingContainer.scrollTop
+        (
+          scrollTop !== prevState.scrollTop &&
+          scrollTop !== this._scrollingContainer.scrollTop ||
+          columnOrRowCountJustIncreasedFromZero
+        )
       ) {
         this._scrollingContainer.scrollTop = scrollTop
       }
