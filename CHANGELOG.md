@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.19.1
+`WindowScroller` auto-restores body pointer-events when unmounted to fix edge-case bug when component was unmounted during (or _right after_) scrolling.
+
 ##### 7.19.0
 `CellMeasurer` now properly uses `shallowCompare`.
 It also supports a custom caching strategy for measured cell sizes (see `cellSizeCache` prop).
