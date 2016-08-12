@@ -46,7 +46,8 @@ export default class WindowScroller extends Component {
   }
 
   componentDidMount () {
-    this._positionFromTop = ReactDOM.findDOMNode(this).getBoundingClientRect().top
+    this._positionFromTop = ReactDOM.findDOMNode(this).getBoundingClientRect().top -
+        document.documentElement.getBoundingClientRect().top
 
     this.setState({ height: window.innerHeight })
 
