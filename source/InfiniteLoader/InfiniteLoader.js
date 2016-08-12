@@ -1,6 +1,7 @@
 /** @flow */
 import { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
+import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 
 /**
  * Higher-order component that manages lazy-loading for "infinite" data.
@@ -62,6 +63,8 @@ export default class InfiniteLoader extends Component {
   constructor (props, context) {
     super(props, context)
 
+    this._loadMoreRowsMemoizer = createCallbackMemoizer()
+
     this._onRowsRendered = this._onRowsRendered.bind(this)
     this._registerChild = this._registerChild.bind(this)
   }
@@ -79,19 +82,8 @@ export default class InfiniteLoader extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _onRowsRendered ({ startIndex, stopIndex }) {
-    const { isRowLoaded, loadMoreRows, minimumBatchSize, rowCount, threshold } = this.props
-
-    this._lastRenderedStartIndex = startIndex
-    this._lastRenderedStopIndex = stopIndex
-
-    const unloadedRanges = scanForUnloadedRanges({
-      isRowLoaded,
-      minimumBatchSize,
-      rowCount,
-      startIndex: Math.max(0, startIndex - threshold),
-      stopIndex: Math.min(rowCount - 1, stopIndex + threshold)
-    })
+  _loadUnloadedRanges (unloadedRanges) {
+    const { loadMoreRows } = this.props
 
     unloadedRanges.forEach(unloadedRange => {
       let promise = loadMoreRows(unloadedRange)
@@ -113,6 +105,34 @@ export default class InfiniteLoader extends Component {
           }
         })
       }
+    })
+  }
+
+  _onRowsRendered ({ startIndex, stopIndex }) {
+    const { isRowLoaded, minimumBatchSize, rowCount, threshold } = this.props
+
+    this._lastRenderedStartIndex = startIndex
+    this._lastRenderedStopIndex = stopIndex
+
+    const unloadedRanges = scanForUnloadedRanges({
+      isRowLoaded,
+      minimumBatchSize,
+      rowCount,
+      startIndex: Math.max(0, startIndex - threshold),
+      stopIndex: Math.min(rowCount - 1, stopIndex + threshold)
+    })
+
+    // For memoize comparison
+    const squashedUnloadedRanges = unloadedRanges.reduce(
+      (reduced, unloadedRange) => reduced.concat([unloadedRange.startIndex, unloadedRange.stopIndex]),
+      []
+    )
+
+    this._loadMoreRowsMemoizer({
+      callback: () => {
+        this._loadUnloadedRanges(unloadedRanges)
+      },
+      indices: { squashedUnloadedRanges }
     })
   }
 

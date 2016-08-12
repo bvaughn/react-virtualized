@@ -215,6 +215,21 @@ describe('InfiniteLoader', () => {
       expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 5 }])
     })
   })
+
+  // Verifies improved memoization; see bvaughn/react-virtualized/issues/345
+  it('should memoize calls to :loadMoreRows (not calling unless unloaded ranges have changed)', () => {
+    render(getMarkup({
+      isRowLoaded: () => false,
+      minimumBatchSize: 20,
+      threshold: 0
+    }))
+    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 19 }])
+    innerOnRowsRendered({ startIndex: 0, stopIndex: 15 })
+    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 19 }])
+    loadMoreRowsCalls.splice(0)
+    innerOnRowsRendered({ startIndex: 0, stopIndex: 20 })
+    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 20 }])
+  })
 })
 
 describe('scanForUnloadedRanges', () => {
