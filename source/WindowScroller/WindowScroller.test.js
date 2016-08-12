@@ -48,6 +48,20 @@ describe('WindowScroller', () => {
     expect(component._positionFromTop).toEqual(top)
   })
 
+  // Test edge-case reported in bvaughn/react-virtualized/pull/346
+  it('should have correct top property to be defined on :_positionFromTop if documentElement is scrolled', () => {
+    // Simulate scrolled documentElement
+    document.documentElement.getBoundingClientRect = () => ({
+      top: -100
+    })
+    const component = render(getMarkup())
+    const rendered = findDOMNode(component)
+    const top = rendered.getBoundingClientRect().top
+    expect(component._positionFromTop).toEqual(top + 100)
+    // Reset override
+    delete document.documentElement.getBoundingClientRect
+  })
+
   it('inherits the window height and passes it to child component', () => {
     // Set default window height
     window.innerHeight = 500
