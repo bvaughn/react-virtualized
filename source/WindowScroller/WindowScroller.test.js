@@ -1,7 +1,7 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
-import WindowScroller from './WindowScroller'
+import WindowScroller, { IS_SCROLLING_TIMEOUT } from './WindowScroller'
 
 function ChildComponent ({ scrollTop, isScrolling, height }) {
   return (
@@ -57,6 +57,36 @@ describe('WindowScroller', () => {
     expect(component.state.height).toEqual(window.innerHeight)
     expect(component.state.height).toEqual(500)
     expect(rendered.textContent).toContain('height:500')
+  })
+
+  it('should restore pointerEvents on body after IS_SCROLLING_TIMEOUT', async (done) => {
+    render(getMarkup())
+    document.body.style.pointerEvents = 'all'
+    simulateWindowScroll({ scrollY: 5000 })
+    expect(document.body.style.pointerEvents).toEqual('none')
+
+    await new Promise(resolve => setTimeout(resolve, IS_SCROLLING_TIMEOUT))
+
+    expect(document.body.style.pointerEvents).toEqual('all')
+
+    done()
+  })
+
+  it('should restore pointerEvents on body after unmount', async (done) => {
+    render(getMarkup())
+    document.body.style.pointerEvents = 'all'
+    simulateWindowScroll({ scrollY: 5000 })
+    expect(document.body.style.pointerEvents).toEqual('none')
+    console.log = jasmine.createSpy('log')
+    render.unmount()
+    expect(document.body.style.pointerEvents).toEqual('all')
+
+    await new Promise(resolve => setTimeout(resolve, IS_SCROLLING_TIMEOUT))
+
+    // Testing that no React warning about setState after unmount occured
+    expect(console.log).not.toHaveBeenCalled()
+
+    done()
   })
 
   describe('onScroll', () => {
