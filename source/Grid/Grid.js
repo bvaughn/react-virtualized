@@ -482,7 +482,9 @@ export default class Grid extends Component {
       noContentRenderer,
       style,
       tabIndex,
-      width
+      width,
+      rowCount,
+      columnCount
     } = this.props
 
     const { isScrolling } = this.state
@@ -516,7 +518,7 @@ export default class Grid extends Component {
     const childrenToDisplay = this._childrenToDisplay
 
     const showNoContentRenderer = (
-      childrenToDisplay.length === 0 &&
+      (rowCount === 0 || columnCount === 0) &&
       height > 0 &&
       width > 0
     )
@@ -536,7 +538,7 @@ export default class Grid extends Component {
         }}
         tabIndex={tabIndex}
       >
-        {childrenToDisplay.length > 0 &&
+        {(rowCount > 0 && columnCount > 0) &&
           <div
             className='Grid__innerScrollContainer'
             style={{
