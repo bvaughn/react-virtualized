@@ -8,7 +8,7 @@ import raf from 'raf'
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
  */
-const IS_SCROLLING_TIMEOUT = 150
+export const IS_SCROLLING_TIMEOUT = 150
 
 export default class WindowScroller extends Component {
   static propTypes = {
@@ -57,6 +57,12 @@ export default class WindowScroller extends Component {
   componentWillUnmount () {
     window.removeEventListener('scroll', this._onScrollWindow, false)
     window.removeEventListener('resize', this._onResizeWindow, false)
+
+    if (this._disablePointerEventsTimeoutId) {
+      clearTimeout(this._disablePointerEventsTimeoutId)
+
+      this._enablePointerEventsIfDisabled()
+    }
   }
 
   /**
@@ -106,15 +112,21 @@ export default class WindowScroller extends Component {
   }
 
   _enablePointerEventsAfterDelayCallback () {
-    this._disablePointerEventsTimeoutId = null
-
-    document.body.style.pointerEvents = this._originalBodyPointerEvents
-
-    this._originalBodyPointerEvents = null
+    this._enablePointerEventsIfDisabled()
 
     this.setState({
       isScrolling: false
     })
+  }
+
+  _enablePointerEventsIfDisabled () {
+    if (this._disablePointerEventsTimeoutId) {
+      this._disablePointerEventsTimeoutId = null
+
+      document.body.style.pointerEvents = this._originalBodyPointerEvents
+
+      this._originalBodyPointerEvents = null
+    }
   }
 
   _onResizeWindow (event) {
