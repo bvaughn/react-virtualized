@@ -142,11 +142,11 @@ function getAutoSizer ({
     props.disableWidth = true
   }
 
-  let methodSignature = '({ height, width })'
+  let methodSignature = '{({ height, width })'
   if (collectionHasFixedWidth) {
-    methodSignature = '({ height })'
+    methodSignature = '{({ height })'
   } else if (collectionHasFixedHeight) {
-    methodSignature = '({ width })'
+    methodSignature = '{({ width })'
   }
 
   const children = []
@@ -155,7 +155,7 @@ function getAutoSizer ({
     component: child,
     indentation: 4
   }))
-  children.push('  )')
+  children.push('  )}')
 
   return {
     name: 'AutoSizer',
@@ -203,10 +203,10 @@ function getCellMeasurer ({
   // @TODO CellMeasurer doesn't support both dynamic widths and heights. Warn about this.
   if (cellsHaveKnownHeight) {
     props.height = heightValue
-    methodSignature = '({ getColumnWidth })'
+    methodSignature = '{({ getColumnWidth })'
   } else {
     props.width = widthValue
-    methodSignature = '({ getRowHeight })'
+    methodSignature = '{({ getRowHeight })'
   }
 
   const children = []
@@ -215,7 +215,7 @@ function getCellMeasurer ({
     component: child,
     indentation: indentation + 4
   }))
-  children.push(`${spaces}  )`)
+  children.push(`${spaces}  )}`)
 
   return {
     name: 'CellMeasurer',
