@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.19.2
+Edge-case bug fix for `WindowScroller` when user returning to a page (via browser back button) that has already been scrolled. Previously, `WindowScroller` failed to correctly calculate its position from the top under these conditions. Now it calculates the proper position.
+
 ##### 7.19.1
 `WindowScroller` auto-restores body pointer-events when unmounted to fix edge-case bug when component was unmounted during (or _right after_) scrolling.
 
