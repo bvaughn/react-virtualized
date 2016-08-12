@@ -402,6 +402,35 @@ describe('Grid', () => {
       expect(list.textContent).toEqual('No data')
     })
 
+    // Sanity check for bvaughn/react-virtualized/pull/348
+    it('should render an empty body if :rowCount or :columnCount changes to 0', () => {
+      function noContentRenderer () {
+        return <div>No data</div>
+      }
+
+      let list = findDOMNode(render(getMarkup({
+        noContentRenderer
+      })))
+      expect(list.textContent).not.toEqual('No data')
+
+      list = findDOMNode(render(getMarkup({
+        noContentRenderer,
+        rowCount: 0
+      })))
+      expect(list.textContent).toEqual('No data')
+
+      list = findDOMNode(render(getMarkup({
+        noContentRenderer
+      })))
+      expect(list.textContent).not.toEqual('No data')
+
+      list = findDOMNode(render(getMarkup({
+        columnCount: 0,
+        noContentRenderer
+      })))
+      expect(list.textContent).toEqual('No data')
+    })
+
     it('should render an empty body if :columnCount is 0 and there is no :noContentRenderer', () => {
       let list = findDOMNode(render(getMarkup({
         columnCount: 0
