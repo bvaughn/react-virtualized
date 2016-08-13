@@ -36,7 +36,7 @@ export default class WindowScroller extends Component {
 
     this.state = {
       isScrolling: false,
-      height: 0,
+      height: window ? window.innerHeight : 0,
       scrollTop: 0
     }
 
