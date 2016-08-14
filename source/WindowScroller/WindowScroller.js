@@ -34,9 +34,13 @@ export default class WindowScroller extends Component {
   constructor (props) {
     super(props)
 
+    const height = typeof window !== 'undefined'
+      ? window.innerHeight
+      : 0
+
     this.state = {
       isScrolling: false,
-      height: window ? window.innerHeight : 0,
+      height,
       scrollTop: 0
     }
 
@@ -46,13 +50,19 @@ export default class WindowScroller extends Component {
   }
 
   componentDidMount () {
+    const { height } = this.state
+
     // Subtract documentElement top to handle edge-case where a user is navigating back (history) from an already-scrolled bage.
     // In this case the body's top position will be a negative number and this element's top will be increased (by that amount).
     this._positionFromTop =
       ReactDOM.findDOMNode(this).getBoundingClientRect().top -
       document.documentElement.getBoundingClientRect().top
 
-    this.setState({ height: window.innerHeight })
+    if (height !== window.innerHeight) {
+      this.setState({
+        height: window.innerHeight
+      })
+    }
 
     window.addEventListener('scroll', this._onScrollWindow, false)
     window.addEventListener('resize', this._onResizeWindow, false)
