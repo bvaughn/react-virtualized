@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 7.19.4
+Initialize `WindowScroller` height to `window.innerHeight` if component is initially rendered in the browser.
+This fixes temporary zero-height that would cause previous scroll position to be lost when a user navigates back in their history.
+
 ##### 7.19.3
 Improved memoization in `InfiniteLoader` to reduce repeated calls to `loadMoreRows`.
 
