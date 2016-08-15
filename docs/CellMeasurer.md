@@ -1,24 +1,13 @@
 CellMeasurer
 ---------------
 
-High-order component for automatically measuring a cell's contents by rendering it in a way that is not visible to the user.
-Specify a fixed width or height constraint if you only want to measure one dimension.
+High-order component that automatically measures a cell's contents by temporarily rendering it in a way that is not visible to the user.
+Specify a fixed width to measure dynamic height (or vice versa).
 
-This HOC is mainly intended for use with a `Grid`. If you want to use it with `VirtualScroll` or `FlexTable`, you'll need to provide an adapter method that converts the incoming `rowRenderer` params to those expected by `cellRenderer`. For example:
+This is an advanced component and has some limitations and performance considerations.
+[See below for more information](#limitations-and-performance-considerations).
 
-```js
-function rowRenderer ({ index }) {
-  return cellRenderer({
-    columnIndex: 1,
-    rowIndex: index
-  })
-}
-```
-
-Also note that in order to measure a column's width for a `Grid`, that column's content must be rendered for all rows in order to determine the maximum width.
-For this reason it may not be a good idea to use this HOC for `Grid`s containing a large number of both columns _and_ cells.
-
-**Warning**: Certain box-sizing settings (eg `box-sizing: border-box`) may cause slight discrepencies if borders are applied to a `Grid` whose cells are being measured. For this reason, it is recommended that you avoid placing borders on a `Grid` that uses a `CellMeasurer` and instead style its parent container. (See [issue 338](https://github.com/bvaughn/react-virtualized/issues/338) for more background information.)
+`CellMeasurer` is intended for use with `Grid` components but [can be adapted to work with `VirtualScroll` as well](#using-cellmeasurer-with-virtualscroll).
 
 ### Prop Types
 | Property | Type | Required? | Description |
@@ -97,4 +86,38 @@ ReactDOM.render(
   </CellMeasurer>,
   document.getElementById('example')
 );
+```
+
+### Limitations and Performance Considerations
+
+###### Styling
+
+Cells may be measured outside of the context of their intended `Grid` (or `VirtualScroll`).
+This means that they will not inherit the parent styles while being measured.
+Take care not rely on inherited styles for things that will affect measurement (eg `font-size`).
+(See [issue 352](https://github.com/bvaughn/react-virtualized/issues/352) for more background information.)
+
+Certain box-sizing settings (eg `box-sizing: border-box`) may cause slight discrepencies if borders are applied to a `Grid` whose cells are being measured.
+For this reason, it is recommended that you avoid placing borders on a `Grid` that uses a `CellMeasurer` and instead style its parent container.
+(See [issue 338](https://github.com/bvaughn/react-virtualized/issues/338) for more background information.)
+
+###### Performance
+
+Measuring a column's width requires measuring all rows in order to determine the widest occurance of that column.
+The same is true in reverse for measuring a row's height.
+For this reason it may not be a good idea to use this HOC for `Grid`s containing a large number of both columns _and_ cells.
+
+### Using `CellMeasurer` with `VirtualScroll`
+
+This HOC is intended for use with a `Grid`.
+If you want to use it with `VirtualScroll` you'll need to provide an adapter method that converts the incoming `rowRenderer` params to those expected by `cellRenderer`.
+For example:
+
+```js
+function rowRenderer ({ index }) {
+  return cellRenderer({
+    columnIndex: 1,
+    rowIndex: index
+  })
+}
 ```
