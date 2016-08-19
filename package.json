@@ -133,6 +133,7 @@
     "style-loader": "^0.13.0",
     "watch": "^0.18.0",
     "webpack": "^1.9.6",
+    "webpack-dashboard": "0.0.1",
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
