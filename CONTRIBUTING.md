@@ -28,7 +28,7 @@ Guidelines for bug reports:
 
 A good bug report shouldn't leave others needing to chase you up for more information.
 Please try to be as detailed as possible in your report.
-Which versions of formFor and Angular are you using?
+Which versions of react-virtualized and react are you using?
 What steps will reproduce the issue? What browser(s) and OS experience the problem?
 What would you expect to be the outcome?
 All these details will help people to fix any potential bugs.
