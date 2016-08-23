@@ -321,13 +321,12 @@ export default class Grid extends Component {
     // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
     // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
     // So we only set these when we require an adjustment of the scroll position.
-    // See issue #2 for more information.
+    // (In other words- only update it if the new value was requested, not observed via onScroll.)
     if (scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
       if (
         scrollLeft >= 0 &&
         (
-          scrollLeft !== prevState.scrollLeft &&
-          scrollLeft !== this._scrollingContainer.scrollLeft ||
+          scrollLeft !== prevState.scrollLeft ||
           columnOrRowCountJustIncreasedFromZero
         )
       ) {
@@ -340,8 +339,7 @@ export default class Grid extends Component {
         !autoHeight &&
         scrollTop >= 0 &&
         (
-          scrollTop !== prevState.scrollTop &&
-          scrollTop !== this._scrollingContainer.scrollTop ||
+          scrollTop !== prevState.scrollTop ||
           columnOrRowCountJustIncreasedFromZero
         )
       ) {
@@ -864,26 +862,20 @@ export default class Grid extends Component {
       this.state.scrollLeft !== scrollLeft ||
       this.state.scrollTop !== scrollTop
     ) {
-      // Browsers with cancelable scroll events (eg. Firefox) interrupt scrolling animations if scrollTop/scrollLeft is set.
-      // Other browsers (eg. Safari) don't scroll as well without the help under certain conditions (DOM or style changes during scrolling).
-      // All things considered, this seems to be the best current work around that I'm aware of.
-      // For more information see https://github.com/bvaughn/react-virtualized/pull/124
-      const scrollPositionChangeReason = event.cancelable
-        ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED
-        : SCROLL_POSITION_CHANGE_REASONS.REQUESTED
-
-      if (!this.state.isScrolling) {
-        this.setState({
-          isScrolling: true
-        })
-      }
-
-      this._setNextState({
+      const state = {
         isScrolling: true,
         scrollLeft,
-        scrollPositionChangeReason,
+        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
         scrollTop
-      })
+      }
+
+      // If this is the start of the scroll- synchronously update state (so pointer-events get disabled);
+      // Otherwise batch changes with animation frame.
+      if (!this.state.isScrolling) {
+        this.setState(state)
+      } else {
+        this._setNextState(state)
+      }
     }
 
     this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
