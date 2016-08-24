@@ -12,10 +12,10 @@ export default class Column extends Component {
   static defaultProps = {
     cellDataGetter: defaultCellDataGetter,
     cellRenderer: defaultCellRenderer,
-    cellStyle: {},
     flexGrow: 0,
     flexShrink: 1,
-    headerRenderer: defaultHeaderRenderer
+    headerRenderer: defaultHeaderRenderer,
+    style: {}
   }
 
   static propTypes = {
