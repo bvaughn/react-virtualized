@@ -5,7 +5,6 @@ import getUpdatedOffsetForIndex from '../utils/getUpdatedOffsetForIndex'
 import shallowCompare from 'react-addons-shallow-compare'
 import type { ScrollPosition, SizeInfo } from './types'
 
-
 /**
  * Renders scattered or non-linear data.
  * Unlike Grid, which renders checkerboard data, Collection can render arbitrarily positioned- even overlapping- data.
