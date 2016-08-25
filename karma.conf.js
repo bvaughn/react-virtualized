@@ -15,8 +15,6 @@ module.exports = function (config) {
       require('karma-coverage'),
       require('karma-jasmine'),
       require('karma-webpack'),
-      require('karma-spec-reporter'),
-      require('karma-junit-reporter'),
       require('karma-sourcemap-loader'),
       require('karma-phantomjs-launcher')
     ],
