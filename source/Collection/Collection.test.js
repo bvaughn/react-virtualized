@@ -171,89 +171,89 @@ describe('Collection', () => {
 
   describe(':scrollToCell', () => {
     it('should scroll to the top/left', () => {
-      const grid = render(getMarkup({ scrollToCell: 0 }))
-      expect(grid._collectionView.state.scrollLeft).toEqual(0)
-      expect(grid._collectionView.state.scrollTop).toEqual(0)
+      const collection = render(getMarkup({ scrollToCell: 0 }))
+      expect(collection._collectionView.state.scrollLeft).toEqual(0)
+      expect(collection._collectionView.state.scrollTop).toEqual(0)
     })
 
     it('should scroll over to the middle', () => {
-      const grid = render(getMarkup({ scrollToCell: 7 }))
-      expect(grid._collectionView.state.scrollLeft).toEqual(1)
-      expect(grid._collectionView.state.scrollTop).toEqual(1)
+      const collection = render(getMarkup({ scrollToCell: 7 }))
+      expect(collection._collectionView.state.scrollLeft).toEqual(1)
+      expect(collection._collectionView.state.scrollTop).toEqual(1)
     })
 
     it('should scroll to the bottom/right', () => {
-      const grid = render(getMarkup({ scrollToCell: 9 }))
-      expect(grid._collectionView.state.scrollLeft).toEqual(2)
-      expect(grid._collectionView.state.scrollTop).toEqual(2)
+      const collection = render(getMarkup({ scrollToCell: 9 }))
+      expect(collection._collectionView.state.scrollLeft).toEqual(2)
+      expect(collection._collectionView.state.scrollTop).toEqual(2)
     })
 
     it('should honor the specified :scrollToAlignment', () => {
-      let grid = render(getMarkup({
+      let collection = render(getMarkup({
         scrollToAlignment: 'start',
         scrollToCell: 2,
         width: SECTION_SIZE
       }))
       // Minimum amount of scrolling ("auto") would be 0,0
-      expect(grid._collectionView.state.scrollLeft).toEqual(2)
-      expect(grid._collectionView.state.scrollTop).toEqual(1)
+      expect(collection._collectionView.state.scrollLeft).toEqual(2)
+      expect(collection._collectionView.state.scrollTop).toEqual(1)
 
-      grid = render(getMarkup({
+      collection = render(getMarkup({
         scrollToAlignment: 'end',
         scrollToCell: 2,
         width: SECTION_SIZE
       }))
       // This cell would already by visible by "auto" rules
-      expect(grid._collectionView.state.scrollLeft).toEqual(1)
-      expect(grid._collectionView.state.scrollTop).toEqual(0)
+      expect(collection._collectionView.state.scrollLeft).toEqual(1)
+      expect(collection._collectionView.state.scrollTop).toEqual(0)
 
-      grid = render(getMarkup({
+      collection = render(getMarkup({
         scrollToAlignment: 'center',
         scrollToCell: 4,
         width: SECTION_SIZE
       }))
       // This cell doesn't fit entirely in the viewport but we center it anyway.
-      expect(grid._collectionView.state.scrollLeft).toEqual(0.5)
-      expect(grid._collectionView.state.scrollTop).toEqual(2)
+      expect(collection._collectionView.state.scrollLeft).toEqual(0.5)
+      expect(collection._collectionView.state.scrollTop).toEqual(2)
     })
 
     it('should scroll to a cell just added', () => {
-      let grid = render(getMarkup({
+      let collection = render(getMarkup({
         cellCount: 4
       }))
-      expect(grid._collectionView.state.scrollLeft).toEqual(0)
-      expect(grid._collectionView.state.scrollTop).toEqual(0)
-      grid = render(getMarkup({
+      expect(collection._collectionView.state.scrollLeft).toEqual(0)
+      expect(collection._collectionView.state.scrollTop).toEqual(0)
+      collection = render(getMarkup({
         cellCount: 8,
         scrollToCell: 7
       }))
-      expect(grid._collectionView.state.scrollLeft).toEqual(1)
-      expect(grid._collectionView.state.scrollTop).toEqual(1)
+      expect(collection._collectionView.state.scrollLeft).toEqual(1)
+      expect(collection._collectionView.state.scrollTop).toEqual(1)
     })
   })
 
   describe('property updates', () => {
     it('should update :scrollToCell position when :width changes', () => {
-      let grid = findDOMNode(render(getMarkup({ scrollToCell: 3 })))
-      expect(grid.textContent).toContain('cell:3')
-      // Making the grid narrower leaves only room for 1 item
-      grid = findDOMNode(render(getMarkup({ scrollToCell: 3, width: 1 })))
-      expect(grid.textContent).toContain('cell:3')
+      let collection = findDOMNode(render(getMarkup({ scrollToCell: 3 })))
+      expect(collection.textContent).toContain('cell:3')
+      // Making the collection narrower leaves only room for 1 item
+      collection = findDOMNode(render(getMarkup({ scrollToCell: 3, width: 1 })))
+      expect(collection.textContent).toContain('cell:3')
     })
 
     it('should update :scrollToCell position when :height changes', () => {
-      let grid = findDOMNode(render(getMarkup({ scrollToCell: 4 })))
-      expect(grid.textContent).toContain('cell:4')
-      // Making the grid shorter leaves only room for 1 item
-      grid = findDOMNode(render(getMarkup({ scrollToCell: 4, height: 1 })))
-      expect(grid.textContent).toContain('cell:4')
+      let collection = findDOMNode(render(getMarkup({ scrollToCell: 4 })))
+      expect(collection.textContent).toContain('cell:4')
+      // Making the collection shorter leaves only room for 1 item
+      collection = findDOMNode(render(getMarkup({ scrollToCell: 4, height: 1 })))
+      expect(collection.textContent).toContain('cell:4')
     })
 
     it('should update scroll position when :scrollToCell changes', () => {
-      let grid = findDOMNode(render(getMarkup()))
-      expect(grid.textContent).not.toContain('cell:9')
-      grid = findDOMNode(render(getMarkup({ scrollToCell: 9 })))
-      expect(grid.textContent).toContain('cell:9')
+      let collection = findDOMNode(render(getMarkup()))
+      expect(collection.textContent).not.toContain('cell:9')
+      collection = findDOMNode(render(getMarkup({ scrollToCell: 9 })))
+      expect(collection.textContent).toContain('cell:9')
     })
   })
 
@@ -564,6 +564,107 @@ describe('Collection', () => {
         verticalOverscanSize: 2
       }))
       compareArrays(indices, [6, 7, 8, 9])
+    })
+  })
+
+  describe('cell caching', () => {
+    it('should not cache cells if the Grid is not scrolling', () => {
+      const cellRendererCalls = []
+      function cellRenderer ({ isScrolling, index }) {
+        cellRendererCalls.push({ isScrolling, index })
+        return defaultCellRenderer({ index })
+      }
+
+      const props = {
+        cellRenderer,
+        scrollLeft: 0,
+        scrollTop: 0
+      }
+
+      findDOMNode(render(getMarkup(props)))
+      expect(cellRendererCalls.length).toEqual(4)
+      cellRendererCalls.forEach((call) => expect(call.isScrolling).toEqual(false))
+
+      cellRendererCalls.splice(0)
+
+      render(getMarkup({
+        ...props,
+        foo: 'bar' // Force re-render
+      }))
+      expect(cellRendererCalls.length).toEqual(4)
+      cellRendererCalls.forEach((call) => expect(call.isScrolling).toEqual(false))
+    })
+
+    it('should cache a cell once it has been rendered while scrolling', () => {
+      const cellRendererCalls = []
+      function cellRenderer ({ isScrolling, index }) {
+        cellRendererCalls.push({ isScrolling, index })
+        return defaultCellRenderer({ index })
+      }
+
+      const props = {
+        cellRenderer,
+        scrollLeft: 0,
+        scrollTop: 0
+      }
+
+      const collection = render(getMarkup(props))
+      expect(cellRendererCalls.length).toEqual(4)
+      cellRendererCalls.forEach((call) => expect(call.isScrolling).toEqual(false))
+
+      simulateScroll({ collection, scrollTop: 10 })
+
+      cellRendererCalls.splice(0)
+
+      // Cells 0, 1, 2, and 3 have been rendered already,
+      // But cells 4 and 5 have not.
+      render(getMarkup({
+        ...props,
+        scrollTop: 1
+      }))
+      expect(cellRendererCalls.length).toEqual(2)
+
+      cellRendererCalls.splice(0)
+
+      // Cells 4 and 5 have been rendered,
+      // But cells 7, 8, and 9 have not.
+      render(getMarkup({
+        ...props,
+        scrollLeft: 1,
+        scrollTop: 2
+      }))
+      expect(cellRendererCalls.length).toEqual(3)
+      cellRendererCalls.forEach((call) => expect(call.isScrolling).toEqual(true))
+    })
+
+    it('should clear cache once :isScrolling is false', async (done) => {
+      const cellRendererCalls = []
+      function cellRenderer ({ isScrolling, index }) {
+        cellRendererCalls.push({ isScrolling, index })
+        return defaultCellRenderer({ isScrolling, index })
+      }
+
+      const props = {
+        cellRenderer,
+        scrollLeft: 0,
+        scrollTop: 0
+      }
+
+      const collection = render(getMarkup(props))
+      simulateScroll({ collection, scrollTop: 1 })
+
+      // Allow scrolling timeout to complete so that cell cache is reset
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      cellRendererCalls.splice(0)
+
+      render(getMarkup({
+        ...props,
+        scrollTop: 1
+      }))
+      expect(cellRendererCalls.length).not.toEqual(0)
+
+      done()
     })
   })
 })

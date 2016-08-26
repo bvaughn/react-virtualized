@@ -57,14 +57,16 @@ export default class Collection extends Component {
 
     this._cellMetadata = []
     this._lastRenderedCellIndices = []
+
+    // Cell cache during scroll (for perforamnce)
+    this._cellCache = []
+
+    this._isScrollingChange = this._isScrollingChange.bind(this)
   }
 
   /** See Collection#recomputeCellSizesAndPositions */
   recomputeCellSizesAndPositions () {
-    // Clean data cached during scroll
-    cellMetadataCache = []
-    renderedCellCache = []
-
+    this._cellCache = []
     this._collectionView.recomputeCellSizesAndPositions()
   }
 
@@ -76,6 +78,7 @@ export default class Collection extends Component {
     return (
       <CollectionView
         cellLayoutManager={this}
+        isScrollingChange={this._isScrollingChange}
         ref={(ref) => {
           this._collectionView = ref
         }}
@@ -181,19 +184,23 @@ export default class Collection extends Component {
     })
 
     return cellGroupRenderer({
+      cellCache: this._cellCache,
       cellRenderer,
       cellSizeAndPositionGetter: ({ index }) => this._sectionManager.getCellMetadata({ index }),
       indices: this._lastRenderedCellIndices,
       isScrolling
     })
   }
+
+  _isScrollingChange (isScrolling) {
+    if (!isScrolling) {
+      this._cellCache = []
+    }
+  }
 }
 
-// Arrays where to store cache data during scroll
-let cellMetadataCache = []
-let renderedCellCache = []
-
 function defaultCellGroupRenderer ({
+  cellCache,
   cellRenderer,
   cellSizeAndPositionGetter,
   indices,
@@ -201,35 +208,31 @@ function defaultCellGroupRenderer ({
 }) {
   return indices
     .map((index) => {
-      let cellMetadata
-      let renderedCell
+      const cellMetadata = cellSizeAndPositionGetter({ index })
 
       // Avoid re-creating cells while scrolling.
       // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
       // If a scroll is in progress- cache and reuse cells.
       // This cache will be thrown away once scrolling complets.
+      let renderedCell
+
       if (isScrolling) {
-        if (index in renderedCellCache) {
-          renderedCell = renderedCellCache[index]
-          cellMetadata = cellMetadataCache[index]
-        } else {
-          cellMetadataCache[index] = cellSizeAndPositionGetter({ index })
-          renderedCellCache[index] = cellRenderer({
+        if (!(index in cellCache)) {
+          cellCache[index] = cellRenderer({
             index,
             isScrolling
           })
         }
-      // If the user is no longer scrolling, don't cache cells.
-      // This makes dynamic cell content difficult for users and would also lead to a heavier memory footprint.
+
+        renderedCell = cellCache[index]
       } else {
-        cellMetadata = cellSizeAndPositionGetter({ index })
         renderedCell = cellRenderer({
           index,
           isScrolling
         })
       }
 
-      if (renderedCell == null || renderedCell === false || cellMetadata == null || cellMetadata === false) {
+      if (renderedCell == null || renderedCell === false) {
         return null
       }
 
