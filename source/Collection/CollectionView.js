@@ -57,6 +57,8 @@ export default class CollectionView extends Component {
      */
     horizontalOverscanSize: PropTypes.number.isRequired,
 
+    isScrollingChange: PropTypes.func,
+
     /**
      * Optional renderer to be used in place of rows when either :rowCount or :cellCount is 0.
      */
@@ -411,6 +413,10 @@ export default class CollectionView extends Component {
     }
 
     this._disablePointerEventsTimeoutId = setTimeout(() => {
+      const { isScrollingChange } = this.props
+
+      isScrollingChange(false)
+
       this._disablePointerEventsTimeoutId = null
       this.setState({
         isScrolling: false
@@ -531,7 +537,7 @@ export default class CollectionView extends Component {
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
     // This causes a series of rapid renders that is slow for long lists.
     // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-    const { cellLayoutManager, height, width } = this.props
+    const { cellLayoutManager, height, isScrollingChange, width } = this.props
     const scrollbarSize = this._scrollbarSize
     const {
       height: totalHeight,
@@ -558,6 +564,8 @@ export default class CollectionView extends Component {
 
       // Synchronously set :isScrolling the first time (since _setNextState will reschedule its animation frame each time it's called)
       if (!this.state.isScrolling) {
+        isScrollingChange(true)
+
         this.setState({
           isScrolling: true
         })

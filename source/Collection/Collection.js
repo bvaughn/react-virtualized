@@ -57,10 +57,16 @@ export default class Collection extends Component {
 
     this._cellMetadata = []
     this._lastRenderedCellIndices = []
+
+    // Cell cache during scroll (for perforamnce)
+    this._cellCache = []
+
+    this._isScrollingChange = this._isScrollingChange.bind(this)
   }
 
   /** See Collection#recomputeCellSizesAndPositions */
   recomputeCellSizesAndPositions () {
+    this._cellCache = []
     this._collectionView.recomputeCellSizesAndPositions()
   }
 
@@ -72,6 +78,7 @@ export default class Collection extends Component {
     return (
       <CollectionView
         cellLayoutManager={this}
+        isScrollingChange={this._isScrollingChange}
         ref={(ref) => {
           this._collectionView = ref
         }}
@@ -177,15 +184,23 @@ export default class Collection extends Component {
     })
 
     return cellGroupRenderer({
+      cellCache: this._cellCache,
       cellRenderer,
       cellSizeAndPositionGetter: ({ index }) => this._sectionManager.getCellMetadata({ index }),
       indices: this._lastRenderedCellIndices,
       isScrolling
     })
   }
+
+  _isScrollingChange (isScrolling) {
+    if (!isScrolling) {
+      this._cellCache = []
+    }
+  }
 }
 
 function defaultCellGroupRenderer ({
+  cellCache,
   cellRenderer,
   cellSizeAndPositionGetter,
   indices,
@@ -194,10 +209,28 @@ function defaultCellGroupRenderer ({
   return indices
     .map((index) => {
       const cellMetadata = cellSizeAndPositionGetter({ index })
-      const renderedCell = cellRenderer({
-        index,
-        isScrolling
-      })
+
+      // Avoid re-creating cells while scrolling.
+      // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
+      // If a scroll is in progress- cache and reuse cells.
+      // This cache will be thrown away once scrolling complets.
+      let renderedCell
+
+      if (isScrolling) {
+        if (!(index in cellCache)) {
+          cellCache[index] = cellRenderer({
+            index,
+            isScrolling
+          })
+        }
+
+        renderedCell = cellCache[index]
+      } else {
+        renderedCell = cellRenderer({
+          index,
+          isScrolling
+        })
+      }
 
       if (renderedCell == null || renderedCell === false) {
         return null
