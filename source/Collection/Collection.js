@@ -61,6 +61,10 @@ export default class Collection extends Component {
 
   /** See Collection#recomputeCellSizesAndPositions */
   recomputeCellSizesAndPositions () {
+    // Clean data cached during scroll
+    cellMetadataCache = []
+    renderedCellCache = []
+
     this._collectionView.recomputeCellSizesAndPositions()
   }
 
@@ -185,6 +189,10 @@ export default class Collection extends Component {
   }
 }
 
+// Arrays where to store cache data during scroll
+let cellMetadataCache = []
+let renderedCellCache = []
+
 function defaultCellGroupRenderer ({
   cellRenderer,
   cellSizeAndPositionGetter,
@@ -193,13 +201,35 @@ function defaultCellGroupRenderer ({
 }) {
   return indices
     .map((index) => {
-      const cellMetadata = cellSizeAndPositionGetter({ index })
-      const renderedCell = cellRenderer({
-        index,
-        isScrolling
-      })
+      let cellMetadata
+      let renderedCell
 
-      if (renderedCell == null || renderedCell === false) {
+      // Avoid re-creating cells while scrolling.
+      // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
+      // If a scroll is in progress- cache and reuse cells.
+      // This cache will be thrown away once scrolling complets.
+      if (isScrolling) {
+        if (index in renderedCellCache) {
+          renderedCell = renderedCellCache[index]
+          cellMetadata = cellMetadataCache[index]
+        } else {
+          cellMetadataCache[index] = cellSizeAndPositionGetter({ index })
+          renderedCellCache[index] = cellRenderer({
+            index,
+            isScrolling
+          })
+        }
+      // If the user is no longer scrolling, don't cache cells.
+      // This makes dynamic cell content difficult for users and would also lead to a heavier memory footprint.
+      } else {
+        cellMetadata = cellSizeAndPositionGetter({ index })
+        renderedCell = cellRenderer({
+          index,
+          isScrolling
+        })
+      }
+
+      if (renderedCell == null || renderedCell === false || cellMetadata == null || cellMetadata === false) {
         return null
       }
 
