@@ -52,7 +52,8 @@ class CellSizeCache {
 }
 ```
 
-The [default caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/defaultCellSizeCache.js) is exported as `defaultCellMeasurerCellSizeCache` should you wish to decorate it. You can also use [an alternative caching strategy for lists with a uniform (yet unknown) row height](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/CellSizeCacheUniformHeight.js), exported as `CellMeasurerCellSizeCacheUniformHeight`.
+The [default caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/defaultCellSizeCache.js) is exported as `defaultCellMeasurerCellSizeCache` should you wish to decorate it.
+You can also use [an alternative caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/uniformHeightCellSizeCache.js) for lists with a uniform (yet unknown) row height, exported as `uniformHeightCellMeasurerCellSizeCache`.
 
 ### Examples
 
@@ -91,13 +92,21 @@ ReactDOM.render(
 If you want to use a custom cell size cache (in this case, columns are fixed-width and rows have a fixed but unknown height):
 
 ```js
-// ...
-import { CellMeasurer, Grid, CellMeasurerCellSizeCacheUniformHeight } from 'react-virtualized';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {
+  CellMeasurer,
+  Grid,
+  uniformHeightCellMeasurerCellSizeCache as CellSizeCache
+} from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
+
+const cellSizeCache = new CellSizeCache()
 
 ReactDOM.render(
   <CellMeasurer
     cellRenderer={cellRenderer}
-    cellSizeCache={new CellMeasurerCellSizeCacheUniformHeight()}
+    cellSizeCache={cellSizeCache}
     width={fixedColumnWidth}
     columnCount={columnCount}
     rowCount={rowCount}

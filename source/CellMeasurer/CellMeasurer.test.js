@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from '../TestUtils'
 import CellMeasurer from './CellMeasurer'
 import CellSizeCache from './defaultCellSizeCache'
-import CellSizeCacheUniformHeight from './CellSizeCacheUniformHeight'
+import UniformHeightCellSizeCache from './uniformHeightCellSizeCache'
 
 const HEIGHTS = [75, 50, 125, 100, 150]
 const WIDTHS = [125, 50, 200, 175, 100]
@@ -323,7 +323,7 @@ describe('CellMeasurer', () => {
   })
 
   it('should calculate row height just once when using the alternative uniform-height cell size cache', () => {
-    const cellSizeCacheUniformHeight = new CellSizeCacheUniformHeight()
+    const cellSizeCache = new UniformHeightCellSizeCache()
     const {
       cellRenderer,
       cellRendererParams
@@ -332,7 +332,7 @@ describe('CellMeasurer', () => {
       getRowHeight
     } = renderHelper({
       cellRenderer,
-      cellSizeCache: cellSizeCacheUniformHeight,
+      cellSizeCache,
       rowCount: 5
     })
 

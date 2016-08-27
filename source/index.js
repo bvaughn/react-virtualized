@@ -4,7 +4,7 @@ export { AutoSizer } from './AutoSizer'
 export {
   CellMeasurer,
   defaultCellSizeCache as defaultCellMeasurerCellSizeCache,
-  CellSizeCacheUniformHeight as CellMeasurerCellSizeCacheUniformHeight
+  uniformHeightCellSizeCache as uniformHeightCellMeasurerCellSizeCache
 } from './CellMeasurer'
 export { Collection } from './Collection'
 export { ColumnSizer } from './ColumnSizer'

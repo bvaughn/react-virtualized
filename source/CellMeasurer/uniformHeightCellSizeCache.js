@@ -1,10 +1,8 @@
 /**
- * Alternative CellMeasurer `cellSizeCache` implementation
- * for lists with unknown **but uniform** row heights.
- * Permanently caches column widths (identified by column index) and
- * a single row height unless explicitly cleared.
+ * Alternative CellMeasurer `cellSizeCache` implementation for lists with uniform (but unknown) row heights.
+ * Permanently caches column widths (identified by column index) and a single row height unless explicitly cleared.
  */
-export default class CellSizeCacheUniformHeight {
+export default class UniformHeightCellSizeCache {
   constructor () {
     this._cachedColumnWidths = {}
     this._cachedRowHeight = undefined
