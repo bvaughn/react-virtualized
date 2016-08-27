@@ -53,10 +53,13 @@ class CellSizeCache {
 ```
 
 The [default caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/defaultCellSizeCache.js) is exported as `defaultCellMeasurerCellSizeCache` should you wish to decorate it.
+You can also use [an alternative caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/uniformSizeCellSizeCache.js) for lists with a uniform (yet unknown) row height, exported as `uniformSizeCellMeasurerCellSizeCache`.
 
 ### Examples
 
-This example shows a `Grid` with fixed column widths and dynamic row heights.
+###### Default `cellSizeCache`
+
+This example shows a `Grid` with fixed row heights and dynamic column widths.
 For more examples check out the component [demo page](https://bvaughn.github.io/react-virtualized/?component=CellMeasurer).
 
 ```javascript
@@ -69,7 +72,7 @@ ReactDOM.render(
   <CellMeasurer
     cellRenderer={cellRenderer}
     columnCount={columnCount}
-    height={height}
+    height={fixedRowHeight}
     rowCount={rowCount}
   >
     {({ getColumnWidth }) => (
@@ -88,6 +91,44 @@ ReactDOM.render(
 );
 ```
 
+###### Alternate `cellSizeCache`
+
+An alternate cache is also available for cells that have a _dyanmic but uniform_ width or height.
+This cache will measure only a single cell and then return its width and height for all other cells.
+You can use it like so:
+
+```js
+import {
+  CellMeasurer,
+  Grid,
+  uniformSizeCellMeasurerCellSizeCache as CellSizeCache
+} from 'react-virtualized';
+
+const cellSizeCache = new CellSizeCache()
+
+function render () {
+  return (
+    <CellMeasurer
+      cellRenderer={cellRenderer}
+      cellSizeCache={cellSizeCache}
+      columnCount={columnCount}
+      rowCount={rowCount}
+    >
+      {({ getColumnWidth, getRowHeight }) => (
+        <Grid
+          columnCount={columnCount}
+          columnWidth={getColumnWidth}
+          cellRenderer={cellRenderer}
+          rowCount={rowCount}
+          rowHeight={getRowHeight}
+          {...otherProps}
+        />
+      )}
+    </CellMeasurer>
+  )
+}
+```
+
 ### Limitations and Performance Considerations
 
 ###### Styling
@@ -97,13 +138,13 @@ This means that they will not inherit the parent styles while being measured.
 Take care not rely on inherited styles for things that will affect measurement (eg `font-size`).
 (See [issue 352](https://github.com/bvaughn/react-virtualized/issues/352) for more background information.)
 
-Certain box-sizing settings (eg `box-sizing: border-box`) may cause slight discrepencies if borders are applied to a `Grid` whose cells are being measured.
+Certain box-sizing settings (eg `box-sizing: border-box`) may cause slight discrepancies if borders are applied to a `Grid` whose cells are being measured.
 For this reason, it is recommended that you avoid placing borders on a `Grid` that uses a `CellMeasurer` and instead style its parent container.
 (See [issue 338](https://github.com/bvaughn/react-virtualized/issues/338) for more background information.)
 
 ###### Performance
 
-Measuring a column's width requires measuring all rows in order to determine the widest occurance of that column.
+Measuring a column's width requires measuring all rows in order to determine the widest occurrence of that column.
 The same is true in reverse for measuring a row's height.
 For this reason it may not be a good idea to use this HOC for `Grid`s containing a large number of both columns _and_ cells.
 

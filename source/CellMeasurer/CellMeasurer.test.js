@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from '../TestUtils'
 import CellMeasurer from './CellMeasurer'
 import CellSizeCache from './defaultCellSizeCache'
+import UniformSizeCellSizeCache from './uniformSizeCellSizeCache'
 
 const HEIGHTS = [75, 50, 125, 100, 150]
 const WIDTHS = [125, 50, 200, 175, 100]
@@ -319,5 +320,63 @@ describe('CellMeasurer', () => {
     expect(customCellSizeCacheB.hasColumnWidth(0)).toEqual(false)
     expect(getColumnWidthC({ index: 0 })).toEqual(50)
     expect(customCellSizeCacheB.hasColumnWidth(0)).toEqual(true)
+  })
+
+  it('should calculate row height just once when using the alternative uniform-size cell size cache', () => {
+    const cellSizeCache = new UniformSizeCellSizeCache()
+    const {
+      cellRenderer,
+      cellRendererParams
+    } = createCellRenderer()
+    const {
+      getRowHeight
+    } = renderHelper({
+      cellRenderer,
+      cellSizeCache,
+      rowCount: 5
+    })
+
+    expect(cellRendererParams).toEqual([])
+    const height1 = getRowHeight({ index: 0 })
+    const height2 = getRowHeight({ index: 1 })
+    const height3 = getRowHeight({ index: 0 })
+    expect(cellRendererParams).toEqual([
+      { columnIndex: 0, rowIndex: 0 }
+    ])
+
+    const expectedHeight = HEIGHTS[0]
+
+    expect(height1).toEqual(expectedHeight)
+    expect(height2).toEqual(expectedHeight)
+    expect(height3).toEqual(expectedHeight)
+  })
+
+  it('should calculate column-width just once when using the alternative uniform-size cell size cache', () => {
+    const cellSizeCache = new UniformSizeCellSizeCache()
+    const {
+      cellRenderer,
+      cellRendererParams
+    } = createCellRenderer()
+    const {
+      getColumnWidth
+    } = renderHelper({
+      cellRenderer,
+      cellSizeCache,
+      columnCount: 5
+    })
+
+    expect(cellRendererParams).toEqual([])
+    const width1 = getColumnWidth({ index: 0 })
+    const width2 = getColumnWidth({ index: 1 })
+    const width3 = getColumnWidth({ index: 0 })
+    expect(cellRendererParams).toEqual([
+      { columnIndex: 0, rowIndex: 0 }
+    ])
+
+    const expectedWidth = WIDTHS[0]
+
+    expect(width1).toEqual(expectedWidth)
+    expect(width2).toEqual(expectedWidth)
+    expect(width3).toEqual(expectedWidth)
   })
 })

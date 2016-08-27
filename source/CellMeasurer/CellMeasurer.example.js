@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from '../AutoSizer'
 import CellMeasurer from './CellMeasurer'
+import UniformSizeCellSizeCache from './uniformSizeCellSizeCache'
 import Grid from '../Grid'
 import shallowCompare from 'react-addons-shallow-compare'
 import cn from 'classnames'
@@ -22,7 +23,10 @@ export default class CellMeasurerExample extends Component {
   constructor (props, context) {
     super(props, context)
 
+    this._uniformSizeCellSizeCache = new UniformSizeCellSizeCache()
+
     this._cellRenderer = this._cellRenderer.bind(this)
+    this._uniformCellRenderer = this._uniformCellRenderer.bind(this)
   }
 
   render () {
@@ -90,6 +94,29 @@ export default class CellMeasurerExample extends Component {
                   />
                 )}
               </CellMeasurer>
+
+              <h3>Uniform width and height</h3>
+              <CellMeasurer
+                cellRenderer={this._uniformCellRenderer}
+                cellSizeCache={this._uniformSizeCellSizeCache}
+                columnCount={COLUMN_COUNT}
+                rowCount={ROW_COUNT}
+              >
+                {({ getColumnWidth, getRowHeight }) => (
+                  <Grid
+                    className={styles.BodyGrid}
+                    columnCount={COLUMN_COUNT}
+                    columnWidth={getColumnWidth}
+                    height={150}
+                    overscanColumnCount={0}
+                    overscanRowCount={0}
+                    cellRenderer={this._uniformCellRenderer}
+                    rowCount={ROW_COUNT}
+                    rowHeight={getRowHeight}
+                    width={width}
+                  />
+                )}
+              </CellMeasurer>
             </div>
           )}
         </AutoSizer>
@@ -137,5 +164,13 @@ export default class CellMeasurerExample extends Component {
 
   _getRowClassName (row) {
     return row % 2 === 0 ? styles.evenRow : styles.oddRow
+  }
+
+  _uniformCellRenderer ({ columnIndex, rowIndex }) {
+    return (
+      <div className={styles.uniformSizeCell}>
+        {rowIndex}, {columnIndex}
+      </div>
+    )
   }
 }

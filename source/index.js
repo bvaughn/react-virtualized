@@ -3,7 +3,8 @@ export { ArrowKeyStepper } from './ArrowKeyStepper'
 export { AutoSizer } from './AutoSizer'
 export {
   CellMeasurer,
-  defaultCellSizeCache as defaultCellMeasurerCellSizeCache
+  defaultCellSizeCache as defaultCellMeasurerCellSizeCache,
+  uniformSizeCellSizeCache as uniformSizeCellMeasurerCellSizeCache
 } from './CellMeasurer'
 export { Collection } from './Collection'
 export { ColumnSizer } from './ColumnSizer'
