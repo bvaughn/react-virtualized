@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from '../TestUtils'
 import CellMeasurer from './CellMeasurer'
 import CellSizeCache from './defaultCellSizeCache'
+import CellSizeCacheUniformHeight from './CellSizeCacheUniformHeight'
 
 const HEIGHTS = [75, 50, 125, 100, 150]
 const WIDTHS = [125, 50, 200, 175, 100]
@@ -319,5 +320,32 @@ describe('CellMeasurer', () => {
     expect(customCellSizeCacheB.hasColumnWidth(0)).toEqual(false)
     expect(getColumnWidthC({ index: 0 })).toEqual(50)
     expect(customCellSizeCacheB.hasColumnWidth(0)).toEqual(true)
+  })
+
+  it('should calculate row height just once when using the alternative uniform-height cell size cache', () => {
+    const cellSizeCacheUniformHeight = new CellSizeCacheUniformHeight()
+    const {
+      cellRenderer,
+      cellRendererParams
+    } = createCellRenderer()
+    const {
+      getRowHeight
+    } = renderHelper({
+      cellRenderer,
+      cellSizeCache: cellSizeCacheUniformHeight,
+      rowCount: 5
+    })
+
+    expect(cellRendererParams).toEqual([])
+    const height1 = getRowHeight({ index: 0 })
+    const height2 = getRowHeight({ index: 1 })
+    const height3 = getRowHeight({ index: 0 })
+    expect(cellRendererParams).toEqual([
+      { columnIndex: 0, rowIndex: 0 }
+    ])
+
+    expect(height1).toEqual(75)
+    expect(height2).toEqual(75)
+    expect(height3).toEqual(75)
   })
 })
