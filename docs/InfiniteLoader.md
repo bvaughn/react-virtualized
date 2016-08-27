@@ -7,6 +7,9 @@ Note that this component is inteded to assist with row-loading.
 As such it is best suited for use with `FlexTable` and `VirtualScroll` (although it can also be used with `Grid`).
 This HOC is not compatible with the `Collection` component.
 
+This is an advanced component and can be confusing in certain situations.
+[See below for more information](#edge-cases-and-considerations).
+
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
@@ -73,4 +76,51 @@ ReactDOM.render(
   </InfiniteLoader>,
   document.getElementById('example')
 );
+```
+
+### Edge Cases and Considerations
+
+###### Tracking loaded (and loading) rows
+
+`InfiniteLoader` is not a stateful component, meaning that it does not keep track of which rows it has requested to be loaded.
+Your component will need to track this information yourself to avoid loading rows multiple times.
+One way to do this is to to use a map to track the status of each row like so:
+
+```js
+_isRowLoaded ({ index }) {
+  const { loadedRowsMap } = this.state
+
+  // No entry in this map signifies that the row has never been loaded before
+  // An entry (either LOADING or LOADED) can be treated as loaded as far as InfiniteLoader is concerned
+  return !!loadedRowsMap[index]
+}
+```
+
+###### Memoization and rowCount changes
+
+`InfiniteLoader` memoizes calls to `loadMoreRows` in order to avoid multiple calls with the same parameters while a user is scrolling.
+This can have an unexpected impact though if the underlying colleection data changes.
+In that case it is possible that `InfiniteLoader` will not _know_ to call `loadMoreRows` again because- from its point of view- it already made that call for a given row.
+(React Virtualized components do not know anything about the underlying data after all, only the number of items in the collection.)
+
+The easiest way to address this is for your application code to call `loadMoreRows` when it detects that the underlying collection may have changed.
+For example:
+```js
+_loadMoreRows ({ startIndex, stopIndex }) {
+  this._loadMoreRowsStartIndex = startIndex
+  this._loadMoreRowsStopIndex = stopIndex
+
+  // Load the rows
+}
+
+componentDidUpdate (prevProps, prevState) {
+  // If props/state signals that the underlying collection has changed,
+  // Reload the most recently requested batch of rows:
+  if (...) {
+    this._loadMoreRows({
+      startIndex: this._loadMoreRowsStartIndex,
+      stopIndex: this._loadMoreRowsStopIndex
+    })
+  }
+}
 ```
