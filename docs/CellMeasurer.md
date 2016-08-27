@@ -53,9 +53,11 @@ class CellSizeCache {
 ```
 
 The [default caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/defaultCellSizeCache.js) is exported as `defaultCellMeasurerCellSizeCache` should you wish to decorate it.
-You can also use [an alternative caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/uniformHeightCellSizeCache.js) for lists with a uniform (yet unknown) row height, exported as `uniformHeightCellMeasurerCellSizeCache`.
+You can also use [an alternative caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/uniformSizeCellSizeCache.js) for lists with a uniform (yet unknown) row height, exported as `uniformSizeCellMeasurerCellSizeCache`.
 
 ### Examples
+
+###### Default `cellSizeCache`
 
 This example shows a `Grid` with fixed row heights and dynamic column widths.
 For more examples check out the component [demo page](https://bvaughn.github.io/react-virtualized/?component=CellMeasurer).
@@ -89,42 +91,42 @@ ReactDOM.render(
 );
 ```
 
-If you want to use a custom cell size cache (in this case, columns are fixed-width and rows have a fixed but unknown height):
+###### Alternate `cellSizeCache`
+
+An alternate cache is also available for cells that have a _dyanmic but uniform_ width or height.
+This cache will measure only a single cell and then return its width and height for all other cells.
+You can use it like so:
 
 ```js
-import React from 'react';
-import ReactDOM from 'react-dom';
 import {
   CellMeasurer,
   Grid,
-  uniformHeightCellMeasurerCellSizeCache as CellSizeCache
+  uniformSizeCellMeasurerCellSizeCache as CellSizeCache
 } from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
 
 const cellSizeCache = new CellSizeCache()
 
-ReactDOM.render(
-  <CellMeasurer
-    cellRenderer={cellRenderer}
-    cellSizeCache={cellSizeCache}
-    width={fixedColumnWidth}
-    columnCount={columnCount}
-    rowCount={rowCount}
-  >
-    {({ getRowHeight }) => (
-      <Grid
-        columnCount={columnCount}
-        columnWidth={fixedColumnWidth}
-        height={height}
-        cellRenderer={cellRenderer}
-        rowCount={rowCount}
-        rowHeight={getRowHeight}
-        width={width}
-      />
-    )}
-  </CellMeasurer>,
-  document.getElementById('example')
-);
+function render () {
+  return (
+    <CellMeasurer
+      cellRenderer={cellRenderer}
+      cellSizeCache={cellSizeCache}
+      columnCount={columnCount}
+      rowCount={rowCount}
+    >
+      {({ getColumnWidth, getRowHeight }) => (
+        <Grid
+          columnCount={columnCount}
+          columnWidth={getColumnWidth}
+          cellRenderer={cellRenderer}
+          rowCount={rowCount}
+          rowHeight={getRowHeight}
+          {...otherProps}
+        />
+      )}
+    </CellMeasurer>
+  )
+}
 ```
 
 ### Limitations and Performance Considerations
