@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.21.1
+Lowered the `ScalingCellSizeAndPositionManager` maximum scroll threshold from 10M to 1.5M pixels to accommodate Edge's lower-than-expected `scrollTop` maximum.
+
 ##### 7.21.0
 New `cellSizeCache` added for `CellMeasurer` (`uniformSizeCellMeasurerCellSizeCache`) for cells that have a _dyanmic but uniform_ width or height.
 This cache will measure only a single cell and then return its width and height for all other cells.
