@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.21.0
+New `cellSizeCache` added for `CellMeasurer` (`uniformSizeCellMeasurerCellSizeCache`) for cells that have a _dyanmic but uniform_ width or height.
+This cache will measure only a single cell and then return its width and height for all other cells.
+This allows for greater performance optimization for use cases like virtualized drop-down lists, etc.
+
 ##### 7.20.0
 `Collection` now temporarily caches cells while scrolling is in progress.
 
