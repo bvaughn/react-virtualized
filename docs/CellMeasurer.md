@@ -91,20 +91,24 @@ ReactDOM.render(
 );
 ```
 
-###### Alternate `cellSizeCache`
+###### Customizing `cellSizeCache`
 
-An alternate cache is also available for cells that have a _dyanmic but uniform_ width or height.
-This cache will measure only a single cell and then return its width and height for all other cells.
+The cell size cache can be optimized when width and/or height is uniform across cells.
+In this case the cache will allow only a single cell width/height measurement and then return that value for all other cells.
 You can use it like so:
 
 ```js
 import {
   CellMeasurer,
-  Grid,
-  uniformSizeCellMeasurerCellSizeCache as CellSizeCache
+  defaultCellMeasurerCellSizeCache as CellSizeCache,
+  Grid
 } from 'react-virtualized';
 
-const cellSizeCache = new CellSizeCache()
+// Column widths vary but row heights are uniform
+const cellSizeCache = new CellSizeCache({
+  uniformRowHeight = true,
+  uniformColumnWidth = false
+})
 
 function render () {
   return (

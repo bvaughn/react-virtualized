@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from '../AutoSizer'
 import CellMeasurer from './CellMeasurer'
-import UniformSizeCellSizeCache from './uniformSizeCellSizeCache'
+import CellSizeCache from './defaultCellSizeCache'
 import Grid from '../Grid'
 import shallowCompare from 'react-addons-shallow-compare'
 import cn from 'classnames'
@@ -23,7 +23,10 @@ export default class CellMeasurerExample extends Component {
   constructor (props, context) {
     super(props, context)
 
-    this._uniformSizeCellSizeCache = new UniformSizeCellSizeCache()
+    this._uniformSizeCellSizeCache = new CellSizeCache({
+      uniformColumnWidth: true,
+      uniformRowHeight: true
+    })
 
     this._cellRenderer = this._cellRenderer.bind(this)
     this._uniformCellRenderer = this._uniformCellRenderer.bind(this)

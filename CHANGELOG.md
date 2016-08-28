@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.22.0
+Updated the exported `defaultCellMeasurerCellSizeCache` to support configured uniform column widths and/or row heights.
+This allows greater customization and flexibility than the version released in 7.21.0.
+For backwards compat `uniformSizeCellMeasurerCellSizeCache` is still exported but also points to `defaultCellMeasurerCellSizeCache`.
+
 ##### 7.21.1
 Lowered the `ScalingCellSizeAndPositionManager` maximum scroll threshold from 10M to 1.5M pixels to accommodate Edge's lower-than-expected `scrollTop` maximum.
 
