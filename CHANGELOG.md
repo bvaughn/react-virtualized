@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 7.22.1
+`InfiniteLoader` now better handles `FlexTable` and `VirtualScroll` children by calling `forceUpdateGrid` when defined.
+This prevents rows from being stuck in a visual "loading" state until a user scrolls.
+
 ##### 7.22.0
 Updated the exported `defaultCellMeasurerCellSizeCache` to support configured uniform column widths and/or row heights.
 This allows greater customization and flexibility than the version released in 7.21.0.

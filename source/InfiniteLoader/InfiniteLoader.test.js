@@ -1,5 +1,5 @@
-import InfiniteLoader, { isRangeVisible, scanForUnloadedRanges } from './InfiniteLoader'
-import React from 'react'
+import InfiniteLoader, { forceUpdateReactVirtualizedComponent, isRangeVisible, scanForUnloadedRanges } from './InfiniteLoader'
+import React, { Component } from 'react'
 import VirtualScroll from '../VirtualScroll'
 import { render } from '../TestUtils'
 
@@ -320,5 +320,44 @@ describe('isRangeVisible', () => {
       startIndex: 21,
       stopIndex: 30
     })).toEqual(false)
+  })
+})
+
+describe('forceUpdateReactVirtualizedComponent', () => {
+  it('should call :forceUpdateGrid if defined', () => {
+    let forceUpdateCalled = false
+    let forceUpdateGridCalled = false
+    class TestComponent extends Component {
+      forceUpdate () {
+        forceUpdateCalled = true
+      }
+      forceUpdateGrid () {
+        forceUpdateGridCalled = true
+      }
+      render () {
+        return <div />
+      }
+    }
+    forceUpdateReactVirtualizedComponent(
+      render(<TestComponent />)
+    )
+    expect(forceUpdateGridCalled).toEqual(true)
+    expect(forceUpdateCalled).toEqual(false)
+  })
+
+  it('should called :forceUpdate if :forceUpdateGrid is not defined', () => {
+    let forceUpdateCalled = false
+    class TestComponent extends Component {
+      forceUpdate () {
+        forceUpdateCalled = true
+      }
+      render () {
+        return <div />
+      }
+    }
+    forceUpdateReactVirtualizedComponent(
+      render(<TestComponent />)
+    )
+    expect(forceUpdateCalled).toEqual(true)
   })
 })
