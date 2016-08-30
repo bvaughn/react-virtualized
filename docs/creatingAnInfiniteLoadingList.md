@@ -32,7 +32,7 @@ function MyComponent ({
 
   // Render a list item or a loading indicator.
   const rowRenderer = ({ index }) => {
-    if (!isRowLoaded(index)) {
+    if (!isRowLoaded({ index })) {
       return 'Loading...'
     } else {
       return list.getIn([index, 'name'])
