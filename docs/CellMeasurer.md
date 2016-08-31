@@ -135,6 +135,14 @@ function render () {
 
 ### Limitations and Performance Considerations
 
+###### Stateful Components
+
+The current implementation of `CellMeasurer` creates cells on demand, measures them, and then throws them away.
+Future versions of this component may try to clone or in some other way share cells with their parent `Grid` in order to improve performance.
+However until that happens, be wary of using `CellMeasurer` to measure stateful components.
+Since cells are just-in-time created for measuring purposes they will only be measured with their default state.
+To avoid this issue for now, use controlled props (instead of state) for cell rendering behavior.
+
 ###### Styling
 
 Cells may be measured outside of the context of their intended `Grid` (or `VirtualScroll`).
