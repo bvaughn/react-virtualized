@@ -14,13 +14,13 @@ function loadScript (source) {
 }
 
 function loadScriptsAndStyles (source) {
-  var baseDir = 'https://npmcdn.com/react-virtualized/'
+  var baseDir = 'https://unpkg.com/react-virtualized/'
   var sourceParam = getUrlParam('source')
 
   if (sourceParam) {
     baseDir = sourceParam === 'local'
       ? '../'
-      : `https://npmcdn.com/react-virtualized@${sourceParam}/`
+      : `https://unpkg.com/react-virtualized@${sourceParam}/`
   }
 
   var styleSource = baseDir + 'styles.css'
