@@ -21,8 +21,12 @@ export default function Generator ({
   })
   const useAutoSizer = !collectionHasFixedHeight || !collectionHasFixedWidth
   const useCellMeasurer = (
-    !cellsHaveKnownHeight ||
-    !cellsHaveKnownWidth && !doNotVirtualizeColumns
+    !doNotVirtualizeColumns &&
+    !nonCheckerboardPattern &&
+    (
+      !cellsHaveKnownHeight ||
+      !cellsHaveKnownWidth
+    )
   )
 
   // TODO Share these with CellMeasurer?

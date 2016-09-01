@@ -91,14 +91,14 @@ export default class Wizard extends Component {
         <ContentBox>
           <ContentBoxHeader text='Cell Sizing' />
           <Option
-            disabled={nonCheckerboardPattern || !cellsHaveKnownWidth || (!hasMultipleRows && !hasMultipleColumns)}
-            checked={cellsHaveKnownHeight && !nonCheckerboardPattern}
+            disabled={nonCheckerboardPattern || doNotVirtualizeColumns || !cellsHaveKnownWidth || (!hasMultipleRows && !hasMultipleColumns)}
+            checked={cellsHaveKnownHeight && !nonCheckerboardPattern && !doNotVirtualizeColumns}
             label='Do you know the height of your rows ahead of time?'
             onChange={(cellsHaveKnownHeight) => this.setState({ cellsHaveKnownHeight })}
           />
           <Option
-            disabled={nonCheckerboardPattern || !cellsHaveKnownHeight || (!hasMultipleRows && !hasMultipleColumns)}
-            checked={cellsHaveKnownWidth && !nonCheckerboardPattern}
+            disabled={nonCheckerboardPattern || doNotVirtualizeColumns || !cellsHaveKnownHeight || (!hasMultipleRows && !hasMultipleColumns)}
+            checked={cellsHaveKnownWidth && !nonCheckerboardPattern && !doNotVirtualizeColumns}
             label='Do you know the width of your columns ahead of time?'
             onChange={(cellsHaveKnownWidth) => this.setState({ cellsHaveKnownWidth })}
           />
