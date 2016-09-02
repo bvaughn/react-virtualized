@@ -278,7 +278,7 @@ describe('FlexTable', () => {
       const rendered = findDOMNode(render(getMarkup()))
       const nameColumn = rendered.querySelectorAll('.FlexTable__headerColumn:first-of-type')
 
-      expect(nameColumn.className).not.toContain('FlexTable__sortableHeaderColumn')
+      expect(nameColumn.className || '').not.toContain('FlexTable__sortableHeaderColumn')
     })
 
     it('should not render sort indicators for non-sortable columns', () => {
@@ -288,7 +288,7 @@ describe('FlexTable', () => {
       })))
       const nameColumn = rendered.querySelectorAll('.FlexTable__headerColumn:first-of-type')
 
-      expect(nameColumn.className).not.toContain('FlexTable__sortableHeaderColumn')
+      expect(nameColumn.className || '').not.toContain('FlexTable__sortableHeaderColumn')
       expect(rendered.querySelectorAll('.FlexTable__sortableHeaderColumn').length).toEqual(1) // Email only
     })
 
