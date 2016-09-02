@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.22.2
+In the event that size or cell count decreases for a `Grid`, remaining cells are no longer remeasured in order to verify the current scroll offset.
+Instead the most recent measurements are used.
+This change should positively impact performance but should have no other affect.
+
 ##### 7.22.1
 `InfiniteLoader` now better handles `FlexTable` and `VirtualScroll` children by calling `forceUpdateGrid` when defined.
 This prevents rows from being stuck in a visual "loading" state until a user scrolls.

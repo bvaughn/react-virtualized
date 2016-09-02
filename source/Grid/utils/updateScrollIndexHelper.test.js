@@ -30,7 +30,7 @@ describe('updateScrollIndexHelper', () => {
     cellCount = undefined,
     cellSizeAndPositionManager,
     cellSize = 10,
-    previousCellsCount = 100,
+    previousCellsCount = undefined,
     previousCellSize = 10,
     previousScrollToAlignment = 'auto',
     previousScrollToIndex,
@@ -44,6 +44,9 @@ describe('updateScrollIndexHelper', () => {
     cellCount = cellCount === undefined
       ? cellSizeAndPositionManager.getCellCount()
       : cellCount
+    previousCellsCount = previousCellsCount === undefined
+      ? cellCount
+      : previousCellsCount
 
     let updateScrollIndexCallbackCalled = false
 
@@ -121,6 +124,20 @@ describe('updateScrollIndexHelper', () => {
       scrollOffset: 510,
       size: 50
     })).toEqual(true)
+  })
+
+  it('should not measure rows if :size or :cellCount have been reduced but only use already measured (or estimated) total size', () => {
+    const cellSizeAndPositionManager = {
+      getCellCount: () => CELL_SIZES.length,
+      getTotalSize: () => 560
+    }
+
+    expect(helper({
+      cellSizeAndPositionManager,
+      previousSize: 100,
+      scrollOffset: 510,
+      size: 50
+    })).toEqual(false)
   })
 
   it('should not call :updateScrollIndexCallback if there is no :scrollToIndex but :cellCount has been increased', () => {

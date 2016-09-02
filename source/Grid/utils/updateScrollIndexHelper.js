@@ -60,16 +60,11 @@ export default function updateScrollIndexHelper ({
       cellCount < previousCellsCount
     )
   ) {
-    scrollToIndex = cellCount - 1
-
-    const calculatedScrollOffset = cellSizeAndPositionManager.getUpdatedOffsetForIndex({
-      containerSize: size,
-      currentOffset: scrollOffset,
-      targetIndex: scrollToIndex
-    })
-
+    // We need to ensure that the current scroll offset is still within the collection's range.
+    // To do this, we don't need to measure everything; CellMeasurer would perform poorly.
+    // Just check to make sure we're still okay.
     // Only adjust the scroll position if we've scrolled below the last set of rows.
-    if (calculatedScrollOffset < scrollOffset) {
+    if (scrollOffset > cellSizeAndPositionManager.getTotalSize() - size) {
       updateScrollIndexCallback(cellCount - 1)
     }
   }
