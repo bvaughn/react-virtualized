@@ -78,11 +78,17 @@
       "jasmine"
     ]
   },
+  "jest": {
+    "setupFiles": [
+      "source/jest-setup.js"
+    ]
+  },
   "devDependencies": {
     "autoprefixer": "^6.2.3",
     "babel-cli": "6.8.0",
     "babel-core": "^6.5.1",
     "babel-eslint": "^6.0.4",
+    "babel-jest": "^15.0.0",
     "babel-loader": "^6.2.3",
     "babel-plugin-__coverage__": "^0.111111.11",
     "babel-plugin-react-transform": "^2.0.0",
@@ -108,6 +114,7 @@
     "immutable": "^3.7.5",
     "jasmine": "^2.3.2",
     "jasmine-core": "^2.3.4",
+    "jest": "^15.1.1",
     "karma": "^0.13.22",
     "karma-coverage": "^1.0.0",
     "karma-jasmine": "^1.0.2",
