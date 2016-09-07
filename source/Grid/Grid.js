@@ -206,6 +206,8 @@ export default class Grid extends Component {
 
     this.state = {
       isScrolling: false,
+      scrollDirectionHorizontal: SCROLL_DIRECTION_FIXED,
+      scrollDirectionVertical: SCROLL_DIRECTION_FIXED,
       scrollLeft: 0,
       scrollTop: 0
     }

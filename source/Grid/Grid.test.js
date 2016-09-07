@@ -4,6 +4,7 @@ import { findDOMNode } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
 import Grid from './Grid'
+import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FIXED, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 
 const DEFAULT_COLUMN_WIDTH = 50
 const DEFAULT_HEIGHT = 100
@@ -847,6 +848,35 @@ describe('Grid', () => {
       expect(helper.rowOverscanStopIndex()).toEqual(4)
       expect(helper.rowStartIndex()).toEqual(0)
       expect(helper.rowStopIndex()).toEqual(4)
+    })
+
+    it('should set the correct scroll direction', () => {
+      const grid = render(getMarkup({
+        scrollLeft: 50,
+        scrollTop: 50
+      }))
+
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FIXED)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FIXED)
+
+      simulateScroll({
+        grid,
+        scrollLeft: 100,
+        scrollTop: 100
+      })
+
+      // _nextState is easier to check than state since we can query it synchronously
+      expect(grid._nextState.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid._nextState.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
+
+      simulateScroll({
+        grid,
+        scrollLeft: 0,
+        scrollTop: 0
+      })
+
+      expect(grid._nextState.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_BACKWARD)
+      expect(grid._nextState.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_BACKWARD)
     })
 
     it('should overscan more in the direction being scrolled', async (done) => {
