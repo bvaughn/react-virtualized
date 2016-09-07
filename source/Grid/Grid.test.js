@@ -849,18 +849,29 @@ describe('Grid', () => {
       expect(helper.rowStopIndex()).toEqual(4)
     })
 
-    /* @TODO Enable test
-    it('should overscan more in the direction being scrolled', async () => {
+    it('should overscan more in the direction being scrolled', async (done) => {
       const helper = createHelper()
 
-      let onScrollPromiseResolve
+      let onSectionRenderedResolve
+
+      function onSectionRendered (params) {
+        helper.onSectionRendered(params)
+
+        if (onSectionRenderedResolve) {
+          onSectionRenderedResolve()
+        }
+      }
 
       const grid = render(getMarkup({
-        onScroll: () => onScrollPromiseResolve(),
-        onSectionRendered: helper.onSectionRendered,
+        onSectionRendered,
         overscanColumnCount: 2,
         overscanRowCount: 5
       }))
+
+      // Wait until the onSectionRendered handler / debouncer has processed
+      let onSectionRenderedPromise = new Promise(resolve => {
+        onSectionRenderedResolve = resolve
+      })
 
       simulateScroll({
         grid,
@@ -868,10 +879,7 @@ describe('Grid', () => {
         scrollTop: 200
       })
 
-      // Wait until the onScroll handler / debouncer has processed
-      await new Promise(resolve => {
-        onScrollPromiseResolve = resolve
-      })
+      await onSectionRenderedPromise
 
       // It should overscan in the direction being scrolled while scroll is in progress
       expect(helper.columnOverscanStartIndex()).toEqual(4)
@@ -895,8 +903,9 @@ describe('Grid', () => {
       expect(helper.rowOverscanStopIndex()).toEqual(19)
       expect(helper.rowStartIndex()).toEqual(10)
       expect(helper.rowStopIndex()).toEqual(14)
+
+      done()
     })
-    */
   })
 
   describe('cellRangeRenderer', () => {
