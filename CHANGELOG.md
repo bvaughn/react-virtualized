@@ -1,6 +1,13 @@
 Changelog
 ------------
 
+##### 7.23.0
+`Grid` scrolling timeout for pointer events can be customized now via a prop; same default value is preserved as before (150ms).
+
+Also addressed a couple of small bugs as well:
+* Multiple `WindowScroller` instances can be used on a single page now without interfering with each other's `pointer-events` settings.
+* Calling `recomputeGridSize` on `Grid` (or any of its wrapping HOCs) will clear any pending cell cache to avoid edge-case issue where a scrolling `Grid` has invalid cached cells due to a change in the underlying collection data.
+
 ##### 7.22.3
 While a scroll is in progress, `Grid` focuses overscan on the direction being scrolled- doubling up the number of overscanned cells.
 This reduces the amount of empty space that temporarily appears when a user is quickly scrolling.
