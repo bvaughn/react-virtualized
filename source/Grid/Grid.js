@@ -15,7 +15,7 @@ import defaultCellRangeRenderer from './defaultCellRangeRenderer'
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
  */
-const IS_SCROLLING_TIMEOUT = 150
+export const DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150
 
 /**
  * Controls whether the Grid updates the DOM element's scrollLeft/scrollTop based on the current state or just observes it.
@@ -150,6 +150,9 @@ export default class Grid extends Component {
      */
     rowCount: PropTypes.number.isRequired,
 
+    /** Wait this amount of time after the last scroll event before resetting Grid `pointer-events`. */
+    scrollingResetTimeInterval: PropTypes.number,
+
     /** Horizontal offset. */
     scrollLeft: PropTypes.number,
 
@@ -196,6 +199,7 @@ export default class Grid extends Component {
     onSectionRendered: () => null,
     overscanColumnCount: 0,
     overscanRowCount: 10,
+    scrollingResetTimeInterval: DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
     scrollToAlignment: 'auto',
     style: {},
     tabIndex: 0
@@ -668,13 +672,15 @@ export default class Grid extends Component {
    * This prevents jerky/stuttery mouse-wheel scrolling.
    */
   _enablePointerEventsAfterDelay () {
+    const { scrollingResetTimeInterval } = this.props
+
     if (this._disablePointerEventsTimeoutId) {
       clearTimeout(this._disablePointerEventsTimeoutId)
     }
 
     this._disablePointerEventsTimeoutId = setTimeout(
       this._enablePointerEventsAfterDelayCallback,
-      IS_SCROLLING_TIMEOUT
+      scrollingResetTimeInterval
     )
   }
 

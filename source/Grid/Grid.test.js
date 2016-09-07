@@ -3,7 +3,7 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
-import Grid from './Grid'
+import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
 import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FIXED, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 
 const DEFAULT_COLUMN_WIDTH = 50
@@ -1084,6 +1084,7 @@ describe('Grid', () => {
 
     it('should clear cache once :isScrolling is false', async (done) => {
       const cellRendererCalls = []
+      const scrollingResetTimeInterval = 100
       function cellRenderer ({ columnIndex, rowIndex }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
         return defaultCellRenderer({ columnIndex, rowIndex })
@@ -1093,6 +1094,7 @@ describe('Grid', () => {
         columnWidth: 100,
         height: 40,
         rowHeight: 20,
+        scrollingResetTimeInterval, // Also tests custom :scrollingResetTimeInterval override as well
         scrollToRow: 0,
         width: 100
       }
@@ -1106,7 +1108,7 @@ describe('Grid', () => {
       simulateScroll({ grid, scrollTop: 1 })
 
       // Allow scrolling timeout to complete so that cell cache is reset
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL - 1))
 
       cellRendererCalls.splice(0)
 
