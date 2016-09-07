@@ -2,7 +2,8 @@ Changelog
 ------------
 
 ##### 7.23.0
-`Grid` scrolling timeout for pointer events can be customized now via a prop; same default value is preserved as before (150ms).
+`Grid` scrolling timeout for pointer events can be customized now via `scrollingResetTimeInterval` property.
+This defaults to 150ms (as before).
 
 Also addressed a couple of small bugs as well:
 * Multiple `WindowScroller` instances can be used on a single page now without interfering with each other's `pointer-events` settings.
