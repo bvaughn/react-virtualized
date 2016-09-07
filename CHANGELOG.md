@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 7.22.3
+While a scroll is in progress, `Grid` focuses overscan on the direction being scrolled- doubling up the number of overscanned cells.
+This reduces the amount of empty space that temporarily appears when a user is quickly scrolling.
+It does not increase the overall number of cells being rendered (and so does not negatively impact performance).
+
 ##### 7.22.2
 In the event that size or cell count decreases for a `Grid`, remaining cells are no longer remeasured in order to verify the current scroll offset.
 Instead the most recent measurements are used.

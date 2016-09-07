@@ -1,10 +1,15 @@
-import getOverscanIndices from './getOverscanIndices'
+import getOverscanIndices, {
+  SCROLL_DIRECTION_BACKWARD,
+  SCROLL_DIRECTION_FIXED,
+  SCROLL_DIRECTION_FORWARD
+} from './getOverscanIndices'
 
 describe('getOverscanIndices', () => {
-  function testHelper (cellCount, startIndex, stopIndex, overscanCellsCount) {
+  function testHelper (cellCount, startIndex, stopIndex, overscanCellsCount, scrollDirection = SCROLL_DIRECTION_FIXED) {
     return getOverscanIndices({
       cellCount,
       overscanCellsCount,
+      scrollDirection,
       startIndex,
       stopIndex
     })
@@ -19,6 +24,18 @@ describe('getOverscanIndices', () => {
 
   it('should overscan by the specified :overscanCellsCount', () => {
     expect(testHelper(100, 10, 20, 10)).toEqual({
+      overscanStartIndex: 0,
+      overscanStopIndex: 30
+    })
+  })
+
+  it('should double the overscan in the direction being scrolled', () => {
+    expect(testHelper(100, 20, 30, 10, SCROLL_DIRECTION_FORWARD)).toEqual({
+      overscanStartIndex: 20,
+      overscanStopIndex: 50
+    })
+
+    expect(testHelper(100, 20, 30, 10, SCROLL_DIRECTION_BACKWARD)).toEqual({
       overscanStartIndex: 0,
       overscanStopIndex: 30
     })

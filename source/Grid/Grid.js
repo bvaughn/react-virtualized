@@ -4,7 +4,7 @@ import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
 import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
-import getOverscanIndices from './utils/getOverscanIndices'
+import getOverscanIndices, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FIXED, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import raf from 'raf'
 import shallowCompare from 'react-addons-shallow-compare'
@@ -579,6 +579,8 @@ export default class Grid extends Component {
 
     const {
       isScrolling,
+      scrollDirectionHorizontal,
+      scrollDirectionVertical,
       scrollLeft,
       scrollTop
     } = state
@@ -614,6 +616,7 @@ export default class Grid extends Component {
       const overscanColumnIndices = getOverscanIndices({
         cellCount: columnCount,
         overscanCellsCount: overscanColumnCount,
+        scrollDirection: scrollDirectionHorizontal,
         startIndex: this._renderedColumnStartIndex,
         stopIndex: this._renderedColumnStopIndex
       })
@@ -621,6 +624,7 @@ export default class Grid extends Component {
       const overscanRowIndices = getOverscanIndices({
         cellCount: rowCount,
         overscanCellsCount: overscanRowCount,
+        scrollDirection: scrollDirectionVertical,
         startIndex: this._renderedRowStartIndex,
         stopIndex: this._renderedRowStopIndex
       })
@@ -674,7 +678,9 @@ export default class Grid extends Component {
     this._cellCache = {}
 
     this.setState({
-      isScrolling: false
+      isScrolling: false,
+      scrollDirectionHorizontal: SCROLL_DIRECTION_FIXED,
+      scrollDirectionVertical: SCROLL_DIRECTION_FIXED
     })
   }
 
@@ -872,6 +878,10 @@ export default class Grid extends Component {
         ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED
         : SCROLL_POSITION_CHANGE_REASONS.REQUESTED
 
+      // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
+      const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+      const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+
       if (!this.state.isScrolling) {
         this.setState({
           isScrolling: true
@@ -880,6 +890,8 @@ export default class Grid extends Component {
 
       this._setNextState({
         isScrolling: true,
+        scrollDirectionHorizontal,
+        scrollDirectionVertical,
         scrollLeft,
         scrollPositionChangeReason,
         scrollTop

@@ -772,7 +772,7 @@ describe('Grid', () => {
     })
   })
 
-  describe('overscanRowCount', () => {
+  describe('overscanColumnCount & overscanRowCount', () => {
     function createHelper () {
       let columnOverscanStartIndex, columnOverscanStopIndex, columnStartIndex, columnStopIndex, rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex
 
@@ -848,6 +848,55 @@ describe('Grid', () => {
       expect(helper.rowStartIndex()).toEqual(0)
       expect(helper.rowStopIndex()).toEqual(4)
     })
+
+    /* @TODO Enable test
+    it('should overscan more in the direction being scrolled', async () => {
+      const helper = createHelper()
+
+      let onScrollPromiseResolve
+
+      const grid = render(getMarkup({
+        onScroll: () => onScrollPromiseResolve(),
+        onSectionRendered: helper.onSectionRendered,
+        overscanColumnCount: 2,
+        overscanRowCount: 5
+      }))
+
+      simulateScroll({
+        grid,
+        scrollLeft: 200,
+        scrollTop: 200
+      })
+
+      // Wait until the onScroll handler / debouncer has processed
+      await new Promise(resolve => {
+        onScrollPromiseResolve = resolve
+      })
+
+      // It should overscan in the direction being scrolled while scroll is in progress
+      expect(helper.columnOverscanStartIndex()).toEqual(4)
+      expect(helper.columnOverscanStopIndex()).toEqual(11)
+      expect(helper.columnStartIndex()).toEqual(4)
+      expect(helper.columnStopIndex()).toEqual(7)
+      expect(helper.rowOverscanStartIndex()).toEqual(10)
+      expect(helper.rowOverscanStopIndex()).toEqual(24)
+      expect(helper.rowStartIndex()).toEqual(10)
+      expect(helper.rowStopIndex()).toEqual(14)
+
+      // Allow scrolling timeout to complete so that cell cache is reset
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      // It reset overscan once scrolling has finished
+      expect(helper.columnOverscanStartIndex()).toEqual(2)
+      expect(helper.columnOverscanStopIndex()).toEqual(9)
+      expect(helper.columnStartIndex()).toEqual(4)
+      expect(helper.columnStopIndex()).toEqual(7)
+      expect(helper.rowOverscanStartIndex()).toEqual(5)
+      expect(helper.rowOverscanStopIndex()).toEqual(19)
+      expect(helper.rowStartIndex()).toEqual(10)
+      expect(helper.rowStopIndex()).toEqual(14)
+    })
+    */
   })
 
   describe('cellRangeRenderer', () => {
