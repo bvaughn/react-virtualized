@@ -18,7 +18,6 @@ var App = React.createClass({
             columnCount: 1000,
             columnWidth: 100,
             height: params.height,
-            overscanRowCount: 0,
             ref: 'Grid',
             cellRenderer: cellRenderer,
             rowHeight: 30,
