@@ -2,7 +2,7 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import WindowScroller from './WindowScroller'
-import { IS_SCROLLING_TIMEOUT } from './onScroll'
+import { IS_SCROLLING_TIMEOUT } from './utils/onScroll'
 
 function ChildComponent ({ scrollTop, isScrolling, height }) {
   return (
