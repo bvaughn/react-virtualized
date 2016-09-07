@@ -265,6 +265,11 @@ export default class Grid extends Component {
   } = {}) {
     this._columnSizeAndPositionManager.resetCell(columnIndex)
     this._rowSizeAndPositionManager.resetCell(rowIndex)
+
+    // Clear cell cache in case we are scrolling;
+    // Invalid row heights likely mean invalid cached content as well.
+    this._cellCache = {}
+
     this.forceUpdate()
   }
 

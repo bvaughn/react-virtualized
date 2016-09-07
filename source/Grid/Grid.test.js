@@ -1118,6 +1118,40 @@ describe('Grid', () => {
 
       done()
     })
+
+    it('should clear cache if :recomputeGridSize is called', () => {
+      const cellRendererCalls = []
+      function cellRenderer ({ columnIndex, rowIndex }) {
+        cellRendererCalls.push({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, rowIndex })
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollTop: 0,
+        width: 100
+      }
+
+      const grid = render(getMarkup(props))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+
+      simulateScroll({ grid, scrollTop: 1 })
+
+      grid.recomputeGridSize()
+
+      cellRendererCalls.splice(0)
+
+      render(getMarkup({
+        ...props,
+        scrollTop: 2
+      }))
+      expect(cellRendererCalls.length).not.toEqual(0)
+    })
   })
 
   describe('measureAllCells', () => {
