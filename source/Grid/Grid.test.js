@@ -1106,7 +1106,7 @@ describe('Grid', () => {
       simulateScroll({ grid, scrollTop: 1 })
 
       // Allow scrolling timeout to complete so that cell cache is reset
-      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL))
+      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL * 2))
 
       cellRendererCalls.splice(0)
 
@@ -1179,7 +1179,7 @@ describe('Grid', () => {
       }))
       expect(cellRendererCalls.length).toEqual(0)
 
-      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL))
+      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL * 2))
 
       cellRendererCalls.splice(0)
       render(getMarkup({
