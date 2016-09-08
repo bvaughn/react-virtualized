@@ -1084,7 +1084,6 @@ describe('Grid', () => {
 
     it('should clear cache once :isScrolling is false', async (done) => {
       const cellRendererCalls = []
-      const scrollingResetTimeInterval = 100
       function cellRenderer ({ columnIndex, rowIndex }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
         return defaultCellRenderer({ columnIndex, rowIndex })
@@ -1094,7 +1093,6 @@ describe('Grid', () => {
         columnWidth: 100,
         height: 40,
         rowHeight: 20,
-        scrollingResetTimeInterval, // Also tests custom :scrollingResetTimeInterval override as well
         scrollToRow: 0,
         width: 100
       }
@@ -1108,7 +1106,7 @@ describe('Grid', () => {
       simulateScroll({ grid, scrollTop: 1 })
 
       // Allow scrolling timeout to complete so that cell cache is reset
-      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL - 1))
+      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL))
 
       cellRendererCalls.splice(0)
 
@@ -1153,6 +1151,44 @@ describe('Grid', () => {
         scrollTop: 2
       }))
       expect(cellRendererCalls.length).not.toEqual(0)
+    })
+
+    it('should support a custom :scrollingResetTimeInterval prop', async (done) => {
+      const cellRendererCalls = []
+      const scrollingResetTimeInterval = DEFAULT_SCROLLING_RESET_TIME_INTERVAL * 2
+      function cellRenderer ({ columnIndex, rowIndex }) {
+        cellRendererCalls.push({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, rowIndex })
+      }
+      const props = {
+        cellRenderer,
+        scrollingResetTimeInterval
+      }
+
+      const grid = render(getMarkup(props))
+      expect(cellRendererCalls.length > 0).toEqual(true)
+
+      simulateScroll({ grid, scrollTop: 1 })
+
+      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL))
+
+      cellRendererCalls.splice(0)
+      render(getMarkup({
+        ...props,
+        className: 'foo'
+      }))
+      expect(cellRendererCalls.length).toEqual(0)
+
+      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL))
+
+      cellRendererCalls.splice(0)
+      render(getMarkup({
+        ...props,
+        className: 'bar'
+      }))
+      expect(cellRendererCalls.length).not.toEqual(0)
+
+      done()
     })
   })
 
