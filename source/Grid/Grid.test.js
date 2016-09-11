@@ -1302,8 +1302,7 @@ describe('Grid', () => {
         autoHeight: true
       }
       const grid = render(getMarkup(props))
-      const rendered = findDOMNode(render(getMarkup(props)))
-
+      const rendered = findDOMNode(grid)
       expect(rendered.querySelector('.Grid__innerScrollContainer').style.height).toEqual('2000px') // 100 rows * 20px rowHeight
       expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000)
     })
