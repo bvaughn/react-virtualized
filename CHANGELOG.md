@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.24.0
+Added `autoHeight` prop to `Collection` so that it can more easily be used with `WindowScroller`.
+
 ##### 7.23.0
 `Grid` scrolling timeout for pointer events can be customized now via `scrollingResetTimeInterval` property.
 This defaults to 150ms (as before).

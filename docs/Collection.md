@@ -9,6 +9,7 @@ Unlike `Grid`, which renders checkerboard data, `Collection` can render arbitrar
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
+| autoHeight | Boolean |  | Outer `height` of `Collection` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
 | className | String |  | Optional custom CSS class name to attach to root Collection element. |
 | cellCount | Number | ✓ | Number of cells in collection. |
 | cellGroupRenderer | Function | ✓ | Responsible for rendering a group of cells given their indices.: `({ cellSizeAndPositionGetter:Function, indices: Array<number>, cellRenderer: Function }): Array<PropTypes.node>` |

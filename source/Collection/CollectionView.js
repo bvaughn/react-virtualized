@@ -32,6 +32,12 @@ export default class CollectionView extends Component {
     'aria-label': PropTypes.string,
 
     /**
+     * Removes fixed height from the scrollingContainer so that the total height
+     * of rows can stretch the window. Intended for use with WindowScroller
+     */
+    autoHeight: PropTypes.bool,
+
+    /**
      * Number of cells in collection.
      */
     cellCount: PropTypes.number.isRequired,
@@ -306,6 +312,7 @@ export default class CollectionView extends Component {
 
   render () {
     const {
+      autoHeight,
       cellCount,
       cellLayoutManager,
       className,
@@ -344,7 +351,7 @@ export default class CollectionView extends Component {
       }) : []
 
     const collectionStyle = {
-      height,
+      height: autoHeight ? 'auto' : height,
       width
     }
 

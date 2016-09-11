@@ -169,6 +169,37 @@ describe('Collection', () => {
     })
   })
 
+  describe('autoHeight', () => {
+    it('should set the container height to auto to adjust to innerScrollContainer height', () => {
+      const props = {
+        autoHeight: true
+      }
+      const rendered = findDOMNode(render(getMarkup(props)))
+      expect(rendered.style.height).toEqual('auto')
+    })
+
+    it('should have container height still affecting number of rows rendered', () => {
+      let indices
+      const props = {
+        autoHeight: true,
+        height: 500,
+        onSectionRendered: params => {
+          indices = params.indices
+        }
+      }
+      findDOMNode(render(getMarkup(props)))
+      compareArrays(indices, [0, 1, 2, 3, 4, 5])
+    })
+
+    it('should have innerScrollContainer height to be equal number of rows * rowHeight', () => {
+      const props = {
+        autoHeight: true
+      }
+      const rendered = findDOMNode(render(getMarkup(props)))
+      expect(rendered.querySelector('.Collection__innerScrollContainer').style.height).toEqual('4px')
+    })
+  })
+
   describe(':scrollToCell', () => {
     it('should scroll to the top/left', () => {
       const collection = render(getMarkup({ scrollToCell: 0 }))
