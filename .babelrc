@@ -68,8 +68,5 @@
         "stage-1"
       ]
     }
-  },
-  "plugins": [
-    "transform-decorators-legacy"
-  ]
+  }
 }
