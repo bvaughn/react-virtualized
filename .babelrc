@@ -4,7 +4,7 @@
       "presets": [
         "es2015",
         "react",
-        "stage-0"
+        "stage-1"
       ]
     },
     "development": {
@@ -37,14 +37,14 @@
       "presets": [
         "es2015",
         "react",
-        "stage-0"
+        "stage-1"
       ]
     },
     "es": {
       "presets": [
         "es2015-rollup",
         "react",
-        "stage-0"
+        "stage-1"
       ]
     },
     "production": {
@@ -54,7 +54,7 @@
       "presets": [
         "es2015",
         "react",
-        "stage-0"
+        "stage-1"
       ]
     },
     "test": {
@@ -65,7 +65,7 @@
       "presets": [
         "es2015",
         "react",
-        "stage-0"
+        "stage-1"
       ]
     }
   },

@@ -93,7 +93,7 @@
     "babel-preset-es2015": "^6.5.0",
     "babel-preset-es2015-rollup": "^1.1.1",
     "babel-preset-react": "^6.5.0",
-    "babel-preset-stage-0": "^6.5.0",
+    "babel-preset-stage-1": "^6.5.0",
     "bluebird": "^3.0.5",
     "codecov": "^1.0.1",
     "codemirror": "^5.17.0",

@@ -38,6 +38,7 @@ export default class FlexTableExample extends Component {
     this._noRowsRenderer = this._noRowsRenderer.bind(this)
     this._onRowCountChange = this._onRowCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
+    this._rowClassName = this._rowClassName.bind(this)
     this._sort = this._sort.bind(this)
   }
 
@@ -171,7 +172,7 @@ export default class FlexTableExample extends Component {
                 height={height}
                 noRowsRenderer={this._noRowsRenderer}
                 overscanRowCount={overscanRowCount}
-                rowClassName={::this._rowClassName}
+                rowClassName={this._rowClassName}
                 rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
                 rowGetter={rowGetter}
                 rowCount={rowCount}
