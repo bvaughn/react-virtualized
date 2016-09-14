@@ -23,7 +23,7 @@ import { generateRandomList } from './utils'
 import Wizard from './Wizard'
 import '../../styles.css'
 
-const COMPONENTS = ['Collection', 'Grid', 'Table', 'List']
+const COMPONENTS = ['Collection', 'Grid', 'List', 'Table']
 const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync', 'WindowScroller']
 const COMPONENT_EXAMPLES_MAP = {
   ArrowKeyStepper: ArrowKeyStepperExample,
