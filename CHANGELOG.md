@@ -1,6 +1,19 @@
 Changelog
 ------------
 
+##### 7.24.1
+Refactored `AutoSizer` slightly to add support for `react-lite`.
+
+Note that if you intend to use the UMD build of `react-lite` the following lines are required before `react-virtualized` is loaded:
+```js
+React.addons = {
+  shallowCompare (context, nextProps, nextState) {
+    return React.PureComponent.prototype.shouldComponentUpdate(nextProps, nextState)
+  }
+};
+ReactDOM = React;
+```
+
 ##### 7.24.0
 Added `autoHeight` prop to `Collection` so that it can more easily be used with `WindowScroller`.
 

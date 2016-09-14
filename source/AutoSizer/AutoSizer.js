@@ -44,6 +44,11 @@ export default class AutoSizer extends Component {
   }
 
   componentDidMount () {
+    // Delay access of parentNode until mount.
+    // This handles edge-cases where the component has already been unmounted before its ref has been set,
+    // As well as libraries like react-lite which have a slightly different lifecycle.
+    this._parentNode = this._autoSizer.parentNode
+
     // Defer requiring resize handler in order to support server-side rendering.
     // See issue #41
     this._detectElementResize = require('../vendor/detectElementResize')
@@ -121,7 +126,6 @@ export default class AutoSizer extends Component {
   }
 
   _setRef (autoSizer) {
-    // In case the component has been unmounted
-    this._parentNode = autoSizer && autoSizer.parentNode
+    this._autoSizer = autoSizer
   }
 }
