@@ -44,9 +44,9 @@ The Collection component supports the following static class names
 
 | Property | Description |
 |:---|:---|
-| Collection | Main (outer) element |
-| Collection__innerScrollContainer | Inner scrollable area |
-| Collection__cell | Individual cell |
+| ReactVirtualized__Collection | Main (outer) element |
+| ReactVirtualized__Collection__innerScrollContainer | Inner scrollable area |
+| ReactVirtualized__Collection__cell | Individual cell |
 
 ### Examples
 

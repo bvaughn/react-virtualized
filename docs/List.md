@@ -55,7 +55,7 @@ The List component supports the following static class names
 
 | Property | Description |
 |:---|:---|
-| List | Main (outer) element |
+| ReactVirtualized__List | Main (outer) element |
 
 ### Examples
 

@@ -74,13 +74,13 @@ The Table component supports the following static class names
 
 | Property | Description |
 |:---|:---|
-| Table | Main (outer) element |
-| Table__headerColumn | Header cell (similar to `thead > tr > th`) |
-| Table__headerRow | Header row (similar to `thead > tr`) |
-| Table__row | Table row (akin to `tbody > tr`) |
-| Table__rowColumn | Table column (akin to `tbody > tr > td`) |
-| Table__sortableHeaderColumn | Applied to header columns that are sortable |
-| Table__sortableHeaderIcon | SVG sort indicator |
+| ReactVirtualized__Table | Main (outer) element |
+| ReactVirtualized__Table__headerColumn | Header cell (similar to `thead > tr > th`) |
+| ReactVirtualized__Table__headerRow | Header row (similar to `thead > tr`) |
+| ReactVirtualized__Table__row | Table row (akin to `tbody > tr`) |
+| ReactVirtualized__Table__rowColumn | Table column (akin to `tbody > tr > td`) |
+| ReactVirtualized__Table__sortableHeaderColumn | Applied to header columns that are sortable |
+| ReactVirtualized__Table__sortableHeaderIcon | SVG sort indicator |
 
 ### rowRenderer
 
