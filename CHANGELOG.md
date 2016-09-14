@@ -7,7 +7,7 @@ Upgrade instructions and [jscodeshift](https://github.com/facebook/jscodeshift) 
 
 To run a code mod, check out react-virtualized (or download the codemod) and then...
 ```
-jscodeshift -t /path/to/react-virtualized/codemods/7-to-8/TODO.js source
+jscodeshift -t /path/to/react-virtualized/codemods/7-to-8/rename-components.js source
 ```
 
 ##### 7.24.1
