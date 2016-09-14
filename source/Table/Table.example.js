@@ -4,14 +4,14 @@ import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import AutoSizer from '../AutoSizer'
-import FlexColumn from './FlexColumn'
-import FlexTable from './FlexTable'
+import Column from './Column'
+import Table from './Table'
 import SortDirection from './SortDirection'
 import SortIndicator from './SortIndicator'
 import shallowCompare from 'react-addons-shallow-compare'
-import styles from './FlexTable.example.css'
+import styles from './Table.example.css'
 
-export default class FlexTableExample extends Component {
+export default class TableExample extends Component {
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -73,9 +73,9 @@ export default class FlexTableExample extends Component {
     return (
       <ContentBox {...props}>
         <ContentBoxHeader
-          text='FlexTable'
-          sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/FlexTable.example.js'
-          docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/FlexTable.md'
+          text='Table'
+          sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/Table/Table.example.js'
+          docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/Table.md'
         />
 
         <ContentBoxParagraph>
@@ -164,7 +164,7 @@ export default class FlexTableExample extends Component {
         <div>
           <AutoSizer disableHeight>
             {({ width }) => (
-              <FlexTable
+              <Table
                 ref='Table'
                 disableHeader={disableHeader}
                 headerClassName={styles.headerColumn}
@@ -183,7 +183,7 @@ export default class FlexTableExample extends Component {
                 width={width}
               >
                 {!hideIndexRow &&
-                  <FlexColumn
+                  <Column
                     label='Index'
                     cellDataGetter={
                       ({ columnData, dataKey, rowData }) => rowData.index
@@ -193,13 +193,13 @@ export default class FlexTableExample extends Component {
                     width={60}
                   />
                 }
-                <FlexColumn
+                <Column
                   dataKey='name'
                   disableSort={!this._isSortEnabled()}
                   headerRenderer={this._headerRenderer}
                   width={90}
                 />
-                <FlexColumn
+                <Column
                   width={210}
                   disableSort
                   label='The description label is really long so that it will be truncated'
@@ -210,7 +210,7 @@ export default class FlexTableExample extends Component {
                   }
                   flexGrow={1}
                 />
-              </FlexTable>
+              </Table>
             )}
           </AutoSizer>
         </div>

@@ -25,10 +25,10 @@ export default class ColumnSizer extends Component {
     /** Optional minimum allowed column width */
     columnMinWidth: PropTypes.number,
 
-    /** Number of columns in Grid or FlexTable child */
+    /** Number of columns in Grid or Table child */
     columnCount: PropTypes.number.isRequired,
 
-    /** Width of Grid or FlexTable child */
+    /** Width of Grid or Table child */
     width: PropTypes.number.isRequired
   }
 

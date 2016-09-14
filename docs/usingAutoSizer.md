@@ -1,7 +1,7 @@
 Using AutoSizer
 ---------------
 
-The `AutoSizer` component decorates a React element and automatically manages `width` and `height` properties so that decorated element fills the available space. This simplifies usage of components like `Grid`, `FlexTable`, and `List` that require explicit dimensions.
+The `AutoSizer` component decorates a React element and automatically manages `width` and `height` properties so that decorated element fills the available space. This simplifies usage of components like `Grid`, `Table`, and `List` that require explicit dimensions.
 
 This guide covers a few of the most commonly asked questions about using the component.
 

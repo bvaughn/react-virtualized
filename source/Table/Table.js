@@ -1,6 +1,6 @@
 /** @flow */
 import cn from 'classnames'
-import FlexColumn from './FlexColumn'
+import Column from './Column'
 import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import shallowCompare from 'react-addons-shallow-compare'
@@ -12,7 +12,7 @@ import SortDirection from './SortDirection'
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
  * This component expects explicit width, height, and padding parameters.
  */
-export default class FlexTable extends Component {
+export default class Table extends Component {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -22,12 +22,12 @@ export default class FlexTable extends Component {
      */
     autoHeight: PropTypes.bool,
 
-    /** One or more FlexColumns describing the data displayed in this row */
+    /** One or more Columns describing the data displayed in this row */
     children: (props, propName, componentName) => {
       const children = React.Children.toArray(props.children)
       for (let i = 0; i < children.length; i++) {
-        if (children[i].type !== FlexColumn) {
-          return new Error('FlexTable only accepts children of type FlexColumn')
+        if (children[i].type !== Column) {
+          return new Error('Table only accepts children of type Column')
         }
       }
     },
@@ -39,7 +39,7 @@ export default class FlexTable extends Component {
     disableHeader: PropTypes.bool,
 
     /**
-     * Used to estimate the total height of a FlexTable before all of its rows have actually been measured.
+     * Used to estimate the total height of a Table before all of its rows have actually been measured.
      * The estimated total height is adjusted as rows are rendered.
      */
     estimatedRowSize: PropTypes.number.isRequired,
@@ -177,10 +177,10 @@ export default class FlexTable extends Component {
      */
     sort: PropTypes.func,
 
-    /** FlexTable data is currently sorted by this :dataKey (if it is sorted at all) */
+    /** Table data is currently sorted by this :dataKey (if it is sorted at all) */
     sortBy: PropTypes.string,
 
-    /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
+    /** Table data is currently sorted in this direction (if it is sorted at all) */
     sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
 
     /** Optional inline style */
@@ -282,12 +282,12 @@ export default class FlexTable extends Component {
     // Any property that should trigger a re-render of Grid then is specified here to avoid a stale display.
     return (
       <div
-        className={cn('FlexTable', className)}
+        className={cn('Table', className)}
         style={style}
       >
         {!disableHeader && (
           <div
-            className={cn('FlexTable__headerRow', rowClass)}
+            className={cn('Table__headerRow', rowClass)}
             style={{
               ...rowStyleObject,
               height: headerHeight,
@@ -302,7 +302,7 @@ export default class FlexTable extends Component {
         <Grid
           {...this.props}
           autoContainerWidth
-          className={cn('FlexTable__Grid', gridClassName)}
+          className={cn('Table__Grid', gridClassName)}
           cellClassName={this._cellClassName}
           cellRenderer={this._createRow}
           cellStyle={this._cellStyle}
@@ -370,7 +370,7 @@ export default class FlexTable extends Component {
     return (
       <div
         key={`Row${rowIndex}-Col${columnIndex}`}
-        className={cn('FlexTable__rowColumn', className)}
+        className={cn('Table__rowColumn', className)}
         style={style}
         title={title}
       >
@@ -385,11 +385,11 @@ export default class FlexTable extends Component {
     const sortEnabled = !disableSort && sort
 
     const classNames = cn(
-      'FlexTable__headerColumn',
+      'Table__headerColumn',
       headerClassName,
       column.props.headerClassName,
       {
-        'FlexTable__sortableHeaderColumn': sortEnabled
+        'Table__sortableHeaderColumn': sortEnabled
       }
     )
     const style = this._getFlexStyleForColumn(column, headerStyle)
@@ -477,7 +477,7 @@ export default class FlexTable extends Component {
       })
     )
 
-    const className = cn('FlexTable__row', rowClass)
+    const className = cn('Table__row', rowClass)
     const style = {
       ...rowStyleObject,
       height: this._getRowHeight(index),

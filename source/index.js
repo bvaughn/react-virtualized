@@ -9,15 +9,15 @@ export {
 export { Collection } from './Collection'
 export { ColumnSizer } from './ColumnSizer'
 export {
-  defaultCellDataGetter as defaultFlexTableCellDataGetter,
-  defaultCellRenderer as defaultFlexTableCellRenderer,
-  defaultHeaderRenderer as defaultFlexTableHeaderRenderer,
-  defaultRowRenderer as defaultFlexTableRowRenderer,
-  FlexTable,
-  FlexColumn,
+  defaultCellDataGetter as defaultTableCellDataGetter,
+  defaultCellRenderer as defaultTableCellRenderer,
+  defaultHeaderRenderer as defaultTableHeaderRenderer,
+  defaultRowRenderer as defaultTableRowRenderer,
+  Table,
+  Column,
   SortDirection,
   SortIndicator
-} from './FlexTable'
+} from './Table'
 export {
   defaultCellRangeRenderer,
   Grid

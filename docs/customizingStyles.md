@@ -13,11 +13,11 @@ You can also customize component styles.
 Fork the react-virtualized `styles.css` file and load your own, totally custom styles.
 
 #### Global CSS
-Load an additional, external CSS file that defines global classes (eg. `FlexTable`, `FlexTable__row`) to append to default inline styles.
+Load an additional, external CSS file that defines global classes (eg. `Table`, `Table__row`) to append to default inline styles.
 
 Learn more about which class names a component supports in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
 
 #### CSS Modules
-If you are using CSS modules you can specify custom class names to be appended to a component instance (eg. `FlexTable` supports `className`, `headerClassName`, and `rowClassName` properties).
+If you are using CSS modules you can specify custom class names to be appended to a component instance (eg. `Table` supports `className`, `headerClassName`, and `rowClassName` properties).
 
 Learn more about which class names are supported in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).

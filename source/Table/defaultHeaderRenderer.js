@@ -17,7 +17,7 @@ export default function defaultHeaderRenderer ({
   const showSortIndicator = sortBy === dataKey
   const children = [
     <span
-      className='FlexTable__headerTruncatedText'
+      className='Table__headerTruncatedText'
       key='label'
       title={label}
     >

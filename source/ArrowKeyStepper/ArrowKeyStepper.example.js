@@ -27,7 +27,7 @@ export default class ArrowKeyStepperExample extends Component {
         />
 
         <ContentBoxParagraph>
-          This high-order component decorates a <code>List</code>, <code>FlexTable</code>, or <code>Grid</code> and responds to arrow-key events by scrolling one row or column at a time.
+          This high-order component decorates a <code>List</code>, <code>Table</code>, or <code>Grid</code> and responds to arrow-key events by scrolling one row or column at a time.
           Focus in the `Grid` below and use the left, right, up, or down arrow keys to move around within the grid.
         </ContentBoxParagraph>
 

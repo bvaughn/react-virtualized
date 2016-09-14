@@ -144,7 +144,7 @@ For example:
 ###### Public methods
 
 `Grid` and `Collection` components can be forcefully re-rendered using [`forceUpdate`](https://facebook.github.io/react/docs/component-api.html#forceupdate).
-For `FlexTable` and `List`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/FlexTable.md#forceupdategrid)) to ensure that the inner `Grid` is also updated.
+For `Table` and `List`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/Table.md#forceupdategrid)) to ensure that the inner `Grid` is also updated.
 
 Documentation
 ---------------
@@ -170,7 +170,7 @@ Here are some online demos of each component:
 * [CellMeasurer](https://bvaughn.github.io/react-virtualized/?component=CellMeasurer)
 * [Collection](https://bvaughn.github.io/react-virtualized/?component=Collection)
 * [ColumnSizer](https://bvaughn.github.io/react-virtualized/?component=ColumnSizer)
-* [FlexTable](https://bvaughn.github.io/react-virtualized/?component=FlexTable)
+* [Table](https://bvaughn.github.io/react-virtualized/?component=Table)
 * [Grid](https://bvaughn.github.io/react-virtualized/?component=Grid)
 * [InfiniteLoader](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader)
 * [ScrollSync](https://bvaughn.github.io/react-virtualized/?component=ScrollSync)

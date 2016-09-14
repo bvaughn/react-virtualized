@@ -178,7 +178,7 @@ function getBaseComponent ({
   } else if (!hasMultipleColumns) {
     return getListMarkup()
   } else if (doNotVirtualizeColumns) {
-    return getFlexTableMarkup()
+    return getTableMarkup()
   } else {
     return getGridMarkup()
   }
@@ -239,16 +239,16 @@ function getCollectionMarkup () {
   }
 }
 
-function getFlexTableMarkup () {
+function getTableMarkup () {
   return {
-    name: 'FlexTable',
+    name: 'Table',
     props: {
       headerHeight: 30,
       rowGetter: '({ index }) => collection.get(index)'
     },
     rowCountProp: 'rowCount',
     rowHeightProp: 'rowHeight',
-    children: '<!-- Insert FlexColumn children here -->' // @TODO
+    children: '<!-- Insert Column children here -->' // @TODO
   }
 }
 

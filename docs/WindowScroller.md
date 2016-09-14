@@ -1,11 +1,11 @@
 WindowScroller
 ---------------
 
-High-order component that enables a `FlexTable` or `List` component to be scrolled based on the window's scroll positions.
+High-order component that enables a `Table` or `List` component to be scrolled based on the window's scroll positions.
 This can be used to create layouts similar to Facebook or Twitter news feeds.
 
 **Note** that this HOC does not currently work with a horizontally-scrolling `Grid` as horizontal scrolls reset the internal `scrollTop`.
-This may change with a future release but for the time being this HOC is should be used with `FlexTable` or `List` only.
+This may change with a future release but for the time being this HOC is should be used with `Table` or `List` only.
 
 ### Prop Types
 | Property | Type | Required? | Description |

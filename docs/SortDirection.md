@@ -1,7 +1,7 @@
 SortDirection
 ---------------
 
-Specifies which direction [FlexTable](FlexTable.md) data is currently sorted in.
+Specifies which direction [Table](Table.md) data is currently sorted in.
 
 #### SortDirection.ASC
 Sort items in ascending order.

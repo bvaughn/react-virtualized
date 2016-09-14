@@ -11,7 +11,7 @@ import CollectionExample from '../Collection/Collection.example'
 import ColumnSizerExample from '../ColumnSizer/ColumnSizer.example'
 import ComponentLink from './ComponentLink'
 import GridExample from '../Grid/Grid.example'
-import FlexTableExample from '../FlexTable/FlexTable.example'
+import TableExample from '../Table/Table.example'
 import Immutable from 'immutable'
 import InfiniteLoaderExample from '../InfiniteLoader/InfiniteLoader.example'
 import NavLink from './NavLink'
@@ -23,7 +23,7 @@ import { generateRandomList } from './utils'
 import Wizard from './Wizard'
 import '../../styles.css'
 
-const COMPONENTS = ['Collection', 'Grid', 'FlexTable', 'List']
+const COMPONENTS = ['Collection', 'Grid', 'Table', 'List']
 const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync', 'WindowScroller']
 const COMPONENT_EXAMPLES_MAP = {
   ArrowKeyStepper: ArrowKeyStepperExample,
@@ -31,7 +31,7 @@ const COMPONENT_EXAMPLES_MAP = {
   CellMeasurer: CellMeasurerExample,
   Collection: CollectionExample,
   ColumnSizer: ColumnSizerExample,
-  FlexTable: FlexTableExample,
+  Table: TableExample,
   Grid: GridExample,
   InfiniteLoader: InfiniteLoaderExample,
   ScrollSync: ScrollSyncExample,

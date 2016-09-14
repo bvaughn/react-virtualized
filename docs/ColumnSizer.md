@@ -9,7 +9,7 @@ High-order component that auto-calculates column-widths for `Grid` cells.
 | children | Function | ✓ | Function respondible for rendering a virtualized Grid. This function should implement the following signature: `({ adjustedWidth: number, getColumnWidth: Function, registerChild: Function }) => PropTypes.element` |
 | columnMaxWidth | Number |  | Optional maximum allowed column width |
 | columnMinWidth | Number |  | Optional minimum allowed column width |
-| width | Number | ✓ | Width of Grid or `FlexTable` child |
+| width | Number | ✓ | Width of Grid or `Table` child |
 
 ### Children function
 

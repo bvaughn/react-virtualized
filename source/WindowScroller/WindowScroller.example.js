@@ -34,7 +34,7 @@ export default class AutoSizerExample extends Component {
         />
 
         <ContentBoxParagraph>
-          This component decorates <code>List</code>, <code>FlexTable</code>, or any other component
+          This component decorates <code>List</code>, <code>Table</code>, or any other component
           and manages the window scroll to scroll through the list
         </ContentBoxParagraph>
 

@@ -54,7 +54,7 @@ export default class AutoSizerExample extends Component {
 
         {!hideDescription &&
           <ContentBoxParagraph>
-            This component decorates <code>List</code>, <code>FlexTable</code>, or any other component and automatically manages its width and height.
+            This component decorates <code>List</code>, <code>Table</code>, or any other component and automatically manages its width and height.
             It uses Sebastian Decima's <a href='https://github.com/sdecima/javascript-detect-element-resize' target='_blank'>element resize event</a> to determine the appropriate size.
             In this example <code>AutoSizer</code> grows to fill the remaining width and height of this flex column.
           </ContentBoxParagraph>
