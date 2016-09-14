@@ -373,7 +373,7 @@ export default class CollectionView extends Component {
           this._scrollingContainer = ref
         }}
         aria-label={this.props['aria-label']}
-        className={cn('Collection', className)}
+        className={cn('ReactVirtualized__Collection', className)}
         onScroll={this._onScroll}
         role='grid'
         style={{
@@ -384,7 +384,7 @@ export default class CollectionView extends Component {
       >
         {cellCount > 0 &&
           <div
-            className='Collection__innerScrollContainer'
+            className='ReactVirtualized__Collection__innerScrollContainer'
             style={{
               height: totalHeight,
               maxHeight: totalHeight,

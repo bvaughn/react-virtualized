@@ -538,7 +538,7 @@ export default class Grid extends Component {
           this._scrollingContainer = ref
         }}
         aria-label={this.props['aria-label']}
-        className={cn('Grid', className)}
+        className={cn('ReactVirtualized__Grid', className)}
         onScroll={this._onScroll}
         role='grid'
         style={{
@@ -549,7 +549,7 @@ export default class Grid extends Component {
       >
         {childrenToDisplay.length > 0 &&
           <div
-            className='Grid__innerScrollContainer'
+            className='ReactVirtualized__Grid__innerScrollContainer'
             style={{
               width: autoContainerWidth ? 'auto' : totalColumnsWidth,
               height: totalRowsHeight,

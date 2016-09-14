@@ -238,7 +238,7 @@ function defaultCellGroupRenderer ({
 
       return (
         <div
-          className='Collection__cell'
+          className='ReactVirtualized__Collection__cell'
           key={index}
           style={{
             height: cellMetadata.height,

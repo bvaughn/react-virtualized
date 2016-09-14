@@ -252,7 +252,7 @@ describe('List', () => {
   describe('styles and classNames', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(render(getMarkup()))
-      expect(node.className).toContain('List')
+      expect(node.className).toContain('ReactVirtualized__List')
     })
 
     it('should use a custom :className if specified', () => {
@@ -271,8 +271,8 @@ describe('List', () => {
         rowCount: 3,
         columnCount: 1
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const rows = Array.from(cells).map(row => row.className === 'Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
+      const rows = Array.from(cells).map(row => row.className === 'ReactVirtualized__Grid__cell')
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
     })
@@ -282,7 +282,7 @@ describe('List', () => {
         rowCount: 3,
         rowClassName: 'foo'
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const rows = Array.from(cells).map(row => row.classList.contains('foo'))
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
@@ -293,7 +293,7 @@ describe('List', () => {
         rowCount: 3,
         rowClassName: () => 'foo'
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const rows = Array.from(cells).map(row => row.classList.contains('foo'))
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
@@ -304,7 +304,7 @@ describe('List', () => {
         rowCount: 3,
         rowClassName: ({index}) => `col-${index}`
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const rows = Array.from(cells).map(row => row.className.split(' ')[1])
       expect(rows.length).toEqual(3)
       expect(rows).toEqual(['col-0', 'col-1', 'col-2'])
@@ -313,7 +313,7 @@ describe('List', () => {
     it('should use a custom :rowStyle if specified', () => {
       const rowStyle = { backgroundColor: 'red' }
       const rendered = findDOMNode(render(getMarkup({ rowStyle })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const result = Array.from(cells).map(el => el.style.backgroundColor)
       expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
@@ -321,14 +321,14 @@ describe('List', () => {
     it('should use a custom :rowStyle if function specified', () => {
       const rowStyle = () => { return { backgroundColor: 'red' } }
       const rendered = findDOMNode(render(getMarkup({ rowStyle })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const result = Array.from(cells).map(el => el.style.backgroundColor)
       expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
 
     it('should set the width of a row to be 100% by default', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      const cell = rendered.querySelector('.Grid__cell')
+      const cell = rendered.querySelector('.ReactVirtualized__Grid__cell')
       expect(cell.style.width).toEqual('100%')
     })
   })
@@ -502,6 +502,6 @@ describe('List', () => {
 
   it('should set the width of the single-column inner Grid to auto', () => {
     const rendered = findDOMNode(render(getMarkup()))
-    expect(rendered.querySelector('.Grid__innerScrollContainer').style.width).toEqual('auto')
+    expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.width).toEqual('auto')
   })
 })

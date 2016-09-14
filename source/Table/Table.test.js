@@ -119,15 +119,15 @@ describe('Table', () => {
           rowGetter: useImmutable ? immutableRowGetter : vanillaRowGetter
         })))
         // 100px height should fit 1 header (20px) and 8 rows (10px each) -
-        expect(rendered.querySelectorAll('.Table__headerRow').length).toEqual(1)
-        expect(rendered.querySelectorAll('.Table__row').length).toEqual(8)
+        expect(rendered.querySelectorAll('.ReactVirtualized__Table__headerRow').length).toEqual(1)
+        expect(rendered.querySelectorAll('.ReactVirtualized__Table__row').length).toEqual(8)
       })
 
       it('should render the expected headers', () => {
         const rendered = findDOMNode(render(getMarkup({
           rowGetter: useImmutable ? immutableRowGetter : vanillaRowGetter
         })))
-        const columns = rendered.querySelectorAll('.Table__headerColumn')
+        const columns = rendered.querySelectorAll('.ReactVirtualized__Table__headerColumn')
         expect(columns.length).toEqual(2)
         expect(columns[0].textContent).toEqual('Name')
         expect(columns[1].textContent).toEqual('Email')
@@ -140,11 +140,11 @@ describe('Table', () => {
           rowHeight: 20,
           height: 50
         })))
-        const rows = rendered.querySelectorAll('.Table__row')
+        const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
         expect(rows.length).toEqual(2)
         Array.from(rows).forEach((row, index) => {
           let rowData = list.get(index)
-          let columns = row.querySelectorAll('.Table__rowColumn')
+          let columns = row.querySelectorAll('.ReactVirtualized__Table__rowColumn')
           expect(columns.length).toEqual(2)
           expect(columns[0].textContent).toEqual(rowData.get('name'))
           expect(columns[1].textContent).toEqual(rowData.get('email'))
@@ -158,7 +158,7 @@ describe('Table', () => {
         rowHeight,
         rowCount: 3
       })))
-      const rows = rendered.querySelectorAll('.Table__row')
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
       Array.from(rows).forEach((row, index) => {
         expect(Number.parseInt(row.style.height, 10)).toEqual(rowHeight({ index }))
       })
@@ -170,7 +170,7 @@ describe('Table', () => {
         minWidth: 25,
         rowCount: 1
       })))
-      const columns = rendered.querySelectorAll('.Table__rowColumn')
+      const columns = rendered.querySelectorAll('.ReactVirtualized__Table__rowColumn')
       const emailColumn = columns[1]
       expect(Number.parseInt(emailColumn.style.maxWidth, 10)).toEqual(75)
       expect(Number.parseInt(emailColumn.style.minWidth, 10)).toEqual(25)
@@ -239,7 +239,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         cellDataGetter: ({ columnData, dataKey, rowData }) => `Custom ${dataKey} for row ${rowData.get('id')}`
       })))
-      const nameColumns = rendered.querySelectorAll('.Table__rowColumn:first-of-type')
+      const nameColumns = rendered.querySelectorAll('.ReactVirtualized__Table__rowColumn:first-of-type')
       Array.from(nameColumns).forEach((nameColumn, index) => {
         expect(nameColumn.textContent).toEqual(`Custom name for row ${index}`)
       })
@@ -249,7 +249,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex }) => `Custom ${cellData}`
       })))
-      const nameColumns = rendered.querySelectorAll('.Table__rowColumn:first-of-type')
+      const nameColumns = rendered.querySelectorAll('.ReactVirtualized__Table__rowColumn:first-of-type')
       Array.from(nameColumns).forEach((nameColumn, index) => {
         let rowData = list.get(index)
         expect(nameColumn.textContent).toEqual(`Custom ${rowData.get('name')}`)
@@ -260,7 +260,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex }) => 'Custom'
       })))
-      const nameColumn = rendered.querySelector('.Table__rowColumn:first-of-type')
+      const nameColumn = rendered.querySelector('.ReactVirtualized__Table__rowColumn:first-of-type')
       expect(nameColumn.getAttribute('title')).toContain('Custom')
     })
 
@@ -268,7 +268,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex }) => <div>Custom</div>
       })))
-      const nameColumn = rendered.querySelector('.Table__rowColumn:first-of-type')
+      const nameColumn = rendered.querySelector('.ReactVirtualized__Table__rowColumn:first-of-type')
       expect(nameColumn.getAttribute('title')).toEqual(null)
     })
   })
@@ -276,9 +276,9 @@ describe('Table', () => {
   describe('sorting', () => {
     it('should not render sort indicators if no sort function is provided', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      const nameColumn = rendered.querySelectorAll('.Table__headerColumn:first-of-type')
+      const nameColumn = rendered.querySelectorAll('.ReactVirtualized__Table__headerColumn:first-of-type')
 
-      expect(nameColumn.className).not.toContain('Table__sortableHeaderColumn')
+      expect(nameColumn.className).not.toContain('ReactVirtualized__Table__sortableHeaderColumn')
     })
 
     it('should not render sort indicators for non-sortable columns', () => {
@@ -286,20 +286,20 @@ describe('Table', () => {
         disableSort: true,
         sort: () => {}
       })))
-      const nameColumn = rendered.querySelectorAll('.Table__headerColumn:first-of-type')
+      const nameColumn = rendered.querySelectorAll('.ReactVirtualized__Table__headerColumn:first-of-type')
 
-      expect(nameColumn.className).not.toContain('Table__sortableHeaderColumn')
-      expect(rendered.querySelectorAll('.Table__sortableHeaderColumn').length).toEqual(1) // Email only
+      expect(nameColumn.className).not.toContain('ReactVirtualized__Table__sortableHeaderColumn')
+      expect(rendered.querySelectorAll('.ReactVirtualized__Table__sortableHeaderColumn').length).toEqual(1) // Email only
     })
 
     it('should render sortable column headers as sortable', () => {
       const rendered = findDOMNode(render(getMarkup({
         sort: () => {}
       })))
-      const nameColumn = rendered.querySelector('.Table__headerColumn:first-of-type')
+      const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
-      expect(nameColumn.className).toContain('Table__sortableHeaderColumn')
-      expect(rendered.querySelectorAll('.Table__sortableHeaderColumn').length).toEqual(2) // Email and Name
+      expect(nameColumn.className).toContain('ReactVirtualized__Table__sortableHeaderColumn')
+      expect(rendered.querySelectorAll('.ReactVirtualized__Table__sortableHeaderColumn').length).toEqual(2) // Email and Name
     })
 
     it('should render the correct sort indicator by the current sort-by column', () => {
@@ -310,10 +310,10 @@ describe('Table', () => {
           sortBy: 'name',
           sortDirection
         })))
-        const nameColumn = rendered.querySelector('.Table__headerColumn:first-of-type')
+        const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
-        expect(nameColumn.querySelector('.Table__sortableHeaderIcon')).not.toEqual(null)
-        expect(nameColumn.querySelector(`.Table__sortableHeaderIcon--${sortDirection}`)).not.toEqual(null)
+        expect(nameColumn.querySelector('.ReactVirtualized__Table__sortableHeaderIcon')).not.toEqual(null)
+        expect(nameColumn.querySelector(`.ReactVirtualized__Table__sortableHeaderIcon--${sortDirection}`)).not.toEqual(null)
       })
     })
 
@@ -326,7 +326,7 @@ describe('Table', () => {
           sortBy: 'name',
           sortDirection
         })))
-        const nameColumn = rendered.querySelector('.Table__headerColumn:first-of-type')
+        const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
         Simulate.click(nameColumn)
         expect(sortCalls.length).toEqual(1)
@@ -345,7 +345,7 @@ describe('Table', () => {
         sortBy: 'email',
         sortDirection: SortDirection.ASC
       })))
-      const nameColumn = rendered.querySelector('.Table__headerColumn:first-of-type')
+      const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
       Simulate.click(nameColumn)
       expect(sortCalls.length).toEqual(1)
@@ -361,7 +361,7 @@ describe('Table', () => {
         sort: ({ sortBy, sortDirection }) => sortCalls.push({ sortBy, sortDirection }),
         sortBy: 'name'
       })))
-      const nameColumn = rendered.querySelector('.Table__headerColumn:first-of-type')
+      const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
       expect(sortCalls.length).toEqual(0)
       Simulate.keyDown(nameColumn, {key: ' '})
       expect(sortCalls.length).toEqual(1)
@@ -385,7 +385,7 @@ describe('Table', () => {
         sortBy: 'name',
         sortDirection: SortDirection.ASC
       })))
-      const nameColumn = rendered.querySelector('.Table__headerColumn:first-of-type')
+      const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
       expect(nameColumn.textContent).toContain('custom header')
       expect(headerRendererCalls.length).toBeTruthy()
@@ -407,7 +407,7 @@ describe('Table', () => {
         sortBy: 'name',
         sortDirection: SortDirection.ASC
       })))
-      const nameColumn = rendered.querySelector('.Table__headerColumn:first-of-type')
+      const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
       Simulate.click(nameColumn)
 
@@ -425,7 +425,7 @@ describe('Table', () => {
         headerRenderer: (params) => 'custom header',
         onHeaderClick: ({ columnData, dataKey }) => onHeaderClickCalls.push([dataKey, columnData])
       })))
-      const nameColumn = rendered.querySelector('.Table__headerColumn:first-of-type')
+      const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
       Simulate.click(nameColumn)
 
@@ -462,7 +462,7 @@ describe('Table', () => {
         disableSort: true,
         onHeaderClick: ({ columnData, dataKey }) => onHeaderClickCalls.push({dataKey, columnData})
       })))
-      const nameColumn = rendered.querySelector('.Table__headerColumn:first-of-type')
+      const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
       Simulate.click(nameColumn)
       expect(onHeaderClickCalls.length).toEqual(1)
@@ -476,7 +476,7 @@ describe('Table', () => {
         disableSort: false,
         onHeaderClick: ({ columnData, dataKey }) => onHeaderClickCalls.push({dataKey, columnData})
       })))
-      const nameColumn = rendered.querySelector('.Table__headerColumn:first-of-type')
+      const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
       Simulate.click(nameColumn)
       expect(onHeaderClickCalls.length).toEqual(1)
@@ -491,7 +491,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         onRowClick: ({ index }) => onRowClickCalls.push(index)
       })))
-      const rows = rendered.querySelectorAll('.Table__row')
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
       Simulate.click(rows[0])
       Simulate.click(rows[3])
       expect(onRowClickCalls).toEqual([0, 3])
@@ -504,7 +504,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         onRowDoubleClick: ({ index }) => onRowDoubleClickCalls.push(index)
       })))
-      const rows = rendered.querySelectorAll('.Table__row')
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
       Simulate.doubleClick(rows[0])
       Simulate.doubleClick(rows[3])
       expect(onRowDoubleClickCalls).toEqual([0, 3])
@@ -525,7 +525,7 @@ describe('Table', () => {
         Simulate.mouseOver(to, { relatedTarget: from })
       }
 
-      const rows = rendered.querySelectorAll('.Table__row')
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
       simulateMouseOver(rows[0], rows[1])
       simulateMouseOver(rows[1], rows[2])
       simulateMouseOver(rows[2], rows[3])
@@ -540,7 +540,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         rowClassName: staticClassName
       })))
-      const rows = rendered.querySelectorAll('.Table__row')
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
       Array.from(rows).forEach((row, index) => {
         expect(row.className).toContain(staticClassName)
       })
@@ -550,7 +550,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         rowClassName: ({ index }) => index % 2 === 0 ? 'even' : 'odd'
       })))
-      const rows = rendered.querySelectorAll('.Table__row')
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
       Array.from(rows).forEach((row, index) => {
         if (index % 2 === 0) {
           expect(row.className).toContain('even')
@@ -661,13 +661,13 @@ describe('Table', () => {
         sortBy: 'name',
         sortDirection: SortDirection.ASC
       })))
-      expect(node.className).toEqual('Table')
-      expect(node.querySelector('.Table__headerRow')).toBeTruthy()
-      expect(node.querySelector('.Table__rowColumn')).toBeTruthy()
-      expect(node.querySelector('.Table__headerColumn')).toBeTruthy()
-      expect(node.querySelector('.Table__row')).toBeTruthy()
-      expect(node.querySelector('.Table__sortableHeaderColumn')).toBeTruthy()
-      expect(node.querySelector('.Table__sortableHeaderIcon')).toBeTruthy()
+      expect(node.className).toEqual('ReactVirtualized__Table')
+      expect(node.querySelector('.ReactVirtualized__Table__headerRow')).toBeTruthy()
+      expect(node.querySelector('.ReactVirtualized__Table__rowColumn')).toBeTruthy()
+      expect(node.querySelector('.ReactVirtualized__Table__headerColumn')).toBeTruthy()
+      expect(node.querySelector('.ReactVirtualized__Table__row')).toBeTruthy()
+      expect(node.querySelector('.ReactVirtualized__Table__sortableHeaderColumn')).toBeTruthy()
+      expect(node.querySelector('.ReactVirtualized__Table__sortableHeaderIcon')).toBeTruthy()
     })
 
     it('should use a custom :className if specified', () => {
@@ -692,9 +692,9 @@ describe('Table', () => {
         rowStyle,
         style
       })))
-      expect(node.querySelector('.Table__rowColumn').style.backgroundColor).toEqual('red')
-      expect(node.querySelector('.Table__headerColumn').style.backgroundColor).toEqual('blue')
-      expect(node.querySelector('.Table__row').style.backgroundColor).toEqual('green')
+      expect(node.querySelector('.ReactVirtualized__Table__rowColumn').style.backgroundColor).toEqual('red')
+      expect(node.querySelector('.ReactVirtualized__Table__headerColumn').style.backgroundColor).toEqual('blue')
+      expect(node.querySelector('.ReactVirtualized__Table__row').style.backgroundColor).toEqual('green')
       expect(node.style.backgroundColor).toEqual('orange')
     })
 
@@ -704,7 +704,7 @@ describe('Table', () => {
           ? { backgroundColor: 'red' }
           : { backgroundColor: 'green' }
       })))
-      const rows = rendered.querySelectorAll('.Table__row')
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
       Array.from(rows).forEach((row, index) => {
         if (index % 2 === 0) {
           expect(row.style.backgroundColor).toEqual('red')
@@ -719,8 +719,8 @@ describe('Table', () => {
         rowCount: 3,
         columnCount: 1
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const rows = Array.from(cells).map(row => row.className === 'Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
+      const rows = Array.from(cells).map(row => row.className === 'ReactVirtualized__Grid__cell')
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
     })
@@ -731,7 +731,7 @@ describe('Table', () => {
         columnCount: 1,
         rowWrapperClassName: 'foo'
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const rows = Array.from(cells).map(row => row.classList.contains('foo'))
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
@@ -743,7 +743,7 @@ describe('Table', () => {
         columnCount: 1,
         rowWrapperClassName: () => 'foo'
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const rows = Array.from(cells).map(row => row.classList.contains('foo'))
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
@@ -755,7 +755,7 @@ describe('Table', () => {
         columnCount: 2,
         rowWrapperClassName: ({index}) => `row-${index}`
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const rows = Array.from(cells).map(row => row.className.split(' ')[1])
       expect(rows.length).toEqual(2)
       expect(rows).toEqual(['row--1', 'row-0'])
@@ -764,7 +764,7 @@ describe('Table', () => {
     it('should use a custom :rowWrapperStyle if specified', () => {
       const rowWrapperStyle = { backgroundColor: 'red' }
       const rendered = findDOMNode(render(getMarkup({ rowWrapperStyle })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const result = Array.from(cells).map(el => el.style.backgroundColor)
       expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
@@ -772,7 +772,7 @@ describe('Table', () => {
     it('should use a custom :rowWrapperStyle if function specified', () => {
       const rowWrapperStyle = () => { return { backgroundColor: 'red' } }
       const rendered = findDOMNode(render(getMarkup({ rowWrapperStyle })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const result = Array.from(cells).map(el => el.style.backgroundColor)
       expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
@@ -782,7 +782,7 @@ describe('Table', () => {
         gridClassName: 'foo',
         gridStyle: { backgroundColor: 'red' }
       })))
-      const grid = rendered.querySelector('.Grid')
+      const grid = rendered.querySelector('.ReactVirtualized__Grid')
       expect(grid.className).toContain('foo')
       expect(grid.style.backgroundColor).toEqual('red')
     })
@@ -874,7 +874,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         onRowClick: () => {}
       })))
-      const row = rendered.querySelector('.Table__row')
+      const row = rendered.querySelector('.ReactVirtualized__Table__row')
       expect(row.getAttribute('aria-label')).toEqual('row')
       expect(row.getAttribute('role')).toEqual('row')
       expect(row.tabIndex).toEqual(0)
@@ -884,7 +884,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         onRowClick: null
       })))
-      const row = rendered.querySelector('.Table__row')
+      const row = rendered.querySelector('.ReactVirtualized__Table__row')
       expect(row.getAttribute('aria-label')).toEqual(null)
       expect(row.getAttribute('role')).toEqual(null)
       expect(row.tabIndex).toEqual(-1)
@@ -895,7 +895,7 @@ describe('Table', () => {
         disableSort: false,
         sort: () => {}
       })))
-      const row = rendered.querySelector('.Table__headerColumn')
+      const row = rendered.querySelector('.ReactVirtualized__Table__headerColumn')
       expect(row.getAttribute('aria-label')).toEqual('Name')
       expect(row.getAttribute('role')).toEqual('rowheader')
       expect(row.tabIndex).toEqual(0)
@@ -905,7 +905,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup({
         disableSort: true
       })))
-      const row = rendered.querySelector('.Table__headerColumn')
+      const row = rendered.querySelector('.ReactVirtualized__Table__headerColumn')
       expect(row.getAttribute('aria-label')).toEqual(null)
       expect(row.getAttribute('role')).toEqual(null)
       expect(row.tabIndex).toEqual(-1)
@@ -915,14 +915,14 @@ describe('Table', () => {
   describe('tabIndex', () => {
     it('should be focusable by default', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      expect(rendered.querySelector('.Grid').tabIndex).toEqual(0)
+      expect(rendered.querySelector('.ReactVirtualized__Grid').tabIndex).toEqual(0)
     })
 
     it('should allow tabIndex to be overridden', () => {
       const rendered = findDOMNode(render(getMarkup({
         tabIndex: -1
       })))
-      expect(rendered.querySelector('.Grid').tabIndex).toEqual(-1)
+      expect(rendered.querySelector('.ReactVirtualized__Grid').tabIndex).toEqual(-1)
     })
   })
 
@@ -1006,6 +1006,6 @@ describe('Table', () => {
 
   it('should set the width of the single-column inner Grid to auto', () => {
     const rendered = findDOMNode(render(getMarkup()))
-    expect(rendered.querySelector('.Grid__innerScrollContainer').style.width).toEqual('auto')
+    expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.width).toEqual('auto')
   })
 })

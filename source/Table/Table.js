@@ -282,12 +282,12 @@ export default class Table extends Component {
     // Any property that should trigger a re-render of Grid then is specified here to avoid a stale display.
     return (
       <div
-        className={cn('Table', className)}
+        className={cn('ReactVirtualized__Table', className)}
         style={style}
       >
         {!disableHeader && (
           <div
-            className={cn('Table__headerRow', rowClass)}
+            className={cn('ReactVirtualized__Table__headerRow', rowClass)}
             style={{
               ...rowStyleObject,
               height: headerHeight,
@@ -302,7 +302,7 @@ export default class Table extends Component {
         <Grid
           {...this.props}
           autoContainerWidth
-          className={cn('Table__Grid', gridClassName)}
+          className={cn('ReactVirtualized__Table__Grid', gridClassName)}
           cellClassName={this._cellClassName}
           cellRenderer={this._createRow}
           cellStyle={this._cellStyle}
@@ -370,7 +370,7 @@ export default class Table extends Component {
     return (
       <div
         key={`Row${rowIndex}-Col${columnIndex}`}
-        className={cn('Table__rowColumn', className)}
+        className={cn('ReactVirtualized__Table__rowColumn', className)}
         style={style}
         title={title}
       >
@@ -385,11 +385,11 @@ export default class Table extends Component {
     const sortEnabled = !disableSort && sort
 
     const classNames = cn(
-      'Table__headerColumn',
+      'ReactVirtualized__Table__headerColumn',
       headerClassName,
       column.props.headerClassName,
       {
-        'Table__sortableHeaderColumn': sortEnabled
+        'ReactVirtualized__Table__sortableHeaderColumn': sortEnabled
       }
     )
     const style = this._getFlexStyleForColumn(column, headerStyle)
@@ -477,7 +477,7 @@ export default class Table extends Component {
       })
     )
 
-    const className = cn('Table__row', rowClass)
+    const className = cn('ReactVirtualized__Table__row', rowClass)
     const style = {
       ...rowStyleObject,
       height: this._getRowHeight(index),

@@ -66,7 +66,7 @@ export default function defaultCellRangeRenderer ({
       let child = (
         <div
           key={key}
-          className={cn('Grid__cell', className)}
+          className={cn('ReactVirtualized__Grid__cell', className)}
           style={{
             height: rowDatum.size,
             left: columnDatum.offset + horizontalOffsetAdjustment,

@@ -138,7 +138,7 @@ export default class List extends Component {
       width
     } = this.props
 
-    const classNames = cn('List', className)
+    const classNames = cn('ReactVirtualized__List', className)
 
     return (
       <Grid

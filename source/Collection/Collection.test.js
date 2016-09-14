@@ -196,7 +196,7 @@ describe('Collection', () => {
         autoHeight: true
       }
       const rendered = findDOMNode(render(getMarkup(props)))
-      expect(rendered.querySelector('.Collection__innerScrollContainer').style.height).toEqual('4px')
+      expect(rendered.querySelector('.ReactVirtualized__Collection__innerScrollContainer').style.height).toEqual('4px')
     })
   })
 
@@ -416,7 +416,7 @@ describe('Collection', () => {
   describe('styles and classeNames', () => {
     it('should use the expected global CSS classNames', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      expect(rendered.className).toEqual('Collection')
+      expect(rendered.className).toEqual('ReactVirtualized__Collection')
     })
 
     it('should use a custom :className if specified', () => {

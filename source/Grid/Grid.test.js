@@ -84,7 +84,7 @@ describe('Grid', () => {
         rowCount: 3,
         cellRenderer
       })))
-      expect(rendered.querySelectorAll('.Grid__cell').length).toEqual(4) // [1,1], [1,2], [2,1], and [2,2]
+      expect(rendered.querySelectorAll('.ReactVirtualized__Grid__cell').length).toEqual(4) // [1,1], [1,2], [2,1], and [2,2]
       expect(rendered.textContent).not.toContain('column:0')
       expect(rendered.textContent).not.toContain('row:0')
     })
@@ -582,7 +582,7 @@ describe('Grid', () => {
   describe('styles and classNames', () => {
     it('should use the expected global CSS classNames', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      expect(rendered.className).toEqual('Grid')
+      expect(rendered.className).toEqual('ReactVirtualized__Grid')
     })
 
     it('should use a custom :className if specified', () => {
@@ -601,8 +601,8 @@ describe('Grid', () => {
         rowCount: 3,
         columnCount: 1
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const rows = Array.from(cells).map(row => row.className === 'Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
+      const rows = Array.from(cells).map(row => row.className === 'ReactVirtualized__Grid__cell')
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
     })
@@ -613,7 +613,7 @@ describe('Grid', () => {
         columnCount: 1,
         cellClassName: 'foo'
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const rows = Array.from(cells).map(row => row.classList.contains('foo'))
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
@@ -625,7 +625,7 @@ describe('Grid', () => {
         columnCount: 1,
         cellClassName: () => 'foo'
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const rows = Array.from(cells).map(row => row.classList.contains('foo'))
       expect(rows.length).toEqual(3)
       expect(rows).toEqual([true, true, true])
@@ -637,7 +637,7 @@ describe('Grid', () => {
         columnCount: 2,
         cellClassName: ({rowIndex, columnIndex}) => `col-${rowIndex}-${columnIndex}`
       })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const rows = Array.from(cells).map(row => row.className.split(' ')[1])
       expect(rows.length).toEqual(4)
       expect(rows).toEqual(['col-0-0', 'col-0-1', 'col-1-0', 'col-1-1'])
@@ -646,7 +646,7 @@ describe('Grid', () => {
     it('should use a custom :cellStyle if specified', () => {
       const cellStyle = { backgroundColor: 'red' }
       const rendered = findDOMNode(render(getMarkup({ cellStyle })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const result = Array.from(cells).map(el => el.style.backgroundColor)
       expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
@@ -654,7 +654,7 @@ describe('Grid', () => {
     it('should use a custom :cellStyle if function specified', () => {
       const cellStyle = () => { return { backgroundColor: 'red' } }
       const rendered = findDOMNode(render(getMarkup({ cellStyle })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
+      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
       const result = Array.from(cells).map(el => el.style.backgroundColor)
       expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
@@ -1267,7 +1267,7 @@ describe('Grid', () => {
         autoContainerWidth: true
       }
       const rendered = findDOMNode(render(getMarkup(props)))
-      expect(rendered.querySelector('.Grid__innerScrollContainer').style.width).toEqual('auto')
+      expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.width).toEqual('auto')
     })
 
     it('should set the innerScrollContainer width to :totalColumnsWidth unless :autoContainerWidth', () => {
@@ -1275,7 +1275,7 @@ describe('Grid', () => {
         autoContainerWidth: false
       }
       const rendered = findDOMNode(render(getMarkup(props)))
-      expect(rendered.querySelector('.Grid__innerScrollContainer').style.width).toEqual('2500px') // 50 columns x 50px
+      expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.width).toEqual('2500px') // 50 columns x 50px
     })
   })
 
@@ -1303,7 +1303,7 @@ describe('Grid', () => {
       }
       const grid = render(getMarkup(props))
       const rendered = findDOMNode(grid)
-      expect(rendered.querySelector('.Grid__innerScrollContainer').style.height).toEqual('2000px') // 100 rows * 20px rowHeight
+      expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.height).toEqual('2000px') // 100 rows * 20px rowHeight
       expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000)
     })
   })

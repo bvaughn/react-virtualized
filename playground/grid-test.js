@@ -31,7 +31,7 @@ ReactDOM.render(
   document.querySelector('#mount')
 )
 
-const testCase = createScrollingTestCase(document.querySelector('.Grid'))
+const testCase = createScrollingTestCase(document.querySelector('.ReactVirtualized__Grid'))
 const TestRunner = FpsMeasurer.TestRunner
 const testRunner = new TestRunner(testCase, 5)
 
