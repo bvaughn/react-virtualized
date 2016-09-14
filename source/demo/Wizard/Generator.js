@@ -176,7 +176,7 @@ function getBaseComponent ({
   if (nonCheckerboardPattern) {
     return getCollectionMarkup()
   } else if (!hasMultipleColumns) {
-    return getVirtualScrollMarkup()
+    return getListMarkup()
   } else if (doNotVirtualizeColumns) {
     return getFlexTableMarkup()
   } else {
@@ -265,9 +265,9 @@ function getGridMarkup () {
   }
 }
 
-function getVirtualScrollMarkup () {
+function getListMarkup () {
   return {
-    name: 'VirtualScroll',
+    name: 'List',
     props: {
       rowRenderer: '({ index, isScrolling  }) => collection.getIn([index, "name"])'
     },

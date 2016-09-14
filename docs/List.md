@@ -1,4 +1,4 @@
-VirtualScroll
+List
 ---------------
 
 This component renders a virtualized list of elements with either fixed or dynamic heights.
@@ -6,8 +6,8 @@ This component renders a virtualized list of elements with either fixed or dynam
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| className | String |  | Optional custom CSS class name to attach to root `VirtualScroll` element. |
-| estimatedRowSize | Number |  | Used to estimate the total height of a `VirtualScroll` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
+| className | String |  | Optional custom CSS class name to attach to root `List` element. |
+| estimatedRowSize | Number |  | Used to estimate the total height of a `List` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | height | Number | ✓ | Height constraint for list (determines how many actual rows are rendered) |
 | noRowsRenderer | Function |  | Callback used to render placeholder content when `rowCount` is 0 |
 | onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
@@ -21,7 +21,7 @@ This component renders a virtualized list of elements with either fixed or dynam
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Forced vertical scroll offset; can be used to synchronize scrolling between components |
-| style | Object |  | Optional custom inline style to attach to root `VirtualScroll` element. |
+| style | Object |  | Optional custom inline style to attach to root `List` element. |
 | tabIndex | Number |  | Optional override of tab index default; defaults to `0`. |
 | width | Number | ✓ | Width of the list |
 
@@ -30,12 +30,12 @@ This component renders a virtualized list of elements with either fixed or dynam
 ##### forceUpdateGrid
 Forcefull re-render the inner `Grid` component.
 
-Calling `forceUpdate` on `VirtualScroll` may not re-render the inner `Grid` since it uses `shallowCompare` as a performance optimization.
+Calling `forceUpdate` on `List` may not re-render the inner `Grid` since it uses `shallowCompare` as a performance optimization.
 Use this method if you want to manually trigger a re-render.
 This may be appropriate if the underlying row data has changed but the row sizes themselves have not.
 
 ##### measureAllRows
-Pre-measure all rows in a `VirtualScroll`.
+Pre-measure all rows in a `List`.
 
 Typically rows are only measured as needed and estimated heights are used for cells that have not yet been measured.
 This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
@@ -43,7 +43,7 @@ This method ensures that the next call to getTotalSize() returns an exact size (
 ##### recomputeRowHeights (index: number)
 Recompute row heights and offsets after the specified index (defaults to 0).
 
-`VirtualScroll` has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property.
+`List` has no way of knowing when its underlying list data has changed since it only receives a `rowHeight` property.
 If the `rowHeight` is a number it can compare before and after values but if it is a function that comparison is error prone.
 In the event that a dynamic `rowHeight` function is in use and the row heights have changed this function should be manually called by the "smart" container parent.
 
@@ -51,15 +51,15 @@ This method will also force a render cycle (via `forceUpdate`) to ensure that th
 
 ### Class names
 
-The VirtualScroll component supports the following static class names
+The List component supports the following static class names
 
 | Property | Description |
 |:---|:---|
-| VirtualScroll | Main (outer) element |
+| List | Main (outer) element |
 
 ### Examples
 
-Below is a simple `VirtualScroll` example. Each row in the virtualized list is rendered through the use of a `rowRenderer` function for performance reasons. This function must return an element with a unique `key` and must fit within the specified `rowHeight`.
+Below is a simple `List` example. Each row in the virtualized list is rendered through the use of a `rowRenderer` function for performance reasons. This function must return an element with a unique `key` and must fit within the specified `rowHeight`.
 
 **Note** that it is very important that rows do not have vertical overflow.
 It would make scrolling the list difficult (as individual items will intercept the scroll events).
@@ -68,7 +68,7 @@ For this reason it is recommended that your rows use a style like `overflow-y: h
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { VirtualScroll } from 'react-virtualized';
+import { List } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // List data as an array of strings
@@ -79,7 +79,7 @@ const list = [
 
 // Render your list
 ReactDOM.render(
-  <VirtualScroll
+  <List
     width={300}
     height={300}
     rowCount={list.length}

@@ -1,11 +1,11 @@
 WindowScroller
 ---------------
 
-High-order component that enables a `FlexTable` or `VirtualScroll` component to be scrolled based on the window's scroll positions.
+High-order component that enables a `FlexTable` or `List` component to be scrolled based on the window's scroll positions.
 This can be used to create layouts similar to Facebook or Twitter news feeds.
 
 **Note** that this HOC does not currently work with a horizontally-scrolling `Grid` as horizontal scrolls reset the internal `scrollTop`.
-This may change with a future release but for the time being this HOC is should be used with `FlexTable` or `VirtualScroll` only.
+This may change with a future release but for the time being this HOC is should be used with `FlexTable` or `List` only.
 
 ### Prop Types
 | Property | Type | Required? | Description |
@@ -19,13 +19,13 @@ This may change with a future release but for the time being this HOC is should 
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { VirtualScroll, WindowScroller } from 'react-virtualized';
+import { List, WindowScroller } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
 ReactDOM.render(
   <WindowScroller>
     {({ height, isScrolling, scrollTop }) => (
-      <VirtualScroll
+      <List
         autoHeight
         height={height}
         rowCount={...}

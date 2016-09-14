@@ -107,9 +107,9 @@
   fill: currentColor;
 }
 
-/* VirtualScroll default theme */
+/* List default theme */
 
-.VirtualScroll {
+.List {
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;

@@ -235,7 +235,7 @@ export function scanForUnloadedRanges ({
 
 /**
  * Since RV components use shallowCompare we need to force a render (even though props haven't changed).
- * However InfiniteLoader may wrap a Grid or it may wrap a FlexTable or VirtualScroll.
+ * However InfiniteLoader may wrap a Grid or it may wrap a FlexTable or List.
  * In the first case the built-in React forceUpdate() method is sufficient to force a re-render,
  * But in the latter cases we need to use the RV-specific forceUpdateGrid() method.
  * Else the inner Grid will not be re-rendered and visuals may be stale.

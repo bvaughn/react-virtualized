@@ -130,12 +130,12 @@ This can be done a couple of different ways.
 
 The `shallowCompare` method will detect changes to any props, even if they aren't declared as `propTypes`.
 This means you can also pass through additional properties that affect cell rendering to ensure changes are detected.
-For example, if you're using `VirtualScroll` to render a list of items that may be re-sorted after initial render- react-virtualized would not normally detect the sort operation because none of the properties it deals with change.
+For example, if you're using `List` to render a list of items that may be re-sorted after initial render- react-virtualized would not normally detect the sort operation because none of the properties it deals with change.
 However you can pass through the additional sort property to trigger a re-render.
 For example:
 
 ```js
-<VirtualScroll
+<List
   {...virtualScrollProps}
   sortBy={sortBy}
 />
@@ -144,7 +144,7 @@ For example:
 ###### Public methods
 
 `Grid` and `Collection` components can be forcefully re-rendered using [`forceUpdate`](https://facebook.github.io/react/docs/component-api.html#forceupdate).
-For `FlexTable` and `VirtualScroll`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/FlexTable.md#forceupdategrid)) to ensure that the inner `Grid` is also updated.
+For `FlexTable` and `List`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/FlexTable.md#forceupdategrid)) to ensure that the inner `Grid` is also updated.
 
 Documentation
 ---------------
@@ -174,7 +174,7 @@ Here are some online demos of each component:
 * [Grid](https://bvaughn.github.io/react-virtualized/?component=Grid)
 * [InfiniteLoader](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader)
 * [ScrollSync](https://bvaughn.github.io/react-virtualized/?component=ScrollSync)
-* [VirtualScroll](https://bvaughn.github.io/react-virtualized/?component=VirtualScroll)
+* [List](https://bvaughn.github.io/react-virtualized/?component=List)
 * [WindowScroller](https://bvaughn.github.io/react-virtualized/?component=WindowScroller)
 
 And here are some "recipe" type demos:

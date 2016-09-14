@@ -18,12 +18,12 @@ import NavLink from './NavLink'
 import React, { Component } from 'react'
 import ScrollSyncExample from '../ScrollSync/ScrollSync.example'
 import styles from './Application.css'
-import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
+import ListExample from '../List/List.example'
 import { generateRandomList } from './utils'
 import Wizard from './Wizard'
 import '../../styles.css'
 
-const COMPONENTS = ['Collection', 'Grid', 'FlexTable', 'VirtualScroll']
+const COMPONENTS = ['Collection', 'Grid', 'FlexTable', 'List']
 const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync', 'WindowScroller']
 const COMPONENT_EXAMPLES_MAP = {
   ArrowKeyStepper: ArrowKeyStepperExample,
@@ -35,7 +35,7 @@ const COMPONENT_EXAMPLES_MAP = {
   Grid: GridExample,
   InfiniteLoader: InfiniteLoaderExample,
   ScrollSync: ScrollSyncExample,
-  VirtualScroll: VirtualScrollExample,
+  List: ListExample,
   WindowScroller: WindowScrollerExample
 }
 
@@ -60,7 +60,7 @@ class Application extends Component {
     super(props)
 
     const activeComponent = getUrlParam({
-      defaultValue: 'VirtualScroll',
+      defaultValue: 'List',
       name: 'component',
       valueCheck: (value) => COMPONENTS.includes(value) || HIGH_ORDER_COMPONENTS.includes(value)
     })

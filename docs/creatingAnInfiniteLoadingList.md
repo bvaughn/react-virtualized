@@ -46,7 +46,7 @@ function MyComponent ({
       rowCount={rowCount}
     >
       {({ onRowsRendered, registerChild }) => (
-        <VirtualScroll
+        <List
           ref={registerChild}
           onRowsRendered={onRowsRendered}
           rowRenderer={rowRenderer}

@@ -27,7 +27,7 @@ The child function is passed the following named parameters:
 This example uses `ScrollSync` to create a fixed row of columns to go along with a scrollable grid.
 
 ```js
-import { Grid, ScrollSync, VirtualScroll } from 'react-virtualized'
+import { Grid, ScrollSync, List } from 'react-virtualized'
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
 function render (props) {
@@ -36,7 +36,7 @@ function render (props) {
       {({ clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => (
         <div className='Table'>
           <div className='LeftColumn'>
-            <VirtualScroll
+            <List
               scrollTop={scrollTop}
               {...props}
             />

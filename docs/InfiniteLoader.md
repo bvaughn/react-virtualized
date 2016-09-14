@@ -4,7 +4,7 @@ InfiniteLoader
 High-order component that manages just-in-time fetching of data as a user scrolls up or down in a list.
 
 Note that this component is inteded to assist with row-loading.
-As such it is best suited for use with `FlexTable` and `VirtualScroll` (although it can also be used with `Grid`).
+As such it is best suited for use with `FlexTable` and `List` (although it can also be used with `Grid`).
 This HOC is not compatible with the `Collection` component.
 
 This is an advanced component and can be confusing in certain situations.
@@ -31,13 +31,13 @@ The child function is passed the following named parameters:
 
 ### Examples
 
-This example uses `InfiniteLoader` to prefetch rows in a `VirtualScroll` list as a user scrolls.
+This example uses `InfiniteLoader` to prefetch rows in a `List` list as a user scrolls.
 An interactive demo can be seen [here](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader).
 
 ```js
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { InfiniteLoader, VirtualScroll } from 'react-virtualized';
+import { InfiniteLoader, List } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
 const list = [];
@@ -61,7 +61,7 @@ ReactDOM.render(
     rowCount={remoteRowCount}
   >
     {({ onRowsRendered, registerChild }) => (
-      <VirtualScroll
+      <List
         ref={registerChild}
         width={300}
         height={200}

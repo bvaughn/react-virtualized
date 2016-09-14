@@ -4,7 +4,7 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import Immutable from 'immutable'
 import AutoSizer from '../AutoSizer'
 import InfiniteLoader from './InfiniteLoader'
-import VirtualScroll from '../VirtualScroll'
+import List from '../List'
 import shallowCompare from 'react-addons-shallow-compare'
 import styles from './InfiniteLoader.example.css'
 
@@ -80,9 +80,9 @@ export default class InfiniteLoaderExample extends Component {
           {({ onRowsRendered, registerChild }) => (
             <AutoSizer disableHeight>
               {({ width }) => (
-                <VirtualScroll
+                <List
                   ref={registerChild}
-                  className={styles.VirtualScroll}
+                  className={styles.List}
                   height={200}
                   onRowsRendered={onRowsRendered}
                   rowCount={list.size}

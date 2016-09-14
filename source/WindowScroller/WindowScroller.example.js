@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import WindowScroller from './WindowScroller'
-import VirtualScroll from '../VirtualScroll'
+import List from '../List'
 import AutoSizer from '../AutoSizer'
 import shallowCompare from 'react-addons-shallow-compare'
 import styles from './WindowScroller.example.css'
@@ -34,7 +34,7 @@ export default class AutoSizerExample extends Component {
         />
 
         <ContentBoxParagraph>
-          This component decorates <code>VirtualScroll</code>, <code>FlexTable</code>, or any other component
+          This component decorates <code>List</code>, <code>FlexTable</code>, or any other component
           and manages the window scroll to scroll through the list
         </ContentBoxParagraph>
 
@@ -43,9 +43,9 @@ export default class AutoSizerExample extends Component {
             {({ height, isScrolling, scrollTop }) => (
               <AutoSizer disableHeight>
                 {({ width }) => (
-                  <VirtualScroll
+                  <List
                     autoHeight
-                    className={styles.VirtualScroll}
+                    className={styles.List}
                     height={height}
                     rowCount={list.size}
                     rowHeight={30}

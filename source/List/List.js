@@ -12,7 +12,7 @@ import shallowCompare from 'react-addons-shallow-compare'
  *
  * This component renders a virtualized list of elements with either fixed or dynamic heights.
  */
-export default class VirtualScroll extends Component {
+export default class List extends Component {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -26,7 +26,7 @@ export default class VirtualScroll extends Component {
     className: PropTypes.string,
 
     /**
-     * Used to estimate the total height of a VirtualScroll before all of its rows have actually been measured.
+     * Used to estimate the total height of a List before all of its rows have actually been measured.
      * The estimated total height is adjusted as rows are rendered.
      */
     estimatedRowSize: PropTypes.number.isRequired,
@@ -138,7 +138,7 @@ export default class VirtualScroll extends Component {
       width
     } = this.props
 
-    const classNames = cn('VirtualScroll', className)
+    const classNames = cn('List', className)
 
     return (
       <Grid

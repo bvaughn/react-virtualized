@@ -3,14 +3,14 @@
  */
 import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
-import styles from './VirtualScroll.example.css'
+import styles from './List.example.css'
 import AutoSizer from '../AutoSizer'
-import VirtualScroll from './VirtualScroll'
+import List from './List'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import shallowCompare from 'react-addons-shallow-compare'
 
-export default class VirtualScrollExample extends Component {
+export default class ListExample extends Component {
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -49,9 +49,9 @@ export default class VirtualScrollExample extends Component {
     return (
       <ContentBox {...this.props}>
         <ContentBoxHeader
-          text='VirtualScroll'
-          sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'
-          docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/VirtualScroll.md'
+          text='List'
+          sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/List/List.example.js'
+          docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/List.md'
         />
 
         <ContentBoxParagraph>
@@ -121,9 +121,9 @@ export default class VirtualScrollExample extends Component {
         <div>
           <AutoSizer disableHeight>
             {({ width }) => (
-              <VirtualScroll
-                ref='VirtualScroll'
-                className={styles.VirtualScroll}
+              <List
+                ref='List'
+                className={styles.List}
                 height={virtualScrollHeight}
                 overscanRowCount={overscanRowCount}
                 noRowsRenderer={this._noRowsRenderer}

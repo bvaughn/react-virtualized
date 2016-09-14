@@ -8,7 +8,7 @@ Documentation
   * [FlexColumn](FlexColumn.md)
   * [SortDirection](SortDirection.md)
 * [Grid](Grid.md)
-* [VirtualScroll](VirtualScroll.md)
+* [List](List.md)
 
 ### High-Order Components
 

@@ -27,10 +27,10 @@ export default class Example extends Component {
     const { list } = this.state
 
     return (
-      <div className={styles.VirtualScrollExample}>
-        <VirtualScroll
-          ref='VirtualScroll'
-          className={styles.VirtualScroll}
+      <div className={styles.ListExample}>
+        <List
+          ref='List'
+          className={styles.List}
           width={300}
           height={200}
           rowHeight={60}
@@ -51,7 +51,7 @@ export default class Example extends Component {
     this.setState({ list })
 
     // If you want to scroll to the top you can do it like this
-    this.refs.VirtualScroll.scrollToRow(0)
+    this.refs.List.scrollToRow(0)
   }
 
   _rowRenderer ({ index, isScrolling }) {

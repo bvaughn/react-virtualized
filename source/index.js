@@ -24,5 +24,5 @@ export {
 } from './Grid'
 export { InfiniteLoader } from './InfiniteLoader'
 export { ScrollSync } from './ScrollSync'
-export { VirtualScroll } from './VirtualScroll'
+export { List } from './List'
 export { WindowScroller } from './WindowScroller'

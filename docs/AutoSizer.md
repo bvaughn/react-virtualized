@@ -26,7 +26,7 @@ Here is a simple example...
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AutoSizer, VirtualScroll } from 'react-virtualized';
+import { AutoSizer, List } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // List data as an array of strings
@@ -39,7 +39,7 @@ const list = [
 ReactDOM.render(
   <AutoSizer>
     {({ height, width }) => (
-      <VirtualScroll
+      <List
         width={width}
         height={height}
         rowCount={list.length}

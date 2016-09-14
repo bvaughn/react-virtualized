@@ -3,9 +3,9 @@ import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import { Simulate } from 'react-addons-test-utils'
 import Immutable from 'immutable'
-import VirtualScroll from './VirtualScroll'
+import List from './List'
 
-describe('VirtualScroll', () => {
+describe('List', () => {
   const array = []
   for (var i = 0; i < 100; i++) {
     array.push(`Name ${i}`)
@@ -25,7 +25,7 @@ describe('VirtualScroll', () => {
     }
 
     return (
-      <VirtualScroll
+      <List
         height={100}
         overscanRowCount={0}
         rowHeight={10}
@@ -252,7 +252,7 @@ describe('VirtualScroll', () => {
   describe('styles and classNames', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(render(getMarkup()))
-      expect(node.className).toContain('VirtualScroll')
+      expect(node.className).toContain('List')
     })
 
     it('should use a custom :className if specified', () => {

@@ -57,7 +57,7 @@ var App = React.createClass({
             },
             function (cellMeasurerParams) {
               return React.createElement(
-                ReactVirtualized.VirtualScroll,
+                ReactVirtualized.List,
                 {
                   className: 'chat',
                   height: autoSizerParams.height,

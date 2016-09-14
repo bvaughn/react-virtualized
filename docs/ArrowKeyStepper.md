@@ -12,7 +12,7 @@ The appearance of this wrapper element can be customized using the `className` p
 |:---|:---|:---:|:---|
 | children | Function | ✓ | Function respondible for rendering children. This function should implement the following signature: `({ onSectionRendered: Function, scrollToColumn: number, scrollToRow: number }) => PropTypes.element` |
 | className | String |  | CSS class name to attach to the wrapper `<div>`. |
-| columnCount | Number | ✓ | Number of columns in grid; for `FlexTable` and `VirtualScroll` this property should always be `1`. |
+| columnCount | Number | ✓ | Number of columns in grid; for `FlexTable` and `List` this property should always be `1`. |
 | rowCount | Number | ✓ | Number of rows in grid. |
 
 ### Children function
@@ -27,7 +27,7 @@ The child function is passed the following named parameters:
 
 ### Examples
 
-You can decorate any virtualized component (eg. `FlexTable`, `Grid`, or `VirtualScroll`) with arrow-key snapping like so:
+You can decorate any virtualized component (eg. `FlexTable`, `Grid`, or `List`) with arrow-key snapping like so:
 
 ```javascript
 import React from 'react';
