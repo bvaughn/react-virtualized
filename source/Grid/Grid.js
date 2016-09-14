@@ -555,7 +555,7 @@ export default class Grid extends Component {
               height: totalRowsHeight,
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,
-              pointerEvents: isScrolling ? 'none' : 'auto'
+              pointerEvents: isScrolling ? 'none' : ''
             }}
           >
             {childrenToDisplay}
