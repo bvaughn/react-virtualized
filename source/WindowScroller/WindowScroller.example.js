@@ -49,7 +49,7 @@ export default class AutoSizerExample extends Component {
                     height={height}
                     rowCount={list.size}
                     rowHeight={30}
-                    rowRenderer={({ index }) => this._rowRenderer({ index, isScrolling })}
+                    rowRenderer={({ index, key, style }) => this._rowRenderer({ index, isScrolling, key, style })}
                     scrollTop={scrollTop}
                     width={width}
                   />
@@ -66,7 +66,7 @@ export default class AutoSizerExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _rowRenderer ({ index, isScrolling }) {
+  _rowRenderer ({ index, isScrolling, key, style }) {
     const { list } = this.props
     const row = list.get(index)
     const className = cn(styles.row, {
@@ -75,9 +75,9 @@ export default class AutoSizerExample extends Component {
 
     return (
       <div
-        key={index}
+        key={key}
         className={className}
-        style={{ height: 30 }}
+        style={style}
       >
         {row.name}
       </div>

@@ -31,8 +31,8 @@ describe('Table', () => {
   function getMarkup ({
     cellDataGetter,
     cellRenderer,
-    cellStyle,
     columnData = { data: 123 },
+    columnStyle,
     disableSort = false,
     headerRenderer,
     maxWidth,
@@ -59,7 +59,7 @@ describe('Table', () => {
           cellDataGetter={cellDataGetter}
           headerRenderer={headerRenderer}
           disableSort={disableSort}
-          style={cellStyle}
+          style={columnStyle}
         />
         <Column
           label='Email'
@@ -682,12 +682,12 @@ describe('Table', () => {
     })
 
     it('should use custom :styles if specified', () => {
-      const cellStyle = { backgroundColor: 'red' }
+      const columnStyle = { backgroundColor: 'red' }
       const headerStyle = { backgroundColor: 'blue' }
       const rowStyle = { backgroundColor: 'green' }
       const style = { backgroundColor: 'orange' }
       const node = findDOMNode(render(getMarkup({
-        cellStyle,
+        columnStyle,
         headerStyle,
         rowStyle,
         style
@@ -712,69 +712,6 @@ describe('Table', () => {
           expect(row.style.backgroundColor).toEqual('green')
         }
       })
-    })
-
-    it('should use the expected global CSS classNames for rows', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        columnCount: 1
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.className === 'ReactVirtualized__Grid__cell')
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :rowWrapperClassName if specified', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        columnCount: 1,
-        rowWrapperClassName: 'foo'
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :rowWrapperClassName if function specified', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        columnCount: 1,
-        rowWrapperClassName: () => 'foo'
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :rowWrapperClassName indexes', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 2,
-        columnCount: 2,
-        rowWrapperClassName: ({index}) => `row-${index}`
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.className.split(' ')[1])
-      expect(rows.length).toEqual(2)
-      expect(rows).toEqual(['row--1', 'row-0'])
-    })
-
-    it('should use a custom :rowWrapperStyle if specified', () => {
-      const rowWrapperStyle = { backgroundColor: 'red' }
-      const rendered = findDOMNode(render(getMarkup({ rowWrapperStyle })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const result = Array.from(cells).map(el => el.style.backgroundColor)
-      expect(result).toEqual((new Array(cells.length)).fill('red'))
-    })
-
-    it('should use a custom :rowWrapperStyle if function specified', () => {
-      const rowWrapperStyle = () => { return { backgroundColor: 'red' } }
-      const rendered = findDOMNode(render(getMarkup({ rowWrapperStyle })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const result = Array.from(cells).map(el => el.style.backgroundColor)
-      expect(result).toEqual((new Array(cells.length)).fill('red'))
     })
 
     it('should pass :gridClassName and :gridStyle to the inner Grid', () => {

@@ -1,6 +1,7 @@
 /**
  * @flow
  */
+import cn from 'classnames'
 import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
 import styles from './List.example.css'
@@ -179,7 +180,7 @@ export default class ListExample extends Component {
     this.setState({ scrollToIndex })
   }
 
-  _rowRenderer ({ index, isScrolling }) {
+  _rowRenderer ({ index, isScrolling, key, style }) {
     const {
       showScrollingPlaceholder,
       useDynamicRowHeight
@@ -190,10 +191,12 @@ export default class ListExample extends Component {
       isScrolling
     ) {
       return (
-        <div className={styles.row}>
-          <span className={styles.isScrollingPlaceholder}>
-            Scrolling...
-          </span>
+        <div
+          className={cn(styles.row, styles.isScrollingPlaceholder)}
+          key={key}
+          style={style}
+        >
+          Scrolling...
         </div>
       )
     }
@@ -214,7 +217,11 @@ export default class ListExample extends Component {
     }
 
     return (
-      <div className={styles.row}>
+      <div
+        className={styles.row}
+        key={key}
+        style={style}
+      >
         <div
           className={styles.letter}
           style={{

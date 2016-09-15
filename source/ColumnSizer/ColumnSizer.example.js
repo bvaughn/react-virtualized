@@ -146,13 +146,17 @@ export default class ColumnSizerExample extends Component {
     )
   }
 
-  _cellRenderer ({ columnIndex, rowIndex }) {
+  _cellRenderer ({ columnIndex, key, rowIndex, style }) {
     const className = columnIndex === 0
       ? styles.firstCell
       : styles.cell
 
     return (
-      <div className={className}>
+      <div
+        className={className}
+        key={key}
+        style={style}
+      >
         {`R:${rowIndex}, C:${columnIndex}`}
       </div>
     )

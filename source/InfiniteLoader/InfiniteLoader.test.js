@@ -26,10 +26,10 @@ describe('InfiniteLoader', () => {
     loadMoreRowsCalls.push({ startIndex, stopIndex })
   }
 
-  function rowRenderer (index) {
+  function rowRenderer ({ index, key, style }) {
     rowRendererCalls.push(index)
     return (
-      <div key={index} />
+      <div key={key} />
     )
   }
 

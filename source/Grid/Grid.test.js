@@ -14,9 +14,13 @@ const NUM_ROWS = 100
 const NUM_COLUMNS = 50
 
 describe('Grid', () => {
-  function defaultCellRenderer ({ columnIndex, rowIndex }) {
+  function defaultCellRenderer ({ columnIndex, key, rowIndex, style }) {
     return (
-      <div className='gridItem'>
+      <div
+        className='gridItem'
+        key={key}
+        style={style}
+      >
         {`row:${rowIndex}, column:${columnIndex}`}
       </div>
     )
@@ -68,13 +72,21 @@ describe('Grid', () => {
 
     // Small performance tweak added in 5.5.6
     it('should not render/parent cells that are null or false', () => {
-      function cellRenderer ({ columnIndex, rowIndex }) {
+      function cellRenderer ({ columnIndex, key, rowIndex, style }) {
         if (columnIndex === 0) {
           return null
         } else if (rowIndex === 0) {
           return false
         } else {
-          return `row:${rowIndex}, column:${columnIndex}`
+          return (
+            <div
+              className='cell'
+              key={key}
+              style={style}
+            >
+              {`row:${rowIndex}, column:${columnIndex}`}
+            </div>
+          )
         }
       }
       const rendered = findDOMNode(render(getMarkup({
@@ -84,7 +96,7 @@ describe('Grid', () => {
         rowCount: 3,
         cellRenderer
       })))
-      expect(rendered.querySelectorAll('.ReactVirtualized__Grid__cell').length).toEqual(4) // [1,1], [1,2], [2,1], and [2,2]
+      expect(rendered.querySelectorAll('.cell').length).toEqual(4) // [1,1], [1,2], [2,1], and [2,2]
       expect(rendered.textContent).not.toContain('column:0')
       expect(rendered.textContent).not.toContain('row:0')
     })
@@ -595,69 +607,6 @@ describe('Grid', () => {
       const rendered = findDOMNode(render(getMarkup({ style })))
       expect(rendered.style.backgroundColor).toEqual('red')
     })
-
-    it('should use the expected global CSS classNames for rows', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        columnCount: 1
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.className === 'ReactVirtualized__Grid__cell')
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :cellClassName if specified', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        columnCount: 1,
-        cellClassName: 'foo'
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :cellClassName if function specified', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        columnCount: 1,
-        cellClassName: () => 'foo'
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :cellClassName indexes', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 2,
-        columnCount: 2,
-        cellClassName: ({rowIndex, columnIndex}) => `col-${rowIndex}-${columnIndex}`
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.className.split(' ')[1])
-      expect(rows.length).toEqual(4)
-      expect(rows).toEqual(['col-0-0', 'col-0-1', 'col-1-0', 'col-1-1'])
-    })
-
-    it('should use a custom :cellStyle if specified', () => {
-      const cellStyle = { backgroundColor: 'red' }
-      const rendered = findDOMNode(render(getMarkup({ cellStyle })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const result = Array.from(cells).map(el => el.style.backgroundColor)
-      expect(result).toEqual((new Array(cells.length)).fill('red'))
-    })
-
-    it('should use a custom :cellStyle if function specified', () => {
-      const cellStyle = () => { return { backgroundColor: 'red' } }
-      const rendered = findDOMNode(render(getMarkup({ cellStyle })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const result = Array.from(cells).map(el => el.style.backgroundColor)
-      expect(result).toEqual((new Array(cells.length)).fill('red'))
-    })
   })
 
   describe('onScroll', () => {
@@ -987,9 +936,9 @@ describe('Grid', () => {
 
   it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', () => {
     const cellRendererCalls = []
-    function cellRenderer ({ columnIndex, isScrolling, rowIndex }) {
+    function cellRenderer ({ columnIndex, isScrolling, key, rowIndex, style }) {
       cellRendererCalls.push(isScrolling)
-      return defaultCellRenderer({ columnIndex, rowIndex })
+      return defaultCellRenderer({ columnIndex, key, rowIndex, style })
     }
     const grid = render(getMarkup({
       cellRenderer
@@ -1003,9 +952,9 @@ describe('Grid', () => {
   describe('cell caching', () => {
     it('should not cache cells if the Grid is not scrolling', () => {
       const cellRendererCalls = []
-      function cellRenderer ({ columnIndex, rowIndex }) {
+      function cellRenderer ({ columnIndex, key, rowIndex, style }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
-        return defaultCellRenderer({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, key, rowIndex, style })
       }
       const props = {
         cellRenderer,
@@ -1039,9 +988,9 @@ describe('Grid', () => {
 
     it('should cache a cell once it has been rendered while scrolling', () => {
       const cellRendererCalls = []
-      function cellRenderer ({ columnIndex, rowIndex }) {
+      function cellRenderer ({ columnIndex, key, rowIndex, style }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
-        return defaultCellRenderer({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, key, rowIndex, style })
       }
       const props = {
         cellRenderer,
@@ -1084,9 +1033,9 @@ describe('Grid', () => {
 
     it('should clear cache once :isScrolling is false', async (done) => {
       const cellRendererCalls = []
-      function cellRenderer ({ columnIndex, rowIndex }) {
+      function cellRenderer ({ columnIndex, key, rowIndex, style }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
-        return defaultCellRenderer({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, key, rowIndex, style })
       }
       const props = {
         cellRenderer,
@@ -1121,9 +1070,9 @@ describe('Grid', () => {
 
     it('should clear cache if :recomputeGridSize is called', () => {
       const cellRendererCalls = []
-      function cellRenderer ({ columnIndex, rowIndex }) {
+      function cellRenderer ({ columnIndex, key, rowIndex, style }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
-        return defaultCellRenderer({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, key, rowIndex, style })
       }
       const props = {
         cellRenderer,
@@ -1156,9 +1105,9 @@ describe('Grid', () => {
     it('should support a custom :scrollingResetTimeInterval prop', async (done) => {
       const cellRendererCalls = []
       const scrollingResetTimeInterval = DEFAULT_SCROLLING_RESET_TIME_INTERVAL * 2
-      function cellRenderer ({ columnIndex, rowIndex }) {
+      function cellRenderer ({ columnIndex, key, rowIndex, style }) {
         cellRendererCalls.push({ columnIndex, rowIndex })
-        return defaultCellRenderer({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, key, rowIndex, style })
       }
       const props = {
         cellRenderer,

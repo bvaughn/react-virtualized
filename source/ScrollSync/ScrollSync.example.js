@@ -181,38 +181,46 @@ export default class GridExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _renderBodyCell ({ columnIndex, rowIndex }) {
+  _renderBodyCell ({ columnIndex, key, rowIndex, style }) {
     if (columnIndex < 1) {
       return
     }
 
-    return this._renderLeftSideCell({ columnIndex, rowIndex })
+    return this._renderLeftSideCell({ columnIndex, key, rowIndex, style })
   }
 
-  _renderHeaderCell ({ columnIndex, rowIndex }) {
+  _renderHeaderCell ({ columnIndex, key, rowIndex, style }) {
     if (columnIndex < 1) {
       return
     }
 
-    return this._renderLeftHeaderCell({ columnIndex, rowIndex })
+    return this._renderLeftHeaderCell({ columnIndex, key, rowIndex, style })
   }
 
-  _renderLeftHeaderCell ({ columnIndex, rowIndex }) {
+  _renderLeftHeaderCell ({ columnIndex, key, rowIndex, style }) {
     return (
-      <div className={styles.headerCell}>
+      <div
+        className={styles.headerCell}
+        key={key}
+        style={style}
+      >
         {`C${columnIndex}`}
       </div>
     )
   }
 
-  _renderLeftSideCell ({ columnIndex, rowIndex }) {
+  _renderLeftSideCell ({ columnIndex, key, rowIndex, style }) {
     const rowClass = rowIndex % 2 === 0
       ? columnIndex % 2 === 0 ? styles.evenRow : styles.oddRow
       : columnIndex % 2 !== 0 ? styles.evenRow : styles.oddRow
     const classNames = cn(rowClass, styles.cell)
 
     return (
-      <div className={classNames}>
+      <div
+        className={classNames}
+        key={key}
+        style={style}
+      >
         {`R${rowIndex}, C${columnIndex}`}
       </div>
     )

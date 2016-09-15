@@ -65,14 +65,8 @@ export default class List extends Component {
     /** Responsbile for rendering a row given an index; ({ index: number }): node */
     rowRenderer: PropTypes.func.isRequired,
 
-    /** Optional custom CSS class for individual rows */
-    rowClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
     /** Number of rows in list. */
     rowCount: PropTypes.number.isRequired,
-
-    /** Optional custom styles for individual cells */
-    rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
     /** See Grid#scrollToAlignment */
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
@@ -107,8 +101,6 @@ export default class List extends Component {
     super(props, context)
 
     this._cellRenderer = this._cellRenderer.bind(this)
-    this._createRowClassNameGetter = this._createRowClassNameGetter.bind(this)
-    this._createRowStyleGetter = this._createRowStyleGetter.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._onSectionRendered = this._onSectionRendered.bind(this)
   }
@@ -145,8 +137,6 @@ export default class List extends Component {
         {...this.props}
         autoContainerWidth
         cellRenderer={this._cellRenderer}
-        cellClassName={this._createRowClassNameGetter()}
-        cellStyle={this._createRowStyleGetter()}
         className={classNames}
         columnWidth={width}
         columnCount={1}
@@ -165,34 +155,18 @@ export default class List extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _cellRenderer ({ columnIndex, isScrolling, rowIndex }) {
+  _cellRenderer ({ columnIndex, isScrolling, key, rowIndex, style }) {
     const { rowRenderer } = this.props
+
+    // By default, List cells should be 100% width.
+    // This prevents them from flowing under a scrollbar (if present).
+    style.width = '100%'
 
     return rowRenderer({
       index: rowIndex,
-      isScrolling
-    })
-  }
-
-  _createRowClassNameGetter () {
-    const { rowClassName } = this.props
-
-    return rowClassName instanceof Function
-      ? ({ rowIndex }) => rowClassName({ index: rowIndex })
-      : () => rowClassName
-  }
-
-  _createRowStyleGetter () {
-    const { rowStyle } = this.props
-
-    const wrapped = rowStyle instanceof Function
-      ? rowStyle
-      : () => rowStyle
-
-    // Default width to 100% to prevent list rows from flowing under the vertical scrollbar
-    return ({ rowIndex }) => ({
-      width: '100%',
-      ...wrapped({ index: rowIndex })
+      isScrolling,
+      key,
+      style
     })
   }
 

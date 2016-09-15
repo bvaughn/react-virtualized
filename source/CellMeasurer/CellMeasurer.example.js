@@ -131,7 +131,7 @@ export default class CellMeasurerExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _cellRenderer ({ columnIndex, rowIndex }) {
+  _cellRenderer ({ columnIndex, key, rowIndex, style }) {
     const datum = this._getDatum(rowIndex)
     const rowClass = this._getRowClassName(rowIndex)
     const classNames = cn(rowClass, styles.cell, {
@@ -153,7 +153,11 @@ export default class CellMeasurerExample extends Component {
     }
 
     return (
-      <div className={classNames}>
+      <div
+        className={classNames}
+        key={key}
+        style={style}
+      >
         {content}
       </div>
     )
@@ -169,9 +173,13 @@ export default class CellMeasurerExample extends Component {
     return row % 2 === 0 ? styles.evenRow : styles.oddRow
   }
 
-  _uniformCellRenderer ({ columnIndex, rowIndex }) {
+  _uniformCellRenderer ({ columnIndex, key, rowIndex, style }) {
     return (
-      <div className={styles.uniformSizeCell}>
+      <div
+        className={styles.uniformSizeCell}
+        key={key}
+        style={style}
+      >
         {rowIndex}, {columnIndex}
       </div>
     )

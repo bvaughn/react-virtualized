@@ -1,6 +1,4 @@
 /** @flow */
-import React from 'react'
-import cn from 'classnames'
 
 /**
  * Default implementation of cellRangeRenderer used by Grid.
@@ -8,9 +6,7 @@ import cn from 'classnames'
  */
 export default function defaultCellRangeRenderer ({
   cellCache,
-  cellClassName,
   cellRenderer,
-  cellStyle,
   columnSizeAndPositionManager,
   columnStartIndex,
   columnStopIndex,
@@ -31,7 +27,22 @@ export default function defaultCellRangeRenderer ({
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
       let columnDatum = columnSizeAndPositionManager.getSizeAndPositionOfCell(columnIndex)
       let key = `${rowIndex}-${columnIndex}`
-      let cellStyleObject = cellStyle({ rowIndex, columnIndex })
+      let style = {
+        height: rowDatum.size,
+        left: columnDatum.offset + horizontalOffsetAdjustment,
+        position: 'absolute',
+        top: rowDatum.offset + verticalOffsetAdjustment,
+        width: columnDatum.size
+      }
+
+      let cellRendererParams = {
+        columnIndex,
+        isScrolling,
+        key,
+        rowIndex,
+        style
+      }
+
       let renderedCell
 
       // Avoid re-creating cells while scrolling.
@@ -40,46 +51,20 @@ export default function defaultCellRangeRenderer ({
       // This cache will be thrown away once scrolling complets.
       if (isScrolling) {
         if (!cellCache[key]) {
-          cellCache[key] = cellRenderer({
-            columnIndex,
-            isScrolling,
-            rowIndex
-          })
+          cellCache[key] = cellRenderer(cellRendererParams)
         }
         renderedCell = cellCache[key]
       // If the user is no longer scrolling, don't cache cells.
       // This makes dynamic cell content difficult for users and would also lead to a heavier memory footprint.
       } else {
-        renderedCell = cellRenderer({
-          columnIndex,
-          isScrolling,
-          rowIndex
-        })
+        renderedCell = cellRenderer(cellRendererParams)
       }
 
       if (renderedCell == null || renderedCell === false) {
         continue
       }
 
-      const className = cellClassName({ columnIndex, rowIndex })
-
-      let child = (
-        <div
-          key={key}
-          className={cn('ReactVirtualized__Grid__cell', className)}
-          style={{
-            height: rowDatum.size,
-            left: columnDatum.offset + horizontalOffsetAdjustment,
-            top: rowDatum.offset + verticalOffsetAdjustment,
-            width: columnDatum.size,
-            ...cellStyleObject
-          }}
-        >
-          {renderedCell}
-        </div>
-      )
-
-      renderedCells.push(child)
+      renderedCells.push(renderedCell)
     }
   }
 
@@ -88,9 +73,7 @@ export default function defaultCellRangeRenderer ({
 
 type DefaultCellRangeRendererParams = {
   cellCache: Object,
-  cellClassName: Function,
   cellRenderer: Function,
-  cellStyle: Function,
   columnSizeAndPositionManager: Object,
   columnStartIndex: number,
   columnStopIndex: number,

@@ -13,11 +13,12 @@ describe('List', () => {
   const names = Immutable.fromJS(array)
 
   function getMarkup (props = {}) {
-    function rowRenderer ({ index }) {
+    function rowRenderer ({ index, key, style }) {
       return (
         <div
-          key={index}
           className='listItem'
+          key={key}
+          style={style}
         >
           {names.get(index)}
         </div>
@@ -266,69 +267,9 @@ describe('List', () => {
       expect(rendered.style.backgroundColor).toEqual('red')
     })
 
-    it('should use the expected global CSS classNames for rows', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        columnCount: 1
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.className === 'ReactVirtualized__Grid__cell')
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :cellClassName if specified', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        rowClassName: 'foo'
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :cellClassName if function specified', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        rowClassName: () => 'foo'
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :cellClassName indexes', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        rowClassName: ({index}) => `col-${index}`
-      })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const rows = Array.from(cells).map(row => row.className.split(' ')[1])
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual(['col-0', 'col-1', 'col-2'])
-    })
-
-    it('should use a custom :rowStyle if specified', () => {
-      const rowStyle = { backgroundColor: 'red' }
-      const rendered = findDOMNode(render(getMarkup({ rowStyle })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const result = Array.from(cells).map(el => el.style.backgroundColor)
-      expect(result).toEqual((new Array(cells.length)).fill('red'))
-    })
-
-    it('should use a custom :rowStyle if function specified', () => {
-      const rowStyle = () => { return { backgroundColor: 'red' } }
-      const rendered = findDOMNode(render(getMarkup({ rowStyle })))
-      const cells = rendered.querySelectorAll('.ReactVirtualized__Grid__cell')
-      const result = Array.from(cells).map(el => el.style.backgroundColor)
-      expect(result).toEqual((new Array(cells.length)).fill('red'))
-    })
-
     it('should set the width of a row to be 100% by default', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      const cell = rendered.querySelector('.ReactVirtualized__Grid__cell')
+      const cell = rendered.querySelector('.listItem')
       expect(cell.style.width).toEqual('100%')
     })
   })
@@ -458,8 +399,15 @@ describe('List', () => {
   describe('forceUpdateGrid', () => {
     it('should refresh inner Grid content when called', () => {
       let marker = 'a'
-      function rowRenderer ({ index }) {
-        return `${index}${marker}`
+      function rowRenderer ({ index, key, style }) {
+        return (
+          <div
+            key={key}
+            style={style}
+          >
+            {index}{marker}
+          </div>
+        )
       }
       const component = render(getMarkup({ rowRenderer }))
       const node = findDOMNode(component)
@@ -487,9 +435,16 @@ describe('List', () => {
   describe('pure', () => {
     it('should not re-render unless props have changed', () => {
       let rowRendererCalled = false
-      function rowRenderer () {
+      function rowRenderer ({ index, key, style }) {
         rowRendererCalled = true
-        return 'foo'
+        return (
+          <div
+            key={key}
+            style={style}
+          >
+            {index}
+          </div>
+        )
       }
       const markup = getMarkup({ rowRenderer })
       render(markup)

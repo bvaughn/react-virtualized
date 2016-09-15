@@ -39,10 +39,6 @@
   position: relative;
 }
 
-.ReactVirtualized__Grid__cell {
-  position: absolute;
-}
-
 /* Table default theme */
 
 .ReactVirtualized__Table {

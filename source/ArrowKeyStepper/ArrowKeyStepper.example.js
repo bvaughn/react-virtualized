@@ -53,7 +53,7 @@ export default class ArrowKeyStepperExample extends Component {
                     columnCount={100}
                     height={200}
                     onSectionRendered={onSectionRendered}
-                    cellRenderer={({ columnIndex, rowIndex }) => this._cellRenderer({ columnIndex, rowIndex, scrollToColumn, scrollToRow })}
+                    cellRenderer={({ columnIndex, key, rowIndex, style }) => this._cellRenderer({ columnIndex, key, rowIndex, scrollToColumn, scrollToRow, style })}
                     rowHeight={this._getRowHeight}
                     rowCount={100}
                     scrollToColumn={scrollToColumn}
@@ -81,13 +81,17 @@ export default class ArrowKeyStepperExample extends Component {
     return (1 + (index % 3)) * 30
   }
 
-  _cellRenderer ({ columnIndex, rowIndex, scrollToColumn, scrollToRow }) {
+  _cellRenderer ({ columnIndex, key, rowIndex, scrollToColumn, scrollToRow, style }) {
     const className = cn(styles.Cell, {
       [styles.FocusedCell]: columnIndex === scrollToColumn && rowIndex === scrollToRow
     })
 
     return (
-      <div className={className}>
+      <div
+        className={className}
+        key={key}
+        style={style}
+      >
         {`r:${rowIndex}, c:${columnIndex}`}
       </div>
     )

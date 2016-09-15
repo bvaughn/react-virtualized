@@ -82,15 +82,15 @@ export default class AutoSizerExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _rowRenderer ({ index }) {
+  _rowRenderer ({ key, index, style }) {
     const { list } = this.props
     const row = list.get(index)
 
     return (
       <div
-        key={index}
+        key={key}
         className={styles.row}
-        style={{ height: 30 }}
+        style={style}
       >
         {row.name}
       </div>

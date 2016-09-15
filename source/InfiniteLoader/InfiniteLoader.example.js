@@ -67,7 +67,7 @@ export default class InfiniteLoaderExample extends Component {
             </button>
 
             <div className={styles.cacheCountRow}>
-              {`${loadingRowCount} loading, ${loadedRowCount} loaded`}
+              {loadingRowCount} loading, {loadedRowCount} loaded
             </div>
           </div>
         </ContentBoxParagraph>
@@ -154,7 +154,7 @@ export default class InfiniteLoaderExample extends Component {
     })
   }
 
-  _rowRenderer ({ index }) {
+  _rowRenderer ({ index, key, style }) {
     const { list } = this.props
     const { loadedRowsMap } = this.state
 
@@ -174,9 +174,9 @@ export default class InfiniteLoaderExample extends Component {
 
     return (
       <div
-        key={index}
         className={styles.row}
-        style={{ height: 30 }}
+        key={key}
+        style={style}
       >
         {content}
       </div>

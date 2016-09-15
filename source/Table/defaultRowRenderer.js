@@ -10,6 +10,7 @@ export default function defaultRowRenderer ({
   columns,
   index,
   isScrolling,
+  key,
   onRowClick,
   onRowDoubleClick,
   onRowMouseOver,
@@ -47,6 +48,7 @@ export default function defaultRowRenderer ({
     <div
       {...a11yProps}
       className={className}
+      key={key}
       style={style}
     >
       {columns}

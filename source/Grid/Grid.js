@@ -46,12 +46,6 @@ export default class Grid extends Component {
      */
     autoHeight: PropTypes.bool,
 
-    /** Optional custom CSS class for individual cells */
-    cellClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-    /** Optional custom styles for individual cells */
-    cellStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-
     /**
      * Responsible for rendering a cell given an row and column index.
      * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
@@ -190,7 +184,6 @@ export default class Grid extends Component {
 
   static defaultProps = {
     'aria-label': 'grid',
-    cellStyle: {},
     cellRangeRenderer: defaultCellRangeRenderer,
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
@@ -576,10 +569,8 @@ export default class Grid extends Component {
 
   _calculateChildrenToRender (props = this.props, state = this.state) {
     const {
-      cellClassName,
       cellRenderer,
       cellRangeRenderer,
-      cellStyle,
       columnCount,
       height,
       overscanColumnCount,
@@ -648,9 +639,7 @@ export default class Grid extends Component {
 
       this._childrenToDisplay = cellRangeRenderer({
         cellCache: this._cellCache,
-        cellClassName: this._wrapCellClassNameGetter(cellClassName),
         cellRenderer,
-        cellStyle: this._wrapCellStyleGetter(cellStyle),
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
@@ -789,14 +778,6 @@ export default class Grid extends Component {
     ) {
       this.setState(newState)
     }
-  }
-
-  _wrapCellClassNameGetter (className) {
-    return this._wrapPropertyGetter(className)
-  }
-
-  _wrapCellStyleGetter (style) {
-    return this._wrapPropertyGetter(style)
   }
 
   _wrapPropertyGetter (value) {

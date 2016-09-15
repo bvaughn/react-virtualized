@@ -156,12 +156,6 @@ export default class Table extends Component {
     /** Optional custom inline style to attach to table rows. */
     rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
 
-    /** Optional custom CSS class for individual rows */
-    rowWrapperClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-    /** Optional custom CSS class for individual rows */
-    rowWrapperStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-
     /** See Grid#scrollToAlignment */
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
@@ -215,8 +209,6 @@ export default class Table extends Component {
       scrollbarWidth: 0
     }
 
-    this._cellClassName = this._cellClassName.bind(this)
-    this._cellStyle = this._cellStyle.bind(this)
     this._createColumn = this._createColumn.bind(this)
     this._createRow = this._createRow.bind(this)
     this._onScroll = this._onScroll.bind(this)
@@ -303,9 +295,7 @@ export default class Table extends Component {
           {...this.props}
           autoContainerWidth
           className={cn('ReactVirtualized__Table__Grid', gridClassName)}
-          cellClassName={this._cellClassName}
           cellRenderer={this._createRow}
-          cellStyle={this._cellStyle}
           columnWidth={width}
           columnCount={1}
           height={availableRowsHeight}
@@ -325,22 +315,6 @@ export default class Table extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
-  }
-
-  _cellClassName ({ rowIndex }) {
-    const { rowWrapperClassName } = this.props
-
-    return rowWrapperClassName instanceof Function
-      ? rowWrapperClassName({ index: rowIndex - 1 })
-      : rowWrapperClassName
-  }
-
-  _cellStyle ({ rowIndex }) {
-    const { rowWrapperStyle } = this.props
-
-    return rowWrapperStyle instanceof Function
-      ? rowWrapperStyle({ index: rowIndex - 1 })
-      : rowWrapperStyle
   }
 
   _createColumn ({
@@ -446,7 +420,9 @@ export default class Table extends Component {
 
   _createRow ({
     rowIndex: index,
-    isScrolling
+    isScrolling,
+    key,
+    style
   }) {
     const {
       children,
@@ -478,7 +454,8 @@ export default class Table extends Component {
     )
 
     const className = cn('ReactVirtualized__Table__row', rowClass)
-    const style = {
+    const flattenedStyle = {
+      ...style,
       ...rowStyleObject,
       height: this._getRowHeight(index),
       paddingRight: scrollbarWidth
@@ -489,12 +466,13 @@ export default class Table extends Component {
       columns,
       index,
       isScrolling,
+      key,
       onRowClick,
       onRowDoubleClick,
       onRowMouseOver,
       onRowMouseOut,
       rowData,
-      style
+      style: flattenedStyle
     })
   }
 

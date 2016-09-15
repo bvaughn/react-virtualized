@@ -163,6 +163,14 @@ export default class GridExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
+  _cellRenderer ({ columnIndex, key, rowIndex, style }) {
+    if (columnIndex === 0) {
+      return this._renderLeftSideCell({ columnIndex, key, rowIndex, style })
+    } else {
+      return this._renderBodyCell({ columnIndex, key, rowIndex, style })
+    }
+  }
+
   _getColumnWidth ({ index }) {
     switch (index) {
       case 0:
@@ -198,7 +206,7 @@ export default class GridExample extends Component {
     )
   }
 
-  _renderBodyCell ({ columnIndex, rowIndex }) {
+  _renderBodyCell ({ columnIndex, key, rowIndex, style }) {
     const rowClass = this._getRowClassName(rowIndex)
     const datum = this._getDatum(rowIndex)
 
@@ -227,29 +235,27 @@ export default class GridExample extends Component {
     })
 
     return (
-      <div className={classNames}>
+      <div
+        className={classNames}
+        key={key}
+        style={style}
+      >
         {content}
       </div>
     )
   }
 
-  _cellRenderer ({ columnIndex, rowIndex }) {
-    if (columnIndex === 0) {
-      return this._renderLeftSideCell({ columnIndex, rowIndex })
-    } else {
-      return this._renderBodyCell({ columnIndex, rowIndex })
-    }
-  }
-
-  _renderLeftSideCell ({ rowIndex }) {
+  _renderLeftSideCell ({ key, rowIndex, style }) {
     const datum = this._getDatum(rowIndex)
 
     const classNames = cn(styles.cell, styles.letterCell)
-    const style = { backgroundColor: datum.color }
+
+    style.backgroundColor = datum.color
 
     return (
       <div
         className={classNames}
+        key={key}
         style={style}
       >
         {datum.name.charAt(0)}

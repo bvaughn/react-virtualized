@@ -32,8 +32,6 @@ This component expects explicit width, height, and padding parameters.
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
 | rowRenderer | Function |  | Responsible for rendering a table row given an array of columns.: `({ className: string, columns: Array, index: number, isScrolling: boolean, onRowClick: ?Function, onRowDoubleClick: ?Function, onRowMouseOver: ?Function, onRowMouseOut: ?Function, rowData: any, style: any }): PropTypes.node`. [Learn more](#rowrenderer) |
 | rowStyle | Object or Function |  | Optional custom inline style to attach to table rows. This value may be either a style object or a function with the signature `({ index: number }): Object`. Note that for the header row an index of `-1` is provided. |
-| rowWrapperClassName | String or Function |  | Optional custom CSS class name to attach to `Grid__cell` element. If function given then signature should be look like: ({ index: number }): PropTypes.string |
-| rowWrapperStyle | Object or Function |  | Optional custom inline style for `Grid__cell` elements. If function given then signature should be look like: ({ index: number }): PropTypes.object |
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
