@@ -10,6 +10,13 @@ To run a code mod, check out react-virtualized (or download the codemod) and the
 jscodeshift -t /path/to/react-virtualized/codemods/7-to-8/rename-components.js source
 ```
 
+##### 7.24.3
+ES module build (_jsnext:main_ target) updated to depend on Babel's `transform-runtime` rather than referencing global `babelHelpers`.
+This should fix support within projects like `react-boilerplate`.
+
+##### 7.24.2
+`Grid` and `Collection` now set `pointer-events: ''` (instead of _auto_) after scrolling has stopped to avoid overriding parents who may have specified `pointer-events: 'none'`.
+
 ##### 7.24.1
 Refactored `AutoSizer` slightly to add support for `react-lite`.
 
