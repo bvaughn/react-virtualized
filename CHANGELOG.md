@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 7.24.2
+`Grid` and `Collection` now set `pointer-events: ''` (instead of _auto_) after scrolling has stopped to avoid overriding parents who may have specified `pointer-events: 'none'`.
+
 ##### 7.24.1
 Refactored `AutoSizer` slightly to add support for `react-lite`.
 

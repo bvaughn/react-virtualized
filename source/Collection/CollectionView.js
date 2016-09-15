@@ -389,7 +389,7 @@ export default class CollectionView extends Component {
               height: totalHeight,
               maxHeight: totalHeight,
               maxWidth: totalWidth,
-              pointerEvents: isScrolling ? 'none' : 'auto',
+              pointerEvents: isScrolling ? 'none' : '',
               width: totalWidth
             }}
           >
