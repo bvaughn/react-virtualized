@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 7.24.3
+ES module build (_jsnext:main_ target) updated to depend on Babel's `transform-runtime` rather than referencing global `babelHelpers`.
+This should fix support within projects like `react-boilerplate`.
+
 ##### 7.24.2
 `Grid` and `Collection` now set `pointer-events: ''` (instead of _auto_) after scrolling has stopped to avoid overriding parents who may have specified `pointer-events: 'none'`.
 
