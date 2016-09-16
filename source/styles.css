@@ -16,10 +16,6 @@
   overflow: hidden;
 }
 
-.ReactVirtualized__Collection__cell {
-  position: absolute;
-}
-
 /* Grid default theme */
 
 .ReactVirtualized__Grid {

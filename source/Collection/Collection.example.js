@@ -130,18 +130,20 @@ export default class CollectionExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _cellRenderer ({ index, isScrolling }) {
+  _cellRenderer ({ index, isScrolling, key, style }) {
     const { list } = this.props
     const { showScrollingPlaceholder } = this.state
 
     const datum = list.get(index % list.size)
 
+    // Customize style
+    style.backgroundColor = datum.color
+
     return (
       <div
         className={styles.cell}
-        style={{
-          backgroundColor: datum.color
-        }}
+        key={key}
+        style={style}
       >
         {showScrollingPlaceholder && isScrolling ? '...' : index}
       </div>

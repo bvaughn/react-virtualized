@@ -13,7 +13,7 @@ Unlike `Grid`, which renders checkerboard data, `Collection` can render arbitrar
 | className | String |  | Optional custom CSS class name to attach to root Collection element. |
 | cellCount | Number | ✓ | Number of cells in collection. |
 | cellGroupRenderer | Function | ✓ | Responsible for rendering a group of cells given their indices.: `({ cellSizeAndPositionGetter:Function, indices: Array<number>, cellRenderer: Function }): Array<PropTypes.node>` |
-| cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ index: number, isScrolling: boolean }): PropTypes.element` |
+| cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ index: number, isScrolling: boolean, key: string, style: object }): PropTypes.element` |
 | cellSizeAndPositionGetter | Function | ✓ | Callback responsible for returning size and offset/position information for a given cell (index): `({ index: number }): { height: number, width: number, x: number, y: number }` |
 | height | Number | ✓ | Height of Collection; this property determines the number of visible (vs virtualized) rows. |
 | horizontalOverscanSize | Number |  | Enables the `Collection` to horiontally "overscan" its content similar to how `Grid` does. This can reduce flicker around the edges when a user scrolls quickly. This property defaults to `0`; |
@@ -46,14 +46,13 @@ The Collection component supports the following static class names
 |:---|:---|
 | ReactVirtualized__Collection | Main (outer) element |
 | ReactVirtualized__Collection__innerScrollContainer | Inner scrollable area |
-| ReactVirtualized__Collection__cell | Individual cell |
 
 ### Examples
 
 Below is a very basic `Collection` example. It displays an array of objects with fixed row and column sizes.
 [See here](../source/Collection/Collection.example.js) for a more full-featured example.
 
-```javascript
+```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Collection } from 'react-virtualized';
@@ -65,20 +64,34 @@ const list = [
   // And so on...
 ];
 
+function cellRenderer ({ index, key, style }) {
+  return (
+    <div
+      key={key}
+      style={style}
+    >
+      {list[index].name}
+    </div>
+  )
+}
+
+function cellSizeAndPositionGetter ({ index }) {
+  const datum = list[index]
+
+  return {
+    height: datum.height,
+    width: datum.width,
+    x: datum.x,
+    y: datum.y
+  }
+}
+
 // Render your grid
 ReactDOM.render(
   <Collection
     cellCount={list.length}
-    cellRenderer={({ index }) => list[index].name}
-    cellSizeAndPositionGetter={({ index }) => {
-      const datum = list[index]
-      return {
-        height: datum.height,
-        width: datum.width,
-        x: datum.x,
-        y: datum.y
-      }
-    }}
+    cellRenderer={cellRenderer}
+    cellSizeAndPositionGetter={cellSizeAndPositionGetter}
     height={300}
     width={300}
   />,

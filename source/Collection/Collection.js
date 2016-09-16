@@ -31,7 +31,7 @@ export default class Collection extends Component {
 
     /**
      * Responsible for rendering a cell given an row and column index.
-     * Should implement the following interface: ({ index: number }): PropTypes.element
+     * Should implement the following interface: ({ index: number, key: string, style: object }): PropTypes.element
      */
     cellRenderer: PropTypes.func.isRequired,
 
@@ -210,46 +210,32 @@ function defaultCellGroupRenderer ({
     .map((index) => {
       const cellMetadata = cellSizeAndPositionGetter({ index })
 
+      let cellRendererProps = {
+        index,
+        isScrolling,
+        key: index,
+        style: {
+          height: cellMetadata.height,
+          left: cellMetadata.x,
+          position: 'absolute',
+          top: cellMetadata.y,
+          width: cellMetadata.width
+        }
+      }
+
       // Avoid re-creating cells while scrolling.
       // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
       // If a scroll is in progress- cache and reuse cells.
       // This cache will be thrown away once scrolling complets.
-      let renderedCell
-
       if (isScrolling) {
         if (!(index in cellCache)) {
-          cellCache[index] = cellRenderer({
-            index,
-            isScrolling
-          })
+          cellCache[index] = cellRenderer(cellRendererProps)
         }
 
-        renderedCell = cellCache[index]
+        return cellCache[index]
       } else {
-        renderedCell = cellRenderer({
-          index,
-          isScrolling
-        })
+        return cellRenderer(cellRendererProps)
       }
-
-      if (renderedCell == null || renderedCell === false) {
-        return null
-      }
-
-      return (
-        <div
-          className='ReactVirtualized__Collection__cell'
-          key={index}
-          style={{
-            height: cellMetadata.height,
-            left: cellMetadata.x,
-            top: cellMetadata.y,
-            width: cellMetadata.width
-          }}
-        >
-          {renderedCell}
-        </div>
-      )
     })
     .filter((renderedCell) => !!renderedCell)
 }

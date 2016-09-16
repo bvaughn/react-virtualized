@@ -11,9 +11,13 @@ import Collection from './Collection'
 import { CELLS, SECTION_SIZE } from './TestData'
 
 describe('Collection', () => {
-  function defaultCellRenderer ({ index }) {
+  function defaultCellRenderer ({ index, key, style }) {
     return (
-      <div className='cell'>
+      <div
+        className='cell'
+        key={key}
+        style={style}
+      >
         cell:{index}
       </div>
     )
@@ -70,12 +74,16 @@ describe('Collection', () => {
 
     // Small performance tweak added in 5.5.6
     it('should not render/parent cells that are null or false', () => {
-      function cellRenderer ({ index }) {
+      function cellRenderer ({ index, key, style }) {
         if (index > 2) {
           return null
         } else {
           return (
-            <div className='cell'>
+            <div
+              className='cell'
+              key={key}
+              style={style}
+            >
               {index}
             </div>
           )
@@ -511,7 +519,14 @@ describe('Collection', () => {
     it('should use a custom :cellGroupRenderer if specified', () => {
       let cellGroupRendererCalled = 0
       let cellGroupRendererParams
-      const cellRenderer = ({ index }) => index
+      const cellRenderer = ({ index, key, style }) => (
+        <div
+          key={key}
+          style={style}
+        >
+          {index}
+        </div>
+      )
       findDOMNode(render(getMarkup({
         cellRenderer,
         cellGroupRenderer: (params) => {
@@ -532,9 +547,9 @@ describe('Collection', () => {
 
   it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', () => {
     const cellRendererCalls = []
-    function cellRenderer ({ index, isScrolling }) {
+    function cellRenderer ({ index, isScrolling, key, style }) {
       cellRendererCalls.push(isScrolling)
-      return defaultCellRenderer({ index })
+      return defaultCellRenderer({ index, key, style })
     }
     const collection = render(getMarkup({
       cellRenderer
@@ -601,9 +616,9 @@ describe('Collection', () => {
   describe('cell caching', () => {
     it('should not cache cells if the Grid is not scrolling', () => {
       const cellRendererCalls = []
-      function cellRenderer ({ isScrolling, index }) {
+      function cellRenderer ({ isScrolling, index, key, style }) {
         cellRendererCalls.push({ isScrolling, index })
-        return defaultCellRenderer({ index })
+        return defaultCellRenderer({ index, key, style })
       }
 
       const props = {
@@ -628,9 +643,9 @@ describe('Collection', () => {
 
     it('should cache a cell once it has been rendered while scrolling', () => {
       const cellRendererCalls = []
-      function cellRenderer ({ isScrolling, index }) {
+      function cellRenderer ({ isScrolling, index, key, style }) {
         cellRendererCalls.push({ isScrolling, index })
-        return defaultCellRenderer({ index })
+        return defaultCellRenderer({ index, key, style })
       }
 
       const props = {
@@ -670,9 +685,9 @@ describe('Collection', () => {
 
     it('should clear cache once :isScrolling is false', async (done) => {
       const cellRendererCalls = []
-      function cellRenderer ({ isScrolling, index }) {
+      function cellRenderer ({ isScrolling, index, key, style }) {
         cellRendererCalls.push({ isScrolling, index })
-        return defaultCellRenderer({ isScrolling, index })
+        return defaultCellRenderer({ isScrolling, index, key, style })
       }
 
       const props = {
