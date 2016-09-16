@@ -3,12 +3,7 @@ Changelog
 
 # 8.0.0
 Version 8 changes are described in detail on the [Version 8 Roadmap](https://github.com/bvaughn/react-virtualized/issues/386).
-Upgrade instructions and [jscodeshift](https://github.com/facebook/jscodeshift) mods can also be found there.
-
-To run a code mod, check out react-virtualized (or download the codemod) and then...
-```
-jscodeshift -t /path/to/react-virtualized/codemods/7-to-8/rename-components.js source
-```
+Upgrade instructions and [jscodeshift](https://github.com/facebook/jscodeshift) mods can be found [here](docs/upgrades/Version8.md).
 
 ##### 7.24.3
 ES module build (_jsnext:main_ target) updated to depend on Babel's `transform-runtime` rather than referencing global `babelHelpers`.
