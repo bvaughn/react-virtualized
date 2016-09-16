@@ -388,7 +388,7 @@ At a high-level the purpose of this release is to improve customization and flex
 ### Backwards-incompatible changes
 * Refactored `Grid` to remove arrow-key scroll-snapping. Instead this feature is implemented in a HOC, `ArrowKeyStepper`. The upgrade path from React 5.x to 6.x if you want to maintain arrow-key navigation behavior is as follows:
 
-```js
+```jsx
 // Before...
 <Grid {...gridProps}/>
 
@@ -610,14 +610,14 @@ import 'react-virtualized/styles.css';
 In this release the `width` property of the `FlexTable` component was removed. Tables will now grow to fill 100% of the width of their parent container.
 
 The `AutoSizer`'s `ChildComponent` attribute has been removed in favor of using a regular react child. For example:
-```html
+```jsx
 <AutoSizer
   ChildComponent={VirtualScroll}
   {...props}
 />
 ```
 Should instead be this:
-```html
+```jsx
 <AutoSizer>
   <VirtualScroll {...props}/>
 </AutoSizer>

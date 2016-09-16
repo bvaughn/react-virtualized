@@ -8,7 +8,7 @@ This guide covers a few of the most commonly asked questions about using the com
 #### Using AutoSizer to manage only width (or height)
 You can use `AutoSizer` to control only one dimension of its child component using the `disableHeight` or `disableWidth` attributes. For example, a fixed-height component that should grow to fill the available width can be created like so:
 
-```html
+```jsx
 <AutoSizer disableHeight>
   {({ width }) => (
     <Component
@@ -23,7 +23,7 @@ You can use `AutoSizer` to control only one dimension of its child component usi
 #### Using AutoSizer within a flex container
 When using an `AutoSizer` as a direct child of a flex box it usually works out best to wrap it with a div, like so:
 
-```html
+```jsx
 <div style={{ display: 'flex' }}>
   <!-- Other children... -->
   <div style={{ flex: '1 1 auto' }}>
@@ -43,7 +43,7 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
 #### Using AutoSizer with InfiniteLoader
 `AutoSizer` can be used within other react-virtualized HOCs such as `InfiniteLoader` or `ScrollSync` like so:
 
-```html
+```jsx
 <InfiniteLoader {...infiniteLoaderProps}>
   {({ onRowsRendered, registerChild }) => (
     <AutoSizer>

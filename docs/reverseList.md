@@ -5,7 +5,7 @@ Sometimes it is desirable to dislpay a list in reverse order.
 The simplest way to do this is to add items to the front of the list (`unshift`) instead of the end (`push`).
 Here is a high level template for doing this:
 
-```js
+```jsx
 export default class Example extends Component {
   constructor (props) {
     super(props)

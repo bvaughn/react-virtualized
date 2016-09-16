@@ -5,7 +5,7 @@ The `InfiniteLoader` component was created to help break large data sets down in
 It can also be used to create an infinite-loading list (eg. Twitter or Facebook).
 Here's a basic example of how you might implement that:
 
-```js
+```jsx
 function MyComponent ({
   /** Are there more items to load? (This information comes from the most recent API request.) */
   hasNextPage,

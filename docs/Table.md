@@ -86,7 +86,7 @@ This is an advanced property.
 It is useful for situations where you require additional hooks into `Table` (eg integration with a library like `react-sortable-hoc`).
 If you do want to override `rowRenderer` the easiest way is to decorate the default implementation like so:
 
-```js
+```jsx
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { defaultTableRowRenderer, Table } from 'react-virtualized'
 

@@ -97,7 +97,7 @@ The cell size cache can be optimized when width and/or height is uniform across 
 In this case the cache will allow only a single cell width/height measurement and then return that value for all other cells.
 You can use it like so:
 
-```js
+```jsx
 import {
   CellMeasurer,
   defaultCellMeasurerCellSizeCache as CellSizeCache,
