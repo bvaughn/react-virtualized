@@ -1,8 +1,9 @@
 Table
 ---------------
 
-Table component with fixed headers and virtualized rows for improved performance with large data sets.
-This component expects explicit width, height, and padding parameters.
+Table component with fixed headers and windowed rows for improved performance with large data sets.
+This component expects explicit `width` and `height` parameters.
+`Table` content can scroll vertically but it is not meant to scroll horizontally.
 
 ### Prop Types
 | Property | Type | Required? | Description |
@@ -30,7 +31,7 @@ This component expects explicit width, height, and padding parameters.
 | rowCount | Number | ✓ | Number of rows in table. |
 | rowGetter | Function | ✓ | Callback responsible for returning a data row given an index. `({ index: int }): any` |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
-| rowRenderer | Function |  | Responsible for rendering a table row given an array of columns.: `({ className: string, columns: Array, index: number, isScrolling: boolean, onRowClick: ?Function, onRowDoubleClick: ?Function, onRowMouseOver: ?Function, onRowMouseOut: ?Function, rowData: any, style: any }): PropTypes.node`. [Learn more](#rowrenderer) |
+| rowRenderer | Function |  | Responsible for rendering a table row given an array of columns. [Learn more](#rowrenderer) |
 | rowStyle | Object or Function |  | Optional custom inline style to attach to table rows. This value may be either a style object or a function with the signature `({ index: number }): Object`. Note that for the header row an index of `-1` is provided. |
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
@@ -131,7 +132,7 @@ Below is a very basic `Table` example. This table has only 2 columns, each conta
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Table, Column } from 'react-virtualized';
+import { Column, Table } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // Table data as a array of objects
@@ -148,9 +149,7 @@ ReactDOM.render(
     headerHeight={20}
     rowHeight={30}
     rowCount={list.length}
-    rowGetter={
-      ({ index }) => list[index]
-    }
+    rowGetter={({ index }) => list[index]}
   >
     <Column
       label='Name'

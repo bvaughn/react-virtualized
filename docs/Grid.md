@@ -190,27 +190,27 @@ const list = [
   // And so on...
 ];
 
+function cellRenderer ({ columnIndex, key, rowIndex, style }) {
+  return (
+    <div
+      key={key}
+      style={style}
+    >
+      {list[rowIndex][columnIndex]}
+    </div>
+  )  
+}
+
 // Render your grid
 ReactDOM.render(
   <Grid
-    width={300}
-    height={300}
-    columnWidth={100}
-    rowHeight={30}
+    cellRenderer={cellRenderer}
     columnCount={list[0].length}
+    columnWidth={100}
+    height={300}
     rowCount={list.length}
-    cellRenderer={
-      ({ className, columnIndex, isScrolling, rowIndex, style }) => {
-        return (
-          <div
-            className={className}
-            style={style}
-          >
-            {list[rowIndex][columnIndex]}
-          </div>
-        )
-      }
-    }
+    rowHeight={30}
+    width={300}
   />,
   document.getElementById('example')
 );

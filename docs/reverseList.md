@@ -54,9 +54,14 @@ export default class Example extends Component {
     this.refs.List.scrollToRow(0)
   }
 
-  _rowRenderer ({ index, isScrolling }) {
+  _rowRenderer ({ key, rowIndex }) {
     return (
-      // Your markup goes here
+      <div
+        key={key}
+        style={style}
+      >
+        {/* Your content goes here */}
+      </div>
     )
   }
 }

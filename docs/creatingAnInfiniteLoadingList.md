@@ -31,12 +31,23 @@ function MyComponent ({
   const isRowLoaded = ({ index }) => !hasNextPage || index < list.size
 
   // Render a list item or a loading indicator.
-  const rowRenderer = ({ index }) => {
+  const rowRenderer = ({ index, key, style }) => {
+    let content
+
     if (!isRowLoaded({ index })) {
-      return 'Loading...'
+      content = 'Loading...'
     } else {
-      return list.getIn([index, 'name'])
+      content = list.getIn([index, 'name'])
     }
+
+    return (
+      <div
+        key={key}
+        style={style}
+      >
+        {content}
+      </div>
+    )
   }
 
   return (

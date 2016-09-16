@@ -53,6 +53,17 @@ function loadMoreRows ({ startIndex, stopIndex }) {
     })
 }
 
+function rowRenderer ({ key, rowIndex, style}) {
+  return (
+    <div
+      key={key}
+      style={style}
+    >
+      {list[rowIndex]}
+    </div>
+  )
+}
+
 // Render your list
 ReactDOM.render(
   <InfiniteLoader
@@ -62,15 +73,13 @@ ReactDOM.render(
   >
     {({ onRowsRendered, registerChild }) => (
       <List
-        ref={registerChild}
-        width={300}
         height={200}
         onRowsRendered={onRowsRendered}
+        ref={registerChild}
         rowCount={list.length}
         rowHeight={20}
-        rowRenderer={
-          ({ index }) => list[index] // Could also be a DOM element
-        }
+        rowRenderer={rowRenderer}
+        width={300}
       />
     )}
   </InfiniteLoader>,

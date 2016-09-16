@@ -28,7 +28,11 @@ Callback responsible for returning a cell's data, given its `dataKey`.
 It should implement the following signature:
 
 ```javascript
-function ({ columnData: any, dataKey: string, rowData: any }): any
+function ({
+  columnData: any,
+  dataKey: string,
+  rowData: any
+}): any
 ```
 
 A [default `cellDataGetter`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultCellDataGetter.js) is provided that simply returns the attribute as a String.
@@ -41,7 +45,14 @@ Callback responsible for rendering a cell's contents.
 It should implement the following signature:
 
 ```javascript
-function ({ cellData: any, columnData: any, dataKey: string, isScrolling: boolean, rowData: any, rowIndex: number }): node
+function ({
+  cellData: any,
+  columnData: any,
+  dataKey: string,
+  isScrolling: boolean,
+  rowData: any,
+  rowIndex: number
+}): node
 ```
 
 A [default `cellRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultCellRenderer.js) is provided that displays an attribute as a simple string
@@ -53,7 +64,14 @@ Callback responsible for rendering a cell's header column.
 It should implement the following signature:
 
 ```javascript
-function ({ columnData: any, dataKey: string, disableSort: boolean, label: string, sortBy: string, sortDirection: SortDirection }): element
+function ({
+  columnData: any,
+  dataKey: string,
+  disableSort: boolean,
+  label: string,
+  sortBy: string,
+  sortDirection: SortDirection
+}): element
 ```
 
 A [default `headerRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultHeaderRenderer.js) is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
