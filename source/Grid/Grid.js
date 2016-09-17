@@ -496,7 +496,7 @@ export default class Grid extends Component {
       height: autoHeight ? 'auto' : height,
       position: 'relative',
       width,
-      webkitOverflowScrolling: 'touch',
+      WebkitOverflowScrolling: 'touch',
       willChange: 'transform'
     }
 

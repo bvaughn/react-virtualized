@@ -355,7 +355,7 @@ export default class CollectionView extends Component {
       height: autoHeight ? 'auto' : height,
       overflow: 'auto',
       position: 'relative',
-      webkitOverflowScrolling: 'touch',
+      WebkitOverflowScrolling: 'touch',
       width,
       willChange: 'transform'
     }
