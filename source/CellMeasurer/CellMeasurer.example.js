@@ -16,7 +16,7 @@ const ROW_COUNT = 50
 const ROW_HEIGHT = 35
 
 export default class CellMeasurerExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
 
@@ -34,7 +34,7 @@ export default class CellMeasurerExample extends Component {
 
   render () {
     return (
-      <ContentBox {...this.props}>
+      <ContentBox>
         <ContentBoxHeader
           text='CellMeasurer'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/CellMeasurer.example.js'
@@ -164,7 +164,7 @@ export default class CellMeasurerExample extends Component {
   }
 
   _getDatum (index) {
-    const { list } = this.props
+    const { list } = this.context
 
     return list.get(index % list.size)
   }

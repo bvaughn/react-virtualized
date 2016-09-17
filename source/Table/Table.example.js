@@ -12,9 +12,9 @@ import shallowCompare from 'react-addons-shallow-compare'
 import styles from './Table.example.css'
 
 export default class TableExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
-  }
+  };
 
   constructor (props, context) {
     super(props, context)
@@ -57,7 +57,7 @@ export default class TableExample extends Component {
       useDynamicRowHeight
     } = this.state
 
-    const { list, ...props } = this.props
+    const { list } = this.context
     const sortedList = this._isSortEnabled()
       ? list
         .sortBy(item => item[sortBy])
@@ -71,7 +71,7 @@ export default class TableExample extends Component {
     const rowGetter = ({ index }) => this._getDatum(sortedList, index)
 
     return (
-      <ContentBox {...props}>
+      <ContentBox>
         <ContentBoxHeader
           text='Table'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/Table/Table.example.js'
@@ -227,7 +227,7 @@ export default class TableExample extends Component {
   }
 
   _getRowHeight ({ index }) {
-    const { list } = this.props
+    const { list } = this.context
 
     return this._getDatum(list, index).size
   }
@@ -251,7 +251,7 @@ export default class TableExample extends Component {
   }
 
   _isSortEnabled () {
-    const { list } = this.props
+    const { list } = this.context
     const { rowCount } = this.state
 
     return rowCount <= list.size

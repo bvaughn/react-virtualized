@@ -45,7 +45,7 @@ export default class GridExample extends Component {
     } = this.state
 
     return (
-      <ContentBox {...this.props}>
+      <ContentBox>
         <ContentBoxHeader
           text='ScrollSync'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/ScrollSync/ScrollSync.example.js'

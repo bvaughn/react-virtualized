@@ -10,7 +10,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 import styles from './WindowScroller.example.css'
 
 export default class AutoSizerExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
 
@@ -21,12 +21,10 @@ export default class AutoSizerExample extends Component {
   }
 
   render () {
-    const { list, ...props } = this.props
+    const { list } = this.context
 
     return (
-      <ContentBox
-        {...props}
-      >
+      <ContentBox>
         <ContentBoxHeader
           text='WindowScroller'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/WindowScroller/WindowScroller.example.js'
@@ -67,7 +65,7 @@ export default class AutoSizerExample extends Component {
   }
 
   _rowRenderer ({ index, isScrolling, key, style }) {
-    const { list } = this.props
+    const { list } = this.context
     const row = list.get(index)
     const className = cn(styles.row, {
       [styles.rowScrolling]: isScrolling

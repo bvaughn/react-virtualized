@@ -8,7 +8,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 import styles from './AutoSizer.example.css'
 
 export default class AutoSizerExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
 
@@ -23,12 +23,12 @@ export default class AutoSizerExample extends Component {
   }
 
   render () {
+    const { list } = this.context
     const { hideDescription } = this.state
-    const { list, ...props } = this.props
 
     return (
       <ContentBox
-        {...props}
+        {...this.props}
         style={{
           height: 400
         }}
@@ -83,7 +83,7 @@ export default class AutoSizerExample extends Component {
   }
 
   _rowRenderer ({ index, key, style }) {
-    const { list } = this.props
+    const { list } = this.context
     const row = list.get(index)
 
     return (

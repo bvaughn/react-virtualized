@@ -1,19 +1,18 @@
+/** @flow */
 import React from 'react'
-import cn from 'classnames'
+import { Link } from 'react-router'
 import styles from './ComponentLink.css'
 
-export default function ComponentLink ({ activeComponent, component, disabled, setActiveComponent }) {
-  const classNames = cn(styles.ComponentLink, {
-    [styles.ActiveComponentLink]: activeComponent === component,
-    [styles.DisabledComponentLink]: disabled
-  })
-
+export default function ComponentLink ({ children, to }) {
   return (
-    <button
-      className={classNames}
-      onClick={() => setActiveComponent(component)}
-    >
-      {component}
-    </button>
+    <li className={styles.NavListItem}>
+      <Link
+        activeClassName={styles.ActiveComponentLink}
+        className={styles.ComponentLink}
+        to={to}
+      >
+        {children}
+      </Link>
+    </li>
   )
 }

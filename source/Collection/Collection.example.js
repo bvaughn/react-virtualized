@@ -14,16 +14,16 @@ const GUTTER_SIZE = 3
 const CELL_WIDTH = 75
 
 export default class CollectionExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
-  }
+  };
 
   constructor (props, context) {
     super(props, context)
 
     this.state = {
-      cellCount: props.list.size,
-      columnCount: this._getColumnCount(props.list.size),
+      cellCount: context.list.size,
+      columnCount: this._getColumnCount(context.list.size),
       height: 300,
       horizontalOverscanSize: 0,
       scrollToCell: undefined,
@@ -47,7 +47,7 @@ export default class CollectionExample extends Component {
     const { cellCount, height, horizontalOverscanSize, scrollToCell, showScrollingPlaceholder, verticalOverscanSize } = this.state
 
     return (
-      <ContentBox {...this.props}>
+      <ContentBox>
         <ContentBoxHeader
           text='Collection'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/Collection/Collection.example.js'
@@ -131,7 +131,7 @@ export default class CollectionExample extends Component {
   }
 
   _cellRenderer ({ index, isScrolling, key, style }) {
-    const { list } = this.props
+    const { list } = this.context
     const { showScrollingPlaceholder } = this.state
 
     const datum = list.get(index % list.size)
@@ -151,7 +151,7 @@ export default class CollectionExample extends Component {
   }
 
   _cellSizeAndPositionGetter ({ index }) {
-    const { list } = this.props
+    const { list } = this.context
     const { columnCount } = this.state
 
     const columnPosition = index % (columnCount || 1)

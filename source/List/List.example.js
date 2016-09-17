@@ -12,16 +12,16 @@ import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import shallowCompare from 'react-addons-shallow-compare'
 
 export default class ListExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
-  }
+  };
 
-  constructor (props) {
-    super(props)
+  constructor (props, context) {
+    super(props, context)
 
     this.state = {
       overscanRowCount: 10,
-      rowCount: props.list.size,
+      rowCount: context.list.size,
       scrollToIndex: undefined,
       showScrollingPlaceholder: false,
       useDynamicRowHeight: false,
@@ -48,7 +48,7 @@ export default class ListExample extends Component {
     } = this.state
 
     return (
-      <ContentBox {...this.props}>
+      <ContentBox>
         <ContentBoxHeader
           text='List'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/List/List.example.js'
@@ -146,7 +146,7 @@ export default class ListExample extends Component {
   }
 
   _getDatum (index) {
-    const { list } = this.props
+    const { list } = this.context
 
     return list.get(index % list.size)
   }

@@ -10,9 +10,9 @@ import cn from 'classnames'
 import styles from './Grid.example.css'
 
 export default class GridExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
-  }
+  };
 
   constructor (props, context) {
     super(props, context)
@@ -57,7 +57,7 @@ export default class GridExample extends Component {
     } = this.state
 
     return (
-      <ContentBox {...this.props}>
+      <ContentBox>
         <ContentBoxHeader
           text='Grid'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/Grid.example.js'
@@ -185,7 +185,7 @@ export default class GridExample extends Component {
   }
 
   _getDatum (index) {
-    const { list } = this.props
+    const { list } = this.context
 
     return list.get(index % list.size)
   }

@@ -19,7 +19,7 @@ export default class ArrowKeyStepperExample extends Component {
 
   render () {
     return (
-      <ContentBox {...this.props}>
+      <ContentBox>
         <ContentBoxHeader
           text='ArrowKeyStepper'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/ArrowKeyStepper/ArrowKeyStepper.example.js'

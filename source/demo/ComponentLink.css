@@ -1,4 +1,5 @@
 .ComponentLink {
+  display: list-item;
   background: none;
   border: none;
   padding: .75em;
@@ -6,6 +7,7 @@
   cursor: pointer;
   font-size: .8rem;
   text-transform: uppercase;
+  text-decoration: none;
   transition: .2s all;
 }
 .ComponentLink:hover {

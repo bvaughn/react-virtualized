@@ -12,7 +12,7 @@ const STATUS_LOADING = 1
 const STATUS_LOADED = 2
 
 export default class InfiniteLoaderExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
 
@@ -41,11 +41,11 @@ export default class InfiniteLoaderExample extends Component {
   }
 
   render () {
-    const { list, ...props } = this.props
+    const { list } = this.context
     const { loadedRowCount, loadingRowCount, randomScrollToIndex } = this.state
 
     return (
-      <ContentBox {...props}>
+      <ContentBox>
         <ContentBoxHeader
           text='InfiniteLoader'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/InfiniteLoader/InfiniteLoader.example.js'
@@ -155,7 +155,7 @@ export default class InfiniteLoaderExample extends Component {
   }
 
   _rowRenderer ({ index, key, style }) {
-    const { list } = this.props
+    const { list } = this.context
     const { loadedRowsMap } = this.state
 
     const row = list.get(index)
