@@ -351,8 +351,13 @@ export default class CollectionView extends Component {
       }) : []
 
     const collectionStyle = {
+      boxSizing: 'border-box',
       height: autoHeight ? 'auto' : height,
-      width
+      overflow: 'auto',
+      position: 'relative',
+      webkitOverflowScrolling: 'touch',
+      width,
+      willChange: 'transform'
     }
 
     // Force browser to hide scrollbars when we know they aren't necessary.
@@ -389,6 +394,7 @@ export default class CollectionView extends Component {
               height: totalHeight,
               maxHeight: totalHeight,
               maxWidth: totalWidth,
+              overflow: 'hidden',
               pointerEvents: isScrolling ? 'none' : '',
               width: totalWidth
             }}

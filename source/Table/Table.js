@@ -266,7 +266,12 @@ export default class Table extends Component {
     // Precompute and cache column styles before rendering rows and columns to speed things up
     this._cachedColumnStyles = []
     React.Children.toArray(children).forEach((column, index) => {
-      this._cachedColumnStyles[index] = this._getFlexStyleForColumn(column, column.props.style)
+      const flexStyles = this._getFlexStyleForColumn(column, column.props.style)
+
+      this._cachedColumnStyles[index] = {
+        ...flexStyles,
+        overflow: 'hidden'
+      }
     })
 
     // Note that we specify :numChildren, :scrollbarWidth, :sortBy, and :sortDirection as properties on Grid even though these have nothing to do with Grid.
@@ -283,6 +288,7 @@ export default class Table extends Component {
             style={{
               ...rowStyleObject,
               height: headerHeight,
+              overflow: 'hidden',
               paddingRight: scrollbarWidth,
               width: width
             }}
@@ -458,6 +464,7 @@ export default class Table extends Component {
       ...style,
       ...rowStyleObject,
       height: this._getRowHeight(index),
+      overflow: 'hidden',
       paddingRight: scrollbarWidth
     }
 

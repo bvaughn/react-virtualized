@@ -492,8 +492,12 @@ export default class Grid extends Component {
     const { isScrolling } = this.state
 
     const gridStyle = {
+      boxSizing: 'border-box',
       height: autoHeight ? 'auto' : height,
-      width
+      position: 'relative',
+      width,
+      webkitOverflowScrolling: 'touch',
+      willChange: 'transform'
     }
 
     const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
@@ -548,6 +552,7 @@ export default class Grid extends Component {
               height: totalRowsHeight,
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,
+              overflow: 'hidden',
               pointerEvents: isScrolling ? 'none' : ''
             }}
           >

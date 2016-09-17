@@ -91,13 +91,14 @@ ES6, CommonJS, and UMD builds are available with each distribution.
 For example:
 
 ```js
-// Make sure to import default styles.
+// If you're using the Table component you'll need to include the default styles.
 // This only needs to be done once; probably during your application's bootstrapping process.
+// Grid and List base styles are purely functional and so they're all inline.
 import 'react-virtualized/styles.css';
 
 // Then you can import any react-virtualized components you need.
-// Tree-shaking is supported with ES6 or CommonJS usage.
-import { Grid } from 'react-virtualized'
+// Tree-shaking is supported with ES6 modules (`jsnext:main` package target).
+import { Table } from 'react-virtualized'
 ```
 
 Alternately you can load a global-friendly UMD build:
