@@ -1,5 +1,13 @@
 function cellRenderer (params) {
-  return params.columnIndex
+  return React.createElement(
+    'div',
+    {
+      className: 'item',
+      key: params.key,
+      style: params.style
+    },
+    params.columnIndex
+  )
 }
 
 var App = React.createClass({

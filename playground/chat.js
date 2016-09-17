@@ -4,7 +4,9 @@ function rowRenderer (params) {
   return React.createElement(
     'div',
     {
-      className: 'item'
+      className: 'item',
+      key: params.key,
+      style: params.style
     },
     React.createElement(
       'strong',
@@ -17,13 +19,13 @@ function rowRenderer (params) {
 }
 
 function cellRenderer (params) {
-  return rowRenderer({
-    index: params.rowIndex
-  })
+  params.index = params.rowIndex
+
+  return rowRenderer(params)
 }
 
 var cellMeasurer
-var virtualScroll
+var list
 var mostRecentWidth
 
 var App = React.createClass({
@@ -39,7 +41,7 @@ var App = React.createClass({
         function (autoSizerParams) {
           if (mostRecentWidth && mostRecentWidth !== autoSizerParams.width) {
             cellMeasurer.resetMeasurements()
-            virtualScroll.recomputeRowHeights()
+            list.recomputeRowHeights()
           }
 
           mostRecentWidth = autoSizerParams.width
@@ -62,7 +64,7 @@ var App = React.createClass({
                   className: 'chat',
                   height: autoSizerParams.height,
                   ref: function (ref) {
-                    virtualScroll = ref
+                    list = ref
                   },
                   rowCount: chatHistory.length,
                   rowHeight: cellMeasurerParams.getRowHeight,

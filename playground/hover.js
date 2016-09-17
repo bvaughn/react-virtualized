@@ -42,6 +42,7 @@ var App = React.createClass({
 
     return React.DOM.div({
       className: className,
+      key: params.key,
       onMouseOver: function () {
         setState({
           hoveredColumnIndex: columnIndex,
@@ -49,7 +50,7 @@ var App = React.createClass({
         })
         grid.forceUpdate()
       },
-
+      style: params.style
     }, key)
   }
 })

@@ -58,7 +58,15 @@ function setRef (ref) {
 }
 
 function cellRenderer (params) {
-  return renderItem(data[params.index], params.index)
+  var renderedCell = renderItem(data[params.index], params.index)
+
+  return React.DOM.ul(
+    {
+      key: params.key,
+      style: params.style
+    },
+    renderedCell
+  )
 }
 
 function rowHeight (params) {
