@@ -94,7 +94,7 @@ For example:
 // If you're using the Table component you'll need to include the default styles.
 // This only needs to be done once; probably during your application's bootstrapping process.
 // Grid and List base styles are purely functional and so they're all inline.
-import 'react-virtualized/styles.css';
+import 'react-virtualized/styles.css'
 
 // Then you can import any react-virtualized components you need.
 // Tree-shaking is supported with ES6 modules (`jsnext:main` package target).
@@ -107,6 +107,9 @@ Alternately you can load a global-friendly UMD build:
 <link rel="stylesheet" href="path-to-react-virtualized/styles.css">
 <script src="path-to-react-virtualized/dist/umd/react-virtualized.js"></script>
 ```
+
+Now you're ready to start using the components.
+You can learn more about which components react-virtualized has to offer [below](#documentation).
 
 Dependencies
 ---------------
