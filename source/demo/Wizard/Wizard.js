@@ -6,10 +6,10 @@ import { ContentBox, ContentBoxHeader } from '../ContentBox'
 import generate from './Generator'
 import styles from './Wizard.css'
 
-require('codemirror/mode/javascript/javascript')
+require('codemirror/mode/jsx/jsx')
 
 const codeMirrorOptions = {
-  mode: 'javascript',
+  mode: 'jsx',
   theme: 'dracula'
 }
 
