@@ -3,9 +3,12 @@
   display: flex;
   flex-direction: column;
   background-color: #FFF;
-  padding: 1rem;
+  padding: 0 1rem 1rem 1rem;
   overflow: auto;
   background: white;
+}
+.ContentBox:first-of-type {
+  padding-top: 1rem;
 }
 
 .Header {
@@ -14,7 +17,9 @@
   flex-direction: row;
   font-weight: normal;
   justify-content: space-between;
-  margin: 0 0 1rem;
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: normal;
 }
 .Small {
   font-size: .5em;
