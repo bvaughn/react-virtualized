@@ -1,20 +1,25 @@
 .ContentBox {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 15px 20px 20px;
   background-color: #FFF;
-  box-shadow: 1px 1px 1px 1px rgba(0,0,0,.15);
-  border-radius: 2px;
-  margin: 1rem;
+  padding: 0 1rem 1rem 1rem;
+  overflow: auto;
+  background: white;
+}
+.ContentBox:first-of-type {
+  padding-top: 1rem;
 }
 
 .Header {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: row;
-  align-items: center;
   font-weight: normal;
   justify-content: space-between;
-  margin: 0 0 1rem;
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: normal;
 }
 .Small {
   font-size: .5em;
@@ -25,6 +30,7 @@
 }
 
 .Paragraph {
-  line-height: 1.4rem;
+  flex: 0 0 auto;
+  line-height: 1.2rem;
   margin: 0 0 1rem;
 }

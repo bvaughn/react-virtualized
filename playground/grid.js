@@ -18,16 +18,22 @@ function cellRenderer (params) {
       return React.DOM.input({
         className: 'input',
         defaultValue: key,
-        onChange: function () {}
+        key: params.key,
+        onChange: function () {},
+        style: params.style
       })
     case 1:
       return React.DOM.button({
-        className: 'button'
+        className: 'button',
+        key: params.key,
+        style: params.style
       }, key)
     case 2:
       return React.DOM.img({
         className: 'image',
-        src: REACT_VIRTUALIZED_BANNER
+        key: params.key,
+        src: REACT_VIRTUALIZED_BANNER,
+        style: params.style
       })
   }
 }

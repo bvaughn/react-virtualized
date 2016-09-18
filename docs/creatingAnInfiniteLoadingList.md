@@ -5,7 +5,7 @@ The `InfiniteLoader` component was created to help break large data sets down in
 It can also be used to create an infinite-loading list (eg. Twitter or Facebook).
 Here's a basic example of how you might implement that:
 
-```js
+```jsx
 function MyComponent ({
   /** Are there more items to load? (This information comes from the most recent API request.) */
   hasNextPage,
@@ -31,12 +31,23 @@ function MyComponent ({
   const isRowLoaded = ({ index }) => !hasNextPage || index < list.size
 
   // Render a list item or a loading indicator.
-  const rowRenderer = ({ index }) => {
+  const rowRenderer = ({ index, key, style }) => {
+    let content
+
     if (!isRowLoaded({ index })) {
-      return 'Loading...'
+      content = 'Loading...'
     } else {
-      return list.getIn([index, 'name'])
+      content = list.getIn([index, 'name'])
     }
+
+    return (
+      <div
+        key={key}
+        style={style}
+      >
+        {content}
+      </div>
+    )
   }
 
   return (
@@ -46,7 +57,7 @@ function MyComponent ({
       rowCount={rowCount}
     >
       {({ onRowsRendered, registerChild }) => (
-        <VirtualScroll
+        <List
           ref={registerChild}
           onRowsRendered={onRowsRendered}
           rowRenderer={rowRenderer}

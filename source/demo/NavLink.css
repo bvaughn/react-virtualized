@@ -15,10 +15,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 1em 1em .5em;
-  border-bottom: .5em solid transparent;
-  font-size: 1.2em;
-  color: #FFFFFF;
+  padding: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
   text-transform: lowercase;
   text-decoration: none;
   text-transform: uppercase;
@@ -26,19 +24,5 @@
 }
 .ActiveNavLink,
 .NavLink:hover {
-  border-bottom-color: #409890;
-}
-
-@media (max-width: 525px) {
-  .NavLink {
-    padding: 1em .5em .5em;
-    font-size: 1.1em;
-  }
-}
-
-@media (max-width: 475px) {
-  .NavLink {
-    padding: 1em .5em .5em;
-    font-size: .9em;
-  }
+  color: #FFF;
 }

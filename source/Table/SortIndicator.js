@@ -3,12 +3,12 @@ import cn from 'classnames'
 import SortDirection from './SortDirection'
 
 /**
- * Displayed beside a header to indicate that a FlexTable is currently sorted by this column.
+ * Displayed beside a header to indicate that a Table is currently sorted by this column.
  */
 export default function SortIndicator ({ sortDirection }) {
-  const classNames = cn('FlexTable__sortableHeaderIcon', {
-    'FlexTable__sortableHeaderIcon--ASC': sortDirection === SortDirection.ASC,
-    'FlexTable__sortableHeaderIcon--DESC': sortDirection === SortDirection.DESC
+  const classNames = cn('ReactVirtualized__Table__sortableHeaderIcon', {
+    'ReactVirtualized__Table__sortableHeaderIcon--ASC': sortDirection === SortDirection.ASC,
+    'ReactVirtualized__Table__sortableHeaderIcon--DESC': sortDirection === SortDirection.DESC
   })
 
   return (

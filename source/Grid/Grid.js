@@ -6,7 +6,6 @@ import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositio
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getOverscanIndices, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FIXED, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
-import raf from 'raf'
 import shallowCompare from 'react-addons-shallow-compare'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
 import defaultCellRangeRenderer from './defaultCellRangeRenderer'
@@ -45,12 +44,6 @@ export default class Grid extends Component {
      * of rows can stretch the window. Intended for use with WindowScroller
      */
     autoHeight: PropTypes.bool,
-
-    /** Optional custom CSS class for individual cells */
-    cellClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-    /** Optional custom styles for individual cells */
-    cellStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 
     /**
      * Responsible for rendering a cell given an row and column index.
@@ -190,7 +183,6 @@ export default class Grid extends Component {
 
   static defaultProps = {
     'aria-label': 'grid',
-    cellStyle: {},
     cellRangeRenderer: defaultCellRangeRenderer,
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
@@ -224,7 +216,6 @@ export default class Grid extends Component {
     this._enablePointerEventsAfterDelayCallback = this._enablePointerEventsAfterDelayCallback.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
-    this._setNextStateCallback = this._setNextStateCallback.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
 
@@ -411,10 +402,6 @@ export default class Grid extends Component {
     if (this._disablePointerEventsTimeoutId) {
       clearTimeout(this._disablePointerEventsTimeoutId)
     }
-
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
-    }
   }
 
   /**
@@ -499,8 +486,12 @@ export default class Grid extends Component {
     const { isScrolling } = this.state
 
     const gridStyle = {
+      boxSizing: 'border-box',
       height: autoHeight ? 'auto' : height,
-      width
+      position: 'relative',
+      width,
+      WebkitOverflowScrolling: 'touch',
+      willChange: 'transform'
     }
 
     const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
@@ -538,7 +529,7 @@ export default class Grid extends Component {
           this._scrollingContainer = ref
         }}
         aria-label={this.props['aria-label']}
-        className={cn('Grid', className)}
+        className={cn('ReactVirtualized__Grid', className)}
         onScroll={this._onScroll}
         role='grid'
         style={{
@@ -549,12 +540,13 @@ export default class Grid extends Component {
       >
         {childrenToDisplay.length > 0 &&
           <div
-            className='Grid__innerScrollContainer'
+            className='ReactVirtualized__Grid__innerScrollContainer'
             style={{
               width: autoContainerWidth ? 'auto' : totalColumnsWidth,
               height: totalRowsHeight,
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,
+              overflow: 'hidden',
               pointerEvents: isScrolling ? 'none' : ''
             }}
           >
@@ -576,10 +568,8 @@ export default class Grid extends Component {
 
   _calculateChildrenToRender (props = this.props, state = this.state) {
     const {
-      cellClassName,
       cellRenderer,
       cellRangeRenderer,
-      cellStyle,
       columnCount,
       height,
       overscanColumnCount,
@@ -648,9 +638,7 @@ export default class Grid extends Component {
 
       this._childrenToDisplay = cellRangeRenderer({
         cellCache: this._cellCache,
-        cellClassName: this._wrapCellClassNameGetter(cellClassName),
         cellRenderer,
-        cellStyle: this._wrapCellStyleGetter(cellStyle),
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
@@ -748,28 +736,6 @@ export default class Grid extends Component {
     })
   }
 
-  /**
-   * Updates the state during the next animation frame.
-   * Use this method to avoid multiple renders in a small span of time.
-   * This helps performance for bursty events (like onScroll).
-   */
-  _setNextState (state) {
-    this._nextState = state
-
-    if (!this._setNextStateAnimationFrameId) {
-      this._setNextStateAnimationFrameId = raf(this._setNextStateCallback)
-    }
-  }
-
-  _setNextStateCallback () {
-    const state = this._nextState
-
-    this._setNextStateAnimationFrameId = null
-    this._nextState = null
-
-    this.setState(state)
-  }
-
   _setScrollPosition ({ scrollLeft, scrollTop }) {
     const newState = {
       scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
@@ -789,14 +755,6 @@ export default class Grid extends Component {
     ) {
       this.setState(newState)
     }
-  }
-
-  _wrapCellClassNameGetter (className) {
-    return this._wrapPropertyGetter(className)
-  }
-
-  _wrapCellStyleGetter (style) {
-    return this._wrapPropertyGetter(style)
   }
 
   _wrapPropertyGetter (value) {
@@ -895,13 +853,7 @@ export default class Grid extends Component {
       const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
       const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
 
-      if (!this.state.isScrolling) {
-        this.setState({
-          isScrolling: true
-        })
-      }
-
-      this._setNextState({
+      this.setState({
         isScrolling: true,
         scrollDirectionHorizontal,
         scrollDirectionVertical,

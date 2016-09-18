@@ -9,20 +9,20 @@ export {
 export { Collection } from './Collection'
 export { ColumnSizer } from './ColumnSizer'
 export {
-  defaultCellDataGetter as defaultFlexTableCellDataGetter,
-  defaultCellRenderer as defaultFlexTableCellRenderer,
-  defaultHeaderRenderer as defaultFlexTableHeaderRenderer,
-  defaultRowRenderer as defaultFlexTableRowRenderer,
-  FlexTable,
-  FlexColumn,
+  defaultCellDataGetter as defaultTableCellDataGetter,
+  defaultCellRenderer as defaultTableCellRenderer,
+  defaultHeaderRenderer as defaultTableHeaderRenderer,
+  defaultRowRenderer as defaultTableRowRenderer,
+  Table,
+  Column,
   SortDirection,
   SortIndicator
-} from './FlexTable'
+} from './Table'
 export {
   defaultCellRangeRenderer,
   Grid
 } from './Grid'
 export { InfiniteLoader } from './InfiniteLoader'
 export { ScrollSync } from './ScrollSync'
-export { VirtualScroll } from './VirtualScroll'
+export { List } from './List'
 export { WindowScroller } from './WindowScroller'

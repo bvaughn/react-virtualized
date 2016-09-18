@@ -10,15 +10,14 @@ import cn from 'classnames'
 import styles from './Grid.example.css'
 
 export default class GridExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
-  }
+  };
 
   constructor (props, context) {
     super(props, context)
 
     this.state = {
-      columnWidth: 100,
       columnCount: 1000,
       height: 300,
       overscanColumnCount: 0,
@@ -57,7 +56,7 @@ export default class GridExample extends Component {
     } = this.state
 
     return (
-      <ContentBox {...this.props}>
+      <ContentBox>
         <ContentBoxHeader
           text='Grid'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/Grid.example.js'
@@ -163,6 +162,14 @@ export default class GridExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
+  _cellRenderer ({ columnIndex, key, rowIndex, style }) {
+    if (columnIndex === 0) {
+      return this._renderLeftSideCell({ columnIndex, key, rowIndex, style })
+    } else {
+      return this._renderBodyCell({ columnIndex, key, rowIndex, style })
+    }
+  }
+
   _getColumnWidth ({ index }) {
     switch (index) {
       case 0:
@@ -172,12 +179,12 @@ export default class GridExample extends Component {
       case 2:
         return 300
       default:
-        return 50
+        return 80
     }
   }
 
   _getDatum (index) {
-    const { list } = this.props
+    const { list } = this.context
 
     return list.get(index % list.size)
   }
@@ -198,7 +205,7 @@ export default class GridExample extends Component {
     )
   }
 
-  _renderBodyCell ({ columnIndex, rowIndex }) {
+  _renderBodyCell ({ columnIndex, key, rowIndex, style }) {
     const rowClass = this._getRowClassName(rowIndex)
     const datum = this._getDatum(rowIndex)
 
@@ -212,13 +219,7 @@ export default class GridExample extends Component {
         content = datum.random
         break
       default:
-        content = (
-          <div>
-            c:{columnIndex}
-            <br />
-            r:{rowIndex}
-          </div>
-        )
+        content = `r:${rowIndex}, c:${columnIndex}`
         break
     }
 
@@ -227,29 +228,27 @@ export default class GridExample extends Component {
     })
 
     return (
-      <div className={classNames}>
+      <div
+        className={classNames}
+        key={key}
+        style={style}
+      >
         {content}
       </div>
     )
   }
 
-  _cellRenderer ({ columnIndex, rowIndex }) {
-    if (columnIndex === 0) {
-      return this._renderLeftSideCell({ columnIndex, rowIndex })
-    } else {
-      return this._renderBodyCell({ columnIndex, rowIndex })
-    }
-  }
-
-  _renderLeftSideCell ({ rowIndex }) {
+  _renderLeftSideCell ({ key, rowIndex, style }) {
     const datum = this._getDatum(rowIndex)
 
     const classNames = cn(styles.cell, styles.letterCell)
-    const style = { backgroundColor: datum.color }
+
+    style.backgroundColor = datum.color
 
     return (
       <div
         className={classNames}
+        key={key}
         style={style}
       >
         {datum.name.charAt(0)}

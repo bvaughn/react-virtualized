@@ -4,13 +4,13 @@ import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import WindowScroller from './WindowScroller'
-import VirtualScroll from '../VirtualScroll'
+import List from '../List'
 import AutoSizer from '../AutoSizer'
 import shallowCompare from 'react-addons-shallow-compare'
 import styles from './WindowScroller.example.css'
 
 export default class AutoSizerExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
 
@@ -21,12 +21,10 @@ export default class AutoSizerExample extends Component {
   }
 
   render () {
-    const { list, ...props } = this.props
+    const { list } = this.context
 
     return (
-      <ContentBox
-        {...props}
-      >
+      <ContentBox>
         <ContentBoxHeader
           text='WindowScroller'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/WindowScroller/WindowScroller.example.js'
@@ -34,7 +32,7 @@ export default class AutoSizerExample extends Component {
         />
 
         <ContentBoxParagraph>
-          This component decorates <code>VirtualScroll</code>, <code>FlexTable</code>, or any other component
+          This component decorates <code>List</code>, <code>Table</code>, or any other component
           and manages the window scroll to scroll through the list
         </ContentBoxParagraph>
 
@@ -43,13 +41,13 @@ export default class AutoSizerExample extends Component {
             {({ height, isScrolling, scrollTop }) => (
               <AutoSizer disableHeight>
                 {({ width }) => (
-                  <VirtualScroll
+                  <List
                     autoHeight
-                    className={styles.VirtualScroll}
+                    className={styles.List}
                     height={height}
                     rowCount={list.size}
                     rowHeight={30}
-                    rowRenderer={({ index }) => this._rowRenderer({ index, isScrolling })}
+                    rowRenderer={({ index, key, style }) => this._rowRenderer({ index, isScrolling, key, style })}
                     scrollTop={scrollTop}
                     width={width}
                   />
@@ -66,8 +64,8 @@ export default class AutoSizerExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _rowRenderer ({ index, isScrolling }) {
-    const { list } = this.props
+  _rowRenderer ({ index, isScrolling, key, style }) {
+    const { list } = this.context
     const row = list.get(index)
     const className = cn(styles.row, {
       [styles.rowScrolling]: isScrolling
@@ -75,9 +73,9 @@ export default class AutoSizerExample extends Component {
 
     return (
       <div
-        key={index}
+        key={key}
         className={className}
-        style={{ height: 30 }}
+        style={style}
       >
         {row.name}
       </div>

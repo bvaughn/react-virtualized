@@ -1,6 +1,6 @@
 import InfiniteLoader, { forceUpdateReactVirtualizedComponent, isRangeVisible, scanForUnloadedRanges } from './InfiniteLoader'
 import React, { Component } from 'react'
-import VirtualScroll from '../VirtualScroll'
+import List from '../List'
 import { render } from '../TestUtils'
 
 describe('InfiniteLoader', () => {
@@ -26,10 +26,10 @@ describe('InfiniteLoader', () => {
     loadMoreRowsCalls.push({ startIndex, stopIndex })
   }
 
-  function rowRenderer (index) {
+  function rowRenderer ({ index, key, style }) {
     rowRendererCalls.push(index)
     return (
-      <div key={index} />
+      <div key={key} />
     )
   }
 
@@ -56,7 +56,7 @@ describe('InfiniteLoader', () => {
           innerOnRowsRendered = onRowsRendered
 
           return (
-            <VirtualScroll
+            <List
               ref={registerChild}
               height={height}
               onRowsRendered={onRowsRendered}

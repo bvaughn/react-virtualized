@@ -4,7 +4,7 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import Immutable from 'immutable'
 import AutoSizer from '../AutoSizer'
 import InfiniteLoader from './InfiniteLoader'
-import VirtualScroll from '../VirtualScroll'
+import List from '../List'
 import shallowCompare from 'react-addons-shallow-compare'
 import styles from './InfiniteLoader.example.css'
 
@@ -12,7 +12,7 @@ const STATUS_LOADING = 1
 const STATUS_LOADED = 2
 
 export default class InfiniteLoaderExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
 
@@ -41,11 +41,11 @@ export default class InfiniteLoaderExample extends Component {
   }
 
   render () {
-    const { list, ...props } = this.props
+    const { list } = this.context
     const { loadedRowCount, loadingRowCount, randomScrollToIndex } = this.state
 
     return (
-      <ContentBox {...props}>
+      <ContentBox>
         <ContentBoxHeader
           text='InfiniteLoader'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/InfiniteLoader/InfiniteLoader.example.js'
@@ -67,7 +67,7 @@ export default class InfiniteLoaderExample extends Component {
             </button>
 
             <div className={styles.cacheCountRow}>
-              {`${loadingRowCount} loading, ${loadedRowCount} loaded`}
+              {loadingRowCount} loading, {loadedRowCount} loaded
             </div>
           </div>
         </ContentBoxParagraph>
@@ -80,9 +80,9 @@ export default class InfiniteLoaderExample extends Component {
           {({ onRowsRendered, registerChild }) => (
             <AutoSizer disableHeight>
               {({ width }) => (
-                <VirtualScroll
+                <List
                   ref={registerChild}
-                  className={styles.VirtualScroll}
+                  className={styles.List}
                   height={200}
                   onRowsRendered={onRowsRendered}
                   rowCount={list.size}
@@ -154,8 +154,8 @@ export default class InfiniteLoaderExample extends Component {
     })
   }
 
-  _rowRenderer ({ index }) {
-    const { list } = this.props
+  _rowRenderer ({ index, key, style }) {
+    const { list } = this.context
     const { loadedRowsMap } = this.state
 
     const row = list.get(index)
@@ -174,9 +174,9 @@ export default class InfiniteLoaderExample extends Component {
 
     return (
       <div
-        key={index}
         className={styles.row}
-        style={{ height: 30 }}
+        key={key}
+        style={style}
       >
         {content}
       </div>

@@ -1,18 +1,15 @@
 Grid
 ---------------
 
-This component efficiently renders a virtualized grid of elements.
-Only a small number of cells are rendered based on the horizontal and vertical scroll position.
+A windowed grid of elements. `Grid` only renders cells necessary to fill itself based on the current horizontal and vertical scroll position. A simple `Grid` example can be seen [here](#basicgridexample).
 
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | autoContainerWidth | Boolean |  | Set the width of the inner scrollable container to 'auto'. This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar. |
 | autoHeight | Boolean |  | Outer `height` of `Grid` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
-| cellClassName | String or Function |  | Optional custom CSS class name to attach to `Grid__cell` element. If function given then signature should be look like: ({ columnIndex: number, rowIndex: number }): PropTypes.string |
-| cellRangeRenderer | Function |  | Responsible for rendering a group of cells given their index ranges.: `({ cellCache: Map, cellRenderer: Function, columnSizeAndPositionManager: CellSizeAndPositionManager, columnStartIndex: number, columnStopIndex: number, isScrolling: boolean, rowSizeAndPositionManager: CellSizeAndPositionManager, rowStartIndex: number, rowStopIndex: number, scrollLeft: number, scrollTop: number }): Array<PropTypes.node>`. [Learn more](#cellrangerenderer) |
-| cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ columnIndex: number, isScrolling: boolean, rowIndex: number }): PropTypes.node` |
-| cellStyle | Object or Function |  | Optional custom inline style for individual cell. If function given then signature should be look like: ({ columnIndex: number, rowIndex: number }): PropTypes.object |
+| cellRangeRenderer | Function |  | Responsible for rendering a group of cells given their index ranges. [Learn more](#cellrangerenderer) |
+| cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index. [Learn more](#cellrenderer) |
 | className | String |  | Optional custom CSS class name to attach to root `Grid` element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
 | columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number` |
@@ -60,9 +57,8 @@ The Grid component supports the following static class names
 
 | Property | Description |
 |:---|:---|
-| Grid | Main (outer) element |
-| Grid__innerScrollContainer | Inner scrollable area |
-| Grid__cell | Individual cell |
+| ReactVirtualized__Grid | Main (outer) element |
+| ReactVirtualized__Grid__innerScrollContainer | Inner scrollable area |
 
 ### cellRangeRenderer
 
@@ -72,7 +68,7 @@ Many use cases can be solved more easily using the `onScroll` callback or the `S
 
 If you do want to override `cellRangeRenderer` the easiest way is to decorate the default implementation like so:
 
-```js
+```jsx
 import { defaultCellRangeRenderer, Grid } from 'react-virtualized'
 
 function cellRangeRenderer (props) {
@@ -99,21 +95,19 @@ This function accepts the following named parameters:
 
 ```js
 function cellRangeRenderer ({
-  cellCache: Object,
-  cellClassName: Function,
-  cellRenderer: Function,
-  cellStyle: Function,
-  columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
-  columnStartIndex: number,
-  columnStopIndex: number,
-  horizontalOffsetAdjustment: number
-  isScrolling: boolean,
-  rowSizeAndPositionManager: ScalingCellSizeAndPositionManager,
-  rowStartIndex: number,
-  rowStopIndex: number,
-  scrollLeft: number,
-  scrollTop: number,
-  verticalOffsetAdjustment: number
+  cellCache,                    // Temporary cell cache for use while scrolling
+  cellRenderer,                 // Cell renderer prop supplied to Grid
+  columnSizeAndPositionManager, // @see CellSizeAndPositionManager,
+  columnStartIndex,             // Index of first column (inclusive) to render
+  columnStopIndex,              // Index of last column (inclusive) to render
+  horizontalOffsetAdjustment,   // Horizontal pixel offset (required for scaling)
+  isScrolling,                  // The Grid is currently being scrolled
+  rowSizeAndPositionManager,    // @see CellSizeAndPositionManager,
+  rowStartIndex,                // Index of first column (inclusive) to render
+  rowStopIndex,                 // Index of last column (inclusive) to render
+  scrollLeft,                   // Current horizontal scroll offset of Grid
+  scrollTop,                    // Current vertical scroll offset of Grid
+  verticalOffsetAdjustment      // Vertical pixel offset (required for scaling)
 }) {
   const renderedCells = []
 
@@ -145,11 +139,46 @@ function cellRangeRenderer ({
 }
 ```
 
-### Examples
+### cellRenderer
+
+Responsible for rendering a single cell, given its row and column index.
+This function accepts the following named parameters:
+
+```jsx
+function cellRenderer ({ 
+  columnIndex, // Horizontal (column) index of cell
+  isScrolling, // The Grid is currently being scrolled
+  key,         // Unique key within array of cells
+  rowIndex,    // Vertical (row) index of cell
+  style        // Style object to be applied to cell
+}) {
+  // Grid data is a 2d array in this example...
+  const user = list[rowIndex][columnIndex]
+
+  // If cell content is complex, consider rendering a lighter-weight placeholder while scrolling.
+  const content = isScrolling
+    ? '...'
+    : <User user={user} />
+
+  // It is important to attach the style specified as it controls the cell's position.
+  // You can add additional class names or style properties as you would like.
+  // Key is also required by React to more efficiently manage the array of cells.
+  return (
+    <div
+      key={key}
+      style={style}
+    >
+      {content}
+    </div>
+  )
+}
+```
+
+### Basic `Grid` Example
 
 Below is a very basic `Grid` example. The grid displays an array of objects with fixed row and column sizes. (Dynamic sizes are also supported but this example is intended to be basic.) [See here](../source/Grid/Grid.example.js) for a more full-featured example with dynamic cell sizes and more.
 
-```javascript
+```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Grid } from 'react-virtualized';
@@ -161,16 +190,27 @@ const list = [
   // And so on...
 ];
 
+function cellRenderer ({ columnIndex, key, rowIndex, style }) {
+  return (
+    <div
+      key={key}
+      style={style}
+    >
+      {list[rowIndex][columnIndex]}
+    </div>
+  )  
+}
+
 // Render your grid
 ReactDOM.render(
   <Grid
-    width={300}
-    height={300}
-    columnWidth={100}
-    rowHeight={30}
+    cellRenderer={cellRenderer}
     columnCount={list[0].length}
+    columnWidth={100}
+    height={300}
     rowCount={list.length}
-    cellRenderer={({ columnIndex, isScrolling, rowIndex }) => list[rowIndex][columnIndex]}
+    rowHeight={30}
+    width={300}
   />,
   document.getElementById('example')
 );

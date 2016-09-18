@@ -3,9 +3,9 @@ import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import { Simulate } from 'react-addons-test-utils'
 import Immutable from 'immutable'
-import VirtualScroll from './VirtualScroll'
+import List from './List'
 
-describe('VirtualScroll', () => {
+describe('List', () => {
   const array = []
   for (var i = 0; i < 100; i++) {
     array.push(`Name ${i}`)
@@ -13,11 +13,12 @@ describe('VirtualScroll', () => {
   const names = Immutable.fromJS(array)
 
   function getMarkup (props = {}) {
-    function rowRenderer ({ index }) {
+    function rowRenderer ({ index, key, style }) {
       return (
         <div
-          key={index}
           className='listItem'
+          key={key}
+          style={style}
         >
           {names.get(index)}
         </div>
@@ -25,7 +26,7 @@ describe('VirtualScroll', () => {
     }
 
     return (
-      <VirtualScroll
+      <List
         height={100}
         overscanRowCount={0}
         rowHeight={10}
@@ -252,7 +253,7 @@ describe('VirtualScroll', () => {
   describe('styles and classNames', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(render(getMarkup()))
-      expect(node.className).toContain('VirtualScroll')
+      expect(node.className).toContain('ReactVirtualized__List')
     })
 
     it('should use a custom :className if specified', () => {
@@ -266,69 +267,9 @@ describe('VirtualScroll', () => {
       expect(rendered.style.backgroundColor).toEqual('red')
     })
 
-    it('should use the expected global CSS classNames for rows', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        columnCount: 1
-      })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const rows = Array.from(cells).map(row => row.className === 'Grid__cell')
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :cellClassName if specified', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        rowClassName: 'foo'
-      })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :cellClassName if function specified', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        rowClassName: () => 'foo'
-      })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const rows = Array.from(cells).map(row => row.classList.contains('foo'))
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual([true, true, true])
-    })
-
-    it('should use a custom :cellClassName indexes', () => {
-      const rendered = findDOMNode(render(getMarkup({
-        rowCount: 3,
-        rowClassName: ({index}) => `col-${index}`
-      })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const rows = Array.from(cells).map(row => row.className.split(' ')[1])
-      expect(rows.length).toEqual(3)
-      expect(rows).toEqual(['col-0', 'col-1', 'col-2'])
-    })
-
-    it('should use a custom :rowStyle if specified', () => {
-      const rowStyle = { backgroundColor: 'red' }
-      const rendered = findDOMNode(render(getMarkup({ rowStyle })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const result = Array.from(cells).map(el => el.style.backgroundColor)
-      expect(result).toEqual((new Array(cells.length)).fill('red'))
-    })
-
-    it('should use a custom :rowStyle if function specified', () => {
-      const rowStyle = () => { return { backgroundColor: 'red' } }
-      const rendered = findDOMNode(render(getMarkup({ rowStyle })))
-      const cells = rendered.querySelectorAll('.Grid__cell')
-      const result = Array.from(cells).map(el => el.style.backgroundColor)
-      expect(result).toEqual((new Array(cells.length)).fill('red'))
-    })
-
     it('should set the width of a row to be 100% by default', () => {
       const rendered = findDOMNode(render(getMarkup()))
-      const cell = rendered.querySelector('.Grid__cell')
+      const cell = rendered.querySelector('.listItem')
       expect(cell.style.width).toEqual('100%')
     })
   })
@@ -401,6 +342,7 @@ describe('VirtualScroll', () => {
         onScroll: params => onScrollCalls.push(params)
       }))
       const target = {
+        scrollLeft: 0,
         scrollTop: 100
       }
       rendered.Grid._scrollingContainer = target // HACK to work around _onScroll target check
@@ -458,8 +400,15 @@ describe('VirtualScroll', () => {
   describe('forceUpdateGrid', () => {
     it('should refresh inner Grid content when called', () => {
       let marker = 'a'
-      function rowRenderer ({ index }) {
-        return `${index}${marker}`
+      function rowRenderer ({ index, key, style }) {
+        return (
+          <div
+            key={key}
+            style={style}
+          >
+            {index}{marker}
+          </div>
+        )
       }
       const component = render(getMarkup({ rowRenderer }))
       const node = findDOMNode(component)
@@ -487,9 +436,16 @@ describe('VirtualScroll', () => {
   describe('pure', () => {
     it('should not re-render unless props have changed', () => {
       let rowRendererCalled = false
-      function rowRenderer () {
+      function rowRenderer ({ index, key, style }) {
         rowRendererCalled = true
-        return 'foo'
+        return (
+          <div
+            key={key}
+            style={style}
+          >
+            {index}
+          </div>
+        )
       }
       const markup = getMarkup({ rowRenderer })
       render(markup)
@@ -502,6 +458,6 @@ describe('VirtualScroll', () => {
 
   it('should set the width of the single-column inner Grid to auto', () => {
     const rendered = findDOMNode(render(getMarkup()))
-    expect(rendered.querySelector('.Grid__innerScrollContainer').style.width).toEqual('auto')
+    expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.width).toEqual('auto')
   })
 })

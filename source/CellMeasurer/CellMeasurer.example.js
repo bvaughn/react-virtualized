@@ -10,13 +10,12 @@ import shallowCompare from 'react-addons-shallow-compare'
 import cn from 'classnames'
 import styles from './CellMeasurer.example.css'
 
-const COLUMN_COUNT = 20
 const COLUMN_WIDTH = 150
 const ROW_COUNT = 50
 const ROW_HEIGHT = 35
 
 export default class CellMeasurerExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
 
@@ -34,7 +33,7 @@ export default class CellMeasurerExample extends Component {
 
   render () {
     return (
-      <ContentBox {...this.props}>
+      <ContentBox>
         <ContentBoxHeader
           text='CellMeasurer'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/CellMeasurer.example.js'
@@ -52,7 +51,7 @@ export default class CellMeasurerExample extends Component {
               <h3>Fixed height, dynamic width</h3>
               <CellMeasurer
                 cellRenderer={this._cellRenderer}
-                columnCount={COLUMN_COUNT}
+                columnCount={50}
                 height={ROW_HEIGHT}
                 ref={(ref) => {
                   this._columnWidthMeasurerRef = ref
@@ -62,7 +61,7 @@ export default class CellMeasurerExample extends Component {
                 {({ getColumnWidth }) => (
                   <Grid
                     className={styles.BodyGrid}
-                    columnCount={COLUMN_COUNT}
+                    columnCount={50}
                     columnWidth={getColumnWidth}
                     height={150}
                     overscanColumnCount={0}
@@ -78,14 +77,14 @@ export default class CellMeasurerExample extends Component {
               <h3>Fixed width, dynamic height</h3>
               <CellMeasurer
                 cellRenderer={this._cellRenderer}
-                columnCount={COLUMN_COUNT}
+                columnCount={10}
                 rowCount={ROW_COUNT}
                 width={COLUMN_WIDTH}
               >
                 {({ getRowHeight }) => (
                   <Grid
                     className={styles.BodyGrid}
-                    columnCount={COLUMN_COUNT}
+                    columnCount={10}
                     columnWidth={COLUMN_WIDTH}
                     height={150}
                     overscanColumnCount={0}
@@ -102,13 +101,13 @@ export default class CellMeasurerExample extends Component {
               <CellMeasurer
                 cellRenderer={this._uniformCellRenderer}
                 cellSizeCache={this._uniformSizeCellSizeCache}
-                columnCount={COLUMN_COUNT}
+                columnCount={100}
                 rowCount={ROW_COUNT}
               >
                 {({ getColumnWidth, getRowHeight }) => (
                   <Grid
                     className={styles.BodyGrid}
-                    columnCount={COLUMN_COUNT}
+                    columnCount={100}
                     columnWidth={getColumnWidth}
                     height={150}
                     overscanColumnCount={0}
@@ -131,7 +130,7 @@ export default class CellMeasurerExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _cellRenderer ({ columnIndex, rowIndex }) {
+  _cellRenderer ({ columnIndex, key, rowIndex, style }) {
     const datum = this._getDatum(rowIndex)
     const rowClass = this._getRowClassName(rowIndex)
     const classNames = cn(rowClass, styles.cell, {
@@ -153,14 +152,18 @@ export default class CellMeasurerExample extends Component {
     }
 
     return (
-      <div className={classNames}>
+      <div
+        className={classNames}
+        key={key}
+        style={style}
+      >
         {content}
       </div>
     )
   }
 
   _getDatum (index) {
-    const { list } = this.props
+    const { list } = this.context
 
     return list.get(index % list.size)
   }
@@ -169,9 +172,13 @@ export default class CellMeasurerExample extends Component {
     return row % 2 === 0 ? styles.evenRow : styles.oddRow
   }
 
-  _uniformCellRenderer ({ columnIndex, rowIndex }) {
+  _uniformCellRenderer ({ columnIndex, key, rowIndex, style }) {
     return (
-      <div className={styles.uniformSizeCell}>
+      <div
+        className={styles.uniformSizeCell}
+        key={key}
+        style={style}
+      >
         {rowIndex}, {columnIndex}
       </div>
     )

@@ -11,9 +11,13 @@ describe('ColumnSizer', () => {
     columnCount = 10,
     width = 200
   } = {}) {
-    function cellRenderer ({ columnIndex, rowIndex }) {
+    function cellRenderer ({ columnIndex, key, rowIndex, style }) {
       return (
-        <div className='gridItem'>
+        <div
+          className='gridItem'
+          key={key}
+          style={style}
+        >
           {`row:${rowIndex}, column:${columnIndex}`}
         </div>
       )

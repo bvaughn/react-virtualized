@@ -3,12 +3,12 @@ import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from './AutoSizer'
-import VirtualScroll from '../VirtualScroll'
+import List from '../List'
 import shallowCompare from 'react-addons-shallow-compare'
 import styles from './AutoSizer.example.css'
 
 export default class AutoSizerExample extends Component {
-  static propTypes = {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
 
@@ -23,12 +23,12 @@ export default class AutoSizerExample extends Component {
   }
 
   render () {
+    const { list } = this.context
     const { hideDescription } = this.state
-    const { list, ...props } = this.props
 
     return (
       <ContentBox
-        {...props}
+        {...this.props}
         style={{
           height: 400
         }}
@@ -54,7 +54,7 @@ export default class AutoSizerExample extends Component {
 
         {!hideDescription &&
           <ContentBoxParagraph>
-            This component decorates <code>VirtualScroll</code>, <code>FlexTable</code>, or any other component and automatically manages its width and height.
+            This component decorates <code>List</code>, <code>Table</code>, or any other component and automatically manages its width and height.
             It uses Sebastian Decima's <a href='https://github.com/sdecima/javascript-detect-element-resize' target='_blank'>element resize event</a> to determine the appropriate size.
             In this example <code>AutoSizer</code> grows to fill the remaining width and height of this flex column.
           </ContentBoxParagraph>
@@ -63,8 +63,8 @@ export default class AutoSizerExample extends Component {
         <div className={styles.AutoSizerWrapper}>
           <AutoSizer>
             {({ width, height }) => (
-              <VirtualScroll
-                className={styles.VirtualScroll}
+              <List
+                className={styles.List}
                 height={height}
                 rowCount={list.size}
                 rowHeight={30}
@@ -82,15 +82,15 @@ export default class AutoSizerExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _rowRenderer ({ index }) {
-    const { list } = this.props
+  _rowRenderer ({ index, key, style }) {
+    const { list } = this.context
     const row = list.get(index)
 
     return (
       <div
-        key={index}
+        key={key}
         className={styles.row}
-        style={{ height: 30 }}
+        style={style}
       >
         {row.name}
       </div>

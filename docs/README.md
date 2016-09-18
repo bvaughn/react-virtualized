@@ -4,11 +4,11 @@ Documentation
 ### Components
 
 * [Collection](Collection.md)
-* [FlexTable](FlexTable.md)
-  * [FlexColumn](FlexColumn.md)
-  * [SortDirection](SortDirection.md)
 * [Grid](Grid.md)
-* [VirtualScroll](VirtualScroll.md)
+* [List](List.md)
+* [Table](Table.md)
+  * [Column](Column.md)
+  * [SortDirection](SortDirection.md)
 
 ### High-Order Components
 

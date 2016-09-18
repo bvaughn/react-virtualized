@@ -6,7 +6,7 @@ const webpack = require('webpack')
 module.exports = {
   devtool: 'source-map',
   entry: {
-    demo: './source/demo/Application'
+    demo: './source/demo/index'
   },
   output: {
     path: 'build',

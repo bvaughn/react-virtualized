@@ -91,13 +91,14 @@ ES6, CommonJS, and UMD builds are available with each distribution.
 For example:
 
 ```js
-// Make sure to import default styles.
+// If you're using the Table component you'll need to include the default styles.
 // This only needs to be done once; probably during your application's bootstrapping process.
-import 'react-virtualized/styles.css';
+// Grid and List base styles are purely functional and so they're all inline.
+import 'react-virtualized/styles.css'
 
 // Then you can import any react-virtualized components you need.
-// Tree-shaking is supported with ES6 or CommonJS usage.
-import { Grid } from 'react-virtualized'
+// Tree-shaking is supported with ES6 modules (`jsnext:main` package target).
+import { Table } from 'react-virtualized'
 ```
 
 Alternately you can load a global-friendly UMD build:
@@ -106,6 +107,9 @@ Alternately you can load a global-friendly UMD build:
 <link rel="stylesheet" href="path-to-react-virtualized/styles.css">
 <script src="path-to-react-virtualized/dist/umd/react-virtualized.js"></script>
 ```
+
+Now you're ready to start using the components.
+You can learn more about which components react-virtualized has to offer [below](#documentation).
 
 Dependencies
 ---------------
@@ -130,12 +134,12 @@ This can be done a couple of different ways.
 
 The `shallowCompare` method will detect changes to any props, even if they aren't declared as `propTypes`.
 This means you can also pass through additional properties that affect cell rendering to ensure changes are detected.
-For example, if you're using `VirtualScroll` to render a list of items that may be re-sorted after initial render- react-virtualized would not normally detect the sort operation because none of the properties it deals with change.
+For example, if you're using `List` to render a list of items that may be re-sorted after initial render- react-virtualized would not normally detect the sort operation because none of the properties it deals with change.
 However you can pass through the additional sort property to trigger a re-render.
 For example:
 
 ```js
-<VirtualScroll
+<List
   {...virtualScrollProps}
   sortBy={sortBy}
 />
@@ -144,7 +148,7 @@ For example:
 ###### Public methods
 
 `Grid` and `Collection` components can be forcefully re-rendered using [`forceUpdate`](https://facebook.github.io/react/docs/component-api.html#forceupdate).
-For `FlexTable` and `VirtualScroll`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/FlexTable.md#forceupdategrid)) to ensure that the inner `Grid` is also updated.
+For `Table` and `List`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/Table.md#forceupdategrid) to ensure that the inner `Grid` is also updated.
 
 Documentation
 ---------------
@@ -170,11 +174,11 @@ Here are some online demos of each component:
 * [CellMeasurer](https://bvaughn.github.io/react-virtualized/?component=CellMeasurer)
 * [Collection](https://bvaughn.github.io/react-virtualized/?component=Collection)
 * [ColumnSizer](https://bvaughn.github.io/react-virtualized/?component=ColumnSizer)
-* [FlexTable](https://bvaughn.github.io/react-virtualized/?component=FlexTable)
+* [Table](https://bvaughn.github.io/react-virtualized/?component=Table)
 * [Grid](https://bvaughn.github.io/react-virtualized/?component=Grid)
 * [InfiniteLoader](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader)
 * [ScrollSync](https://bvaughn.github.io/react-virtualized/?component=ScrollSync)
-* [VirtualScroll](https://bvaughn.github.io/react-virtualized/?component=VirtualScroll)
+* [List](https://bvaughn.github.io/react-virtualized/?component=List)
 * [WindowScroller](https://bvaughn.github.io/react-virtualized/?component=WindowScroller)
 
 And here are some "recipe" type demos:

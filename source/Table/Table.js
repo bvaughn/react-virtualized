@@ -1,6 +1,6 @@
 /** @flow */
 import cn from 'classnames'
-import FlexColumn from './FlexColumn'
+import Column from './Column'
 import React, { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 import shallowCompare from 'react-addons-shallow-compare'
@@ -12,7 +12,7 @@ import SortDirection from './SortDirection'
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
  * This component expects explicit width, height, and padding parameters.
  */
-export default class FlexTable extends Component {
+export default class Table extends Component {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -22,12 +22,12 @@ export default class FlexTable extends Component {
      */
     autoHeight: PropTypes.bool,
 
-    /** One or more FlexColumns describing the data displayed in this row */
+    /** One or more Columns describing the data displayed in this row */
     children: (props, propName, componentName) => {
       const children = React.Children.toArray(props.children)
       for (let i = 0; i < children.length; i++) {
-        if (children[i].type !== FlexColumn) {
-          return new Error('FlexTable only accepts children of type FlexColumn')
+        if (children[i].type !== Column) {
+          return new Error('Table only accepts children of type Column')
         }
       }
     },
@@ -39,7 +39,7 @@ export default class FlexTable extends Component {
     disableHeader: PropTypes.bool,
 
     /**
-     * Used to estimate the total height of a FlexTable before all of its rows have actually been measured.
+     * Used to estimate the total height of a Table before all of its rows have actually been measured.
      * The estimated total height is adjusted as rows are rendered.
      */
     estimatedRowSize: PropTypes.number.isRequired,
@@ -156,12 +156,6 @@ export default class FlexTable extends Component {
     /** Optional custom inline style to attach to table rows. */
     rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
 
-    /** Optional custom CSS class for individual rows */
-    rowWrapperClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-    /** Optional custom CSS class for individual rows */
-    rowWrapperStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-
     /** See Grid#scrollToAlignment */
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
@@ -177,10 +171,10 @@ export default class FlexTable extends Component {
      */
     sort: PropTypes.func,
 
-    /** FlexTable data is currently sorted by this :dataKey (if it is sorted at all) */
+    /** Table data is currently sorted by this :dataKey (if it is sorted at all) */
     sortBy: PropTypes.string,
 
-    /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
+    /** Table data is currently sorted in this direction (if it is sorted at all) */
     sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
 
     /** Optional inline style */
@@ -215,8 +209,6 @@ export default class FlexTable extends Component {
       scrollbarWidth: 0
     }
 
-    this._cellClassName = this._cellClassName.bind(this)
-    this._cellStyle = this._cellStyle.bind(this)
     this._createColumn = this._createColumn.bind(this)
     this._createRow = this._createRow.bind(this)
     this._onScroll = this._onScroll.bind(this)
@@ -274,7 +266,12 @@ export default class FlexTable extends Component {
     // Precompute and cache column styles before rendering rows and columns to speed things up
     this._cachedColumnStyles = []
     React.Children.toArray(children).forEach((column, index) => {
-      this._cachedColumnStyles[index] = this._getFlexStyleForColumn(column, column.props.style)
+      const flexStyles = this._getFlexStyleForColumn(column, column.props.style)
+
+      this._cachedColumnStyles[index] = {
+        ...flexStyles,
+        overflow: 'hidden'
+      }
     })
 
     // Note that we specify :numChildren, :scrollbarWidth, :sortBy, and :sortDirection as properties on Grid even though these have nothing to do with Grid.
@@ -282,15 +279,16 @@ export default class FlexTable extends Component {
     // Any property that should trigger a re-render of Grid then is specified here to avoid a stale display.
     return (
       <div
-        className={cn('FlexTable', className)}
+        className={cn('ReactVirtualized__Table', className)}
         style={style}
       >
         {!disableHeader && (
           <div
-            className={cn('FlexTable__headerRow', rowClass)}
+            className={cn('ReactVirtualized__Table__headerRow', rowClass)}
             style={{
               ...rowStyleObject,
               height: headerHeight,
+              overflow: 'hidden',
               paddingRight: scrollbarWidth,
               width: width
             }}
@@ -302,10 +300,8 @@ export default class FlexTable extends Component {
         <Grid
           {...this.props}
           autoContainerWidth
-          className={cn('FlexTable__Grid', gridClassName)}
-          cellClassName={this._cellClassName}
+          className={cn('ReactVirtualized__Table__Grid', gridClassName)}
           cellRenderer={this._createRow}
-          cellStyle={this._cellStyle}
           columnWidth={width}
           columnCount={1}
           height={availableRowsHeight}
@@ -325,22 +321,6 @@ export default class FlexTable extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
-  }
-
-  _cellClassName ({ rowIndex }) {
-    const { rowWrapperClassName } = this.props
-
-    return rowWrapperClassName instanceof Function
-      ? rowWrapperClassName({ index: rowIndex - 1 })
-      : rowWrapperClassName
-  }
-
-  _cellStyle ({ rowIndex }) {
-    const { rowWrapperStyle } = this.props
-
-    return rowWrapperStyle instanceof Function
-      ? rowWrapperStyle({ index: rowIndex - 1 })
-      : rowWrapperStyle
   }
 
   _createColumn ({
@@ -370,7 +350,7 @@ export default class FlexTable extends Component {
     return (
       <div
         key={`Row${rowIndex}-Col${columnIndex}`}
-        className={cn('FlexTable__rowColumn', className)}
+        className={cn('ReactVirtualized__Table__rowColumn', className)}
         style={style}
         title={title}
       >
@@ -385,11 +365,11 @@ export default class FlexTable extends Component {
     const sortEnabled = !disableSort && sort
 
     const classNames = cn(
-      'FlexTable__headerColumn',
+      'ReactVirtualized__Table__headerColumn',
       headerClassName,
       column.props.headerClassName,
       {
-        'FlexTable__sortableHeaderColumn': sortEnabled
+        'ReactVirtualized__Table__sortableHeaderColumn': sortEnabled
       }
     )
     const style = this._getFlexStyleForColumn(column, headerStyle)
@@ -446,7 +426,9 @@ export default class FlexTable extends Component {
 
   _createRow ({
     rowIndex: index,
-    isScrolling
+    isScrolling,
+    key,
+    style
   }) {
     const {
       children,
@@ -477,10 +459,12 @@ export default class FlexTable extends Component {
       })
     )
 
-    const className = cn('FlexTable__row', rowClass)
-    const style = {
+    const className = cn('ReactVirtualized__Table__row', rowClass)
+    const flattenedStyle = {
+      ...style,
       ...rowStyleObject,
       height: this._getRowHeight(index),
+      overflow: 'hidden',
       paddingRight: scrollbarWidth
     }
 
@@ -489,12 +473,13 @@ export default class FlexTable extends Component {
       columns,
       index,
       isScrolling,
+      key,
       onRowClick,
       onRowDoubleClick,
       onRowMouseOver,
       onRowMouseOut,
       rowData,
-      style
+      style: flattenedStyle
     })
   }
 

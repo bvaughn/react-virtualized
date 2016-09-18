@@ -14,7 +14,7 @@ var App = React.createClass({
     for (var i = 0; i < NUM_COLUMNS; i++) {
       flexColumns.push(
         React.createElement(
-          ReactVirtualized.FlexColumn,
+          ReactVirtualized.Column,
           {
             dataKey: i,
             flexGrow: 1,
@@ -30,7 +30,7 @@ var App = React.createClass({
       null,
       function (params) {
         return React.createElement(
-          ReactVirtualized.FlexTable,
+          ReactVirtualized.Table,
           {
             height: params.height,
             overscanRowCount: 0,
@@ -52,7 +52,7 @@ ReactDOM.render(
   document.querySelector('#mount')
 )
 
-const testCase = createScrollingTestCase(document.querySelector('.Grid'))
+const testCase = createScrollingTestCase(document.querySelector('.ReactVirtualized__Grid'))
 const TestRunner = FpsMeasurer.TestRunner
 const testRunner = new TestRunner(testCase, 5)
 

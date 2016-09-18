@@ -1,170 +1,123 @@
-// IE 10+ compatibility for demo (must come before other imports)
-import 'babel-polyfill'
-
-import { render } from 'react-dom'
+/** @flow */
+import Immutable from 'immutable'
+import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
+import { HashRouter, Match, Redirect } from 'react-router'
+
+import ComponentLink from './ComponentLink'
+import styles from './Application.css'
+import NavLink from './NavLink'
+import Wizard from './Wizard'
+import { generateRandomList } from './utils'
+
 import ArrowKeyStepperExample from '../ArrowKeyStepper/ArrowKeyStepper.example'
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
 import WindowScrollerExample from '../WindowScroller/WindowScroller.example'
 import CellMeasurerExample from '../CellMeasurer/CellMeasurer.example'
 import CollectionExample from '../Collection/Collection.example'
 import ColumnSizerExample from '../ColumnSizer/ColumnSizer.example'
-import ComponentLink from './ComponentLink'
 import GridExample from '../Grid/Grid.example'
-import FlexTableExample from '../FlexTable/FlexTable.example'
-import Immutable from 'immutable'
+import TableExample from '../Table/Table.example'
 import InfiniteLoaderExample from '../InfiniteLoader/InfiniteLoader.example'
-import NavLink from './NavLink'
-import React, { Component } from 'react'
 import ScrollSyncExample from '../ScrollSync/ScrollSync.example'
-import styles from './Application.css'
-import VirtualScrollExample from '../VirtualScroll/VirtualScroll.example'
-import { generateRandomList } from './utils'
-import Wizard from './Wizard'
-import '../../styles.css'
+import ListExample from '../List/List.example'
 
-const COMPONENTS = ['Collection', 'Grid', 'FlexTable', 'VirtualScroll']
-const HIGH_ORDER_COMPONENTS = ['ArrowKeyStepper', 'AutoSizer', 'CellMeasurer', 'ColumnSizer', 'InfiniteLoader', 'ScrollSync', 'WindowScroller']
 const COMPONENT_EXAMPLES_MAP = {
-  ArrowKeyStepper: ArrowKeyStepperExample,
-  AutoSizer: AutoSizerExample,
-  CellMeasurer: CellMeasurerExample,
-  Collection: CollectionExample,
-  ColumnSizer: ColumnSizerExample,
-  FlexTable: FlexTableExample,
-  Grid: GridExample,
-  InfiniteLoader: InfiniteLoaderExample,
-  ScrollSync: ScrollSyncExample,
-  VirtualScroll: VirtualScrollExample,
-  WindowScroller: WindowScrollerExample
-}
-
-const NAV_LINKS = {
-  Components: 'Components',
-  Wizard: 'Wizard'
+  '/components/ArrowKeyStepper': ArrowKeyStepperExample,
+  '/components/AutoSizer': AutoSizerExample,
+  '/components/CellMeasurer': CellMeasurerExample,
+  '/components/Collection': CollectionExample,
+  '/components/ColumnSizer': ColumnSizerExample,
+  '/components/Table': TableExample,
+  '/components/Grid': GridExample,
+  '/components/InfiniteLoader': InfiniteLoaderExample,
+  '/components/ScrollSync': ScrollSyncExample,
+  '/components/List': ListExample,
+  '/components/WindowScroller': WindowScrollerExample
 }
 
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
 
-function getUrlParam ({ defaultValue, name, valueCheck }) {
-  const matches = window.location.search.match(`${name}=(.+)`)
+export default class Application extends Component {
+  static childContextTypes = {
+    list: PropTypes.instanceOf(Immutable.List).isRequired
+  };
 
-  return matches && valueCheck(matches[1])
-    ? matches[1]
-    : defaultValue
-}
-
-class Application extends Component {
-  constructor (props) {
-    super(props)
-
-    const activeComponent = getUrlParam({
-      defaultValue: 'VirtualScroll',
-      name: 'component',
-      valueCheck: (value) => COMPONENTS.includes(value) || HIGH_ORDER_COMPONENTS.includes(value)
-    })
-    const activeNavLink = getUrlParam({
-      defaultValue: NAV_LINKS.Components,
-      name: 'navLink',
-      valueCheck: (value) => NAV_LINKS[value]
-    })
-
-    this.state = {
-      activeComponent,
-      activeNavLink
+  getChildContext () {
+    return {
+      list
     }
   }
 
   render () {
-    const { activeComponent, activeNavLink } = this.state
-
-    const setActiveComponent = (activeComponent) => this.setState({ activeComponent })
-    const setActiveNavLink = (activeNavLink) => this.setState({ activeNavLink })
-
-    const ActiveComponent = COMPONENT_EXAMPLES_MAP[activeComponent]
-
     return (
-      <div className={styles.demo}>
-        <div className={styles.headerRow}>
-          <div className={styles.ReactVirtualizedContainer}>
-            <img
-              alt='React virtualized'
-              className={styles.logo}
-              src='https://cloud.githubusercontent.com/assets/29597/11736841/c0497158-9f87-11e5-8dfe-9c0be97d4286.png'
-            />
-            <div className={styles.PrimaryLogoText}>
-              React
+      <HashRouter>
+        <div className={styles.demo}>
+          <div className={styles.headerRow}>
+            <div className={styles.logoRow}>
+              <div className={styles.ReactVirtualizedContainer}>
+                <img
+                  alt='React virtualized'
+                  className={styles.logo}
+                  src='https://cloud.githubusercontent.com/assets/29597/11736841/c0497158-9f87-11e5-8dfe-9c0be97d4286.png'
+                />
+                <div className={styles.PrimaryLogoText}>
+                  React
+                </div>
+                <div className={styles.SecondaryLogoText}>
+                  Virtualized
+                </div>
+              </div>
+
+              <ul className={styles.NavList}>
+                <NavLink to='/components/List'>Components</NavLink>
+                <NavLink to='/wizard'>Wizard</NavLink>
+                <NavLink href='https://github.com/bvaughn/react-virtualized'>Source</NavLink>
+                <NavLink href='https://github.com/bvaughn/react-virtualized/tree/master/docs#documentation'>Documentation</NavLink>
+                <NavLink href='https://github.com/bvaughn/react-virtualized/issues'>Issues</NavLink>
+              </ul>
             </div>
-            <div className={styles.SecondaryLogoText}>
-              Virtualized
+
+            <div className={styles.ComponentList}>
+              <ComponentLink to='/components/Collection'>Collection</ComponentLink>
+              <ComponentLink to='/components/Grid'>Grid</ComponentLink>
+              <ComponentLink to='/components/List'>List</ComponentLink>
+              <ComponentLink to='/components/Table'>Table</ComponentLink>
+            </div>
+
+            <div className={styles.HighOrderComponentList}>
+              <ComponentLink to='/components/ArrowKeyStepper'>ArrowKeyStepper</ComponentLink>
+              <ComponentLink to='/components/AutoSizer'>AutoSizer</ComponentLink>
+              <ComponentLink to='/components/CellMeasurer'>CellMeasurer</ComponentLink>
+              <ComponentLink to='/components/ColumnSizer'>ColumnSizer</ComponentLink>
+              <ComponentLink to='/components/InfiniteLoader'>InfiniteLoader</ComponentLink>
+              <ComponentLink to='/components/ScrollSync'>ScrollSync</ComponentLink>
+              <ComponentLink to='/components/WindowScroller'>WindowScroller</ComponentLink>
             </div>
           </div>
 
-          <ul className={styles.NavList}>
-            <NavLink
-              active={activeNavLink === NAV_LINKS.Components}
-              onClick={() => setActiveNavLink(NAV_LINKS.Components)}
-              text='Components'
-            />
-            <NavLink
-              active={activeNavLink === NAV_LINKS.Wizard}
-              onClick={() => setActiveNavLink(NAV_LINKS.Wizard)}
-              text='Wizard'
-            />
-            <NavLink
-              text='Source'
-              url='https://github.com/bvaughn/react-virtualized'
-            />
-            <NavLink
-              text='Documentation'
-              url='https://github.com/bvaughn/react-virtualized/tree/master/docs#documentation'
-            />
-            <NavLink
-              text='Issues'
-              url='https://github.com/bvaughn/react-virtualized/issues'
-            />
-          </ul>
-
-          <ul className={styles.ComponentList}>
-            {COMPONENTS.map(component => (
-              <ComponentLink
-                key={component}
-                activeComponent={activeComponent}
-                component={component}
-                disabled={activeNavLink === NAV_LINKS.Wizard}
-                setActiveComponent={setActiveComponent}
+          <div className={styles.Body}>
+            <div className={styles.column}>
+              <Match pattern='/wizard' component={Wizard} />
+              {Object.keys(COMPONENT_EXAMPLES_MAP).map((route) => (
+                <Match
+                  component={COMPONENT_EXAMPLES_MAP[route]}
+                  key={route}
+                  pattern={route}
+                />
+              ))}
+              <Match
+                exactly
+                pattern='/'
+                render={() => (
+                  <Redirect to='/components/List' />
+                )}
               />
-            ))}
-          </ul>
-
-          <ul className={styles.HighOrderComponentList}>
-            {HIGH_ORDER_COMPONENTS.map(component => (
-              <ComponentLink
-                key={component}
-                activeComponent={activeComponent}
-                component={component}
-                disabled={activeNavLink === NAV_LINKS.Wizard}
-                setActiveComponent={setActiveComponent}
-              />
-            ))}
-          </ul>
+            </div>
+          </div>
         </div>
-
-        <div className={styles.row}>
-          {activeNavLink === NAV_LINKS.Components
-            ? <ActiveComponent
-              className={styles.column}
-              list={list}
-            />
-            : <Wizard />
-          }
-        </div>
-
-        <p className={styles.footer}>
-          React Virtualized is available under the MIT license.
-        </p>
-      </div>
+      </HashRouter>
     )
   }
 
@@ -172,11 +125,3 @@ class Application extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 }
-
-render(
-  <Application />,
-  document.getElementById('root')
-)
-
-// Import and attach the favicon
-document.querySelector('[rel="shortcut icon"]').href = require('file!./favicon.png')

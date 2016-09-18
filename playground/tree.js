@@ -6,8 +6,8 @@ function renderItem (item, keyPrefix) {
   var onClick = function(event) {
     event.stopPropagation()
     item.expanded = !item.expanded
-    VirtualScroll.recomputeRowHeights()
-    VirtualScroll.forceUpdate()
+    List.recomputeRowHeights()
+    List.forceUpdate()
   }
 
   var props = { key: keyPrefix }
@@ -52,13 +52,21 @@ function getExpandedItemCount (item) {
   return count
 }
 
-var VirtualScroll
+var List
 function setRef (ref) {
-  VirtualScroll = ref
+  List = ref
 }
 
 function cellRenderer (params) {
-  return renderItem(data[params.index], params.index)
+  var renderedCell = renderItem(data[params.index], params.index)
+
+  return React.DOM.ul(
+    {
+      key: params.key,
+      style: params.style
+    },
+    renderedCell
+  )
 }
 
 function rowHeight (params) {
@@ -72,7 +80,7 @@ var App = React.createClass({
       null,
       function (params) {
         return React.createElement(
-          ReactVirtualized.VirtualScroll,
+          ReactVirtualized.List,
           {
             height: params.height,
             overscanRowCount: 10,

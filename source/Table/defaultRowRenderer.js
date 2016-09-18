@@ -3,13 +3,14 @@ import React from 'react'
 import type { RowRendererParams } from './types'
 
 /**
- * Default row renderer for FlexTable.
+ * Default row renderer for Table.
  */
 export default function defaultRowRenderer ({
   className,
   columns,
   index,
   isScrolling,
+  key,
   onRowClick,
   onRowDoubleClick,
   onRowMouseOver,
@@ -47,6 +48,7 @@ export default function defaultRowRenderer ({
     <div
       {...a11yProps}
       className={className}
+      key={key}
       style={style}
     >
       {columns}

@@ -1,26 +1,27 @@
 /**
  * @flow
  */
+import cn from 'classnames'
 import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
-import styles from './VirtualScroll.example.css'
+import styles from './List.example.css'
 import AutoSizer from '../AutoSizer'
-import VirtualScroll from './VirtualScroll'
+import List from './List'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import shallowCompare from 'react-addons-shallow-compare'
 
-export default class VirtualScrollExample extends Component {
-  static propTypes = {
+export default class ListExample extends Component {
+  static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
-  }
+  };
 
-  constructor (props) {
-    super(props)
+  constructor (props, context) {
+    super(props, context)
 
     this.state = {
       overscanRowCount: 10,
-      rowCount: props.list.size,
+      rowCount: context.list.size,
       scrollToIndex: undefined,
       showScrollingPlaceholder: false,
       useDynamicRowHeight: false,
@@ -47,11 +48,11 @@ export default class VirtualScrollExample extends Component {
     } = this.state
 
     return (
-      <ContentBox {...this.props}>
+      <ContentBox>
         <ContentBoxHeader
-          text='VirtualScroll'
-          sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/VirtualScroll/VirtualScroll.example.js'
-          docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/VirtualScroll.md'
+          text='List'
+          sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/List/List.example.js'
+          docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/List.md'
         />
 
         <ContentBoxParagraph>
@@ -121,9 +122,9 @@ export default class VirtualScrollExample extends Component {
         <div>
           <AutoSizer disableHeight>
             {({ width }) => (
-              <VirtualScroll
-                ref='VirtualScroll'
-                className={styles.VirtualScroll}
+              <List
+                ref='List'
+                className={styles.List}
                 height={virtualScrollHeight}
                 overscanRowCount={overscanRowCount}
                 noRowsRenderer={this._noRowsRenderer}
@@ -145,7 +146,7 @@ export default class VirtualScrollExample extends Component {
   }
 
   _getDatum (index) {
-    const { list } = this.props
+    const { list } = this.context
 
     return list.get(index % list.size)
   }
@@ -179,7 +180,7 @@ export default class VirtualScrollExample extends Component {
     this.setState({ scrollToIndex })
   }
 
-  _rowRenderer ({ index, isScrolling }) {
+  _rowRenderer ({ index, isScrolling, key, style }) {
     const {
       showScrollingPlaceholder,
       useDynamicRowHeight
@@ -190,10 +191,12 @@ export default class VirtualScrollExample extends Component {
       isScrolling
     ) {
       return (
-        <div className={styles.row}>
-          <span className={styles.isScrollingPlaceholder}>
-            Scrolling...
-          </span>
+        <div
+          className={cn(styles.row, styles.isScrollingPlaceholder)}
+          key={key}
+          style={style}
+        >
+          Scrolling...
         </div>
       )
     }
@@ -214,7 +217,11 @@ export default class VirtualScrollExample extends Component {
     }
 
     return (
-      <div className={styles.row}>
+      <div
+        className={styles.row}
+        key={key}
+        style={style}
+      >
         <div
           className={styles.letter}
           style={{

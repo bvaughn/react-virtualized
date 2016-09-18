@@ -1,5 +1,13 @@
 function cellRenderer (params) {
-  return params.columnIndex
+  return React.createElement(
+    'div',
+    {
+      className: 'item',
+      key: params.key,
+      style: params.style
+    },
+    params.columnIndex
+  )
 }
 
 var App = React.createClass({
@@ -31,7 +39,7 @@ ReactDOM.render(
   document.querySelector('#mount')
 )
 
-const testCase = createScrollingTestCase(document.querySelector('.Grid'))
+const testCase = createScrollingTestCase(document.querySelector('.ReactVirtualized__Grid'))
 const TestRunner = FpsMeasurer.TestRunner
 const testRunner = new TestRunner(testCase, 5)
 

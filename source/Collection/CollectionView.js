@@ -3,7 +3,6 @@ import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
-import raf from 'raf'
 import shallowCompare from 'react-addons-shallow-compare'
 
 // @TODO It would be nice to refactor Grid to use this code as well.
@@ -260,10 +259,6 @@ export default class CollectionView extends Component {
     if (this._disablePointerEventsTimeoutId) {
       clearTimeout(this._disablePointerEventsTimeoutId)
     }
-
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
-    }
   }
 
   /**
@@ -351,8 +346,13 @@ export default class CollectionView extends Component {
       }) : []
 
     const collectionStyle = {
+      boxSizing: 'border-box',
       height: autoHeight ? 'auto' : height,
-      width
+      overflow: 'auto',
+      position: 'relative',
+      WebkitOverflowScrolling: 'touch',
+      width,
+      willChange: 'transform'
     }
 
     // Force browser to hide scrollbars when we know they aren't necessary.
@@ -373,7 +373,7 @@ export default class CollectionView extends Component {
           this._scrollingContainer = ref
         }}
         aria-label={this.props['aria-label']}
-        className={cn('Collection', className)}
+        className={cn('ReactVirtualized__Collection', className)}
         onScroll={this._onScroll}
         role='grid'
         style={{
@@ -384,11 +384,12 @@ export default class CollectionView extends Component {
       >
         {cellCount > 0 &&
           <div
-            className='Collection__innerScrollContainer'
+            className='ReactVirtualized__Collection__innerScrollContainer'
             style={{
               height: totalHeight,
               maxHeight: totalHeight,
               maxWidth: totalWidth,
+              overflow: 'hidden',
               pointerEvents: isScrolling ? 'none' : '',
               width: totalWidth
             }}
@@ -460,22 +461,6 @@ export default class CollectionView extends Component {
         scrollLeft,
         scrollTop
       }
-    })
-  }
-
-  /**
-   * Updates the state during the next animation frame.
-   * Use this method to avoid multiple renders in a small span of time.
-   * This helps performance for bursty events (like onScroll).
-   */
-  _setNextState (state) {
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
-    }
-
-    this._setNextStateAnimationFrameId = raf(() => {
-      this._setNextStateAnimationFrameId = null
-      this.setState(state)
     })
   }
 
@@ -572,13 +557,9 @@ export default class CollectionView extends Component {
       // Synchronously set :isScrolling the first time (since _setNextState will reschedule its animation frame each time it's called)
       if (!this.state.isScrolling) {
         isScrollingChange(true)
-
-        this.setState({
-          isScrolling: true
-        })
       }
 
-      this._setNextState({
+      this.setState({
         isScrolling: true,
         scrollLeft,
         scrollPositionChangeReason,

@@ -7,13 +7,13 @@ Specify a fixed width to measure dynamic height (or vice versa).
 This is an advanced component and has some limitations and performance considerations.
 [See below for more information](#limitations-and-performance-considerations).
 
-`CellMeasurer` is intended for use with `Grid` components but [can be adapted to work with `VirtualScroll` as well](#using-cellmeasurer-with-virtualscroll).
+`CellMeasurer` is intended for use with `Grid` components but [can be adapted to work with `List` as well](#using-cellmeasurer-with-virtualscroll).
 
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | cellRenderer | Function | ✓ | Renders a cell given its indices. `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
-| cellSizeCache | Object |  | Optional, custom caching strategy for cell sizes. |
+| cellSizeCache | Object |  | Optional, custom caching strategy for cell sizes. Learn more [here](#cellsizecache). |
 | children | Function | ✓ | Function respondible for rendering a virtualized component; `({ getColumnWidth: Function, getRowHeight: Function, resetMeasurements: Function }) => PropTypes.element` |
 | columnCount | number | ✓ | Number of columns in the `Grid`; in order to measure a row's height, all of that row's columns must be rendered. |
 | container |  |  | A Node, Component instance, or function that returns either. If this property is not specified the document body will be used. |
@@ -97,7 +97,7 @@ The cell size cache can be optimized when width and/or height is uniform across 
 In this case the cache will allow only a single cell width/height measurement and then return that value for all other cells.
 You can use it like so:
 
-```js
+```jsx
 import {
   CellMeasurer,
   defaultCellMeasurerCellSizeCache as CellSizeCache,
@@ -145,7 +145,7 @@ To avoid this issue for now, use controlled props (instead of state) for cell re
 
 ###### Styling
 
-Cells may be measured outside of the context of their intended `Grid` (or `VirtualScroll`).
+Cells may be measured outside of the context of their intended `Grid` (or `List`).
 This means that they will not inherit the parent styles while being measured.
 Take care not rely on inherited styles for things that will affect measurement (eg `font-size`).
 (See [issue 352](https://github.com/bvaughn/react-virtualized/issues/352) for more background information.)
@@ -163,10 +163,10 @@ For this reason it may not be a good idea to use this HOC for `Grid`s containing
 Since this component measures one cell at a time to determine it's width/height, it will likely be slow if a user skips many rows (or columns) at once by scrolling with a scrollbar or via a scroll-to-cell prop.
 There is (unfortunately) no workaround for this performance limitation at the moment.
 
-### Using `CellMeasurer` with `VirtualScroll`
+### Using `CellMeasurer` with `List`
 
 This HOC is intended for use with a `Grid`.
-If you want to use it with `VirtualScroll` you'll need to provide an adapter method that converts the incoming `rowRenderer` params to those expected by `cellRenderer`.
+If you want to use it with `List` you'll need to provide an adapter method that converts the incoming `rowRenderer` params to those expected by `cellRenderer`.
 For example:
 
 ```js

@@ -2,7 +2,6 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import shallowCompare from 'react-addons-shallow-compare'
-import raf from 'raf'
 import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
 
 export default class WindowScroller extends Component {
@@ -70,22 +69,6 @@ export default class WindowScroller extends Component {
     window.removeEventListener('resize', this._onResizeWindow, false)
   }
 
-  /**
-   * Updates the state during the next animation frame.
-   * Use this method to avoid multiple renders in a small span of time.
-   * This helps performance for bursty events (like onScroll).
-   */
-  _setNextState (state) {
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
-    }
-
-    this._setNextStateAnimationFrameId = raf(() => {
-      this._setNextStateAnimationFrameId = null
-      this.setState(state)
-    })
-  }
-
   render () {
     const { children } = this.props
     const { isScrolling, scrollTop, height } = this.state
@@ -131,16 +114,10 @@ export default class WindowScroller extends Component {
 
     const scrollTop = Math.max(0, scrollY - this._positionFromTop)
 
-    const state = {
+    this.setState({
       isScrolling: true,
       scrollTop
-    }
-
-    if (!this.state.isScrolling) {
-      this.setState(state)
-    } else {
-      this._setNextState(state)
-    }
+    })
 
     onScroll({ scrollTop })
   }

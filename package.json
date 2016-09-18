@@ -3,7 +3,7 @@
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
-  "version": "7.24.3",
+  "version": "8.0.0",
   "homepage": "https://github.com/bvaughn/react-virtualized",
   "main": "dist/commonjs/index.js",
   "jsnext:main": "dist/es/index.js",
@@ -96,7 +96,7 @@
     "babel-preset-stage-1": "^6.5.0",
     "bluebird": "^3.0.5",
     "codecov": "^1.0.1",
-    "codemirror": "^5.17.0",
+    "codemirror": "^5.18.0",
     "cross-env": "^1.0.7",
     "css-loader": "^0.23.0",
     "express": "^4.13.3",
@@ -138,7 +138,7 @@
     "babel-runtime": "^6.11.6",
     "classnames": "^2.2.3",
     "dom-helpers": "^2.4.0",
-    "raf": "^3.1.0"
+    "react-router": "^4.0.0-2"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0",

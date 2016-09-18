@@ -1,11 +1,12 @@
 .ComponentLink {
+  display: list-item;
   background: none;
   border: none;
-  padding: .75em;
+  padding: .6rem;
   color: #bdbdbd;
   cursor: pointer;
-  font-size: .8rem;
   text-transform: uppercase;
+  text-decoration: none;
   transition: .2s all;
 }
 .ComponentLink:hover {
@@ -21,11 +22,4 @@
 .DisabledComponentLink {
   pointer-events: none;
   opacity: 0.5;
-}
-
-@media (max-width: 500px) {
-  .ComponentLink {
-    padding: .7em;
-    font-size: .7rem;
-  }
 }

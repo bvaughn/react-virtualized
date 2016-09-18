@@ -19,7 +19,7 @@ export default class ArrowKeyStepperExample extends Component {
 
   render () {
     return (
-      <ContentBox {...this.props}>
+      <ContentBox>
         <ContentBoxHeader
           text='ArrowKeyStepper'
           sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/ArrowKeyStepper/ArrowKeyStepper.example.js'
@@ -27,7 +27,7 @@ export default class ArrowKeyStepperExample extends Component {
         />
 
         <ContentBoxParagraph>
-          This high-order component decorates a <code>VirtualScroll</code>, <code>FlexTable</code>, or <code>Grid</code> and responds to arrow-key events by scrolling one row or column at a time.
+          This high-order component decorates a <code>List</code>, <code>Table</code>, or <code>Grid</code> and responds to arrow-key events by scrolling one row or column at a time.
           Focus in the `Grid` below and use the left, right, up, or down arrow keys to move around within the grid.
         </ContentBoxParagraph>
 
@@ -53,7 +53,7 @@ export default class ArrowKeyStepperExample extends Component {
                     columnCount={100}
                     height={200}
                     onSectionRendered={onSectionRendered}
-                    cellRenderer={({ columnIndex, rowIndex }) => this._cellRenderer({ columnIndex, rowIndex, scrollToColumn, scrollToRow })}
+                    cellRenderer={({ columnIndex, key, rowIndex, style }) => this._cellRenderer({ columnIndex, key, rowIndex, scrollToColumn, scrollToRow, style })}
                     rowHeight={this._getRowHeight}
                     rowCount={100}
                     scrollToColumn={scrollToColumn}
@@ -81,13 +81,17 @@ export default class ArrowKeyStepperExample extends Component {
     return (1 + (index % 3)) * 30
   }
 
-  _cellRenderer ({ columnIndex, rowIndex, scrollToColumn, scrollToRow }) {
+  _cellRenderer ({ columnIndex, key, rowIndex, scrollToColumn, scrollToRow, style }) {
     const className = cn(styles.Cell, {
       [styles.FocusedCell]: columnIndex === scrollToColumn && rowIndex === scrollToRow
     })
 
     return (
-      <div className={className}>
+      <div
+        className={className}
+        key={key}
+        style={style}
+      >
         {`r:${rowIndex}, c:${columnIndex}`}
       </div>
     )

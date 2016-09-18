@@ -1,21 +1,35 @@
+/** @flow */
 import React from 'react'
-import cn from 'classnames'
+import { Link } from 'react-router'
 import styles from './NavLink.css'
 
-export default function NavLink ({ active, onClick, pathData, text, url }) {
-  const classNames = cn(styles.NavLink, {
-    [styles.ActiveNavLink]: active
-  })
+export default function NavLink ({ children, href, to }) {
+  let link
+
+  if (to) {
+    link = (
+      <Link
+        activeClassName={styles.ActiveNavLink}
+        className={styles.NavLink}
+        to={to}
+      >
+        {children}
+      </Link>
+    )
+  } else {
+    link = (
+      <a
+        className={styles.NavLink}
+        href={href}
+      >
+        {children}
+      </a>
+    )
+  }
 
   return (
     <li className={styles.NavListItem}>
-      <a
-        className={classNames}
-        href={url}
-        onClick={onClick}
-      >
-        {text}
-      </a>
+      {link}
     </li>
   )
 }

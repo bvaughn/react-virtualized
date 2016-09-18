@@ -1,75 +1,41 @@
 /* Collection default theme */
 
-.Collection {
-  position: relative;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-
-  /* Without this property, Chrome repaints the entire Collection any time a new row or column is added.
-     Firefox only repaints the new row or column (regardless of this property).
-     Safari and IE don't support the property at all. */
-  will-change: transform;
+.ReactVirtualized__Collection {
 }
 
-.Collection__innerScrollContainer {
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.Collection__cell {
-  position: absolute;
+.ReactVirtualized__Collection__innerScrollContainer {
 }
 
 /* Grid default theme */
 
-.Grid {
-  position: relative;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-
-  /* Without this property, Chrome repaints the entire Grid any time a new row or column is added.
-     Firefox only repaints the new row or column (regardless of this property).
-     Safari and IE don't support the property at all. */
-  will-change: transform;
+.ReactVirtualized__Grid {
 }
 
-.Grid__innerScrollContainer {
-  box-sizing: border-box;
-  overflow: hidden;
-  position: relative;
+.ReactVirtualized__Grid__innerScrollContainer {
 }
 
-.Grid__cell {
-  position: absolute;
+/* Table default theme */
+
+.ReactVirtualized__Table {
 }
 
-/* FlexTable default theme */
-
-.FlexTable {
+.ReactVirtualized__Table__Grid {
 }
 
-.FlexTable__Grid {
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
-
-.FlexTable__headerRow {
+.ReactVirtualized__Table__headerRow {
   font-weight: 700;
   text-transform: uppercase;
   display: flex;
   flex-direction: row;
   align-items: center;
-  overflow: hidden;
-  box-sizing: border-box;
 }
-.FlexTable__row {
+.ReactVirtualized__Table__row {
   display: flex;
   flex-direction: row;
   align-items: center;
-  overflow: hidden;
 }
 
-.FlexTable__headerTruncatedText {    
+.ReactVirtualized__Table__headerTruncatedText {
   display: inline-block;
   max-width: 100%;
   white-space: nowrap;
@@ -77,41 +43,36 @@
   overflow: hidden;
 }
 
-.FlexTable__headerColumn,
-.FlexTable__rowColumn {
+.ReactVirtualized__Table__headerColumn,
+.ReactVirtualized__Table__rowColumn {
   margin-right: 10px;
   min-width: 0px;
 }
-.FlexTable__rowColumn {
-  overflow: hidden;
+.ReactVirtualized__Table__rowColumn {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.FlexTable__headerColumn:first-of-type,
-.FlexTable__rowColumn:first-of-type {
+.ReactVirtualized__Table__headerColumn:first-of-type,
+.ReactVirtualized__Table__rowColumn:first-of-type {
   margin-left: 10px;
 }
-.FlexTable__sortableHeaderColumn {
+.ReactVirtualized__Table__sortableHeaderColumn {
   cursor: pointer;
 }
 
-.FlexTable__sortableHeaderIconContainer {
+.ReactVirtualized__Table__sortableHeaderIconContainer {
   display: flex;
   align-items: center;
 }
-.FlexTable__sortableHeaderIcon {
+.ReactVirtualized__Table__sortableHeaderIcon {
   flex: 0 0 24px;
   height: 1em;
   width: 1em;
   fill: currentColor;
 }
 
-/* VirtualScroll default theme */
+/* List default theme */
 
-.VirtualScroll {
-  position: relative;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+.ReactVirtualized__List {
 }

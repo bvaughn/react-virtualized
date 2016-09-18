@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+# 8.0.0
+Version 8 changes are described in detail on the [Version 8 Roadmap](https://github.com/bvaughn/react-virtualized/issues/386).
+Upgrade instructions and [jscodeshift](https://github.com/facebook/jscodeshift) mods can be found [here](docs/upgrades/Version8.md).
+
 ##### 7.24.3
 ES module build (_jsnext:main_ target) updated to depend on Babel's `transform-runtime` rather than referencing global `babelHelpers`.
 This should fix support within projects like `react-boilerplate`.
@@ -384,7 +388,7 @@ At a high-level the purpose of this release is to improve customization and flex
 ### Backwards-incompatible changes
 * Refactored `Grid` to remove arrow-key scroll-snapping. Instead this feature is implemented in a HOC, `ArrowKeyStepper`. The upgrade path from React 5.x to 6.x if you want to maintain arrow-key navigation behavior is as follows:
 
-```js
+```jsx
 // Before...
 <Grid {...gridProps}/>
 
@@ -606,14 +610,14 @@ import 'react-virtualized/styles.css';
 In this release the `width` property of the `FlexTable` component was removed. Tables will now grow to fill 100% of the width of their parent container.
 
 The `AutoSizer`'s `ChildComponent` attribute has been removed in favor of using a regular react child. For example:
-```html
+```jsx
 <AutoSizer
   ChildComponent={VirtualScroll}
   {...props}
 />
 ```
 Should instead be this:
-```html
+```jsx
 <AutoSizer>
   <VirtualScroll {...props}/>
 </AutoSizer>

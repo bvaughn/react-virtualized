@@ -1,14 +1,21 @@
 Using AutoSizer
 ---------------
 
-The `AutoSizer` component decorates a React element and automatically manages `width` and `height` properties so that decorated element fills the available space. This simplifies usage of components like `Grid`, `FlexTable`, and `VirtualScroll` that require explicit dimensions.
+The `AutoSizer` component decorates a React element and automatically manages `width` and `height` properties so that decorated element fills the available space. This simplifies usage of components like `Grid`, `Table`, and `List` that require explicit dimensions.
 
 This guide covers a few of the most commonly asked questions about using the component.
 
-#### Using AutoSizer to manage only width (or height)
+#### Why is my `AutoSizer` setting a height of 0?
+`AutoSizer` expands to _fill_ its parent but it will not _stretch_ the parent.
+This is done to prevent problems with flexbox layouts.
+If `AutoSizer` is reporting a height (or width) of 0- then it's likely that the parent element (or one of its parents) has a height of 0.
+One easy way to test this is to add a style property (eg `background-color: red;`) to the parent to ensure that it is the correct size.
+(eg You may need to add `height: 100%` or `flex: 1` to the parent.)
+
+#### Can I use AutoSizer to manage only width or height (not both)?
 You can use `AutoSizer` to control only one dimension of its child component using the `disableHeight` or `disableWidth` attributes. For example, a fixed-height component that should grow to fill the available width can be created like so:
 
-```html
+```jsx
 <AutoSizer disableHeight>
   {({ width }) => (
     <Component
@@ -20,10 +27,10 @@ You can use `AutoSizer` to control only one dimension of its child component usi
 </AutoSizer>
 ```
 
-#### Using AutoSizer within a flex container
+#### Can I use AutoSizer within a flex container?
 When using an `AutoSizer` as a direct child of a flex box it usually works out best to wrap it with a div, like so:
 
-```html
+```jsx
 <div style={{ display: 'flex' }}>
   <!-- Other children... -->
   <div style={{ flex: '1 1 auto' }}>
@@ -40,15 +47,15 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
 </div>
 ```
 
-#### Using AutoSizer with InfiniteLoader
+#### Can I use AutoSizer with other HOCs like InfiniteLoader?
 `AutoSizer` can be used within other react-virtualized HOCs such as `InfiniteLoader` or `ScrollSync` like so:
 
-```html
+```jsx
 <InfiniteLoader {...infiniteLoaderProps}>
   {({ onRowsRendered, registerChild }) => (
     <AutoSizer>
       {({ height, width }) => (
-        <VirtualScroll
+        <List
           ref={registerChild}
           width={width}
           height={height}
@@ -61,4 +68,4 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
 </InfiniteLoader>
 ```
 
-You can see an example of just such a thing [here](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader).
+You can see an example of this [here](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader).

@@ -20,13 +20,12 @@ One word of caution about using `AutoSizer` with flexbox containers.
 Flex containers don't prevent their children from growing and `AutoSizer` greedily grows to fill as much space as possible.
 Combining the two can cause a loop.
 The simple way to fix this is to nest `AutoSizer` inside of a `block` element (like a `<div>`) rather than putting it as a direct child of the flex container.
-
-Here is a simple example...
+Read more about common `AutoSizer` questions [here](usingAutoSizer.md).
 
 ```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AutoSizer, VirtualScroll } from 'react-virtualized';
+import { AutoSizer, List } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // List data as an array of strings
@@ -35,18 +34,27 @@ const list = [
   // And so on...
 ];
 
+function rowRenderer ({ key, rowIndex, style}) {
+  return (
+    <div
+      key={key}
+      style={style}
+    >
+      {list[rowIndex]}
+    </div>
+  )
+}
+
 // Render your list
 ReactDOM.render(
   <AutoSizer>
     {({ height, width }) => (
-      <VirtualScroll
-        width={width}
+      <List
         height={height}
         rowCount={list.length}
         rowHeight={20}
-        rowRenderer={
-          ({ index }) => list[index] // Could also be a DOM element
-        }
+        rowRenderer={rowRenderer}
+        width={width}
       />
     )}
   </AutoSizer>,

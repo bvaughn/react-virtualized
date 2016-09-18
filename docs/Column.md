@@ -1,4 +1,4 @@
-FlexColumn
+Column
 ---------------
 
 Describes the header and cell contents of a table column.
@@ -28,10 +28,14 @@ Callback responsible for returning a cell's data, given its `dataKey`.
 It should implement the following signature:
 
 ```javascript
-function ({ columnData: any, dataKey: string, rowData: any }): any
+function ({
+  columnData: any,
+  dataKey: string,
+  rowData: any
+}): any
 ```
 
-A [default `cellDataGetter`](https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/defaultCellDataGetter.js) is provided that simply returns the attribute as a String.
+A [default `cellDataGetter`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultCellDataGetter.js) is provided that simply returns the attribute as a String.
 This function expects to operate on either a vanilla Object or a Map-like object with a get method.
 You should override this default method if your data is calculated or requires any custom processing.
 
@@ -41,10 +45,17 @@ Callback responsible for rendering a cell's contents.
 It should implement the following signature:
 
 ```javascript
-function ({ cellData: any, columnData: any, dataKey: string, isScrolling: boolean, rowData: any, rowIndex: number }): node
+function ({
+  cellData: any,
+  columnData: any,
+  dataKey: string,
+  isScrolling: boolean,
+  rowData: any,
+  rowIndex: number
+}): node
 ```
 
-A [default `cellRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/defaultCellRenderer.js) is provided that displays an attribute as a simple string
+A [default `cellRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultCellRenderer.js) is provided that displays an attribute as a simple string
 You should override this default method if your data is some other type of object or requires custom formatting.
 
 #### headerRenderer
@@ -53,8 +64,15 @@ Callback responsible for rendering a cell's header column.
 It should implement the following signature:
 
 ```javascript
-function ({ columnData: any, dataKey: string, disableSort: boolean, label: string, sortBy: string, sortDirection: SortDirection }): element
+function ({
+  columnData: any,
+  dataKey: string,
+  disableSort: boolean,
+  label: string,
+  sortBy: string,
+  sortDirection: SortDirection
+}): element
 ```
 
-A [default `headerRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/FlexTable/defaultHeaderRenderer.js) is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
+A [default `headerRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultHeaderRenderer.js) is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
 You should override this default method if you want to customize the appearance of table columns.
