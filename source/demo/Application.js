@@ -55,53 +55,49 @@ export default class Application extends Component {
       <HashRouter>
         <div className={styles.demo}>
           <div className={styles.headerRow}>
-            <div className={styles.ReactVirtualizedContainer}>
-              <img
-                alt='React virtualized'
-                className={styles.logo}
-                src='https://cloud.githubusercontent.com/assets/29597/11736841/c0497158-9f87-11e5-8dfe-9c0be97d4286.png'
-              />
-              <div className={styles.PrimaryLogoText}>
-                React
+            <div className={styles.logoRow}>
+              <div className={styles.ReactVirtualizedContainer}>
+                <img
+                  alt='React virtualized'
+                  className={styles.logo}
+                  src='https://cloud.githubusercontent.com/assets/29597/11736841/c0497158-9f87-11e5-8dfe-9c0be97d4286.png'
+                />
+                <div className={styles.PrimaryLogoText}>
+                  React
+                </div>
+                <div className={styles.SecondaryLogoText}>
+                  Virtualized
+                </div>
               </div>
-              <div className={styles.SecondaryLogoText}>
-                Virtualized
-              </div>
+
+              <ul className={styles.NavList}>
+                <NavLink to='/components/List'>Components</NavLink>
+                <NavLink to='/wizard'>Wizard</NavLink>
+                <NavLink href='https://github.com/bvaughn/react-virtualized'>Source</NavLink>
+                <NavLink href='https://github.com/bvaughn/react-virtualized/tree/master/docs#documentation'>Documentation</NavLink>
+                <NavLink href='https://github.com/bvaughn/react-virtualized/issues'>Issues</NavLink>
+              </ul>
             </div>
 
-            <ul className={styles.NavList}>
-              <NavLink to='/components/List'>Components</NavLink>
-              <NavLink to='/wizard'>Wizard</NavLink>
-              <NavLink href='https://github.com/bvaughn/react-virtualized'>Source</NavLink>
-              <NavLink href='https://github.com/bvaughn/react-virtualized/tree/master/docs#documentation'>Documentation</NavLink>
-              <NavLink href='https://github.com/bvaughn/react-virtualized/issues'>Issues</NavLink>
-            </ul>
+            <div className={styles.ComponentList}>
+              <ComponentLink to='/components/Collection'>Collection</ComponentLink>
+              <ComponentLink to='/components/Grid'>Grid</ComponentLink>
+              <ComponentLink to='/components/List'>List</ComponentLink>
+              <ComponentLink to='/components/Table'>Table</ComponentLink>
+            </div>
 
-            <Match
-              pattern='/components'
-              render={() => (
-                <div>
-                  <div className={styles.ComponentList}>
-                    <ComponentLink to='/components/Collection'>Collection</ComponentLink>
-                    <ComponentLink to='/components/Grid'>Grid</ComponentLink>
-                    <ComponentLink to='/components/List'>List</ComponentLink>
-                    <ComponentLink to='/components/Table'>Table</ComponentLink>
-                  </div>
-                  <div className={styles.HighOrderComponentList}>
-                    <ComponentLink to='/components/ArrowKeyStepper'>ArrowKeyStepper</ComponentLink>
-                    <ComponentLink to='/components/AutoSizer'>AutoSizer</ComponentLink>
-                    <ComponentLink to='/components/CellMeasurer'>CellMeasurer</ComponentLink>
-                    <ComponentLink to='/components/ColumnSizer'>ColumnSizer</ComponentLink>
-                    <ComponentLink to='/components/InfiniteLoader'>InfiniteLoader</ComponentLink>
-                    <ComponentLink to='/components/ScrollSync'>ScrollSync</ComponentLink>
-                    <ComponentLink to='/components/WindowScroller'>WindowScroller</ComponentLink>
-                  </div>
-                </div>
-              )}
-            />
+            <div className={styles.HighOrderComponentList}>
+              <ComponentLink to='/components/ArrowKeyStepper'>ArrowKeyStepper</ComponentLink>
+              <ComponentLink to='/components/AutoSizer'>AutoSizer</ComponentLink>
+              <ComponentLink to='/components/CellMeasurer'>CellMeasurer</ComponentLink>
+              <ComponentLink to='/components/ColumnSizer'>ColumnSizer</ComponentLink>
+              <ComponentLink to='/components/InfiniteLoader'>InfiniteLoader</ComponentLink>
+              <ComponentLink to='/components/ScrollSync'>ScrollSync</ComponentLink>
+              <ComponentLink to='/components/WindowScroller'>WindowScroller</ComponentLink>
+            </div>
           </div>
 
-          <div className={styles.row}>
+          <div className={styles.Body}>
             <div className={styles.column}>
               <Match pattern='/wizard' component={Wizard} />
               {Object.keys(COMPONENT_EXAMPLES_MAP).map((route) => (
@@ -120,10 +116,6 @@ export default class Application extends Component {
               />
             </div>
           </div>
-
-          <p className={styles.footer}>
-            React Virtualized is available under the MIT license.
-          </p>
         </div>
       </HashRouter>
     )

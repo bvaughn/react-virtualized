@@ -1,16 +1,21 @@
+html, body {
+  height: 100%;
+}
+
 body {
   padding: 0;
   margin: 0;
   font-family: 'Roboto', 'Open Sans', sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   color: #272727;
-  background-color: #e0e0e0;
+  box-sizing: border-box;
 }
 a {
   color: #409890;
 }
 * {
-  box-sizing: border-box;
+  font-size: inherit;
+  box-sizing: inherit;
 }
 
 .headerRow {
@@ -22,8 +27,16 @@ a {
 }
 
 .logo {
-  width: 100px;
-  height: 100px;
+  width: 35px;
+  height: 35px;
+}
+
+.logoRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .ReactVirtualizedContainer {
@@ -31,7 +44,7 @@ a {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin: 1rem 0 0;
+  margin: 0.25rem;
 }
 .LogoColumn {
   display: inline-flex;
@@ -44,7 +57,7 @@ a {
 .PrimaryLogoText,
 .SecondaryLogoText {
   text-transform: lowercase;
-  font-size: 3em;
+  font-size: 2em;
 }
 .PrimaryLogoText {
   font-weight: bold;
@@ -59,7 +72,7 @@ a {
   margin: 0;
   padding: 0;
   list-style: none;
-  text-align: center;
+  font-size: 0.8rem;
 }
 
 .ComponentList,
@@ -67,10 +80,10 @@ a {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
   margin: 0;
   padding: 0;
   list-style: none;
+  font-size: 0.7rem;
 }
 .ComponentList {
   background-color: #272727;
@@ -80,34 +93,21 @@ a {
 }
 
 .demo {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
-.row {
+.Body {
+  flex: 1;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  padding: .5rem 1rem;
 }
 .column {
+  display: flex;
+  flex-direction: column;
   flex: 0 0 100%;
-  max-width: 500px;
-}
-
-.footer {
-  text-align: center;
-  font-size: .75em;
-  color: #37474f;
-  margin: 0 0 1rem;
-}
-
-@media (max-width: 500px) {
-  .logo {
-    width: 50px;
-    height: 50px;
-  }
-
-  .PrimaryLogoText,
-  .SecondaryLogoText {
-    font-size: 2em;
-  }
+  width: 100%;
+  max-width: 100%;
 }

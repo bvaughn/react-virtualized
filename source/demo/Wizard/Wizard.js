@@ -50,7 +50,7 @@ export default class Wizard extends Component {
     } = state
 
     return (
-      <div>
+      <div className={styles.Wrapper}>
         <ContentBox>
           <ContentBoxHeader text='Collection Layout and Sizing' />
           <Option
@@ -167,9 +167,10 @@ function Option ({
         [styles.OptionDisabled]: disabled
       })}
     >
-      <label>
+      <label className={styles.Label}>
         <input
           checked={checked}
+          className={styles.Input}
           disabled={disabled}
           onChange={(event) => onChange(event.target.checked)}
           type='checkbox'

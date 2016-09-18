@@ -1,9 +1,19 @@
+.Wrapper {
+  flex: 1;
+}
+
 .Option {
+  max-width: 100%;
   padding: 0.25rem 0;
 }
 
 .OptionDisabled {
   opacity: .5;
+}
+
+.Label,
+.Input {
+  font-size: 1em;
 }
 
 :global(.CodeMirror) {
