@@ -22,8 +22,7 @@
   font-weight: normal;
 }
 .Small {
-  font-size: .5em;
-
+  font-size: .65em;
 }
 .Link:hover {
   text-decoration: none;
