@@ -62,7 +62,7 @@ export default class VirtualScroll extends Component {
      */
     rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
-    /** Responsbile for rendering a row given an index; ({ index: number }): node */
+    /** Responsible for rendering a row given an index; ({ index: number }): node */
     rowRenderer: PropTypes.func.isRequired,
 
     /** Optional custom CSS class for individual rows */
