@@ -29,9 +29,9 @@ export default function defaultCellRangeRenderer ({
       let key = `${rowIndex}-${columnIndex}`
       let style = {
         height: rowDatum.size,
-        left: columnDatum.offset,
+        left: columnDatum.offset + horizontalOffsetAdjustment,
         position: 'absolute',
-        top: rowDatum.offset,
+        top: rowDatum.offset + verticalOffsetAdjustment,
         width: columnDatum.size
       }
 
@@ -48,8 +48,15 @@ export default function defaultCellRangeRenderer ({
       // Avoid re-creating cells while scrolling.
       // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
       // If a scroll is in progress- cache and reuse cells.
-      // This cache will be thrown away once scrolling complets.
-      if (isScrolling) {
+      // This cache will be thrown away once scrolling completes.
+      // However if we are scaling scroll positions and sizes, we should also avoid caching.
+      // This is because the offset changes slightly as scroll position changes and caching leads to stale values.
+      // For more info refer to issue #395
+      if (
+        isScrolling &&
+        !horizontalOffsetAdjustment &&
+        !verticalOffsetAdjustment
+      ) {
         if (!cellCache[key]) {
           cellCache[key] = cellRenderer(cellRendererParams)
         }

@@ -1,8 +1,11 @@
 Changelog
 ------------
 
+##### 8.0.2
+Improved fix for regression with scaled `Grid`s that caused position offsets to be incorrect while scrolling.
+
 ##### 8.0.1
-Fixed regression with scaled `Grid`s that caused position offsets to be incorrect while scrolling.
+Initial attempt at fixing regression with scaled `Grid`s that caused position offsets to be incorrect while scrolling.
 
 # 8.0.0
 Version 8 changes are described in detail on the [Version 8 Roadmap](https://github.com/bvaughn/react-virtualized/issues/386).
