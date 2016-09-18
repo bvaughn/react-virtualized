@@ -814,9 +814,8 @@ describe('Grid', () => {
         scrollTop: 100
       })
 
-      // _nextState is easier to check than state since we can query it synchronously
-      expect(grid._nextState.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
-      expect(grid._nextState.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
 
       simulateScroll({
         grid,
@@ -824,8 +823,8 @@ describe('Grid', () => {
         scrollTop: 0
       })
 
-      expect(grid._nextState.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_BACKWARD)
-      expect(grid._nextState.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_BACKWARD)
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_BACKWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_BACKWARD)
     })
 
     it('should overscan more in the direction being scrolled', async (done) => {
@@ -934,7 +933,7 @@ describe('Grid', () => {
     })
   })
 
-  it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', () => {
+  it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', async (done) => {
     const cellRendererCalls = []
     function cellRenderer ({ columnIndex, isScrolling, key, rowIndex, style }) {
       cellRendererCalls.push(isScrolling)
@@ -945,8 +944,14 @@ describe('Grid', () => {
     }))
     expect(cellRendererCalls[0]).toEqual(false)
     cellRendererCalls.splice(0)
+
+    // Give React time to process the queued setState()
+    await new Promise(resolve => setTimeout(resolve, 1))
+
     simulateScroll({ grid, scrollTop: 100 })
     expect(cellRendererCalls[0]).toEqual(true)
+
+    done()
   })
 
   describe('cell caching', () => {
@@ -997,7 +1002,6 @@ describe('Grid', () => {
         columnWidth: 100,
         height: 40,
         rowHeight: 20,
-        scrollToRow: 0,
         width: 100
       }
 
@@ -1014,20 +1018,15 @@ describe('Grid', () => {
 
       cellRendererCalls.splice(0)
 
-      // Row 1 is already visible so no new cells are rendered
+      // Rows 0-2 have already rendered but row 3 is not yet visible
+      // This means that only row 3 should be newly-created
+      // The others should come from the cache
       render(getMarkup({
         ...props,
-        scrollToRow: 1
-      }))
-      expect(cellRendererCalls).toEqual([])
-
-      // Row 2 is not yet visible so 1 new cell must be rendered
-      render(getMarkup({
-        ...props,
-        scrollToRow: 2
+        scrollToRow: 3
       }))
       expect(cellRendererCalls).toEqual([
-        { columnIndex: 0, rowIndex: 2 }
+        { columnIndex: 0, rowIndex: 3 }
       ])
     })
 
@@ -1091,14 +1090,10 @@ describe('Grid', () => {
 
       simulateScroll({ grid, scrollTop: 1 })
 
-      grid.recomputeGridSize()
-
       cellRendererCalls.splice(0)
 
-      render(getMarkup({
-        ...props,
-        scrollTop: 2
-      }))
+      grid.recomputeGridSize()
+
       expect(cellRendererCalls.length).not.toEqual(0)
     })
 

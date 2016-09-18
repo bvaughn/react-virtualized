@@ -3,7 +3,6 @@ import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
-import raf from 'raf'
 import shallowCompare from 'react-addons-shallow-compare'
 
 // @TODO It would be nice to refactor Grid to use this code as well.
@@ -260,10 +259,6 @@ export default class CollectionView extends Component {
     if (this._disablePointerEventsTimeoutId) {
       clearTimeout(this._disablePointerEventsTimeoutId)
     }
-
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
-    }
   }
 
   /**
@@ -469,22 +464,6 @@ export default class CollectionView extends Component {
     })
   }
 
-  /**
-   * Updates the state during the next animation frame.
-   * Use this method to avoid multiple renders in a small span of time.
-   * This helps performance for bursty events (like onScroll).
-   */
-  _setNextState (state) {
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
-    }
-
-    this._setNextStateAnimationFrameId = raf(() => {
-      this._setNextStateAnimationFrameId = null
-      this.setState(state)
-    })
-  }
-
   _setScrollPosition ({ scrollLeft, scrollTop }) {
     const newState = {
       scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
@@ -578,13 +557,9 @@ export default class CollectionView extends Component {
       // Synchronously set :isScrolling the first time (since _setNextState will reschedule its animation frame each time it's called)
       if (!this.state.isScrolling) {
         isScrollingChange(true)
-
-        this.setState({
-          isScrolling: true
-        })
       }
 
-      this._setNextState({
+      this.setState({
         isScrolling: true,
         scrollLeft,
         scrollPositionChangeReason,

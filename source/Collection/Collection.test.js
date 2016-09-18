@@ -47,7 +47,7 @@ describe('Collection', () => {
     )
   }
 
-  function simulateScroll ({ collection, scrollLeft, scrollTop }) {
+  function simulateScroll ({ collection, scrollLeft = 0, scrollTop = 0 }) {
     const target = { scrollLeft, scrollTop }
     collection._collectionView._scrollingContainer = target // HACK to work around _onScroll target check
     Simulate.scroll(findDOMNode(collection), { target })
@@ -545,19 +545,29 @@ describe('Collection', () => {
     })
   })
 
-  it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', () => {
+  it('should pass the cellRenderer an :isScrolling flag when scrolling is in progress', async (done) => {
     const cellRendererCalls = []
     function cellRenderer ({ index, isScrolling, key, style }) {
       cellRendererCalls.push(isScrolling)
       return defaultCellRenderer({ index, key, style })
     }
+
     const collection = render(getMarkup({
       cellRenderer
     }))
+
     expect(cellRendererCalls[0]).toEqual(false)
+
     cellRendererCalls.splice(0)
-    simulateScroll({ collection, scrollTop: 100 })
+
+    simulateScroll({ collection, scrollTop: 1 })
+
+    // Give React time to process the queued setState()
+    await new Promise(resolve => setTimeout(resolve, 1))
+
     expect(cellRendererCalls[0]).toEqual(true)
+
+    done()
   })
 
   describe('horizontalOverscanSize and verticalOverscanSize', () => {
@@ -658,26 +668,17 @@ describe('Collection', () => {
       expect(cellRendererCalls.length).toEqual(4)
       cellRendererCalls.forEach((call) => expect(call.isScrolling).toEqual(false))
 
-      simulateScroll({ collection, scrollTop: 10 })
+      // Scroll a little bit; newly-rendered cells will be cached.
+      simulateScroll({ collection, scrollTop: 2 })
 
       cellRendererCalls.splice(0)
 
-      // Cells 0, 1, 2, and 3 have been rendered already,
-      // But cells 4 and 5 have not.
-      render(getMarkup({
-        ...props,
-        scrollTop: 1
-      }))
-      expect(cellRendererCalls.length).toEqual(2)
-
-      cellRendererCalls.splice(0)
-
-      // Cells 4 and 5 have been rendered,
+      // At this point cells 4 and 5 have been rendered,
       // But cells 7, 8, and 9 have not.
       render(getMarkup({
         ...props,
         scrollLeft: 1,
-        scrollTop: 2
+        scrollTop: 3
       }))
       expect(cellRendererCalls.length).toEqual(3)
       cellRendererCalls.forEach((call) => expect(call.isScrolling).toEqual(true))

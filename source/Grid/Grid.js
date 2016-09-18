@@ -6,7 +6,6 @@ import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositio
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getOverscanIndices, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FIXED, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
-import raf from 'raf'
 import shallowCompare from 'react-addons-shallow-compare'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
 import defaultCellRangeRenderer from './defaultCellRangeRenderer'
@@ -217,7 +216,6 @@ export default class Grid extends Component {
     this._enablePointerEventsAfterDelayCallback = this._enablePointerEventsAfterDelayCallback.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
-    this._setNextStateCallback = this._setNextStateCallback.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
 
@@ -403,10 +401,6 @@ export default class Grid extends Component {
   componentWillUnmount () {
     if (this._disablePointerEventsTimeoutId) {
       clearTimeout(this._disablePointerEventsTimeoutId)
-    }
-
-    if (this._setNextStateAnimationFrameId) {
-      raf.cancel(this._setNextStateAnimationFrameId)
     }
   }
 
@@ -742,28 +736,6 @@ export default class Grid extends Component {
     })
   }
 
-  /**
-   * Updates the state during the next animation frame.
-   * Use this method to avoid multiple renders in a small span of time.
-   * This helps performance for bursty events (like onScroll).
-   */
-  _setNextState (state) {
-    this._nextState = state
-
-    if (!this._setNextStateAnimationFrameId) {
-      this._setNextStateAnimationFrameId = raf(this._setNextStateCallback)
-    }
-  }
-
-  _setNextStateCallback () {
-    const state = this._nextState
-
-    this._setNextStateAnimationFrameId = null
-    this._nextState = null
-
-    this.setState(state)
-  }
-
   _setScrollPosition ({ scrollLeft, scrollTop }) {
     const newState = {
       scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
@@ -869,20 +841,19 @@ export default class Grid extends Component {
       this.state.scrollLeft !== scrollLeft ||
       this.state.scrollTop !== scrollTop
     ) {
-      // Instruct componentDidUpdate not to interfere with scrolling animation.
-      const scrollPositionChangeReason = SCROLL_POSITION_CHANGE_REASONS.OBSERVED
+      // Browsers with cancelable scroll events (eg. Firefox) interrupt scrolling animations if scrollTop/scrollLeft is set.
+      // Other browsers (eg. Safari) don't scroll as well without the help under certain conditions (DOM or style changes during scrolling).
+      // All things considered, this seems to be the best current work around that I'm aware of.
+      // For more information see https://github.com/bvaughn/react-virtualized/pull/124
+      const scrollPositionChangeReason = event.cancelable
+        ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED
+        : SCROLL_POSITION_CHANGE_REASONS.REQUESTED
 
       // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
       const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
       const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
 
-      if (!this.state.isScrolling) {
-        this.setState({
-          isScrolling: true
-        })
-      }
-
-      this._setNextState({
+      this.setState({
         isScrolling: true,
         scrollDirectionHorizontal,
         scrollDirectionVertical,

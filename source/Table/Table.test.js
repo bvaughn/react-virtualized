@@ -793,6 +793,7 @@ describe('Table', () => {
         onScroll: params => onScrollCalls.push(params)
       }))
       const target = {
+        scrollLeft: 0,
         scrollTop: 100
       }
       rendered.Grid._scrollingContainer = target // HACK to work around _onScroll target check

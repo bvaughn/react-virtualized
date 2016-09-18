@@ -18,7 +18,6 @@ export default class GridExample extends Component {
     super(props, context)
 
     this.state = {
-      columnWidth: 100,
       columnCount: 1000,
       height: 300,
       overscanColumnCount: 0,
@@ -180,7 +179,7 @@ export default class GridExample extends Component {
       case 2:
         return 300
       default:
-        return 50
+        return 80
     }
   }
 
@@ -220,13 +219,7 @@ export default class GridExample extends Component {
         content = datum.random
         break
       default:
-        content = (
-          <div>
-            c:{columnIndex}
-            <br />
-            r:{rowIndex}
-          </div>
-        )
+        content = `r:${rowIndex}, c:${columnIndex}`
         break
     }
 
