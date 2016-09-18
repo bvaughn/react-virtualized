@@ -547,7 +547,9 @@ export default class Grid extends Component {
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,
               overflow: 'hidden',
-              pointerEvents: isScrolling ? 'none' : ''
+              pointerEvents: isScrolling ? 'none' : '',
+              transform: `translate(${this._horizontalOffsetAdjustment}px, ${this._verticalOffsetAdjustment}px)`,
+              willChange: 'transform'
             }}
           >
             {childrenToDisplay}
@@ -635,6 +637,9 @@ export default class Grid extends Component {
       this._columnStopIndex = overscanColumnIndices.overscanStopIndex
       this._rowStartIndex = overscanRowIndices.overscanStartIndex
       this._rowStopIndex = overscanRowIndices.overscanStopIndex
+
+      this._horizontalOffsetAdjustment = horizontalOffsetAdjustment
+      this._verticalOffsetAdjustment = verticalOffsetAdjustment
 
       this._childrenToDisplay = cellRangeRenderer({
         cellCache: this._cellCache,

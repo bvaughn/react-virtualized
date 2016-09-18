@@ -29,9 +29,9 @@ export default function defaultCellRangeRenderer ({
       let key = `${rowIndex}-${columnIndex}`
       let style = {
         height: rowDatum.size,
-        left: columnDatum.offset + horizontalOffsetAdjustment,
+        left: columnDatum.offset,
         position: 'absolute',
-        top: rowDatum.offset + verticalOffsetAdjustment,
+        top: rowDatum.offset,
         width: columnDatum.size
       }
 
