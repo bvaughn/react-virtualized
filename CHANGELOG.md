@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 8.0.3
+Removed unnecessary `react-router` dependency.
+(This was accidentally added as to `dependencies` when it should have been in `devDependencies`).
+
 ##### 8.0.2
 Improved fix for regression with scaled `Grid`s that caused position offsets to be incorrect while scrolling.
 
