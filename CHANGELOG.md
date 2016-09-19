@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.0.4
+Fixed a small regression in the `Table` component that caused a horizontal scrollbar to appear.
+
 ##### 8.0.3
 Removed unnecessary `react-router` dependency.
 (This was accidentally added as to `dependencies` when it should have been in `devDependencies`).

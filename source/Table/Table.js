@@ -465,7 +465,8 @@ export default class Table extends Component {
       ...rowStyleObject,
       height: this._getRowHeight(index),
       overflow: 'hidden',
-      paddingRight: scrollbarWidth
+      paddingRight: scrollbarWidth,
+      width: '100%'
     }
 
     return rowRenderer({
