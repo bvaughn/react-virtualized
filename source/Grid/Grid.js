@@ -382,6 +382,17 @@ export default class Grid extends Component {
 
     // Update onRowsRendered callback if start/stop indices have changed
     this._invokeOnGridRenderedHelper()
+
+    // Changes to :scrollLeft or :scrollTop should also notify :onScroll listeners
+    if (
+      scrollLeft !== prevState.scrollLeft ||
+      scrollTop !== prevState.scrollTop
+    ) {
+      const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
+      const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
+
+      this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
+    }
   }
 
   componentWillMount () {

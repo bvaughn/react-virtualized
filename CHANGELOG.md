@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.0.5
+`Grid` notifies `onScroll` callback if `scrollLeft` or `scrollTop` have changed in response to prop changes (including `scrollToColumn` or `scrollToRow`).
+
 ##### 8.0.4
 Fixed a small regression in the `Table` component that caused a horizontal scrollbar to appear.
 

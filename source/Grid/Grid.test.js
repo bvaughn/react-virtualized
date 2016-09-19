@@ -720,6 +720,25 @@ describe('Grid', () => {
         scrollWidth: 2500
       })
     })
+
+    // Support use-cases like WindowScroller; enable them to stay in sync with scroll-to-cell changes.
+    it('should trigger when :scrollToColumn or :scrollToRow are changed via props', () => {
+      const onScrollCalls = []
+      render(getMarkup())
+      render(getMarkup({
+        onScroll: params => onScrollCalls.push(params),
+        scrollToColumn: 24,
+        scrollToRow: 49
+      }))
+      expect(onScrollCalls).toEqual([{
+        clientHeight: 100,
+        clientWidth: 200,
+        scrollHeight: 2000,
+        scrollLeft: 1050,
+        scrollTop: 900,
+        scrollWidth: 2500
+      }])
+    })
   })
 
   describe('overscanColumnCount & overscanRowCount', () => {
