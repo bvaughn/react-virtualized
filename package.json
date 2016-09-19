@@ -123,6 +123,7 @@
     "react-addons-test-utils": "^15.3.1",
     "react-codemirror": "^0.2.6",
     "react-dom": "^15.3.1",
+    "react-router": "^4.0.0-2",
     "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.2",
     "redbox-react": "^1.0.1",
@@ -137,8 +138,7 @@
   "dependencies": {
     "babel-runtime": "^6.11.6",
     "classnames": "^2.2.3",
-    "dom-helpers": "^2.4.0",
-    "react-router": "^4.0.0-2"
+    "dom-helpers": "^2.4.0"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0",
