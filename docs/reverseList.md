@@ -54,7 +54,7 @@ export default class Example extends Component {
     this.refs.List.scrollToRow(0)
   }
 
-  _rowRenderer ({ key, rowIndex }) {
+  _rowRenderer ({ key, index }) {
     return (
       <div
         key={key}
