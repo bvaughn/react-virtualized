@@ -166,14 +166,31 @@ There is (unfortunately) no workaround for this performance limitation at the mo
 ### Using `CellMeasurer` with `List`
 
 This HOC is intended for use with a `Grid`.
-If you want to use it with `List` you'll need to provide an adapter method that converts the incoming `rowRenderer` params to those expected by `cellRenderer`.
+That means it passes `cellRenderer` the same named index parameter used by `Grid` (`rowIndex`).
+However the `rowRenderer` used by `List` expects a slightly different named index parameter (`index`).
+To use `CellMeasurerer` with `List` then you need to provide an adapter method that converts the param names.
 For example:
 
-```js
-function rowRenderer ({ index }) {
-  return cellRenderer({
-    columnIndex: 1,
-    rowIndex: index
-  })
+```jsx
+import { CellMeasurer, List } from 'react-virtualized';
+
+function renderList (listProps) {
+  return (
+    <CellMeasurer
+      {...listProps}
+      cellRenderer={
+        ({ rowIndex, ...rest }) => listProps.cellRenderer({ index: rowIndex, ...rest })
+      }
+      columnCount={1}
+    >
+      {({ getRowHeight, setRef }) => (
+        <List
+          {...listProps}
+          ref={setRef}
+          rowHeight={getRowHeight}
+        />
+      )}
+    </CellMeasurer>
+  )
 }
 ```
