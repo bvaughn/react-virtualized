@@ -53,13 +53,13 @@ function loadMoreRows ({ startIndex, stopIndex }) {
     })
 }
 
-function rowRenderer ({ key, rowIndex, style}) {
+function rowRenderer ({ key, index, style}) {
   return (
     <div
       key={key}
       style={style}
     >
-      {list[rowIndex]}
+      {list[index]}
     </div>
   )
 }
