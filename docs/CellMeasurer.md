@@ -7,7 +7,7 @@ Specify a fixed width to measure dynamic height (or vice versa).
 This is an advanced component and has some limitations and performance considerations.
 [See below for more information](#limitations-and-performance-considerations).
 
-`CellMeasurer` is intended for use with `Grid` components but [can be adapted to work with `List` as well](#using-cellmeasurer-with-virtualscroll).
+`CellMeasurer` is intended for use with `Grid` components but [can be adapted to work with `List` as well](#using-cellmeasurer-with-list).
 
 ### Prop Types
 | Property | Type | Required? | Description |
