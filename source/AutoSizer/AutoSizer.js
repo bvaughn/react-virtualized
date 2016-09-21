@@ -39,7 +39,6 @@ export default class AutoSizer extends Component {
     }
 
     this._onResize = this._onResize.bind(this)
-    this._onScroll = this._onScroll.bind(this)
     this._setRef = this._setRef.bind(this)
   }
 
@@ -83,7 +82,6 @@ export default class AutoSizer extends Component {
     return (
       <div
         ref={this._setRef}
-        onScroll={this._onScroll}
         style={outerStyle}
       >
         {children({ height, width })}
@@ -118,11 +116,6 @@ export default class AutoSizer extends Component {
     })
 
     onResize({ height, width })
-  }
-
-  _onScroll (event) {
-    // Prevent detectElementResize library from being triggered by this scroll event.
-    event.stopPropagation()
   }
 
   _setRef (autoSizer) {
