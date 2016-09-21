@@ -49,7 +49,7 @@ function onScrollWindow (event) {
 
 export function registerScrollListener (component) {
   if (!mountedInstances.length) {
-    window.addEventListener('scroll', onScrollWindow, (isPassiveSupported ? {passive: true} : false))
+    window.addEventListener('scroll', onScrollWindow, (isPassiveSupported() ? {passive: true} : false))
   }
   mountedInstances.push(component)
 }
@@ -57,7 +57,7 @@ export function registerScrollListener (component) {
 export function unregisterScrollListener (component) {
   mountedInstances = mountedInstances.filter(c => (c !== component))
   if (!mountedInstances.length) {
-    window.removeEventListener('scroll', onScrollWindow, (isPassiveSupported ? {passive: true} : false))
+    window.removeEventListener('scroll', onScrollWindow, (isPassiveSupported() ? {passive: true} : false))
     if (disablePointerEventsTimeoutId) {
       clearTimeout(disablePointerEventsTimeoutId)
       enablePointerEventsIfDisabled()
