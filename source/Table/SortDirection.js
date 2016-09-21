@@ -1,5 +1,11 @@
 const SortDirection = {
   /**
+   * Sort items in natural (original) order.
+   * This means returning data as it was originally sorted.
+   */
+  NAT: 'NAT',
+
+  /**
    * Sort items in ascending order.
    * This means arranging from the lowest value to the highest (e.g. a-z, 0-9).
    */

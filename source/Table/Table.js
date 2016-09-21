@@ -175,7 +175,7 @@ export default class Table extends Component {
     sortBy: PropTypes.string,
 
     /** Table data is currently sorted in this direction (if it is sorted at all) */
-    sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
+    sortDirection: PropTypes.oneOf([SortDirection.NAT, SortDirection.ASC, SortDirection.DESC]),
 
     /** Optional inline style */
     style: PropTypes.object,
@@ -390,9 +390,9 @@ export default class Table extends Component {
 
     if (sortEnabled || onHeaderClick) {
       // If this is a sortable header, clicking it should update the table data's sorting.
-      const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
+      const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.NAT
         ? SortDirection.ASC
-        : SortDirection.DESC
+        : (sortDirection === SortDirection.DESC ? SortDirection.NAT : SortDirection.DESC)
 
       const onClick = () => {
         sortEnabled && sort({
