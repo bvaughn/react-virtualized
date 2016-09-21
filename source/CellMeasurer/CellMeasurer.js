@@ -22,7 +22,7 @@ export default class CellMeasurer extends Component {
     cellSizeCache: PropTypes.object,
 
     /**
-     * Function respondible for rendering a virtualized component.
+     * Function responsible for rendering a virtualized component.
      * This function should implement the following signature:
      * ({ getColumnWidth, getRowHeight, resetMeasurements }) => PropTypes.element
      */

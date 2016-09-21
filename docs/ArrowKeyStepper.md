@@ -10,7 +10,7 @@ The appearance of this wrapper element can be customized using the `className` p
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| children | Function | ✓ | Function respondible for rendering children. This function should implement the following signature: `({ onSectionRendered: Function, scrollToColumn: number, scrollToRow: number }) => PropTypes.element` |
+| children | Function | ✓ | Function responsible for rendering children. This function should implement the following signature: `({ onSectionRendered: Function, scrollToColumn: number, scrollToRow: number }) => PropTypes.element` |
 | className | String |  | CSS class name to attach to the wrapper `<div>`. |
 | columnCount | Number | ✓ | Number of columns in grid; for `Table` and `List` this property should always be `1`. |
 | rowCount | Number | ✓ | Number of rows in grid. |

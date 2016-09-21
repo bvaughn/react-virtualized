@@ -10,7 +10,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 export default class AutoSizer extends Component {
   static propTypes = {
     /**
-     * Function respondible for rendering children.
+     * Function responsible for rendering children.
      * This function should implement the following signature:
      * ({ height, width }) => PropTypes.element
      */

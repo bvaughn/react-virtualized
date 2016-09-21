@@ -9,7 +9,7 @@ import Grid from '../Grid'
 export default class ColumnSizer extends Component {
   static propTypes = {
     /**
-     * Function respondible for rendering a virtualized Grid.
+     * Function responsible for rendering a virtualized Grid.
      * This function should implement the following signature:
      * ({ adjustedWidth, getColumnWidth, registerChild }) => PropTypes.element
      *

@@ -7,7 +7,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 export default class ScrollSync extends Component {
   static propTypes = {
     /**
-     * Function respondible for rendering 2 or more virtualized components.
+     * Function responsible for rendering 2 or more virtualized components.
      * This function should implement the following signature:
      * ({ onScroll, scrollLeft, scrollTop }) => PropTypes.element
      */

@@ -14,7 +14,7 @@ This is an advanced component and has some limitations and performance considera
 |:---|:---|:---:|:---|
 | cellRenderer | Function | ✓ | Renders a cell given its indices. `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
 | cellSizeCache | Object |  | Optional, custom caching strategy for cell sizes. Learn more [here](#cellsizecache). |
-| children | Function | ✓ | Function respondible for rendering a virtualized component; `({ getColumnWidth: Function, getRowHeight: Function, resetMeasurements: Function }) => PropTypes.element` |
+| children | Function | ✓ | Function responsible for rendering a virtualized component; `({ getColumnWidth: Function, getRowHeight: Function, resetMeasurements: Function }) => PropTypes.element` |
 | columnCount | number | ✓ | Number of columns in the `Grid`; in order to measure a row's height, all of that row's columns must be rendered. |
 | container |  |  | A Node, Component instance, or function that returns either. If this property is not specified the document body will be used. |
 | height | number |  | Fixed height; specify this property to measure cell-width only. |
@@ -183,10 +183,9 @@ function renderList (listProps) {
       }
       columnCount={1}
     >
-      {({ getRowHeight, setRef }) => (
+      {({ getRowHeight }) => (
         <List
           {...listProps}
-          ref={setRef}
           rowHeight={getRowHeight}
         />
       )}

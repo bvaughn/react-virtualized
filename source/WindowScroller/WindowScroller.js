@@ -8,7 +8,7 @@ export default class WindowScroller extends Component {
 
   static propTypes = {
     /**
-     * Function respondible for rendering children.
+     * Function responsible for rendering children.
      * This function should implement the following signature:
      * ({ height, scrollTop }) => PropTypes.element
      */
