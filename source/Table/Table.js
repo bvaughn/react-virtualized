@@ -313,7 +313,10 @@ export default class Table extends Component {
           }}
           scrollbarWidth={scrollbarWidth}
           scrollToRow={scrollToIndex}
-          style={gridStyle}
+          style={{
+            ...gridStyle,
+            overflowX: 'hidden'
+          }}
         />
       </div>
     )
@@ -465,8 +468,7 @@ export default class Table extends Component {
       ...rowStyleObject,
       height: this._getRowHeight(index),
       overflow: 'hidden',
-      paddingRight: scrollbarWidth,
-      width: '100%'
+      paddingRight: scrollbarWidth
     }
 
     return rowRenderer({

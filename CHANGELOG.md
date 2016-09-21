@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 8.0.7
+Fixed a small `Table` alignment issue due to conflicting `padding-right` and `width: 100%` value.
+Also fixed an edge-case horiztonal scrollbar that was appearing for some tables.
+
 ##### 8.0.6
 Updated the embedded `detect-element-resize` library to reduce the number of reflows it triggered.
 This library was forcing reflow (to measure itself) each time a scroll event occurred within its children.
