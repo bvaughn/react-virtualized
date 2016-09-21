@@ -1,6 +1,16 @@
 Changelog
 ------------
 
+##### 8.0.6
+Updated the embedded `detect-element-resize` library to reduce the number of reflows it triggered.
+This library was forcing reflow (to measure itself) each time a scroll event occurred within its children.
+This was unnecessary since it really only cared about resizes to its expand-trigger and collapse-trigger.
+I have updated it to ignore scroll events triggered by other DOM elements.
+
+As a result of this change, `AutoSizer` no longer needs to trap bubbling "scroll" events.
+This opens the door to potentially using passive scroll event handlers in the future.
+It also fixes a long-standing bug that prevented scrollbars from working correctly within auto-sized-content.
+
 ##### 8.0.5
 `Grid` notifies `onScroll` callback if `scrollLeft` or `scrollTop` have changed in response to prop changes (including `scrollToColumn` or `scrollToRow`).
 
