@@ -852,14 +852,6 @@ export default class Grid extends Component {
       this.state.scrollLeft !== scrollLeft ||
       this.state.scrollTop !== scrollTop
     ) {
-      // Browsers with cancelable scroll events (eg. Firefox) interrupt scrolling animations if scrollTop/scrollLeft is set.
-      // Other browsers (eg. Safari) don't scroll as well without the help under certain conditions (DOM or style changes during scrolling).
-      // All things considered, this seems to be the best current work around that I'm aware of.
-      // For more information see https://github.com/bvaughn/react-virtualized/pull/124
-      const scrollPositionChangeReason = event.cancelable
-        ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED
-        : SCROLL_POSITION_CHANGE_REASONS.REQUESTED
-
       // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
       const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
       const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
@@ -869,7 +861,7 @@ export default class Grid extends Component {
         scrollDirectionHorizontal,
         scrollDirectionVertical,
         scrollLeft,
-        scrollPositionChangeReason,
+        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
         scrollTop
       })
     }

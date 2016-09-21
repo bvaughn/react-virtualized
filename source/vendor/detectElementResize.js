@@ -53,6 +53,14 @@ if (!attachEvent) {
   }
 
   var scrollListener = function(e){
+    // Don't measure (which forces) reflow for scrolls that happen inside of children!
+    if (
+      !e.target.className.includes('contract-trigger') &&
+      !e.target.className.includes('expand-trigger')
+    ) {
+      return
+    }
+
     var element = this;
     resetTriggers(this);
     if (this.__resizeRAF__) cancelFrame(this.__resizeRAF__);
