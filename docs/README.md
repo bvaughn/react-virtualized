@@ -26,4 +26,4 @@ Documentation
 * [Displaying items in reverse order](reverseList.md)
 * [Using AutoSizer](usingAutoSizer.md)
 * [Creating an infinite-loading list](creatingAnInfiniteLoadingList.md)
-* [Displaying a reverse list](reverseList.md)
+* [Natural sort Table](tableWithNaturalSort.md)
