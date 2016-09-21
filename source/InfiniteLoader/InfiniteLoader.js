@@ -108,18 +108,18 @@ export default class InfiniteLoader extends Component {
     })
   }
 
-  _onRowsRendered ({ startIndex, stopIndex }) {
+  _onRowsRendered ({ startIndex, stopIndex, rowStartIndex, rowStopIndex }) {
     const { isRowLoaded, minimumBatchSize, rowCount, threshold } = this.props
 
-    this._lastRenderedStartIndex = startIndex
-    this._lastRenderedStopIndex = stopIndex
+    this._lastRenderedStartIndex = (startIndex != null) ? startIndex : rowStartIndex
+    this._lastRenderedStopIndex = (stopIndex != null) ? stopIndex : rowStopIndex
 
     const unloadedRanges = scanForUnloadedRanges({
       isRowLoaded,
       minimumBatchSize,
       rowCount,
-      startIndex: Math.max(0, startIndex - threshold),
-      stopIndex: Math.min(rowCount - 1, stopIndex + threshold)
+      startIndex: Math.max(0, this._lastRenderedStartIndex - threshold),
+      stopIndex: Math.min(rowCount - 1, this._lastRenderedStopIndex + threshold)
     })
 
     // For memoize comparison
