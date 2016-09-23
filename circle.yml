@@ -4,4 +4,4 @@ general:
       - gh-pages
 machine:
   node:
-    version: v5.1.0
+    version: v6.6.0
