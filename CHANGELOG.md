@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 8.0.9
+`scrollToColumn` and `scrollToRow` offsets will always be 0 when `Grid` size is <= 0.
+Technically this is an invalid size but a 0 offset is a more meaningful return value.
+Previously the min/max offset check could result in a positive offset in this case (which is invalid).
+
 ##### 8.0.8
 Fixes bug in resize detector that broke scrollbar functionality in Safari.
 

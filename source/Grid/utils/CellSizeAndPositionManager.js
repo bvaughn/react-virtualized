@@ -112,6 +112,10 @@ export default class CellSizeAndPositionManager {
     currentOffset,
     targetIndex
   }) {
+    if (containerSize <= 0) {
+      return 0
+    }
+
     const datum = this.getSizeAndPositionOfCell(targetIndex)
     const maxOffset = datum.offset
     const minOffset = maxOffset - containerSize + datum.size

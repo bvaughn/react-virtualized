@@ -268,6 +268,14 @@ describe('CellSizeAndPositionManager', () => {
         targetIndex: 8
       })).toEqual(55)
     })
+
+    it('should always return an offset of 0 when :containerSize is 0', () => {
+      expect(getUpdatedOffsetForIndexHelper({
+        containerSize: 0,
+        currentOffset: 50,
+        targetIndex: 2
+      })).toEqual(0)
+    })
   })
 
   describe('getVisibleCellRange', () => {
