@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.0.8
+Fixes bug in resize detector that broke scrollbar functionality in Safari.
+
 ##### 8.0.7
 Fixed a small `Table` alignment issue due to conflicting `padding-right` and `width: 100%` value.
 Also fixed an edge-case horiztonal scrollbar that was appearing for some tables.
