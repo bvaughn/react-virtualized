@@ -33,6 +33,10 @@
     "watch": "watch 'clear && npm run test -s' source",
     "watch:nolint": "watch 'clear && npm run test:unit' source"
   },
+  "files": [
+    "dist",
+    "styles.css"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/bvaughn/react-virtualized.git"
