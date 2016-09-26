@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.0.10
+Changed the embedded `detect-element-resize` library `includes` call to use `indexOf` instead for better IE compatibility.
+
 ##### 8.0.9
 `scrollToColumn` and `scrollToRow` offsets will always be 0 when `Grid` size is <= 0.
 Technically this is an invalid size but a 0 offset is a more meaningful return value.

@@ -55,8 +55,8 @@ if (!attachEvent) {
   var scrollListener = function(e){
     // Don't measure (which forces) reflow for scrolls that happen inside of children!
     if (
-      !e.target.className.includes('contract-trigger') &&
-      !e.target.className.includes('expand-trigger')
+      e.target.className.indexOf('contract-trigger') < 0 &&
+      e.target.className.indexOf('expand-trigger') < 0
     ) {
       return
     }
