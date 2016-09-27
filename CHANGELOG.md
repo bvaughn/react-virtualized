@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.0.11
+Fixed an invalid export for `IS_SCROLLING_TIMEOUT` inside the `WindowScroller` module.
+
 ##### 8.0.10
 Changed the embedded `detect-element-resize` library `includes` call to use `indexOf` instead for better IE compatibility.
 
