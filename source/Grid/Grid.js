@@ -1,5 +1,6 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
+import { addEventListener } from 'event-listener-with-options'
 import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
 import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
@@ -538,10 +539,13 @@ export default class Grid extends Component {
       <div
         ref={(ref) => {
           this._scrollingContainer = ref
+
+          if (ref) {
+            addEventListener(ref, 'scroll', this._onScroll, { passive: true })
+          }
         }}
         aria-label={this.props['aria-label']}
         className={cn('ReactVirtualized__Grid', className)}
-        onScroll={this._onScroll}
         role='grid'
         style={{
           ...gridStyle,

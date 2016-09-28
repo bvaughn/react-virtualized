@@ -1,3 +1,5 @@
+import { addEventListener, removeEventListener } from 'event-listener-with-options'
+
 /**
 * Detect Element Resize.
 * Forked in order to guard against unsafe 'window' and 'document' references.
@@ -140,7 +142,7 @@ var addResizeListener = function(element, fn){
                                           '<div class="contract-trigger"></div>';
       element.appendChild(element.__resizeTriggers__);
       resetTriggers(element);
-      element.addEventListener('scroll', scrollListener, true);
+      addEventListener(element, 'scroll', scrollListener, { capture: true, passive: true });
 
       /* Listen for a css animation to detect element display/re-attach */
       animationstartevent && element.__resizeTriggers__.addEventListener(animationstartevent, function(e) {
@@ -157,7 +159,7 @@ var removeResizeListener = function(element, fn){
   else {
     element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1);
     if (!element.__resizeListeners__.length) {
-        element.removeEventListener('scroll', scrollListener, true);
+        removeEventListener(element, 'scroll', scrollListener, { capture: true, passive: true });
         element.__resizeTriggers__ = !element.removeChild(element.__resizeTriggers__);
     }
   }
