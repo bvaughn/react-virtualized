@@ -1,4 +1,5 @@
 .ContentBox {
+  height: 100%; /* IE fix */
   flex: 1;
   display: flex;
   flex-direction: column;
