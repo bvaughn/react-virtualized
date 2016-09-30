@@ -93,13 +93,11 @@ a {
 }
 
 .demo {
-  height: 100%; /* IE fix */
   display: flex;
   flex-direction: column;
   min-height: 100%;
 }
 .Body {
-  height: 100%; /* IE fix */
   flex: 1;
   display: flex;
   flex-direction: row;
@@ -107,7 +105,6 @@ a {
   justify-content: center;
 }
 .column {
-  height: 100%; /* IE fix */
   display: flex;
   flex-direction: column;
   flex: 0 0 100%;
