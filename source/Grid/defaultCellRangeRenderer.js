@@ -10,14 +10,12 @@ export default function defaultCellRangeRenderer ({
   columnSizeAndPositionManager,
   columnStartIndex,
   columnStopIndex,
-  horizontalOffsetAdjustment,
   isScrolling,
   rowSizeAndPositionManager,
   rowStartIndex,
   rowStopIndex,
   scrollLeft,
-  scrollTop,
-  verticalOffsetAdjustment
+  scrollTop
 }: DefaultCellRangeRendererParams) {
   const renderedCells = []
 
@@ -29,9 +27,9 @@ export default function defaultCellRangeRenderer ({
       let key = `${rowIndex}-${columnIndex}`
       let style = {
         height: rowDatum.size,
-        left: columnDatum.offset + horizontalOffsetAdjustment,
+        left: columnDatum.offset,
         position: 'absolute',
-        top: rowDatum.offset + verticalOffsetAdjustment,
+        top: rowDatum.offset,
         width: columnDatum.size
       }
 
@@ -49,14 +47,7 @@ export default function defaultCellRangeRenderer ({
       // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
       // If a scroll is in progress- cache and reuse cells.
       // This cache will be thrown away once scrolling completes.
-      // However if we are scaling scroll positions and sizes, we should also avoid caching.
-      // This is because the offset changes slightly as scroll position changes and caching leads to stale values.
-      // For more info refer to issue #395
-      if (
-        isScrolling &&
-        !horizontalOffsetAdjustment &&
-        !verticalOffsetAdjustment
-      ) {
+      if (isScrolling) {
         if (!cellCache[key]) {
           cellCache[key] = cellRenderer(cellRendererParams)
         }
@@ -84,12 +75,10 @@ type DefaultCellRangeRendererParams = {
   columnSizeAndPositionManager: Object,
   columnStartIndex: number,
   columnStopIndex: number,
-  horizontalOffsetAdjustment: number,
   isScrolling: boolean,
   rowSizeAndPositionManager: Object,
   rowStartIndex: number,
   rowStopIndex: number,
   scrollLeft: number,
-  scrollTop: number,
-  verticalOffsetAdjustment: number
+  scrollTop: number
 };

@@ -21,9 +21,9 @@ export default class ListExample extends Component {
 
     this.state = {
       overscanRowCount: 10,
-      rowCount: context.list.size,
+      rowCount: 1000000, // context.list.size,
       scrollToIndex: undefined,
-      showScrollingPlaceholder: false,
+      showScrollingPlaceholder: true,
       useDynamicRowHeight: false,
       virtualScrollHeight: 300,
       virtualScrollRowHeight: 50

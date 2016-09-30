@@ -2,11 +2,12 @@
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
-import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
+import CellSizeAndPositionManager from './utils/CellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getOverscanIndices, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FIXED, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import shallowCompare from 'react-addons-shallow-compare'
+import ScaledOffsetUtil from './utils/ScaledOffsetUtil'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
 import defaultCellRangeRenderer from './defaultCellRangeRenderer'
 
@@ -222,15 +223,24 @@ export default class Grid extends Component {
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth)
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight)
 
-    this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
+    // Requesting the position of the last column/row will force measurement of all columns/rows before it
+    this._columnSizeAndPositionManager = new CellSizeAndPositionManager({
       cellCount: props.columnCount,
       cellSizeGetter: (index) => this._columnWidthGetter(index),
       estimatedCellSize: this._getEstimatedColumnSize(props)
     })
-    this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
+    this._rowSizeAndPositionManager = new CellSizeAndPositionManager({
       cellCount: props.rowCount,
       cellSizeGetter: (index) => this._rowHeightGetter(index),
       estimatedCellSize: this._getEstimatedRowSize(props)
+    })
+
+    // Maps physical and logical offsets to enable larger scrolling sizes than browsers support natively
+    this._columnScaledOffsetUtil = new ScaledOffsetUtil({
+      logicalSize: this._columnSizeAndPositionManager.getTotalSize()
+    })
+    this._rowScaledOffsetUtil = new ScaledOffsetUtil({
+      logicalSize: this._rowSizeAndPositionManager.getTotalSize()
     })
 
     // See defaultCellRangeRenderer() for more information on the usage of this cache
@@ -245,8 +255,12 @@ export default class Grid extends Component {
   measureAllCells () {
     const { columnCount, rowCount } = this.props
 
+    // Requesting the position of the last column/row will force measurement of all columns/rows before it.
     this._columnSizeAndPositionManager.getSizeAndPositionOfCell(columnCount - 1)
     this._rowSizeAndPositionManager.getSizeAndPositionOfCell(rowCount - 1)
+
+    this._columnScaledOffsetUtil.setLogicalSize(this._columnSizeAndPositionManager.getTotalSize())
+    this._rowScaledOffsetUtil.setLogicalSize(this._rowSizeAndPositionManager.getTotalSize())
   }
 
   /**
@@ -260,6 +274,9 @@ export default class Grid extends Component {
   } = {}) {
     this._columnSizeAndPositionManager.resetCell(columnIndex)
     this._rowSizeAndPositionManager.resetCell(rowIndex)
+
+    this._columnScaledOffsetUtil.setLogicalSize(this._columnSizeAndPositionManager.getTotalSize())
+    this._rowScaledOffsetUtil.setLogicalSize(this._rowSizeAndPositionManager.getTotalSize())
 
     // Clear cell cache in case we are scrolling;
     // Invalid row heights likely mean invalid cached content as well.
@@ -380,6 +397,9 @@ export default class Grid extends Component {
       updateScrollIndexCallback: (scrollToRow) => this._updateScrollTopForScrollToRow({ ...this.props, scrollToRow })
     })
 
+    this._columnScaledOffsetUtil.setLogicalSize(this._columnSizeAndPositionManager.getTotalSize())
+    this._rowScaledOffsetUtil.setLogicalSize(this._rowSizeAndPositionManager.getTotalSize())
+
     // Update onRowsRendered callback if start/stop indices have changed
     this._invokeOnGridRenderedHelper()
 
@@ -410,9 +430,7 @@ export default class Grid extends Component {
   }
 
   componentWillUnmount () {
-    if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId)
-    }
+    clearTimeout(this._disablePointerEventsTimeoutId)
   }
 
   /**
@@ -454,6 +472,9 @@ export default class Grid extends Component {
       cellCount: nextProps.rowCount,
       estimatedCellSize: this._getEstimatedRowSize(nextProps)
     })
+
+    this._columnScaledOffsetUtil.setLogicalSize(this._columnSizeAndPositionManager.getTotalSize())
+    this._rowScaledOffsetUtil.setLogicalSize(this._rowSizeAndPositionManager.getTotalSize())
 
     // Update scroll offsets if the size or number of cells have changed, invalidating the previous value
     calculateSizeAndPositionDataAndUpdateScrollOffset({
@@ -600,24 +621,19 @@ export default class Grid extends Component {
     this._childrenToDisplay = []
 
     // Render only enough columns and rows to cover the visible area of the grid.
+    // Map physical offset to logical offset to ensure that the correct items are rendered.
     if (height > 0 && width > 0) {
       const visibleColumnIndices = this._columnSizeAndPositionManager.getVisibleCellRange({
         containerSize: width,
-        offset: scrollLeft
+        offset: this._columnScaledOffsetUtil.getLogicalOffset(scrollLeft)
       })
       const visibleRowIndices = this._rowSizeAndPositionManager.getVisibleCellRange({
         containerSize: height,
-        offset: scrollTop
+        offset: this._rowScaledOffsetUtil.getLogicalOffset(scrollTop)
       })
 
-      const horizontalOffsetAdjustment = this._columnSizeAndPositionManager.getOffsetAdjustment({
-        containerSize: width,
-        offset: scrollLeft
-      })
-      const verticalOffsetAdjustment = this._rowSizeAndPositionManager.getOffsetAdjustment({
-        containerSize: height,
-        offset: scrollTop
-      })
+      this._columnScaledOffsetUtil.setLogicalSize(this._columnSizeAndPositionManager.getTotalSize())
+      this._rowScaledOffsetUtil.setLogicalSize(this._rowSizeAndPositionManager.getTotalSize())
 
       // Store for _invokeOnGridRenderedHelper()
       this._renderedColumnStartIndex = visibleColumnIndices.start
@@ -653,14 +669,12 @@ export default class Grid extends Component {
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
-        horizontalOffsetAdjustment,
         isScrolling,
         rowSizeAndPositionManager: this._rowSizeAndPositionManager,
         rowStartIndex: this._rowStartIndex,
         rowStopIndex: this._rowStopIndex,
         scrollLeft,
-        scrollTop,
-        verticalOffsetAdjustment
+        scrollTop
       })
     }
   }
@@ -673,9 +687,7 @@ export default class Grid extends Component {
   _enablePointerEventsAfterDelay () {
     const { scrollingResetTimeInterval } = this.props
 
-    if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId)
-    }
+    clearTimeout(this._disablePointerEventsTimeoutId)
 
     this._disablePointerEventsTimeoutId = setTimeout(
       this._enablePointerEventsAfterDelayCallback,
@@ -689,10 +701,21 @@ export default class Grid extends Component {
     // Throw away cell cache once scrolling is complete
     this._cellCache = {}
 
+console.group('enablePointerEventsAfterDelayCallback')
+    // Adjust scaled offsets if necessary now that scrolling has stopped
+    const scrollLeft = this._columnScaledOffsetUtil.getAdjustedPhsysicalOffset()
+    const scrollTop = this._rowScaledOffsetUtil.getAdjustedPhsysicalOffset()
+console.log('previous scrollTop:', this.state.scrollTop)
+console.log('adjusted scrollTop:', scrollTop)
+console.groupEnd()
+
     this.setState({
       isScrolling: false,
       scrollDirectionHorizontal: SCROLL_DIRECTION_FIXED,
-      scrollDirectionVertical: SCROLL_DIRECTION_FIXED
+      scrollDirectionVertical: SCROLL_DIRECTION_FIXED,
+      scrollLeft,
+      scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED,
+      scrollTop
     })
   }
 
@@ -792,6 +815,8 @@ export default class Grid extends Component {
         targetIndex
       })
 
+      this._columnScaledOffsetUtil.setLogicalSize(this._columnSizeAndPositionManager.getTotalSize())
+
       if (scrollLeft !== calculatedScrollLeft) {
         this._setScrollPosition({
           scrollLeft: calculatedScrollLeft
@@ -813,6 +838,8 @@ export default class Grid extends Component {
         currentOffset: scrollTop,
         targetIndex
       })
+
+      this._rowScaledOffsetUtil.setLogicalSize(this._rowSizeAndPositionManager.getTotalSize())
 
       if (scrollTop !== calculatedScrollTop) {
         this._setScrollPosition({
