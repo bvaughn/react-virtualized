@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import Grid from '../Grid'
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'

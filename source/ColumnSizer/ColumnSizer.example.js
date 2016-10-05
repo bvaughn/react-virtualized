@@ -1,5 +1,5 @@
 /**
- * @flow
+ * @noflow
  */
 import React, { Component } from 'react'
 import styles from './ColumnSizer.example.css'

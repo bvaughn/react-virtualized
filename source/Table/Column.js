@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import { Component, PropTypes } from 'react'
 import defaultHeaderRenderer from './defaultHeaderRenderer'
 import defaultCellRenderer from './defaultCellRenderer'

@@ -1,6 +1,6 @@
 /**
  * Tests Collection and CollectionView.
- * @flow
+ * @noflow
  */
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import React from 'react'

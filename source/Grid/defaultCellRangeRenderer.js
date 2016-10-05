@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 
 /**
  * Default implementation of cellRangeRenderer used by Grid.

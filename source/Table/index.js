@@ -1,4 +1,4 @@
-/* @flow */
+/* @noflow */
 export default from './Table'
 export defaultCellDataGetter from './defaultCellDataGetter'
 export defaultCellRenderer from './defaultCellRenderer'

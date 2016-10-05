@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import React, { Component, PropTypes } from 'react'
 import Immutable from 'immutable'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'

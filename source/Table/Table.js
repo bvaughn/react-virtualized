@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import cn from 'classnames'
 import Column from './Column'
 import React, { Component, PropTypes } from 'react'

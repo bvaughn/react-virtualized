@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import CellSizeAndPositionManager from './CellSizeAndPositionManager'
 
 /**

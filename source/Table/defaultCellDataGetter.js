@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import type { CellDataGetterParams } from './types'
 
 /**

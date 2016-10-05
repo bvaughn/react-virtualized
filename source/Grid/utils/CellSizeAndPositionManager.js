@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 
 /**
  * Just-in-time calculates and caches size and position information for a collection of cells.
