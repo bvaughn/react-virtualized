@@ -3,6 +3,8 @@
  * If the cell is already visible then the current offset will be returned.
  * If the current offset is too great or small, it will be adjusted just enough to ensure the specified index is visible.
  *
+ * @flow
+ *
  * @param align Desired alignment within container; one of "auto" (default), "start", or "end"
  * @param cellOffset Offset (x or y) position for cell
  * @param cellSize Size (width or height) of cell
@@ -16,7 +18,13 @@ export default function getUpdatedOffsetForIndex ({
   cellSize,
   containerSize,
   currentOffset
-}) {
+}: {
+  align: 'auto' | 'start' | 'end';
+  cellOffset: number;
+  cellSize: number;
+  containerSize: number;
+  currentOffset: number;
+}): number {
   const maxOffset = cellOffset
   const minOffset = maxOffset - containerSize + cellSize
 

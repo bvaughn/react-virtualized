@@ -2,17 +2,22 @@
  * Initializes metadata for an axis and its cells.
  * This data is used to determine which cells are visible given a container size and scroll position.
  *
+ * @flow
  * @param cellCount Total number of cells.
  * @param size Either a fixed size or a function that returns the size for a given given an index.
  * @return Object mapping cell index to cell metadata (size, offset)
  */
-export default function initCellMetadata ({
-  cellCount,
-  size
+
+type SizeGetter = (p: {index: number}) => number;
+
+export default function initCellMetadata (params: {
+  cellCount: number;
+  size: SizeGetter | number;
 }) {
-  const sizeGetter = size instanceof Function
-    ? size
-    : ({ index }) => size
+  const {size, cellCount} = params;
+  const sizeGetter = typeof size === 'number'
+    ? ({ index }) => size
+    : size;
 
   const cellMetadata = []
   let offset = 0
