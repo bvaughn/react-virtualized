@@ -1,14 +1,43 @@
-/** @noflow */
+/** @flow */
+import invariant from 'invariant';
 import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import ReactDOM from 'react-dom'
 import CellSizeCache from './defaultCellSizeCache'
 
+type CellRenderer = (pos: {columnIndex: number; rowIndex: number}) => React.Element<any>
+
+type CellMeasurerCallback = (params: {
+  getColumnWidth: (loc: { index: number }) => ?number;
+  getRowHeight: (loc: { index: number }) => ?number;
+  resetMeasurements: () => void;
+  resetMeasurementForColumn: (columnIndex: number) => void;
+  resetMeasurementForRow: (rowIndex: number) => void;
+}) => React.Element<any>;
+
+type CellMeasurerProps = {
+  cellRenderer: CellRenderer;
+  cellSizeCache?: Object;
+  children: CellMeasurerCallback;
+  width?: number;
+  height?: number;
+  container: HTMLElement | (() => HTMLElement);
+  columnCount: number;
+  rowCount: number;
+};
+
 /**
  * Measures a Grid cell's contents by rendering them in a way that is not visible to the user.
  * Either a fixed width or height may be provided if it is desirable to measure only in one direction.
  */
-export default class CellMeasurer extends Component {
+export default class CellMeasurer extends Component<*, CellMeasurerProps, *> {
+
+  _div: ?HTMLElement;
+  _divHeight: number;
+  _divWidth: number;
+  _containerNode: ?HTMLElement;
+  _cellSizeCache: CellSizeCache;
+
   static propTypes = {
     /**
      * Renders a cell given its indices.
@@ -58,19 +87,13 @@ export default class CellMeasurer extends Component {
     width: PropTypes.number
   };
 
-  constructor (props, state) {
-    super(props, state)
+  constructor (props: CellMeasurerProps) {
+    super(props)
 
     this._cellSizeCache = props.cellSizeCache || new CellSizeCache()
-
-    this.getColumnWidth = this.getColumnWidth.bind(this)
-    this.getRowHeight = this.getRowHeight.bind(this)
-    this.resetMeasurements = this.resetMeasurements.bind(this)
-    this.resetMeasurementForColumn = this.resetMeasurementForColumn.bind(this)
-    this.resetMeasurementForRow = this.resetMeasurementForRow.bind(this)
   }
 
-  getColumnWidth ({ index }) {
+  getColumnWidth = ({ index }: { index: number }) => {
     if (this._cellSizeCache.hasColumnWidth(index)) {
       return this._cellSizeCache.getColumnWidth(index)
     }
@@ -94,7 +117,7 @@ export default class CellMeasurer extends Component {
     return maxWidth
   }
 
-  getRowHeight ({ index }) {
+  getRowHeight = ({ index }: { index: number }) => {
     if (this._cellSizeCache.hasRowHeight(index)) {
       return this._cellSizeCache.getRowHeight(index)
     }
@@ -118,15 +141,15 @@ export default class CellMeasurer extends Component {
     return maxHeight
   }
 
-  resetMeasurementForColumn (columnIndex) {
+  resetMeasurementForColumn = (columnIndex: number) => {
     this._cellSizeCache.clearColumnWidth(columnIndex)
   }
 
-  resetMeasurementForRow (rowIndex) {
+  resetMeasurementForRow = (rowIndex: number) => {
     this._cellSizeCache.clearRowHeight(rowIndex)
   }
 
-  resetMeasurements () {
+  resetMeasurements = () => {
     this._cellSizeCache.clearAllColumnWidths()
     this._cellSizeCache.clearAllRowHeights()
   }
@@ -135,10 +158,10 @@ export default class CellMeasurer extends Component {
     this._renderAndMount()
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps: CellMeasurerProps) {
     const { cellSizeCache } = this.props
 
-    if (cellSizeCache !== nextProps.cellSizeCache) {
+    if (cellSizeCache !== nextProps.cellSizeCache && nextProps.cellSizeCache != null) {
       this._cellSizeCache = nextProps.cellSizeCache
     }
 
@@ -161,11 +184,11 @@ export default class CellMeasurer extends Component {
     })
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
+  shouldComponentUpdate (nextProps: CellMeasurerProps) {
+    return shallowCompare(this, nextProps, this.state)
   }
 
-  _getContainerNode (props) {
+  _getContainerNode (props: CellMeasurerProps) {
     const { container } = props
 
     if (container) {
@@ -184,6 +207,11 @@ export default class CellMeasurer extends Component {
     clientWidth = true,
     columnIndex,
     rowIndex
+  }: {
+    clientHeight?: boolean;
+    clientWidth?: boolean;
+    columnIndex: number;
+    rowIndex: number;
   }) {
     const { cellRenderer } = this.props
 
@@ -199,9 +227,11 @@ export default class CellMeasurer extends Component {
     // https://twitter.com/soprano/status/737316379712331776
     ReactDOM.unstable_renderSubtreeIntoContainer(this, rendered, this._div)
 
+    invariant(this._div != null, 'Missing element');
+
     const measurements = {
-      height: clientHeight && this._div.clientHeight,
-      width: clientWidth && this._div.clientWidth
+      height: clientHeight ? this._div.clientHeight : 0,
+      width: clientWidth ? this._div.clientWidth : 0,
     }
 
     ReactDOM.unmountComponentAtNode(this._div)
@@ -215,17 +245,18 @@ export default class CellMeasurer extends Component {
       this._div.style.display = 'inline-block'
       this._div.style.position = 'absolute'
       this._div.style.visibility = 'hidden'
-      this._div.style.zIndex = -1
+      this._div.style.zIndex = '-1'
 
       this._updateDivDimensions(this.props)
 
       this._containerNode = this._getContainerNode(this.props)
+      invariant(this._div != null, 'Missing element');
       this._containerNode.appendChild(this._div)
     }
   }
 
   _unmountContainer () {
-    if (this._div) {
+    if (this._div && this._containerNode) {
       this._containerNode.removeChild(this._div)
 
       this._div = null
@@ -234,7 +265,8 @@ export default class CellMeasurer extends Component {
     this._containerNode = null
   }
 
-  _updateDivDimensions (props) {
+  _updateDivDimensions (props: CellMeasurerProps) {
+    invariant(this._div != null, 'Missing element');
     const { height, width } = props
 
     if (

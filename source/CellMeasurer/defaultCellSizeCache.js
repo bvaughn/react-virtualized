@@ -2,12 +2,30 @@
  * Default CellMeasurer `cellSizeCache` implementation.
  * Permanently caches all cell sizes (identified by column and row index) unless explicitly cleared.
  * Can be configured to handle uniform cell widths and/or heights as a way of optimizing certain use cases.
+ *
+ * @flow
  */
+
+type SizeCache = {
+  [index: number]: number;
+};
+
 export default class CellSizeCache {
+
+  _uniformRowHeight: boolean;
+  _uniformColumnWidth: boolean;
+
+  _cachedColumnWidths: SizeCache;
+  _cachedColumnWidth: ?number;
+
+  _cachedRowHeights: SizeCache;
+  _cachedRowHeight: ?number;
+
+
   constructor ({
     uniformRowHeight = false,
     uniformColumnWidth = false
-  } = {}) {
+  }: {uniformRowHeight?: boolean; uniformColumnWidth?: boolean} = {}) {
     this._uniformRowHeight = uniformRowHeight
     this._uniformColumnWidth = uniformColumnWidth
 
@@ -37,13 +55,13 @@ export default class CellSizeCache {
     delete this._cachedRowHeights[index]
   }
 
-  getColumnWidth (index: number): number {
+  getColumnWidth (index: number): ?number {
     return this._uniformColumnWidth
       ? this._cachedColumnWidth
       : this._cachedColumnWidths[index]
   }
 
-  getRowHeight (index: number): number {
+  getRowHeight (index: number): ?number {
     return this._uniformRowHeight
       ? this._cachedRowHeight
       : this._cachedRowHeights[index]
