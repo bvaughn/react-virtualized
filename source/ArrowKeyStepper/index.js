@@ -1,2 +1,3 @@
-export default from './ArrowKeyStepper'
-export ArrowKeyStepper from './ArrowKeyStepper'
+/** @flow */
+export {default as default} from './ArrowKeyStepper'
+export {default as ArrowKeyStepper} from './ArrowKeyStepper'

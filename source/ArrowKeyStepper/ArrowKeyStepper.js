@@ -1,11 +1,42 @@
-/** @noflow */
+/** @flow */
 import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
+
+type IndexRange = {
+  columnStartIndex: number;
+  columnStopIndex: number;
+  rowStartIndex: number;
+  rowStopIndex: number;
+};
+
+type ArrowKeyStepperCallback = (params: {
+  onSectionRendered: (range: IndexRange) => void;
+  scrollToColumn: number;
+  scrollToRow: number;
+}) => React.Element<any>;
+
+type ArrowKeyStepperProps = {
+  children: ArrowKeyStepperCallback;
+  className?: string;
+  columnCount: number;
+  rowCount: number;
+}
+
+type ArrowKeyStepperState = {
+  scrollToColumn: number;
+  scrollToRow: number;
+}
 
 /**
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
  */
-export default class ArrowKeyStepper extends Component {
+export default class ArrowKeyStepper extends Component<*, ArrowKeyStepperProps, ArrowKeyStepperState> {
+
+  _columnStartIndex: number;
+  _columnStopIndex: number;
+  _rowStartIndex: number;
+  _rowStopIndex: number;
+
   static propTypes = {
     children: PropTypes.func.isRequired,
     className: PropTypes.string,
@@ -13,22 +44,15 @@ export default class ArrowKeyStepper extends Component {
     rowCount: PropTypes.number.isRequired
   }
 
-  constructor (props, context) {
-    super(props, context)
+  state = {
+    scrollToColumn: 0,
+    scrollToRow: 0
+  };
 
-    this.state = {
-      scrollToColumn: 0,
-      scrollToRow: 0
-    }
-
-    this._columnStartIndex = 0
-    this._columnStopIndex = 0
-    this._rowStartIndex = 0
-    this._rowStopIndex = 0
-
-    this._onKeyDown = this._onKeyDown.bind(this)
-    this._onSectionRendered = this._onSectionRendered.bind(this)
-  }
+  _columnStartIndex = 0
+  _columnStopIndex = 0
+  _rowStartIndex = 0
+  _rowStopIndex = 0
 
   render () {
     const { className, children } = this.props
@@ -48,11 +72,11 @@ export default class ArrowKeyStepper extends Component {
     )
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
+  shouldComponentUpdate (nextProps: ArrowKeyStepperProps, nextState: ArrowKeyStepperState) {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _onKeyDown (event) {
+  _onKeyDown = (event: KeyboardEvent) => {
     const { columnCount, rowCount } = this.props
 
     // The above cases all prevent default event event behavior.
@@ -85,7 +109,7 @@ export default class ArrowKeyStepper extends Component {
     }
   }
 
-  _onSectionRendered ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }) {
+  _onSectionRendered = ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }: IndexRange) => {
     this._columnStartIndex = columnStartIndex
     this._columnStopIndex = columnStopIndex
     this._rowStartIndex = rowStartIndex
