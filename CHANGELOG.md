@@ -1,6 +1,14 @@
 Changelog
 ------------
 
+##### 8.0.12
+Added "module" entry to `package.json` in order to support ES modules with the latest Webpack.
+This should enable tree-shaking support ouf of the box for Webpack.
+Rollup will continue to use the "jsnext:main" entry to my knowledge.
+
+For more info see https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md
+Related issues: webpack/webpack#1979, bvaughn/react-virtualized/issues/427
+
 ##### 8.0.11
 Fixed an invalid export for `IS_SCROLLING_TIMEOUT` inside the `WindowScroller` module.
 
