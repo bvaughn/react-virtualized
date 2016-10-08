@@ -68,7 +68,6 @@ For this reason it is recommended that your rows use a style like `overflow-y: h
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { List } from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // List data as an array of strings
 const list = [
