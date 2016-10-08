@@ -16,7 +16,7 @@ Elements can have fixed or varying heights.
 | overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
 | rowCount | Number | ✓ | Number of rows in list. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
-| rowRenderer | Function | ✓ | Responsible for rendering a row given an index. Signature should look like `({ index: number, key: string, style: Object, isScrolling: boolean }): React.PropTypes.node` |
+| rowRenderer | Function | ✓ | Responsible for rendering a row. Signature should look like `({ index: number, key: string, style: Object, isScrolling: boolean }): React.PropTypes.node` and the returned element must handle index, key and style.|
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Forced vertical scroll offset; can be used to synchronize scrolling between components |
@@ -58,7 +58,7 @@ The List component supports the following static class names
 
 ### Examples
 
-Below is a simple `List` example. Each row in the virtualized list is rendered through the use of a `rowRenderer` function for performance reasons. This function must return an element with a unique `key` and its content must fit within the specified `rowHeight`.
+Below is a simple `List` example. Each row in the virtualized list is rendered through the use of a `rowRenderer` function for performance reasons. This function must return an element that has a unique `key`, applies the `style` and has content fitting within `rowHeight`.
 
 **Note** that it is very important that rows do not have vertical overflow.
 It would make scrolling the list difficult (as individual items will intercept the scroll events).
@@ -68,7 +68,6 @@ For this reason it is recommended that your rows use a style like `overflow-y: h
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { List } from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // List data as an array of strings
 const list = [
