@@ -7,6 +7,7 @@ Elements can have fixed or varying heights.
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
+| autoHeight | Boolean |  | Outer `height` of `List` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
 | className | String |  | Optional custom CSS class name to attach to root `List` element. |
 | estimatedRowSize | Number |  | Used to estimate the total height of a `List` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | height | Number | ✓ | Height constraint for list (determines how many actual rows are rendered) |
