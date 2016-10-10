@@ -8,6 +8,7 @@ This component expects explicit `width` and `height` parameters.
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
+| autoHeight | Boolean |  | Outer `height` of `Table` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
 | children | [Column](Column.md) | ✓ | One or more Columns describing the data displayed in this table |
 | className | String |  | Optional custom CSS class name to attach to root `Table` element. |
 | disableHeader | Boolean |  | Do not render the table header (only the rows) |
