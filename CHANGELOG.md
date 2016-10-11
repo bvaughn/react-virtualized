@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 8.0.13
+Replaces references to `getComputedStyle` with `window.getComputedStyle` to better support Enzyme.
+Thanks to @DevinClark for the contribution!
+
 ##### 8.0.12
 Added "module" entry to `package.json` in order to support ES modules with the latest Webpack.
 This should enable tree-shaking support ouf of the box for Webpack.
