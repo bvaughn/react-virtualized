@@ -1,7 +1,7 @@
 /**
  * Window Sections are used to group nearby cells.
  * This enables us to more quickly determine which cells to display in a given region of the Window.
- * @flow
+ * @noflow
  */
 import Section from './Section'
 import type { Index, SizeAndPositionInfo } from './types'

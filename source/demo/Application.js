@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'

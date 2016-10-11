@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import React from 'react'
 import SortIndicator from './SortIndicator'
 import type { HeaderRendererParams } from './types'

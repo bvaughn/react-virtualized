@@ -2,12 +2,29 @@
 import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 
+type AutoSizerProps = {
+  children: (size: {height: number; width: number}) => React.Element<any>;
+  disableHeight?: boolean;
+  disableWidth?: boolean;
+  onResize: (size: {height: number; width: number}) => *;
+}
+
+type AutoSizerState = {
+  height: number;
+  width: number;
+}
+
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
  * Child component should not be declared as a child but should rather be specified by a `ChildComponent` property.
  * All other properties will be passed through to the child component.
  */
-export default class AutoSizer extends Component {
+export default class AutoSizer extends Component<*, AutoSizerProps, AutoSizerState> {
+
+  _parentNode: Element;
+  _autoSizer: Element;
+  _detectElementResize: any;
+
   static propTypes = {
     /**
      * Function responsible for rendering children.
@@ -30,23 +47,16 @@ export default class AutoSizer extends Component {
     onResize: () => {}
   }
 
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      height: 0,
-      width: 0
-    }
-
-    this._onResize = this._onResize.bind(this)
-    this._setRef = this._setRef.bind(this)
-  }
+  state = {
+    height: 0,
+    width: 0,
+  };
 
   componentDidMount () {
     // Delay access of parentNode until mount.
     // This handles edge-cases where the component has already been unmounted before its ref has been set,
     // As well as libraries like react-lite which have a slightly different lifecycle.
-    this._parentNode = this._autoSizer.parentNode
+    this._parentNode = ((this._autoSizer.parentNode: any): Element)
 
     // Defer requiring resize handler in order to support server-side rendering.
     // See issue #41
@@ -69,7 +79,7 @@ export default class AutoSizer extends Component {
     // Outer div should not force width/height since that may prevent containers from shrinking.
     // Inner component should overflow and use calculated width/height.
     // See issue #68 for more information.
-    const outerStyle = { overflow: 'visible' }
+    const outerStyle: {overflow: string; height?: number; width?: number} = { overflow: 'visible' }
 
     if (!disableHeight) {
       outerStyle.height = 0
@@ -89,11 +99,15 @@ export default class AutoSizer extends Component {
     )
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
+  shouldComponentUpdate (nextProps: AutoSizerProps, nextState: AutoSizerState) {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _onResize () {
+  _onResize = () => {
+    if (this._parentNode == null) {
+      return
+    }
+
     const { onResize } = this.props
 
     // Gaurd against AutoSizer component being removed from the DOM immediately after being added.
@@ -103,6 +117,10 @@ export default class AutoSizer extends Component {
     const boundingRect = this._parentNode.getBoundingClientRect()
     const height = boundingRect.height || 0
     const width = boundingRect.width || 0
+
+    if (this._parentNode == null) {
+      return
+    }
 
     const style = getComputedStyle(this._parentNode)
     const paddingLeft = parseInt(style.paddingLeft, 10) || 0
@@ -118,7 +136,7 @@ export default class AutoSizer extends Component {
     onResize({ height, width })
   }
 
-  _setRef (autoSizer) {
+  _setRef = (autoSizer: HTMLElement) => {
     this._autoSizer = autoSizer
   }
 }

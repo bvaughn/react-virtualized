@@ -1,12 +1,17 @@
 /**
  * Helper utility that updates the specified callback whenever any of the specified indices have changed.
+ *
+ * @flow
  */
-export default function createCallbackMemoizer (requireAllKeys = true) {
+export default function createCallbackMemoizer (requireAllKeys: boolean = true) {
   let cachedIndices = {}
 
   return ({
     callback,
     indices
+  }: {
+    callback: Function;
+    indices: Object;
   }) => {
     const keys = Object.keys(indices)
     const allInitialized = !requireAllKeys || keys.every(key => {

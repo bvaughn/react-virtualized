@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import ScalingCellSizeAndPositionManager from './ScalingCellSizeAndPositionManager'
 
 describe('ScalingCellSizeAndPositionManager', () => {

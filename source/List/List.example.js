@@ -1,5 +1,5 @@
 /**
- * @flow
+ * @noflow
  */
 import cn from 'classnames'
 import Immutable from 'immutable'

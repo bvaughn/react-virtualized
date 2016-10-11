@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import cn from 'classnames'
 import Immutable from 'immutable'
 import React, { Component, PropTypes } from 'react'

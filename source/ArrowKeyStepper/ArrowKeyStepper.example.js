@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import React, { Component } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import ArrowKeyStepper from './ArrowKeyStepper'

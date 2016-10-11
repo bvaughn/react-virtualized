@@ -1,3 +1,7 @@
+/**
+ * @flow
+ */
+
 import initCellMetadata from './initCellMetadata'
 
 // Default cell sizes and offsets for use in below tests

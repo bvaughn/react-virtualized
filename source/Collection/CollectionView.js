@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import React, { Component, PropTypes } from 'react'
 import cn from 'classnames'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'

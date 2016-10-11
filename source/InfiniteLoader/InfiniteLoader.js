@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 import { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'

@@ -1,4 +1,4 @@
-/** @flow */
+/** @noflow */
 
 export type CellDataGetterParams = {
   columnData: ?any,
