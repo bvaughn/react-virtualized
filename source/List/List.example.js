@@ -20,13 +20,13 @@ export default class ListExample extends Component {
     super(props, context)
 
     this.state = {
+      listHeight: 300,
+      listRowHeight: 50,
       overscanRowCount: 10,
       rowCount: context.list.size,
       scrollToIndex: undefined,
       showScrollingPlaceholder: false,
-      useDynamicRowHeight: false,
-      virtualScrollHeight: 300,
-      virtualScrollRowHeight: 50
+      useDynamicRowHeight: false
     }
 
     this._getRowHeight = this._getRowHeight.bind(this)
@@ -38,13 +38,13 @@ export default class ListExample extends Component {
 
   render () {
     const {
+      listHeight,
+      listRowHeight,
       overscanRowCount,
       rowCount,
       scrollToIndex,
       showScrollingPlaceholder,
-      useDynamicRowHeight,
-      virtualScrollHeight,
-      virtualScrollRowHeight
+      useDynamicRowHeight
     } = this.state
 
     return (
@@ -100,16 +100,16 @@ export default class ListExample extends Component {
           />
           <LabeledInput
             label='List height'
-            name='virtualScrollHeight'
-            onChange={event => this.setState({ virtualScrollHeight: parseInt(event.target.value, 10) || 1 })}
-            value={virtualScrollHeight}
+            name='listHeight'
+            onChange={event => this.setState({ listHeight: parseInt(event.target.value, 10) || 1 })}
+            value={listHeight}
           />
           <LabeledInput
             disabled={useDynamicRowHeight}
             label='Row height'
-            name='virtualScrollRowHeight'
-            onChange={event => this.setState({ virtualScrollRowHeight: parseInt(event.target.value, 10) || 1 })}
-            value={virtualScrollRowHeight}
+            name='listRowHeight'
+            onChange={event => this.setState({ listRowHeight: parseInt(event.target.value, 10) || 1 })}
+            value={listRowHeight}
           />
           <LabeledInput
             label='Overscan'
@@ -125,11 +125,11 @@ export default class ListExample extends Component {
               <List
                 ref='List'
                 className={styles.List}
-                height={virtualScrollHeight}
+                height={listHeight}
                 overscanRowCount={overscanRowCount}
                 noRowsRenderer={this._noRowsRenderer}
                 rowCount={rowCount}
-                rowHeight={useDynamicRowHeight ? this._getRowHeight : virtualScrollRowHeight}
+                rowHeight={useDynamicRowHeight ? this._getRowHeight : listRowHeight}
                 rowRenderer={this._rowRenderer}
                 scrollToIndex={scrollToIndex}
                 width={width}

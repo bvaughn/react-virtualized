@@ -60,7 +60,7 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
           width={width}
           height={height}
           onRowsRendered={onRowsRendered}
-          {...virtualScrollProps}
+          {...listProps}
         />
       )}
     </AutoSizer>

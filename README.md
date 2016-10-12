@@ -140,7 +140,7 @@ For example:
 
 ```js
 <List
-  {...virtualScrollProps}
+  {...listProps}
   sortBy={sortBy}
 />
 ```
