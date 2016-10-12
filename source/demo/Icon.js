@@ -9,7 +9,7 @@ export const TYPES = {
   DOCUMENTATION: 'DOCUMENTATION',
   ISSUES: 'ISSUES',
   SOURCE: 'SOURCE',
-  WIZARD: 'WIZARD',
+  WIZARD: 'WIZARD'
 }
 
 Icon.propTypes = {

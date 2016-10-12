@@ -13,7 +13,7 @@ export default function NavLink ({ children, href, iconType, to }) {
       <Icon
         className={styles.Icon}
         type={iconType}
-      /> 
+      />
     )
   }
 
@@ -23,7 +23,7 @@ export default function NavLink ({ children, href, iconType, to }) {
         activeClassName={styles.ActiveNavLink}
         className={styles.NavLink}
         to={to}
-      > 
+      >
         {icon} {children}
       </Link>
     )
@@ -32,7 +32,7 @@ export default function NavLink ({ children, href, iconType, to }) {
       <a
         className={styles.NavLink}
         href={href}
-      > 
+      >
         {icon} {children}
       </a>
     )
