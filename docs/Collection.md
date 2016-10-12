@@ -12,7 +12,7 @@ Unlike `Grid`, which renders checkerboard data, `Collection` can render arbitrar
 | autoHeight | Boolean |  | Outer `height` of `Collection` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
 | className | String |  | Optional custom CSS class name to attach to root Collection element. |
 | cellCount | Number | ✓ | Number of cells in collection. |
-| cellGroupRenderer | Function | ✓ | Responsible for rendering a group of cells given their indices.: `({ cellSizeAndPositionGetter:Function, indices: Array<number>, cellRenderer: Function }): Array<PropTypes.node>` |
+| cellGroupRenderer | Function |  | Responsible for rendering a group of cells given their indices.: `({ cellSizeAndPositionGetter:Function, indices: Array<number>, cellRenderer: Function }): Array<PropTypes.node>` |
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ index: number, isScrolling: boolean, key: string, style: object }): PropTypes.element` |
 | cellSizeAndPositionGetter | Function | ✓ | Callback responsible for returning size and offset/position information for a given cell (index): `({ index: number }): { height: number, width: number, x: number, y: number }` |
 | height | Number | ✓ | Height of Collection; this property determines the number of visible (vs virtualized) rows. |
