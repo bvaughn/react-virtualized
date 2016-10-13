@@ -7,6 +7,16 @@ This property allows custom styling to be applied to the inner cell-containing d
 This can be used to enable padding within the grid.
 For more context see: github.com/metabase/metabase/pull/3547
 
+Refactored the `detect-element-resize` util to export a factory function.
+This allows `AutoSizer` to import it initially but defer execution until mounted.
+(Executing immediately causes problems for server-side rendering context.
+Using a deferred `require` causes problems for es6 bundlers, eg Rollup.)
+
+Fixed an edge-case that occurred for slower browsers when mounting and then quickly unmounting an `AutoSizer`.
+In some cases, an animation event was left attached.
+This event is now specifically checked for and removed.
+Special thanks to @yb (PR #436) for this bugfix contribution.
+
 ##### 8.0.13
 Replaces references to `getComputedStyle` with `window.getComputedStyle` to better support Enzyme.
 Thanks to @DevinClark for the contribution!
