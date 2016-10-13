@@ -85,6 +85,9 @@ export default class Grid extends Component {
      */
     columnWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
+    /** Optional inline style applied to inner cell-container */
+    containerStyle: PropTypes.object,
+
     /**
      * Used to estimate the total width of a Grid before all of its columns have actually been measured.
      * The estimated total width is adjusted as columns are rendered.
@@ -487,6 +490,7 @@ export default class Grid extends Component {
       autoContainerWidth,
       autoHeight,
       className,
+      containerStyle,
       height,
       noContentRenderer,
       style,
@@ -558,7 +562,8 @@ export default class Grid extends Component {
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,
               overflow: 'hidden',
-              pointerEvents: isScrolling ? 'none' : ''
+              pointerEvents: isScrolling ? 'none' : '',
+              ...containerStyle
             }}
           >
             {childrenToDisplay}

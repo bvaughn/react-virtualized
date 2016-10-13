@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+##### 8.1.0
+Added `containerStyle` property to `Grid`.
+This property allows custom styling to be applied to the inner cell-containing div.
+This can be used to enable padding within the grid.
+For more context see: github.com/metabase/metabase/pull/3547
+
 ##### 8.0.13
 Replaces references to `getComputedStyle` with `window.getComputedStyle` to better support Enzyme.
 Thanks to @DevinClark for the contribution!

@@ -607,6 +607,12 @@ describe('Grid', () => {
       const rendered = findDOMNode(render(getMarkup({ style })))
       expect(rendered.style.backgroundColor).toEqual('red')
     })
+
+    it('should use a custom :containerStyle if specified', () => {
+      const containerStyle = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ containerStyle })))
+      expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.backgroundColor).toEqual('red')
+    })
   })
 
   describe('onScroll', () => {
