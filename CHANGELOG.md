@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 8.1.1
+Wrapped component `propTypes` with `process.env.NODE_ENV !== 'production'` so they can be stripped from production builds.
+Thanks to @mbrevda for the suggestion and contribution.
+
 ##### 8.1.0
 Added `containerStyle` property to `Grid`.
 This property allows custom styling to be applied to the inner cell-containing div.
