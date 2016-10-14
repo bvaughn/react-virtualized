@@ -8,7 +8,7 @@ export default class WindowScroller extends Component {
   static defaultProps = {
     onResize: () => {},
     onScroll: () => {}
-  }
+  };
 
   constructor (props) {
     super(props)

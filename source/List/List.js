@@ -21,7 +21,7 @@ export default class List extends Component {
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
     style: {}
-  }
+  };
 
   constructor (props, context) {
     super(props, context)

@@ -11,7 +11,7 @@ import createDetectElementResize from '../vendor/detectElementResize'
 export default class AutoSizer extends Component {
   static defaultProps = {
     onResize: () => {}
-  }
+  };
 
   constructor (props) {
     super(props)

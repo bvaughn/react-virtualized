@@ -13,7 +13,7 @@ export default class InfiniteLoader extends Component {
     minimumBatchSize: 10,
     rowCount: 0,
     threshold: 15
-  }
+  };
 
   constructor (props, context) {
     super(props, context)
