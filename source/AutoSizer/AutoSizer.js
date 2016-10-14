@@ -9,24 +9,6 @@ import createDetectElementResize from '../vendor/detectElementResize'
  * All other properties will be passed through to the child component.
  */
 export default class AutoSizer extends Component {
-  static propTypes = {
-    /**
-     * Function responsible for rendering children.
-     * This function should implement the following signature:
-     * ({ height, width }) => PropTypes.element
-     */
-    children: PropTypes.func.isRequired,
-
-    /** Disable dynamic :height property */
-    disableHeight: PropTypes.bool,
-
-    /** Disable dynamic :width property */
-    disableWidth: PropTypes.bool,
-
-    /** Callback to be invoked on-resize: ({ height, width }) */
-    onResize: PropTypes.func.isRequired
-  }
-
   static defaultProps = {
     onResize: () => {}
   }
@@ -121,5 +103,25 @@ export default class AutoSizer extends Component {
 
   _setRef (autoSizer) {
     this._autoSizer = autoSizer
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  AutoSizer.propTypes = {
+    /**
+    * Function responsible for rendering children.
+    * This function should implement the following signature:
+    * ({ height, width }) => PropTypes.element
+    */
+    children: PropTypes.func.isRequired,
+
+    /** Disable dynamic :height property */
+    disableHeight: PropTypes.bool,
+
+    /** Disable dynamic :width property */
+    disableWidth: PropTypes.bool,
+
+    /** Callback to be invoked on-resize: ({ height, width }) */
+    onResize: PropTypes.func.isRequired
   }
 }

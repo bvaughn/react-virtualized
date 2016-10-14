@@ -9,51 +9,6 @@ import createCallbackMemoizer from '../utils/createCallbackMemoizer'
  * It is intended as a convenience component; fork it if you'd like finer-grained control over data-loading.
  */
 export default class InfiniteLoader extends Component {
-  static propTypes = {
-    /**
-     * Function responsible for rendering a virtualized component.
-     * This function should implement the following signature:
-     * ({ onRowsRendered, registerChild }) => PropTypes.element
-     *
-     * The specified :onRowsRendered function should be passed through to the child's :onRowsRendered property.
-     * The :registerChild callback should be set as the virtualized component's :ref.
-     */
-    children: PropTypes.func.isRequired,
-
-    /**
-     * Function responsible for tracking the loaded state of each row.
-     * It should implement the following signature: ({ index: number }): boolean
-     */
-    isRowLoaded: PropTypes.func.isRequired,
-
-    /**
-     * Callback to be invoked when more rows must be loaded.
-     * It should implement the following signature: ({ startIndex, stopIndex }): Promise
-     * The returned Promise should be resolved once row data has finished loading.
-     * It will be used to determine when to refresh the list with the newly-loaded data.
-     * This callback may be called multiple times in reaction to a single scroll event.
-     */
-    loadMoreRows: PropTypes.func.isRequired,
-
-    /**
-     * Minimum number of rows to be loaded at a time.
-     * This property can be used to batch requests to reduce HTTP requests.
-     */
-    minimumBatchSize: PropTypes.number.isRequired,
-
-    /**
-     * Number of rows in list; can be arbitrary high number if actual number is unknown.
-     */
-    rowCount: PropTypes.number.isRequired,
-
-    /**
-     * Threshold at which to pre-fetch data.
-     * A threshold X means that data will start loading when a user scrolls within X rows.
-     * This value defaults to 15.
-     */
-    threshold: PropTypes.number.isRequired
-  }
-
   static defaultProps = {
     minimumBatchSize: 10,
     rowCount: 0,
@@ -244,4 +199,51 @@ export function forceUpdateReactVirtualizedComponent (component) {
   typeof component.forceUpdateGrid === 'function'
     ? component.forceUpdateGrid()
     : component.forceUpdate()
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  InfiniteLoader.propTypes = {
+    /**
+     * Function responsible for rendering a virtualized component.
+     * This function should implement the following signature:
+     * ({ onRowsRendered, registerChild }) => PropTypes.element
+     *
+     * The specified :onRowsRendered function should be passed through to the child's :onRowsRendered property.
+     * The :registerChild callback should be set as the virtualized component's :ref.
+     */
+    children: PropTypes.func.isRequired,
+
+    /**
+     * Function responsible for tracking the loaded state of each row.
+     * It should implement the following signature: ({ index: number }): boolean
+     */
+    isRowLoaded: PropTypes.func.isRequired,
+
+    /**
+     * Callback to be invoked when more rows must be loaded.
+     * It should implement the following signature: ({ startIndex, stopIndex }): Promise
+     * The returned Promise should be resolved once row data has finished loading.
+     * It will be used to determine when to refresh the list with the newly-loaded data.
+     * This callback may be called multiple times in reaction to a single scroll event.
+     */
+    loadMoreRows: PropTypes.func.isRequired,
+
+    /**
+     * Minimum number of rows to be loaded at a time.
+     * This property can be used to batch requests to reduce HTTP requests.
+     */
+    minimumBatchSize: PropTypes.number.isRequired,
+
+    /**
+     * Number of rows in list; can be arbitrary high number if actual number is unknown.
+     */
+    rowCount: PropTypes.number.isRequired,
+
+    /**
+     * Threshold at which to pre-fetch data.
+     * A threshold X means that data will start loading when a user scrolls within X rows.
+     * This value defaults to 15.
+     */
+    threshold: PropTypes.number.isRequired
+  }
 }

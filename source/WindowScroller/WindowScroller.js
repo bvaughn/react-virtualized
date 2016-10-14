@@ -5,22 +5,6 @@ import shallowCompare from 'react-addons-shallow-compare'
 import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
 
 export default class WindowScroller extends Component {
-
-  static propTypes = {
-    /**
-     * Function responsible for rendering children.
-     * This function should implement the following signature:
-     * ({ height, scrollTop }) => PropTypes.element
-     */
-    children: PropTypes.func.isRequired,
-
-    /** Callback to be invoked on-resize: ({ height }) */
-    onResize: PropTypes.func.isRequired,
-
-    /** Callback to be invoked on-scroll: ({ scrollTop }) */
-    onScroll: PropTypes.func.isRequired
-  }
-
   static defaultProps = {
     onResize: () => {},
     onScroll: () => {}
@@ -120,5 +104,22 @@ export default class WindowScroller extends Component {
     })
 
     onScroll({ scrollTop })
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  WindowScroller.propTypes = {
+    /**
+     * Function responsible for rendering children.
+     * This function should implement the following signature:
+     * ({ height, scrollTop }) => PropTypes.element
+     */
+    children: PropTypes.func.isRequired,
+
+    /** Callback to be invoked on-resize: ({ height }) */
+    onResize: PropTypes.func.isRequired,
+
+    /** Callback to be invoked on-scroll: ({ scrollTop }) */
+    onScroll: PropTypes.func.isRequired
   }
 }

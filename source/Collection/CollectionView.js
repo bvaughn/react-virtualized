@@ -27,100 +27,6 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  * This component does not render any visible content itself; it defers to the specified :cellLayoutManager.
  */
 export default class CollectionView extends Component {
-  static propTypes = {
-    'aria-label': PropTypes.string,
-
-    /**
-     * Removes fixed height from the scrollingContainer so that the total height
-     * of rows can stretch the window. Intended for use with WindowScroller
-     */
-    autoHeight: PropTypes.bool,
-
-    /**
-     * Number of cells in collection.
-     */
-    cellCount: PropTypes.number.isRequired,
-
-    /**
-     * Calculates cell sizes and positions and manages rendering the appropriate cells given a specified window.
-     */
-    cellLayoutManager: PropTypes.object.isRequired,
-
-    /**
-     * Optional custom CSS class name to attach to root Collection element.
-     */
-    className: PropTypes.string,
-
-    /**
-     * Height of Collection; this property determines the number of visible (vs virtualized) rows.
-     */
-    height: PropTypes.number.isRequired,
-
-    /**
-     * Enables the `Collection` to horiontally "overscan" its content similar to how `Grid` does.
-     * This can reduce flicker around the edges when a user scrolls quickly.
-     */
-    horizontalOverscanSize: PropTypes.number.isRequired,
-
-    isScrollingChange: PropTypes.func,
-
-    /**
-     * Optional renderer to be used in place of rows when either :rowCount or :cellCount is 0.
-     */
-    noContentRenderer: PropTypes.func.isRequired,
-
-    /**
-     * Callback invoked whenever the scroll offset changes within the inner scrollable region.
-     * This callback can be used to sync scrolling between lists, tables, or grids.
-     * ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void
-     */
-    onScroll: PropTypes.func.isRequired,
-
-    /**
-     * Callback invoked with information about the section of the Collection that was just rendered.
-     * This callback is passed a named :indices parameter which is an Array of the most recently rendered section indices.
-     */
-    onSectionRendered: PropTypes.func.isRequired,
-
-    /**
-     * Horizontal offset.
-     */
-    scrollLeft: PropTypes.number,
-
-    /**
-     * Controls scroll-to-cell behavior of the Grid.
-     * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
-     * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
-     */
-    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
-
-    /**
-     * Cell index to ensure visible (by forcefully scrolling if necessary).
-     */
-    scrollToCell: PropTypes.number,
-
-    /**
-     * Vertical offset.
-     */
-    scrollTop: PropTypes.number,
-
-    /**
-     * Optional custom inline style to attach to root Collection element.
-     */
-    style: PropTypes.object,
-
-    /**
-     * Enables the `Collection` to vertically "overscan" its content similar to how `Grid` does.
-     * This can reduce flicker around the edges when a user scrolls quickly.
-     */
-    verticalOverscanSize: PropTypes.number.isRequired,
-
-    /**
-     * Width of Collection; this property determines the number of visible (vs virtualized) columns.
-     */
-    width: PropTypes.number.isRequired
-  };
-
   static defaultProps = {
     'aria-label': 'grid',
     horizontalOverscanSize: 0,
@@ -573,5 +479,101 @@ export default class CollectionView extends Component {
       totalWidth,
       totalHeight
     })
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  CollectionView.propTypes = {
+    'aria-label': PropTypes.string,
+
+    /**
+     * Removes fixed height from the scrollingContainer so that the total height
+     * of rows can stretch the window. Intended for use with WindowScroller
+     */
+    autoHeight: PropTypes.bool,
+
+    /**
+     * Number of cells in collection.
+     */
+    cellCount: PropTypes.number.isRequired,
+
+    /**
+     * Calculates cell sizes and positions and manages rendering the appropriate cells given a specified window.
+     */
+    cellLayoutManager: PropTypes.object.isRequired,
+
+    /**
+     * Optional custom CSS class name to attach to root Collection element.
+     */
+    className: PropTypes.string,
+
+    /**
+     * Height of Collection; this property determines the number of visible (vs virtualized) rows.
+     */
+    height: PropTypes.number.isRequired,
+
+    /**
+     * Enables the `Collection` to horiontally "overscan" its content similar to how `Grid` does.
+     * This can reduce flicker around the edges when a user scrolls quickly.
+     */
+    horizontalOverscanSize: PropTypes.number.isRequired,
+
+    isScrollingChange: PropTypes.func,
+
+    /**
+     * Optional renderer to be used in place of rows when either :rowCount or :cellCount is 0.
+     */
+    noContentRenderer: PropTypes.func.isRequired,
+
+    /**
+     * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+     * This callback can be used to sync scrolling between lists, tables, or grids.
+     * ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void
+     */
+    onScroll: PropTypes.func.isRequired,
+
+    /**
+     * Callback invoked with information about the section of the Collection that was just rendered.
+     * This callback is passed a named :indices parameter which is an Array of the most recently rendered section indices.
+     */
+    onSectionRendered: PropTypes.func.isRequired,
+
+    /**
+     * Horizontal offset.
+     */
+    scrollLeft: PropTypes.number,
+
+    /**
+     * Controls scroll-to-cell behavior of the Grid.
+     * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
+     * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
+     */
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
+
+    /**
+     * Cell index to ensure visible (by forcefully scrolling if necessary).
+     */
+    scrollToCell: PropTypes.number,
+
+    /**
+     * Vertical offset.
+     */
+    scrollTop: PropTypes.number,
+
+    /**
+     * Optional custom inline style to attach to root Collection element.
+     */
+    style: PropTypes.object,
+
+    /**
+     * Enables the `Collection` to vertically "overscan" its content similar to how `Grid` does.
+     * This can reduce flicker around the edges when a user scrolls quickly.
+     */
+    verticalOverscanSize: PropTypes.number.isRequired,
+
+    /**
+     * Width of Collection; this property determines the number of visible (vs virtualized) columns.
+     */
+    width: PropTypes.number.isRequired
   }
 }

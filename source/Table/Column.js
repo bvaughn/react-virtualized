@@ -8,16 +8,6 @@ import defaultCellDataGetter from './defaultCellDataGetter'
  * Describes the header and cell contents of a table column.
  */
 export default class Column extends Component {
-
-  static defaultProps = {
-    cellDataGetter: defaultCellDataGetter,
-    cellRenderer: defaultCellRenderer,
-    flexGrow: 0,
-    flexShrink: 1,
-    headerRenderer: defaultHeaderRenderer,
-    style: {}
-  }
-
   static propTypes = {
     /** Optional aria-label value to set on the column header */
     'aria-label': PropTypes.string,
@@ -75,5 +65,16 @@ export default class Column extends Component {
 
     /** Flex basis (width) for this column; This value can grow or shrink based on :flexGrow and :flexShrink properties. */
     width: PropTypes.number.isRequired
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  Column.defaultProps = {
+    cellDataGetter: defaultCellDataGetter,
+    cellRenderer: defaultCellRenderer,
+    flexGrow: 0,
+    flexShrink: 1,
+    headerRenderer: defaultHeaderRenderer,
+    style: {}
   }
 }
