@@ -9,55 +9,6 @@ import CellSizeCache from './defaultCellSizeCache'
  * Either a fixed width or height may be provided if it is desirable to measure only in one direction.
  */
 export default class CellMeasurer extends Component {
-  static propTypes = {
-    /**
-     * Renders a cell given its indices.
-     * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
-     */
-    cellRenderer: PropTypes.func.isRequired,
-
-    /**
-     * Optional, custom caching strategy for cell sizes.
-     */
-    cellSizeCache: PropTypes.object,
-
-    /**
-     * Function responsible for rendering a virtualized component.
-     * This function should implement the following signature:
-     * ({ getColumnWidth, getRowHeight, resetMeasurements }) => PropTypes.element
-     */
-    children: PropTypes.func.isRequired,
-
-    /**
-     * Number of columns in grid.
-     */
-    columnCount: PropTypes.number.isRequired,
-
-    /**
-     * A Node, Component instance, or function that returns either.
-     * If this property is not specified the document body will be used.
-     */
-    container: React.PropTypes.oneOfType([
-      React.PropTypes.func,
-      React.PropTypes.node
-    ]),
-
-    /**
-     * Assign a fixed :height in order to measure dynamic text :width only.
-     */
-    height: PropTypes.number,
-
-    /**
-     * Number of rows in grid.
-     */
-    rowCount: PropTypes.number.isRequired,
-
-    /**
-     * Assign a fixed :width in order to measure dynamic text :height only.
-     */
-    width: PropTypes.number
-  };
-
   constructor (props, state) {
     super(props, state)
 
@@ -252,5 +203,56 @@ export default class CellMeasurer extends Component {
       this._divWidth = width
       this._div.style.width = `${width}px`
     }
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  CellMeasurer.propTypes = {
+    /**
+     * Renders a cell given its indices.
+     * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
+     */
+    cellRenderer: PropTypes.func.isRequired,
+
+    /**
+     * Optional, custom caching strategy for cell sizes.
+     */
+    cellSizeCache: PropTypes.object,
+
+    /**
+     * Function responsible for rendering a virtualized component.
+     * This function should implement the following signature:
+     * ({ getColumnWidth, getRowHeight, resetMeasurements }) => PropTypes.element
+     */
+    children: PropTypes.func.isRequired,
+
+    /**
+     * Number of columns in grid.
+     */
+    columnCount: PropTypes.number.isRequired,
+
+    /**
+     * A Node, Component instance, or function that returns either.
+     * If this property is not specified the document body will be used.
+     */
+    container: React.PropTypes.oneOfType([
+      React.PropTypes.func,
+      React.PropTypes.node
+    ]),
+
+    /**
+     * Assign a fixed :height in order to measure dynamic text :width only.
+     */
+    height: PropTypes.number,
+
+    /**
+     * Number of rows in grid.
+     */
+    rowCount: PropTypes.number.isRequired,
+
+    /**
+     * Assign a fixed :width in order to measure dynamic text :height only.
+     */
+    width: PropTypes.number
   }
 }

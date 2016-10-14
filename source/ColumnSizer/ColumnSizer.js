@@ -7,31 +7,6 @@ import Grid from '../Grid'
  * High-order component that auto-calculates column-widths for `Grid` cells.
  */
 export default class ColumnSizer extends Component {
-  static propTypes = {
-    /**
-     * Function responsible for rendering a virtualized Grid.
-     * This function should implement the following signature:
-     * ({ adjustedWidth, getColumnWidth, registerChild }) => PropTypes.element
-     *
-     * The specified :getColumnWidth function should be passed to the Grid's :columnWidth property.
-     * The :registerChild should be passed to the Grid's :ref property.
-     * The :adjustedWidth property is optional; it reflects the lesser of the overall width or the width of all columns.
-     */
-    children: PropTypes.func.isRequired,
-
-    /** Optional maximum allowed column width */
-    columnMaxWidth: PropTypes.number,
-
-    /** Optional minimum allowed column width */
-    columnMinWidth: PropTypes.number,
-
-    /** Number of columns in Grid or Table child */
-    columnCount: PropTypes.number.isRequired,
-
-    /** Width of Grid or Table child */
-    width: PropTypes.number.isRequired
-  }
-
   constructor (props, context) {
     super(props, context)
 
@@ -101,5 +76,32 @@ export default class ColumnSizer extends Component {
     if (this._registeredChild) {
       this._registeredChild.recomputeGridSize()
     }
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  ColumnSizer.propTypes = {
+    /**
+     * Function responsible for rendering a virtualized Grid.
+     * This function should implement the following signature:
+     * ({ adjustedWidth, getColumnWidth, registerChild }) => PropTypes.element
+     *
+     * The specified :getColumnWidth function should be passed to the Grid's :columnWidth property.
+     * The :registerChild should be passed to the Grid's :ref property.
+     * The :adjustedWidth property is optional; it reflects the lesser of the overall width or the width of all columns.
+     */
+    children: PropTypes.func.isRequired,
+
+    /** Optional maximum allowed column width */
+    columnMaxWidth: PropTypes.number,
+
+    /** Optional minimum allowed column width */
+    columnMinWidth: PropTypes.number,
+
+    /** Number of columns in Grid or Table child */
+    columnCount: PropTypes.number.isRequired,
+
+    /** Width of Grid or Table child */
+    width: PropTypes.number.isRequired
   }
 }

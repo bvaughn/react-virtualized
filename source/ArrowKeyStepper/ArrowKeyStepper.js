@@ -6,13 +6,6 @@ import shallowCompare from 'react-addons-shallow-compare'
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
  */
 export default class ArrowKeyStepper extends Component {
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    className: PropTypes.string,
-    columnCount: PropTypes.number.isRequired,
-    rowCount: PropTypes.number.isRequired
-  }
-
   constructor (props, context) {
     super(props, context)
 
@@ -90,5 +83,14 @@ export default class ArrowKeyStepper extends Component {
     this._columnStopIndex = columnStopIndex
     this._rowStartIndex = rowStartIndex
     this._rowStopIndex = rowStopIndex
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  ArrowKeyStepper.propTypes = {
+    children: PropTypes.func.isRequired,
+    className: PropTypes.string,
+    columnCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired
   }
 }

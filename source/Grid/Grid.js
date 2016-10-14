@@ -30,160 +30,6 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
 export default class Grid extends Component {
-  static propTypes = {
-    'aria-label': PropTypes.string,
-
-    /**
-     * Set the width of the inner scrollable container to 'auto'.
-     * This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar.
-     */
-    autoContainerWidth: PropTypes.bool,
-
-    /**
-     * Removes fixed height from the scrollingContainer so that the total height
-     * of rows can stretch the window. Intended for use with WindowScroller
-     */
-    autoHeight: PropTypes.bool,
-
-    /**
-     * Responsible for rendering a cell given an row and column index.
-     * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
-     */
-    cellRenderer: PropTypes.func.isRequired,
-
-    /**
-     * Responsible for rendering a group of cells given their index ranges.
-     * Should implement the following interface: ({
-     *   cellCache: Map,
-     *   cellRenderer: Function,
-     *   columnSizeAndPositionManager: CellSizeAndPositionManager,
-     *   columnStartIndex: number,
-     *   columnStopIndex: number,
-     *   isScrolling: boolean,
-     *   rowSizeAndPositionManager: CellSizeAndPositionManager,
-     *   rowStartIndex: number,
-     *   rowStopIndex: number,
-     *   scrollLeft: number,
-     *   scrollTop: number
-     * }): Array<PropTypes.node>
-     */
-    cellRangeRenderer: PropTypes.func.isRequired,
-
-    /**
-     * Optional custom CSS class name to attach to root Grid element.
-     */
-    className: PropTypes.string,
-
-    /**
-     * Number of columns in grid.
-     */
-    columnCount: PropTypes.number.isRequired,
-
-    /**
-     * Either a fixed column width (number) or a function that returns the width of a column given its index.
-     * Should implement the following interface: (index: number): number
-     */
-    columnWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
-
-    /** Optional inline style applied to inner cell-container */
-    containerStyle: PropTypes.object,
-
-    /**
-     * Used to estimate the total width of a Grid before all of its columns have actually been measured.
-     * The estimated total width is adjusted as columns are rendered.
-     */
-    estimatedColumnSize: PropTypes.number.isRequired,
-
-    /**
-     * Used to estimate the total height of a Grid before all of its rows have actually been measured.
-     * The estimated total height is adjusted as rows are rendered.
-     */
-    estimatedRowSize: PropTypes.number.isRequired,
-
-    /**
-     * Height of Grid; this property determines the number of visible (vs virtualized) rows.
-     */
-    height: PropTypes.number.isRequired,
-
-    /**
-     * Optional renderer to be used in place of rows when either :rowCount or :columnCount is 0.
-     */
-    noContentRenderer: PropTypes.func.isRequired,
-
-    /**
-     * Callback invoked whenever the scroll offset changes within the inner scrollable region.
-     * This callback can be used to sync scrolling between lists, tables, or grids.
-     * ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void
-     */
-    onScroll: PropTypes.func.isRequired,
-
-    /**
-     * Callback invoked with information about the section of the Grid that was just rendered.
-     * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
-     */
-    onSectionRendered: PropTypes.func.isRequired,
-
-    /**
-     * Number of columns to render before/after the visible section of the grid.
-     * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
-     */
-    overscanColumnCount: PropTypes.number.isRequired,
-
-    /**
-     * Number of rows to render above/below the visible section of the grid.
-     * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
-     */
-    overscanRowCount: PropTypes.number.isRequired,
-
-    /**
-     * Either a fixed row height (number) or a function that returns the height of a row given its index.
-     * Should implement the following interface: ({ index: number }): number
-     */
-    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
-
-    /**
-     * Number of rows in grid.
-     */
-    rowCount: PropTypes.number.isRequired,
-
-    /** Wait this amount of time after the last scroll event before resetting Grid `pointer-events`. */
-    scrollingResetTimeInterval: PropTypes.number,
-
-    /** Horizontal offset. */
-    scrollLeft: PropTypes.number,
-
-    /**
-     * Controls scroll-to-cell behavior of the Grid.
-     * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
-     * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
-     */
-    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
-
-    /**
-     * Column index to ensure visible (by forcefully scrolling if necessary)
-     */
-    scrollToColumn: PropTypes.number,
-
-    /** Vertical offset. */
-    scrollTop: PropTypes.number,
-
-    /**
-     * Row index to ensure visible (by forcefully scrolling if necessary)
-     */
-    scrollToRow: PropTypes.number,
-
-    /** Optional inline style */
-    style: PropTypes.object,
-
-    /** Tab index for focus */
-    tabIndex: PropTypes.number,
-
-    /**
-     * Width of Grid; this property determines the number of visible (vs virtualized) columns.
-     */
-    width: PropTypes.number.isRequired
-  };
-
   static defaultProps = {
     'aria-label': 'grid',
     cellRangeRenderer: defaultCellRangeRenderer,
@@ -872,5 +718,161 @@ export default class Grid extends Component {
     }
 
     this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  Grid.propTypes = {
+    'aria-label': PropTypes.string,
+
+    /**
+     * Set the width of the inner scrollable container to 'auto'.
+     * This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar.
+     */
+    autoContainerWidth: PropTypes.bool,
+
+    /**
+     * Removes fixed height from the scrollingContainer so that the total height
+     * of rows can stretch the window. Intended for use with WindowScroller
+     */
+    autoHeight: PropTypes.bool,
+
+    /**
+     * Responsible for rendering a cell given an row and column index.
+     * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
+     */
+    cellRenderer: PropTypes.func.isRequired,
+
+    /**
+     * Responsible for rendering a group of cells given their index ranges.
+     * Should implement the following interface: ({
+     *   cellCache: Map,
+     *   cellRenderer: Function,
+     *   columnSizeAndPositionManager: CellSizeAndPositionManager,
+     *   columnStartIndex: number,
+     *   columnStopIndex: number,
+     *   isScrolling: boolean,
+     *   rowSizeAndPositionManager: CellSizeAndPositionManager,
+     *   rowStartIndex: number,
+     *   rowStopIndex: number,
+     *   scrollLeft: number,
+     *   scrollTop: number
+     * }): Array<PropTypes.node>
+     */
+    cellRangeRenderer: PropTypes.func.isRequired,
+
+    /**
+     * Optional custom CSS class name to attach to root Grid element.
+     */
+    className: PropTypes.string,
+
+    /**
+     * Number of columns in grid.
+     */
+    columnCount: PropTypes.number.isRequired,
+
+    /**
+     * Either a fixed column width (number) or a function that returns the width of a column given its index.
+     * Should implement the following interface: (index: number): number
+     */
+    columnWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+
+    /** Optional inline style applied to inner cell-container */
+    containerStyle: PropTypes.object,
+
+    /**
+     * Used to estimate the total width of a Grid before all of its columns have actually been measured.
+     * The estimated total width is adjusted as columns are rendered.
+     */
+    estimatedColumnSize: PropTypes.number.isRequired,
+
+    /**
+     * Used to estimate the total height of a Grid before all of its rows have actually been measured.
+     * The estimated total height is adjusted as rows are rendered.
+     */
+    estimatedRowSize: PropTypes.number.isRequired,
+
+    /**
+     * Height of Grid; this property determines the number of visible (vs virtualized) rows.
+     */
+    height: PropTypes.number.isRequired,
+
+    /**
+     * Optional renderer to be used in place of rows when either :rowCount or :columnCount is 0.
+     */
+    noContentRenderer: PropTypes.func.isRequired,
+
+    /**
+     * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+     * This callback can be used to sync scrolling between lists, tables, or grids.
+     * ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void
+     */
+    onScroll: PropTypes.func.isRequired,
+
+    /**
+     * Callback invoked with information about the section of the Grid that was just rendered.
+     * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
+     */
+    onSectionRendered: PropTypes.func.isRequired,
+
+    /**
+     * Number of columns to render before/after the visible section of the grid.
+     * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
+     */
+    overscanColumnCount: PropTypes.number.isRequired,
+
+    /**
+     * Number of rows to render above/below the visible section of the grid.
+     * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
+     */
+    overscanRowCount: PropTypes.number.isRequired,
+
+    /**
+     * Either a fixed row height (number) or a function that returns the height of a row given its index.
+     * Should implement the following interface: ({ index: number }): number
+     */
+    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+
+    /**
+     * Number of rows in grid.
+     */
+    rowCount: PropTypes.number.isRequired,
+
+    /** Wait this amount of time after the last scroll event before resetting Grid `pointer-events`. */
+    scrollingResetTimeInterval: PropTypes.number,
+
+    /** Horizontal offset. */
+    scrollLeft: PropTypes.number,
+
+    /**
+     * Controls scroll-to-cell behavior of the Grid.
+     * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
+     * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
+     */
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
+
+    /**
+     * Column index to ensure visible (by forcefully scrolling if necessary)
+     */
+    scrollToColumn: PropTypes.number,
+
+    /** Vertical offset. */
+    scrollTop: PropTypes.number,
+
+    /**
+     * Row index to ensure visible (by forcefully scrolling if necessary)
+     */
+    scrollToRow: PropTypes.number,
+
+    /** Optional inline style */
+    style: PropTypes.object,
+
+    /** Tab index for focus */
+    tabIndex: PropTypes.number,
+
+    /**
+     * Width of Grid; this property determines the number of visible (vs virtualized) columns.
+     */
+    width: PropTypes.number.isRequired
   }
 }

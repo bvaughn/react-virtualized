@@ -5,15 +5,6 @@ import shallowCompare from 'react-addons-shallow-compare'
  * HOC that simplifies the process of synchronizing scrolling between two or more virtualized components.
  */
 export default class ScrollSync extends Component {
-  static propTypes = {
-    /**
-     * Function responsible for rendering 2 or more virtualized components.
-     * This function should implement the following signature:
-     * ({ onScroll, scrollLeft, scrollTop }) => PropTypes.element
-     */
-    children: PropTypes.func.isRequired
-  }
-
   constructor (props, context) {
     super(props, context)
 
@@ -50,5 +41,16 @@ export default class ScrollSync extends Component {
 
   _onScroll ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) {
     this.setState({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth })
+  }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  ScrollSync.propTypes = {
+    /**
+     * Function responsible for rendering 2 or more virtualized components.
+     * This function should implement the following signature:
+     * ({ onScroll, scrollLeft, scrollTop }) => PropTypes.element
+     */
+    children: PropTypes.func.isRequired
   }
 }
