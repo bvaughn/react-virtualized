@@ -27,8 +27,6 @@ export default function SortIndicator ({ sortDirection }) {
   )
 }
 
-if (process.env.NODE_ENV !== 'production') {
-  SortIndicator.propTypes = {
-    sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
-  }
+SortIndicator.propTypes = {
+  sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
 }

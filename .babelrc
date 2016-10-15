@@ -1,6 +1,13 @@
 {
   "env": {
     "commonjs": {
+      "plugins": [
+        [
+          "transform-react-remove-prop-types", {
+            "mode": "wrap"
+          }
+        ]
+      ],
       "presets": [
         "es2015",
         "react",
@@ -42,7 +49,12 @@
     },
     "es": {
       "plugins": [
-        "transform-runtime"
+        "transform-runtime",
+        [
+          "transform-react-remove-prop-types", {
+            "mode": "wrap"
+          }
+        ]
       ],
       "presets": [
         "es2015-rollup",
