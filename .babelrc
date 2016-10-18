@@ -65,6 +65,7 @@
     "production": {
       "comments": false,
       "plugins": [
+        "transform-react-remove-prop-types",
         "transform-runtime"
       ],
       "presets": [
