@@ -10,6 +10,42 @@ import type { ScrollPosition, SizeInfo } from './types'
  * Unlike Grid, which renders checkerboard data, Collection can render arbitrarily positioned- even overlapping- data.
  */
 export default class Collection extends Component {
+  static propTypes = {
+    'aria-label': PropTypes.string,
+
+    /**
+     * Number of cells in Collection.
+     */
+    cellCount: PropTypes.number.isRequired,
+
+    /**
+     * Responsible for rendering a group of cells given their indices.
+     * Should implement the following interface: ({
+     *   cellSizeAndPositionGetter:Function,
+     *   indices: Array<number>,
+     *   cellRenderer: Function
+     * }): Array<PropTypes.node>
+     */
+    cellGroupRenderer: PropTypes.func.isRequired,
+
+    /**
+     * Responsible for rendering a cell given an row and column index.
+     * Should implement the following interface: ({ index: number, key: string, style: object }): PropTypes.element
+     */
+    cellRenderer: PropTypes.func.isRequired,
+
+    /**
+     * Callback responsible for returning size and offset/position information for a given cell (index).
+     * ({ index: number }): { height: number, width: number, x: number, y: number }
+     */
+    cellSizeAndPositionGetter: PropTypes.func.isRequired,
+
+    /**
+     * Optionally override the size of the sections a Collection's cells are split into.
+     */
+    sectionSize: PropTypes.number
+  };
+
   static defaultProps = {
     'aria-label': 'grid',
     cellGroupRenderer: defaultCellGroupRenderer
@@ -201,42 +237,4 @@ function defaultCellGroupRenderer ({
       }
     })
     .filter((renderedCell) => !!renderedCell)
-}
-
-if (process.env.NODE_ENV !== 'production') {
-  Collection.propTypes = {
-    'aria-label': PropTypes.string,
-
-    /**
-     * Number of cells in Collection.
-     */
-    cellCount: PropTypes.number.isRequired,
-
-    /**
-     * Responsible for rendering a group of cells given their indices.
-     * Should implement the following interface: ({
-     *   cellSizeAndPositionGetter:Function,
-     *   indices: Array<number>,
-     *   cellRenderer: Function
-     * }): Array<PropTypes.node>
-     */
-    cellGroupRenderer: PropTypes.func.isRequired,
-
-    /**
-     * Responsible for rendering a cell given an row and column index.
-     * Should implement the following interface: ({ index: number, key: string, style: object }): PropTypes.element
-     */
-    cellRenderer: PropTypes.func.isRequired,
-
-    /**
-     * Callback responsible for returning size and offset/position information for a given cell (index).
-     * ({ index: number }): { height: number, width: number, x: number, y: number }
-     */
-    cellSizeAndPositionGetter: PropTypes.func.isRequired,
-
-    /**
-     * Optionally override the size of the sections a Collection's cells are split into.
-     */
-    sectionSize: PropTypes.number
-  }
 }
