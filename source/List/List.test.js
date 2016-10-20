@@ -250,7 +250,7 @@ describe('List', () => {
     })
   })
 
-  describe('styles and classNames', () => {
+  describe('styles, classNames, and ids', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(render(getMarkup()))
       expect(node.className).toContain('ReactVirtualized__List')
@@ -259,6 +259,11 @@ describe('List', () => {
     it('should use a custom :className if specified', () => {
       const node = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(node.className).toContain('foo')
+    })
+
+    it('should use a custom :id if specified', () => {
+      const node = findDOMNode(render(getMarkup({ id: 'bar' })))
+      expect(node.id).toContain('bar')
     })
 
     it('should use a custom :style if specified', () => {
