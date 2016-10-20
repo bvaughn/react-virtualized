@@ -19,6 +19,7 @@ This component expects explicit `width` and `height` parameters.
 | headerHeight | Number | ✓ | Fixed height of header row |
 | headerStyle | Object |  | Optional custom inline style to attach to table header columns. |
 | height | Number | ✓ | Fixed/available height for out DOM element |
+| id | String |  | Optional custom CSS id to attach to root `Table` element. |
 | noRowsRenderer | Function |  | Callback used to render placeholder content when :rowCount is 0 |
 | onHeaderClick | Function |  | Callback invoked when a user clicks on a table header. `(dataKey: string, columnData: any): void` |
 | onRowClick | Function |  | Callback invoked when a user clicks on a table row. `({ index: number }): void` |

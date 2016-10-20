@@ -11,6 +11,7 @@ Elements can have fixed or varying heights.
 | className | String |  | Optional custom CSS class name to attach to root `List` element. |
 | estimatedRowSize | Number |  | Used to estimate the total height of a `List` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | height | Number | ✓ | Height constraint for list (determines how many actual rows are rendered) |
+| id | String |  | Optional custom CSS id to attach to root `List` element. |
 | noRowsRenderer | Function |  | Callback used to render placeholder content when `rowCount` is 0 |
 | onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, scrollHeight: number, scrollTop: number }): void` |
