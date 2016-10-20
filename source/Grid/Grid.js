@@ -106,6 +106,11 @@ export default class Grid extends Component {
     height: PropTypes.number.isRequired,
 
     /**
+     * Optional custom CSS id to attach to root Grid element.
+     */
+    id: PropTypes.string,
+
+    /**
      * Optional renderer to be used in place of rows when either :rowCount or :columnCount is 0.
      */
     noContentRenderer: PropTypes.func.isRequired,
@@ -492,6 +497,7 @@ export default class Grid extends Component {
       className,
       containerStyle,
       height,
+      id,
       noContentRenderer,
       style,
       tabIndex,
@@ -545,6 +551,7 @@ export default class Grid extends Component {
         }}
         aria-label={this.props['aria-label']}
         className={cn('ReactVirtualized__Grid', className)}
+        id={id}
         onScroll={this._onScroll}
         role='grid'
         style={{
