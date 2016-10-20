@@ -57,6 +57,11 @@ export default class CollectionView extends Component {
     height: PropTypes.number.isRequired,
 
     /**
+     * Optional custom CSS id to attach to root Collection element.
+     */
+    id: PropTypes.string,
+
+    /**
      * Enables the `Collection` to horiontally "overscan" its content similar to how `Grid` does.
      * This can reduce flicker around the edges when a user scrolls quickly.
      */
@@ -313,6 +318,7 @@ export default class CollectionView extends Component {
       className,
       height,
       horizontalOverscanSize,
+      id,
       noContentRenderer,
       style,
       verticalOverscanSize,
@@ -374,6 +380,7 @@ export default class CollectionView extends Component {
         }}
         aria-label={this.props['aria-label']}
         className={cn('ReactVirtualized__Collection', className)}
+        id={id}
         onScroll={this._onScroll}
         role='grid'
         style={{
