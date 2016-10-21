@@ -654,7 +654,7 @@ describe('Table', () => {
     })
   })
 
-  describe('styles and classeNames', () => {
+  describe('styles, classNames, and ids', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(render(getMarkup({
         sort: () => {},
@@ -679,6 +679,11 @@ describe('Table', () => {
       expect(node.className).toContain('foo')
       expect(node.querySelectorAll('.bar').length).toEqual(2)
       expect(node.querySelectorAll('.baz').length).toEqual(9)
+    })
+
+    it('should use a custom :id if specified', () => {
+      const node = findDOMNode(render(getMarkup({ id: 'bar' })))
+      expect(node.getAttribute('id')).toEqual('bar')
     })
 
     it('should use custom :styles if specified', () => {
