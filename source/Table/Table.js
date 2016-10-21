@@ -310,6 +310,7 @@ export default class Table extends Component {
           columnWidth={width}
           columnCount={1}
           height={availableRowsHeight}
+          id={undefined}
           noContentRenderer={noRowsRenderer}
           onScroll={this._onScroll}
           onSectionRendered={this._onSectionRendered}

@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 8.2.0
+Added optional `id` prop to `Collection`, `Grid`, `List`, and `Table`.
+Thanks to @mnquintana for the contribution!
+
 ##### 8.1.1
 Wrapped component `propTypes` with `process.env.NODE_ENV !== 'production'` so they can be stripped from production builds.
 Thanks to @mbrevda for the suggestion and contribution.

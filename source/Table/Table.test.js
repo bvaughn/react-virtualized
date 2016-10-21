@@ -686,6 +686,12 @@ describe('Table', () => {
       expect(node.getAttribute('id')).toEqual('bar')
     })
 
+    it('should not set :id on the inner Grid', () => {
+      const node = findDOMNode(render(getMarkup({ id: 'bar' })))
+      const grid = node.querySelector('.ReactVirtualized__Grid')
+      expect(grid.getAttribute('id')).not.toEqual('bar')
+    })
+
     it('should use custom :styles if specified', () => {
       const columnStyle = { backgroundColor: 'red' }
       const headerStyle = { backgroundColor: 'blue' }
