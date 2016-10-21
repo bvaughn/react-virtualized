@@ -59,6 +59,9 @@ export default class Table extends Component {
     /** Fixed/available height for out DOM element */
     height: PropTypes.number.isRequired,
 
+    /** Optional CSS id */
+    id: PropTypes.string,
+
     /** Optional renderer to be used in place of table body rows when rowCount is 0 */
     noRowsRenderer: PropTypes.func,
 
@@ -249,6 +252,7 @@ export default class Table extends Component {
       gridStyle,
       headerHeight,
       height,
+      id,
       noRowsRenderer,
       rowClassName,
       rowStyle,
@@ -280,6 +284,7 @@ export default class Table extends Component {
     return (
       <div
         className={cn('ReactVirtualized__Table', className)}
+        id={id}
         style={style}
       >
         {!disableHeader && (

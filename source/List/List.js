@@ -34,6 +34,9 @@ export default class List extends Component {
     /** Height constraint for list (determines how many actual rows are rendered) */
     height: PropTypes.number.isRequired,
 
+    /** Optional CSS class id */
+    id: PropTypes.string,
+
     /** Optional renderer to be used in place of rows when rowCount is 0 */
     noRowsRenderer: PropTypes.func.isRequired,
 
