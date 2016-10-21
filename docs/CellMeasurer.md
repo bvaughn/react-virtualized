@@ -106,8 +106,8 @@ import {
 
 // Column widths vary but row heights are uniform
 const cellSizeCache = new CellSizeCache({
-  uniformRowHeight = true,
-  uniformColumnWidth = false
+  uniformRowHeight: true,
+  uniformColumnWidth: false
 })
 
 function render () {
