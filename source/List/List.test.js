@@ -263,7 +263,7 @@ describe('List', () => {
 
     it('should use a custom :id if specified', () => {
       const node = findDOMNode(render(getMarkup({ id: 'bar' })))
-      expect(node.id).toContain('bar')
+      expect(node.getAttribute('id')).toEqual('bar')
     })
 
     it('should use a custom :style if specified', () => {

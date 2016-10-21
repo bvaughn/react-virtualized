@@ -682,10 +682,8 @@ describe('Table', () => {
     })
 
     it('should use a custom :id if specified', () => {
-      const node = findDOMNode(render(getMarkup({
-        id: 'bar'
-      })))
-      expect(node.id).toContain('bar')
+      const node = findDOMNode(render(getMarkup({ id: 'bar' })))
+      expect(node.getAttribute('id')).toEqual('bar')
     })
 
     it('should use custom :styles if specified', () => {

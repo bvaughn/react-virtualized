@@ -434,7 +434,7 @@ describe('Collection', () => {
 
     it('should use a custom :id if specified', () => {
       const rendered = findDOMNode(render(getMarkup({ id: 'bar' })))
-      expect(rendered.id).toContain('bar')
+      expect(rendered.getAttribute('id')).toEqual('bar')
     })
 
     it('should use a custom :style if specified', () => {
