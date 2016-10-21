@@ -106,7 +106,7 @@ export default class Grid extends Component {
     height: PropTypes.number.isRequired,
 
     /**
-     * Optional custom CSS id to attach to root Grid element.
+     * Optional custom id to attach to root Grid element.
      */
     id: PropTypes.string,
 

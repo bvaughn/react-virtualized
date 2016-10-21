@@ -59,7 +59,7 @@ export default class Table extends Component {
     /** Fixed/available height for out DOM element */
     height: PropTypes.number.isRequired,
 
-    /** Optional CSS id */
+    /** Optional id */
     id: PropTypes.string,
 
     /** Optional renderer to be used in place of table body rows when rowCount is 0 */

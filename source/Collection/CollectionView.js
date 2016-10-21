@@ -57,7 +57,7 @@ export default class CollectionView extends Component {
     height: PropTypes.number.isRequired,
 
     /**
-     * Optional custom CSS id to attach to root Collection element.
+     * Optional custom id to attach to root Collection element.
      */
     id: PropTypes.string,
 
