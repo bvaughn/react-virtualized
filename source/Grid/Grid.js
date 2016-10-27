@@ -665,6 +665,7 @@ export default class Grid extends Component {
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
+        height,
         horizontalOffsetAdjustment,
         isScrolling,
         rowSizeAndPositionManager: this._rowSizeAndPositionManager,
@@ -672,7 +673,8 @@ export default class Grid extends Component {
         rowStopIndex: this._rowStopIndex,
         scrollLeft,
         scrollTop,
-        verticalOffsetAdjustment
+        verticalOffsetAdjustment,
+        width
       })
     }
   }

@@ -152,7 +152,8 @@ function cellRenderer ({
   isScrolling, // The Grid is currently being scrolled
   key,         // Unique key within array of cells
   rowIndex,    // Vertical (row) index of cell
-  style        // Style object to be applied to cell
+  style        // Style object to be applied to cell,
+  visibility   // an object with the percentage of visibility on x and y expressed as a decimal
 }) {
   // Grid data is a 2d array in this example...
   const user = list[rowIndex][columnIndex]
