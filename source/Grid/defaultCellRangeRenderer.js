@@ -1,59 +1,13 @@
 /** @flow */
-
-const overlap = (parent, child) => {
-  let visXStart, visXEnd, xHidden,
-    visYStart, visYEnd, yHidden
-
-  // x
-  if (parent.x > child.x) {
-    visXStart = 0
-    xHidden = parent.x - child.x
-  } else {
-    visXStart = child.x - parent.x
-    xHidden = 0
-  }
-
-  visXEnd = visXStart + (child.width - xHidden) < parent.width
-    ? visXStart + (child.width - xHidden)
-    : parent.width
-
-  // y
-  if (parent.y > child.y) {
-    visYStart = 0
-    yHidden = parent.y - child.y
-  } else {
-    visYStart = child.y - parent.y
-    yHidden = 0
-  }
-
-  visYEnd = visYStart + (child.height - yHidden) < parent.y
-    ? visYStart + (child.height - yHidden)
-    : parent.height
-
-  // area
-  let area = {
-    x: (visXEnd - visXStart) / child.width,
-    y: (visYEnd - visYStart) / child.height
-  }
-
-  return area
+const isVisible = (grid, cell) => {
+  return !(
+    cell.left > grid.scrollLeft + grid.width ||
+    cell.top > grid.scrollTop + grid.height ||
+    grid.scrollLeft > cell.left + cell.height ||
+    grid.scrollTop > cell.top + grid.height
+  )
 }
 
-const findOverlap = (grid, cell) => {
-  let parent = {
-    x: grid.scrollLeft,
-    y: grid.scrollTop,
-    width: grid.width,
-    height: grid.height
-  }
-  let child = {
-    x: cell.left,
-    y: cell.top,
-    width: cell.width,
-    height: cell.height
-  }
-  return overlap(parent, child)
-}
 /**
  * Default implementation of cellRangeRenderer used by Grid.
  * This renderer supports cell-caching while the user is scrolling.
@@ -98,7 +52,7 @@ export default function defaultCellRangeRenderer ({
         key,
         rowIndex,
         style,
-        visibility: findOverlap(gridDimensions, style)
+        isVisible: isVisible(gridDimensions, style)
       }
 
       let renderedCell
