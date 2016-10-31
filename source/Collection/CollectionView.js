@@ -205,8 +205,8 @@ export default class CollectionView extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    const { height, scrollToCell, width } = this.props
-    const { scrollLeft, scrollPositionChangeReason, scrollToAlignment, scrollTop } = this.state
+    const { height, scrollToAlignment, scrollToCell, width } = this.props
+    const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
     // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
