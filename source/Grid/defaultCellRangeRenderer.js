@@ -1,13 +1,4 @@
 /** @flow */
-const isVisible = (grid, cell) => {
-  return !(
-    cell.left > grid.scrollLeft + grid.width ||
-    cell.top > grid.scrollTop + grid.height ||
-    grid.scrollLeft > cell.left + cell.height ||
-    grid.scrollTop > cell.top + grid.height
-  )
-}
-
 /**
  * Default implementation of cellRangeRenderer used by Grid.
  * This renderer supports cell-caching while the user is scrolling.
@@ -26,6 +17,8 @@ export default function defaultCellRangeRenderer ({
   scrollLeft,
   scrollTop,
   verticalOffsetAdjustment,
+  visibleColumnIndices,
+  visibleRowIndices,
   height,
   width
 }: DefaultCellRangeRendererParams) {
@@ -37,6 +30,10 @@ export default function defaultCellRangeRenderer ({
 
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
       let columnDatum = columnSizeAndPositionManager.getSizeAndPositionOfCell(columnIndex)
+      let isVisible = columnIndex >= visibleColumnIndices.start
+        && columnIndex <= visibleColumnIndices.stop
+        && rowIndex >= visibleRowIndices.start
+        && rowIndex <= visibleRowIndices.stop
       let key = `${rowIndex}-${columnIndex}`
       let style = {
         height: rowDatum.size,
@@ -52,7 +49,7 @@ export default function defaultCellRangeRenderer ({
         key,
         rowIndex,
         style,
-        isVisible: isVisible(gridDimensions, style)
+        isVisible
       }
 
       let renderedCell

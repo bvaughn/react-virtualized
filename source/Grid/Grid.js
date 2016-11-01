@@ -674,6 +674,8 @@ export default class Grid extends Component {
         scrollLeft,
         scrollTop,
         verticalOffsetAdjustment,
+        visibleColumnIndices,
+        visibleRowIndices,
         width
       })
     }

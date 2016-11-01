@@ -153,7 +153,7 @@ function cellRenderer ({
   key,         // Unique key within array of cells
   rowIndex,    // Vertical (row) index of cell
   style        // Style object to be applied to cell,
-  visibility   // an object with the percentage of visibility on x and y expressed as a decimal
+  isVisible   // Is this cell currently visible. The primary differentiator between cell visibility is cell overscanning. If a cell is even partly visible,`isVisible` will be `true`
 }) {
   // Grid data is a 2d array in this example...
   const user = list[rowIndex][columnIndex]
