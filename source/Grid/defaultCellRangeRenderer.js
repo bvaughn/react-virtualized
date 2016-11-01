@@ -98,6 +98,6 @@ type DefaultCellRangeRendererParams = {
   scrollLeft: number,
   scrollTop: number,
   verticalOffsetAdjustment: number,
-  visibleColumnIndices: object,
-  visibleRowIndices: object
+  visibleColumnIndices: Object,
+  visibleRowIndices: Object
 };
