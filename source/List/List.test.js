@@ -438,6 +438,22 @@ describe('List', () => {
     })
   })
 
+  it('should pass the cellRenderer an :isVisible flag', () => {
+    const rowRendererCalls = []
+    function rowRenderer (props) {
+      rowRendererCalls.push(props)
+      return null
+    }
+    findDOMNode(render(getMarkup({
+      height: 50,
+      overscanRowCount: 1,
+      rowHeight: 50,
+      rowRenderer
+    })))
+    expect(rowRendererCalls[0].isVisible).toEqual(true)
+    expect(rowRendererCalls[1].isVisible).toEqual(false)
+  })
+
   describe('pure', () => {
     it('should not re-render unless props have changed', () => {
       let rowRendererCalled = false

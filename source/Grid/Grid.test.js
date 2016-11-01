@@ -984,6 +984,27 @@ describe('Grid', () => {
     done()
   })
 
+  it('should pass the cellRenderer an :isVisible flag', () => {
+    const cellRendererCalls = []
+    function cellRenderer (props) {
+      cellRendererCalls.push(props)
+      return defaultCellRenderer(props)
+    }
+    render(getMarkup({
+      cellRenderer,
+      height: DEFAULT_ROW_HEIGHT,
+      overscanColumnCount: 1,
+      overscanRowCount: 1,
+      width: DEFAULT_COLUMN_WIDTH
+    }))
+    cellRendererCalls.forEach((props) => {
+      expect(props.isVisible).toEqual(
+        props.columnIndex === 0 &&
+        props.rowIndex === 0
+      ) // Only the first cell is visible
+    })
+  })
+
   describe('cell caching', () => {
     it('should not cache cells if the Grid is not scrolling', () => {
       const cellRendererCalls = []

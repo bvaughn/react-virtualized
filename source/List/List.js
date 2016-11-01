@@ -155,7 +155,7 @@ export default class List extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _cellRenderer ({ columnIndex, isScrolling, key, rowIndex, style }) {
+  _cellRenderer ({ rowIndex, style, ...rest }) {
     const { rowRenderer } = this.props
 
     // By default, List cells should be 100% width.
@@ -164,9 +164,8 @@ export default class List extends Component {
 
     return rowRenderer({
       index: rowIndex,
-      isScrolling,
-      key,
-      style
+      style,
+      ...rest
     })
   }
 
