@@ -18,12 +18,9 @@ export default function defaultCellRangeRenderer ({
   scrollTop,
   verticalOffsetAdjustment,
   visibleColumnIndices,
-  visibleRowIndices,
-  height,
-  width
+  visibleRowIndices
 }: DefaultCellRangeRendererParams) {
   const renderedCells = []
-  const gridDimensions = {width, height, scrollLeft, scrollTop}
 
   for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
     let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex)
@@ -93,7 +90,6 @@ type DefaultCellRangeRendererParams = {
   columnSizeAndPositionManager: Object,
   columnStartIndex: number,
   columnStopIndex: number,
-  height: number,
   horizontalOffsetAdjustment: number,
   isScrolling: boolean,
   rowSizeAndPositionManager: Object,
@@ -101,6 +97,5 @@ type DefaultCellRangeRendererParams = {
   rowStopIndex: number,
   scrollLeft: number,
   scrollTop: number,
-  verticalOffsetAdjustment: number,
-  width: number
+  verticalOffsetAdjustment: number
 };
