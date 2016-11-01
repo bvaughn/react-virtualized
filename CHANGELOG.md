@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 8.3.0
+`cellRenderer` and `rowRenderer` callbacks now accept an additional property, `isVisible`.
+This property can be used to differentiate between visible and overscanned cells.
+Thanks to @mbrevda for this feature!
+
 ##### 8.2.0
 Added optional `id` prop to `Collection`, `Grid`, `List`, and `Table`.
 Thanks to @mnquintana for the contribution!
