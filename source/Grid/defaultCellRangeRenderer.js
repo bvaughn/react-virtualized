@@ -27,10 +27,12 @@ export default function defaultCellRangeRenderer ({
 
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
       let columnDatum = columnSizeAndPositionManager.getSizeAndPositionOfCell(columnIndex)
-      let isVisible = columnIndex >= visibleColumnIndices.start &&
+      let isVisible = (
+        columnIndex >= visibleColumnIndices.start &&
         columnIndex <= visibleColumnIndices.stop &&
         rowIndex >= visibleRowIndices.start &&
         rowIndex <= visibleRowIndices.stop
+      )
       let key = `${rowIndex}-${columnIndex}`
       let style = {
         height: rowDatum.size,
@@ -43,10 +45,10 @@ export default function defaultCellRangeRenderer ({
       let cellRendererParams = {
         columnIndex,
         isScrolling,
+        isVisible,
         key,
         rowIndex,
-        style,
-        isVisible
+        style
       }
 
       let renderedCell
