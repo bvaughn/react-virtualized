@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 8.3.1
+Fixed `scrollToAlignment` bug in `Collection` that caused cells not to render under certain conditions.
+Special thanks to @coluccini for spotting and fixing this bug!
+
 ##### 8.3.0
 `cellRenderer` and `rowRenderer` callbacks now accept an additional property, `isVisible`.
 This property can be used to differentiate between visible and overscanned cells.
