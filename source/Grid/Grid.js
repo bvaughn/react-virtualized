@@ -672,7 +672,9 @@ export default class Grid extends Component {
         rowStopIndex: this._rowStopIndex,
         scrollLeft,
         scrollTop,
-        verticalOffsetAdjustment
+        verticalOffsetAdjustment,
+        visibleColumnIndices,
+        visibleRowIndices
       })
     }
   }

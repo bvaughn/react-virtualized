@@ -150,9 +150,10 @@ This function accepts the following named parameters:
 function cellRenderer ({
   columnIndex, // Horizontal (column) index of cell
   isScrolling, // The Grid is currently being scrolled
+  isVisible,   // This cell is visible within the grid (eg it is not an overscanned cell)
   key,         // Unique key within array of cells
   rowIndex,    // Vertical (row) index of cell
-  style        // Style object to be applied to cell
+  style        // Style object to be applied to cell,
 }) {
   // Grid data is a 2d array in this example...
   const user = list[rowIndex][columnIndex]
