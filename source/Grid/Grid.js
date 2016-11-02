@@ -246,6 +246,24 @@ export default class Grid extends Component {
   }
 
   /**
+   * Get the instance of ScalingCellSizeAndPositionManager
+   * for columns to access size and position information
+   * outside the render callback
+   */
+  getColumnSizeAndPositionManager() {
+    return this._columnSizeAndPositionManager
+  }
+
+  /**
+   * Get the instance of ScalingCellSizeAndPositionManager
+   * for rows to access size and position information
+   * outside the render callback
+   */
+  getRowSizeAndPositionManager() {
+    return this._rowSizeAndPositionManager
+  }
+
+  /**
    * Pre-measure all columns and rows in a Grid.
    * Typically cells are only measured as needed and estimated sizes are used for cells that have not yet been measured.
    * This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
