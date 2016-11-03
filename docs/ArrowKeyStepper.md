@@ -13,7 +13,10 @@ The appearance of this wrapper element can be customized using the `className` p
 | children | Function | ✓ | Function responsible for rendering children. This function should implement the following signature: `({ onSectionRendered: Function, scrollToColumn: number, scrollToRow: number }) => PropTypes.element` |
 | className | String |  | CSS class name to attach to the wrapper `<div>`. |
 | columnCount | Number | ✓ | Number of columns in grid; for `Table` and `List` this property should always be `1`. |
+| mode | "edges" or "cells" |  | Controls behavior of stepper when arrow key direction changes. "cells" means that the index will only increment or decrement by 1; "edges" (default) means that the opposite side of the grid will be incremented. |
 | rowCount | Number | ✓ | Number of rows in grid. |
+| scrollToColumn | Number |  | Optional default/initial `scrollToColumn` value |
+| scrollToRow | Number |  | Optional default/initial `scrollToRow` value |
 
 ### Children function
 

@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 8.4.0
+`ArrowKeyStepper` incrementing behavior can now be further customized via new `mode` prop.
+Default behavior will remain the same (eg `mode='edges'`).
+Use `mode='cells'` to prefer smaller increments.
+
 ##### 8.3.1
 Fixed `scrollToAlignment` bug in `Collection` that caused cells not to render under certain conditions.
 Special thanks to @coluccini for spotting and fixing this bug!

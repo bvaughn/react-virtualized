@@ -12,12 +12,18 @@ export default class ArrowKeyStepperExample extends Component {
   constructor (props) {
     super(props)
 
+    this.state = {
+      mode: 'edges'
+    }
+
     this._getColumnWidth = this._getColumnWidth.bind(this)
     this._getRowHeight = this._getRowHeight.bind(this)
     this._cellRenderer = this._cellRenderer.bind(this)
   }
 
   render () {
+    const { mode } = this.state
+
     return (
       <ContentBox>
         <ContentBoxHeader
@@ -35,8 +41,35 @@ export default class ArrowKeyStepperExample extends Component {
           Note that unlike the other HOCs in react-virtualized, the <code>ArrowKeyStepper</code> adds a <code>&lt;div&gt;</code> element around its children in order to attach a key-down event handler.
         </ContentBoxParagraph>
 
+        <ContentBoxParagraph>
+          <strong>mode</strong>:
+          <label>
+            <input
+              aria-label='Set mode equal to "cells"'
+              checked={mode === 'cells'}
+              className={styles.Radio}
+              type='radio'
+              onChange={event => event.target.checked && this.setState({ mode: 'cells' })}
+              value='cells'
+            />
+            cells
+          </label>
+          <label>
+            <input
+              aria-label='Set mode equal to "edges"'
+              checked={mode === 'edges'}
+              className={styles.Radio}
+              type='radio'
+              onChange={event => event.target.checked && this.setState({ mode: 'edges' })}
+              value='edges'
+            />
+            edges (default)
+          </label>
+        </ContentBoxParagraph>
+
         <ArrowKeyStepper
           columnCount={100}
+          mode={mode}
           rowCount={100}
         >
           {({ onSectionRendered, scrollToColumn, scrollToRow }) => (
