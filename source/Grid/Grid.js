@@ -508,6 +508,7 @@ export default class Grid extends Component {
 
     const gridStyle = {
       boxSizing: 'border-box',
+      direction: 'ltr',
       height: autoHeight ? 'auto' : height,
       position: 'relative',
       width,

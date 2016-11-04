@@ -353,6 +353,7 @@ export default class CollectionView extends Component {
 
     const collectionStyle = {
       boxSizing: 'border-box',
+      direction: 'ltr',
       height: autoHeight ? 'auto' : height,
       overflow: 'auto',
       position: 'relative',

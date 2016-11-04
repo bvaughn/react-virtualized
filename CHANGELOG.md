@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+##### 8.4.1
+`Collection` and `Grid` now set a default `direction: ltr` style property.
+Neither component gracefully handles RTL layout at the moment and so it is disabled by default.
+Cells within either component can be layed out RTL without any problem though.
+To do so, just add an additional `direction: rtl` style property via the cell renderer.
+
 ##### 8.4.0
 `ArrowKeyStepper` incrementing behavior can now be further customized via new `mode` prop.
 Default behavior will remain the same (eg `mode='edges'`).
