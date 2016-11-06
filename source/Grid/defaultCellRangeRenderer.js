@@ -9,6 +9,7 @@ export default function defaultCellRangeRenderer ({
   columnSizeAndPositionManager,
   columnStartIndex,
   columnStopIndex,
+  direction,
   horizontalOffsetAdjustment,
   isScrolling,
   rowSizeAndPositionManager,
@@ -16,6 +17,7 @@ export default function defaultCellRangeRenderer ({
   rowStopIndex,
   scrollLeft,
   scrollTop,
+  totalColumnsWidth,
   verticalOffsetAdjustment,
   visibleColumnIndices,
   visibleRowIndices
@@ -36,10 +38,15 @@ export default function defaultCellRangeRenderer ({
       let key = `${rowIndex}-${columnIndex}`
       let style = {
         height: rowDatum.size,
-        left: columnDatum.offset + horizontalOffsetAdjustment,
         position: 'absolute',
         top: rowDatum.offset + verticalOffsetAdjustment,
         width: columnDatum.size
+      }
+
+      if (direction === 'rtl') {
+        style.right = totalColumnsWidth - columnDatum.offset + horizontalOffsetAdjustment - columnDatum.size;
+      } else {
+        style.left = columnDatum.offset + horizontalOffsetAdjustment;
       }
 
       let cellRendererParams = {

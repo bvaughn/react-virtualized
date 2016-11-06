@@ -89,6 +89,11 @@ export default class Grid extends Component {
     containerStyle: PropTypes.object,
 
     /**
+     * Layout direction; defaults to ltr.
+     */
+    direction: PropTypes.oneOf(['ltr', 'rtl']).isRequired,
+
+    /**
      * Used to estimate the total width of a Grid before all of its columns have actually been measured.
      * The estimated total width is adjusted as columns are rendered.
      */
@@ -192,6 +197,7 @@ export default class Grid extends Component {
   static defaultProps = {
     'aria-label': 'grid',
     cellRangeRenderer: defaultCellRangeRenderer,
+    direction: 'ltr',
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
     noContentRenderer: () => null,
@@ -212,7 +218,7 @@ export default class Grid extends Component {
       isScrolling: false,
       scrollDirectionHorizontal: SCROLL_DIRECTION_FIXED,
       scrollDirectionVertical: SCROLL_DIRECTION_FIXED,
-      scrollLeft: 0,
+      scrollLeft: 0, // @TODO Set default for direction === 'rtl'
       scrollTop: 0
     }
 
@@ -496,6 +502,7 @@ export default class Grid extends Component {
       autoHeight,
       className,
       containerStyle,
+      direction,
       height,
       id,
       noContentRenderer,
@@ -508,7 +515,7 @@ export default class Grid extends Component {
 
     const gridStyle = {
       boxSizing: 'border-box',
-      direction: 'ltr',
+      direction,
       height: autoHeight ? 'auto' : height,
       position: 'relative',
       width,
@@ -595,6 +602,7 @@ export default class Grid extends Component {
       cellRenderer,
       cellRangeRenderer,
       columnCount,
+      direction,
       height,
       overscanColumnCount,
       overscanRowCount,
@@ -621,11 +629,15 @@ export default class Grid extends Component {
       const visibleRowIndices = this._rowSizeAndPositionManager.getVisibleCellRange({
         containerSize: height,
         offset: scrollTop
+
       })
+
 
       const horizontalOffsetAdjustment = this._columnSizeAndPositionManager.getOffsetAdjustment({
         containerSize: width,
-        offset: scrollLeft
+        offset: direction === 'rtl'
+          ? this._columnSizeAndPositionManager.getTotalSize() - scrollLeft - width
+          : scrollLeft
       })
       const verticalOffsetAdjustment = this._rowSizeAndPositionManager.getOffsetAdjustment({
         containerSize: height,
@@ -666,6 +678,7 @@ export default class Grid extends Component {
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
+        direction,
         horizontalOffsetAdjustment,
         isScrolling,
         rowSizeAndPositionManager: this._rowSizeAndPositionManager,
@@ -673,6 +686,7 @@ export default class Grid extends Component {
         rowStopIndex: this._rowStopIndex,
         scrollLeft,
         scrollTop,
+        totalColumnsWidth: this._columnSizeAndPositionManager.getTotalSize(),
         verticalOffsetAdjustment,
         visibleColumnIndices,
         visibleRowIndices

@@ -142,6 +142,7 @@ export default class GridExample extends Component {
               className={styles.BodyGrid}
               columnWidth={this._getColumnWidth}
               columnCount={columnCount}
+              direction='rtl'
               height={height}
               noContentRenderer={this._noContentRenderer}
               overscanColumnCount={overscanColumnCount}
