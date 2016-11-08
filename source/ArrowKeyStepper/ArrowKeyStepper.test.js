@@ -119,6 +119,17 @@ describe('ArrowKeyStepper', () => {
     assertCurrentScrollTo(node, 2, 1)
   })
 
+  it('should not update :scrollToColumn or :scrollToRow when :disabled', () => {
+    const { node } = renderHelper({
+      disabled: true
+    })
+    assertCurrentScrollTo(node, 0, 0)
+    Simulate.keyDown(node, {key: 'ArrowDown'})
+    assertCurrentScrollTo(node, 0, 0)
+    Simulate.keyDown(node, {key: 'ArrowRight'})
+    assertCurrentScrollTo(node, 0, 0)
+  })
+
   describe('mode === "edges"', () => {
     it('should update :scrollToColumn and :scrollToRow relative to the most recent :onSectionRendered event', () => {
       const { node, onSectionRendered } = renderHelper()

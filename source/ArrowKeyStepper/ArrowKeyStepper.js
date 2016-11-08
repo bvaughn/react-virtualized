@@ -7,6 +7,7 @@ import shallowCompare from 'react-addons-shallow-compare'
  */
 export default class ArrowKeyStepper extends Component {
   static defaultProps = {
+    disabled: false,
     mode: 'edges',
     scrollToColumn: 0,
     scrollToRow: 0
@@ -16,6 +17,7 @@ export default class ArrowKeyStepper extends Component {
     children: PropTypes.func.isRequired,
     className: PropTypes.string,
     columnCount: PropTypes.number.isRequired,
+    disabled: PropTypes.bool.isRequired,
     mode: PropTypes.oneOf(['cells', 'edges']),
     rowCount: PropTypes.number.isRequired,
     scrollToColumn: PropTypes.number.isRequired,
@@ -74,7 +76,12 @@ export default class ArrowKeyStepper extends Component {
   }
 
   _onKeyDown (event) {
-    const { columnCount, mode, rowCount } = this.props
+    const { columnCount, disabled, mode, rowCount } = this.props
+
+    if (disabled) {
+      return
+    }
+
     const {
       scrollToColumn: scrollToColumnPrevious,
       scrollToRow: scrollToRowPrevious

@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.5.0
+Added `disabled` property to `ArrowKeyStepper`; when `true` this component ignores keyboard events.
+
 ##### 8.4.1
 `Collection` and `Grid` now set a default `direction: ltr` style property.
 Neither component gracefully handles RTL layout at the moment and so it is disabled by default.
