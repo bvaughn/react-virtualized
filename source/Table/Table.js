@@ -262,7 +262,7 @@ export default class Table extends Component {
     } = this.props
     const { scrollbarWidth } = this.state
 
-    const availableRowsHeight = height - headerHeight
+    const availableRowsHeight = disableHeader ? height : height - headerHeight
 
     const rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName
     const rowStyleObject = rowStyle instanceof Function ? rowStyle({ index: -1 }) : rowStyle
