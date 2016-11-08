@@ -110,6 +110,31 @@ describe('Table', () => {
     })
   })
 
+  describe('height', () => {
+    it('should subtract header row height from the inner Grid height if headers are enabled', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        headerHeight: 10,
+        overscanRowCount: 0,
+        rowHeight: 20,
+        height: 50
+      })))
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
+      expect(rows.length).toEqual(2)
+    })
+
+    it('should not subtract header row height from the inner Grid height if headers are disabled', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        disableHeader: true,
+        headerHeight: 10,
+        overscanRowCount: 0,
+        rowHeight: 20,
+        height: 50
+      })))
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
+      expect(rows.length).toEqual(3)
+    })
+  })
+
   describe('initial rendering', () => {
     // Ensure that both Immutable Lists of Maps and Arrays of Objects are supported
     const useImmutable = [true, false]

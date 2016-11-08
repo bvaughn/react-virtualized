@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 8.5.1
+`Table` header height is no longer subtracted from overall (rows) height if header is disabled.
+Thanks to @Jakehp for this contribution!
+
 ##### 8.5.0
 Added `disabled` property to `ArrowKeyStepper`; when `true` this component ignores keyboard events.
 
