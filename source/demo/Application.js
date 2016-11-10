@@ -53,7 +53,7 @@ export default class Application extends Component {
 
   render () {
     return (
-      <HashRouter>
+      <HashRouter basename=''>
         <div className={styles.demo}>
           <div className={styles.headerRow}>
             <div className={styles.logoRow}>
