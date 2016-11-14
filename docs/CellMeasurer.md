@@ -179,7 +179,7 @@ function renderList (listProps) {
     <CellMeasurer
       {...listProps}
       cellRenderer={
-        ({ rowIndex, ...rest }) => listProps.cellRenderer({ index: rowIndex, ...rest })
+        ({ rowIndex, ...rest }) => listProps.rowRenderer({ index: rowIndex, ...rest })
       }
       columnCount={1}
     >
