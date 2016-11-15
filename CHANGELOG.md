@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.5.2
+Added guard against potential `null` return value from `getComputedStyle` for hidden elements (see PR #465).
+
 ##### 8.5.1
 `Table` header height is no longer subtracted from overall (rows) height if header is disabled.
 Thanks to @Jakehp for this contribution!
