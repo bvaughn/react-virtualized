@@ -105,7 +105,7 @@ export default class AutoSizer extends Component {
     const height = boundingRect.height || 0
     const width = boundingRect.width || 0
 
-    const style = window.getComputedStyle(this._parentNode)
+    const style = window.getComputedStyle(this._parentNode) || {}
     const paddingLeft = parseInt(style.paddingLeft, 10) || 0
     const paddingRight = parseInt(style.paddingRight, 10) || 0
     const paddingTop = parseInt(style.paddingTop, 10) || 0
