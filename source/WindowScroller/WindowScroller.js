@@ -72,15 +72,11 @@ export default class WindowScroller extends Component {
     const { children } = this.props
     const { isScrolling, scrollTop, height } = this.state
 
-    return (
-      <div>
-        {children({
-          height,
-          isScrolling,
-          scrollTop
-        })}
-      </div>
-    )
+    return children({
+      height,
+      isScrolling,
+      scrollTop
+    })
   }
 
   shouldComponentUpdate (nextProps, nextState) {
