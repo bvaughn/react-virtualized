@@ -1,5 +1,5 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
+import { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import shallowCompare from 'react-addons-shallow-compare'
 import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
@@ -72,15 +72,11 @@ export default class WindowScroller extends Component {
     const { children } = this.props
     const { isScrolling, scrollTop, height } = this.state
 
-    return (
-      <div>
-        {children({
-          height,
-          isScrolling,
-          scrollTop
-        })}
-      </div>
-    )
+    return children({
+      height,
+      isScrolling,
+      scrollTop
+    })
   }
 
   shouldComponentUpdate (nextProps, nextState) {
