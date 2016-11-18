@@ -1,5 +1,5 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
+import { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import shallowCompare from 'react-addons-shallow-compare'
 import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
