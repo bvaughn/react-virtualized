@@ -8,6 +8,7 @@ import ComponentLink from './ComponentLink'
 import styles from './Application.css'
 import NavLink from './NavLink'
 import Wizard from './Wizard'
+import { TYPES } from './Icon'
 import { generateRandomList } from './utils'
 
 import ArrowKeyStepperExample from '../ArrowKeyStepper/ArrowKeyStepper.example'
@@ -71,11 +72,11 @@ export default class Application extends Component {
               </div>
 
               <ul className={styles.NavList}>
-                <NavLink to='/components/List'>Components</NavLink>
-                <NavLink to='/wizard'>Wizard</NavLink>
-                <NavLink href='https://github.com/bvaughn/react-virtualized'>Source</NavLink>
-                <NavLink href='https://github.com/bvaughn/react-virtualized/tree/master/docs#documentation'>Documentation</NavLink>
-                <NavLink href='https://github.com/bvaughn/react-virtualized/issues'>Issues</NavLink>
+                <NavLink to='/components/List' iconType={TYPES.COMPONENTS}>Components</NavLink>
+                <NavLink to='/wizard' iconType={TYPES.WIZARD}>Wizard</NavLink>
+                <NavLink href='https://github.com/bvaughn/react-virtualized' iconType={TYPES.SOURCE}>Source</NavLink>
+                <NavLink href='https://github.com/bvaughn/react-virtualized/tree/master/docs#documentation' iconType={TYPES.DOCUMENTATION}>Documentation</NavLink>
+                <NavLink href='https://github.com/bvaughn/react-virtualized/issues' iconType={TYPES.ISSUES}>Issues</NavLink>
               </ul>
             </div>
 

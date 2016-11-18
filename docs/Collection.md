@@ -10,13 +10,14 @@ Unlike `Grid`, which renders checkerboard data, `Collection` can render arbitrar
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | autoHeight | Boolean |  | Outer `height` of `Collection` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
-| className | String |  | Optional custom CSS class name to attach to root Collection element. |
+| className | String |  | Optional custom CSS class name to attach to root `Collection` element. |
 | cellCount | Number | ✓ | Number of cells in collection. |
-| cellGroupRenderer | Function | ✓ | Responsible for rendering a group of cells given their indices.: `({ cellSizeAndPositionGetter:Function, indices: Array<number>, cellRenderer: Function }): Array<PropTypes.node>` |
+| cellGroupRenderer | Function |  | Responsible for rendering a group of cells given their indices.: `({ cellSizeAndPositionGetter:Function, indices: Array<number>, cellRenderer: Function }): Array<PropTypes.node>` |
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ index: number, isScrolling: boolean, key: string, style: object }): PropTypes.element` |
 | cellSizeAndPositionGetter | Function | ✓ | Callback responsible for returning size and offset/position information for a given cell (index): `({ index: number }): { height: number, width: number, x: number, y: number }` |
 | height | Number | ✓ | Height of Collection; this property determines the number of visible (vs virtualized) rows. |
 | horizontalOverscanSize | Number |  | Enables the `Collection` to horiontally "overscan" its content similar to how `Grid` does. This can reduce flicker around the edges when a user scrolls quickly. This property defaults to `0`; |
+| id | String |  | Optional custom id to attach to root `Collection` element. |
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when `cellCount` is 0: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Collection that was just rendered: `({ indices: Array<number> }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, clientWidth: number, scrollHeight: number, scrollLeft: number, scrollTop: number, scrollWidth: number }): void` |
@@ -60,7 +61,7 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // Collection data as an array of arrays
 const list = [
-  { name: 'Brian Vaughn', x: 13, y: 34, width: 123, size: 234 }
+  { name: 'Brian Vaughn', x: 13, y: 34, width: 123, height: 234 }
   // And so on...
 ];
 

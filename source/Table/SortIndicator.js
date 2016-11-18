@@ -26,6 +26,7 @@ export default function SortIndicator ({ sortDirection }) {
     </svg>
   )
 }
+
 SortIndicator.propTypes = {
   sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
 }

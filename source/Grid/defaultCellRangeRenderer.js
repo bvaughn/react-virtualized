@@ -1,5 +1,4 @@
 /** @flow */
-
 /**
  * Default implementation of cellRangeRenderer used by Grid.
  * This renderer supports cell-caching while the user is scrolling.
@@ -17,7 +16,9 @@ export default function defaultCellRangeRenderer ({
   rowStopIndex,
   scrollLeft,
   scrollTop,
-  verticalOffsetAdjustment
+  verticalOffsetAdjustment,
+  visibleColumnIndices,
+  visibleRowIndices
 }: DefaultCellRangeRendererParams) {
   const renderedCells = []
 
@@ -26,6 +27,12 @@ export default function defaultCellRangeRenderer ({
 
     for (let columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
       let columnDatum = columnSizeAndPositionManager.getSizeAndPositionOfCell(columnIndex)
+      let isVisible = (
+        columnIndex >= visibleColumnIndices.start &&
+        columnIndex <= visibleColumnIndices.stop &&
+        rowIndex >= visibleRowIndices.start &&
+        rowIndex <= visibleRowIndices.stop
+      )
       let key = `${rowIndex}-${columnIndex}`
       let style = {
         height: rowDatum.size,
@@ -38,6 +45,7 @@ export default function defaultCellRangeRenderer ({
       let cellRendererParams = {
         columnIndex,
         isScrolling,
+        isVisible,
         key,
         rowIndex,
         style
@@ -91,5 +99,7 @@ type DefaultCellRangeRendererParams = {
   rowStopIndex: number,
   scrollLeft: number,
   scrollTop: number,
-  verticalOffsetAdjustment: number
+  verticalOffsetAdjustment: number,
+  visibleColumnIndices: Object,
+  visibleRowIndices: Object
 };

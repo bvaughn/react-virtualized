@@ -110,6 +110,31 @@ describe('Table', () => {
     })
   })
 
+  describe('height', () => {
+    it('should subtract header row height from the inner Grid height if headers are enabled', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        headerHeight: 10,
+        overscanRowCount: 0,
+        rowHeight: 20,
+        height: 50
+      })))
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
+      expect(rows.length).toEqual(2)
+    })
+
+    it('should not subtract header row height from the inner Grid height if headers are disabled', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        disableHeader: true,
+        headerHeight: 10,
+        overscanRowCount: 0,
+        rowHeight: 20,
+        height: 50
+      })))
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
+      expect(rows.length).toEqual(3)
+    })
+  })
+
   describe('initial rendering', () => {
     // Ensure that both Immutable Lists of Maps and Arrays of Objects are supported
     const useImmutable = [true, false]
@@ -654,7 +679,7 @@ describe('Table', () => {
     })
   })
 
-  describe('styles and classeNames', () => {
+  describe('styles, classNames, and ids', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(render(getMarkup({
         sort: () => {},
@@ -679,6 +704,17 @@ describe('Table', () => {
       expect(node.className).toContain('foo')
       expect(node.querySelectorAll('.bar').length).toEqual(2)
       expect(node.querySelectorAll('.baz').length).toEqual(9)
+    })
+
+    it('should use a custom :id if specified', () => {
+      const node = findDOMNode(render(getMarkup({ id: 'bar' })))
+      expect(node.getAttribute('id')).toEqual('bar')
+    })
+
+    it('should not set :id on the inner Grid', () => {
+      const node = findDOMNode(render(getMarkup({ id: 'bar' })))
+      const grid = node.querySelector('.ReactVirtualized__Grid')
+      expect(grid.getAttribute('id')).not.toEqual('bar')
     })
 
     it('should use custom :styles if specified', () => {

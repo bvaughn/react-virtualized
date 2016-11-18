@@ -1,5 +1,7 @@
 .NavListItem {
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 @keyframes spin {
@@ -25,4 +27,9 @@
 .ActiveNavLink,
 .NavLink:hover {
   color: #FFF;
+}
+
+.Icon {
+  margin-right: 0.25rem;
+  color: #fff;
 }

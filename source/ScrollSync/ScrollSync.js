@@ -12,7 +12,7 @@ export default class ScrollSync extends Component {
      * ({ onScroll, scrollLeft, scrollTop }) => PropTypes.element
      */
     children: PropTypes.func.isRequired
-  }
+  };
 
   constructor (props, context) {
     super(props, context)

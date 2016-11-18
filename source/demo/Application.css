@@ -24,6 +24,7 @@ a {
   justify-content: center;
   width: 100%;
   background-color: #4db6ac;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -95,10 +96,10 @@ a {
 .demo {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  height: 100vh;
 }
 .Body {
-  flex: 1;
+  flex: 1 0 auto; 
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

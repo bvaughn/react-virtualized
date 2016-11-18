@@ -53,9 +53,6 @@ export default class CellMeasurerExample extends Component {
                 cellRenderer={this._cellRenderer}
                 columnCount={50}
                 height={ROW_HEIGHT}
-                ref={(ref) => {
-                  this._columnWidthMeasurerRef = ref
-                }}
                 rowCount={ROW_COUNT}
               >
                 {({ getColumnWidth }) => (

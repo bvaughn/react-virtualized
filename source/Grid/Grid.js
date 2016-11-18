@@ -85,6 +85,9 @@ export default class Grid extends Component {
      */
     columnWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
 
+    /** Optional inline style applied to inner cell-container */
+    containerStyle: PropTypes.object,
+
     /**
      * Used to estimate the total width of a Grid before all of its columns have actually been measured.
      * The estimated total width is adjusted as columns are rendered.
@@ -101,6 +104,11 @@ export default class Grid extends Component {
      * Height of Grid; this property determines the number of visible (vs virtualized) rows.
      */
     height: PropTypes.number.isRequired,
+
+    /**
+     * Optional custom id to attach to root Grid element.
+     */
+    id: PropTypes.string,
 
     /**
      * Optional renderer to be used in place of rows when either :rowCount or :columnCount is 0.
@@ -487,7 +495,9 @@ export default class Grid extends Component {
       autoContainerWidth,
       autoHeight,
       className,
+      containerStyle,
       height,
+      id,
       noContentRenderer,
       style,
       tabIndex,
@@ -498,6 +508,7 @@ export default class Grid extends Component {
 
     const gridStyle = {
       boxSizing: 'border-box',
+      direction: 'ltr',
       height: autoHeight ? 'auto' : height,
       position: 'relative',
       width,
@@ -541,6 +552,7 @@ export default class Grid extends Component {
         }}
         aria-label={this.props['aria-label']}
         className={cn('ReactVirtualized__Grid', className)}
+        id={id}
         onScroll={this._onScroll}
         role='grid'
         style={{
@@ -558,7 +570,8 @@ export default class Grid extends Component {
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,
               overflow: 'hidden',
-              pointerEvents: isScrolling ? 'none' : ''
+              pointerEvents: isScrolling ? 'none' : '',
+              ...containerStyle
             }}
           >
             {childrenToDisplay}
@@ -660,7 +673,9 @@ export default class Grid extends Component {
         rowStopIndex: this._rowStopIndex,
         scrollLeft,
         scrollTop,
-        verticalOffsetAdjustment
+        verticalOffsetAdjustment,
+        visibleColumnIndices,
+        visibleRowIndices
       })
     }
   }

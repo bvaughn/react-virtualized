@@ -13,9 +13,11 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | className | String |  | Optional custom CSS class name to attach to root `Grid` element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
 | columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number` |
+| containerStyle | Object |  | Optional custom inline style to attach to inner cell-container element. |
 | estimatedColumnSize | Number |  | Used to estimate the total width of a `Grid` before all of its columns have actually been measured. The estimated total width is adjusted as columns are rendered. |
 | estimatedRowSize | Number |  | Used to estimate the total height of a `Grid` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | height | Number | ✓ | Height of Grid; this property determines the number of visible (vs virtualized) rows. |
+| id | String |  | Optional custom id to attach to root `Grid` element. |
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowCount` or `columnCount` is empty: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered. This callback is only invoked when visible rows have changed: `({ columnOverscanStartIndex: number, columnOverscanStopIndex: number, columnStartIndex: number, columnStopIndex: number, rowOverscanStartIndex: number, rowOverscanStopIndex: number, rowStartIndex: number, rowStopIndex: number }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, clientWidth: number, scrollHeight: number, scrollLeft: number, scrollTop: number, scrollWidth: number }): void` |
@@ -145,12 +147,13 @@ Responsible for rendering a single cell, given its row and column index.
 This function accepts the following named parameters:
 
 ```jsx
-function cellRenderer ({ 
+function cellRenderer ({
   columnIndex, // Horizontal (column) index of cell
   isScrolling, // The Grid is currently being scrolled
+  isVisible,   // This cell is visible within the grid (eg it is not an overscanned cell)
   key,         // Unique key within array of cells
   rowIndex,    // Vertical (row) index of cell
-  style        // Style object to be applied to cell
+  style        // Style object to be applied to cell (to position it)
 }) {
   // Grid data is a 2d array in this example...
   const user = list[rowIndex][columnIndex]

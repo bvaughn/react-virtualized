@@ -421,7 +421,7 @@ describe('Collection', () => {
     })
   })
 
-  describe('styles and classeNames', () => {
+  describe('styles, classNames, and ids', () => {
     it('should use the expected global CSS classNames', () => {
       const rendered = findDOMNode(render(getMarkup()))
       expect(rendered.className).toEqual('ReactVirtualized__Collection')
@@ -430,6 +430,11 @@ describe('Collection', () => {
     it('should use a custom :className if specified', () => {
       const rendered = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(rendered.className).toContain('foo')
+    })
+
+    it('should use a custom :id if specified', () => {
+      const rendered = findDOMNode(render(getMarkup({ id: 'bar' })))
+      expect(rendered.getAttribute('id')).toEqual('bar')
     })
 
     it('should use a custom :style if specified', () => {

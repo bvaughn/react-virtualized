@@ -591,7 +591,7 @@ describe('Grid', () => {
     })
   })
 
-  describe('styles and classNames', () => {
+  describe('styles, classNames, and ids', () => {
     it('should use the expected global CSS classNames', () => {
       const rendered = findDOMNode(render(getMarkup()))
       expect(rendered.className).toEqual('ReactVirtualized__Grid')
@@ -602,10 +602,21 @@ describe('Grid', () => {
       expect(rendered.className).toContain('foo')
     })
 
+    it('should use a custom :id if specified', () => {
+      const rendered = findDOMNode(render(getMarkup({ id: 'bar' })))
+      expect(rendered.getAttribute('id')).toEqual('bar')
+    })
+
     it('should use a custom :style if specified', () => {
       const style = { backgroundColor: 'red' }
       const rendered = findDOMNode(render(getMarkup({ style })))
       expect(rendered.style.backgroundColor).toEqual('red')
+    })
+
+    it('should use a custom :containerStyle if specified', () => {
+      const containerStyle = { backgroundColor: 'red' }
+      const rendered = findDOMNode(render(getMarkup({ containerStyle })))
+      expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.backgroundColor).toEqual('red')
     })
   })
 
@@ -971,6 +982,27 @@ describe('Grid', () => {
     expect(cellRendererCalls[0]).toEqual(true)
 
     done()
+  })
+
+  it('should pass the cellRenderer an :isVisible flag', () => {
+    const cellRendererCalls = []
+    function cellRenderer (props) {
+      cellRendererCalls.push(props)
+      return defaultCellRenderer(props)
+    }
+    render(getMarkup({
+      cellRenderer,
+      height: DEFAULT_ROW_HEIGHT,
+      overscanColumnCount: 1,
+      overscanRowCount: 1,
+      width: DEFAULT_COLUMN_WIDTH
+    }))
+    cellRendererCalls.forEach((props) => {
+      expect(props.isVisible).toEqual(
+        props.columnIndex === 0 &&
+        props.rowIndex === 0
+      ) // Only the first cell is visible
+    })
   })
 
   describe('cell caching', () => {

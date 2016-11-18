@@ -59,6 +59,9 @@ export default class Table extends Component {
     /** Fixed/available height for out DOM element */
     height: PropTypes.number.isRequired,
 
+    /** Optional id */
+    id: PropTypes.string,
+
     /** Optional renderer to be used in place of table body rows when rowCount is 0 */
     noRowsRenderer: PropTypes.func,
 
@@ -185,7 +188,7 @@ export default class Table extends Component {
 
     /** Width of list */
     width: PropTypes.number.isRequired
-  }
+  };
 
   static defaultProps = {
     disableHeader: false,
@@ -200,7 +203,7 @@ export default class Table extends Component {
     rowStyle: {},
     scrollToAlignment: 'auto',
     style: {}
-  }
+  };
 
   constructor (props) {
     super(props)
@@ -249,6 +252,7 @@ export default class Table extends Component {
       gridStyle,
       headerHeight,
       height,
+      id,
       noRowsRenderer,
       rowClassName,
       rowStyle,
@@ -258,7 +262,7 @@ export default class Table extends Component {
     } = this.props
     const { scrollbarWidth } = this.state
 
-    const availableRowsHeight = height - headerHeight
+    const availableRowsHeight = disableHeader ? height : height - headerHeight
 
     const rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName
     const rowStyleObject = rowStyle instanceof Function ? rowStyle({ index: -1 }) : rowStyle
@@ -274,12 +278,13 @@ export default class Table extends Component {
       }
     })
 
-    // Note that we specify :numChildren, :scrollbarWidth, :sortBy, and :sortDirection as properties on Grid even though these have nothing to do with Grid.
+    // Note that we specify :rowCount, :scrollbarWidth, :sortBy, and :sortDirection as properties on Grid even though these have nothing to do with Grid.
     // This is done because Grid is a pure component and won't update unless its properties or state has changed.
     // Any property that should trigger a re-render of Grid then is specified here to avoid a stale display.
     return (
       <div
         className={cn('ReactVirtualized__Table', className)}
+        id={id}
         style={style}
       >
         {!disableHeader && (
@@ -305,6 +310,7 @@ export default class Table extends Component {
           columnWidth={width}
           columnCount={1}
           height={availableRowsHeight}
+          id={undefined}
           noContentRenderer={noRowsRenderer}
           onScroll={this._onScroll}
           onSectionRendered={this._onSectionRendered}

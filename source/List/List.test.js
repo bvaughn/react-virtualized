@@ -250,7 +250,7 @@ describe('List', () => {
     })
   })
 
-  describe('styles and classNames', () => {
+  describe('styles, classNames, and ids', () => {
     it('should use the expected global CSS classNames', () => {
       const node = findDOMNode(render(getMarkup()))
       expect(node.className).toContain('ReactVirtualized__List')
@@ -259,6 +259,11 @@ describe('List', () => {
     it('should use a custom :className if specified', () => {
       const node = findDOMNode(render(getMarkup({ className: 'foo' })))
       expect(node.className).toContain('foo')
+    })
+
+    it('should use a custom :id if specified', () => {
+      const node = findDOMNode(render(getMarkup({ id: 'bar' })))
+      expect(node.getAttribute('id')).toEqual('bar')
     })
 
     it('should use a custom :style if specified', () => {
@@ -431,6 +436,22 @@ describe('List', () => {
       })))
       expect(rendered.tabIndex).toEqual(-1)
     })
+  })
+
+  it('should pass the cellRenderer an :isVisible flag', () => {
+    const rowRendererCalls = []
+    function rowRenderer (props) {
+      rowRendererCalls.push(props)
+      return null
+    }
+    findDOMNode(render(getMarkup({
+      height: 50,
+      overscanRowCount: 1,
+      rowHeight: 50,
+      rowRenderer
+    })))
+    expect(rowRendererCalls[0].isVisible).toEqual(true)
+    expect(rowRendererCalls[1].isVisible).toEqual(false)
   })
 
   describe('pure', () => {

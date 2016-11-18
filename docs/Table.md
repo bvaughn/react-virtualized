@@ -8,6 +8,7 @@ This component expects explicit `width` and `height` parameters.
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
+| autoHeight | Boolean |  | Outer `height` of `Table` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
 | children | [Column](Column.md) | ✓ | One or more Columns describing the data displayed in this table |
 | className | String |  | Optional custom CSS class name to attach to root `Table` element. |
 | disableHeader | Boolean |  | Do not render the table header (only the rows) |
@@ -18,6 +19,7 @@ This component expects explicit `width` and `height` parameters.
 | headerHeight | Number | ✓ | Fixed height of header row |
 | headerStyle | Object |  | Optional custom inline style to attach to table header columns. |
 | height | Number | ✓ | Fixed/available height for out DOM element |
+| id | String |  | Optional custom id to attach to root `Table` element. |
 | noRowsRenderer | Function |  | Callback used to render placeholder content when :rowCount is 0 |
 | onHeaderClick | Function |  | Callback invoked when a user clicks on a table header. `(dataKey: string, columnData: any): void` |
 | onRowClick | Function |  | Callback invoked when a user clicks on a table row. `({ index: number }): void` |

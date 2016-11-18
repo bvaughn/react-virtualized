@@ -1,6 +1,7 @@
 /** @flow */
 import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
+import createDetectElementResize from '../vendor/detectElementResize'
 
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
@@ -10,10 +11,10 @@ import shallowCompare from 'react-addons-shallow-compare'
 export default class AutoSizer extends Component {
   static propTypes = {
     /**
-     * Function responsible for rendering children.
-     * This function should implement the following signature:
-     * ({ height, width }) => PropTypes.element
-     */
+    * Function responsible for rendering children.
+    * This function should implement the following signature:
+    * ({ height, width }) => PropTypes.element
+    */
     children: PropTypes.func.isRequired,
 
     /** Disable dynamic :height property */
@@ -24,11 +25,11 @@ export default class AutoSizer extends Component {
 
     /** Callback to be invoked on-resize: ({ height, width }) */
     onResize: PropTypes.func.isRequired
-  }
+  };
 
   static defaultProps = {
     onResize: () => {}
-  }
+  };
 
   constructor (props) {
     super(props)
@@ -50,7 +51,7 @@ export default class AutoSizer extends Component {
 
     // Defer requiring resize handler in order to support server-side rendering.
     // See issue #41
-    this._detectElementResize = require('../vendor/detectElementResize')
+    this._detectElementResize = createDetectElementResize()
     this._detectElementResize.addResizeListener(this._parentNode, this._onResize)
 
     this._onResize()
@@ -104,7 +105,7 @@ export default class AutoSizer extends Component {
     const height = boundingRect.height || 0
     const width = boundingRect.width || 0
 
-    const style = getComputedStyle(this._parentNode)
+    const style = window.getComputedStyle(this._parentNode) || {}
     const paddingLeft = parseInt(style.paddingLeft, 10) || 0
     const paddingRight = parseInt(style.paddingRight, 10) || 0
     const paddingTop = parseInt(style.paddingTop, 10) || 0

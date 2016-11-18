@@ -6,19 +6,30 @@ import shallowCompare from 'react-addons-shallow-compare'
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
  */
 export default class ArrowKeyStepper extends Component {
+  static defaultProps = {
+    disabled: false,
+    mode: 'edges',
+    scrollToColumn: 0,
+    scrollToRow: 0
+  };
+
   static propTypes = {
     children: PropTypes.func.isRequired,
     className: PropTypes.string,
     columnCount: PropTypes.number.isRequired,
-    rowCount: PropTypes.number.isRequired
-  }
+    disabled: PropTypes.bool.isRequired,
+    mode: PropTypes.oneOf(['cells', 'edges']),
+    rowCount: PropTypes.number.isRequired,
+    scrollToColumn: PropTypes.number.isRequired,
+    scrollToRow: PropTypes.number.isRequired
+  };
 
   constructor (props, context) {
     super(props, context)
 
     this.state = {
-      scrollToColumn: 0,
-      scrollToRow: 0
+      scrollToColumn: props.scrollToColumn,
+      scrollToRow: props.scrollToRow
     }
 
     this._columnStartIndex = 0
@@ -28,6 +39,18 @@ export default class ArrowKeyStepper extends Component {
 
     this._onKeyDown = this._onKeyDown.bind(this)
     this._onSectionRendered = this._onSectionRendered.bind(this)
+  }
+
+  componentWillUpdate (nextProps, nextState) {
+    const { scrollToColumn, scrollToRow } = nextProps
+
+    if (this.props.scrollToColumn !== scrollToColumn) {
+      this.setState({ scrollToColumn })
+    }
+
+    if (this.props.scrollToRow !== scrollToRow) {
+      this.setState({ scrollToRow })
+    }
   }
 
   render () {
@@ -53,35 +76,51 @@ export default class ArrowKeyStepper extends Component {
   }
 
   _onKeyDown (event) {
-    const { columnCount, rowCount } = this.props
+    const { columnCount, disabled, mode, rowCount } = this.props
+
+    if (disabled) {
+      return
+    }
+
+    const {
+      scrollToColumn: scrollToColumnPrevious,
+      scrollToRow: scrollToRowPrevious
+    } = this.state
+
+    let { scrollToColumn, scrollToRow } = this.state
 
     // The above cases all prevent default event event behavior.
     // This is to keep the grid from scrolling after the snap-to update.
     switch (event.key) {
       case 'ArrowDown':
-        event.preventDefault()
-        this.setState({
-          scrollToRow: Math.min(this._rowStopIndex + 1, rowCount - 1)
-        })
+        scrollToRow = mode === 'cells'
+          ? Math.min(scrollToRow + 1, rowCount - 1)
+          : Math.min(this._rowStopIndex + 1, rowCount - 1)
         break
       case 'ArrowLeft':
-        event.preventDefault()
-        this.setState({
-          scrollToColumn: Math.max(this._columnStartIndex - 1, 0)
-        })
+        scrollToColumn = mode === 'cells'
+          ? Math.max(scrollToColumn - 1, 0)
+          : Math.max(this._columnStartIndex - 1, 0)
         break
       case 'ArrowRight':
-        event.preventDefault()
-        this.setState({
-          scrollToColumn: Math.min(this._columnStopIndex + 1, columnCount - 1)
-        })
+        scrollToColumn = mode === 'cells'
+          ? Math.min(scrollToColumn + 1, columnCount - 1)
+          : Math.min(this._columnStopIndex + 1, columnCount - 1)
         break
       case 'ArrowUp':
-        event.preventDefault()
-        this.setState({
-          scrollToRow: Math.max(this._rowStartIndex - 1, 0)
-        })
+        scrollToRow = mode === 'cells'
+          ? Math.max(scrollToRow - 1, 0)
+          : Math.max(this._rowStartIndex - 1, 0)
         break
+    }
+
+    if (
+      scrollToColumn !== scrollToColumnPrevious ||
+      scrollToRow !== scrollToRowPrevious
+    ) {
+      event.preventDefault()
+
+      this.setState({ scrollToColumn, scrollToRow })
     }
   }
 

@@ -1,6 +1,72 @@
 Changelog
 ------------
 
+##### 8.5.2
+Added guard against potential `null` return value from `getComputedStyle` for hidden elements (see PR #465).
+
+##### 8.5.1
+`Table` header height is no longer subtracted from overall (rows) height if header is disabled.
+Thanks to @Jakehp for this contribution!
+
+##### 8.5.0
+Added `disabled` property to `ArrowKeyStepper`; when `true` this component ignores keyboard events.
+
+##### 8.4.1
+`Collection` and `Grid` now set a default `direction: ltr` style property.
+Neither component gracefully handles RTL layout at the moment and so it is disabled by default.
+Cells within either component can be layed out RTL without any problem though.
+To do so, just add an additional `direction: rtl` style property via the cell renderer.
+
+##### 8.4.0
+`ArrowKeyStepper` incrementing behavior can now be further customized via new `mode` prop.
+Default behavior will remain the same (eg `mode='edges'`).
+Use `mode='cells'` to prefer smaller increments.
+
+##### 8.3.1
+Fixed `scrollToAlignment` bug in `Collection` that caused cells not to render under certain conditions.
+Special thanks to @coluccini for spotting and fixing this bug!
+
+##### 8.3.0
+`cellRenderer` and `rowRenderer` callbacks now accept an additional property, `isVisible`.
+This property can be used to differentiate between visible and overscanned cells.
+Thanks to @mbrevda for this feature!
+
+##### 8.2.0
+Added optional `id` prop to `Collection`, `Grid`, `List`, and `Table`.
+Thanks to @mnquintana for the contribution!
+
+##### 8.1.1
+Wrapped component `propTypes` with `process.env.NODE_ENV !== 'production'` so they can be stripped from production builds.
+Thanks to @mbrevda for the suggestion and contribution.
+
+##### 8.1.0
+Added `containerStyle` property to `Grid`.
+This property allows custom styling to be applied to the inner cell-containing div.
+This can be used to enable padding within the grid.
+For more context see: github.com/metabase/metabase/pull/3547
+
+Refactored the `detect-element-resize` util to export a factory function.
+This allows `AutoSizer` to import it initially but defer execution until mounted.
+(Executing immediately causes problems for server-side rendering context.
+Using a deferred `require` causes problems for es6 bundlers, eg Rollup.)
+
+Fixed an edge-case that occurred for slower browsers when mounting and then quickly unmounting an `AutoSizer`.
+In some cases, an animation event was left attached.
+This event is now specifically checked for and removed.
+Special thanks to @yb (PR #436) for this bugfix contribution.
+
+##### 8.0.13
+Replaces references to `getComputedStyle` with `window.getComputedStyle` to better support Enzyme.
+Thanks to @DevinClark for the contribution!
+
+##### 8.0.12
+Added "module" entry to `package.json` in order to support ES modules with the latest Webpack.
+This should enable tree-shaking support ouf of the box for Webpack.
+Rollup will continue to use the "jsnext:main" entry to my knowledge.
+
+For more info see https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md
+Related issues: webpack/webpack#1979, bvaughn/react-virtualized/issues/427
+
 ##### 8.0.11
 Fixed an invalid export for `IS_SCROLLING_TIMEOUT` inside the `WindowScroller` module.
 

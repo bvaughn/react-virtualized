@@ -106,8 +106,8 @@ import {
 
 // Column widths vary but row heights are uniform
 const cellSizeCache = new CellSizeCache({
-  uniformRowHeight = true,
-  uniformColumnWidth = false
+  uniformRowHeight: true,
+  uniformColumnWidth: false
 })
 
 function render () {
@@ -179,7 +179,7 @@ function renderList (listProps) {
     <CellMeasurer
       {...listProps}
       cellRenderer={
-        ({ rowIndex, ...rest }) => listProps.cellRenderer({ index: rowIndex, ...rest })
+        ({ rowIndex, ...rest }) => listProps.rowRenderer({ index: rowIndex, ...rest })
       }
       columnCount={1}
     >

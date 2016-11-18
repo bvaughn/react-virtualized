@@ -10,7 +10,6 @@ import type { ScrollPosition, SizeInfo } from './types'
  * Unlike Grid, which renders checkerboard data, Collection can render arbitrarily positioned- even overlapping- data.
  */
 export default class Collection extends Component {
-
   static propTypes = {
     'aria-label': PropTypes.string,
 

@@ -52,13 +52,13 @@ export default class InfiniteLoader extends Component {
      * This value defaults to 15.
      */
     threshold: PropTypes.number.isRequired
-  }
+  };
 
   static defaultProps = {
     minimumBatchSize: 10,
     rowCount: 0,
     threshold: 15
-  }
+  };
 
   constructor (props, context) {
     super(props, context)

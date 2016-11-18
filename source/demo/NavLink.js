@@ -1,10 +1,21 @@
 /** @flow */
 import React from 'react'
 import { Link } from 'react-router'
+import Icon from './Icon'
 import styles from './NavLink.css'
 
-export default function NavLink ({ children, href, to }) {
+export default function NavLink ({ children, href, iconType, to }) {
   let link
+  let icon
+
+  if (iconType) {
+    icon = (
+      <Icon
+        className={styles.Icon}
+        type={iconType}
+      />
+    )
+  }
 
   if (to) {
     link = (
@@ -13,7 +24,7 @@ export default function NavLink ({ children, href, to }) {
         className={styles.NavLink}
         to={to}
       >
-        {children}
+        {icon} {children}
       </Link>
     )
   } else {
@@ -22,7 +33,7 @@ export default function NavLink ({ children, href, to }) {
         className={styles.NavLink}
         href={href}
       >
-        {children}
+        {icon} {children}
       </a>
     )
   }

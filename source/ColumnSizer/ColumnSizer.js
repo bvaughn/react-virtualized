@@ -30,7 +30,7 @@ export default class ColumnSizer extends Component {
 
     /** Width of Grid or Table child */
     width: PropTypes.number.isRequired
-  }
+  };
 
   constructor (props, context) {
     super(props, context)
