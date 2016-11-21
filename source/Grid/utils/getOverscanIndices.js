@@ -1,5 +1,4 @@
 export const SCROLL_DIRECTION_BACKWARD = -1
-export const SCROLL_DIRECTION_FIXED = 0
 export const SCROLL_DIRECTION_FORWARD = 1
 
 /**
@@ -16,15 +15,15 @@ export default function getOverscanIndices ({ cellCount, overscanCellsCount, scr
   let overscanStartIndex
   let overscanStopIndex
 
-  if (scrollDirection === SCROLL_DIRECTION_FORWARD) {
-    overscanStartIndex = startIndex
-    overscanStopIndex = stopIndex + overscanCellsCount * 2
-  } else if (scrollDirection === SCROLL_DIRECTION_BACKWARD) {
-    overscanStartIndex = startIndex - overscanCellsCount * 2
-    overscanStopIndex = stopIndex
-  } else {
-    overscanStartIndex = startIndex - overscanCellsCount
-    overscanStopIndex = stopIndex + overscanCellsCount
+  switch (scrollDirection) {
+    case SCROLL_DIRECTION_FORWARD:
+      overscanStartIndex = startIndex
+      overscanStopIndex = stopIndex + overscanCellsCount
+      break
+    case SCROLL_DIRECTION_BACKWARD:
+      overscanStartIndex = startIndex - overscanCellsCount
+      overscanStopIndex = stopIndex
+      break
   }
 
   return {

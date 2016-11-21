@@ -296,7 +296,7 @@ describe('List', () => {
         overscanRowCount: 10,
         scrollToIndex: 30
       }))
-      expect(overscanStartIndex).toEqual(11)
+      expect(overscanStartIndex).toEqual(21)
       expect(startIndex).toEqual(21)
       expect(stopIndex).toEqual(30)
       expect(overscanStopIndex).toEqual(40)
