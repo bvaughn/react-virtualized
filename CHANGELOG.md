@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 8.5.3
+Changed overscan rows/cols behavior as described [here](https://github.com/bvaughn/react-virtualized/pull/478).
+This change targets performance improvements only and should have no other noticeable impact.
+
 ##### 8.5.2
 Added guard against potential `null` return value from `getComputedStyle` for hidden elements (see PR #465).
 
