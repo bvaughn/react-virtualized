@@ -28,7 +28,7 @@ export default class WindowScrollerExample extends Component {
     this._rowRenderer = this._rowRenderer.bind(this)
     this.onChangeCustomElementCheckbox = this.onChangeCustomElementCheckbox.bind(this)
   }
-  
+
   onChangeCustomElementCheckbox (event) {
     this.context.setScrollingCustomElement(event.target.checked)
   }

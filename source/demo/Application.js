@@ -49,22 +49,22 @@ export default class Application extends Component {
     isScrollingCustomElement: PropTypes.bool.isRequired,
     setScrollingCustomElement: PropTypes.func
   };
-  
+
   state = {
     isScrollingCustomElement: false
   }
-  
+
   constructor (props) {
     super(props)
     this.setScrollingCustomElement = this.setScrollingCustomElement.bind(this)
   }
-  
+
   setScrollingCustomElement (custom) {
     this.setState({ isScrollingCustomElement: custom })
   }
 
   getChildContext () {
-    const { customElement, isScrollingCustomElement } = this.state;
+    const { customElement, isScrollingCustomElement } = this.state
     return {
       list,
       customElement,
