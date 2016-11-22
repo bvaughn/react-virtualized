@@ -105,6 +105,11 @@ a {
   flex-wrap: wrap;
   justify-content: center;
 }
+.ScrollingBody {
+  composes: Body;
+  overflow: auto;
+  flex: 0 1 auto;
+}
 .column {
   display: flex;
   flex-direction: column;

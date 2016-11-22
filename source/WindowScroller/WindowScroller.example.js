@@ -9,19 +9,27 @@ import AutoSizer from '../AutoSizer'
 import shallowCompare from 'react-addons-shallow-compare'
 import styles from './WindowScroller.example.css'
 
-export default class AutoSizerExample extends Component {
+export default class WindowScrollerExample extends Component {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(Immutable.List).isRequired,
+    customElement: PropTypes.instanceOf(Element),
+    isScrollingCustomElement: PropTypes.bool.isRequired,
+    setScrollingCustomElement: PropTypes.func
   }
 
   constructor (props) {
     super(props)
 
     this._rowRenderer = this._rowRenderer.bind(this)
+    this.onChangeCustomElementCheckbox = this.onChangeCustomElementCheckbox.bind(this)
+  }
+  
+  onChangeCustomElementCheckbox (event) {
+    this.context.setScrollingCustomElement(event.target.checked)
   }
 
   render () {
-    const { list } = this.context
+    const { list, isScrollingCustomElement, customElement } = this.context
 
     return (
       <ContentBox>
@@ -35,9 +43,22 @@ export default class AutoSizerExample extends Component {
           This component decorates <code>List</code>, <code>Table</code>, or any other component
           and manages the window scroll to scroll through the list
         </ContentBoxParagraph>
+        
+        <ContentBoxParagraph>
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Use custom element for scrolling'
+              className={styles.checkbox}
+              type='checkbox'
+              value={isScrollingCustomElement}
+              onChange={this.onChangeCustomElementCheckbox}
+            />
+            Use custom element for scrolling
+          </label>
+        </ContentBoxParagraph>
 
         <div className={styles.WindowScrollerWrapper}>
-          <WindowScroller>
+          <WindowScroller scrollElement={isScrollingCustomElement ? customElement : null}>
             {({ height, isScrolling, scrollTop }) => (
               <AutoSizer disableHeight>
                 {({ width }) => (
