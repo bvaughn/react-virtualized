@@ -45,7 +45,7 @@ const list = Immutable.List(generateRandomList())
 export default class Application extends Component {
   static childContextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
-    customElement: PropTypes.instanceOf(Element),
+    customElement: PropTypes.object,
     isScrollingCustomElement: PropTypes.bool.isRequired,
     setScrollingCustomElement: PropTypes.func
   };
