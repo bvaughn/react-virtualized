@@ -64,6 +64,7 @@ export default class WindowScroller extends Component {
       unregisterScrollListener(this, this.scrollElement)
       registerScrollListener(this, nextProps.scrollElement)
     } else if (!nextProps.scrollElement && this.scrollElement !== window) {
+      this._updateDimensions()
       unregisterScrollListener(this, this.scrollElement)
       registerScrollListener(this, window)
     }
