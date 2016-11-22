@@ -1,5 +1,5 @@
+import styles from '../WindowScroller.css'
 let mountedInstances = []
-let originalBodyPointerEvents = null
 let disablePointerEventsTimeoutId = null
 
 /**
@@ -8,54 +8,49 @@ let disablePointerEventsTimeoutId = null
  */
 export const IS_SCROLLING_TIMEOUT = 150
 
-function enablePointerEventsIfDisabled () {
+function enablePointerEventsIfDisabled (element) {
   if (disablePointerEventsTimeoutId) {
     disablePointerEventsTimeoutId = null
-
-    document.body.style.pointerEvents = originalBodyPointerEvents
-
-    originalBodyPointerEvents = null
+    element.classList.remove(styles.disabled)
   }
 }
 
-function enablePointerEventsAfterDelayCallback () {
-  enablePointerEventsIfDisabled()
+function enablePointerEventsAfterDelayCallback (element) {
+  enablePointerEventsIfDisabled(element)
   mountedInstances.forEach(component => component._enablePointerEventsAfterDelayCallback())
 }
 
-function enablePointerEventsAfterDelay () {
+function enablePointerEventsAfterDelay (element) {
   if (disablePointerEventsTimeoutId) {
     clearTimeout(disablePointerEventsTimeoutId)
   }
 
   disablePointerEventsTimeoutId = setTimeout(
-      enablePointerEventsAfterDelayCallback,
-      IS_SCROLLING_TIMEOUT
-    )
+    enablePointerEventsAfterDelayCallback,
+    IS_SCROLLING_TIMEOUT,
+    element
+  )
 }
 
 function onScrollWindow (event) {
-  if (originalBodyPointerEvents == null) {
-    originalBodyPointerEvents = document.body.style.pointerEvents
+  const disabledElement = event.target === window ? document.documentElement : event.target
+  disabledElement.classList.add(styles.disabled)
 
-    document.body.style.pointerEvents = 'none'
-
-    enablePointerEventsAfterDelay()
-  }
+  enablePointerEventsAfterDelay(disabledElement)
   mountedInstances.forEach(component => component._onScrollWindow(event))
 }
 
-export function registerScrollListener (component) {
+export function registerScrollListener (component, element = window) {
   if (!mountedInstances.length) {
-    window.addEventListener('scroll', onScrollWindow)
+    element.addEventListener('scroll', onScrollWindow)
   }
   mountedInstances.push(component)
 }
 
-export function unregisterScrollListener (component) {
+export function unregisterScrollListener (component, element = window) {
   mountedInstances = mountedInstances.filter(c => (c !== component))
   if (!mountedInstances.length) {
-    window.removeEventListener('scroll', onScrollWindow)
+    element.removeEventListener('scroll', onScrollWindow)
     if (disablePointerEventsTimeoutId) {
       clearTimeout(disablePointerEventsTimeoutId)
       enablePointerEventsIfDisabled()

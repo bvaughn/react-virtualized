@@ -1,0 +1,3 @@
+.disabled > * {
+  pointer-events: none;
+}
