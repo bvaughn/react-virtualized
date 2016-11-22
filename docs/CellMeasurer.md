@@ -177,12 +177,12 @@ import { CellMeasurer, List } from 'react-virtualized';
 function renderList(listProps, cellMeasurerProps = Object.create(null)) {
   return (
     <CellMeasurer
-      rowCount={listProps.rowCount}
+      {...cellMeasurerProps}
       cellRenderer={
         ({ rowIndex, ...rest }) => listProps.rowRenderer({ index: rowIndex, ...rest })
       }
       columnCount={1}
-      {...cellMeasurerProps}
+      rowCount={listProps.rowCount}
     >
       {({ getRowHeight }) => (
         <List
