@@ -91,20 +91,22 @@ describe('WindowScroller', () => {
   it('should restore pointerEvents on body after IS_SCROLLING_TIMEOUT', async (done) => {
     render(getMarkup())
     document.body.style.pointerEvents = 'all'
+    expect(window.getComputedStyle(document.body).pointerEvents).toEqual('all')
     simulateWindowScroll({ scrollY: 5000 })
-    expect(document.body.style.pointerEvents).toEqual('none')
+    expect(window.getComputedStyle(document.body).pointerEvents).toEqual('none')
     await new Promise(resolve => setTimeout(resolve, IS_SCROLLING_TIMEOUT))
-    expect(document.body.style.pointerEvents).toEqual('all')
+    expect(window.getComputedStyle(document.body).pointerEvents).toEqual('all')
     done()
   })
 
   it('should restore pointerEvents on body after unmount', () => {
     render(getMarkup())
     document.body.style.pointerEvents = 'all'
+    expect(window.getComputedStyle(document.body).pointerEvents).toEqual('all')
     simulateWindowScroll({ scrollY: 5000 })
-    expect(document.body.style.pointerEvents).toEqual('none')
+    expect(window.getComputedStyle(document.body).pointerEvents).toEqual('none')
     render.unmount()
-    expect(document.body.style.pointerEvents).toEqual('all')
+    expect(window.getComputedStyle(document.body).pointerEvents).toEqual('all')
   })
 
   describe('onScroll', () => {
