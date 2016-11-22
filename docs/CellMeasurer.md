@@ -174,14 +174,15 @@ For example:
 ```jsx
 import { CellMeasurer, List } from 'react-virtualized';
 
-function renderList (listProps) {
+function renderList(listProps, cellMeasurerProps = Object.create(null)) {
   return (
     <CellMeasurer
-      {...listProps}
+      rowCount={listProps.rowCount}
       cellRenderer={
         ({ rowIndex, ...rest }) => listProps.rowRenderer({ index: rowIndex, ...rest })
       }
       columnCount={1}
+      {...cellMeasurerProps}
     >
       {({ getRowHeight }) => (
         <List
