@@ -53,7 +53,7 @@ export function unregisterScrollListener (component, element = window) {
     element.removeEventListener('scroll', onScrollWindow)
     if (disablePointerEventsTimeoutId) {
       clearTimeout(disablePointerEventsTimeoutId)
-      enablePointerEventsIfDisabled()
+      enablePointerEventsIfDisabled(element === window ? document.documentElement : element)
     }
   }
 }
