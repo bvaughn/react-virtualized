@@ -9,9 +9,12 @@ import AutoSizer from '../AutoSizer'
 import shallowCompare from 'react-addons-shallow-compare'
 import styles from './WindowScroller.example.css'
 
-export default class AutoSizerExample extends Component {
+export default class WindowScrollerExample extends Component {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(Immutable.List).isRequired,
+    customElement: PropTypes.instanceOf(Element),
+    isScrollingCustomElement: PropTypes.bool.isRequired,
+    setScrollingCustomElement: PropTypes.func
   }
 
   constructor (props) {
@@ -23,10 +26,15 @@ export default class AutoSizerExample extends Component {
 
     this._hideHeader = this._hideHeader.bind(this)
     this._rowRenderer = this._rowRenderer.bind(this)
+    this.onChangeCustomElementCheckbox = this.onChangeCustomElementCheckbox.bind(this)
+  }
+  
+  onChangeCustomElementCheckbox (event) {
+    this.context.setScrollingCustomElement(event.target.checked)
   }
 
   render () {
-    const { list } = this.context
+    const { list, isScrollingCustomElement, customElement } = this.context
     const { showHeaderText } = this.state
 
     return (
@@ -52,12 +60,21 @@ export default class AutoSizerExample extends Component {
           </ContentBoxParagraph>
         )}
 
+        <ContentBoxParagraph>
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Use custom element for scrolling'
+              className={styles.checkbox}
+              type='checkbox'
+              value={isScrollingCustomElement}
+              onChange={this.onChangeCustomElementCheckbox}
+            />
+            Use custom element for scrolling
+          </label>
+        </ContentBoxParagraph>
+
         <div className={styles.WindowScrollerWrapper}>
-          <WindowScroller
-            ref={(ref) => {
-              this._windowScroller = ref
-            }}
-          >
+          <WindowScroller scrollElement={isScrollingCustomElement ? customElement : null}>
             {({ height, isScrolling, scrollTop }) => (
               <AutoSizer disableHeight>
                 {({ width }) => (

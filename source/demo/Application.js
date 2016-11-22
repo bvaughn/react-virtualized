@@ -44,16 +44,38 @@ const list = Immutable.List(generateRandomList())
 
 export default class Application extends Component {
   static childContextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(Immutable.List).isRequired,
+    customElement: PropTypes.instanceOf(Element),
+    isScrollingCustomElement: PropTypes.bool.isRequired,
+    setScrollingCustomElement: PropTypes.func
   };
+  
+  state = {
+    isScrollingCustomElement: false
+  }
+  
+  constructor (props) {
+    super(props)
+    this.setScrollingCustomElement = this.setScrollingCustomElement.bind(this)
+  }
+  
+  setScrollingCustomElement (custom) {
+    this.setState({ isScrollingCustomElement: custom })
+  }
 
   getChildContext () {
+    const { customElement, isScrollingCustomElement } = this.state;
     return {
-      list
+      list,
+      customElement,
+      isScrollingCustomElement,
+      setScrollingCustomElement: this.setScrollingCustomElement
     }
   }
 
   render () {
+    const { isScrollingCustomElement } = this.state
+    const bodyStyle = isScrollingCustomElement ? styles.ScrollingBody : styles.Body
     return (
       <HashRouter>
         <div className={styles.demo}>
@@ -101,7 +123,7 @@ export default class Application extends Component {
             </div>
           </div>
 
-          <div className={styles.Body}>
+          <div className={bodyStyle} ref={e => this.setState({ customElement: e })}>
             <div className={styles.column}>
               <Match pattern='/wizard' component={Wizard} />
               {Object.keys(COMPONENT_EXAMPLES_MAP).map((route) => (
