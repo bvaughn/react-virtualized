@@ -4,7 +4,7 @@ import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
 import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
-import getOverscanIndices, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FIXED, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
+import getOverscanIndices, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import shallowCompare from 'react-addons-shallow-compare'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
@@ -210,8 +210,8 @@ export default class Grid extends Component {
 
     this.state = {
       isScrolling: false,
-      scrollDirectionHorizontal: SCROLL_DIRECTION_FIXED,
-      scrollDirectionVertical: SCROLL_DIRECTION_FIXED,
+      scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
+      scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
       scrollLeft: 0,
       scrollTop: 0
     }
@@ -705,9 +705,7 @@ export default class Grid extends Component {
     this._cellCache = {}
 
     this.setState({
-      isScrolling: false,
-      scrollDirectionHorizontal: SCROLL_DIRECTION_FIXED,
-      scrollDirectionVertical: SCROLL_DIRECTION_FIXED
+      isScrolling: false
     })
   }
 

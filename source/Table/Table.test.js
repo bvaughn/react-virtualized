@@ -778,7 +778,7 @@ describe('Table', () => {
         overscanRowCount: 10,
         scrollToIndex: 30
       }))
-      expect(overscanStartIndex).toEqual(13)
+      expect(overscanStartIndex).toEqual(23)
       expect(startIndex).toEqual(23)
       expect(stopIndex).toEqual(30)
       expect(overscanStopIndex).toEqual(40)

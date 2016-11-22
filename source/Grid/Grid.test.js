@@ -4,7 +4,7 @@ import { findDOMNode } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
 import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
-import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FIXED, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
+import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 
 const DEFAULT_COLUMN_WIDTH = 50
 const DEFAULT_HEIGHT = 100
@@ -800,11 +800,11 @@ describe('Grid', () => {
         scrollToColumn: 25,
         scrollToRow: 50
       }))
-      expect(helper.columnOverscanStartIndex()).toEqual(20)
+      expect(helper.columnOverscanStartIndex()).toEqual(22)
       expect(helper.columnOverscanStopIndex()).toEqual(27)
       expect(helper.columnStartIndex()).toEqual(22)
       expect(helper.columnStopIndex()).toEqual(25)
-      expect(helper.rowOverscanStartIndex()).toEqual(41)
+      expect(helper.rowOverscanStartIndex()).toEqual(46)
       expect(helper.rowOverscanStopIndex()).toEqual(55)
       expect(helper.rowStartIndex()).toEqual(46)
       expect(helper.rowStopIndex()).toEqual(50)
@@ -835,15 +835,6 @@ describe('Grid', () => {
         scrollTop: 50
       }))
 
-      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FIXED)
-      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FIXED)
-
-      simulateScroll({
-        grid,
-        scrollLeft: 100,
-        scrollTop: 100
-      })
-
       expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
       expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
 
@@ -855,9 +846,18 @@ describe('Grid', () => {
 
       expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_BACKWARD)
       expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_BACKWARD)
+
+      simulateScroll({
+        grid,
+        scrollLeft: 100,
+        scrollTop: 100
+      })
+
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
     })
 
-    it('should overscan more in the direction being scrolled', async (done) => {
+    it('should overscan in the direction being scrolled', async (done) => {
       const helper = createHelper()
 
       let onSectionRenderedResolve
@@ -891,26 +891,36 @@ describe('Grid', () => {
 
       // It should overscan in the direction being scrolled while scroll is in progress
       expect(helper.columnOverscanStartIndex()).toEqual(4)
-      expect(helper.columnOverscanStopIndex()).toEqual(11)
-      expect(helper.columnStartIndex()).toEqual(4)
-      expect(helper.columnStopIndex()).toEqual(7)
-      expect(helper.rowOverscanStartIndex()).toEqual(10)
-      expect(helper.rowOverscanStopIndex()).toEqual(24)
-      expect(helper.rowStartIndex()).toEqual(10)
-      expect(helper.rowStopIndex()).toEqual(14)
-
-      // Allow scrolling timeout to complete so that cell cache is reset
-      await new Promise(resolve => setTimeout(resolve, 500))
-
-      // It reset overscan once scrolling has finished
-      expect(helper.columnOverscanStartIndex()).toEqual(2)
       expect(helper.columnOverscanStopIndex()).toEqual(9)
       expect(helper.columnStartIndex()).toEqual(4)
       expect(helper.columnStopIndex()).toEqual(7)
-      expect(helper.rowOverscanStartIndex()).toEqual(5)
+      expect(helper.rowOverscanStartIndex()).toEqual(10)
       expect(helper.rowOverscanStopIndex()).toEqual(19)
       expect(helper.rowStartIndex()).toEqual(10)
       expect(helper.rowStopIndex()).toEqual(14)
+
+      // Wait until the onSectionRendered handler / debouncer has processed
+      onSectionRenderedPromise = new Promise(resolve => {
+        onSectionRenderedResolve = resolve
+      })
+
+      simulateScroll({
+        grid,
+        scrollLeft: 100,
+        scrollTop: 100
+      })
+
+      await onSectionRenderedPromise
+
+      // It reset overscan once scrolling has finished
+      expect(helper.columnOverscanStartIndex()).toEqual(0)
+      expect(helper.columnOverscanStopIndex()).toEqual(5)
+      expect(helper.columnStartIndex()).toEqual(2)
+      expect(helper.columnStopIndex()).toEqual(5)
+      expect(helper.rowOverscanStartIndex()).toEqual(0)
+      expect(helper.rowOverscanStopIndex()).toEqual(9)
+      expect(helper.rowStartIndex()).toEqual(5)
+      expect(helper.rowStopIndex()).toEqual(9)
 
       done()
     })
