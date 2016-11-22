@@ -26,5 +26,5 @@ export function getHeight (element) {
  */
 export function getPositionFromTop (element, container) {
   const containerElement = container === window ? document.documentElement : container
-  return element.getBoundingClientRect().top - container.getBoundingClientRect().top
+  return element.getBoundingClientRect().top - containerElement.getBoundingClientRect().top
 }
