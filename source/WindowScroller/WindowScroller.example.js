@@ -12,7 +12,7 @@ import styles from './WindowScroller.example.css'
 export default class WindowScrollerExample extends Component {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
-    customElement: PropTypes.instanceOf(Element),
+    customElement: PropTypes.object,
     isScrollingCustomElement: PropTypes.bool.isRequired,
     setScrollingCustomElement: PropTypes.func
   }
