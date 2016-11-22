@@ -174,7 +174,7 @@ For example:
 ```jsx
 import { CellMeasurer, List } from 'react-virtualized';
 
-function renderList(listProps, cellMeasurerProps = Object.create(null)) {
+function renderList(listProps, cellMeasurerProps) {
   return (
     <CellMeasurer
       rowCount={listProps.rowCount}
