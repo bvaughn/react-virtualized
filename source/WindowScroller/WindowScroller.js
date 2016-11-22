@@ -15,7 +15,7 @@ export default class WindowScroller extends Component {
     children: PropTypes.func.isRequired,
 
     /** Element to attach scroll event listeners. Defaults to window. */
-    scrollElement: PropTypes.object,
+    scrollElement: PropTypes.any,
 
     /** Callback to be invoked on-resize: ({ height }) */
     onResize: PropTypes.func.isRequired,
