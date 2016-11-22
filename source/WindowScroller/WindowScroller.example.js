@@ -23,7 +23,7 @@ export default class WindowScrollerExample extends Component {
     this._rowRenderer = this._rowRenderer.bind(this)
     this.onChangeCustomElementCheckbox = this.onChangeCustomElementCheckbox.bind(this)
   }
-  
+
   onChangeCustomElementCheckbox (event) {
     this.context.setScrollingCustomElement(event.target.checked)
   }
@@ -43,7 +43,7 @@ export default class WindowScrollerExample extends Component {
           This component decorates <code>List</code>, <code>Table</code>, or any other component
           and manages the window scroll to scroll through the list
         </ContentBoxParagraph>
-        
+
         <ContentBoxParagraph>
           <label className={styles.checkboxLabel}>
             <input

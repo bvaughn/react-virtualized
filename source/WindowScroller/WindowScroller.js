@@ -3,7 +3,7 @@ import { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import shallowCompare from 'react-addons-shallow-compare'
 import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
-import { getVerticalScroll, getPositionFromTop, getHeight } from './utils/dimensions';
+import { getVerticalScroll, getPositionFromTop, getHeight } from './utils/dimensions'
 
 export default class WindowScroller extends Component {
   static propTypes = {
@@ -13,7 +13,7 @@ export default class WindowScroller extends Component {
      * ({ height, scrollTop }) => PropTypes.element
      */
     children: PropTypes.func.isRequired,
-    
+
     /** Element to attach scroll event listeners. Defaults to window. */
     scrollElement: PropTypes.oneOfType([
       PropTypes.instanceOf(Element),
@@ -49,21 +49,21 @@ export default class WindowScroller extends Component {
     this._onResizeWindow = this._onResizeWindow.bind(this)
     this._enablePointerEventsAfterDelayCallback = this._enablePointerEventsAfterDelayCallback.bind(this)
   }
-  
+
   // Can’t really use defaultProps for `window` without breaking server-side rendering
-  get scrollElement() {
+  get scrollElement () {
     return this.props.scrollElement || window
   }
 
   componentDidMount () {
-    this._updateDimensions();
+    this._updateDimensions()
     registerScrollListener(this, this.scrollElement)
     window.addEventListener('resize', this._onResizeWindow, false)
   }
-  
+
   componentWillReceiveProps (nextProps) {
     if (nextProps.scrollElement && nextProps.scrollElement !== this.scrollElement) {
-      this._updateDimensions();
+      this._updateDimensions()
       unregisterScrollListener(this, this.scrollElement)
       registerScrollListener(this, nextProps.scrollElement)
     } else if (!nextProps.scrollElement && this.scrollElement !== window) {
@@ -92,7 +92,7 @@ export default class WindowScroller extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
   }
-  
+
   _updateDimensions () {
     const { height } = this.state
 
