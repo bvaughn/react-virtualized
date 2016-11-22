@@ -33,7 +33,7 @@ function enablePointerEventsAfterDelay (element) {
 }
 
 function onScrollWindow (event) {
-  const disabledElement = event.target === window ? document.documentElement : event.target
+  const disabledElement = event.currentTarget === window ? document.documentElement : event.currentTarget
   disabledElement.classList.add(styles.disabled)
 
   enablePointerEventsAfterDelay(disabledElement)
