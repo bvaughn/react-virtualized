@@ -766,10 +766,16 @@ export default class Grid extends Component {
     }
 
     if (scrollLeft >= 0) {
+      // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
+      const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+      newState.scrollDirectionHorizontal = scrollDirectionHorizontal
       newState.scrollLeft = scrollLeft
     }
 
     if (scrollTop >= 0) {
+      // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
+      const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+      newState.scrollDirectionVertical = scrollDirectionVertical
       newState.scrollTop = scrollTop
     }
 
@@ -865,18 +871,30 @@ export default class Grid extends Component {
       this.state.scrollLeft !== scrollLeft ||
       this.state.scrollTop !== scrollTop
     ) {
-      // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
-      const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
-      const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
-
-      this.setState({
+      const newState = {
         isScrolling: true,
-        scrollDirectionHorizontal,
-        scrollDirectionVertical,
-        scrollLeft,
-        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
-        scrollTop
-      })
+        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED
+      }
+
+      // For each axis, only update the internal scroll state if it is not already being controlled
+      // by the parent component.
+
+      // In each case, also track the scrolling direction so we can more efficiently overscan rows
+      // to reduce empty space around the edges while scrolling.
+
+      if (this.props.scrollLeft === undefined) {
+        const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+        newState.scrollDirectionHorizontal = scrollDirectionHorizontal
+        newState.scrollLeft = scrollLeft
+      }
+
+      if (this.props.scrollTop === undefined) {
+        const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+        newState.scrollDirectionVertical = scrollDirectionVertical
+        newState.scrollTop = scrollTop
+      }
+
+      this.setState(newState)
     }
 
     this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
