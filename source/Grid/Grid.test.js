@@ -3,6 +3,7 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
+import shallowCompare from 'react-addons-shallow-compare'
 import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
 import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 
@@ -1340,6 +1341,55 @@ describe('Grid', () => {
       cellRendererCalled = false
       render(markup)
       expect(cellRendererCalled).toEqual(false)
+    })
+
+    it('should not re-render grid components if they shallowCompare style', () => {
+      let componentUpdates = 0
+
+      class GridComponent extends React.Component {
+        shouldComponentUpdate (nextProps, nextState) {
+          return shallowCompare(this, nextProps, nextState)
+        }
+
+        componentDidUpdate () {
+          componentUpdates++
+        }
+
+        render () {
+          const { columnIndex, rowIndex, style } = this.props
+          return (
+            <div
+              className='gridItem'
+              style={style}
+            >
+              {`row:${rowIndex}, column:${columnIndex}`}
+            </div>
+          )
+        }
+      }
+
+      function cellRenderer ({ columnIndex, key, rowIndex, style }) {
+        return <GridComponent
+          key={key}
+          columnIndex={columnIndex}
+          rowIndex={rowIndex}
+          style={style}
+        />
+      }
+
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollTop: 0,
+        width: 100
+      }
+
+      const grid = render(getMarkup(props))
+      simulateScroll({ grid, scrollTop: 1 })
+
+      expect(componentUpdates).toEqual(0)
     })
   })
 })

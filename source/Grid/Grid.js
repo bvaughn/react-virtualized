@@ -208,6 +208,7 @@ export default class Grid extends Component {
   constructor (props, context) {
     super(props, context)
 
+    this._styleCache = {}
     this.state = {
       isScrolling: false,
       scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
@@ -663,6 +664,7 @@ export default class Grid extends Component {
       this._childrenToDisplay = cellRangeRenderer({
         cellCache: this._cellCache,
         cellRenderer,
+        styleCache: this._styleCache,
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
