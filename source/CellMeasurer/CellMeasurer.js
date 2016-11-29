@@ -190,7 +190,7 @@ export default class CellMeasurer extends Component {
     const rendered = cellRenderer({
       columnIndex,
       rowIndex,
-      index: rowIndex, // List component `rowRenderer` compatibility
+      index: rowIndex // List component `rowRenderer` compatibility
     })
 
     // Handle edge case where this method is called before the CellMeasurer has completed its initial render (and mounted).
