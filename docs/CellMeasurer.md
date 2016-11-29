@@ -12,7 +12,7 @@ This is an advanced component and has some limitations and performance considera
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| cellRenderer | Function | ✓ | Renders a cell given its indices. `({ columnIndex: number, rowIndex: number }): PropTypes.node` |
+| cellRenderer | Function | ✓ | Renders a cell given its indices. `({ columnIndex: number, rowIndex: number, index: number }): PropTypes.node`.<br/>**NOTE**: `index` is just an alias to `rowIndex` |
 | cellSizeCache | Object |  | Optional, custom caching strategy for cell sizes. Learn more [here](#cellsizecache). |
 | children | Function | ✓ | Function responsible for rendering a virtualized component; `({ getColumnWidth: Function, getRowHeight: Function, resetMeasurements: Function }) => PropTypes.element` |
 | columnCount | number | ✓ | Number of columns in the `Grid`; in order to measure a row's height, all of that row's columns must be rendered. |
@@ -178,11 +178,9 @@ function renderList(listProps, cellMeasurerProps = Object.create(null)) {
   return (
     <CellMeasurer
       {...cellMeasurerProps}
-      cellRenderer={
-        ({ rowIndex, ...rest }) => listProps.rowRenderer({ index: rowIndex, ...rest })
-      }
       columnCount={1}
       rowCount={listProps.rowCount}
+      cellRenderer={listProps.rowRenderer}
     >
       {({ getRowHeight }) => (
         <List
