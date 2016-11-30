@@ -162,33 +162,3 @@ For this reason it may not be a good idea to use this HOC for `Grid`s containing
 
 Since this component measures one cell at a time to determine it's width/height, it will likely be slow if a user skips many rows (or columns) at once by scrolling with a scrollbar or via a scroll-to-cell prop.
 There is (unfortunately) no workaround for this performance limitation at the moment.
-
-### Using `CellMeasurer` with `List`
-
-This HOC is intended for use with a `Grid`.
-That means it passes `cellRenderer` the same named index parameter used by `Grid` (`rowIndex`).
-However the `rowRenderer` used by `List` expects a slightly different named index parameter (`index`).
-To use `CellMeasurerer` with `List` then you need to provide an adapter method that converts the param names.
-For example:
-
-```jsx
-import { CellMeasurer, List } from 'react-virtualized';
-
-function renderList(listProps, cellMeasurerProps = Object.create(null)) {
-  return (
-    <CellMeasurer
-      {...cellMeasurerProps}
-      columnCount={1}
-      rowCount={listProps.rowCount}
-      cellRenderer={listProps.rowRenderer}
-    >
-      {({ getRowHeight }) => (
-        <List
-          {...listProps}
-          rowHeight={getRowHeight}
-        />
-      )}
-    </CellMeasurer>
-  )
-}
-```
