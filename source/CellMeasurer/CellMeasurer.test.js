@@ -72,7 +72,7 @@ describe('CellMeasurer', () => {
     })
     expect(cellRendererParams).toEqual([])
     expect(getRowHeight({ index: 0 })).toEqual(75)
-    expect(cellRendererParams).toEqual([{ columnIndex: 0, rowIndex: 0 }])
+    expect(cellRendererParams).toEqual([{ columnIndex: 0, index: 0, rowIndex: 0 }])
     expect(getColumnWidth({ index: 0 })).toEqual(100)
 
     // For some reason this explicit unmount is necessary.
@@ -94,7 +94,7 @@ describe('CellMeasurer', () => {
     })
     expect(cellRendererParams).toEqual([])
     expect(getColumnWidth({ index: 0 })).toEqual(125)
-    expect(cellRendererParams).toEqual([{ columnIndex: 0, rowIndex: 0 }])
+    expect(cellRendererParams).toEqual([{ columnIndex: 0, index: 0, rowIndex: 0 }])
     expect(getRowHeight({ index: 0 })).toEqual(50)
   })
 
@@ -136,6 +136,23 @@ describe('CellMeasurer', () => {
     expect(getRowHeight({ index: 0 })).toEqual(50)
   })
 
+  it('should support :rowRenderer via :index param for easier List integration', () => {
+    const {
+      cellRenderer,
+      cellRendererParams
+    } = createCellRenderer()
+    const { getColumnWidth } = renderHelper({
+      cellRenderer,
+      rowCount: 5,
+      rowHeight: 50
+    })
+    getColumnWidth({ index: 0 })
+    expect(cellRendererParams.length).toEqual(5)
+    for (let i = 0; i < 5; i++) {
+      expect(cellRendererParams[i].index).toEqual(i)
+    }
+  })
+
   it('should cache cell measurements once a cell has been rendered', () => {
     const {
       cellRenderer,
@@ -149,15 +166,15 @@ describe('CellMeasurer', () => {
     getRowHeight({ index: 0 })
     getRowHeight({ index: 1 })
     expect(cellRendererParams).toEqual([
-      { columnIndex: 0, rowIndex: 0 },
-      { columnIndex: 0, rowIndex: 1 }
+      { columnIndex: 0, index: 0, rowIndex: 0 },
+      { columnIndex: 0, index: 1, rowIndex: 1 }
     ])
 
     getRowHeight({ index: 0 })
     getRowHeight({ index: 1 })
     expect(cellRendererParams).toEqual([
-      { columnIndex: 0, rowIndex: 0 },
-      { columnIndex: 0, rowIndex: 1 }
+      { columnIndex: 0, index: 0, rowIndex: 0 },
+      { columnIndex: 0, index: 1, rowIndex: 1 }
     ])
   })
 
@@ -175,8 +192,8 @@ describe('CellMeasurer', () => {
     getRowHeight({ index: 0 })
     getRowHeight({ index: 1 })
     expect(cellRendererParams).toEqual([
-      { columnIndex: 0, rowIndex: 0 },
-      { columnIndex: 0, rowIndex: 1 }
+      { columnIndex: 0, index: 0, rowIndex: 0 },
+      { columnIndex: 0, index: 1, rowIndex: 1 }
     ])
 
     resetMeasurements()
@@ -184,10 +201,10 @@ describe('CellMeasurer', () => {
     getRowHeight({ index: 0 })
     getRowHeight({ index: 1 })
     expect(cellRendererParams).toEqual([
-      { columnIndex: 0, rowIndex: 0 },
-      { columnIndex: 0, rowIndex: 1 },
-      { columnIndex: 0, rowIndex: 0 },
-      { columnIndex: 0, rowIndex: 1 }
+      { columnIndex: 0, index: 0, rowIndex: 0 },
+      { columnIndex: 0, index: 1, rowIndex: 1 },
+      { columnIndex: 0, index: 0, rowIndex: 0 },
+      { columnIndex: 0, index: 1, rowIndex: 1 }
     ])
   })
 
@@ -205,8 +222,8 @@ describe('CellMeasurer', () => {
     getColumnWidth({ index: 0 })
     getColumnWidth({ index: 1 })
     expect(cellRendererParams).toEqual([
-      { columnIndex: 0, rowIndex: 0 },
-      { columnIndex: 1, rowIndex: 0 }
+      { columnIndex: 0, index: 0, rowIndex: 0 },
+      { columnIndex: 1, index: 0, rowIndex: 0 }
     ])
 
     resetMeasurementForColumn(0)
@@ -214,9 +231,9 @@ describe('CellMeasurer', () => {
     getColumnWidth({ index: 0 })
     getColumnWidth({ index: 1 })
     expect(cellRendererParams).toEqual([
-      { columnIndex: 0, rowIndex: 0 },
-      { columnIndex: 1, rowIndex: 0 },
-      { columnIndex: 0, rowIndex: 0 }
+      { columnIndex: 0, index: 0, rowIndex: 0 },
+      { columnIndex: 1, index: 0, rowIndex: 0 },
+      { columnIndex: 0, index: 0, rowIndex: 0 }
     ])
   })
 
@@ -234,8 +251,8 @@ describe('CellMeasurer', () => {
     getRowHeight({ index: 0 })
     getRowHeight({ index: 1 })
     expect(cellRendererParams).toEqual([
-      { columnIndex: 0, rowIndex: 0 },
-      { columnIndex: 0, rowIndex: 1 }
+      { columnIndex: 0, index: 0, rowIndex: 0 },
+      { columnIndex: 0, index: 1, rowIndex: 1 }
     ])
 
     resetMeasurementForRow(0)
@@ -243,9 +260,9 @@ describe('CellMeasurer', () => {
     getRowHeight({ index: 0 })
     getRowHeight({ index: 1 })
     expect(cellRendererParams).toEqual([
-      { columnIndex: 0, rowIndex: 0 },
-      { columnIndex: 0, rowIndex: 1 },
-      { columnIndex: 0, rowIndex: 0 }
+      { columnIndex: 0, index: 0, rowIndex: 0 },
+      { columnIndex: 0, index: 1, rowIndex: 1 },
+      { columnIndex: 0, index: 0, rowIndex: 0 }
     ])
   })
 
@@ -342,7 +359,7 @@ describe('CellMeasurer', () => {
     const height2 = getRowHeight({ index: 1 })
     const height3 = getRowHeight({ index: 0 })
     expect(cellRendererParams).toEqual([
-      { columnIndex: 0, rowIndex: 0 }
+      { columnIndex: 0, index: 0, rowIndex: 0 }
     ])
 
     const expectedHeight = HEIGHTS[0]
@@ -373,7 +390,7 @@ describe('CellMeasurer', () => {
     const width2 = getColumnWidth({ index: 1 })
     const width3 = getColumnWidth({ index: 0 })
     expect(cellRendererParams).toEqual([
-      { columnIndex: 0, rowIndex: 0 }
+      { columnIndex: 0, index: 0, rowIndex: 0 }
     ])
 
     const expectedWidth = WIDTHS[0]
