@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.6.0 (pending)
+`CellMeasurer` passes `index` param (duplicate of `rowIndex`) in order to more easily integrate with `List` by default.
+
 ##### 8.5.3
 Changed overscan rows/cols behavior as described [here](https://github.com/bvaughn/react-virtualized/pull/478).
 This change targets performance improvements only and should have no other noticeable impact.
