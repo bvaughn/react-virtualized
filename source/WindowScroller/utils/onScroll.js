@@ -39,9 +39,8 @@ function onScrollWindow (event) {
     originalBodyPointerEvents = document.body.style.pointerEvents
 
     document.body.style.pointerEvents = 'none'
-
-    enablePointerEventsAfterDelay()
   }
+  enablePointerEventsAfterDelay()
   mountedInstances.forEach(component => component._onScrollWindow(event))
 }
 
