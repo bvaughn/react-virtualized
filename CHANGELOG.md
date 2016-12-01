@@ -4,6 +4,8 @@ Changelog
 ##### 8.6.0 (pending)
 `CellMeasurer` passes `index` param (duplicate of `rowIndex`) in order to more easily integrate with `List` by default.
 
+`Grid` now better handles a mix of controlled and uncontrolled scroll offsets. Previously changes to one offset would wipe out the other causing cells to disappear (see PR #482). This is an edge-case bug and only impacted an uncommon usecase for `Grid`. As such this change is expected to only impact only a small percetange of users.
+
 ##### 8.5.3
 Changed overscan rows/cols behavior as described [here](https://github.com/bvaughn/react-virtualized/pull/478).
 This change targets performance improvements only and should have no other noticeable impact.
