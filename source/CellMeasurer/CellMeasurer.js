@@ -71,8 +71,9 @@ export default class CellMeasurer extends Component {
   }
 
   getColumnWidth ({ index }) {
-    if (this._cellSizeCache.hasColumnWidth(index)) {
-      return this._cellSizeCache.getColumnWidth(index)
+    const columnWidth = this._cellSizeCache.getColumnWidth(index)
+    if (columnWidth != null) {
+      return columnWidth
     }
 
     const { rowCount } = this.props
@@ -95,8 +96,9 @@ export default class CellMeasurer extends Component {
   }
 
   getRowHeight ({ index }) {
-    if (this._cellSizeCache.hasRowHeight(index)) {
-      return this._cellSizeCache.getRowHeight(index)
+    const rowHeight = this._cellSizeCache.getRowHeight(index)
+    if (rowHeight != null) {
+      return rowHeight
     }
 
     const { columnCount } = this.props

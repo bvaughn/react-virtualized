@@ -11,6 +11,9 @@ export default class CellSizeCache {
     this._uniformRowHeight = uniformRowHeight
     this._uniformColumnWidth = uniformColumnWidth
 
+    this._cachedColumnWidth = undefined
+    this._cachedRowHeight = undefined
+
     this._cachedColumnWidths = {}
     this._cachedRowHeights = {}
   }
@@ -37,28 +40,16 @@ export default class CellSizeCache {
     delete this._cachedRowHeights[index]
   }
 
-  getColumnWidth (index: number): number {
+  getColumnWidth (index: number): ?number {
     return this._uniformColumnWidth
       ? this._cachedColumnWidth
       : this._cachedColumnWidths[index]
   }
 
-  getRowHeight (index: number): number {
+  getRowHeight (index: number): ?number {
     return this._uniformRowHeight
       ? this._cachedRowHeight
       : this._cachedRowHeights[index]
-  }
-
-  hasColumnWidth (index: number): boolean {
-    return this._uniformColumnWidth
-      ? !!this._cachedColumnWidth
-      : !!this._cachedColumnWidths[index]
-  }
-
-  hasRowHeight (index: number): boolean {
-    return this._uniformRowHeight
-      ? !!this._cachedRowHeight
-      : !!this._cachedRowHeights[index]
   }
 
   setColumnWidth (index: number, width: number) {
