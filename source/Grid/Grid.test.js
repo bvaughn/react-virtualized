@@ -830,10 +830,16 @@ describe('Grid', () => {
     })
 
     it('should set the correct scroll direction', () => {
-      const grid = render(getMarkup({
+      // Do not pass in the initial state as props, otherwise the internal state is forbidden from
+      // updating itself
+      const grid = render(getMarkup())
+
+      // Simulate a scroll to set the initial internal state
+      simulateScroll({
+        grid,
         scrollLeft: 50,
         scrollTop: 50
-      }))
+      })
 
       expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
       expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
@@ -854,6 +860,67 @@ describe('Grid', () => {
       })
 
       expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
+    })
+
+    it('should set the correct scroll direction when scroll position is updated from props', () => {
+      let grid = render(getMarkup({
+        scrollLeft: 50,
+        scrollTop: 50
+      }))
+
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
+
+      grid = render(getMarkup({
+        scrollLeft: 0,
+        scrollTop: 0
+      }))
+
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_BACKWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_BACKWARD)
+
+      grid = render(getMarkup({
+        scrollLeft: 100,
+        scrollTop: 100
+      }))
+
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
+    })
+
+    it('should not change the scroll position or direction if the axis is controlled by the parent component', () => {
+      // Setting the scrollTop prop here implies it is controlled by the parent component
+      // (e.g. WindowScroller), while scrollLeft is controlled internally by the Grid
+      const grid = render(getMarkup({
+        scrollTop: 50
+      }))
+
+      expect(grid.state.scrollLeft).toEqual(0)
+      expect(grid.state.scrollTop).toEqual(50)
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
+
+      simulateScroll({
+        grid,
+        scrollLeft: 100,
+        scrollTop: 100
+      })
+
+      expect(grid.state.scrollLeft).toEqual(100)
+      expect(grid.state.scrollTop).toEqual(50)
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
+
+      simulateScroll({
+        grid,
+        scrollLeft: 0,
+        scrollTop: 0
+      })
+
+      expect(grid.state.scrollLeft).toEqual(0)
+      expect(grid.state.scrollTop).toEqual(50)
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_BACKWARD)
       expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
     })
 
