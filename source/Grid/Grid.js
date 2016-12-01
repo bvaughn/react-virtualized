@@ -766,16 +766,16 @@ export default class Grid extends Component {
     }
 
     if (scrollLeft >= 0) {
-      // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
-      const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
-      newState.scrollDirectionHorizontal = scrollDirectionHorizontal
+      newState.scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft
+        ? SCROLL_DIRECTION_FORWARD
+        : SCROLL_DIRECTION_BACKWARD
       newState.scrollLeft = scrollLeft
     }
 
     if (scrollTop >= 0) {
-      // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
-      const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
-      newState.scrollDirectionVertical = scrollDirectionVertical
+      newState.scrollDirectionVertical = scrollTop > this.state.scrollTop
+        ? SCROLL_DIRECTION_FORWARD
+        : SCROLL_DIRECTION_BACKWARD
       newState.scrollTop = scrollTop
     }
 
@@ -876,21 +876,18 @@ export default class Grid extends Component {
         scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED
       }
 
-      // For each axis, only update the internal scroll state if it is not already being controlled
-      // by the parent component.
-
-      // In each case, also track the scrolling direction so we can more efficiently overscan rows
-      // to reduce empty space around the edges while scrolling.
-
+      // For each axis, only update the internal scroll state if it is not already being controlled by the parent component.
+      // In each case, also track the scrolling direction as it is used for overscanning.
       if (this.props.scrollLeft === undefined) {
-        const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
-        newState.scrollDirectionHorizontal = scrollDirectionHorizontal
+        newState.scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft
+          ? SCROLL_DIRECTION_FORWARD
+          : SCROLL_DIRECTION_BACKWARD
         newState.scrollLeft = scrollLeft
       }
-
       if (this.props.scrollTop === undefined) {
-        const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
-        newState.scrollDirectionVertical = scrollDirectionVertical
+        newState.scrollDirectionVertical = scrollTop > this.state.scrollTop
+          ? SCROLL_DIRECTION_FORWARD
+          : SCROLL_DIRECTION_BACKWARD
         newState.scrollTop = scrollTop
       }
 
