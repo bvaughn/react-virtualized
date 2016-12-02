@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.6.1
+Updated `CellSizeCache` interface for the better perfomance by removing `has` methods, reducing a double hashtable lookup to a single lookup. Special thanks to @arusakov for this contribution!
+
 ##### 8.6.0
 `CellMeasurer` passes `index` param (duplicate of `rowIndex`) in order to more easily integrate with `List` by default.
 
