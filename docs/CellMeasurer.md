@@ -43,10 +43,8 @@ class CellSizeCache {
   clearAllRowHeights (): void;
   clearColumnWidth (index: number): void;
   clearRowHeight (index: number): void;
-  getColumnWidth (index: number): number;
-  getRowHeight (index: number): number;
-  hasColumnWidth (index: number): boolean;
-  hasRowHeight (index: number): boolean;
+  getColumnWidth (index: number): number | undefined | null;
+  getRowHeight (index: number): number | undefined | null;
   setColumnWidth (index: number, width: number): void;
   setRowHeight (index: number, height: number): void;
 }

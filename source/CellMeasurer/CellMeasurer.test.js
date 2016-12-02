@@ -284,19 +284,17 @@ describe('CellMeasurer', () => {
       rowHeight: 50
     })
 
-    expect(customCellSizeCache.hasColumnWidth(0)).toEqual(false)
+    expect(customCellSizeCache.getColumnWidth(0)).toEqual(undefined)
     expect(cellRendererParams.length).toEqual(0)
     expect(getColumnWidth({ index: 0 })).toEqual(200)
-    expect(customCellSizeCache.hasColumnWidth(0)).toEqual(true)
     expect(customCellSizeCache.getColumnWidth(0)).toEqual(200)
     expect(cellRendererParams.length).toEqual(2)
     expect(getColumnWidth({ index: 0 })).toEqual(200)
     expect(cellRendererParams.length).toEqual(2)
 
-    expect(customCellSizeCache.hasRowHeight(0)).toEqual(false)
+    expect(customCellSizeCache.getRowHeight(0)).toEqual(undefined)
     expect(cellRendererParams.length).toEqual(2)
     expect(getRowHeight({ index: 0 })).toEqual(50)
-    expect(customCellSizeCache.hasRowHeight(0)).toEqual(true)
     expect(customCellSizeCache.getRowHeight(0)).toEqual(50)
     expect(cellRendererParams.length).toEqual(7)
     expect(getRowHeight({ index: 0 })).toEqual(50)
@@ -313,9 +311,9 @@ describe('CellMeasurer', () => {
       columnCount: 5,
       columnWidth: 200
     })
-    expect(customCellSizeCacheA.hasColumnWidth(0)).toEqual(false)
+    expect(customCellSizeCacheA.getColumnWidth(0)).toEqual(undefined)
     expect(getColumnWidthA({ index: 0 })).toEqual(200)
-    expect(customCellSizeCacheA.hasColumnWidth(0)).toEqual(true)
+    expect(customCellSizeCacheA.getColumnWidth(0)).toEqual(200)
 
     const { getColumnWidth: getColumnWidthB } = renderHelper({
       cellRenderer,
@@ -323,9 +321,9 @@ describe('CellMeasurer', () => {
       columnCount: 5,
       columnWidth: 100
     })
-    expect(customCellSizeCacheA.hasColumnWidth(0)).toEqual(true)
+    expect(customCellSizeCacheA.getColumnWidth(0)).toEqual(200)
     expect(getColumnWidthB({ index: 0 })).toEqual(200)
-    expect(customCellSizeCacheA.hasColumnWidth(0)).toEqual(true)
+    expect(customCellSizeCacheA.getColumnWidth(0)).toEqual(200)
 
     const { getColumnWidth: getColumnWidthC } = renderHelper({
       cellRenderer,
@@ -333,9 +331,9 @@ describe('CellMeasurer', () => {
       columnCount: 5,
       columnWidth: 50
     })
-    expect(customCellSizeCacheB.hasColumnWidth(0)).toEqual(false)
+    expect(customCellSizeCacheB.getColumnWidth(0)).toEqual(undefined)
     expect(getColumnWidthC({ index: 0 })).toEqual(50)
-    expect(customCellSizeCacheB.hasColumnWidth(0)).toEqual(true)
+    expect(customCellSizeCacheB.getColumnWidth(0)).toEqual(50)
   })
 
   it('should calculate row height just once when using the alternative uniform-size cell size cache', () => {
