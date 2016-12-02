@@ -60,11 +60,11 @@ export default class WindowScroller extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.scrollElement && nextProps.scrollElement !== this.scrollElement) {
-      this._updateDimensions()
+      this._updateDimensions(nextProps.scrollElement)
       unregisterScrollListener(this, this.scrollElement)
       registerScrollListener(this, nextProps.scrollElement)
     } else if (!nextProps.scrollElement && this.scrollElement !== window) {
-      this._updateDimensions()
+      this._updateDimensions(window)
       unregisterScrollListener(this, this.scrollElement)
       registerScrollListener(this, window)
     }
@@ -91,12 +91,12 @@ export default class WindowScroller extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _updateDimensions () {
+  _updateDimensions (scrollElement = this.scrollElement) {
     const { height } = this.state
 
-    this._positionFromTop = getPositionFromTop(ReactDOM.findDOMNode(this), this.scrollElement)
+    this._positionFromTop = getPositionFromTop(ReactDOM.findDOMNode(this), scrollElement)
 
-    const newHeight = getHeight(this.scrollElement)
+    const newHeight = getHeight(scrollElement)
     if (height !== newHeight) {
       this.setState({
         height: newHeight
