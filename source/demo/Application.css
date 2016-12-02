@@ -108,7 +108,7 @@ a {
 .ScrollingBody {
   composes: Body;
   overflow: auto;
-  flex: 0 1 auto;
+  flex: 1 1 auto;
 }
 .column {
   display: flex;
