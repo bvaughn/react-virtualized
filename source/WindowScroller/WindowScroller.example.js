@@ -66,7 +66,7 @@ export default class WindowScrollerExample extends Component {
               aria-label='Use custom element for scrolling'
               className={styles.checkbox}
               type='checkbox'
-              value={isScrollingCustomElement}
+              checked={isScrollingCustomElement}
               onChange={this.onChangeCustomElementCheckbox}
             />
             Use custom element for scrolling
