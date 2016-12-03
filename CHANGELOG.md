@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.7.1
+Reverted part of the change introduced in version 8.6.0 that changed the behavior regarding controlled/uncontrolled `scrollTop` and `scrollLeft` props and `Grid` in a way that was not backwards compatible. (See issue #490 for more.)
+
 ##### 8.7.0
 Added `updatePosition` to `WindowScroller` to handle case when header items change or resize. `WindowScroller` also better handles window resize events.
 

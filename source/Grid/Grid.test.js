@@ -889,41 +889,6 @@ describe('Grid', () => {
       expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
     })
 
-    it('should not change the scroll position or direction if the axis is controlled by the parent component', () => {
-      // Setting the scrollTop prop here implies it is controlled by the parent component
-      // (e.g. WindowScroller), while scrollLeft is controlled internally by the Grid
-      const grid = render(getMarkup({
-        scrollTop: 50
-      }))
-
-      expect(grid.state.scrollLeft).toEqual(0)
-      expect(grid.state.scrollTop).toEqual(50)
-      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
-      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
-
-      simulateScroll({
-        grid,
-        scrollLeft: 100,
-        scrollTop: 100
-      })
-
-      expect(grid.state.scrollLeft).toEqual(100)
-      expect(grid.state.scrollTop).toEqual(50)
-      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
-      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
-
-      simulateScroll({
-        grid,
-        scrollLeft: 0,
-        scrollTop: 0
-      })
-
-      expect(grid.state.scrollLeft).toEqual(0)
-      expect(grid.state.scrollTop).toEqual(50)
-      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_BACKWARD)
-      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
-    })
-
     it('should overscan in the direction being scrolled', async (done) => {
       const helper = createHelper()
 

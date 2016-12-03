@@ -871,27 +871,18 @@ export default class Grid extends Component {
       this.state.scrollLeft !== scrollLeft ||
       this.state.scrollTop !== scrollTop
     ) {
-      const newState = {
+      // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
+      const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+      const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+
+      this.setState({
         isScrolling: true,
-        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED
-      }
-
-      // For each axis, only update the internal scroll state if it is not already being controlled by the parent component.
-      // In each case, also track the scrolling direction as it is used for overscanning.
-      if (this.props.scrollLeft === undefined) {
-        newState.scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft
-          ? SCROLL_DIRECTION_FORWARD
-          : SCROLL_DIRECTION_BACKWARD
-        newState.scrollLeft = scrollLeft
-      }
-      if (this.props.scrollTop === undefined) {
-        newState.scrollDirectionVertical = scrollTop > this.state.scrollTop
-          ? SCROLL_DIRECTION_FORWARD
-          : SCROLL_DIRECTION_BACKWARD
-        newState.scrollTop = scrollTop
-      }
-
-      this.setState(newState)
+        scrollDirectionHorizontal,
+        scrollDirectionVertical,
+        scrollLeft,
+        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
+        scrollTop
+      })
     }
 
     this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
