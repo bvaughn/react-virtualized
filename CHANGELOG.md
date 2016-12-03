@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.7.0
+Added `updatePosition` to `WindowScroller` to handle case when header items change or resize. `WindowScroller` also better handles window resize events.
+
 ##### 8.6.1
 Updated `CellSizeCache` interface for the better perfomance by removing `has` methods, reducing a double hashtable lookup to a single lookup. Special thanks to @arusakov for this contribution!
 

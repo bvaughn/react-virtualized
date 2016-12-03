@@ -14,6 +14,14 @@ This may change with a future release but for the time being this HOC is should 
 | onResize | Function |  | Callback to be invoked on-resize; it is passed the following named parameters: `({ height: number })`. | 
 | onScroll | Function |  | Callback to be invoked on-scroll; it is passed the following named parameters: `({ scrollTop: number })`. | 
 
+### Public Methods
+
+##### updatePosition
+
+Recalculates scroll position from the top of page.
+
+This methoed is automatically triggered when the component mounts as well as when the browser resizes. It should be manually called if the page header (eg any items in the DOM "above" the `WindowScroller`) resizes or changes.
+
 ### Examples
 
 ```javascript

@@ -27,8 +27,11 @@ describe('WindowScroller', () => {
     document.dispatchEvent(new window.Event('resize', { bubbles: true }))
   }
 
-  function getMarkup (props = {}) {
-    return (
+  function getMarkup ({
+    headerElements,
+    ...props
+  } = {}) {
+    const windowScroller = (
       <WindowScroller {...props}>
         {({ height, isScrolling, scrollTop }) => (
           <ChildComponent
@@ -39,6 +42,17 @@ describe('WindowScroller', () => {
         )}
       </WindowScroller>
     )
+
+    if (headerElements) {
+      return (
+        <div>
+          {headerElements}
+          {windowScroller}
+        </div>
+      )
+    } else {
+      return windowScroller
+    }
   }
 
   // Starts updating scrollTop only when the top position is reached
@@ -183,6 +197,61 @@ describe('WindowScroller', () => {
 
       // Set default window height
       window.innerHeight = 500
+    })
+  })
+
+  describe('updatePosition', () => {
+    it('should calculate the initial offset from the top of the page when mounted', () => {
+      let windowScroller
+
+      render(getMarkup({
+        headerElements: <div style={{ height: 100 }}></div>,
+        ref: (ref) => {
+          windowScroller = ref
+        }
+      }))
+
+      expect(windowScroller._positionFromTop > 100).toBeTruthy()
+    })
+
+    it('should recalculate the offset from the top when the window resizes', () => {
+      let windowScroller
+
+      const rendered = render(getMarkup({
+        headerElements: <div id='header' style={{ height: 100 }}></div>,
+        ref: (ref) => {
+          windowScroller = ref
+        }
+      }))
+
+      expect(windowScroller._positionFromTop < 200).toBeTruthy()
+
+      const header = findDOMNode(rendered).querySelector('#header')
+      header.style.height = '200px'
+
+      simulateWindowResize({ height: 1000 })
+
+      expect(windowScroller._positionFromTop > 200).toBeTruthy()
+    })
+
+    it('should recalculate the offset from the top if called externally', () => {
+      let windowScroller
+
+      const rendered = render(getMarkup({
+        headerElements: <div id='header' style={{ height: 100 }}></div>,
+        ref: (ref) => {
+          windowScroller = ref
+        }
+      }))
+
+      expect(windowScroller._positionFromTop < 200).toBeTruthy()
+
+      const header = findDOMNode(rendered).querySelector('#header')
+      header.style.height = '200px'
+
+      windowScroller.updatePosition()
+
+      expect(windowScroller._positionFromTop > 200).toBeTruthy()
     })
   })
 })

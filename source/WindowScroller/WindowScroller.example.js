@@ -17,11 +17,17 @@ export default class AutoSizerExample extends Component {
   constructor (props) {
     super(props)
 
+    this.state = {
+      showHeaderText: true
+    }
+
+    this._hideHeader = this._hideHeader.bind(this)
     this._rowRenderer = this._rowRenderer.bind(this)
   }
 
   render () {
     const { list } = this.context
+    const { showHeaderText } = this.state
 
     return (
       <ContentBox>
@@ -31,13 +37,27 @@ export default class AutoSizerExample extends Component {
           docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/WindowScroller.md'
         />
 
-        <ContentBoxParagraph>
-          This component decorates <code>List</code>, <code>Table</code>, or any other component
-          and manages the window scroll to scroll through the list
-        </ContentBoxParagraph>
+        {showHeaderText && (
+          <ContentBoxParagraph>
+            This component decorates <code>List</code>, <code>Table</code>, or any other component
+            and manages the window scroll to scroll through the list
+          </ContentBoxParagraph>
+        )}
+
+        {showHeaderText && (
+          <ContentBoxParagraph>
+            <button onClick={this._hideHeader}>
+              Hide header text
+            </button>
+          </ContentBoxParagraph>
+        )}
 
         <div className={styles.WindowScrollerWrapper}>
-          <WindowScroller>
+          <WindowScroller
+            ref={(ref) => {
+              this._windowScroller = ref
+            }}
+          >
             {({ height, isScrolling, scrollTop }) => (
               <AutoSizer disableHeight>
                 {({ width }) => (
@@ -45,9 +65,10 @@ export default class AutoSizerExample extends Component {
                     autoHeight
                     className={styles.List}
                     height={height}
+                    overscanRowCount={2}
                     rowCount={list.size}
                     rowHeight={30}
-                    rowRenderer={({ index, key, style }) => this._rowRenderer({ index, isScrolling, key, style })}
+                    rowRenderer={({ index, isVisible, key, style }) => this._rowRenderer({ index, isScrolling, isVisible, key, style })}
                     scrollTop={scrollTop}
                     width={width}
                   />
@@ -64,11 +85,22 @@ export default class AutoSizerExample extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  _rowRenderer ({ index, isScrolling, key, style }) {
+  _hideHeader () {
+    const { showHeaderText } = this.state
+
+    this.setState({
+      showHeaderText: !showHeaderText
+    }, () => {
+      this._windowScroller.updatePosition()
+    })
+  }
+
+  _rowRenderer ({ index, isScrolling, isVisible, key, style }) {
     const { list } = this.context
     const row = list.get(index)
     const className = cn(styles.row, {
-      [styles.rowScrolling]: isScrolling
+      [styles.rowScrolling]: isScrolling,
+      isVisible: isVisible
     })
 
     return (
