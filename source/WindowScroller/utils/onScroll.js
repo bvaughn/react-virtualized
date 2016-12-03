@@ -35,27 +35,26 @@ function enablePointerEventsAfterDelay () {
 }
 
 function onScrollWindow (event) {
-  if (originalBodyPointerEvents == null) {
+  if (event.currentTarget === window && originalBodyPointerEvents == null) {
     originalBodyPointerEvents = document.body.style.pointerEvents
 
     document.body.style.pointerEvents = 'none'
-
-    enablePointerEventsAfterDelay()
   }
+  enablePointerEventsAfterDelay()
   mountedInstances.forEach(component => component._onScrollWindow(event))
 }
 
-export function registerScrollListener (component) {
+export function registerScrollListener (component, element = window) {
   if (!mountedInstances.length) {
-    window.addEventListener('scroll', onScrollWindow)
+    element.addEventListener('scroll', onScrollWindow)
   }
   mountedInstances.push(component)
 }
 
-export function unregisterScrollListener (component) {
+export function unregisterScrollListener (component, element = window) {
   mountedInstances = mountedInstances.filter(c => (c !== component))
   if (!mountedInstances.length) {
-    window.removeEventListener('scroll', onScrollWindow)
+    element.removeEventListener('scroll', onScrollWindow)
     if (disablePointerEventsTimeoutId) {
       clearTimeout(disablePointerEventsTimeoutId)
       enablePointerEventsIfDisabled()
