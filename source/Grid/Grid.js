@@ -447,10 +447,16 @@ export default class Grid extends Component {
       nextProps.scrollLeft !== this.props.scrollLeft ||
       nextProps.scrollTop !== this.props.scrollTop
     ) {
-      this._setScrollPosition({
-        scrollLeft: nextProps.scrollLeft,
-        scrollTop: nextProps.scrollTop
-      })
+      const newState = {}
+
+      if (nextProps.scrollLeft != null) {
+        newState.scrollLeft = nextProps.scrollLeft
+      }
+      if (nextProps.scrollTop != null) {
+        newState.scrollTop = nextProps.scrollTop
+      }
+
+      this._setScrollPosition(newState)
     }
 
     if (
@@ -880,7 +886,7 @@ export default class Grid extends Component {
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
     // This causes a series of rapid renders that is slow for long lists.
     // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-    const { height, width } = this.props
+    const { autoHeight, height, width } = this.props
     const scrollbarSize = this._scrollbarSize
     const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
     const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
@@ -899,14 +905,19 @@ export default class Grid extends Component {
       const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
       const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
 
-      this.setState({
+      const newState = {
         isScrolling: true,
         scrollDirectionHorizontal,
         scrollDirectionVertical,
         scrollLeft,
-        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED,
-        scrollTop
-      })
+        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED
+      }
+
+      if (!autoHeight) {
+        newState.scrollTop = scrollTop
+      }
+
+      this.setState(newState)
     }
 
     this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
