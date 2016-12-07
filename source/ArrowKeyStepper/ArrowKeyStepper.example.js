@@ -65,6 +65,29 @@ export default class ArrowKeyStepperExample extends Component {
             />
             edges (default)
           </label>
+          <label>
+            <input
+              aria-label='Set mode equal to "align:top-left"'
+              checked={mode === 'align:top-left'}
+              className={styles.Radio}
+              type='radio'
+              onChange={event => event.target.checked && this.setState({ mode: 'align:top-left' })}
+              value='align:top-left'
+            />
+            align:top-left
+          </label>
+          <label>
+            <input
+              aria-label='Set mode equal to "align:top-right"'
+              checked={mode === 'align:top-right'}
+              className={styles.Radio}
+              type='radio'
+              onChange={event => event.target.checked && this.setState({ mode: 'align:top-right' })}
+              value='align:top-right'
+            />
+            align:top-right
+          </label>
+
         </ContentBoxParagraph>
 
         <ArrowKeyStepper
