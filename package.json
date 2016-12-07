@@ -4,6 +4,7 @@
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
   "version": "8.8.1",
+  "next": "8.8.0-alpha.2",
   "homepage": "https://github.com/bvaughn/react-virtualized",
   "main": "dist/commonjs/index.js",
   "module": "dist/es/index.js",
