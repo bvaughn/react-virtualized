@@ -36,17 +36,19 @@ export default class MultiGridExample extends Component {
 
     this.state = {
       fixedColumnCount: 2,
-      fixedRowCount: 1
+      fixedRowCount: 1,
+      scrollLeft: 0,
+      scrollToColumn: 0
     }
 
     this._cellRenderer = this._cellRenderer.bind(this)
-    this._onFixedColumnCountChange = this._onFixedColumnCountChange.bind(this)
-    this._onFixedRowCountChange = this._onFixedRowCountChange.bind(this)
+    this._onFixedColumnCountChange = this._createEventHandler('fixedColumnCount')
+    this._onFixedRowCountChange = this._createEventHandler('fixedRowCount')
+    this._onScrollLeftChange = this._createEventHandler('scrollLeft')
+    this._onScrollToColumnChange = this._createEventHandler('scrollToColumn')
   }
 
   render () {
-    const { fixedColumnCount, fixedRowCount } = this.state
-
     return (
       <ContentBox>
         <ContentBoxHeader
@@ -60,28 +62,19 @@ export default class MultiGridExample extends Component {
         </ContentBoxParagraph>
 
         <InputRow>
-          <LabeledInput
-            label='Num fixed columns'
-            name='fixedColumnCount'
-            onChange={this._onFixedColumnCountChange}
-            value={fixedColumnCount}
-          />
-          <LabeledInput
-            label='Num fixed rows'
-            name='fixedRowCount'
-            onChange={this._onFixedRowCountChange}
-            value={fixedRowCount}
-          />
+          {this._createLabeledInput('fixedColumnCount', this._onFixedColumnCountChange)}
+          {this._createLabeledInput('fixedRowCount', this._onFixedRowCountChange)}
+          {this._createLabeledInput('scrollLeft', this._onScrollLeftChange)}
+          {this._createLabeledInput('scrollToColumn', this._onScrollToColumnChange)}
         </InputRow>
 
         <AutoSizer disableHeight>
           {({ width }) => (
             <MultiGrid
+              {...this.state}
               cellRenderer={this._cellRenderer}
               columnWidth={100}
               columnCount={1000}
-              fixedColumnCount={fixedColumnCount}
-              fixedRowCount={fixedRowCount}
               height={300}
               rowHeight={25}
               rowCount={1000}
@@ -113,15 +106,26 @@ export default class MultiGridExample extends Component {
     )
   }
 
-  _onFixedColumnCountChange (event) {
-    const fixedColumnCount = parseInt(event.target.value, 10) || 0
+  _createEventHandler (property) {
+    return (event) => {
+      const value = parseInt(event.target.value, 10) || 0
 
-    this.setState({ fixedColumnCount })
+      this.setState({
+        [property]: value
+      })
+    }
   }
 
-  _onFixedRowCountChange (event) {
-    const fixedRowCount = parseInt(event.target.value, 10) || 0
+  _createLabeledInput (property, eventHandler) {
+    const value = this.state[property]
 
-    this.setState({ fixedRowCount })
+    return (
+      <LabeledInput
+        label={property}
+        name={property}
+        onChange={eventHandler}
+        value={value}
+      />
+    )
   }
 }

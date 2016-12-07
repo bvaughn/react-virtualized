@@ -3,6 +3,9 @@ import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import Grid from '../Grid'
 
+// TODO: Handle misplaced horizontal scrollbar for bottom/right grid
+// TODO: Handle :scrollLeft prop conflict with onScroll :scrollLeft param
+
 /**
  * Renders 1, 2, or 4 Grids depending on configuration.
  * A main (body) Grid will always be rendered.
@@ -67,8 +70,23 @@ export default class MultiGrid extends Component {
   }
 
   render () {
-    const { height, style, width } = this.props
-    const { scrollLeft, scrollTop } = this.state
+    const {
+      height,
+      onScroll,
+      onSectionRendered,
+      scrollLeft: scrollLeftProp,
+      scrollToColumn,
+      style,
+      width,
+      ...rest
+    } = this.props
+
+    // scrollTop and scrollToRow props are explicitly filtered out and ignored
+
+    const {
+      scrollLeft,
+      scrollTop
+    } = this.state
 
     return (
       <div
@@ -85,8 +103,11 @@ export default class MultiGrid extends Component {
             width
           }}
         >
-          {this._renderTopLeftGrid()}
-          {this._renderTopRightGrid({ scrollLeft })}
+          {this._renderTopLeftGrid(rest)}
+          {this._renderTopRightGrid({
+            ...rest,
+            scrollLeft
+          })}
         </div>
         <div
           onScroll={this._onScrollVertical}
@@ -96,12 +117,23 @@ export default class MultiGrid extends Component {
           style={{
             height: height - this._getTopGridHeight(),
             overflowY: 'auto',
+            overflowX: 'hidden',
             position: 'relative',
             width
           }}
         >
-          {this._renderBottomLeftGrid({ scrollTop })}
-          {this._renderBottomRightGrid({ scrollTop })}
+          {this._renderBottomLeftGrid({
+            ...rest,
+            scrollTop
+          })}
+          {this._renderBottomRightGrid({
+            ...rest,
+            onScroll,
+            onSectionRendered,
+            scrollLeft: scrollLeftProp,
+            scrollToColumn,
+            scrollTop
+          })}
         </div>
       </div>
     )
@@ -121,21 +153,21 @@ export default class MultiGrid extends Component {
   }
 
   _cellRendererBottomRightGrid ({ columnIndex, rowIndex, ...rest }) {
-    const { cellRenderer, fixedRowCount } = this.props
+    const { cellRenderer, fixedColumnCount, fixedRowCount } = this.props
 
     return cellRenderer({
       ...rest,
-      columnIndex: columnIndex + columnIndex,
+      columnIndex: columnIndex + fixedColumnCount,
       rowIndex: rowIndex + fixedRowCount
     })
   }
 
   _cellRendererTopRightGrid ({ columnIndex, ...rest }) {
-    const { cellRenderer } = this.props
+    const { cellRenderer, fixedColumnCount } = this.props
 
     return cellRenderer({
       ...rest,
-      columnIndex: columnIndex + columnIndex
+      columnIndex: columnIndex + fixedColumnCount
     })
   }
 
@@ -219,8 +251,14 @@ export default class MultiGrid extends Component {
     })
   }
 
-  _renderBottomLeftGrid ({ scrollTop }) {
-    const { fixedColumnCount, fixedRowCount, rowCount, styleBottomLeftGrid } = this.props
+  _renderBottomLeftGrid (props) {
+    const {
+      fixedColumnCount,
+      fixedRowCount,
+      rowCount,
+      scrollTop,
+      styleBottomLeftGrid
+    } = props
 
     if (!fixedColumnCount) {
       return null
@@ -228,7 +266,7 @@ export default class MultiGrid extends Component {
 
     return (
       <Grid
-        {...this.props}
+        {...props}
         autoHeight
         cellRenderer={this._cellRendererBottomLeftGrid}
         columnCount={fixedColumnCount}
@@ -240,6 +278,7 @@ export default class MultiGrid extends Component {
           height: 'auto',
           left: 0,
           outline: 0,
+          overflow: 'hidden',
           position: 'absolute',
           ...styleBottomLeftGrid
         }}
@@ -248,12 +287,20 @@ export default class MultiGrid extends Component {
     )
   }
 
-  _renderBottomRightGrid ({ scrollTop }) {
-    const { columnCount, fixedColumnCount, fixedRowCount, rowCount, styleBottomRightGrid } = this.props
+  _renderBottomRightGrid (props) {
+    const {
+      columnCount,
+      fixedColumnCount,
+      fixedRowCount,
+      rowCount,
+      scrollToColumn,
+      scrollTop,
+      styleBottomRightGrid
+    } = props
 
     return (
       <Grid
-        {...this.props}
+        {...props}
         autoHeight
         cellRenderer={this._cellRendererBottomRightGrid}
         columnCount={columnCount - fixedColumnCount}
@@ -262,6 +309,7 @@ export default class MultiGrid extends Component {
         onScroll={this._onScrollHorizontal}
         rowCount={rowCount - fixedRowCount}
         rowHeight={this._rowHeightBottomGrid}
+        scrollToColumn={scrollToColumn - fixedColumnCount}
         scrollTop={scrollTop}
         style={{
           height: 'auto',
@@ -275,8 +323,12 @@ export default class MultiGrid extends Component {
     )
   }
 
-  _renderTopLeftGrid () {
-    const { fixedColumnCount, fixedRowCount, styleTopLeftGrid } = this.props
+  _renderTopLeftGrid (props) {
+    const {
+      fixedColumnCount,
+      fixedRowCount,
+      styleTopLeftGrid
+    } = props
 
     if (!fixedColumnCount || !fixedRowCount) {
       return null
@@ -284,13 +336,14 @@ export default class MultiGrid extends Component {
 
     return (
       <Grid
-        {...this.props}
+        {...props}
         columnCount={fixedColumnCount}
         height={this._getTopGridHeight()}
         rowCount={fixedRowCount}
         style={{
           left: 0,
           outline: 0,
+          overflow: 'hidden',
           position: 'absolute',
           top: 0,
           ...styleTopLeftGrid
@@ -300,8 +353,14 @@ export default class MultiGrid extends Component {
     )
   }
 
-  _renderTopRightGrid ({ scrollLeft }) {
-    const { columnCount, fixedColumnCount, fixedRowCount, styleTopRightGrid } = this.props
+  _renderTopRightGrid (props) {
+    const {
+      columnCount,
+      fixedColumnCount,
+      fixedRowCount,
+      scrollLeft,
+      styleTopRightGrid
+    } = props
 
     if (!fixedRowCount) {
       return null
@@ -309,7 +368,7 @@ export default class MultiGrid extends Component {
 
     return (
       <Grid
-        {...this.props}
+        {...props}
         cellRenderer={this._cellRendererTopRightGrid}
         columnCount={columnCount - fixedColumnCount}
         columnWidth={this._columnWidthRightGrid}
@@ -319,6 +378,7 @@ export default class MultiGrid extends Component {
         style={{
           left: this._getLeftGridWidth(),
           outline: 0,
+          overflow: 'hidden',
           position: 'absolute',
           top: 0,
           ...styleTopRightGrid

@@ -23,6 +23,7 @@ export {
   Grid
 } from './Grid'
 export { InfiniteLoader } from './InfiniteLoader'
-export { ScrollSync } from './ScrollSync'
 export { List } from './List'
+export { MultiGrid } from './MultiGrid'
+export { ScrollSync } from './ScrollSync'
 export { WindowScroller } from './WindowScroller'
