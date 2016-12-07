@@ -168,6 +168,7 @@ describe('ArrowKeyStepper', () => {
       })
       Simulate.keyDown(node, {key: 'ArrowLeft'})
       assertCurrentScrollTo(node, 1, 1)
+      render.unmount()
     })
   })
 
@@ -200,6 +201,94 @@ describe('ArrowKeyStepper', () => {
       assertCurrentScrollTo(node, 6, 5)
       Simulate.keyDown(node, {key: 'ArrowLeft'})
       assertCurrentScrollTo(node, 5, 5)
+    })
+  })
+
+  describe('mode === "align:top-left"', () => {
+    it('should update :scrollToColumn and :scrollToRow relative to the most recent :onSectionRendered event', () => {
+      const { node, onSectionRendered } = renderHelper({
+        mode: 'align:top-left'
+      })
+
+      onSectionRendered({ // Simulate a scroll
+        columnStartIndex: 0,
+        columnStopIndex: 4,
+        rowStartIndex: 4,
+        rowStopIndex: 6
+      })
+      Simulate.keyDown(node, {key: 'ArrowDown'})
+      assertCurrentScrollTo(node, 0, 5)
+
+      onSectionRendered({ // Simulate a scroll
+        columnStartIndex: 5,
+        columnStopIndex: 10,
+        rowStartIndex: 2,
+        rowStopIndex: 4
+      })
+      Simulate.keyDown(node, {key: 'ArrowUp'})
+      assertCurrentScrollTo(node, 0, 1)
+
+      onSectionRendered({ // Simulate a scroll
+        columnStartIndex: 4,
+        columnStopIndex: 8,
+        rowStartIndex: 5,
+        rowStopIndex: 10
+      })
+      Simulate.keyDown(node, {key: 'ArrowRight'})
+      assertCurrentScrollTo(node, 5, 1)
+
+      onSectionRendered({ // Simulate a scroll
+        columnStartIndex: 2,
+        columnStopIndex: 4,
+        rowStartIndex: 2,
+        rowStopIndex: 4
+      })
+      Simulate.keyDown(node, {key: 'ArrowLeft'})
+      assertCurrentScrollTo(node, 1, 1)
+    })
+  })
+
+  describe('mode === "align:top-right"', () => {
+    it('should update :scrollToColumn and :scrollToRow relative to the most recent :onSectionRendered event', () => {
+      const { node, onSectionRendered } = renderHelper({
+        mode: 'align:top-right'
+      })
+
+      onSectionRendered({ // Simulate a scroll
+        columnStartIndex: 0,
+        columnStopIndex: 4,
+        rowStartIndex: 4,
+        rowStopIndex: 6
+      })
+      Simulate.keyDown(node, {key: 'ArrowDown'})
+      assertCurrentScrollTo(node, 0, 5)
+
+      onSectionRendered({ // Simulate a scroll
+        columnStartIndex: 5,
+        columnStopIndex: 10,
+        rowStartIndex: 2,
+        rowStopIndex: 4
+      })
+      Simulate.keyDown(node, {key: 'ArrowUp'})
+      assertCurrentScrollTo(node, 0, 1)
+
+      onSectionRendered({ // Simulate a scroll
+        columnStartIndex: 4,
+        columnStopIndex: 8,
+        rowStartIndex: 5,
+        rowStopIndex: 10
+      })
+      Simulate.keyDown(node, {key: 'ArrowRight'})
+      assertCurrentScrollTo(node, 9, 1)
+
+      onSectionRendered({ // Simulate a scroll
+        columnStartIndex: 2,
+        columnStopIndex: 4,
+        rowStartIndex: 2,
+        rowStopIndex: 4
+      })
+      Simulate.keyDown(node, {key: 'ArrowLeft'})
+      assertCurrentScrollTo(node, 3, 1)
     })
   })
 })
