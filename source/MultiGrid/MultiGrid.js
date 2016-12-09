@@ -171,11 +171,11 @@ export default class MultiGrid extends Component {
     })
   }
 
-  _columnWidthRightGrid (index) {
+  _columnWidthRightGrid ({ index }) {
     const { fixedColumnCount, columnWidth } = this.props
 
     return columnWidth instanceof Function
-      ? columnWidth(index + fixedColumnCount)
+      ? columnWidth({ index: index + fixedColumnCount })
       : columnWidth
   }
 
@@ -195,7 +195,7 @@ export default class MultiGrid extends Component {
         let leftGridWidth = 0
 
         for (let index = 0; index < fixedColumnCount; index++) {
-          leftGridWidth += columnWidth(index)
+          leftGridWidth += columnWidth({ index })
         }
 
         this._leftGridWidth = leftGridWidth
