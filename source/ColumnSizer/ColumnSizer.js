@@ -1,7 +1,6 @@
 /** @flow */
 import { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
-import Grid from '../Grid'
 
 /**
  * High-order component that auto-calculates column-widths for `Grid` cells.
@@ -92,8 +91,13 @@ export default class ColumnSizer extends Component {
   }
 
   _registerChild (child) {
-    if (child !== null && !(child instanceof Grid)) {
-      throw Error('Unexpected child type registered; only Grid children are supported.')
+    if (
+      child &&
+      child.constructor &&
+      child.constructor.name !== 'Grid' &&
+      child.constructor.name !== 'MultiGrid'
+    ) {
+      throw Error('Unexpected child type registered; only Grid/MultiGrid children are supported.')
     }
 
     this._registeredChild = child

@@ -110,7 +110,7 @@ describe('ColumnSizer', () => {
     expect(rendered.querySelector('.debug').textContent).toContain('adjustedWidth:100')
   })
 
-  it('should error if the registered child is not a Grid', () => {
+  it('should error if the registered child is not a Grid or a MultiGrid', () => {
     expect(() => {
       render(
         <ColumnSizer
