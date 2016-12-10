@@ -232,12 +232,12 @@ export default class Grid extends Component {
 
     this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.columnCount,
-      cellSizeGetter: (index) => this._columnWidthGetter(index),
+      cellSizeGetter: (params) => this._columnWidthGetter(params),
       estimatedCellSize: this._getEstimatedColumnSize(props)
     })
     this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.rowCount,
-      cellSizeGetter: (index) => this._rowHeightGetter(index),
+      cellSizeGetter: (params) => this._rowHeightGetter(params),
       estimatedCellSize: this._getEstimatedRowSize(props)
     })
 

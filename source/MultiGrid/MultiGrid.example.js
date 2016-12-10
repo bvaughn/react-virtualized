@@ -42,10 +42,12 @@ export default class MultiGridExample extends Component {
     }
 
     this._cellRenderer = this._cellRenderer.bind(this)
+    this._columnWidthGetter = this._columnWidthGetter.bind(this)
     this._onFixedColumnCountChange = this._createEventHandler('fixedColumnCount')
     this._onFixedRowCountChange = this._createEventHandler('fixedRowCount')
     this._onScrollLeftChange = this._createEventHandler('scrollLeft')
     this._onScrollToColumnChange = this._createEventHandler('scrollToColumn')
+    this._rowHeightGetter = this._rowHeightGetter.bind(this)
   }
 
   render () {
@@ -73,10 +75,10 @@ export default class MultiGridExample extends Component {
             <MultiGrid
               {...this.state}
               cellRenderer={this._cellRenderer}
-              columnWidth={100}
-              columnCount={1000}
+              columnWidth={this._columnWidthGetter}
+              columnCount={500}
               height={300}
-              rowHeight={25}
+              rowHeight={this._rowHeightGetter}
               rowCount={1000}
               style={STYLE}
               styleBottomLeftGrid={STYLE_BOTTOM_LEFT_GRID}
@@ -106,6 +108,10 @@ export default class MultiGridExample extends Component {
     )
   }
 
+  _columnWidthGetter ({ index }) {
+    return 50 + index % 3 * 25
+  }
+
   _createEventHandler (property) {
     return (event) => {
       const value = parseInt(event.target.value, 10) || 0
@@ -127,5 +133,9 @@ export default class MultiGridExample extends Component {
         value={value}
       />
     )
+  }
+
+  _rowHeightGetter ({ index }) {
+    return 20 + index % 2 * 10
   }
 }
