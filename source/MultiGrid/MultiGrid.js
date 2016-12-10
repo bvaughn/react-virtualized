@@ -51,6 +51,39 @@ export default class MultiGrid extends Component {
     this._rowHeightBottomGrid = this._rowHeightBottomGrid.bind(this)
   }
 
+  /** See Grid#measureAllCells */
+  measureAllRows () {
+    this._bottomLeftGrid && this._bottomLeftGrid.measureAllCells()
+    this._bottomRightGrid && this._bottomRightGrid.measureAllCells()
+    this._topLeftGrid && this._topLeftGrid.measureAllCells()
+    this._topRightGrid && this._topRightGrid.measureAllCells()
+  }
+
+  /** See Grid#recomputeGridSize */
+  recomputeGridSize ({
+    columnIndex = 0,
+    rowIndex = 0
+  } = {}) {
+    const { fixedColumnCount, fixedRowCount } = this.props
+
+    this._bottomLeftGrid && this._bottomLeftGrid.measureAllCells({
+      columnIndex,
+      rowIndex: rowIndex - fixedRowCount
+    })
+    this._bottomRightGrid && this._bottomRightGrid.measureAllCells({
+      columnIndex: columnIndex - fixedColumnCount,
+      rowIndex: rowIndex - fixedRowCount
+    })
+    this._topLeftGrid && this._topLeftGrid.measureAllCells({
+      columnIndex,
+      rowIndex
+    })
+    this._topRightGrid && this._topRightGrid.measureAllCells({
+      columnIndex: columnIndex - fixedColumnCount,
+      rowIndex
+    })
+  }
+
   componentWillUpdate (nextProps, nextState) {
     const { columnWidth, fixedColumnCount, fixedRowCount, rowHeight } = this.props
 
@@ -271,6 +304,9 @@ export default class MultiGrid extends Component {
         cellRenderer={this._cellRendererBottomLeftGrid}
         columnCount={fixedColumnCount}
         height={this._getBottomGridHeight()}
+        ref={(ref) => {
+          this._bottomLeftGrid = ref
+        }}
         rowCount={rowCount - fixedRowCount}
         rowHeight={this._rowHeightBottomGrid}
         scrollTop={scrollTop}
@@ -307,6 +343,9 @@ export default class MultiGrid extends Component {
         columnWidth={this._columnWidthRightGrid}
         height={this._getBottomGridHeight()}
         onScroll={this._onScrollHorizontal}
+        ref={(ref) => {
+          this._bottomRightGrid = ref
+        }}
         rowCount={rowCount - fixedRowCount}
         rowHeight={this._rowHeightBottomGrid}
         scrollToColumn={scrollToColumn - fixedColumnCount}
@@ -339,6 +378,9 @@ export default class MultiGrid extends Component {
         {...props}
         columnCount={fixedColumnCount}
         height={this._getTopGridHeight()}
+        ref={(ref) => {
+          this._topLeftGrid = ref
+        }}
         rowCount={fixedRowCount}
         style={{
           left: 0,
@@ -373,6 +415,9 @@ export default class MultiGrid extends Component {
         columnCount={columnCount - fixedColumnCount}
         columnWidth={this._columnWidthRightGrid}
         height={this._getTopGridHeight()}
+        ref={(ref) => {
+          this._topRightGrid = ref
+        }}
         rowCount={fixedRowCount}
         scrollLeft={scrollLeft}
         style={{
