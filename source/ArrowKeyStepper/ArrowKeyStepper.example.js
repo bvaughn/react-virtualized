@@ -74,7 +74,7 @@ export default class ArrowKeyStepperExample extends Component {
               onChange={event => event.target.checked && this.setState({ mode: 'align:top-left' })}
               value='align:top-left'
             />
-            align:top-left
+            align:top-left (<code>Grid</code> prop <code>SetToAlignment</code> is set to <code>start</code>)
           </label>
           <label>
             <input
@@ -85,7 +85,7 @@ export default class ArrowKeyStepperExample extends Component {
               onChange={event => event.target.checked && this.setState({ mode: 'align:bottom-right' })}
               value='align:bottom-right'
             />
-            align:bottom-right
+            align:bottom-right (<code>Grid</code> prop <code>SetToAlignment</code> is set to <code>end</code>)
           </label>
 
         </ContentBoxParagraph>
