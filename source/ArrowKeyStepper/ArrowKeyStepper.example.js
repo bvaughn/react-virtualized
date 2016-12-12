@@ -78,14 +78,14 @@ export default class ArrowKeyStepperExample extends Component {
           </label>
           <label>
             <input
-              aria-label='Set mode equal to "align:top-right"'
-              checked={mode === 'align:top-right'}
+              aria-label='Set mode equal to "align:bottom-right"'
+              checked={mode === 'align:bottom-right'}
               className={styles.Radio}
               type='radio'
-              onChange={event => event.target.checked && this.setState({ mode: 'align:top-right' })}
-              value='align:top-right'
+              onChange={event => event.target.checked && this.setState({ mode: 'align:bottom-right' })}
+              value='align:bottom-right'
             />
-            align:top-right
+            align:bottom-right
           </label>
 
         </ContentBoxParagraph>
@@ -112,6 +112,7 @@ export default class ArrowKeyStepperExample extends Component {
                     cellRenderer={({ columnIndex, key, rowIndex, style }) => this._cellRenderer({ columnIndex, key, rowIndex, scrollToColumn, scrollToRow, style })}
                     rowHeight={this._getRowHeight}
                     rowCount={100}
+                    scrollToAlignment={mode === 'align:top-left' ? 'start' : (mode === 'align:bottom-right' ? 'end' : 'auto')}
                     scrollToColumn={scrollToColumn}
                     scrollToRow={scrollToRow}
                     width={width}
