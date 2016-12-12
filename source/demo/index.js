@@ -2,7 +2,7 @@
 import 'babel-polyfill'
 
 // Import react-virtualized styles as part of bootstrap process
-import '../styles.css'
+import '../../styles.css'
 
 import React from 'react'
 import { render } from 'react-dom'
