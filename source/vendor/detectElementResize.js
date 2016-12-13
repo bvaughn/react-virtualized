@@ -21,7 +21,6 @@ export default function createDetectElementResize () {
   }
 
   var attachEvent = typeof document !== 'undefined' && document.attachEvent;
-  var stylesCreated = false;
 
   if (!attachEvent) {
     var requestFrame = (function(){
@@ -109,7 +108,7 @@ export default function createDetectElementResize () {
   }
 
   var createStyles = function() {
-    if (!stylesCreated) {
+    if (!document.getElementById('detectElementResize')) {
       //opacity:0 works around a chrome bug https://code.google.com/p/chromium/issues/detail?id=286360
       var css = (animationKeyframes ? animationKeyframes : '') +
           '.resize-triggers { ' + (animationStyle ? animationStyle : '') + 'visibility: hidden; opacity: 0; } ' +
@@ -117,6 +116,7 @@ export default function createDetectElementResize () {
         head = document.head || document.getElementsByTagName('head')[0],
         style = document.createElement('style');
 
+      style.id = 'detectElementResize';
       style.type = 'text/css';
       if (style.styleSheet) {
         style.styleSheet.cssText = css;
@@ -125,7 +125,6 @@ export default function createDetectElementResize () {
       }
 
       head.appendChild(style);
-      stylesCreated = true;
     }
   }
 
