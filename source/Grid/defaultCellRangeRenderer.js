@@ -5,6 +5,7 @@
  */
 export default function defaultCellRangeRenderer ({
   cellCache,
+  styleCache,
   cellRenderer,
   columnSizeAndPositionManager,
   columnStartIndex,
@@ -34,12 +35,22 @@ export default function defaultCellRangeRenderer ({
         rowIndex <= visibleRowIndices.stop
       )
       let key = `${rowIndex}-${columnIndex}`
-      let style = {
-        height: rowDatum.size,
-        left: columnDatum.offset + horizontalOffsetAdjustment,
-        position: 'absolute',
-        top: rowDatum.offset + verticalOffsetAdjustment,
-        width: columnDatum.size
+
+      const height = rowDatum.size
+      const left = columnDatum.offset + horizontalOffsetAdjustment
+      const top = rowDatum.offset + verticalOffsetAdjustment
+      const width = columnDatum.size
+
+      const styleKey = `x${left}-y${top}-w${width}-h${height}`
+      let style
+
+      // avoid creating new style objects at all times to maintain referential
+      // equality, so shallowCompare components don't rerun render() unnecessarily
+      if (styleCache[styleKey]) {
+        style = styleCache[styleKey]
+      } else {
+        style = {height, width, left, top, position: 'absolute'}
+        styleCache[styleKey] = style
       }
 
       let cellRendererParams = {
@@ -88,6 +99,7 @@ export default function defaultCellRangeRenderer ({
 
 type DefaultCellRangeRendererParams = {
   cellCache: Object,
+  styleCache: Object,
   cellRenderer: Function,
   columnSizeAndPositionManager: Object,
   columnStartIndex: number,
