@@ -98,6 +98,8 @@ This function accepts the following named parameters:
 ```js
 function cellRangeRenderer ({
   cellCache,                    // Temporary cell cache for use while scrolling
+  styleCache,                   // Cache of style objects sent to cells, to
+                                // ensure referential equality
   cellRenderer,                 // Cell renderer prop supplied to Grid
   columnSizeAndPositionManager, // @see CellSizeAndPositionManager,
   columnStartIndex,             // Index of first column (inclusive) to render
