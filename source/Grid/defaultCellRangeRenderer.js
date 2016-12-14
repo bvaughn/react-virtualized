@@ -5,7 +5,6 @@
  */
 export default function defaultCellRangeRenderer ({
   cellCache,
-  styleCache,
   cellRenderer,
   columnSizeAndPositionManager,
   columnStartIndex,
@@ -17,6 +16,7 @@ export default function defaultCellRangeRenderer ({
   rowStopIndex,
   scrollLeft,
   scrollTop,
+  styleCache,
   verticalOffsetAdjustment,
   visibleColumnIndices,
   visibleRowIndices
@@ -35,22 +35,21 @@ export default function defaultCellRangeRenderer ({
         rowIndex <= visibleRowIndices.stop
       )
       let key = `${rowIndex}-${columnIndex}`
-
-      const height = rowDatum.size
-      const left = columnDatum.offset + horizontalOffsetAdjustment
-      const top = rowDatum.offset + verticalOffsetAdjustment
-      const width = columnDatum.size
-
-      const styleKey = `x${left}-y${top}-w${width}-h${height}`
       let style
 
-      // avoid creating new style objects at all times to maintain referential
-      // equality, so shallowCompare components don't rerun render() unnecessarily
-      if (styleCache[styleKey]) {
-        style = styleCache[styleKey]
+      // Cache style objects so shallow-compare doesn't re-render unnecessarily.
+      if (styleCache[key]) {
+        style = styleCache[key]
       } else {
-        style = {height, width, left, top, position: 'absolute'}
-        styleCache[styleKey] = style
+        style = {
+          height: rowDatum.size,
+          left: columnDatum.offset + horizontalOffsetAdjustment,
+          position: 'absolute',
+          top: rowDatum.offset + verticalOffsetAdjustment,
+          width: columnDatum.size
+        }
+
+        styleCache[key] = style
       }
 
       let cellRendererParams = {
@@ -79,7 +78,9 @@ export default function defaultCellRangeRenderer ({
         if (!cellCache[key]) {
           cellCache[key] = cellRenderer(cellRendererParams)
         }
+
         renderedCell = cellCache[key]
+
       // If the user is no longer scrolling, don't cache cells.
       // This makes dynamic cell content difficult for users and would also lead to a heavier memory footprint.
       } else {
@@ -99,7 +100,6 @@ export default function defaultCellRangeRenderer ({
 
 type DefaultCellRangeRendererParams = {
   cellCache: Object,
-  styleCache: Object,
   cellRenderer: Function,
   columnSizeAndPositionManager: Object,
   columnStartIndex: number,
@@ -111,6 +111,7 @@ type DefaultCellRangeRendererParams = {
   rowStopIndex: number,
   scrollLeft: number,
   scrollTop: number,
+  styleCache: Object,
   verticalOffsetAdjustment: number,
   visibleColumnIndices: Object,
   visibleRowIndices: Object

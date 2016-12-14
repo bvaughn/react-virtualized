@@ -1423,5 +1423,53 @@ describe('Grid', () => {
 
       expect(componentUpdates).toEqual(0)
     })
+
+    it('should clear all but the visible rows from the style cache once :isScrolling is false', async (done) => {
+      const props = {
+        columnWidth: 50,
+        height: 100,
+        rowHeight: 50,
+        width: 100
+      }
+
+      const grid = render(getMarkup(props))
+
+      expect(Object.keys(grid._styleCache).length).toBe(4)
+
+      simulateScroll({ grid, scrollTop: 50 })
+
+      expect(Object.keys(grid._styleCache).length).toBe(6)
+
+      // Allow scrolling timeout to complete so that cell cache is reset
+      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL * 2))
+
+      expect(Object.keys(grid._styleCache).length).toBe(4)
+
+      done()
+    })
+
+    it('should clear style cache if :recomputeGridSize is called', () => {
+      const props = {
+        columnWidth: 50,
+        height: 100,
+        rowHeight: 50,
+        width: 100
+      }
+
+      const grid = render(getMarkup(props))
+
+      expect(Object.keys(grid._styleCache).length).toBe(4)
+
+      render(getMarkup({
+        ...props,
+        scrollTop: 50
+      }))
+
+      expect(Object.keys(grid._styleCache).length).toBe(6)
+
+      grid.recomputeGridSize()
+
+      expect(Object.keys(grid._styleCache).length).toBe(4)
+    })
   })
 })
