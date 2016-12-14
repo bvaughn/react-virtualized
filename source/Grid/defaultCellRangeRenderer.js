@@ -16,6 +16,7 @@ export default function defaultCellRangeRenderer ({
   rowStopIndex,
   scrollLeft,
   scrollTop,
+  styleCache,
   verticalOffsetAdjustment,
   visibleColumnIndices,
   visibleRowIndices
@@ -34,12 +35,21 @@ export default function defaultCellRangeRenderer ({
         rowIndex <= visibleRowIndices.stop
       )
       let key = `${rowIndex}-${columnIndex}`
-      let style = {
-        height: rowDatum.size,
-        left: columnDatum.offset + horizontalOffsetAdjustment,
-        position: 'absolute',
-        top: rowDatum.offset + verticalOffsetAdjustment,
-        width: columnDatum.size
+      let style
+
+      // Cache style objects so shallow-compare doesn't re-render unnecessarily.
+      if (styleCache[key]) {
+        style = styleCache[key]
+      } else {
+        style = {
+          height: rowDatum.size,
+          left: columnDatum.offset + horizontalOffsetAdjustment,
+          position: 'absolute',
+          top: rowDatum.offset + verticalOffsetAdjustment,
+          width: columnDatum.size
+        }
+
+        styleCache[key] = style
       }
 
       let cellRendererParams = {
@@ -68,7 +78,9 @@ export default function defaultCellRangeRenderer ({
         if (!cellCache[key]) {
           cellCache[key] = cellRenderer(cellRendererParams)
         }
+
         renderedCell = cellCache[key]
+
       // If the user is no longer scrolling, don't cache cells.
       // This makes dynamic cell content difficult for users and would also lead to a heavier memory footprint.
       } else {
@@ -99,6 +111,7 @@ type DefaultCellRangeRendererParams = {
   rowStopIndex: number,
   scrollLeft: number,
   scrollTop: number,
+  styleCache: Object,
   verticalOffsetAdjustment: number,
   visibleColumnIndices: Object,
   visibleRowIndices: Object

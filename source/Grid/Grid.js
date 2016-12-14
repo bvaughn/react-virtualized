@@ -221,7 +221,7 @@ export default class Grid extends Component {
     this._onScrollMemoizer = createCallbackMemoizer(false)
 
     // Bind functions to instance so they don't lose context when passed around
-    this._enablePointerEventsAfterDelayCallback = this._enablePointerEventsAfterDelayCallback.bind(this)
+    this._debounceScrollEndedCallback = this._debounceScrollEndedCallback.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
@@ -241,8 +241,9 @@ export default class Grid extends Component {
       estimatedCellSize: this._getEstimatedRowSize(props)
     })
 
-    // See defaultCellRangeRenderer() for more information on the usage of this cache
+    // See defaultCellRangeRenderer() for more information on the usage of these caches
     this._cellCache = {}
+    this._styleCache = {}
   }
 
   /**
@@ -272,6 +273,7 @@ export default class Grid extends Component {
     // Clear cell cache in case we are scrolling;
     // Invalid row heights likely mean invalid cached content as well.
     this._cellCache = {}
+    this._styleCache = {}
 
     this.forceUpdate()
   }
@@ -673,6 +675,7 @@ export default class Grid extends Component {
         rowStopIndex: this._rowStopIndex,
         scrollLeft,
         scrollTop,
+        styleCache: this._styleCache,
         verticalOffsetAdjustment,
         visibleColumnIndices,
         visibleRowIndices
@@ -685,7 +688,7 @@ export default class Grid extends Component {
    * This flag is used to disable pointer events on the scrollable portion of the Grid.
    * This prevents jerky/stuttery mouse-wheel scrolling.
    */
-  _enablePointerEventsAfterDelay () {
+  _debounceScrollEnded () {
     const { scrollingResetTimeInterval } = this.props
 
     if (this._disablePointerEventsTimeoutId) {
@@ -693,16 +696,30 @@ export default class Grid extends Component {
     }
 
     this._disablePointerEventsTimeoutId = setTimeout(
-      this._enablePointerEventsAfterDelayCallback,
+      this._debounceScrollEndedCallback,
       scrollingResetTimeInterval
     )
   }
 
-  _enablePointerEventsAfterDelayCallback () {
+  _debounceScrollEndedCallback () {
     this._disablePointerEventsTimeoutId = null
 
-    // Throw away cell cache once scrolling is complete
+    const styleCache = this._styleCache
+
+    // Reset cell and style caches once scrolling stops.
+    // This makes Grid simpler to use (since cells commonly change).
+    // And it keeps the caches from growing too large.
+    // Performance is most sensitive when a user is scrolling.
     this._cellCache = {}
+    this._styleCache = {}
+
+    // Copy over the visible cell styles so avoid unnecessary re-render.
+    for (let rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) {
+      for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
+        let key = `${rowIndex}-${columnIndex}`
+        this._styleCache[key] = styleCache[key]
+      }
+    }
 
     this.setState({
       isScrolling: false
@@ -850,7 +867,7 @@ export default class Grid extends Component {
     }
 
     // Prevent pointer events from interrupting a smooth scroll
-    this._enablePointerEventsAfterDelay()
+    this._debounceScrollEnded()
 
     // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.

@@ -3,6 +3,7 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
+import shallowCompare from 'react-addons-shallow-compare'
 import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
 import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 
@@ -1372,6 +1373,103 @@ describe('Grid', () => {
       cellRendererCalled = false
       render(markup)
       expect(cellRendererCalled).toEqual(false)
+    })
+
+    it('should not re-render grid components if they shallowCompare style', () => {
+      let componentUpdates = 0
+
+      class GridComponent extends React.Component {
+        shouldComponentUpdate (nextProps, nextState) {
+          return shallowCompare(this, nextProps, nextState)
+        }
+
+        componentDidUpdate () {
+          componentUpdates++
+        }
+
+        render () {
+          const { columnIndex, rowIndex, style } = this.props
+          return (
+            <div
+              className='gridItem'
+              style={style}
+            >
+              {`row:${rowIndex}, column:${columnIndex}`}
+            </div>
+          )
+        }
+      }
+
+      function cellRenderer ({ columnIndex, key, rowIndex, style }) {
+        return <GridComponent
+          key={key}
+          columnIndex={columnIndex}
+          rowIndex={rowIndex}
+          style={style}
+        />
+      }
+
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollTop: 0,
+        width: 100
+      }
+
+      const grid = render(getMarkup(props))
+      simulateScroll({ grid, scrollTop: 1 })
+
+      expect(componentUpdates).toEqual(0)
+    })
+
+    it('should clear all but the visible rows from the style cache once :isScrolling is false', async (done) => {
+      const props = {
+        columnWidth: 50,
+        height: 100,
+        rowHeight: 50,
+        width: 100
+      }
+
+      const grid = render(getMarkup(props))
+
+      expect(Object.keys(grid._styleCache).length).toBe(4)
+
+      simulateScroll({ grid, scrollTop: 50 })
+
+      expect(Object.keys(grid._styleCache).length).toBe(6)
+
+      // Allow scrolling timeout to complete so that cell cache is reset
+      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL * 2))
+
+      expect(Object.keys(grid._styleCache).length).toBe(4)
+
+      done()
+    })
+
+    it('should clear style cache if :recomputeGridSize is called', () => {
+      const props = {
+        columnWidth: 50,
+        height: 100,
+        rowHeight: 50,
+        width: 100
+      }
+
+      const grid = render(getMarkup(props))
+
+      expect(Object.keys(grid._styleCache).length).toBe(4)
+
+      render(getMarkup({
+        ...props,
+        scrollTop: 50
+      }))
+
+      expect(Object.keys(grid._styleCache).length).toBe(6)
+
+      grid.recomputeGridSize()
+
+      expect(Object.keys(grid._styleCache).length).toBe(4)
     })
   })
 })

@@ -97,7 +97,7 @@ This function accepts the following named parameters:
 
 ```js
 function cellRangeRenderer ({
-  cellCache,                    // Temporary cell cache for use while scrolling
+  cellCache,                    // Temporary cell cache used while scrolling
   cellRenderer,                 // Cell renderer prop supplied to Grid
   columnSizeAndPositionManager, // @see CellSizeAndPositionManager,
   columnStartIndex,             // Index of first column (inclusive) to render
@@ -109,6 +109,7 @@ function cellRangeRenderer ({
   rowStopIndex,                 // Index of last column (inclusive) to render
   scrollLeft,                   // Current horizontal scroll offset of Grid
   scrollTop,                    // Current vertical scroll offset of Grid
+  styleCache,                   // Temporary style (size & position) cache used while scrolling
   verticalOffsetAdjustment      // Vertical pixel offset (required for scaling)
 }) {
   const renderedCells = []
