@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 8.8.0
+`Grid` now temporarily caches inline style objects to avoid causing shallow compare to fail unnecessarily (see [PR 506](https://github.com/bvaughn/react-virtualized/pull/506)).
+
+`AutoSizer` internal `detectElementResize` library now no longer creates duplicate `<style>` tags when unmounted and remounted (see [PR 507](https://github.com/bvaughn/react-virtualized/pull/507)).
+
 ##### 8.7.1
 Reverted part of the change introduced in version 8.6.0 that changed the behavior regarding controlled/uncontrolled `scrollTop` and `scrollLeft` props and `Grid` in a way that was not backwards compatible. (See issue #490 for more.)
 
