@@ -453,6 +453,13 @@ export default class Grid extends Component {
       })
     }
 
+    if (
+      nextProps.columnWidth !== this.props.columnWidth ||
+      nextProps.rowHeight !== this.props.rowHeight
+    ) {
+      this._styleCache = {}
+    }
+
     this._columnWidthGetter = this._wrapSizeGetter(nextProps.columnWidth)
     this._rowHeightGetter = this._wrapSizeGetter(nextProps.rowHeight)
 

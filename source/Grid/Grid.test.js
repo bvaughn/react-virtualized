@@ -1428,6 +1428,8 @@ describe('Grid', () => {
       const props = {
         columnWidth: 50,
         height: 100,
+        overscanColumnCount: 0,
+        overscanRowCount: 0,
         rowHeight: 50,
         width: 100
       }
@@ -1452,6 +1454,8 @@ describe('Grid', () => {
       const props = {
         columnWidth: 50,
         height: 100,
+        overscanColumnCount: 0,
+        overscanRowCount: 0,
         rowHeight: 50,
         width: 100
       }
@@ -1470,6 +1474,37 @@ describe('Grid', () => {
       grid.recomputeGridSize()
 
       expect(Object.keys(grid._styleCache).length).toBe(4)
+    })
+
+    it('should clear style cache if cell sizes change', () => {
+      const cellRendererCalls = []
+      function cellRenderer (props) {
+        cellRendererCalls.push(props)
+      }
+
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 100,
+        overscanColumnCount: 0,
+        overscanRowCount: 0,
+        rowHeight: 100,
+        width: 100
+      }
+
+      render(getMarkup(props))
+
+      expect(cellRendererCalls.length).toEqual(1)
+      expect(cellRendererCalls[0].style.width).toEqual(100)
+
+      render(getMarkup({
+        ...props,
+        columnWidth: 50,
+        width: 50
+      }))
+
+      expect(cellRendererCalls.length).toEqual(2)
+      expect(cellRendererCalls[1].style.width).toEqual(50)
     })
   })
 })

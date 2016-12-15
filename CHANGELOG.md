@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.8.1
+Fixed a bug with `Grid` style-cache that caused stale cell-sizes to be used when `Grid` resized.
+
 ##### 8.8.0
 `Grid` now temporarily caches inline style objects to avoid causing shallow compare to fail unnecessarily (see [PR 506](https://github.com/bvaughn/react-virtualized/pull/506)).
 
