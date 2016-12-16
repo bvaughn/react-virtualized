@@ -147,8 +147,8 @@
     "dom-helpers": "^2.4.0"
   },
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0",
-    "react-addons-shallow-compare": "^0.14.0 || ^15.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0"
+    "react": "^0.14.0 || ^15.3.2",
+    "react-addons-shallow-compare": "^0.14.0 || ^15.3.2",
+    "react-dom": "^0.14.0 || ^15.3.2"
   }
 }
