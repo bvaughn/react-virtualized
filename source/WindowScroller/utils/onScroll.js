@@ -45,7 +45,7 @@ function onScrollWindow (event) {
 }
 
 export function registerScrollListener (component, element = window) {
-  if (!mountedInstances.length) {
+  if (!mountedInstances.some(c => c.scrollElement === element)) {
     element.addEventListener('scroll', onScrollWindow)
   }
   mountedInstances.push(component)
