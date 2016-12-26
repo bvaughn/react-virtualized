@@ -1,3 +1,5 @@
+export default from './Grid.refactor'
+
 /** @flow */
 
 import type {
