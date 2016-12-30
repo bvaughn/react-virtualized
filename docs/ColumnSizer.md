@@ -23,7 +23,7 @@ The child function is passed the following named parameters:
 
 ### Examples
 
-This example displays a `Grid` that shrinks to fit sparse content (using the `adjustedWidth` parameter). An interactive demo of this component can be seen [here](https://bvaughn.github.io/react-virtualized/?component=ColumnSizer).
+This example displays a `Grid` that shrinks to fit sparse content (using the `adjustedWidth` parameter). An interactive demo of this component can be seen [here](https://bvaughn.github.io/react-virtualized/#/components/ColumnSizer).
 
 ```javascript
 import React from 'react';

@@ -169,17 +169,17 @@ Examples for each component can be seen in [the documentation](docs/README.md).
 
 Here are some online demos of each component:
 
-* [ArrowKeyStepper](https://bvaughn.github.io/react-virtualized/?component=ArrowKeyStepper)
-* [AutoSizer](https://bvaughn.github.io/react-virtualized/?component=AutoSizer)
-* [CellMeasurer](https://bvaughn.github.io/react-virtualized/?component=CellMeasurer)
-* [Collection](https://bvaughn.github.io/react-virtualized/?component=Collection)
-* [ColumnSizer](https://bvaughn.github.io/react-virtualized/?component=ColumnSizer)
-* [Table](https://bvaughn.github.io/react-virtualized/?component=Table)
-* [Grid](https://bvaughn.github.io/react-virtualized/?component=Grid)
-* [InfiniteLoader](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader)
-* [ScrollSync](https://bvaughn.github.io/react-virtualized/?component=ScrollSync)
-* [List](https://bvaughn.github.io/react-virtualized/?component=List)
-* [WindowScroller](https://bvaughn.github.io/react-virtualized/?component=WindowScroller)
+* [ArrowKeyStepper](https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper)
+* [AutoSizer](https://bvaughn.github.io/react-virtualized/#/components/AutoSizer)
+* [CellMeasurer](https://bvaughn.github.io/react-virtualized/#/components/CellMeasurer)
+* [Collection](https://bvaughn.github.io/react-virtualized/#/components/Collection)
+* [ColumnSizer](https://bvaughn.github.io/react-virtualized/#/components/ColumnSizer)
+* [Table](https://bvaughn.github.io/react-virtualized/#/components/Table)
+* [Grid](https://bvaughn.github.io/react-virtualized/#/components/Grid)
+* [InfiniteLoader](https://bvaughn.github.io/react-virtualized/#/components/InfiniteLoader)
+* [ScrollSync](https://bvaughn.github.io/react-virtualized/#/components/ScrollSync)
+* [List](https://bvaughn.github.io/react-virtualized/#/components/List)
+* [WindowScroller](https://bvaughn.github.io/react-virtualized/#/components/WindowScroller)
 
 And here are some "recipe" type demos:
 * [Collapsable tree view](https://rawgit.com/bvaughn/react-virtualized/master/playground/tree.html)

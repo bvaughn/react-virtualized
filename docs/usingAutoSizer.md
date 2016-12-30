@@ -74,4 +74,4 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
 </InfiniteLoader>
 ```
 
-You can see an example of this [here](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader).
+You can see an example of this [here](https://bvaughn.github.io/react-virtualized/#/components/InfiniteLoader).

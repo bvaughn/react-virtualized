@@ -32,7 +32,7 @@ The child function is passed the following named parameters:
 ### Examples
 
 This example uses `InfiniteLoader` to prefetch rows in a `List` list as a user scrolls.
-An interactive demo can be seen [here](https://bvaughn.github.io/react-virtualized/?component=InfiniteLoader).
+An interactive demo can be seen [here](https://bvaughn.github.io/react-virtualized/#/components/InfiniteLoader).
 
 ```jsx
 import React from 'react';

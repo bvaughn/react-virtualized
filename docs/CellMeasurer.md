@@ -58,7 +58,7 @@ You can also use [an alternative caching strategy](https://github.com/bvaughn/re
 ###### Default `cellSizeCache`
 
 This example shows a `Grid` with fixed row heights and dynamic column widths.
-For more examples check out the component [demo page](https://bvaughn.github.io/react-virtualized/?component=CellMeasurer).
+For more examples check out the component [demo page](https://bvaughn.github.io/react-virtualized/#/components/CellMeasurer).
 
 ```javascript
 import React from 'react';
