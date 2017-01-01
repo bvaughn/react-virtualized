@@ -78,7 +78,6 @@ export default class Grid extends Component {
     this._scrollbarSize = 0
     this._scrollbarSizeMeasured = false
 
-    this._calculateGridStyle(props)
     this._calculateVisibleCells(0, 0, props)
 
     this._onScroll = this._onScroll.bind(this)
@@ -175,16 +174,6 @@ export default class Grid extends Component {
     ) {
       this._calculateVisibleCells(this._lastScrollLeft, this._lastScrollTop, nextProps)
     }
-
-    // TODO Is this really worth doing to avoid a single style?
-    if (
-      height !== nextProps.height ||
-      width !== nextProps.width ||
-      recalculateVisibleCells ||
-      style !== nextProps.style
-    ) {
-      this._calculateGridStyle(nextProps)
-    }
   }
 
   render () {
@@ -250,9 +239,9 @@ export default class Grid extends Component {
         ref={this._scrollTargetRef}
         onScroll={this._onScroll}
         role='grid'
-        style={this._outerStyle}
+        style={this._createOuterStyle()}
       >
-        <div style={this._innerStyle}>
+        <div style={this._createInnerStyle()}>
           {rendereredCells}
         </div>
       </div>
@@ -261,61 +250,6 @@ export default class Grid extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
-  }
-
-  _calculateGridStyle (props = this.props) {
-    const {
-      containerStyle,
-      height,
-      style,
-      width
-    } = props
-
-    const estimatedTotalWidth = this._estimatedTotalWidth
-    const estimatedTotalHeight = this._estimatedTotalHeight
-    const isScrolling = this._isScrolling
-
-    const outerStyle = {
-      boxSizing: 'border-box',
-      direction: 'ltr',
-      height,
-      position: 'relative',
-      width,
-      WebkitOverflowScrolling: 'touch',
-      willChange: 'transform',
-      ...style
-    }
-
-    // Force browser to hide scrollbars when we know they aren't necessary.
-    // Otherwise once scrollbars appear they may not disappear again.
-    // For more info see issue #116
-    const verticalScrollBarSize = estimatedTotalHeight > height ? this._scrollbarSize : 0
-    const horizontalScrollBarSize = estimatedTotalWidth > width ? this._scrollbarSize : 0
-
-    // Also explicitly init styles to 'auto' if scrollbars are required.
-    // This works around an obscure edge case where external CSS styles have not yet been loaded,
-    // But an initial scroll index of offset is set as an external prop.
-    // Without this style, Grid would render the correct range of cells but would NOT update its internal offset.
-    // This was originally reported via clauderic/react-infinite-calendar/issues/23
-    outerStyle.overflowX = estimatedTotalWidth + verticalScrollBarSize <= width
-      ? 'hidden'
-      : 'auto'
-    outerStyle.overflowY = estimatedTotalHeight + horizontalScrollBarSize <= height
-      ? 'hidden'
-      : 'auto'
-
-    const innerStyle = {
-      width: estimatedTotalWidth,
-      height: estimatedTotalHeight,
-      maxWidth: estimatedTotalWidth,
-      maxHeight: estimatedTotalHeight,
-      overflow: 'hidden',
-      pointerEvents: isScrolling ? 'none' : '',
-      ...containerStyle
-    }
-
-    this._innerStyle = innerStyle
-    this._outerStyle = outerStyle
   }
 
   /**
@@ -334,6 +268,8 @@ export default class Grid extends Component {
     const {
       columnCount,
       columnWidth,
+      estimatedColumnWidth,
+      estimatedRowHeight,
       height,
       rowCount,
       rowHeight,
@@ -369,7 +305,7 @@ export default class Grid extends Component {
       anchoredColumnStartIndex = getIndexForOffset(scrollLeft, width, this._estimatedTotalWidth, columnCount)
       anchoredColumnStartPosition = scrollLeft
     } else {
-      let columnSize = this._measureAndCacheColumnWidth(anchoredColumnStartIndex, columnWidth, cachedColumnWidths)
+      let columnSize = this._measureAndCacheColumnWidth(estimatedColumnWidth, anchoredColumnStartIndex, columnWidth, cachedColumnWidths)
 
       if (isScrollingRight) {
         while (anchoredColumnStartIndex < columnCount) {
@@ -379,7 +315,7 @@ export default class Grid extends Component {
 
           anchoredColumnStartIndex++
           anchoredColumnStartPosition += columnSize
-          columnSize = this._measureAndCacheColumnWidth(anchoredColumnStartIndex, columnWidth, cachedColumnWidths)
+          columnSize = this._measureAndCacheColumnWidth(estimatedColumnWidth, anchoredColumnStartIndex, columnWidth, cachedColumnWidths)
         }
       } else {
         while (anchoredColumnStartIndex > 0) {
@@ -389,7 +325,7 @@ export default class Grid extends Component {
           }
 
           anchoredColumnStartIndex--
-          columnSize = this._measureAndCacheColumnWidth(anchoredColumnStartIndex, columnWidth, cachedColumnWidths)
+          columnSize = this._measureAndCacheColumnWidth(estimatedColumnWidth, anchoredColumnStartIndex, columnWidth, cachedColumnWidths)
           anchoredColumnStartPosition -= columnSize
         }
       }
@@ -402,7 +338,7 @@ export default class Grid extends Component {
       anchoredRowStartIndex = getIndexForOffset(scrollTop, height, this._estimatedTotalHeight, rowCount)
       anchoredRowStartPosition = scrollTop
     } else {
-      let rowSize = this._measureAndCacheRowHeight(anchoredRowStartIndex, rowHeight, cachedRowHeights)
+      let rowSize = this._measureAndCacheRowHeight(estimatedRowHeight, anchoredRowStartIndex, rowHeight, cachedRowHeights)
 
       if (isScrollingDown) {
         while (anchoredRowStartIndex < rowCount) {
@@ -412,7 +348,7 @@ export default class Grid extends Component {
 
           anchoredRowStartIndex++
           anchoredRowStartPosition += rowSize
-          rowSize = this._measureAndCacheRowHeight(anchoredRowStartIndex, rowHeight, cachedRowHeights)
+          rowSize = this._measureAndCacheRowHeight(estimatedRowHeight, anchoredRowStartIndex, rowHeight, cachedRowHeights)
         }
       } else {
         while (anchoredRowStartIndex > 0) {
@@ -422,13 +358,17 @@ export default class Grid extends Component {
           }
 
           anchoredRowStartIndex--
-          rowSize = this._measureAndCacheRowHeight(anchoredRowStartIndex, rowHeight, cachedRowHeights)
+          rowSize = this._measureAndCacheRowHeight(estimatedRowHeight, anchoredRowStartIndex, rowHeight, cachedRowHeights)
           anchoredRowStartPosition -= rowSize
         }
       }
     }
 
     // Recalculate visible cells only when anchors change.
+    // TODO This isn't quite good enough.
+    //      Check for new edge cells even when start cells haven't changed.
+    //      That's because small scrolls can open up gaps on opposite sides,
+    //      Without changing the first visible cell.
 
     if (
       anchoredColumnStartIndex !== this._anchoredColumnStartIndex ||
@@ -440,12 +380,11 @@ export default class Grid extends Component {
       let anchoredColumnStopPosition = anchoredColumnStartPosition
 
       while (anchoredColumnStopIndex < columnCount) {
-        let columnSize = this._measureAndCacheColumnWidth(anchoredColumnStopIndex, columnWidth, cachedColumnWidths)
+        let columnSize = this._measureAndCacheColumnWidth(estimatedColumnWidth, anchoredColumnStopIndex, columnWidth, cachedColumnWidths)
 
         // TODO Account for overscan (if scrolling right)
 
-        // TODO Technically this will result in us render 1 too many columns
-        if (anchoredColumnStopPosition + columnSize > rightBoundary) {
+        if (anchoredColumnStopPosition + columnSize >= rightBoundary) {
           break
         }
 
@@ -453,9 +392,18 @@ export default class Grid extends Component {
         anchoredColumnStopPosition += columnSize
       }
 
+      // TODO This reset doesn't work quite right.
+      //      It doesn't subtract quite enough and the result is a bouncing snap.
+      if (anchoredColumnStopIndex >= columnCount - 1) {
+        anchoredColumnStopIndex = Math.min(anchoredColumnStopIndex, columnCount - 1)
+
+        this._estimatedTotalWidth = Math.min(this._estimatedTotalWidth, anchoredColumnStopPosition)
+        this._ignoreNextDebounce = true
+      }
+
       this._anchoredColumnStartIndex = anchoredColumnStartIndex
-      this._anchoredColumnStopIndex = anchoredColumnStopIndex
       this._anchoredColumnStartPosition = anchoredColumnStartPosition
+      this._anchoredColumnStopIndex = anchoredColumnStopIndex
 
       renderNeeded = true
     }
@@ -470,12 +418,11 @@ export default class Grid extends Component {
       let anchoredRowStopPosition = anchoredRowStartPosition
 
       while (anchoredRowStopIndex < rowCount) {
-        let rowSize = this._measureAndCacheRowHeight(anchoredRowStopIndex, rowHeight, cachedRowHeights)
+        let rowSize = this._measureAndCacheRowHeight(estimatedRowHeight, anchoredRowStopIndex, rowHeight, cachedRowHeights)
 
         // TODO Account for overscan (if scrolling down)
 
-        // TODO Technically this will result in us render 1 too many rows
-        if (anchoredRowStopPosition + rowSize > bottomBoundary) {
+        if (anchoredRowStopPosition + rowSize >= bottomBoundary) {
           break
         }
 
@@ -483,9 +430,18 @@ export default class Grid extends Component {
         anchoredRowStopPosition += rowSize
       }
 
+      // TODO This reset doesn't work quite right.
+      //      It doesn't subtract quite enough and the result is a bouncing snap.
+      if (anchoredRowStopIndex >= rowCount - 1) {
+        anchoredRowStopIndex = Math.min(anchoredRowStopIndex, rowCount - 1)
+
+        this._estimatedTotalHeight = Math.min(this._estimatedTotalHeight, anchoredRowStopPosition)
+        this._ignoreNextDebounce = true
+      }
+
       this._anchoredRowStartIndex = anchoredRowStartIndex
-      this._anchoredRowStopIndex = anchoredRowStopIndex
       this._anchoredRowStartPosition = anchoredRowStartPosition
+      this._anchoredRowStopIndex = anchoredRowStopIndex
 
       renderNeeded = true
 
@@ -503,7 +459,71 @@ export default class Grid extends Component {
     return renderNeeded
   }
 
+  _createInnerStyle () {
+    const {
+      containerStyle
+    } = this.props
+
+    const estimatedTotalWidth = this._estimatedTotalWidth
+    const estimatedTotalHeight = this._estimatedTotalHeight
+    const isScrolling = this._isScrolling
+
+    return {
+      width: estimatedTotalWidth,
+      height: estimatedTotalHeight,
+      maxWidth: estimatedTotalWidth,
+      maxHeight: estimatedTotalHeight,
+      overflow: 'hidden',
+      pointerEvents: isScrolling ? 'none' : '',
+      ...containerStyle
+    }
+  }
+
+  _createOuterStyle () {
+    const {
+      height,
+      style,
+      width
+    } = this.props
+
+    const estimatedTotalWidth = this._estimatedTotalWidth
+    const estimatedTotalHeight = this._estimatedTotalHeight
+
+    // Force browser to hide scrollbars when we know they aren't necessary.
+    // Otherwise once scrollbars appear they may not disappear again.
+    // For more info see issue #116
+    const verticalScrollBarSize = estimatedTotalHeight > height ? this._scrollbarSize : 0
+    const horizontalScrollBarSize = estimatedTotalWidth > width ? this._scrollbarSize : 0
+
+    // Also explicitly init styles to 'auto' if scrollbars are required.
+    // This works around an obscure edge case where external CSS styles have not yet been loaded,
+    // But an initial scroll index of offset is set as an external prop.
+    // Without this style, Grid would render the correct range of cells but would NOT update its internal offset.
+    // This was originally reported via clauderic/react-infinite-calendar/issues/23
+    const overflowX = estimatedTotalWidth + verticalScrollBarSize <= width
+      ? 'hidden'
+      : 'auto'
+    const overflowY = estimatedTotalHeight + horizontalScrollBarSize <= height
+      ? 'hidden'
+      : 'auto'
+
+    return {
+      boxSizing: 'border-box',
+      direction: 'ltr',
+      height,
+      overflowX,
+      overflowY,
+      position: 'relative',
+      width,
+      WebkitOverflowScrolling: 'touch',
+      willChange: 'transform',
+      ...style
+    }
+
+  }
+
   _measureAndCacheColumnWidth (
+    estimatedColumnWidth: number,
     index: number,
     columnWidth: number | Function,
     cachedColumnWidths: Object
@@ -518,10 +538,14 @@ export default class Grid extends Component {
 
     cachedColumnWidths[index] = columnSize
 
+    // Adjust scrollable size as we go to prevent over-scrolling
+    this._estimatedTotalWidth += columnSize - estimatedColumnWidth
+
     return columnSize
   }
 
   _measureAndCacheRowHeight (
+    estimatedRowHeight: number,
     index: number,
     rowHeight: number | Function,
     cachedRowHeights: Object
@@ -535,6 +559,9 @@ export default class Grid extends Component {
       : rowHeight
 
     cachedRowHeights[index] = rowSize
+
+    // Adjust scrollable size as we go to prevent over-scrolling
+    this._estimatedTotalHeight += rowSize - estimatedRowHeight
 
     return rowSize
   }
@@ -584,6 +611,10 @@ export default class Grid extends Component {
    * Doing so reduce the chance of a user scrolling to the edge of a grid and things being misaligned.
    */
   _onScrollDebounce () {
+    if (this._ignoreNextDebounce) {
+      this._ignoreNextDebounce = false
+    }
+
     const {
       columnCount,
       height,
@@ -593,14 +624,20 @@ export default class Grid extends Component {
 
     this._isScrolling = false
 
-    // TODO Do we need to guard against overscroll edge-cases here?
-    //      Or will the TODO in getIndexForOffset() protect us from that case?
-
     const scrollLeft = getOffsetForIndex(this._anchoredColumnStartIndex, width, this._estimatedTotalWidth, columnCount)
     const scrollTop = getOffsetForIndex(this._anchoredRowStartIndex, height, this._estimatedTotalHeight, rowCount)
 
     this._anchoredColumnStartPosition -= this._lastScrollLeft - scrollLeft
     this._anchoredRowStartPosition -= this._lastScrollTop - scrollTop
+
+    // TODO I think the threshold check ingetIndexForOffset() will prevent this edge-case,
+    //      So maybe this overscroll guard can be removed.
+    if (this._anchoredColumnStartIndex === 0) {
+      this._anchoredColumnStartPosition = 0
+    }
+    if (this._anchoredRowStartIndex === 0) {
+      this._anchoredRowStartPosition = 0
+    }
 
     // Don't trigger an onScroll cycle.
     this._ignoreNextOnScroll = true
