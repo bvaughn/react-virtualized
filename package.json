@@ -144,7 +144,7 @@
   "dependencies": {
     "babel-runtime": "^6.11.6",
     "classnames": "^2.2.3",
-    "dom-helpers": "^2.4.0"
+    "dom-helpers": "^3.2.0"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0",
