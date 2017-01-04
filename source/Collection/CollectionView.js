@@ -355,7 +355,6 @@ export default class CollectionView extends Component {
       boxSizing: 'border-box',
       direction: 'ltr',
       height: autoHeight ? 'auto' : height,
-      overflow: 'auto',
       position: 'relative',
       WebkitOverflowScrolling: 'touch',
       width,
@@ -367,12 +366,18 @@ export default class CollectionView extends Component {
     // For more info see issue #116
     const verticalScrollBarSize = totalHeight > height ? this._scrollbarSize : 0
     const horizontalScrollBarSize = totalWidth > width ? this._scrollbarSize : 0
-    if (totalWidth + verticalScrollBarSize <= width) {
-      collectionStyle.overflowX = 'hidden'
-    }
-    if (totalHeight + horizontalScrollBarSize <= height) {
-      collectionStyle.overflowY = 'hidden'
-    }
+
+    // Also explicitly init styles to 'auto' if scrollbars are required.
+    // This works around an obscure edge case where external CSS styles have not yet been loaded,
+    // But an initial scroll index of offset is set as an external prop.
+    // Without this style, Grid would render the correct range of cells but would NOT update its internal offset.
+    // This was originally reported via clauderic/react-infinite-calendar/issues/23
+    collectionStyle.overflowX = totalWidth + verticalScrollBarSize <= width
+      ? 'hidden'
+      : 'auto'
+    collectionStyle.overflowY = totalHeight + horizontalScrollBarSize <= height
+      ? 'hidden'
+      : 'auto'
 
     return (
       <div
