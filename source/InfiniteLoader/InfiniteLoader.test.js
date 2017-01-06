@@ -324,43 +324,6 @@ describe('isRangeVisible', () => {
 })
 
 describe('forceUpdateReactVirtualizedComponent', () => {
-  it('should call :forceUpdateGrid if defined', () => {
-    let forceUpdateCalled = false
-    let forceUpdateGridCalled = false
-    class TestComponent extends Component {
-      forceUpdate () {
-        forceUpdateCalled = true
-      }
-      forceUpdateGrid () {
-        forceUpdateGridCalled = true
-      }
-      render () {
-        return <div />
-      }
-    }
-    forceUpdateReactVirtualizedComponent(
-      render(<TestComponent />)
-    )
-    expect(forceUpdateGridCalled).toEqual(true)
-    expect(forceUpdateCalled).toEqual(false)
-  })
-
-  it('should called :forceUpdate if :forceUpdateGrid is not defined', () => {
-    let forceUpdateCalled = false
-    class TestComponent extends Component {
-      forceUpdate () {
-        forceUpdateCalled = true
-      }
-      render () {
-        return <div />
-      }
-    }
-    forceUpdateReactVirtualizedComponent(
-      render(<TestComponent />)
-    )
-    expect(forceUpdateCalled).toEqual(true)
-  })
-
   it('should call :recomputeGridSize if defined', () => {
     let recomputedGridSize = false
     class TestComponent extends Component {
@@ -391,5 +354,21 @@ describe('forceUpdateReactVirtualizedComponent', () => {
       render(<TestComponent />)
     )
     expect(recomputedRowHeights).toEqual(true)
+  })
+
+  it('should call :forceUpdate otherwise', () => {
+    let forceUpdated = false
+    class TestComponent extends Component {
+      forceUpdate () {
+        forceUpdated = true
+      }
+      render () {
+        return <div />
+      }
+    }
+    forceUpdateReactVirtualizedComponent(
+      render(<TestComponent />)
+    )
+    expect(forceUpdated).toEqual(true)
   })
 })
