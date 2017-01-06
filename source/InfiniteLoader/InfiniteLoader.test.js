@@ -364,7 +364,7 @@ describe('forceUpdateReactVirtualizedComponent', () => {
   it('should call :recomputeGridSize if defined', () => {
     let recomputedGridSize = false
     class TestComponent extends Component {
-      forceUpdateGrid () {
+      recomputeGridSize () {
         recomputedGridSize = true
       }
       render () {
@@ -380,7 +380,7 @@ describe('forceUpdateReactVirtualizedComponent', () => {
   it('should called :recomputeRowHeights if defined', () => {
     let recomputedRowHeights = false
     class TestComponent extends Component {
-      forceUpdate () {
+      recomputeRowHeights () {
         recomputedRowHeights = true
       }
       render () {
