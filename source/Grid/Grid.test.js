@@ -6,6 +6,7 @@ import { render } from '../TestUtils'
 import shallowCompare from 'react-addons-shallow-compare'
 import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
 import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
+import { DEFAULT_MAX_SCROLL_SIZE } from './utils/ScalingCellSizeAndPositionManager'
 
 const DEFAULT_COLUMN_WIDTH = 50
 const DEFAULT_HEIGHT = 100
@@ -1506,5 +1507,34 @@ describe('Grid', () => {
       expect(cellRendererCalls.length).toEqual(2)
       expect(cellRendererCalls[1].style.width).toEqual(50)
     })
+  })
+
+  it('should not pull from the style cache while scrolling if there is an offset adjustment', () => {
+    let cellRendererCalls = []
+    function cellRenderer (props) {
+      cellRendererCalls.push(props)
+    }
+
+    const grid = render(getMarkup({
+      cellRenderer,
+      width: 100,
+      height: 100,
+      rowHeight: 100,
+      columnWidth: 100,
+      rowCount: DEFAULT_MAX_SCROLL_SIZE * 2 / 100, // lots of offset
+      scrollTop: DEFAULT_MAX_SCROLL_SIZE
+    }))
+
+    simulateScroll({
+      grid,
+      scrollTop: DEFAULT_MAX_SCROLL_SIZE + 100
+    })
+
+    // cellRendererCalls[0] is the element at rowIndex 0
+    const firstProps = cellRendererCalls[1]
+    const secondProps = cellRendererCalls[2]
+
+    expect(cellRendererCalls.length).toEqual(3)
+    expect(firstProps.style).not.toBe(secondProps.style)
   })
 })
