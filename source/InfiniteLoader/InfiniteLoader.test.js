@@ -360,4 +360,36 @@ describe('forceUpdateReactVirtualizedComponent', () => {
     )
     expect(forceUpdateCalled).toEqual(true)
   })
+
+  it('should call :recomputeGridSize if defined', () => {
+    let recomputedGridSize = false
+    class TestComponent extends Component {
+      recomputeGridSize () {
+        recomputedGridSize = true
+      }
+      render () {
+        return <div />
+      }
+    }
+    forceUpdateReactVirtualizedComponent(
+      render(<TestComponent />)
+    )
+    expect(recomputedGridSize).toEqual(true)
+  })
+
+  it('should called :recomputeRowHeights if defined', () => {
+    let recomputedRowHeights = false
+    class TestComponent extends Component {
+      recomputeRowHeights () {
+        recomputedRowHeights = true
+      }
+      render () {
+        return <div />
+      }
+    }
+    forceUpdateReactVirtualizedComponent(
+      render(<TestComponent />)
+    )
+    expect(recomputedRowHeights).toEqual(true)
+  })
 })

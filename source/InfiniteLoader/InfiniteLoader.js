@@ -239,9 +239,23 @@ export function scanForUnloadedRanges ({
  * In the first case the built-in React forceUpdate() method is sufficient to force a re-render,
  * But in the latter cases we need to use the RV-specific forceUpdateGrid() method.
  * Else the inner Grid will not be re-rendered and visuals may be stale.
+ *
+ * Additionally, while a Grid is scrolling the cells can be cached,
+ * So it's important to invalidate that cache by recalculating sizes
+ * before forcing a rerender.
  */
 export function forceUpdateReactVirtualizedComponent (component) {
-  typeof component.forceUpdateGrid === 'function'
-    ? component.forceUpdateGrid()
-    : component.forceUpdate()
+  const recomputeSize = typeof component.recomputeGridSize === 'function'
+    ? component.recomputeGridSize
+    : component.recomputeRowHeights
+
+  const forceUpdate = typeof component.forceUpdateGrid === 'function'
+    ? component.forceUpdateGrid
+    : component.forceUpdate
+
+  if (recomputeSize) {
+    recomputeSize.call(component)
+  }
+
+  forceUpdate.call(component)
 }
