@@ -22,6 +22,8 @@ export default function defaultCellRangeRenderer ({
   visibleRowIndices
 }: DefaultCellRangeRendererParams) {
   const renderedCells = []
+  const offsetAdjusted = verticalOffsetAdjustment || horizontalOffsetAdjustment
+  const canCacheStyle = !isScrolling || !offsetAdjusted
 
   for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
     let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex)
@@ -38,7 +40,7 @@ export default function defaultCellRangeRenderer ({
       let style
 
       // Cache style objects so shallow-compare doesn't re-render unnecessarily.
-      if (styleCache[key]) {
+      if (canCacheStyle && styleCache[key]) {
         style = styleCache[key]
       } else {
         style = {
