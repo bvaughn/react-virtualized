@@ -42,13 +42,16 @@ export default class MultiGrid extends Component {
       scrollTop: 0
     }
 
+    this._bottomLeftGridRef = this._bottomLeftGridRef.bind(this)
+    this._bottomRightGridRef = this._bottomRightGridRef.bind(this)
     this._cellRendererBottomLeftGrid = this._cellRendererBottomLeftGrid.bind(this)
     this._cellRendererBottomRightGrid = this._cellRendererBottomRightGrid.bind(this)
     this._cellRendererTopRightGrid = this._cellRendererTopRightGrid.bind(this)
     this._columnWidthRightGrid = this._columnWidthRightGrid.bind(this)
-    this._onScrollHorizontal = this._onScrollHorizontal.bind(this)
-    this._onScrollVertical = this._onScrollVertical.bind(this)
+    this._onScroll = this._onScroll.bind(this)
     this._rowHeightBottomGrid = this._rowHeightBottomGrid.bind(this)
+    this._topLeftGridRef = this._topLeftGridRef.bind(this)
+    this._topRightGridRef = this._topRightGridRef.bind(this)
   }
 
   /** See Grid#measureAllCells */
@@ -84,7 +87,11 @@ export default class MultiGrid extends Component {
     })
   }
 
-  componentWillUpdate (nextProps, nextState) {
+  componentWillMount () {
+    this._maybeCalculateCachedStyles(null, this.props)
+  }
+
+  componentWillReceiveProps (nextProps) {
     const { columnWidth, fixedColumnCount, fixedRowCount, rowHeight } = this.props
 
     if (
@@ -100,17 +107,18 @@ export default class MultiGrid extends Component {
     ) {
       this._topGridHeight = null
     }
+
+    this._maybeCalculateCachedStyles(this.props, nextProps)
   }
 
   render () {
     const {
-      height,
       onScroll,
       onSectionRendered,
-      scrollLeft: scrollLeftProp,
+      scrollLeft: scrollLeftProp, // eslint-disable-line no-unused-vars
       scrollToColumn,
-      style,
-      width,
+      scrollTop: scrollTopProp, // eslint-disable-line no-unused-vars
+      scrollToRow,
       ...rest
     } = this.props
 
@@ -122,39 +130,15 @@ export default class MultiGrid extends Component {
     } = this.state
 
     return (
-      <div
-        style={{
-          height,
-          width,
-          ...style
-        }}
-      >
-        <div
-          style={{
-            height: this._getTopGridHeight(),
-            position: 'relative',
-            width
-          }}
-        >
+      <div style={this._containerOuterStyle}>
+        <div style={this._containerTopStyle}>
           {this._renderTopLeftGrid(rest)}
           {this._renderTopRightGrid({
             ...rest,
             scrollLeft
           })}
         </div>
-        <div
-          onScroll={this._onScrollVertical}
-          ref={(ref) => {
-            this._scrollingContainer = ref
-          }}
-          style={{
-            height: height - this._getTopGridHeight(),
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            position: 'relative',
-            width
-          }}
-        >
+        <div style={this._containerBottomStyle}>
           {this._renderBottomLeftGrid({
             ...rest,
             scrollTop
@@ -163,8 +147,9 @@ export default class MultiGrid extends Component {
             ...rest,
             onScroll,
             onSectionRendered,
-            scrollLeft: scrollLeftProp,
+            scrollLeft,
             scrollToColumn,
+            scrollToRow,
             scrollTop
           })}
         </div>
@@ -174,6 +159,14 @@ export default class MultiGrid extends Component {
 
   shouldComponentUpdate (nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState)
+  }
+
+  _bottomLeftGridRef (ref) {
+    this._bottomLeftGrid = ref
+  }
+
+  _bottomRightGridRef (ref) {
+    this._bottomRightGrid = ref
   }
 
   _cellRendererBottomLeftGrid ({ rowIndex, ...rest }) {
@@ -212,16 +205,16 @@ export default class MultiGrid extends Component {
       : columnWidth
   }
 
-  _getBottomGridHeight () {
-    const { height } = this.props
+  _getBottomGridHeight (props) {
+    const { height } = props
 
-    let topGridHeight = this._getTopGridHeight()
+    let topGridHeight = this._getTopGridHeight(props)
 
     return height - topGridHeight
   }
 
-  _getLeftGridWidth () {
-    const { fixedColumnCount, columnWidth } = this.props
+  _getLeftGridWidth (props) {
+    const { fixedColumnCount, columnWidth } = props
 
     if (this._leftGridWidth == null) {
       if (columnWidth instanceof Function) {
@@ -240,16 +233,16 @@ export default class MultiGrid extends Component {
     return this._leftGridWidth
   }
 
-  _getRightGridWidth () {
-    const { width } = this.props
+  _getRightGridWidth (props) {
+    const { width } = props
 
-    let leftGridWidth = this._getLeftGridWidth()
+    let leftGridWidth = this._getLeftGridWidth(props)
 
     return width - leftGridWidth
   }
 
-  _getTopGridHeight () {
-    const { fixedRowCount, rowHeight } = this.props
+  _getTopGridHeight (props) {
+    const { fixedRowCount, rowHeight } = props
 
     if (this._topGridHeight == null) {
       if (rowHeight instanceof Function) {
@@ -268,19 +261,133 @@ export default class MultiGrid extends Component {
     return this._topGridHeight
   }
 
-  _onScrollHorizontal ({ scrollLeft }) {
-    this.setState({
-      scrollLeft
-    })
-  }
+  /**
+   * Avoid recreating inline styles each render; this bypasses Grid's shallowCompare.
+   * This method recalculates styles only when specific props change.
+   */
+  _maybeCalculateCachedStyles (prevProps, props) {
+    const {
+      columnWidth,
+      height,
+      fixedColumnCount,
+      fixedRowCount,
+      rowHeight,
+      style,
+      styleBottomLeftGrid,
+      styleBottomRightGrid,
+      styleTopLeftGrid,
+      styleTopRightGrid,
+      width
+    } = props
 
-  _onScrollVertical (event) {
-    if (event.target !== this._scrollingContainer) {
-      return
+    const firstRender = !prevProps
+    const sizeChange = (
+      firstRender ||
+      height !== prevProps.height ||
+      width !== prevProps.width
+    )
+    const leftSizeChange = (
+      firstRender ||
+      columnWidth !== prevProps.columnWidth ||
+      fixedColumnCount !== prevProps.fixedColumnCount
+    )
+    const topSizeChange = (
+      firstRender ||
+      fixedRowCount !== prevProps.fixedRowCount ||
+      rowHeight !== prevProps.rowHeight
+    )
+
+    if (
+      firstRender ||
+      sizeChange ||
+      style !== prevProps.style
+    ) {
+      this._containerOuterStyle = {
+        height,
+        width,
+        ...style
+      }
     }
 
+    if (
+      firstRender ||
+      sizeChange ||
+      topSizeChange
+    ) {
+      this._containerTopStyle = {
+        height: this._getTopGridHeight(props),
+        position: 'relative',
+        width
+      }
+
+      this._containerBottomStyle = {
+        height: height - this._getTopGridHeight(props),
+        overflow: 'hidden',
+        position: 'relative',
+        width
+      }
+    }
+
+    if (
+      firstRender ||
+      styleBottomLeftGrid !== prevProps.styleBottomLeftGrid
+    ) {
+      this._bottomLeftGridStyle = {
+        left: 0,
+        outline: 0,
+        overflow: 'hidden',
+        position: 'absolute',
+        ...styleBottomLeftGrid
+      }
+    }
+
+    if (
+      firstRender ||
+      leftSizeChange ||
+      styleBottomRightGrid !== prevProps.styleBottomRightGrid
+    ) {
+      this._bottomRightGridStyle = {
+        left: this._getLeftGridWidth(props),
+        outline: 0,
+        position: 'absolute',
+        ...styleBottomRightGrid
+      }
+    }
+
+    if (
+      firstRender ||
+      styleTopLeftGrid !== prevProps.styleTopLeftGrid
+    ) {
+      this._topLeftGridStyle = {
+        left: 0,
+        outline: 0,
+        overflow: 'hidden',
+        position: 'absolute',
+        top: 0,
+        ...styleTopLeftGrid
+      }
+    }
+
+    if (
+      firstRender ||
+      leftSizeChange ||
+      styleTopRightGrid !== prevProps.styleTopRightGrid
+    ) {
+      this._topRightGridStyle = {
+        left: this._getLeftGridWidth(props),
+        outline: 0,
+        overflow: 'hidden',
+        position: 'absolute',
+        top: 0,
+        ...styleTopRightGrid
+      }
+    }
+  }
+
+  _onScroll ({ scrollLeft, scrollTop }) {
     this.setState({
-      scrollTop: event.target.scrollTop
+      scrollLeft,
+      scrollTop
     })
   }
 
@@ -289,8 +396,7 @@ export default class MultiGrid extends Component {
       fixedColumnCount,
       fixedRowCount,
       rowCount,
-      scrollTop,
-      styleBottomLeftGrid
+      scrollTop
     } = props
 
     if (!fixedColumnCount) {
@@ -300,25 +406,15 @@ export default class MultiGrid extends Component {
     return (
       <Grid
         {...props}
-        autoHeight
         cellRenderer={this._cellRendererBottomLeftGrid}
         columnCount={fixedColumnCount}
-        height={this._getBottomGridHeight()}
-        ref={(ref) => {
-          this._bottomLeftGrid = ref
-        }}
+        height={this._getBottomGridHeight(props)}
+        ref={this._bottomLeftGridRef}
         rowCount={rowCount - fixedRowCount}
         rowHeight={this._rowHeightBottomGrid}
         scrollTop={scrollTop}
-        style={{
-          height: 'auto',
-          left: 0,
-          outline: 0,
-          overflow: 'hidden',
-          position: 'absolute',
-          ...styleBottomLeftGrid
-        }}
-        width={this._getLeftGridWidth()}
+        style={this._bottomLeftGridStyle}
+        width={this._getLeftGridWidth(props)}
       />
     )
   }
@@ -330,34 +426,24 @@ export default class MultiGrid extends Component {
       fixedRowCount,
       rowCount,
       scrollToColumn,
-      scrollTop,
-      styleBottomRightGrid
+      scrollToRow
     } = props
 
     return (
       <Grid
         {...props}
-        autoHeight
         cellRenderer={this._cellRendererBottomRightGrid}
         columnCount={columnCount - fixedColumnCount}
         columnWidth={this._columnWidthRightGrid}
-        height={this._getBottomGridHeight()}
-        onScroll={this._onScrollHorizontal}
-        ref={(ref) => {
-          this._bottomRightGrid = ref
-        }}
+        height={this._getBottomGridHeight(props)}
+        onScroll={this._onScroll}
+        ref={this._bottomRightGridRef}
         rowCount={rowCount - fixedRowCount}
         rowHeight={this._rowHeightBottomGrid}
         scrollToColumn={scrollToColumn - fixedColumnCount}
-        scrollTop={scrollTop}
-        style={{
-          height: 'auto',
-          left: this._getLeftGridWidth(),
-          outline: 0,
-          position: 'absolute',
-          ...styleBottomRightGrid
-        }}
-        width={this._getRightGridWidth()}
+        scrollToRow={scrollToRow - fixedRowCount}
+        style={this._bottomRightGridStyle}
+        width={this._getRightGridWidth(props)}
       />
     )
   }
@@ -365,8 +451,7 @@ export default class MultiGrid extends Component {
   _renderTopLeftGrid (props) {
     const {
       fixedColumnCount,
-      fixedRowCount,
-      styleTopLeftGrid
+      fixedRowCount
     } = props
 
     if (!fixedColumnCount || !fixedRowCount) {
@@ -377,20 +462,11 @@ export default class MultiGrid extends Component {
       <Grid
         {...props}
         columnCount={fixedColumnCount}
-        height={this._getTopGridHeight()}
-        ref={(ref) => {
-          this._topLeftGrid = ref
-        }}
+        height={this._getTopGridHeight(props)}
+        ref={this._topLeftGridRef}
         rowCount={fixedRowCount}
-        style={{
-          left: 0,
-          outline: 0,
-          overflow: 'hidden',
-          position: 'absolute',
-          top: 0,
-          ...styleTopLeftGrid
-        }}
-        width={this._getLeftGridWidth()}
+        style={this._topLeftGridStyle}
+        width={this._getLeftGridWidth(props)}
       />
     )
   }
@@ -400,8 +476,7 @@ export default class MultiGrid extends Component {
       columnCount,
       fixedColumnCount,
       fixedRowCount,
-      scrollLeft,
-      styleTopRightGrid
+      scrollLeft
     } = props
 
     if (!fixedRowCount) {
@@ -414,21 +489,12 @@ export default class MultiGrid extends Component {
         cellRenderer={this._cellRendererTopRightGrid}
         columnCount={columnCount - fixedColumnCount}
         columnWidth={this._columnWidthRightGrid}
-        height={this._getTopGridHeight()}
-        ref={(ref) => {
-          this._topRightGrid = ref
-        }}
+        height={this._getTopGridHeight(props)}
+        ref={this._topRightGridRef}
         rowCount={fixedRowCount}
         scrollLeft={scrollLeft}
-        style={{
-          left: this._getLeftGridWidth(),
-          outline: 0,
-          overflow: 'hidden',
-          position: 'absolute',
-          top: 0,
-          ...styleTopRightGrid
-        }}
-        width={this._getRightGridWidth()}
+        style={this._topRightGridStyle}
+        width={this._getRightGridWidth(props)}
       />
     )
   }
@@ -439,5 +505,13 @@ export default class MultiGrid extends Component {
     return rowHeight instanceof Function
       ? rowHeight({ index: index + fixedRowCount })
       : rowHeight
+  }
+
+  _topLeftGridRef (ref) {
+    this._topLeftGrid = ref
+  }
+
+  _topRightGridRef (ref) {
+    this._topRightGrid = ref
   }
 }

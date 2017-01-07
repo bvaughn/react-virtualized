@@ -37,17 +37,15 @@ export default class MultiGridExample extends Component {
     this.state = {
       fixedColumnCount: 2,
       fixedRowCount: 1,
-      scrollLeft: 0,
-      scrollToColumn: 0
+      scrollToColumn: 0,
+      scrollToRow: 0
     }
 
     this._cellRenderer = this._cellRenderer.bind(this)
-    this._columnWidthGetter = this._columnWidthGetter.bind(this)
     this._onFixedColumnCountChange = this._createEventHandler('fixedColumnCount')
     this._onFixedRowCountChange = this._createEventHandler('fixedRowCount')
-    this._onScrollLeftChange = this._createEventHandler('scrollLeft')
     this._onScrollToColumnChange = this._createEventHandler('scrollToColumn')
-    this._rowHeightGetter = this._rowHeightGetter.bind(this)
+    this._onScrollToRowChange = this._createEventHandler('scrollToRow')
   }
 
   render () {
@@ -66,8 +64,8 @@ export default class MultiGridExample extends Component {
         <InputRow>
           {this._createLabeledInput('fixedColumnCount', this._onFixedColumnCountChange)}
           {this._createLabeledInput('fixedRowCount', this._onFixedRowCountChange)}
-          {this._createLabeledInput('scrollLeft', this._onScrollLeftChange)}
           {this._createLabeledInput('scrollToColumn', this._onScrollToColumnChange)}
+          {this._createLabeledInput('scrollToRow', this._onScrollToRowChange)}
         </InputRow>
 
         <AutoSizer disableHeight>
@@ -75,11 +73,11 @@ export default class MultiGridExample extends Component {
             <MultiGrid
               {...this.state}
               cellRenderer={this._cellRenderer}
-              columnWidth={this._columnWidthGetter}
-              columnCount={500}
+              columnWidth={75}
+              columnCount={50}
               height={300}
-              rowHeight={this._rowHeightGetter}
-              rowCount={1000}
+              rowHeight={40}
+              rowCount={100}
               style={STYLE}
               styleBottomLeftGrid={STYLE_BOTTOM_LEFT_GRID}
               styleTopLeftGrid={STYLE_TOP_LEFT_GRID}
@@ -108,10 +106,6 @@ export default class MultiGridExample extends Component {
     )
   }
 
-  _columnWidthGetter ({ index }) {
-    return 50 + index % 3 * 25
-  }
-
   _createEventHandler (property) {
     return (event) => {
       const value = parseInt(event.target.value, 10) || 0
@@ -133,9 +127,5 @@ export default class MultiGridExample extends Component {
         value={value}
       />
     )
-  }
-
-  _rowHeightGetter ({ index }) {
-    return 20 + index % 2 * 10
   }
 }
