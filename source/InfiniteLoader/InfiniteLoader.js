@@ -249,13 +249,9 @@ export function forceUpdateReactVirtualizedComponent (component) {
     ? component.recomputeGridSize
     : component.recomputeRowHeights
 
-  const forceUpdate = typeof component.forceUpdateGrid === 'function'
-    ? component.forceUpdateGrid
-    : component.forceUpdate
-
   if (recomputeSize) {
     recomputeSize.call(component)
+  } else {
+    component.forceUpdate()
   }
-
-  forceUpdate.call(component)
 }
