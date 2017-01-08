@@ -13,15 +13,16 @@ import { generateRandomList } from './utils'
 
 import ArrowKeyStepperExample from '../ArrowKeyStepper/ArrowKeyStepper.example'
 import AutoSizerExample from '../AutoSizer/AutoSizer.example'
-import WindowScrollerExample from '../WindowScroller/WindowScroller.example'
 import CellMeasurerExample from '../CellMeasurer/CellMeasurer.example'
 import CollectionExample from '../Collection/Collection.example'
 import ColumnSizerExample from '../ColumnSizer/ColumnSizer.example'
 import GridExample from '../Grid/Grid.example'
-import TableExample from '../Table/Table.example'
 import InfiniteLoaderExample from '../InfiniteLoader/InfiniteLoader.example'
-import ScrollSyncExample from '../ScrollSync/ScrollSync.example'
 import ListExample from '../List/List.example'
+import MultiGridExample from '../MultiGrid/MultiGrid.example'
+import ScrollSyncExample from '../ScrollSync/ScrollSync.example'
+import TableExample from '../Table/Table.example'
+import WindowScrollerExample from '../WindowScroller/WindowScroller.example'
 
 const COMPONENT_EXAMPLES_MAP = {
   '/components/ArrowKeyStepper': ArrowKeyStepperExample,
@@ -29,11 +30,12 @@ const COMPONENT_EXAMPLES_MAP = {
   '/components/CellMeasurer': CellMeasurerExample,
   '/components/Collection': CollectionExample,
   '/components/ColumnSizer': ColumnSizerExample,
-  '/components/Table': TableExample,
   '/components/Grid': GridExample,
   '/components/InfiniteLoader': InfiniteLoaderExample,
-  '/components/ScrollSync': ScrollSyncExample,
   '/components/List': ListExample,
+  '/components/MultiGrid': MultiGridExample,
+  '/components/ScrollSync': ScrollSyncExample,
+  '/components/Table': TableExample,
   '/components/WindowScroller': WindowScrollerExample
 }
 
@@ -93,6 +95,7 @@ export default class Application extends Component {
               <ComponentLink to='/components/CellMeasurer'>CellMeasurer</ComponentLink>
               <ComponentLink to='/components/ColumnSizer'>ColumnSizer</ComponentLink>
               <ComponentLink to='/components/InfiniteLoader'>InfiniteLoader</ComponentLink>
+              <ComponentLink to='/components/MultiGrid'>MultiGrid</ComponentLink>
               <ComponentLink to='/components/ScrollSync'>ScrollSync</ComponentLink>
               <ComponentLink to='/components/WindowScroller'>WindowScroller</ComponentLink>
             </div>

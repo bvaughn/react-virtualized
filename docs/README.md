@@ -17,6 +17,7 @@ Documentation
 * [CellMeasurer](CellMeasurer.md)
 * [ColumnSizer](ColumnSizer.md)
 * [InfiniteLoader](InfiniteLoader.md)
+* [MultiGrid](MultiGrid.md)
 * [ScrollSync](ScrollSync.md)
 * [WindowScroller](WindowScroller.md)
 
