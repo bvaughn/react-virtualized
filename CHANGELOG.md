@@ -1,6 +1,16 @@
 Changelog
 ------------
 
+##### 8.9.0
+
+* New `MultiGrid` reduces the boilerplate required to configure a `Grid` with fixed columns and/or rows.
+* `defaultTableRowRenderer` passes new `rowData` param to event handlers (in addition to `index`).
+* 🐛 Styles are no longer cached while scrolling for compressed lists ([@nickclaw](https://github.com/nickclaw) - #527)
+* 🐛 Cell cache is reset once `InfiniteLoader` load completes ([@nickclaw](https://github.com/nickclaw) - #528)
+* Add loose-envify support for Browserify users ([@chrisvasz](https://github.com/chrisvasz) - #519, #523)
+* `dom-helpers` dependency relaxed to support 2.x and 3.x versions ([@danez](https://github.com/danez) - #522)
+* 🐛 `Collection` no longer drops its `overflow` style in certain conditions; see facebook/react/issues/8689 for more info.
+
 ##### 8.8.1
 Fixed a bug with `Grid` style-cache that caused stale cell-sizes to be used when `Grid` resized.
 
