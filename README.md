@@ -174,11 +174,12 @@ Here are some online demos of each component:
 * [CellMeasurer](https://bvaughn.github.io/react-virtualized/#/components/CellMeasurer)
 * [Collection](https://bvaughn.github.io/react-virtualized/#/components/Collection)
 * [ColumnSizer](https://bvaughn.github.io/react-virtualized/#/components/ColumnSizer)
-* [Table](https://bvaughn.github.io/react-virtualized/#/components/Table)
 * [Grid](https://bvaughn.github.io/react-virtualized/#/components/Grid)
 * [InfiniteLoader](https://bvaughn.github.io/react-virtualized/#/components/InfiniteLoader)
-* [ScrollSync](https://bvaughn.github.io/react-virtualized/#/components/ScrollSync)
 * [List](https://bvaughn.github.io/react-virtualized/#/components/List)
+* [MultiGrid](https://bvaughn.github.io/react-virtualized/#/components/MultiGrid)
+* [ScrollSync](https://bvaughn.github.io/react-virtualized/#/components/ScrollSync)
+* [Table](https://bvaughn.github.io/react-virtualized/#/components/Table)
 * [WindowScroller](https://bvaughn.github.io/react-virtualized/#/components/WindowScroller)
 
 And here are some "recipe" type demos:
