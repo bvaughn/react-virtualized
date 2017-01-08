@@ -3,9 +3,6 @@ import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import Grid from '../Grid'
 
-// TODO: Handle misplaced horizontal scrollbar for bottom/right grid
-// TODO: Handle :scrollLeft prop conflict with onScroll :scrollLeft param
-
 /**
  * Renders 1, 2, or 4 Grids depending on configuration.
  * A main (body) Grid will always be rendered.
