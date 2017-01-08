@@ -10,6 +10,9 @@
 [![OpenCollective](https://opencollective.com/react-virtualized/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/react-virtualized/sponsors/badge.svg)](#sponsors)
 
+React components for efficiently rendering large lists and tabular data.
+Check out [the demo](https://bvaughn.github.io/react-virtualized/) for some examples.
+
 ### Sponsors
 The following wonderful companies have sponsored react-virtualized:
 
