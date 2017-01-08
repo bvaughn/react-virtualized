@@ -5,10 +5,10 @@ Changelog
 
 * New `MultiGrid` reduces the boilerplate required to configure a `Grid` with fixed columns and/or rows.
 * `defaultTableRowRenderer` passes new `rowData` param to event handlers (in addition to `index`).
-* 🐛 Styles are no longer cached while scrolling for compressed lists ([@nickclaw](https://github.com/nickclaw) - #527)
-* 🐛 Cell cache is reset once `InfiniteLoader` load completes ([@nickclaw](https://github.com/nickclaw) - #528)
-* Add loose-envify support for Browserify users ([@chrisvasz](https://github.com/chrisvasz) - #519, #523)
-* `dom-helpers` dependency relaxed to support 2.x and 3.x versions ([@danez](https://github.com/danez) - #522)
+* 🐛 Styles are no longer cached while scrolling for compressed lists ([@nickclaw](https://github.com/nickclaw) - [#527](https://github.com/bvaughn/react-virtualized/pull/527))
+* 🐛 Cell cache is reset once `InfiniteLoader` load completes ([@nickclaw](https://github.com/nickclaw) - [#528](https://github.com/bvaughn/react-virtualized/pull/528))
+* Add loose-envify support for Browserify users ([@chrisvasz](https://github.com/chrisvasz) - [#519](https://github.com/bvaughn/react-virtualized/pull/519), [#523](https://github.com/bvaughn/react-virtualized/pull/523))
+* `dom-helpers` dependency relaxed to support 2.x and 3.x versions ([@danez](https://github.com/danez) - [#522](https://github.com/bvaughn/react-virtualized/pull/522))
 * 🐛 `Collection` no longer drops its `overflow` style in certain conditions; see facebook/react/issues/8689 for more info.
 
 ##### 8.8.1
