@@ -1,4 +1,4 @@
-ScrollSync
+MultiGrid
 ---------------
 
 Decorates `Grid` and adds fixed columns and/or rows.
