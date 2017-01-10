@@ -1,7 +1,7 @@
 InfiniteLoader
 ---------------
 
-High-order component that manages just-in-time fetching of data as a user scrolls up or down in a list.
+Higher-order component that manages just-in-time fetching of data as a user scrolls up or down in a list.
 
 Note that this component is inteded to assist with row-loading.
 As such it is best suited for use with `Table` and `List` (although it can also be used with `Grid`).
