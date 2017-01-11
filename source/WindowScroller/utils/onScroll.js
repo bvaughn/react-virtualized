@@ -41,7 +41,11 @@ function onScrollWindow (event) {
     document.body.style.pointerEvents = 'none'
   }
   enablePointerEventsAfterDelay()
-  mountedInstances.forEach(component => component._onScrollWindow(event))
+  mountedInstances.forEach(component => {
+    if (component.scrollElement === event.currentTarget) {
+      component._onScrollWindow(event)
+    }
+  })
 }
 
 export function registerScrollListener (component, element = window) {
