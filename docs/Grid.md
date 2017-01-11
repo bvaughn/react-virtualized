@@ -164,11 +164,17 @@ function cellRenderer ({
     ? '...'
     : <User user={user} />
 
-  // It is important to attach the style specified as it controls the cell's position.
+  // Style is important since it specifies how the cell is to be sized and positioned.
+  // By default, the grid component specifies, calculates, and initializes the following style properties:
+  //    height 
+  //    width 
+  //    left
+  //    top
+  //    position
   // You can add additional class names or style properties as you would like.
   // Key is also required by React to more efficiently manage the array of cells.
   return (
-    <div
+    <div 
       key={key}
       style={style}
     >
