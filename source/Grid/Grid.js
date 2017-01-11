@@ -223,6 +223,7 @@ export default class Grid extends Component {
     // Bind functions to instance so they don't lose context when passed around
     this._debounceScrollEndedCallback = this._debounceScrollEndedCallback.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
+    this._onWheel = this._onWheel.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
@@ -568,6 +569,7 @@ export default class Grid extends Component {
         aria-label={this.props['aria-label']}
         className={cn('ReactVirtualized__Grid', className)}
         id={id}
+        onWheel={this._onWheel}
         onScroll={this._onScroll}
         role='grid'
         style={{
@@ -869,6 +871,55 @@ export default class Grid extends Component {
         })
       }
     }
+  }
+
+  _onWheel (event) {
+    event.preventDefault()
+
+    // Prevent pointer events from interrupting a smooth scroll
+    this._debounceScrollEnded()
+
+    // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
+    // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
+    // This causes a series of rapid renders that is slow for long lists.
+    // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
+    const { height, width } = this.props
+    const scrollbarSize = this._scrollbarSize
+    const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
+    const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
+    const scrollLeft = Math.min(
+      Math.max(0, totalColumnsWidth - width + scrollbarSize),
+      Math.max(0, this._scrollingContainer.scrollLeft + event.deltaX)
+    )
+    const scrollTop = Math.min(
+      Math.max(0, totalRowsHeight - height + scrollbarSize),
+      Math.max(0, this._scrollingContainer.scrollTop + event.deltaY)
+    )
+
+    // Certain devices (like Apple touchpad) rapid-fire duplicate events.
+    // Don't force a re-render if this is the case.
+    // The mouse may move faster then the animation frame does.
+    // Use requestAnimationFrame to avoid over-updating.
+    if (
+      this.state.scrollLeft !== scrollLeft ||
+      this.state.scrollTop !== scrollTop
+    ) {
+      // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
+      const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+      const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+
+      const newState = {
+        isScrolling: true,
+        scrollDirectionHorizontal,
+        scrollDirectionVertical,
+        scrollLeft,
+        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED
+      }
+
+      this.setState(newState)
+    }
+
+    this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
   }
 
   _onScroll (event) {
