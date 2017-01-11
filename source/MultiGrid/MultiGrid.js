@@ -423,7 +423,8 @@ export default class MultiGrid extends Component {
       fixedRowCount,
       rowCount,
       scrollToColumn,
-      scrollToRow
+      scrollToRow,
+      onScroll
     } = props
 
     return (
@@ -433,7 +434,7 @@ export default class MultiGrid extends Component {
         columnCount={columnCount - fixedColumnCount}
         columnWidth={this._columnWidthRightGrid}
         height={this._getBottomGridHeight(props)}
-        onScroll={this._onScroll}
+        onScroll={(info) => {this._onScroll(info);onScroll && onScroll(info)}}
         ref={this._bottomRightGridRef}
         rowCount={rowCount - fixedRowCount}
         rowHeight={this._rowHeightBottomGrid}
