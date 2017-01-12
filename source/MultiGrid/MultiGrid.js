@@ -381,11 +381,16 @@ export default class MultiGrid extends Component {
     }
   }
 
-  _onScroll ({ scrollLeft, scrollTop }) {
+  _onScroll (scrollInfo) {
+    const {scrollLeft, scrollTop} = scrollInfo
     this.setState({
       scrollLeft,
       scrollTop
     })
+    const onScroll = this.props.onScroll
+    if (onScroll) {
+      onScroll(scrollInfo)
+    }
   }
 
   _renderBottomLeftGrid (props) {
@@ -423,8 +428,7 @@ export default class MultiGrid extends Component {
       fixedRowCount,
       rowCount,
       scrollToColumn,
-      scrollToRow,
-      onScroll
+      scrollToRow
     } = props
 
     return (
@@ -434,7 +438,7 @@ export default class MultiGrid extends Component {
         columnCount={columnCount - fixedColumnCount}
         columnWidth={this._columnWidthRightGrid}
         height={this._getBottomGridHeight(props)}
-        onScroll={(info) => {this._onScroll(info);onScroll && onScroll(info)}}
+        onScroll={this._onScroll}
         ref={this._bottomRightGridRef}
         rowCount={rowCount - fixedRowCount}
         rowHeight={this._rowHeightBottomGrid}
