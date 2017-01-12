@@ -3,7 +3,7 @@
  * Permanently caches all cell sizes (identified by column and row index) unless explicitly cleared.
  * Can be configured to handle uniform cell widths and/or heights as a way of optimizing certain use cases.
  */
-export default class CellSizeCache {
+export default class DefaultCellSizeCache {
   constructor ({
     uniformRowHeight = false,
     uniformColumnWidth = false
@@ -28,36 +28,36 @@ export default class CellSizeCache {
     this._cachedRowHeights = {}
   }
 
-  clearColumnWidth (index: number) {
+  clearColumnWidth (index: any) {
     this._cachedColumnWidth = undefined
 
     delete this._cachedColumnWidths[index]
   }
 
-  clearRowHeight (index: number) {
+  clearRowHeight (index: any) {
     this._cachedRowHeight = undefined
 
     delete this._cachedRowHeights[index]
   }
 
-  getColumnWidth (index: number): ?number {
+  getColumnWidth (index: any): ?number {
     return this._uniformColumnWidth
       ? this._cachedColumnWidth
       : this._cachedColumnWidths[index]
   }
 
-  getRowHeight (index: number): ?number {
+  getRowHeight (index: any): ?number {
     return this._uniformRowHeight
       ? this._cachedRowHeight
       : this._cachedRowHeights[index]
   }
 
-  setColumnWidth (index: number, width: number) {
+  setColumnWidth (index: any, width: number) {
     this._cachedColumnWidth = width
     this._cachedColumnWidths[index] = width
   }
 
-  setRowHeight (index: number, height: number) {
+  setRowHeight (index: any, height: number) {
     this._cachedRowHeight = height
     this._cachedRowHeights[index] = height
   }
