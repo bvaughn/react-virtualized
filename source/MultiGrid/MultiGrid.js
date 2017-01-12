@@ -381,11 +381,16 @@ export default class MultiGrid extends Component {
     }
   }
 
-  _onScroll ({ scrollLeft, scrollTop }) {
+  _onScroll (scrollInfo) {
+    const {scrollLeft, scrollTop} = scrollInfo
     this.setState({
       scrollLeft,
       scrollTop
     })
+    const onScroll = this.props.onScroll
+    if (onScroll) {
+      onScroll(scrollInfo)
+    }
   }
 
   _renderBottomLeftGrid (props) {
