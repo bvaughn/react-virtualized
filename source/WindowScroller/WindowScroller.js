@@ -3,6 +3,7 @@ import { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import shallowCompare from 'react-addons-shallow-compare'
 import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
+import { getVerticalScroll, getPositionFromTop, getHeight } from './utils/dimensions'
 
 export default class WindowScroller extends Component {
   static propTypes = {
@@ -12,6 +13,9 @@ export default class WindowScroller extends Component {
      * ({ height, scrollTop }) => PropTypes.element
      */
     children: PropTypes.func.isRequired,
+
+    /** Element to attach scroll event listeners. Defaults to window. */
+    scrollElement: PropTypes.any,
 
     /** Callback to be invoked on-resize: ({ height }) */
     onResize: PropTypes.func.isRequired,
@@ -28,13 +32,13 @@ export default class WindowScroller extends Component {
   constructor (props) {
     super(props)
 
-    const height = typeof window !== 'undefined'
-      ? window.innerHeight
+    const height = typeof this.scrollElement !== 'undefined'
+      ? getHeight(this.scrollElement)
       : 0
 
     this.state = {
-      isScrolling: false,
       height,
+      isScrolling: false,
       scrollTop: 0
     }
 
@@ -43,32 +47,33 @@ export default class WindowScroller extends Component {
     this._enablePointerEventsAfterDelayCallback = this._enablePointerEventsAfterDelayCallback.bind(this)
   }
 
+  get scrollElement () {
+    return this.props.scrollElement || window
+  }
+
   updatePosition () {
-    // Subtract documentElement top to handle edge-case where a user is navigating back (history) from an already-scrolled bage.
-    // In this case the body's top position will be a negative number and this element's top will be increased (by that amount).
-    this._positionFromTop =
-      ReactDOM.findDOMNode(this).getBoundingClientRect().top -
-      document.documentElement.getBoundingClientRect().top
+    this._updateDimensions()
   }
 
   componentDidMount () {
-    const { height } = this.state
+    this._updateDimensions()
 
-    this.updatePosition()
-
-    if (height !== window.innerHeight) {
-      this.setState({
-        height: window.innerHeight
-      })
-    }
-
-    registerScrollListener(this)
+    registerScrollListener(this, this.scrollElement)
 
     window.addEventListener('resize', this._onResizeWindow, false)
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.scrollElement !== this.scrollElement) {
+      this._updateDimensions(nextProps.scrollElement || window)
+
+      unregisterScrollListener(this, this.scrollElement)
+      registerScrollListener(this, nextProps.scrollElement || window)
+    }
+  }
+
   componentWillUnmount () {
-    unregisterScrollListener(this)
+    unregisterScrollListener(this, this.scrollElement)
 
     window.removeEventListener('resize', this._onResizeWindow, false)
   }
@@ -94,25 +99,31 @@ export default class WindowScroller extends Component {
     })
   }
 
-  _onResizeWindow (event) {
+  _updateDimensions (scrollElement = this.scrollElement) {
     const { onResize } = this.props
+    const { height } = this.state
 
-    this.updatePosition()
+    this._positionFromTop = getPositionFromTop(ReactDOM.findDOMNode(this), scrollElement)
 
-    const height = window.innerHeight || 0
+    const newHeight = getHeight(scrollElement)
 
-    this.setState({ height })
+    if (height !== newHeight) {
+      this.setState({
+        height: newHeight
+      })
 
-    onResize({ height })
+      onResize({ height: newHeight })
+    }
+  }
+
+  _onResizeWindow (event) {
+    this._updateDimensions()
   }
 
   _onScrollWindow (event) {
     const { onScroll } = this.props
 
-    // In IE10+ scrollY is undefined, so we replace that with the latter
-    const scrollY = ('scrollY' in window)
-      ? window.scrollY
-      : document.documentElement.scrollTop
+    const scrollY = getVerticalScroll(this.scrollElement)
 
     const scrollTop = Math.max(0, scrollY - this._positionFromTop)
 
