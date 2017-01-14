@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 8.10.0
+* 🎉 `WindowScroller` supports custom target element via a new `scrollElement` prop; defaults to `window` for backwards compatibility. ([@andrewbranch](https://github.com/andrewbranch) - [#481](https://github.com/bvaughn/react-virtualized/pull/481))
+* 🐛 `MultiGrid` supports `onScroll` property. ([@Pana](https://github.com/Pana) - [#536](https://github.com/bvaughn/react-virtualized/pull/536))
+* 🎉 New id-based `CellMeasurer` cell size cache, `idCellMeasurerCellSizeCache`. ([@bvaughn](https://github.com/bvaughn) - [#538](https://github.com/bvaughn/react-virtualized/pull/538))
+
 ##### 8.9.0
 
 * New `MultiGrid` reduces the boilerplate required to configure a `Grid` with fixed columns and/or rows.
