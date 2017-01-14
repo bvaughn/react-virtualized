@@ -52,7 +52,6 @@ export default class WindowScroller extends Component {
     return this.props.scrollElement || window
   }
 
-
   updatePosition () {
     // Subtract documentElement top to handle edge-case where a user is navigating back (history) from an already-scrolled bage.
     // In this case the body's top position will be a negative number and this element's top will be increased (by that amount).
@@ -61,7 +60,7 @@ export default class WindowScroller extends Component {
       document.documentElement.getBoundingClientRect().top
   }
 
-  componentDidMount () {7db0ed738a92042e5b76b61
+  componentDidMount () {
     const { height } = this.state
 
     this.updatePosition()

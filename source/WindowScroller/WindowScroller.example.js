@@ -25,12 +25,9 @@ export default class WindowScrollerExample extends Component {
     }
 
     this._hideHeader = this._hideHeader.bind(this)
+    this._onCheckboxChange = this._onCheckboxChange.bind(this)
     this._rowRenderer = this._rowRenderer.bind(this)
-    this.onChangeCustomElementCheckbox = this.onChangeCustomElementCheckbox.bind(this)
-  }
-
-  onChangeCustomElementCheckbox (event) {
-    this.context.setScrollingCustomElement(event.target.checked)
+    this._setRef = this._setRef.bind(this)
   }
 
   render () {
@@ -67,14 +64,17 @@ export default class WindowScrollerExample extends Component {
               className={styles.checkbox}
               type='checkbox'
               checked={isScrollingCustomElement}
-              onChange={this.onChangeCustomElementCheckbox}
+              onChange={this._onCheckboxChange}
             />
             Use custom element for scrolling
           </label>
         </ContentBoxParagraph>
 
         <div className={styles.WindowScrollerWrapper}>
-          <WindowScroller scrollElement={isScrollingCustomElement ? customElement : null}>
+          <WindowScroller
+            ref={this._setRef}
+            scrollElement={isScrollingCustomElement ? customElement : null}
+          >
             {({ height, isScrolling, scrollTop }) => (
               <AutoSizer disableHeight>
                 {({ width }) => (
@@ -112,6 +112,10 @@ export default class WindowScrollerExample extends Component {
     })
   }
 
+  _onCheckboxChange (event) {
+    this.context.setScrollingCustomElement(event.target.checked)
+  }
+
   _rowRenderer ({ index, isScrolling, isVisible, key, style }) {
     const { list } = this.context
     const row = list.get(index)
@@ -129,5 +133,9 @@ export default class WindowScrollerExample extends Component {
         {row.name}
       </div>
     )
+  }
+
+  _setRef (ref) {
+    this._windowScroller = ref
   }
 }
