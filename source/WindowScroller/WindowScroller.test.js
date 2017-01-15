@@ -55,6 +55,12 @@ describe('WindowScroller', () => {
     }
   }
 
+  // Set default window height and scroll position between tests
+  beforeEach(() => {
+    window.scrollY = 0
+    window.innerHeight = 500
+  })
+
   // Starts updating scrollTop only when the top position is reached
   it('should have correct top property to be defined on :_positionFromTop', () => {
     const component = render(getMarkup())
@@ -65,6 +71,8 @@ describe('WindowScroller', () => {
 
   // Test edge-case reported in bvaughn/react-virtualized/pull/346
   it('should have correct top property to be defined on :_positionFromTop if documentElement is scrolled', () => {
+    render.unmount()
+
     // Simulate scrolled documentElement
     document.documentElement.getBoundingClientRect = () => ({
       top: -100
@@ -78,8 +86,6 @@ describe('WindowScroller', () => {
   })
 
   it('inherits the window height and passes it to child component', () => {
-    // Set default window height
-    window.innerHeight = 500
     const component = render(getMarkup())
     const rendered = findDOMNode(component)
 
@@ -175,9 +181,6 @@ describe('WindowScroller', () => {
       expect(onResizeCalls[0]).toEqual({
         height: 1000
       })
-
-      // Set default window height
-      window.innerHeight = 500
     })
 
     it('should update height when window resizes', () => {
@@ -194,9 +197,6 @@ describe('WindowScroller', () => {
       expect(component.state.height).toEqual(window.innerHeight)
       expect(component.state.height).toEqual(1000)
       expect(rendered.textContent).toContain('height:1000')
-
-      // Set default window height
-      window.innerHeight = 500
     })
   })
 
