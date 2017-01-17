@@ -30,6 +30,7 @@ The child function is passed the following named parameters:
 | registerChild | Function | This function should be set as the child's `ref` property. It enables a set of rows to be refreshed once their data has finished loading. |
 
 ### Examples
+###### InfiniteLoader and List
 
 This example uses `InfiniteLoader` to prefetch rows in a `List` list as a user scrolls.
 An interactive demo can be seen [here](https://bvaughn.github.io/react-virtualized/#/components/InfiniteLoader).
@@ -85,6 +86,52 @@ ReactDOM.render(
   </InfiniteLoader>,
   document.getElementById('example')
 );
+```
+
+###### InfiniteLoader and Grid
+It is not common to use `InfiniteLoader` and `Grid` together but it is possible using an approach like this:
+
+```jsx
+class MyComponent extends Component {
+  constructor (props, context) {
+    super(props, context)
+
+    this._infiniteLoaderChildFunction = this._infiniteLoaderChildFunction.bind(this)
+    this._onSectionRendered = this._onSectionRendered.bind(this)
+  }
+
+  render () {
+    const { infiniteLoaderProps } = this.props
+
+    <InfiniteLoader {...infiniteLoaderProps}>
+      {this._infiniteLoaderChildFunction}
+    </InfiniteLoader>
+  }
+
+  _infiniteLoaderChildFunction ({ onRowsRendered, registerChild }) => {
+    this._onRowsRendered = onRowsRendered
+
+    const { gridProps } = this.props
+
+    return (
+      <Grid
+        {...gridProps}
+        onSectionRendered={this._onSectionRendered}
+        ref={registerChild}
+      />
+    )
+  }
+
+  _onSectionRendered ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }) {
+    const startIndex = rowStartIndex * columnCount + columnStartIndex
+    const stopIndex = rowStopIndex * columnCount + columnStopIndex
+
+    this._onRowsRendered({
+      startIndex,
+      stopIndex
+    })
+  }
+}
 ```
 
 ### Edge Cases and Considerations
