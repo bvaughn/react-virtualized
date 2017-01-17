@@ -53,6 +53,11 @@ Since `Grid` only receives `columnCount` and `rowCount` it has no way of detecti
 
 This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered grid.
 
+##### scrollToCell ({ columnIndex: number, rowIndex: number })
+
+Ensure column and row are visible.
+This method can be used to safely scroll back to a cell that a user has scrolled away from even if it was previously scrolled to.
+
 ### Class names
 
 The Grid component supports the following static class names

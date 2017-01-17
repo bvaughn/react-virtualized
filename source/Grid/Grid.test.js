@@ -336,6 +336,24 @@ describe('Grid', () => {
         }))).scrollTop
       ).toEqual(expectedScrollTop)
     })
+
+    it('should support scrollToCell() public method', () => {
+      const grid = render(getMarkup())
+      expect(grid.state.scrollLeft).toEqual(0)
+      expect(grid.state.scrollTop).toEqual(0)
+      grid.scrollToCell({
+        columnIndex: 24,
+        rowIndex: 49
+      })
+      // 100 columns * 50 item width = 5,000 total item width
+      // 4 columns can be visible at a time and :scrollLeft is initially 0,
+      // So the minimum amount of scrolling leaves the 25th item at the right (just scrolled into view).
+      expect(grid.state.scrollLeft).toEqual(1050)
+      // 100 rows * 20 item height = 2,000 total item height
+      // 5 rows can be visible at a time and :scrollTop is initially 0,
+      // So the minimum amount of scrolling leaves the 50th item at the bottom (just scrolled into view).
+      expect(grid.state.scrollTop).toEqual(900)
+    })
   })
 
   describe('property updates', () => {

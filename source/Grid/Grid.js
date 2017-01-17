@@ -278,6 +278,24 @@ export default class Grid extends Component {
     this.forceUpdate()
   }
 
+  /**
+   * Ensure column and row are visible.
+   */
+  scrollToCell ({
+    columnIndex,
+    rowIndex
+  }) {
+    const props = this.props
+    this._updateScrollLeftForScrollToColumn({
+      ...props,
+      scrollToColumn: columnIndex
+    })
+    this._updateScrollTopForScrollToRow({
+      ...props,
+      scrollToRow: rowIndex
+    })
+  }
+
   componentDidMount () {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
 
