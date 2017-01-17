@@ -173,7 +173,11 @@ export default function createDetectElementResize () {
             );
             element.__resizeTriggers__.__animationListener__ = null;
           }
-          element.__resizeTriggers__ = !element.removeChild(element.__resizeTriggers__);
+          try {
+            element.__resizeTriggers__ = !element.removeChild(element.__resizeTriggers__);
+          } catch (e) {
+            // Preact compat; see developit/preact-compat/issues/228
+          }
       }
     }
   }
