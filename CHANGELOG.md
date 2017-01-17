@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 8.11.0
+* 🐛 Minor Preact compat fix to element resize detector; see [developit/preact-compat/issues/228](https://github.com/developit/preact-compat/issues/228)
+* 🎉 New `scrollToCell` public method added to `Grid`.
+
 ##### 8.10.0
 * 🎉 `WindowScroller` supports custom target element via a new `scrollElement` prop; defaults to `window` for backwards compatibility. ([@andrewbranch](https://github.com/andrewbranch) - [#481](https://github.com/bvaughn/react-virtualized/pull/481))
 * 🐛 `MultiGrid` supports `onScroll` property. ([@Pana](https://github.com/Pana) - [#536](https://github.com/bvaughn/react-virtualized/pull/536))
