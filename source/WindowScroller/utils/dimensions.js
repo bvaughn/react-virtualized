@@ -15,12 +15,13 @@ export function getHeight (element) {
  * In this case the body’s top position will be a negative number and this element’s top will be increased (by that amount).
  */
 export function getPositionFromTop (element, container) {
+  const offset = container === window ? 0 : getScrollTop(container)
   const containerElement = container === window
     ? document.documentElement
     : container
   return (
     element.getBoundingClientRect().top +
-    getScrollTop(container) -
+    offset -
     containerElement.getBoundingClientRect().top
   )
 }
