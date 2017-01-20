@@ -134,6 +134,34 @@ function render () {
 }
 ```
 
+###### Using `CellMeasurer` with `List`
+
+`CellMeasurer` is intended for use with `Grid` components but can be adapted to work with `List` as well.
+Doing this is just a matter of renaming the `rowIndex` property specified by `CellMeasurer` to an `index` property expected by `rowRenderer`.
+
+```jsx
+<CellMeasurer
+  cellRenderer={
+    // CellMeasurer expects to work with a Grid
+    // But your rowRenderer was written for a List
+    // The only difference is the named parameter they
+    // So map the Grid params (eg rowIndex) to List params (eg index)
+    ({ rowIndex, ...rest }) => listProps.rowRenderer({ index: rowIndex, ...rest })
+  }
+  columnCount={1}
+  rowCount={listProps.rowCount}
+  width={listProps.width}
+>
+  {({ getRowHeight, setRef }) => (
+    <List
+      {...listProps}
+      ref={setRef}
+      rowHeight={getRowHeight}
+    />
+  )}
+</CellMeasurer>
+```
+
 ### Limitations and Performance Considerations
 
 ###### Stateful Components
