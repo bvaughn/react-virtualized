@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.11.1
+* 🐛 Fixed regression in `WindowScroller` when browser is resized. ([@andrewbranch](https://github.com/andrewbranch) - [#548](https://github.com/bvaughn/react-virtualized/pull/548))
+
 ##### 8.11.0
 * 🐛 Minor Preact compat fix to element resize detector; see [developit/preact-compat/issues/228](https://github.com/developit/preact-compat/issues/228)
 * 🎉 New `scrollToCell` public method added to `Grid`.
