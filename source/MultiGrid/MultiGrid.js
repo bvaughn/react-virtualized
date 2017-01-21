@@ -52,11 +52,18 @@ export default class MultiGrid extends Component {
   }
 
   /** See Grid#measureAllCells */
-  measureAllRows () {
+  measureAllCells () {
     this._bottomLeftGrid && this._bottomLeftGrid.measureAllCells()
     this._bottomRightGrid && this._bottomRightGrid.measureAllCells()
     this._topLeftGrid && this._topLeftGrid.measureAllCells()
     this._topRightGrid && this._topRightGrid.measureAllCells()
+  }
+
+  /** See issue #546 */
+  measureAllRows () {
+    console.warn('MultiGrid measureAllRows() is deprecated; use measureAllCells() instead.')
+
+    this.measureAllCells()
   }
 
   /** See Grid#recomputeGridSize */

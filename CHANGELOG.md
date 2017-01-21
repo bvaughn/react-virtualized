@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.11.2
+* 🐛 Added `MultiGrid` method `measureAllCells`; deprecated misnamed `measureAllRows` method.
+
 ##### 8.11.1
 * 🐛 Fixed regression in `WindowScroller` when browser is resized. ([@andrewbranch](https://github.com/andrewbranch) - [#548](https://github.com/bvaughn/react-virtualized/pull/548))
 
