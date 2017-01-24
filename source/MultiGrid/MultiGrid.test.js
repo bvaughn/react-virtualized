@@ -113,6 +113,19 @@ describe('MultiGrid', () => {
       })))
       expect(rendered.querySelectorAll('.ReactVirtualized__Grid').length).toEqual(2)
     })
+
+    it('should render 4 Grids when configured for fixed columns and rows', () => {
+      let multiGrid
+      findDOMNode(render(getMarkup({
+        fixedColumnCount: 1,
+        fixedRowCount: 1,
+        ref: (ref) => {
+          multiGrid = ref
+        }
+      })))
+
+      multiGrid.recomputeGridSize()
+    })
   })
 
   describe('scrollToColumn and scrollToRow', () => {
