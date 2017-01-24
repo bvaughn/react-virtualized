@@ -340,6 +340,8 @@ export default class MultiGrid extends Component {
         left: 0,
         outline: 0,
         overflow: 'hidden',
+        overflowX: 'hidden',
+        overflowY: 'hidden',
         position: 'absolute',
         ...styleBottomLeftGrid
       }
@@ -366,6 +368,8 @@ export default class MultiGrid extends Component {
         left: 0,
         outline: 0,
         overflow: 'hidden',
+        overflowX: 'hidden',
+        overflowY: 'hidden',
         position: 'absolute',
         top: 0,
         ...styleTopLeftGrid
@@ -381,6 +385,8 @@ export default class MultiGrid extends Component {
         left: this._getLeftGridWidth(props),
         outline: 0,
         overflow: 'hidden',
+        overflowX: 'hidden',
+        overflowY: 'hidden',
         position: 'absolute',
         top: 0,
         ...styleTopRightGrid
