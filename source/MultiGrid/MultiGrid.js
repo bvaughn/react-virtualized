@@ -99,7 +99,7 @@ export default class MultiGrid extends Component {
     const { columnWidth, fixedColumnCount, fixedRowCount, rowHeight } = this.props
 
     if (
-      columnWidth !== nextProps.columnWidth ||
+      columnWidth instanceof Function || columnWidth !== nextProps.columnWidth ||
       fixedColumnCount !== nextProps.fixedColumnCount
     ) {
       this._leftGridWidth = null
@@ -107,7 +107,7 @@ export default class MultiGrid extends Component {
 
     if (
       fixedRowCount !== nextProps.fixedRowCount ||
-      rowHeight !== nextProps.rowHeight
+      rowHeight instanceof Function || rowHeight !== nextProps.rowHeight
     ) {
       this._topGridHeight = null
     }
