@@ -47,16 +47,12 @@ describe('MultiGrid', () => {
       const grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
       expect(grids.length).toEqual(4)
       const [topLeft, topRight, bottomLeft, bottomRight] = grids
-      expect(topLeft.style.getPropertyValue('overflow')).toEqual('hidden')
       expect(topLeft.style.getPropertyValue('overflow-x')).toEqual('hidden')
       expect(topLeft.style.getPropertyValue('overflow-y')).toEqual('hidden')
-      expect(topRight.style.getPropertyValue('overflow')).toEqual('hidden')
       expect(topRight.style.getPropertyValue('overflow-x')).toEqual('hidden')
       expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden')
-      expect(bottomLeft.style.getPropertyValue('overflow')).toEqual('hidden')
       expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden')
       expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('hidden')
-      expect(bottomRight.style.getPropertyValue('overflow')).toEqual('auto')
       expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto')
       expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto')
     })
@@ -69,7 +65,8 @@ describe('MultiGrid', () => {
       const grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
       expect(grids.length).toEqual(2)
       const [bottomLeft, bottomRight] = grids
-      expect(bottomLeft.style.getPropertyValue('overflow')).toEqual('hidden')
+      expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden')
+      expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('hidden')
       expect(bottomRight.style.getPropertyValue('overflow')).toEqual('auto')
     })
 
@@ -81,7 +78,8 @@ describe('MultiGrid', () => {
       const grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
       expect(grids.length).toEqual(2)
       const [topRight, bottomRight] = grids
-      expect(topRight.style.getPropertyValue('overflow')).toEqual('hidden')
+      expect(topRight.style.getPropertyValue('overflow-x')).toEqual('hidden')
+      expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden')
       expect(bottomRight.style.getPropertyValue('overflow')).toEqual('auto')
     })
 
@@ -113,18 +111,67 @@ describe('MultiGrid', () => {
       })))
       expect(rendered.querySelectorAll('.ReactVirtualized__Grid').length).toEqual(2)
     })
+  })
 
-    it('should render 4 Grids when configured for fixed columns and rows', () => {
+  describe('#recomputeGridSize', () => {
+    it('should clear calculated cached styles in recomputeGridSize', () => {
+      let fixedRowHeight = 75
+      let fixedColumnWidth = 100
+
+      function variableRowHeight ({index}) {
+        if (index === 0) { return fixedRowHeight }
+        return 20
+      }
+      function variableColumnWidth ({index}) {
+        if (index === 0) { return fixedColumnWidth }
+        return 50
+      }
+
       let multiGrid
-      findDOMNode(render(getMarkup({
+      let rendered = findDOMNode(render(getMarkup({
         fixedColumnCount: 1,
         fixedRowCount: 1,
-        ref: (ref) => {
-          multiGrid = ref
-        }
+        rowHeight: variableRowHeight,
+        columnWidth: variableColumnWidth,
+        ref: (ref) => { multiGrid = ref }
       })))
 
+      let grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
+      expect(grids.length).toEqual(4)
+      let [topLeft, topRight, bottomLeft, bottomRight] = grids
+      expect(topLeft.style.getPropertyValue('height')).toEqual('75px')
+      expect(topRight.style.getPropertyValue('height')).toEqual('75px')
+      expect(bottomLeft.style.getPropertyValue('height')).toEqual('225px')
+      expect(bottomRight.style.getPropertyValue('height')).toEqual('225px')
+
+      expect(topLeft.style.getPropertyValue('width')).toEqual('100px')
+      expect(topRight.style.getPropertyValue('width')).toEqual('300px')
+      expect(bottomLeft.style.getPropertyValue('width')).toEqual('100px')
+      expect(bottomRight.style.getPropertyValue('width')).toEqual('300px')
+
+      expect(multiGrid._topGridHeight).toEqual(75)
+      expect(multiGrid._leftGridWidth).toEqual(100)
+
+      fixedRowHeight = 125
+      fixedColumnWidth = 75
       multiGrid.recomputeGridSize()
+      expect(multiGrid._topGridHeight).toEqual(125)
+      expect(multiGrid._leftGridWidth).toEqual(75)
+
+      multiGrid.forceUpdate()
+
+      let gridsAfter = rendered.querySelectorAll('.ReactVirtualized__Grid')
+      expect(gridsAfter.length).toEqual(4)
+      let [topLeftAfter, topRightAfter, bottomLeftAfter, bottomRightAfter] = gridsAfter
+      expect(topLeftAfter.style.getPropertyValue('height')).toEqual('125px')
+      expect(topRightAfter.style.getPropertyValue('height')).toEqual('125px')
+      expect(bottomLeftAfter.style.getPropertyValue('height')).toEqual('175px')
+      expect(bottomRightAfter.style.getPropertyValue('height')).toEqual('175px')
+
+      expect(topLeftAfter.style.getPropertyValue('width')).toEqual('75px')
+      expect(topRightAfter.style.getPropertyValue('width')).toEqual('325px')
+      expect(bottomLeftAfter.style.getPropertyValue('width')).toEqual('75px')
+      expect(bottomRightAfter.style.getPropertyValue('width')).toEqual('325px')
     })
   })
 
