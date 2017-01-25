@@ -90,6 +90,10 @@ export default class MultiGrid extends Component {
       columnIndex: col,
       rowIndex: rowIndex
     })
+
+    this._leftGridWidth = null
+    this._topGridHeight = null
+    this._maybeCalculateCachedStyles(null, this.props)
   }
 
   componentWillMount () {
@@ -100,7 +104,7 @@ export default class MultiGrid extends Component {
     const { columnWidth, fixedColumnCount, fixedRowCount, rowHeight } = this.props
 
     if (
-      columnWidth instanceof Function || columnWidth !== nextProps.columnWidth ||
+      columnWidth !== nextProps.columnWidth ||
       fixedColumnCount !== nextProps.fixedColumnCount
     ) {
       this._leftGridWidth = null
@@ -108,7 +112,7 @@ export default class MultiGrid extends Component {
 
     if (
       fixedRowCount !== nextProps.fixedRowCount ||
-      rowHeight instanceof Function || rowHeight !== nextProps.rowHeight
+      rowHeight !== nextProps.rowHeight
     ) {
       this._topGridHeight = null
     }
@@ -340,7 +344,6 @@ export default class MultiGrid extends Component {
       this._bottomLeftGridStyle = {
         left: 0,
         outline: 0,
-        overflow: 'hidden',
         overflowX: 'hidden',
         overflowY: 'hidden',
         position: 'absolute',
@@ -368,7 +371,6 @@ export default class MultiGrid extends Component {
       this._topLeftGridStyle = {
         left: 0,
         outline: 0,
-        overflow: 'hidden',
         overflowX: 'hidden',
         overflowY: 'hidden',
         position: 'absolute',
@@ -385,7 +387,6 @@ export default class MultiGrid extends Component {
       this._topRightGridStyle = {
         left: this._getLeftGridWidth(props),
         outline: 0,
-        overflow: 'hidden',
         overflowX: 'hidden',
         overflowY: 'hidden',
         position: 'absolute',
