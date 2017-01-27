@@ -343,7 +343,7 @@ describe('Table', () => {
     })
 
     it('should call sort with the correct arguments when the current sort-by column header is clicked', () => {
-      const sortDirections = [SortDirection.ASC, SortDirection.DESC]
+      const sortDirections = [SortDirection.NAT, SortDirection.ASC, SortDirection.DESC]
       sortDirections.forEach(sortDirection => {
         const sortCalls = []
         const rendered = findDOMNode(render(getMarkup({
@@ -357,7 +357,8 @@ describe('Table', () => {
         expect(sortCalls.length).toEqual(1)
 
         const { sortBy, sortDirection: newSortDirection } = sortCalls[0]
-        const expectedSortDirection = sortDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
+        const expectedSortDirection = sortDirection === SortDirection.ASC ? SortDirection.DESC
+          : (sortDirection === SortDirection.DESC ? SortDirection.NAT : SortDirection.ASC)
         expect(sortBy).toEqual('name')
         expect(newSortDirection).toEqual(expectedSortDirection)
       })
