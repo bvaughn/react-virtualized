@@ -72,23 +72,25 @@ export default class MultiGrid extends Component {
     rowIndex = 0
   } = {}) {
     const { fixedColumnCount, fixedRowCount } = this.props
-    const col = (columnIndex >= fixedColumnCount ? columnIndex - fixedColumnCount : columnIndex)
-    const row = (rowIndex >= fixedRowCount ? rowIndex - fixedRowCount : rowIndex)
+
+    const adjustedColumnIndex = Math.max(0, columnIndex - fixedColumnCount)
+    const adjustedRowIndex = Math.max(0, rowIndex - fixedRowCount)
+
     this._bottomLeftGrid && this._bottomLeftGrid.recomputeGridSize({
-      columnIndex: columnIndex,
-      rowIndex: row
+      columnIndex,
+      rowIndex: adjustedRowIndex
     })
     this._bottomRightGrid && this._bottomRightGrid.recomputeGridSize({
-      columnIndex: col,
-      rowIndex: row
+      columnIndex: adjustedColumnIndex,
+      rowIndex: adjustedRowIndex
     })
     this._topLeftGrid && this._topLeftGrid.recomputeGridSize({
-      columnIndex: columnIndex,
-      rowIndex: rowIndex
+      columnIndex,
+      rowIndex
     })
     this._topRightGrid && this._topRightGrid.recomputeGridSize({
-      columnIndex: col,
-      rowIndex: rowIndex
+      columnIndex: adjustedColumnIndex,
+      rowIndex
     })
 
     this._leftGridWidth = null
