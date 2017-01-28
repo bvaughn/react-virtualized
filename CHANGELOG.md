@@ -4,6 +4,8 @@ Changelog
 ##### 8.11.3
 * Adding missing `scrollToRow` method to `List` and `Table` (as pass-thrus for `Grid.scrollToCell`).
 * 🐛 Bugfixes with `MultiGrid` resize handling and caching. ([@codingbull](https://github.com/codingbull) - [#552](https://github.com/bvaughn/react-virtualized/pull/552))
+* 🐛 List checks it row-style object has been frozen before modifying width; (fix for [upcoming React 16 change](https://github.com/facebook/react/commit/977357765b44af8ff0cfea327866861073095c12#commitcomment-20648713)).
+* 🐛 `MultiGrid` better handles case where `rowCount === fixedRowCount`.
 
 ##### 8.11.2
 * 🐛 Added `MultiGrid` method `measureAllCells`; deprecated misnamed `measureAllRows` method.
