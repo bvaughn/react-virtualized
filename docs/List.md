@@ -50,6 +50,11 @@ In the event that a dynamic `rowHeight` function is in use and the row heights h
 
 This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered list.
 
+##### scrollToRow (index: number)
+
+Ensure row is visible.
+This method can be used to safely scroll back to a cell that a user has scrolled away from even if it was previously scrolled to.
+
 ### Class names
 
 The List component supports the following static class names

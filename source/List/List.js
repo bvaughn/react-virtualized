@@ -119,7 +119,14 @@ export default class List extends Component {
     this.Grid.recomputeGridSize({
       rowIndex: index
     })
-    this.forceUpdateGrid()
+  }
+
+  /** See Grid#scrollToCell */
+  scrollToRow (index = 0) {
+    this.Grid.scrollToCell({
+      columnIndex: 0,
+      rowIndex: index
+    })
   }
 
   render () {
