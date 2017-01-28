@@ -18,7 +18,7 @@ export default class ArrowKeyStepper extends Component {
     className: PropTypes.string,
     columnCount: PropTypes.number.isRequired,
     disabled: PropTypes.bool.isRequired,
-    mode: PropTypes.oneOf(['cells', 'edges']),
+    mode: PropTypes.oneOf(['cells', 'edges', 'align:top-left', 'align:bottom-right']),
     rowCount: PropTypes.number.isRequired,
     scrollToColumn: PropTypes.number.isRequired,
     scrollToRow: PropTypes.number.isRequired
@@ -93,24 +93,48 @@ export default class ArrowKeyStepper extends Component {
     // This is to keep the grid from scrolling after the snap-to update.
     switch (event.key) {
       case 'ArrowDown':
-        scrollToRow = mode === 'cells'
-          ? Math.min(scrollToRow + 1, rowCount - 1)
-          : Math.min(this._rowStopIndex + 1, rowCount - 1)
+        if (mode === 'cells') {
+          scrollToRow = Math.min(scrollToRow + 1, rowCount - 1)
+        } else if (mode === 'align:top-left') {
+          scrollToRow = Math.min(this._rowStartIndex + 1, rowCount - 1)
+        } else if (mode === 'align:bottom-right') {
+          scrollToRow = Math.min(this._rowStopIndex + 1, rowCount - 1)
+        } else {
+          scrollToRow = Math.min(this._rowStopIndex + 1, rowCount - 1)
+        }
         break
       case 'ArrowLeft':
-        scrollToColumn = mode === 'cells'
-          ? Math.max(scrollToColumn - 1, 0)
-          : Math.max(this._columnStartIndex - 1, 0)
+        if (mode === 'cells') {
+          scrollToColumn = Math.max(scrollToColumn - 1, 0)
+        } else if (mode === 'align:top-left') {
+          scrollToColumn = Math.max(this._columnStartIndex - 1, 0)
+        } else if (mode === 'align:bottom-right') {
+          scrollToColumn = Math.max(this._columnStopIndex - 1, 0)
+        } else {
+          scrollToColumn = Math.max(this._columnStartIndex - 1, 0)
+        }
         break
       case 'ArrowRight':
-        scrollToColumn = mode === 'cells'
-          ? Math.min(scrollToColumn + 1, columnCount - 1)
-          : Math.min(this._columnStopIndex + 1, columnCount - 1)
+        if (mode === 'cells') {
+          scrollToColumn = Math.min(scrollToColumn + 1, columnCount - 1)
+        } else if (mode === 'align:top-left') {
+          scrollToColumn = Math.min(this._columnStartIndex + 1, columnCount - 1)
+        } else if (mode === 'align:bottom-right') {
+          scrollToColumn = Math.min(this._columnStopIndex + 1, columnCount - 1)
+        } else {
+          scrollToColumn = Math.min(this._columnStopIndex + 1, columnCount - 1)
+        }
         break
       case 'ArrowUp':
-        scrollToRow = mode === 'cells'
-          ? Math.max(scrollToRow - 1, 0)
-          : Math.max(this._rowStartIndex - 1, 0)
+        if (mode === 'cells') {
+          scrollToRow = Math.max(scrollToRow - 1, 0)
+        } else if (mode === 'align:top-left') {
+          scrollToRow = Math.max(this._rowStartIndex - 1, 0)
+        } else if (mode === 'align:bottom-right') {
+          scrollToRow = Math.max(this._rowStopIndex - 1, 0)
+        } else {
+          scrollToRow = Math.max(this._rowStartIndex - 1, 0)
+        }
         break
     }
 

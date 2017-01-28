@@ -65,6 +65,29 @@ export default class ArrowKeyStepperExample extends Component {
             />
             edges (default)
           </label>
+          <label>
+            <input
+              aria-label='Set mode equal to "align:top-left"'
+              checked={mode === 'align:top-left'}
+              className={styles.Radio}
+              type='radio'
+              onChange={event => event.target.checked && this.setState({ mode: 'align:top-left' })}
+              value='align:top-left'
+            />
+            align:top-left (<code>Grid</code> prop <code>SetToAlignment</code> is set to <code>start</code>)
+          </label>
+          <label>
+            <input
+              aria-label='Set mode equal to "align:bottom-right"'
+              checked={mode === 'align:bottom-right'}
+              className={styles.Radio}
+              type='radio'
+              onChange={event => event.target.checked && this.setState({ mode: 'align:bottom-right' })}
+              value='align:bottom-right'
+            />
+            align:bottom-right (<code>Grid</code> prop <code>SetToAlignment</code> is set to <code>end</code>)
+          </label>
+
         </ContentBoxParagraph>
 
         <ArrowKeyStepper
@@ -89,6 +112,7 @@ export default class ArrowKeyStepperExample extends Component {
                     cellRenderer={({ columnIndex, key, rowIndex, style }) => this._cellRenderer({ columnIndex, key, rowIndex, scrollToColumn, scrollToRow, style })}
                     rowHeight={this._getRowHeight}
                     rowCount={100}
+                    scrollToAlignment={mode === 'align:top-left' ? 'start' : (mode === 'align:bottom-right' ? 'end' : 'auto')}
                     scrollToColumn={scrollToColumn}
                     scrollToRow={scrollToRow}
                     width={width}
