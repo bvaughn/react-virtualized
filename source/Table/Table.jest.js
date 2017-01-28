@@ -303,7 +303,7 @@ describe('Table', () => {
       const rendered = findDOMNode(render(getMarkup()))
       const nameColumn = rendered.querySelectorAll('.ReactVirtualized__Table__headerColumn:first-of-type')
 
-      expect(nameColumn.className).not.toContain('ReactVirtualized__Table__sortableHeaderColumn')
+      expect(nameColumn.className || '').not.toContain('ReactVirtualized__Table__sortableHeaderColumn')
     })
 
     it('should not render sort indicators for non-sortable columns', () => {
@@ -313,7 +313,7 @@ describe('Table', () => {
       })))
       const nameColumn = rendered.querySelectorAll('.ReactVirtualized__Table__headerColumn:first-of-type')
 
-      expect(nameColumn.className).not.toContain('ReactVirtualized__Table__sortableHeaderColumn')
+      expect(nameColumn.className || '').not.toContain('ReactVirtualized__Table__sortableHeaderColumn')
       expect(rendered.querySelectorAll('.ReactVirtualized__Table__sortableHeaderColumn').length).toEqual(1) // Email only
     })
 
