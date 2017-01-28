@@ -67,7 +67,8 @@ describe('MultiGrid', () => {
       const [bottomLeft, bottomRight] = grids
       expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden')
       expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('hidden')
-      expect(bottomRight.style.getPropertyValue('overflow')).toEqual('auto')
+      expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto')
+      expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto')
     })
 
     it('should render 2 Grids when configured for fixed rows only', () => {
@@ -80,7 +81,8 @@ describe('MultiGrid', () => {
       const [topRight, bottomRight] = grids
       expect(topRight.style.getPropertyValue('overflow-x')).toEqual('hidden')
       expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden')
-      expect(bottomRight.style.getPropertyValue('overflow')).toEqual('auto')
+      expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto')
+      expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto')
     })
 
     it('should render 1 Grid when configured for neither fixed columns and rows', () => {
@@ -91,7 +93,8 @@ describe('MultiGrid', () => {
       const grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
       expect(grids.length).toEqual(1)
       const [bottomRight] = grids
-      expect(bottomRight.style.getPropertyValue('overflow')).toEqual('auto')
+      expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto')
+      expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto')
     })
 
     it('should adjust the number of Grids when fixed column or row counts change', () => {

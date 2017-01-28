@@ -30,10 +30,12 @@
     "posttest": "[ -z \"$CI\" ] || codecov",
     "prepublish": "npm run build",
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --config webpack.config.dev.js",
-    "test": "npm run lint && npm run test:unit",
-    "test:unit": "cross-env NODE_ENV=test karma start",
+    "test": "npm run lint && npm run test:jasmine && npm run test:jest",
+    "test:jasmine": "cross-env NODE_ENV=test karma start",
+    "test:jest": "jest --no-watchman",
     "watch": "watch 'clear && npm run test -s' source",
-    "watch:nolint": "watch 'clear && npm run test:unit' source"
+    "watch:jasmine": "watch 'clear && npm run test:jasmine' source",
+    "watch:jest": "jest --no-watchman --watch"
   },
   "files": [
     "dist",
@@ -79,16 +81,28 @@
       "expect",
       "fdescribe",
       "fit",
-      "it",
       "getComputedStyle",
-      "jasmine"
+      "it",
+      "jasmine",
+      "jest"
     ]
+  },
+  "jest": {
+    "setupFiles": [
+      "./source/jest-setup.js"
+    ],
+    "testPathDirs": [
+      "./source"
+    ],
+    "testRegex": ".jest.js",
+    "verbose": true
   },
   "devDependencies": {
     "autoprefixer": "^6.2.3",
     "babel-cli": "6.8.0",
     "babel-core": "^6.5.1",
     "babel-eslint": "^6.0.4",
+    "babel-jest": "^18.0.0",
     "babel-loader": "^6.2.3",
     "babel-plugin-__coverage__": "^0.111111.11",
     "babel-plugin-react-transform": "^2.0.0",
@@ -115,6 +129,7 @@
     "immutable": "^3.7.5",
     "jasmine": "^2.3.2",
     "jasmine-core": "^2.3.4",
+    "jest": "^18.1.0",
     "karma": "^0.13.22",
     "karma-coverage": "^1.0.0",
     "karma-jasmine": "^1.0.2",
