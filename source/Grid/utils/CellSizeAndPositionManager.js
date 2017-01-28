@@ -103,6 +103,7 @@ export default class CellSizeAndPositionManager {
    * @param align Desired alignment within container; one of "auto" (default), "start", or "end"
    * @param containerSize Size (width or height) of the container viewport
    * @param currentOffset Container's current (x or y) offset
+   * @param scrollbarSize Size of vertical or horizontal scrollbar (impacts "end" alignment)
    * @param totalSize Total size (width or height) of all cells
    * @return Offset to use to ensure the specified cell is visible
    */
@@ -110,6 +111,7 @@ export default class CellSizeAndPositionManager {
     align = 'auto',
     containerSize,
     currentOffset,
+    scrollbarSize = 0,
     targetIndex
   }) {
     if (containerSize <= 0) {
@@ -118,7 +120,7 @@ export default class CellSizeAndPositionManager {
 
     const datum = this.getSizeAndPositionOfCell(targetIndex)
     const maxOffset = datum.offset
-    const minOffset = maxOffset - containerSize + datum.size
+    const minOffset = maxOffset - containerSize + datum.size + scrollbarSize
 
     let idealOffset
 
@@ -130,7 +132,7 @@ export default class CellSizeAndPositionManager {
         idealOffset = minOffset
         break
       case 'center':
-        idealOffset = maxOffset - ((containerSize - datum.size) / 2)
+        idealOffset = maxOffset - ((containerSize - datum.size) / 2) + scrollbarSize / 2
         break
       default:
         idealOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset))

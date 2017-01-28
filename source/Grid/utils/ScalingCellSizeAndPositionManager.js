@@ -74,6 +74,7 @@ export default class ScalingCellSizeAndPositionManager {
     align = 'auto',
     containerSize,
     currentOffset, // safe
+    scrollbarSize,
     targetIndex,
     totalSize
   }) {
@@ -86,6 +87,7 @@ export default class ScalingCellSizeAndPositionManager {
       align,
       containerSize,
       currentOffset,
+      scrollbarSize,
       targetIndex,
       totalSize
     })

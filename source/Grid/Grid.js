@@ -846,16 +846,18 @@ export default class Grid extends Component {
   }
 
   _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {
-    const { columnCount, scrollToAlignment, scrollToColumn, width } = props
+    const { columnCount, height, scrollToAlignment, scrollToColumn, width } = props
     const { scrollLeft } = state
 
     if (scrollToColumn >= 0 && columnCount > 0) {
       const targetIndex = Math.max(0, Math.min(columnCount - 1, scrollToColumn))
+      const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
 
       const calculatedScrollLeft = this._columnSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
         containerSize: width,
         currentOffset: scrollLeft,
+        scrollbarSize: totalRowsHeight > height ? this._scrollbarSize : 0,
         targetIndex
       })
 
@@ -868,16 +870,18 @@ export default class Grid extends Component {
   }
 
   _updateScrollTopForScrollToRow (props = this.props, state = this.state) {
-    const { height, rowCount, scrollToAlignment, scrollToRow } = props
+    const { height, rowCount, scrollToAlignment, scrollToRow, width } = props
     const { scrollTop } = state
 
     if (scrollToRow >= 0 && rowCount > 0) {
       const targetIndex = Math.max(0, Math.min(rowCount - 1, scrollToRow))
+      const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
 
       const calculatedScrollTop = this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
         containerSize: height,
         currentOffset: scrollTop,
+        scrollbarSize: totalColumnsWidth > width ? this._scrollbarSize : 0,
         targetIndex
       })
 

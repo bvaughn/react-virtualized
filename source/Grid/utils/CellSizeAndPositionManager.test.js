@@ -162,6 +162,7 @@ describe('CellSizeAndPositionManager', () => {
       containerSize = 50,
       currentOffset = 0,
       estimatedCellSize = 15,
+      scrollbarSize = 0,
       targetIndex = 0
     }) {
       const cellSizeAndPositionManager = new CellSizeAndPositionManager({
@@ -174,6 +175,7 @@ describe('CellSizeAndPositionManager', () => {
         align,
         containerSize,
         currentOffset,
+        scrollbarSize,
         targetIndex
       })
     }
@@ -275,6 +277,53 @@ describe('CellSizeAndPositionManager', () => {
         currentOffset: 50,
         targetIndex: 2
       })).toEqual(0)
+    })
+
+    describe('with visible scrollbar', () => {
+      it('should align correctly for "begin"', () => {
+        expect(getUpdatedOffsetForIndexHelper({
+          align: 'begin',
+          currentOffset: 100,
+          scrollbarSize: 10,
+          targetIndex: 2
+        })).toEqual(20)
+      })
+
+      it('should align correctly for "begin" at beginning', () => {
+        expect(getUpdatedOffsetForIndexHelper({
+          align: 'begin',
+          currentOffset: 100,
+          scrollbarSize: 10,
+          targetIndex: 0
+        })).toEqual(0)
+      })
+
+      it('should align correctly for "end"', () => {
+        expect(getUpdatedOffsetForIndexHelper({
+          align: 'end',
+          currentOffset: 0,
+          scrollbarSize: 10,
+          targetIndex: 6
+        })).toEqual(30)
+      })
+
+      it('should align correctly for "end" at end', () => {
+        expect(getUpdatedOffsetForIndexHelper({
+          align: 'end',
+          currentOffset: 0,
+          scrollbarSize: 10,
+          targetIndex: 9
+        })).toEqual(50)
+      })
+
+      it('should align correctly for "middle"', () => {
+        expect(getUpdatedOffsetForIndexHelper({
+          align: 'center',
+          currentOffset: 0,
+          scrollbarSize: 10,
+          targetIndex: 3
+        })).toEqual(15)
+      })
     })
   })
 
