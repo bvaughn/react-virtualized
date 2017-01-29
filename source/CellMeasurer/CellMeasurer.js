@@ -155,6 +155,7 @@ export default class CellMeasurer extends Component {
     const { children } = this.props
 
     return children({
+      cellMeasurer: this,
       getColumnWidth: this.getColumnWidth,
       getRowHeight: this.getRowHeight,
       resetMeasurements: this.resetMeasurements,

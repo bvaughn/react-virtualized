@@ -6,6 +6,34 @@ import CellSizeCache from './defaultCellSizeCache'
 const HEIGHTS = [75, 50, 125, 100, 150]
 const WIDTHS = [125, 50, 200, 175, 100]
 
+// Accounts for the fact that JSDom doesn't support measurements.
+function mockClientWidthAndHeight ({
+  cellMeasurer,
+  height,
+  width
+}) {
+  let clientHeightIndex = -1
+  let clientWidthIndex = -1
+
+  Object.defineProperty(
+    cellMeasurer._div,
+    'clientHeight',
+    {
+      configurable: true,
+      get: () => height || HEIGHTS[++clientHeightIndex % HEIGHTS.length]
+    }
+  )
+
+  Object.defineProperty(
+    cellMeasurer._div,
+    'clientWidth',
+    {
+      configurable: true,
+      get: () => width || WIDTHS[++clientWidthIndex % WIDTHS.length]
+    }
+  )
+}
+
 function createCellRenderer () {
   const cellRendererParams = []
   const cellRenderer = (params) => {
@@ -54,6 +82,12 @@ function renderHelper ({
     </div>
   )
 
+  mockClientWidthAndHeight({
+    cellMeasurer: params.cellMeasurer,
+    height: rowHeight,
+    width: columnWidth
+  })
+
   return params
 }
 
@@ -70,6 +104,7 @@ describe('CellMeasurer', () => {
       cellRenderer,
       columnWidth: 100
     })
+
     expect(cellRendererParams).toEqual([])
     expect(getRowHeight({ index: 0 })).toEqual(75)
     expect(cellRendererParams).toEqual([{ columnIndex: 0, index: 0, rowIndex: 0 }])
@@ -92,6 +127,7 @@ describe('CellMeasurer', () => {
       cellRenderer,
       rowHeight: 50
     })
+
     expect(cellRendererParams).toEqual([])
     expect(getColumnWidth({ index: 0 })).toEqual(125)
     expect(cellRendererParams).toEqual([{ columnIndex: 0, index: 0, rowIndex: 0 }])
@@ -111,6 +147,7 @@ describe('CellMeasurer', () => {
       columnCount: 5,
       columnWidth: 100
     })
+
     expect(cellRendererParams.length).toEqual(0)
     expect(getRowHeight({ index: 0 })).toEqual(150)
     expect(cellRendererParams.length).toEqual(5)
@@ -130,6 +167,7 @@ describe('CellMeasurer', () => {
       rowCount: 5,
       rowHeight: 50
     })
+
     expect(cellRendererParams.length).toEqual(0)
     expect(getColumnWidth({ index: 0 })).toEqual(200)
     expect(cellRendererParams.length).toEqual(5)

@@ -30,11 +30,9 @@
     "posttest": "[ -z \"$CI\" ] || codecov",
     "prepublish": "npm run build",
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --config webpack.config.dev.js",
-    "test": "npm run lint && npm run test:jasmine && npm run test:jest",
-    "test:jasmine": "cross-env NODE_ENV=test karma start",
+    "test": "npm run lint && npm run test:jest",
     "test:jest": "jest --no-watchman",
     "watch": "watch 'clear && npm run test -s' source",
-    "watch:jasmine": "watch 'clear && npm run test:jasmine' source",
     "watch:jest": "jest --no-watchman --watch"
   },
   "files": [
@@ -83,7 +81,6 @@
       "fit",
       "getComputedStyle",
       "it",
-      "jasmine",
       "jest"
     ]
   },
@@ -127,16 +124,11 @@
     "gh-pages": "^0.11.0",
     "html-webpack-plugin": "^2.16.1",
     "immutable": "^3.7.5",
-    "jasmine": "^2.3.2",
-    "jasmine-core": "^2.3.4",
     "jest": "^18.1.0",
     "karma": "^0.13.22",
     "karma-coverage": "^1.0.0",
-    "karma-jasmine": "^1.0.2",
-    "karma-phantomjs-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.6",
     "karma-webpack": "^1.7.0",
-    "phantomjs-prebuilt": "^2.1.14",
     "postcss": "^5.0.14",
     "postcss-cli": "^2.3.3",
     "postcss-loader": "^0.9.1",
