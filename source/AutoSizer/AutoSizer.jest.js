@@ -1,8 +1,9 @@
+/* global Element, Event */
+
 import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import AutoSizer from './AutoSizer'
-import { Simulate } from 'react-addons-test-utils'
 
 function ChildComponent ({ height, width, foo, bar }) {
   return (
@@ -32,6 +33,13 @@ describe('AutoSizer', () => {
       paddingTop,
       width
     }
+
+    // AutoSizer uses getBoundingClientRect().
+    // Jest runs in JSDom which doesn't support measurements APIs.
+    Element.prototype.getBoundingClientRect = jest.fn(() => ({
+      width,
+      height
+    }))
 
     return (
       <div style={style}>
@@ -85,17 +93,25 @@ describe('AutoSizer', () => {
   })
 
   async function simulateResize ({ element, height, width }) {
-    element.style.height = `${height}px`
-    element.style.width = `${width}px`
+    // Specific to the implementation of detectElementResize helper
+    element.offsetHeight = height
+    element.offsetWidth = width
+
+    Element.prototype.getBoundingClientRect.mockReturnValue({
+      width,
+      height
+    })
 
     // Trigger detectElementResize library by faking a scroll event
-    Simulate.scroll(element)
+    // TestUtils Simulate doesn't work here in JSDom so we manually dispatch
+    const trigger = element.querySelector('.contract-trigger')
+    trigger.dispatchEvent(new Event('scroll'))
 
     // Allow requestAnimationFrame to be invoked before continuing
     await new Promise(resolve => setTimeout(resolve, 100))
   }
 
-  it('should not update :height if :disableHeight is true', async (done) => {
+  it('should update :height after a resize event', async (done) => {
     const rendered = findDOMNode(render(getMarkup({
       height: 100,
       width: 200
