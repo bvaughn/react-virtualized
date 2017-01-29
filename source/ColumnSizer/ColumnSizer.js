@@ -93,9 +93,7 @@ export default class ColumnSizer extends Component {
   _registerChild (child) {
     if (
       child &&
-      child.constructor &&
-      child.constructor.name !== 'Grid' &&
-      child.constructor.name !== 'MultiGrid'
+      typeof child.recomputeGridSize !== 'function'
     ) {
       throw Error('Unexpected child type registered; only Grid/MultiGrid children are supported.')
     }

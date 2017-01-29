@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 8.11.4
+* 🐛 Better guard against minification/uglification in `ColumnSizer` when verifying child is either a `Grid` or a `MultiGrid`. (#558)
+
 ##### 8.11.3
 * Adding missing `scrollToRow` method to `List` and `Table` (as pass-thrus for `Grid.scrollToCell`).
 * 🐛 Bugfixes with `MultiGrid` resize handling and caching. ([@codingbull](https://github.com/codingbull) - [#552](https://github.com/bvaughn/react-virtualized/pull/552))
