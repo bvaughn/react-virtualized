@@ -1,7 +1,82 @@
+/* global Element */
+
+import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import { IS_SCROLLING_TIMEOUT } from './utils/onScroll'
-import { getMarkup, simulateWindowScroll, simulateWindowResize } from './utils/TestUtils'
+import WindowScroller from './WindowScroller'
+
+function ChildComponent ({ scrollTop, isScrolling, height }) {
+  return (
+    <div>{`scrollTop:${scrollTop}, isScrolling:${isScrolling}, height:${height}`}</div>
+  )
+}
+
+function mockGetBoundingClientRectForHeader ({
+  documentOffset = 0,
+  height
+}) {
+  // Mock the WindowScroller element and window separately
+  // The only way to mock the former (before its created) is globally
+  Element.prototype.getBoundingClientRect = jest.fn(() => ({
+    top: height
+  }))
+  document.documentElement.getBoundingClientRect = jest.fn(() => ({
+    top: documentOffset
+  }))
+}
+
+function getMarkup ({
+  headerElements,
+  documentOffset,
+  ...props
+} = {}) {
+  const windowScroller = (
+    <WindowScroller {...props}>
+      {({ height, isScrolling, scrollTop }) => (
+        <ChildComponent
+          height={height}
+          isScrolling={isScrolling}
+          scrollTop={scrollTop}
+        />
+      )}
+    </WindowScroller>
+  )
+
+  // JSDome doesn't implement a working getBoundingClientRect()
+  // But WindowScroller requires it
+  mockGetBoundingClientRectForHeader({
+    documentOffset,
+    height: headerElements ? headerElements.props.style.height : 0
+  })
+
+  if (headerElements) {
+    return (
+      <div>
+        {headerElements}
+        {windowScroller}
+      </div>
+    )
+  } else {
+    return windowScroller
+  }
+}
+
+function simulateWindowScroll ({
+  scrollY = 0
+}) {
+  document.body.style.height = '10000px'
+  window.scrollY = scrollY
+  document.dispatchEvent(new window.Event('scroll', { bubbles: true }))
+  document.body.style.height = ''
+}
+
+function simulateWindowResize ({
+  height = 0
+}) {
+  window.innerHeight = height
+  document.dispatchEvent(new window.Event('resize', { bubbles: true }))
+}
 
 describe('WindowScroller', () => {
   // Set default window height and scroll position between tests
@@ -23,10 +98,9 @@ describe('WindowScroller', () => {
     render.unmount()
 
     // Simulate scrolled documentElement
-    document.documentElement.getBoundingClientRect = () => ({
-      top: -100
-    })
-    const component = render(getMarkup())
+    const component = render(getMarkup({
+      documentOffset: -100
+    }))
     const rendered = findDOMNode(component)
     const top = rendered.getBoundingClientRect().top
     expect(component._positionFromTop).toEqual(top + 100)
@@ -146,6 +220,65 @@ describe('WindowScroller', () => {
       expect(component.state.height).toEqual(window.innerHeight)
       expect(component.state.height).toEqual(1000)
       expect(rendered.textContent).toContain('height:1000')
+    })
+  })
+
+  describe('updatePosition', () => {
+    it('should calculate the initial offset from the top of the page when mounted', () => {
+      let windowScroller
+
+      render(getMarkup({
+        headerElements: <div style={{ height: 100 }}></div>,
+        ref: (ref) => {
+          windowScroller = ref
+        }
+      }))
+
+      expect(windowScroller._positionFromTop).toBe(100)
+    })
+
+    it('should recalculate the offset from the top when the window resizes', () => {
+      let windowScroller
+
+      render(getMarkup({
+        headerElements: <div id='header' style={{ height: 100 }}></div>,
+        ref: (ref) => {
+          windowScroller = ref
+        }
+      }))
+
+      expect(windowScroller._positionFromTop).toBe(100)
+
+      mockGetBoundingClientRectForHeader({
+        height: 200
+      })
+
+      expect(windowScroller._positionFromTop).toBe(100)
+
+      simulateWindowResize({ height: 1000 })
+
+      expect(windowScroller._positionFromTop).toBe(200)
+    })
+
+    it('should recalculate the offset from the top if called externally', () => {
+      let windowScroller
+
+      render(getMarkup({
+        headerElements: <div id='header' style={{ height: 100 }}></div>,
+        ref: (ref) => {
+          windowScroller = ref
+        }
+      }))
+
+      expect(windowScroller._positionFromTop).toBe(100)
+
+      mockGetBoundingClientRectForHeader({
+        height: 200
+      })
+
+      windowScroller.updatePosition()
+
+      expect(windowScroller._positionFromTop).toBe(200)
     })
   })
 })
