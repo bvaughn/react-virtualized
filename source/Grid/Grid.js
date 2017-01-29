@@ -7,6 +7,7 @@ import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getOverscanIndices, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import shallowCompare from 'react-addons-shallow-compare'
+import throttle from 'lodash.throttle'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
 import defaultCellRangeRenderer from './defaultCellRangeRenderer'
 
@@ -24,6 +25,8 @@ const SCROLL_POSITION_CHANGE_REASONS = {
   OBSERVED: 'observed',
   REQUESTED: 'requested'
 }
+
+const defaultOnScroll = () => null
 
 /**
  * Renders tabular data with virtualization along the vertical and horizontal axes.
@@ -195,7 +198,7 @@ export default class Grid extends Component {
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
     noContentRenderer: () => null,
-    onScroll: () => null,
+    onScroll: defaultOnScroll,
     onSectionRendered: () => null,
     overscanColumnCount: 0,
     overscanRowCount: 10,
@@ -223,6 +226,9 @@ export default class Grid extends Component {
     // Bind functions to instance so they don't lose context when passed around
     this._debounceScrollEndedCallback = this._debounceScrollEndedCallback.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
+    this._onWheelHandler = this._onWheelHandler.bind(this)
+    this._onThrottledWheel = throttle(this._onWheelHandler, 1000 / 60)
+    this._onWheel = this._onWheel.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
@@ -586,6 +592,7 @@ export default class Grid extends Component {
         aria-label={this.props['aria-label']}
         className={cn('ReactVirtualized__Grid', className)}
         id={id}
+        onWheel={this._onWheel}
         onScroll={this._onScroll}
         role='grid'
         style={{
@@ -887,6 +894,68 @@ export default class Grid extends Component {
         })
       }
     }
+  }
+
+  _onWheelHandler (deltaX, deltaY) {
+    // Prevent pointer events from interrupting a smooth scroll
+    this._debounceScrollEnded()
+
+    // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
+    // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
+    // This causes a series of rapid renders that is slow for long lists.
+    // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
+    const { height, width } = this.props
+    const scrollbarSize = this._scrollbarSize
+    const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
+    const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
+    const scrollLeft = Math.min(
+      Math.max(0, totalColumnsWidth - width + scrollbarSize),
+      Math.max(0, this._scrollingContainer.scrollLeft + deltaX)
+    )
+    const scrollTop = Math.min(
+      Math.max(0, totalRowsHeight - height + scrollbarSize),
+      Math.max(0, this._scrollingContainer.scrollTop + deltaY)
+    )
+
+    // Certain devices (like Apple touchpad) rapid-fire duplicate events.
+    // Don't force a re-render if this is the case.
+    // The mouse may move faster then the animation frame does.
+    // Use requestAnimationFrame to avoid over-updating.
+    if (
+      this.state.scrollLeft !== scrollLeft ||
+      this.state.scrollTop !== scrollTop
+    ) {
+      // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
+      const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+      const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+
+      const newState = {
+        isScrolling: true,
+        scrollDirectionHorizontal,
+        scrollDirectionVertical,
+        scrollLeft,
+        scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+      }
+
+      this.setState(newState)
+    }
+
+    this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
+  }
+
+  _onWheel (event) {
+    // On Windows / Linux machines, scrollSync experiences tearing across multiple Grid elements.
+    // The tearing exists because the call to _onScroll happens post-scroll on Windows / Linux boxes.
+    // If we're supplied an onScroll callback, we will assume we are synchronizing Grids, and we will force scrolling
+    // to occur across all Grids simultaneously.
+    if (this.props.onScroll === defaultOnScroll) {
+      return
+    }
+
+    event.preventDefault()
+    const { deltaX, deltaY } = event
+
+    this._onThrottledWheel(deltaX, deltaY)
   }
 
   _onScroll (event) {
