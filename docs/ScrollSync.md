@@ -16,7 +16,7 @@ The child function is passed the following named parameters:
 |:---|:---|:---|
 | clientHeight | Number | Height of the visible portion of the `Grid` (or other scroll-synced component) |
 | clientWidth | Number | Width of the visible portion of the `Grid` (or other scroll-synced component) |
-| onScroll | Function | This function should be passed through to at least one of the virtualized child components. Updates to it will trigger updates to the scroll ofset parameters which will in turn update the other virtualized children. |
+| onScroll | Function | This function should be passed through to at least one of the virtualized child components. Updates to it will trigger updates to the scroll offset parameters which will in turn update the other virtualized children. |
 | scrollHeight | Number | Total height of all rows in the `Grid` (or other scroll-synced component) |
 | scrollLeft | Number | The current scroll-left offset. |
 | scrollTop | Number | The current scroll-top offset. |

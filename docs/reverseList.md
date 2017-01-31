@@ -1,7 +1,7 @@
 Displaying Items in Reverse Order
 ---------------
 
-Sometimes it is desirable to dislpay a list in reverse order.
+Sometimes it is desirable to display a list in reverse order.
 The simplest way to do this is to add items to the front of the list (`unshift`) instead of the end (`push`).
 Here is a high level template for doing this:
 
