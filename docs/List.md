@@ -15,7 +15,7 @@ Elements can have fixed or varying heights.
 | noRowsRenderer | Function |  | Callback used to render placeholder content when `rowCount` is 0 |
 | onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, scrollHeight: number, scrollTop: number }): void` |
-| overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browers/devices. |
+| overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browsers/devices. |
 | rowCount | Number | ✓ | Number of rows in list. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
 | rowRenderer | Function | ✓ | Responsible for rendering a row. Signature should look like `({ index: number, key: string, style: Object, isScrolling: boolean }): React.PropTypes.node` and the returned element must handle index, key and style.|
@@ -29,7 +29,7 @@ Elements can have fixed or varying heights.
 ### Public Methods
 
 ##### forceUpdateGrid
-Forcefull re-render the inner `Grid` component.
+Forcefully re-render the inner `Grid` component.
 
 Calling `forceUpdate` on `List` may not re-render the inner `Grid` since it uses `shallowCompare` as a performance optimization.
 Use this method if you want to manually trigger a re-render.

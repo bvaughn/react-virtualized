@@ -3,7 +3,7 @@ InfiniteLoader
 
 Higher-order component that manages just-in-time fetching of data as a user scrolls up or down in a list.
 
-Note that this component is inteded to assist with row-loading.
+Note that this component is intended to assist with row-loading.
 As such it is best suited for use with `Table` and `List` (although it can also be used with `Grid`).
 This HOC is not compatible with the `Collection` component.
 
@@ -155,7 +155,7 @@ _isRowLoaded ({ index }) {
 ###### Memoization and rowCount changes
 
 `InfiniteLoader` memoizes calls to `loadMoreRows` in order to avoid multiple calls with the same parameters while a user is scrolling.
-This can have an unexpected impact though if the underlying colleection data changes.
+This can have an unexpected impact though if the underlying collection data changes.
 In that case it is possible that `InfiniteLoader` will not _know_ to call `loadMoreRows` again because- from its point of view- it already made that call for a given row.
 (React Virtualized components do not know anything about the underlying data after all, only the number of items in the collection.)
 

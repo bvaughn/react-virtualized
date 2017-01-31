@@ -4,7 +4,7 @@ Collection
 Renders scattered or non-linear data.
 Unlike `Grid`, which renders checkerboard data, `Collection` can render arbitrarily positioned- even overlapping- data.
 
-**Note** that this component's measuring and layout phase is more expensive than `Grid` since it can not assume a correlation between a cell's index and position. For this reason it will take signifnicantly longer to initialize than the more linear/checkerboard components.
+**Note** that this component's measuring and layout phase is more expensive than `Grid` since it can not assume a correlation between a cell's index and position. For this reason it will take significantly longer to initialize than the more linear/checkerboard components.
 
 ### Prop Types
 | Property | Type | Required? | Description |
@@ -16,7 +16,7 @@ Unlike `Grid`, which renders checkerboard data, `Collection` can render arbitrar
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index: `({ index: number, isScrolling: boolean, key: string, style: object }): PropTypes.element` |
 | cellSizeAndPositionGetter | Function | ✓ | Callback responsible for returning size and offset/position information for a given cell (index): `({ index: number }): { height: number, width: number, x: number, y: number }` |
 | height | Number | ✓ | Height of Collection; this property determines the number of visible (vs virtualized) rows. |
-| horizontalOverscanSize | Number |  | Enables the `Collection` to horiontally "overscan" its content similar to how `Grid` does. This can reduce flicker around the edges when a user scrolls quickly. This property defaults to `0`; |
+| horizontalOverscanSize | Number |  | Enables the `Collection` to horizontally "overscan" its content similar to how `Grid` does. This can reduce flicker around the edges when a user scrolls quickly. This property defaults to `0`; |
 | id | String |  | Optional custom id to attach to root `Collection` element. |
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when `cellCount` is 0: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Collection that was just rendered: `({ indices: Array<number> }): void` |
