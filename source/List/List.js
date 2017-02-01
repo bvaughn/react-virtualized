@@ -133,6 +133,7 @@ export default class List extends Component {
     const {
       className,
       noRowsRenderer,
+      scrollTop,
       scrollToIndex,
       width
     } = this.props
@@ -153,6 +154,7 @@ export default class List extends Component {
         ref={(ref) => {
           this.Grid = ref
         }}
+        scrollTop={scrollTop}
         scrollToRow={scrollToIndex}
       />
     )
