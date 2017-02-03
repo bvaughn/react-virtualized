@@ -53,7 +53,7 @@ class CellSizeCache {
 The [default caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/defaultCellSizeCache.js) is exported as `defaultCellMeasurerCellSizeCache` should you wish to decorate it.
 You can also pass `uniformRowHeight` and/or `uniformColumnWidth` named parameters to the constructor for lists with a uniform (yet unknown) cell sizes.
 
-An [id-based caching strategy](id-based-cell-size-cache) is also available for data that may be sorted.
+An [id-based caching strategy](#id-based-cell-size-cache) is also available for data that may be sorted.
 This strategy maps data ids to cell sizes rathe than index so that the sorting order of the data does not invalidate sizes.
 
 ### Examples
