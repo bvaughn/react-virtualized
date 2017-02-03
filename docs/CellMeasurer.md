@@ -53,7 +53,7 @@ class CellSizeCache {
 The [default caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/defaultCellSizeCache.js) is exported as `defaultCellMeasurerCellSizeCache` should you wish to decorate it.
 You can also pass `uniformRowHeight` and/or `uniformColumnWidth` named parameters to the constructor for lists with a uniform (yet unknown) cell sizes.
 
-An [id-based caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/idCellSizeCache.js) is also available for data that may be sorted.
+An [id-based caching strategy](id-based-cell-size-cache) is also available for data that may be sorted.
 This strategy maps data ids to cell sizes rathe than index so that the sorting order of the data does not invalidate sizes.
 
 ### Examples
@@ -63,7 +63,7 @@ This strategy maps data ids to cell sizes rathe than index so that the sorting o
 This example shows a `Grid` with fixed row heights and dynamic column widths.
 For more examples check out the component [demo page](https://bvaughn.github.io/react-virtualized/#/components/CellMeasurer).
 
-```javascript
+```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { CellMeasurer, Grid } from 'react-virtualized';
@@ -84,6 +84,43 @@ ReactDOM.render(
         cellRenderer={cellRenderer}
         rowCount={rowCount}
         rowHeight={fixedRowHeight}
+        width={width}
+      />
+    )}
+  </CellMeasurer>,
+  document.getElementById('example')
+);
+```
+
+#### ID-based cell size cache
+
+`CellMeasurer` measures each cell once and then caches the measurements so it doesn't have to measure it again.
+By default this caching is done using the cell's row and column indices.
+Certain things (eg insertions, sorting) can invalidate this type of cache though.
+If your list is dynamic- you may consider using an id-based caching strategy instead.
+The `idCellMeasurerCellSizeCache` exists for this purpose:
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { CellMeasurer, Grid, idCellMeasurerCellSizeCache } from 'react-virtualized';
+import 'react-virtualized/styles.css'; // only needs to be imported once
+
+ReactDOM.render(
+  <CellMeasurer
+    cellRenderer={cellRenderer}
+    cellSizeCache={idCellMeasurerCellSizeCache}
+    columnCount={columnCount}
+    rowCount={rowCount}
+  >
+    {({ getColumnWidth, getRowHeight }) => (
+      <Grid
+        columnCount={columnCount}
+        columnWidth={getColumnWidth}
+        height={height}
+        cellRenderer={cellRenderer}
+        rowCount={rowCount}
+        rowHeight={getRowHeight}
         width={width}
       />
     )}
