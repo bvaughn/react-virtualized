@@ -61,6 +61,7 @@ export default class Collection extends Component {
     this._cellCache = []
 
     this._isScrollingChange = this._isScrollingChange.bind(this)
+    this._setCollectionViewRef = this._setCollectionViewRef.bind(this)
   }
 
   /** See Collection#recomputeCellSizesAndPositions */
@@ -78,9 +79,7 @@ export default class Collection extends Component {
       <CollectionView
         cellLayoutManager={this}
         isScrollingChange={this._isScrollingChange}
-        ref={(ref) => {
-          this._collectionView = ref
-        }}
+        ref={this._setCollectionViewRef}
         {...props}
       />
     )
@@ -195,6 +194,10 @@ export default class Collection extends Component {
     if (!isScrolling) {
       this._cellCache = []
     }
+  }
+
+  _setCollectionViewRef (ref) {
+    this._collectionView = ref
   }
 }
 

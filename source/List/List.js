@@ -103,6 +103,7 @@ export default class List extends Component {
     this._cellRenderer = this._cellRenderer.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._onSectionRendered = this._onSectionRendered.bind(this)
+    this._setRef = this._setRef.bind(this)
   }
 
   forceUpdateGrid () {
@@ -150,9 +151,7 @@ export default class List extends Component {
         noContentRenderer={noRowsRenderer}
         onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}
-        ref={(ref) => {
-          this.Grid = ref
-        }}
+        ref={this._setRef}
         scrollToRow={scrollToIndex}
       />
     )
@@ -182,6 +181,10 @@ export default class List extends Component {
       style,
       ...rest
     })
+  }
+
+  _setRef (ref) {
+    this.Grid = ref
   }
 
   _onScroll ({ clientHeight, scrollHeight, scrollTop }) {

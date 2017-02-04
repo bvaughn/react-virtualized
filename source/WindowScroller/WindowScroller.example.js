@@ -27,6 +27,7 @@ export default class WindowScrollerExample extends Component {
     this._hideHeader = this._hideHeader.bind(this)
     this._rowRenderer = this._rowRenderer.bind(this)
     this._onCheckboxChange = this._onCheckboxChange.bind(this)
+    this._setRef = this._setRef.bind(this)
   }
 
   render () {
@@ -71,9 +72,7 @@ export default class WindowScrollerExample extends Component {
 
         <div className={styles.WindowScrollerWrapper}>
           <WindowScroller
-            ref={(ref) => {
-              this._windowScroller = ref
-            }}
+            ref={this._setRef}
             scrollElement={isScrollingCustomElement ? customElement : null}
           >
             {({ height, isScrolling, scrollTop }) => (
@@ -130,6 +129,10 @@ export default class WindowScrollerExample extends Component {
         {row.name}
       </div>
     )
+  }
+
+  _setRef (windowScroller) {
+    this._windowScroller = windowScroller
   }
 
   _onCheckboxChange (event) {

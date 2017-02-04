@@ -154,6 +154,7 @@ export default class CollectionView extends Component {
     // Bind functions to instance so they don't lose context when passed around.
     this._invokeOnSectionRenderedHelper = this._invokeOnSectionRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
+    this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this)
     this._updateScrollPositionForScrollToCell = this._updateScrollPositionForScrollToCell.bind(this)
   }
 
@@ -381,9 +382,7 @@ export default class CollectionView extends Component {
 
     return (
       <div
-        ref={(ref) => {
-          this._scrollingContainer = ref
-        }}
+        ref={this._setScrollingContainerRef}
         aria-label={this.props['aria-label']}
         className={cn('ReactVirtualized__Collection', className)}
         id={id}
@@ -475,6 +474,10 @@ export default class CollectionView extends Component {
         scrollTop
       }
     })
+  }
+
+  _setScrollingContainerRef (ref) {
+    this._scrollingContainer = ref
   }
 
   _setScrollPosition ({ scrollLeft, scrollTop }) {

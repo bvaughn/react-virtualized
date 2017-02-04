@@ -224,6 +224,7 @@ export default class Grid extends Component {
     this._debounceScrollEndedCallback = this._debounceScrollEndedCallback.bind(this)
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
+    this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
 
@@ -580,9 +581,7 @@ export default class Grid extends Component {
 
     return (
       <div
-        ref={(ref) => {
-          this._scrollingContainer = ref
-        }}
+        ref={this._setScrollingContainerRef}
         aria-label={this.props['aria-label']}
         className={cn('ReactVirtualized__Grid', className)}
         id={id}
@@ -806,6 +805,10 @@ export default class Grid extends Component {
         scrollTop
       }
     })
+  }
+
+  _setScrollingContainerRef (ref) {
+    this._scrollingContainer = ref
   }
 
   _setScrollPosition ({ scrollLeft, scrollTop }) {

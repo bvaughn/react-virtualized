@@ -216,6 +216,7 @@ export default class Table extends Component {
     this._createRow = this._createRow.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._onSectionRendered = this._onSectionRendered.bind(this)
+    this._setRef = this._setRef.bind(this)
   }
 
   forceUpdateGrid () {
@@ -321,9 +322,7 @@ export default class Table extends Component {
           noContentRenderer={noRowsRenderer}
           onScroll={this._onScroll}
           onSectionRendered={this._onSectionRendered}
-          ref={(ref) => {
-            this.Grid = ref
-          }}
+          ref={this._setRef}
           scrollbarWidth={scrollbarWidth}
           scrollToRow={scrollToIndex}
           style={{
@@ -555,6 +554,10 @@ export default class Table extends Component {
       startIndex: rowStartIndex,
       stopIndex: rowStopIndex
     })
+  }
+
+  _setRef (ref) {
+    this.Grid = ref
   }
 
   _setScrollbarWidth () {
