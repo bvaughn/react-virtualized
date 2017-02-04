@@ -189,10 +189,9 @@ Doing this is just a matter of renaming the `rowIndex` property specified by `Ce
   rowCount={listProps.rowCount}
   width={listProps.width}
 >
-  {({ getRowHeight, setRef }) => (
+  {({ getRowHeight }) => (
     <List
       {...listProps}
-      ref={setRef}
       rowHeight={getRowHeight}
     />
   )}
