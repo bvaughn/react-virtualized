@@ -171,7 +171,7 @@ function cellRenderer ({
     : <User user={user} />
 
   // Style is required since it specifies how the cell is to be sized and positioned,
-  // and React Virtualized depends on this sizing/positioning for proper scrolling behavior..
+  // and React Virtualized depends on this sizing/positioning for proper scrolling behavior.
   // By default, the grid component specifies, calculates, and initializes the following style properties:
   //    height 
   //    width 
