@@ -243,7 +243,10 @@ export default class GridExample extends Component {
 
     const classNames = cn(styles.cell, styles.letterCell)
 
-    style.backgroundColor = datum.color
+    style = {
+      ...style,
+      backgroundColor: datum.color
+    }
 
     return (
       <div
