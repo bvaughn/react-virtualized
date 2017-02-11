@@ -1,4 +1,4 @@
-import CellMeasurerCache from './CellMeasurerCache'
+import CellMeasurerCache, { DEFAULT_HEIGHT, DEFAULT_WIDTH } from './CellMeasurerCache'
 
 describe('CellMeasurerCache', () => {
   it('should correctly report cache status', () => {
@@ -62,10 +62,10 @@ describe('CellMeasurerCache', () => {
 
   it('should provide a Grid-compatible :columnWidth method', () => {
     const cache = new CellMeasurerCache()
-    expect(cache.columnWidth({ index: 0 })).toBe(null)
+    expect(cache.columnWidth({ index: 0 })).toBe(DEFAULT_WIDTH)
     cache.set(0, 0, 100, 50)
     expect(cache.columnWidth({ index: 0 })).toBe(100)
-    expect(cache.columnWidth({ index: 1 })).toBe(null)
+    expect(cache.columnWidth({ index: 1 })).toBe(DEFAULT_WIDTH)
     cache.set(1, 0, 75, 50)
     expect(cache.columnWidth({ index: 0 })).toBe(100)
     cache.set(2, 0, 125, 50)
@@ -74,10 +74,10 @@ describe('CellMeasurerCache', () => {
 
   it('should provide a Grid-compatible :rowHeight method', () => {
     const cache = new CellMeasurerCache()
-    expect(cache.rowHeight({ index: 0 })).toBe(null)
+    expect(cache.rowHeight({ index: 0 })).toBe(DEFAULT_HEIGHT)
     cache.set(0, 0, 100, 50)
     expect(cache.rowHeight({ index: 0 })).toBe(50)
-    expect(cache.rowHeight({ index: 1 })).toBe(null)
+    expect(cache.rowHeight({ index: 1 })).toBe(DEFAULT_HEIGHT)
     cache.set(0, 1, 100, 25)
     expect(cache.rowHeight({ index: 0 })).toBe(50)
     cache.set(0, 2, 100, 75)

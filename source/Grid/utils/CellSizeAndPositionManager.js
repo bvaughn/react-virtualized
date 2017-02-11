@@ -19,6 +19,9 @@ export default class CellSizeAndPositionManager {
 
     // Measurements for cells up to this index can be trusted; cells afterward should be estimated.
     this._lastMeasuredIndex = -1
+
+    // Used in deferred mode to track which cells have been queued for measurement.
+    this._lastBatchedIndex = -1
   }
 
   configure ({
@@ -41,6 +44,13 @@ export default class CellSizeAndPositionManager {
     return this._lastMeasuredIndex
   }
 
+  getOffsetAdjustment ({
+    containerSize,
+    offset // safe
+  }: ContainerSizeAndOffset): number {
+    return 0
+  }
+
   /**
    * This method returns the size and position for the cell at the specified index.
    * It just-in-time calculates (or used cached values) for cells leading up to the index.
@@ -57,19 +67,28 @@ export default class CellSizeAndPositionManager {
       for (var i = this._lastMeasuredIndex + 1; i <= index; i++) {
         let size = this._cellSizeGetter({ index: i })
 
-        if (size == null || isNaN(size)) {
+        // undefined or NaN probably means a logic error in the size getter.
+        // null means we're using CellMeasurer and haven't yet measured a given index.
+        if (size === undefined || isNaN(size)) {
           throw Error(`Invalid size returned for cell ${i} of value ${size}`)
-        }
+        } else if (size === null) {
+          this._cellSizeAndPositionData[i] = {
+            offset,
+            size: 0
+          }
 
-        this._cellSizeAndPositionData[i] = {
-          offset,
-          size
-        }
+          this._lastBatchedIndex = index
+        } else {
+          this._cellSizeAndPositionData[i] = {
+            offset,
+            size
+          }
 
-        offset += size
+          offset += size
+
+          this._lastMeasuredIndex = index
+        }
       }
-
-      this._lastMeasuredIndex = index
     }
 
     return this._cellSizeAndPositionData[index]
@@ -142,10 +161,12 @@ export default class CellSizeAndPositionManager {
     return Math.max(0, Math.min(totalSize - containerSize, idealOffset))
   }
 
-  getVisibleCellRange ({
-    containerSize,
-    offset
-  }: GetVisibleCellRangeParams): VisibleCellRange {
+  getVisibleCellRange (params: GetVisibleCellRangeParams): VisibleCellRange {
+    let {
+      containerSize,
+      offset
+    } = params
+
     const totalSize = this.getTotalSize()
 
     if (totalSize === 0) {
@@ -276,10 +297,20 @@ type ConfigureParams = {
   estimatedCellSize: number
 };
 
+type ContainerSizeAndOffset = {
+  containerSize: number,
+  offset: number
+};
+
 type GetVisibleCellRangeParams = {
   containerSize: number,
   offset: number
 };
+
+type RequiresMoreMeasurementsParams = {
+  containerSize: number,
+  offset: number
+}
 
 type SizeAndPositionData = {
   offset: number,

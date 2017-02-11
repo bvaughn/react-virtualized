@@ -1,5 +1,8 @@
 /** @flow */
 
+export const DEFAULT_HEIGHT = 30
+export const DEFAULT_WIDTH = 100
+
 /**
  * Enables more intelligent mapping of a given column and row index to an item ID.
  * This prevents a cell cache from being invalidated when its parent collection is modified.
@@ -75,8 +78,8 @@ export default class CellMeasurerCache {
   _rowHeightCache: Cache;
 
   constructor (params : CellMeasurerCacheParams = {}) {
-    this._defaultHeight = params.defaultHeight || null
-    this._defaultWidth = params.defaultWidth || null
+    this._defaultHeight = params.defaultHeight || DEFAULT_HEIGHT
+    this._defaultWidth = params.defaultWidth || DEFAULT_WIDTH
     this._keyMapper = params.keyMapper || defaultKeyMapper
 
     this._columnCount = 0
@@ -161,9 +164,13 @@ export default class CellMeasurerCache {
       this._rowCount = rowIndex + 1
     }
 
+    // Size is cached per cell so we don't have to re-measure if cells are re-ordered.
     this._cellHeightCache[key] = height
     this._cellWidthCache[key] = width
 
+    // :columnWidth and :rowHeight are derived based on all cells in a column/row.
+    // Pre-cache these derived values for faster lookup later.
+    // Reads are expected to occur more frequently than writes in this case.
     let columnWidth = 0
     for (let i = 0; i < this._rowCount; i++) {
       columnWidth = Math.max(columnWidth, this.getWidth(i, columnIndex))
@@ -172,7 +179,6 @@ export default class CellMeasurerCache {
     for (let i = 0; i < this._columnCount; i++) {
       rowHeight = Math.max(rowHeight, this.getHeight(rowIndex, i))
     }
-
     this._columnWidthCache[columnIndex] = columnWidth
     this._rowHeightCache[rowIndex] = rowHeight
   }

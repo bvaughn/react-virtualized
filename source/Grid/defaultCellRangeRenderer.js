@@ -9,8 +9,10 @@ export default function defaultCellRangeRenderer ({
   columnSizeAndPositionManager,
   columnStartIndex,
   columnStopIndex,
+  deferredMeasurementCache,
   horizontalOffsetAdjustment,
   isScrolling,
+  parent, // Grid (or List or Table)
   rowSizeAndPositionManager,
   rowStartIndex,
   rowStopIndex,
@@ -21,9 +23,11 @@ export default function defaultCellRangeRenderer ({
   visibleColumnIndices,
   visibleRowIndices
 }: DefaultCellRangeRendererParams) {
+  const deferredMode = typeof deferredMeasurementCache !== 'undefined'
+
   const renderedCells = []
   const offsetAdjusted = verticalOffsetAdjustment || horizontalOffsetAdjustment
-  const canCacheStyle = !isScrolling || !offsetAdjusted
+  const canCacheStyle = !deferredMode && (!isScrolling || !offsetAdjusted)
 
   for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
     let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex)
@@ -43,12 +47,23 @@ export default function defaultCellRangeRenderer ({
       if (canCacheStyle && styleCache[key]) {
         style = styleCache[key]
       } else {
+        // In deferred mode, cells will be initially rendered before we know their size.
+        // Don't interfere with CellMeasurer's measurements by setting an invalid size.
+        // @TODO (bvaughn) Add automated test coverage for this.
+        let deferredCell = deferredMode && !deferredMeasurementCache.has(rowIndex, columnIndex)
+        let height = deferredCell
+          ? 'auto'
+          : rowDatum.size
+        let width = deferredCell
+          ? 'auto'
+          : columnDatum.size
+
         style = {
-          height: rowDatum.size,
+          height,
           left: columnDatum.offset + horizontalOffsetAdjustment,
           position: 'absolute',
           top: rowDatum.offset + verticalOffsetAdjustment,
-          width: columnDatum.size
+          width
         }
 
         styleCache[key] = style
@@ -59,6 +74,7 @@ export default function defaultCellRangeRenderer ({
         isScrolling,
         isVisible,
         key,
+        parent,
         rowIndex,
         style
       }

@@ -2,7 +2,7 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import CellMeasurer from './CellMeasurer'
-import CellMeasurerCache from './CellMeasurerCache'
+import CellMeasurerCache, { DEFAULT_HEIGHT, DEFAULT_WIDTH } from './CellMeasurerCache'
 
 // Accounts for the fact that JSDom doesn't support measurements.
 function mockClientWidthAndHeight ({
@@ -29,12 +29,16 @@ function mockClientWidthAndHeight ({
 }
 
 function renderHelper ({
-  cache
+  cache,
+  invalidateGridSizeAfterRender
 }) {
   render(
     <CellMeasurer
       cache={cache}
       columnIndex={0}
+      parent={{
+        invalidateGridSizeAfterRender
+      }}
       rowIndex={0}
       style={{}}
     >
@@ -46,6 +50,7 @@ function renderHelper ({
 describe('CellMeasurer', () => {
   it('componentDidMount() should measure content that is not already in the cache', () => {
     const cache = new CellMeasurerCache()
+    const invalidateGridSizeAfterRender = jest.fn()
 
     mockClientWidthAndHeight({
       height: 20,
@@ -59,8 +64,9 @@ describe('CellMeasurer', () => {
     expect(offsetWidthMock.mock.calls).toHaveLength(0)
     expect(cache.has(0, 0)).toBe(false)
 
-    renderHelper({ cache })
+    renderHelper({ cache, invalidateGridSizeAfterRender })
 
+    expect(invalidateGridSizeAfterRender).toHaveBeenCalled()
     expect(offsetHeightMock.mock.calls).toHaveLength(1)
     expect(offsetWidthMock.mock.calls).toHaveLength(1)
     expect(cache.has(0, 0)).toBe(true)
@@ -72,6 +78,8 @@ describe('CellMeasurer', () => {
     const cache = new CellMeasurerCache()
     cache.set(0, 0, 100, 20)
 
+    const invalidateGridSizeAfterRender = jest.fn()
+
     mockClientWidthAndHeight({
       height: 20,
       width: 100
@@ -79,25 +87,28 @@ describe('CellMeasurer', () => {
 
     expect(cache.has(0, 0)).toBe(true)
 
-    renderHelper({ cache })
+    renderHelper({ cache, invalidateGridSizeAfterRender })
 
     const offsetHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetHeight').get
     const offsetWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetWidth').get
 
+    expect(invalidateGridSizeAfterRender).not.toHaveBeenCalled()
     expect(offsetHeightMock.mock.calls).toHaveLength(0)
     expect(offsetWidthMock.mock.calls).toHaveLength(0)
   })
 
   it('componentDidUpdate() should measure content that is not already in the cache', () => {
     const cache = new CellMeasurerCache()
+    const invalidateGridSizeAfterRender = jest.fn()
 
-    renderHelper({ cache })
+    renderHelper({ cache, invalidateGridSizeAfterRender })
 
     cache.clear(0, 0)
+    invalidateGridSizeAfterRender.mockReset()
 
     expect(cache.has(0, 0)).toBe(false)
-    expect(cache.getWidth(0, 0)).toBe(null)
-    expect(cache.getHeight(0, 0)).toBe(null)
+    expect(cache.getWidth(0, 0)).toBe(DEFAULT_WIDTH)
+    expect(cache.getHeight(0, 0)).toBe(DEFAULT_HEIGHT)
 
     mockClientWidthAndHeight({
       height: 20,
@@ -107,10 +118,11 @@ describe('CellMeasurer', () => {
     const offsetHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetHeight').get
     const offsetWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetWidth').get
 
-    renderHelper({ cache })
+    renderHelper({ cache, invalidateGridSizeAfterRender })
 
     expect(cache.has(0, 0)).toBe(true)
 
+    expect(invalidateGridSizeAfterRender).toHaveBeenCalled()
     expect(offsetHeightMock.mock.calls).toHaveLength(1)
     expect(offsetWidthMock.mock.calls).toHaveLength(1)
     expect(cache.getWidth(0, 0)).toBe(100)
@@ -121,6 +133,8 @@ describe('CellMeasurer', () => {
     const cache = new CellMeasurerCache()
     cache.set(0, 0, 100, 20)
 
+    const invalidateGridSizeAfterRender = jest.fn()
+
     expect(cache.has(0, 0)).toBe(true)
 
     mockClientWidthAndHeight({
@@ -128,12 +142,13 @@ describe('CellMeasurer', () => {
       width: 100
     })
 
-    renderHelper({ cache })
-    renderHelper({ cache })
+    renderHelper({ cache, invalidateGridSizeAfterRender })
+    renderHelper({ cache, invalidateGridSizeAfterRender })
 
     const offsetHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetHeight').get
     const offsetWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetWidth').get
 
+    expect(invalidateGridSizeAfterRender).not.toHaveBeenCalled()
     expect(offsetHeightMock.mock.calls).toHaveLength(0)
     expect(offsetWidthMock.mock.calls).toHaveLength(0)
   })

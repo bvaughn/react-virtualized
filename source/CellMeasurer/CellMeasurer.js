@@ -8,6 +8,7 @@ type Props = {
   cache: any, // TODO type CellMeasurerCacheType
   children: mixed,
   columnIndex: number,
+  parent: any, // TODO type Grid
   rowIndex: number
 };
 
@@ -34,7 +35,7 @@ export default class CellMeasurer extends Component {
   }
 
   _maybeMeasureCell () {
-    const { cache, columnIndex, rowIndex } = this.props
+    const { cache, columnIndex, parent, rowIndex } = this.props
 
     if (!cache.has(rowIndex, columnIndex)) {
       const node = findDOMNode(this)
@@ -47,6 +48,12 @@ export default class CellMeasurer extends Component {
         width,
         height
       )
+
+      // If size has changed, let Grid know to re-render.
+      parent.invalidateGridSizeAfterRender({
+        columnIndex,
+        rowIndex
+      })
     }
   }
 }
