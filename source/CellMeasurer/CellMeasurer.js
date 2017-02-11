@@ -38,8 +38,8 @@ export default class CellMeasurer extends Component {
 
     if (!cache.has(rowIndex, columnIndex)) {
       const node = findDOMNode(this)
-      const height = node.clientHeight
-      const width = node.clientWidth
+      const height = node.offsetHeight
+      const width = node.offsetWidth
 
       cache.set(
         rowIndex,

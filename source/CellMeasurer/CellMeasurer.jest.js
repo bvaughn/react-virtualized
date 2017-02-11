@@ -11,7 +11,7 @@ function mockClientWidthAndHeight ({
 }) {
   Object.defineProperty(
     Element.prototype,
-    'clientHeight',
+    'offsetHeight',
     {
       configurable: true,
       get: jest.fn().mockReturnValue(height)
@@ -20,7 +20,7 @@ function mockClientWidthAndHeight ({
 
   Object.defineProperty(
     Element.prototype,
-    'clientWidth',
+    'offsetWidth',
     {
       configurable: true,
       get: jest.fn().mockReturnValue(width)
@@ -52,17 +52,17 @@ describe('CellMeasurer', () => {
       width: 100
     })
 
-    const clientHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'clientHeight').get
-    const clientWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'clientWidth').get
+    const offsetHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetHeight').get
+    const offsetWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetWidth').get
 
-    expect(clientHeightMock.mock.calls).toHaveLength(0)
-    expect(clientWidthMock.mock.calls).toHaveLength(0)
+    expect(offsetHeightMock.mock.calls).toHaveLength(0)
+    expect(offsetWidthMock.mock.calls).toHaveLength(0)
     expect(cache.has(0, 0)).toBe(false)
 
     renderHelper({ cache })
 
-    expect(clientHeightMock.mock.calls).toHaveLength(1)
-    expect(clientWidthMock.mock.calls).toHaveLength(1)
+    expect(offsetHeightMock.mock.calls).toHaveLength(1)
+    expect(offsetWidthMock.mock.calls).toHaveLength(1)
     expect(cache.has(0, 0)).toBe(true)
     expect(cache.getWidth(0, 0)).toBe(100)
     expect(cache.getHeight(0, 0)).toBe(20)
@@ -81,11 +81,11 @@ describe('CellMeasurer', () => {
 
     renderHelper({ cache })
 
-    const clientHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'clientHeight').get
-    const clientWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'clientWidth').get
+    const offsetHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetHeight').get
+    const offsetWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetWidth').get
 
-    expect(clientHeightMock.mock.calls).toHaveLength(0)
-    expect(clientWidthMock.mock.calls).toHaveLength(0)
+    expect(offsetHeightMock.mock.calls).toHaveLength(0)
+    expect(offsetWidthMock.mock.calls).toHaveLength(0)
   })
 
   it('componentDidUpdate() should measure content that is not already in the cache', () => {
@@ -96,23 +96,23 @@ describe('CellMeasurer', () => {
     cache.clear(0, 0)
 
     expect(cache.has(0, 0)).toBe(false)
-    expect(cache.getWidth(0, 0)).toBe(undefined)
-    expect(cache.getHeight(0, 0)).toBe(undefined)
+    expect(cache.getWidth(0, 0)).toBe(null)
+    expect(cache.getHeight(0, 0)).toBe(null)
 
     mockClientWidthAndHeight({
       height: 20,
       width: 100
     })
 
-    const clientHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'clientHeight').get
-    const clientWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'clientWidth').get
+    const offsetHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetHeight').get
+    const offsetWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetWidth').get
 
     renderHelper({ cache })
 
     expect(cache.has(0, 0)).toBe(true)
 
-    expect(clientHeightMock.mock.calls).toHaveLength(1)
-    expect(clientWidthMock.mock.calls).toHaveLength(1)
+    expect(offsetHeightMock.mock.calls).toHaveLength(1)
+    expect(offsetWidthMock.mock.calls).toHaveLength(1)
     expect(cache.getWidth(0, 0)).toBe(100)
     expect(cache.getHeight(0, 0)).toBe(20)
   })
@@ -131,10 +131,10 @@ describe('CellMeasurer', () => {
     renderHelper({ cache })
     renderHelper({ cache })
 
-    const clientHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'clientHeight').get
-    const clientWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'clientWidth').get
+    const offsetHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetHeight').get
+    const offsetWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetWidth').get
 
-    expect(clientHeightMock.mock.calls).toHaveLength(0)
-    expect(clientWidthMock.mock.calls).toHaveLength(0)
+    expect(offsetHeightMock.mock.calls).toHaveLength(0)
+    expect(offsetWidthMock.mock.calls).toHaveLength(0)
   })
 })
