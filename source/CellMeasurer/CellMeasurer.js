@@ -1,14 +1,13 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
+import { Component } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import { findDOMNode } from 'react-dom'
-import type { CellMeasurerCacheType } from './CellMeasurerCache'
 
 type Props = {
-  cache: any, // TODO type CellMeasurerCacheType
+  cache: any,
   children: mixed,
   columnIndex: number,
-  parent: any, // TODO type Grid
+  parent: any,
   rowIndex: number
 };
 
@@ -18,20 +17,33 @@ type Props = {
  * Cached-content is not be re-measured.
  */
 export default class CellMeasurer extends Component {
-  constructor (props : Props, state) {
-    super(props, state)
+  props: Props;
+
+  constructor (props, context) {
+    super(props, context)
+
+    this._measure = this._measure.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this._maybeMeasureCell()
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState) {
     this._maybeMeasureCell()
   }
 
-  render() {
-    return this.props.children;
+  render () {
+    const { children } = this.props
+    // @TODO (bvaughn) __DEV__ mode check for parent.props.deferredMeasurementCache
+
+    return typeof children === 'function'
+      ? children({ measure: this._measure })
+      : children
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   _maybeMeasureCell () {
@@ -51,6 +63,31 @@ export default class CellMeasurer extends Component {
 
       // If size has changed, let Grid know to re-render.
       parent.invalidateGridSizeAfterRender({
+        columnIndex,
+        rowIndex
+      })
+    }
+  }
+
+  _measure (force = false) {
+    const { cache, columnIndex, parent, rowIndex } = this.props
+
+    const node = findDOMNode(this)
+    const height = node.offsetHeight
+    const width = node.offsetWidth
+
+    if (
+      height !== cache.getHeight(rowIndex, columnIndex) ||
+      width !== cache.getWidth(rowIndex, columnIndex)
+    ) {
+      cache.set(
+        rowIndex,
+        columnIndex,
+        width,
+        height
+      )
+
+      parent.recomputeGridSize({
         columnIndex,
         rowIndex
       })

@@ -38,6 +38,8 @@ describe('List', () => {
     )
   }
 
+  // @TODO (bvaughn) Test new :parent param
+
   describe('number of rendered children', () => {
     it('should render enough children to fill the view', () => {
       const rendered = findDOMNode(render(getMarkup()))

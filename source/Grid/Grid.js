@@ -89,7 +89,7 @@ export default class Grid extends Component {
     /** Optional inline style applied to inner cell-container */
     containerStyle: PropTypes.object,
 
-    // @TODO (bvaughn) Document
+    // @TODO (bvaughn) Document this; and is this the best name?
     deferredMeasurementCache: PropTypes.object,
 
     /**
@@ -238,12 +238,17 @@ export default class Grid extends Component {
     this._deferredInvalidateColumnIndex = null
     this._deferredInvalidateRowIndex = null
 
+    const deferredMeasurementCache = props.deferredMeasurementCache
+    const deferredMode = typeof deferredMeasurementCache !== 'undefined'
+
     this._columnSizeAndPositionManager = new CellSizeAndPositionManager({ // @TODO (bvaughn) Use scaling impl
+      batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedHeight(),
       cellCount: props.columnCount,
       cellSizeGetter: (params) => this._columnWidthGetter(params),
       estimatedCellSize: this._getEstimatedColumnSize(props)
     })
     this._rowSizeAndPositionManager = new CellSizeAndPositionManager({ // @TODO (bvaughn) Use scaling impl
+      batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedWidth(),
       cellCount: props.rowCount,
       cellSizeGetter: (params) => this._rowHeightGetter(params),
       estimatedCellSize: this._getEstimatedRowSize(props)
@@ -327,7 +332,7 @@ export default class Grid extends Component {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
 
     if (this._gridSizeInvalidated()) {
-      return;
+      return
     }
 
     // If this component was first rendered server-side, scrollbar size will be undefined.
@@ -369,7 +374,7 @@ export default class Grid extends Component {
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
     if (this._gridSizeInvalidated()) {
-      return;
+      return
     }
 
     // Handle edge case where column or row count has only just increased over 0.
@@ -815,7 +820,7 @@ export default class Grid extends Component {
 
       this.recomputeGridSize({ columnIndex, rowIndex })
 
-      return true;
+      return true
     }
 
     return false

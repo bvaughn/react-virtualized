@@ -3,10 +3,8 @@
 export const DEFAULT_HEIGHT = 30
 export const DEFAULT_WIDTH = 100
 
-/**
- * Enables more intelligent mapping of a given column and row index to an item ID.
- * This prevents a cell cache from being invalidated when its parent collection is modified.
- */
+// Enables more intelligent mapping of a given column and row index to an item ID.
+// This prevents a cell cache from being invalidated when its parent collection is modified.
 type KeyMapper = (
   rowIndex: number,
   columnIndex: number
@@ -15,6 +13,10 @@ type KeyMapper = (
 type CellMeasurerCacheParams = {
   defaultHeight ?: number,
   defaultWidth ?: number,
+  fixedHeight ?: boolean,
+  fixedWidth ?: boolean,
+  minHeight: ?number,
+  minWidth: ?number,
   keyMapper ?: KeyMapper
 };
 
@@ -26,45 +28,6 @@ type IndexParam = {
   index: number
 };
 
-export interface CellMeasurerCacheType {
-  clear (
-    rowIndex: number,
-    columnIndex: number
-  ) : void;
-
-  clearAll () : void;
-
-  columnWidth (
-    index : number
-  ) : ?number;
-
-  getHeight (
-    rowIndex: number,
-    columnIndex: number
-  ) : ?number;
-
-  getWidth (
-    rowIndex: number,
-    columnIndex: number
-  ) : ?number;
-
-  has (
-    rowIndex: number,
-    columnIndex: number
-  ) : boolean;
-
-  rowHeight (
-    index : number
-  ) : ?number;
-
-  set (
-    rowIndex: number,
-    columnIndex: number,
-    width: number,
-    height: number
-  ) : void;
-};
-
 /**
  * Caches measurements for a given cell.
  */
@@ -74,12 +37,18 @@ export default class CellMeasurerCache {
   _columnWidthCache: Cache;
   _defaultHeight: ?number;
   _defaultWidth: ?number;
+  _minHeight: ?number;
+  _minWidth: ?number;
   _keyMapper: KeyMapper;
   _rowHeightCache: Cache;
 
   constructor (params : CellMeasurerCacheParams = {}) {
     this._defaultHeight = params.defaultHeight || DEFAULT_HEIGHT
     this._defaultWidth = params.defaultWidth || DEFAULT_WIDTH
+    this._hasFixedHeight = params.fixedHeight === true
+    this._hasFixedWidth = params.fixedWidth === true
+    this._minHeight = params.minHeight || 0
+    this._minWidth = params.minWidth || 0
     this._keyMapper = params.keyMapper || defaultKeyMapper
 
     this._columnCount = 0
@@ -101,7 +70,7 @@ export default class CellMeasurerCache {
     delete this._cellWidthCache[key]
   }
 
-  clearAll() : void {
+  clearAll () : void {
     this._cellHeightCache = {}
     this._cellWidthCache = {}
   }
@@ -112,6 +81,14 @@ export default class CellMeasurerCache {
       : this._defaultWidth
   }
 
+  hasFixedHeight () : boolean {
+    return this._hasFixedHeight
+  }
+
+  hasFixedWidth () : boolean {
+    return this._hasFixedWidth
+  }
+
   getHeight (
     rowIndex: number,
     columnIndex: number
@@ -119,7 +96,7 @@ export default class CellMeasurerCache {
     const key = this._keyMapper(rowIndex, columnIndex)
 
     return this._cellHeightCache.hasOwnProperty(key)
-      ? this._cellHeightCache[key]
+      ? Math.max(this._minHeight, this._cellHeightCache[key])
       : this._defaultHeight
   }
 
@@ -130,7 +107,7 @@ export default class CellMeasurerCache {
     const key = this._keyMapper(rowIndex, columnIndex)
 
     return this._cellWidthCache.hasOwnProperty(key)
-      ? this._cellWidthCache[key]
+      ? Math.max(this._minWidth, this._cellWidthCache[key])
       : this._defaultWidth
   }
 

@@ -1,6 +1,9 @@
 import CellMeasurerCache, { DEFAULT_HEIGHT, DEFAULT_WIDTH } from './CellMeasurerCache'
 
 describe('CellMeasurerCache', () => {
+  // @TODO (bvaughn) Test fixed sizes and overrides for default
+  // @TODO (bvaughn) Test min width/height
+
   it('should correctly report cache status', () => {
     const cache = new CellMeasurerCache()
     expect(cache.has(0, 0)).toBe(false)

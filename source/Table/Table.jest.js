@@ -76,6 +76,8 @@ describe('Table', () => {
     )
   }
 
+  // @TODO (bvaughn) Test new :parent param
+
   describe('children', () => {
     it('should accept Column children', () => {
       const children = [

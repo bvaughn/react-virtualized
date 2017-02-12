@@ -342,6 +342,7 @@ export default class Table extends Component {
     column,
     columnIndex,
     isScrolling,
+    parent,
     rowData,
     rowIndex
   }) {
@@ -354,7 +355,7 @@ export default class Table extends Component {
     } = column.props
 
     const cellData = cellDataGetter({ columnData, dataKey, rowData })
-    const renderedCell = cellRenderer({ cellData, columnData, dataKey, isScrolling, rowData, rowIndex })
+    const renderedCell = cellRenderer({ cellData, columnData, dataKey, isScrolling, parent, rowData, rowIndex })
 
     const style = this._cachedColumnStyles[columnIndex]
 
@@ -443,6 +444,7 @@ export default class Table extends Component {
     rowIndex: index,
     isScrolling,
     key,
+    parent,
     style
   }) {
     const {
@@ -468,6 +470,7 @@ export default class Table extends Component {
         column,
         columnIndex,
         isScrolling,
+        parent,
         rowData,
         rowIndex: index,
         scrollbarWidth

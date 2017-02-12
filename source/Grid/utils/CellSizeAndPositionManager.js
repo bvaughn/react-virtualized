@@ -5,10 +5,12 @@
  */
 export default class CellSizeAndPositionManager {
   constructor ({
+    batchAllCells = false,
     cellCount,
     cellSizeGetter,
     estimatedCellSize
   }: CellSizeAndPositionManagerConstructorParams) {
+    this._batchAllCells = batchAllCells
     this._cellSizeGetter = cellSizeGetter
     this._cellCount = cellCount
     this._estimatedCellSize = estimatedCellSize
@@ -162,6 +164,17 @@ export default class CellSizeAndPositionManager {
   }
 
   getVisibleCellRange (params: GetVisibleCellRangeParams): VisibleCellRange {
+    // Advanced use-cases (eg CellMeasurer) require batched measurements to determine accurate sizes.
+    // eg we can't know a row's height without measuring the height of all columns within that row.
+    // @TODO (bvaughn) We could use a CellMeasurerCache method to determine if a given cell had been measured,
+    //                 by querying all perpendicular cells. But is it worth it? Maybe just a hard-limitation.
+    if (this._batchAllCells) {
+      return {
+        start: 0,
+        stop: this._cellCount - 1
+      }
+    }
+
     let {
       containerSize,
       offset
@@ -181,7 +194,10 @@ export default class CellSizeAndPositionManager {
 
     let stop = start
 
-    while (offset < maxOffset && stop < this._cellCount - 1) {
+    while (
+      offset < maxOffset &&
+      stop < this._cellCount - 1
+    ) {
       stop++
 
       offset += this.getSizeAndPositionOfCell(stop).size
@@ -287,6 +303,7 @@ export default class CellSizeAndPositionManager {
 }
 
 type CellSizeAndPositionManagerConstructorParams = {
+  batchAllCells ?: boolean,
   cellCount: number,
   cellSizeGetter: Function,
   estimatedCellSize: number
@@ -306,11 +323,6 @@ type GetVisibleCellRangeParams = {
   containerSize: number,
   offset: number
 };
-
-type RequiresMoreMeasurementsParams = {
-  containerSize: number,
-  offset: number
-}
 
 type SizeAndPositionData = {
   offset: number,

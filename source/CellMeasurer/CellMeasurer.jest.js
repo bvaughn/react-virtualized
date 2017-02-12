@@ -1,5 +1,6 @@
+/* global Element */
+
 import React from 'react'
-import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import CellMeasurer from './CellMeasurer'
 import CellMeasurerCache, { DEFAULT_HEIGHT, DEFAULT_WIDTH } from './CellMeasurerCache'
@@ -42,7 +43,7 @@ function renderHelper ({
       rowIndex={0}
       style={{}}
     >
-      <div/>
+      <div />
     </CellMeasurer>
   )
 }

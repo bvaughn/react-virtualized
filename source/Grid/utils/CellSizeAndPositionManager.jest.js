@@ -22,6 +22,9 @@ describe('CellSizeAndPositionManager', () => {
     }
   }
 
+  // @TODO (bvaughn) Test batchAllCells mode measures all initially; doesn't measure once already measured.
+  // Test this resets properly when clear is called too
+
   describe('configure', () => {
     it('should update inner :cellCount and :estimatedCellSize', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()

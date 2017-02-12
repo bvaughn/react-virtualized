@@ -31,7 +31,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 .5em;
+  padding: 0.5em 1em;
 }
 .cell {
   border-right: 1px solid #e0e0e0;
@@ -43,4 +43,28 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.tableRow {
+  border-bottom: 1px solid #eee;
+}
+.tableColumn {
+  padding: 5px 15px 5px 0;
+}
+
+.Tab {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 6px;
+  outline: none;
+  background: #eee;
+  margin: 4px;
+  cursor: pointer;
+}
+
+.ActiveTab {
+  background-color: #4db6ac;
+  border: 1px solid #3ca59b;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: default;
 }

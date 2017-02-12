@@ -27,7 +27,7 @@ export default function defaultCellRangeRenderer ({
 
   const renderedCells = []
   const offsetAdjusted = verticalOffsetAdjustment || horizontalOffsetAdjustment
-  const canCacheStyle = !deferredMode && (!isScrolling || !offsetAdjusted)
+  const canCacheStyle = !isScrolling || !offsetAdjusted
 
   for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
     let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex)
@@ -50,23 +50,31 @@ export default function defaultCellRangeRenderer ({
         // In deferred mode, cells will be initially rendered before we know their size.
         // Don't interfere with CellMeasurer's measurements by setting an invalid size.
         // @TODO (bvaughn) Add automated test coverage for this.
-        let deferredCell = deferredMode && !deferredMeasurementCache.has(rowIndex, columnIndex)
-        let height = deferredCell
-          ? 'auto'
-          : rowDatum.size
-        let width = deferredCell
-          ? 'auto'
-          : columnDatum.size
+        if (
+          deferredMode &&
+          !deferredMeasurementCache.has(rowIndex, columnIndex)
+        ) {
+          // Position not-yet-measured cells at top/left 0,0,
+          // And give them width/height of 'auto' so they can grow larger than the parent Grid if necessary.
+          // Positioning them further to the right/bottom influences their measured size.
+          style = {
+            height: 'auto',
+            left: 0,
+            position: 'absolute',
+            top: 0,
+            width: 'auto'
+          }
+        } else {
+          style = {
+            height: rowDatum.size,
+            left: columnDatum.offset + horizontalOffsetAdjustment,
+            position: 'absolute',
+            top: rowDatum.offset + verticalOffsetAdjustment,
+            width: columnDatum.size
+          }
 
-        style = {
-          height,
-          left: columnDatum.offset + horizontalOffsetAdjustment,
-          position: 'absolute',
-          top: rowDatum.offset + verticalOffsetAdjustment,
-          width
+          styleCache[key] = style
         }
-
-        styleCache[key] = style
       }
 
       let cellRendererParams = {
