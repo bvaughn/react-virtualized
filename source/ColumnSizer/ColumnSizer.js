@@ -1,11 +1,10 @@
 /** @flow */
-import { Component, PropTypes } from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import { PropTypes, PureComponent } from 'react'
 
 /**
  * High-order component that auto-calculates column-widths for `Grid` cells.
  */
-export default class ColumnSizer extends Component {
+export default class ColumnSizer extends PureComponent {
   static propTypes = {
     /**
      * Function responsible for rendering a virtualized Grid.
@@ -84,10 +83,6 @@ export default class ColumnSizer extends Component {
       getColumnWidth: () => columnWidth,
       registerChild: this._registerChild
     })
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _registerChild (child) {

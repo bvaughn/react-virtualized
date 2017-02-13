@@ -1,15 +1,14 @@
 /** @flow */
 import cn from 'classnames'
 import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import WindowScroller from './WindowScroller'
 import List from '../List'
 import AutoSizer from '../AutoSizer'
-import shallowCompare from 'react-addons-shallow-compare'
 import styles from './WindowScroller.example.css'
 
-export default class WindowScrollerExample extends Component {
+export default class WindowScrollerExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
     customElement: PropTypes.any,
@@ -96,10 +95,6 @@ export default class WindowScrollerExample extends Component {
         </div>
       </ContentBox>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _hideHeader () {

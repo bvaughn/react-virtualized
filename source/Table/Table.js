@@ -1,9 +1,8 @@
 /** @flow */
 import cn from 'classnames'
 import Column from './Column'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
-import shallowCompare from 'react-addons-shallow-compare'
 import Grid from '../Grid'
 import defaultRowRenderer from './defaultRowRenderer'
 import SortDirection from './SortDirection'
@@ -12,7 +11,7 @@ import SortDirection from './SortDirection'
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
  * This component expects explicit width, height, and padding parameters.
  */
-export default class Table extends Component {
+export default class Table extends PureComponent {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -332,10 +331,6 @@ export default class Table extends Component {
         />
       </div>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _createColumn ({

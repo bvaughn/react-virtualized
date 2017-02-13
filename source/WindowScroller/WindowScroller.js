@@ -1,11 +1,10 @@
 /** @flow */
-import { Component, PropTypes } from 'react'
+import { PropTypes, PureComponent } from 'react'
 import ReactDOM from 'react-dom'
-import shallowCompare from 'react-addons-shallow-compare'
 import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
 import { getHeight, getPositionFromTop, getScrollTop } from './utils/dimensions'
 
-export default class WindowScroller extends Component {
+export default class WindowScroller extends PureComponent {
   static propTypes = {
     /**
      * Function responsible for rendering children.
@@ -111,10 +110,6 @@ export default class WindowScroller extends Component {
       isScrolling,
       scrollTop
     })
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _onResize (event) {

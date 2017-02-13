@@ -3,7 +3,6 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
-import shallowCompare from 'react-addons-shallow-compare'
 import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
 import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 import { DEFAULT_MAX_SCROLL_SIZE } from './utils/ScalingCellSizeAndPositionManager'
@@ -1394,14 +1393,10 @@ describe('Grid', () => {
       expect(cellRendererCalled).toEqual(false)
     })
 
-    it('should not re-render grid components if they shallowCompare style', () => {
+    it('should not re-render grid components if they extend PureComponent', () => {
       let componentUpdates = 0
 
-      class GridComponent extends React.Component {
-        shouldComponentUpdate (nextProps, nextState) {
-          return shallowCompare(this, nextProps, nextState)
-        }
-
+      class GridComponent extends React.PureComponent {
         componentDidUpdate () {
           componentUpdates++
         }

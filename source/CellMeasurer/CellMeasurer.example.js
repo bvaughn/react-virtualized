@@ -1,6 +1,6 @@
 /** @flow */
 import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from '../AutoSizer'
 import CellMeasurer from './CellMeasurer'
@@ -8,9 +8,7 @@ import CellMeasurerCache from './CellMeasurerCache'
 import Grid from '../Grid'
 import List from '../List'
 import { Column, Table } from '../Table'
-import shallowCompare from 'react-addons-shallow-compare'
 import cn from 'classnames'
-import { findDOMNode } from 'react-dom'
 import styles from './CellMeasurer.example.css'
 
 const COLUMN_COUNT = 50
@@ -19,7 +17,7 @@ const HEIGHT = 400
 const ROW_COUNT = 50
 const ROW_HEIGHT = 35
 
-export default class CellMeasurerExample extends Component {
+export default class CellMeasurerExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -83,10 +81,6 @@ export default class CellMeasurerExample extends Component {
     )
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
-  }
-
   _onClick (id) {
     this.setState({
       currentTab: id
@@ -128,7 +122,7 @@ function Tab ({ children, currentTab, id, onClick }) {
   )
 }
 
-class DynamicWidthGrid extends Component {
+class DynamicWidthGrid extends PureComponent {
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
     width: PropTypes.number.isRequired
@@ -165,10 +159,6 @@ class DynamicWidthGrid extends Component {
     )
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
-  }
-
   _cellRenderer ({ columnIndex, key, parent, rowIndex, style }) {
     const { list } = this.props
 
@@ -199,7 +189,7 @@ class DynamicWidthGrid extends Component {
   }
 }
 
-class DynamiHeightGrid extends Component {
+class DynamiHeightGrid extends PureComponent {
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
     width: PropTypes.number.isRequired
@@ -236,10 +226,6 @@ class DynamiHeightGrid extends Component {
     )
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
-  }
-
   _cellRenderer ({ columnIndex, key, parent, rowIndex, style }) {
     const { list } = this.props
 
@@ -269,7 +255,7 @@ class DynamiHeightGrid extends Component {
   }
 }
 
-class DynamicHeightList extends Component {
+class DynamicHeightList extends PureComponent {
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
     width: PropTypes.number.isRequired
@@ -303,10 +289,6 @@ class DynamicHeightList extends Component {
     )
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
-  }
-
   _rowRenderer ({ index, isScrolling, key, parent, style }) {
     const { list } = this.props
 
@@ -318,7 +300,7 @@ class DynamicHeightList extends Component {
 
     const source = `http://lorempixel.com/${imageWidth}/${imageHeight}/`
 
-     return (
+    return (
       <CellMeasurer
         cache={this._cache}
         columnIndex={0}
@@ -348,7 +330,7 @@ class DynamicHeightList extends Component {
   }
 }
 
-class DynamicHeightTableColumn extends Component {
+class DynamicHeightTableColumn extends PureComponent {
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
     width: PropTypes.number.isRequired
@@ -401,10 +383,6 @@ class DynamicHeightTableColumn extends Component {
         />
       </Table>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _columnCellRenderer ({ cellData, columnData, dataKey, parent, rowData, rowIndex }) {

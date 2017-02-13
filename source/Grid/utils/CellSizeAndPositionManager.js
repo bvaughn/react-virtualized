@@ -166,8 +166,6 @@ export default class CellSizeAndPositionManager {
   getVisibleCellRange (params: GetVisibleCellRangeParams): VisibleCellRange {
     // Advanced use-cases (eg CellMeasurer) require batched measurements to determine accurate sizes.
     // eg we can't know a row's height without measuring the height of all columns within that row.
-    // @TODO (bvaughn) We could use a CellMeasurerCache method to determine if a given cell had been measured,
-    //                 by querying all perpendicular cells. But is it worth it? Maybe just a hard-limitation.
     if (this._batchAllCells) {
       return {
         start: 0,

@@ -1,17 +1,16 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import Immutable from 'immutable'
 import AutoSizer from '../AutoSizer'
 import InfiniteLoader from './InfiniteLoader'
 import List from '../List'
-import shallowCompare from 'react-addons-shallow-compare'
 import styles from './InfiniteLoader.example.css'
 
 const STATUS_LOADING = 1
 const STATUS_LOADED = 2
 
-export default class InfiniteLoaderExample extends Component {
+export default class InfiniteLoaderExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -97,10 +96,6 @@ export default class InfiniteLoaderExample extends Component {
         </InfiniteLoader>
       </ContentBox>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _clearData () {

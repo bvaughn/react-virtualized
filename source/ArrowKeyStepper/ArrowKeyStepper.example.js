@@ -1,14 +1,13 @@
 /** @flow */
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import ArrowKeyStepper from './ArrowKeyStepper'
 import AutoSizer from '../AutoSizer'
 import Grid from '../Grid'
-import shallowCompare from 'react-addons-shallow-compare'
 import cn from 'classnames'
 import styles from './ArrowKeyStepper.example.css'
 
-export default class ArrowKeyStepperExample extends Component {
+export default class ArrowKeyStepperExample extends PureComponent {
   constructor (props) {
     super(props)
 
@@ -100,10 +99,6 @@ export default class ArrowKeyStepperExample extends Component {
         </ArrowKeyStepper>
       </ContentBox>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _getColumnWidth ({ index }) {

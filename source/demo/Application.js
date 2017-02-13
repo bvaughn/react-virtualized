@@ -1,7 +1,6 @@
 /** @flow */
 import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import React, { PropTypes, PureComponent } from 'react'
 import { HashRouter, Match, Redirect } from 'react-router'
 
 import ComponentLink from './ComponentLink'
@@ -42,7 +41,7 @@ const COMPONENT_EXAMPLES_MAP = {
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList())
 
-export default class Application extends Component {
+export default class Application extends PureComponent {
   static childContextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
     customElement: PropTypes.any,
@@ -145,9 +144,5 @@ export default class Application extends Component {
         </div>
       </HashRouter>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 }

@@ -1,6 +1,5 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import React, { PropTypes, PureComponent } from 'react'
 import Grid from '../Grid'
 
 /**
@@ -10,7 +9,7 @@ import Grid from '../Grid'
  * If no sticky columns, only 1 sticky header Grid will be rendered.
  * If sticky columns, 2 sticky header Grids will be rendered.
  */
-export default class MultiGrid extends Component {
+export default class MultiGrid extends PureComponent {
   static propTypes = {
     fixedColumnCount: PropTypes.number.isRequired,
     fixedRowCount: PropTypes.number.isRequired,
@@ -159,10 +158,6 @@ export default class MultiGrid extends Component {
         </div>
       </div>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _bottomLeftGridRef (ref) {

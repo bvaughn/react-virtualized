@@ -1,15 +1,15 @@
-import React, { Component, PropTypes } from 'react'
+/** @flow */
+import React, { PropTypes, PureComponent } from 'react'
 import CollectionView from './CollectionView'
 import calculateSizeAndPositionData from './utils/calculateSizeAndPositionData'
 import getUpdatedOffsetForIndex from '../utils/getUpdatedOffsetForIndex'
-import shallowCompare from 'react-addons-shallow-compare'
 import type { ScrollPosition, SizeInfo } from './types'
 
 /**
  * Renders scattered or non-linear data.
  * Unlike Grid, which renders checkerboard data, Collection can render arbitrarily positioned- even overlapping- data.
  */
-export default class Collection extends Component {
+export default class Collection extends PureComponent {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -83,10 +83,6 @@ export default class Collection extends Component {
         {...props}
       />
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   /** CellLayoutManager interface */

@@ -1,6 +1,5 @@
 /** @flow */
-import { Component } from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
 
 type Props = {
@@ -16,7 +15,7 @@ type Props = {
  * Measurements are stored in a per-cell cache.
  * Cached-content is not be re-measured.
  */
-export default class CellMeasurer extends Component {
+export default class CellMeasurer extends PureComponent {
   props: Props;
 
   constructor (props, context) {
@@ -35,15 +34,12 @@ export default class CellMeasurer extends Component {
 
   render () {
     const { children } = this.props
+
     // @TODO (bvaughn) __DEV__ mode check for parent.props.deferredMeasurementCache
 
     return typeof children === 'function'
       ? children({ measure: this._measure })
       : children
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _maybeMeasureCell () {
@@ -62,7 +58,7 @@ export default class CellMeasurer extends Component {
       )
 
       // If size has changed, let Grid know to re-render.
-      parent.invalidateGridSizeAfterRender({
+      parent.invalidateCellSizeAfterRender({
         columnIndex,
         rowIndex
       })

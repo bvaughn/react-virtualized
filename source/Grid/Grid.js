@@ -1,13 +1,11 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
-// @TODO (bvaughn) import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
-import CellSizeAndPositionManager from './utils/CellSizeAndPositionManager'
+import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getOverscanIndices, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
-import shallowCompare from 'react-addons-shallow-compare'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
 import defaultCellRangeRenderer from './defaultCellRangeRenderer'
 
@@ -30,7 +28,7 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  * Renders tabular data with virtualization along the vertical and horizontal axes.
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
-export default class Grid extends Component {
+export default class Grid extends PureComponent {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -241,13 +239,13 @@ export default class Grid extends Component {
     const deferredMeasurementCache = props.deferredMeasurementCache
     const deferredMode = typeof deferredMeasurementCache !== 'undefined'
 
-    this._columnSizeAndPositionManager = new CellSizeAndPositionManager({ // @TODO (bvaughn) Use scaling impl
+    this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedHeight(),
       cellCount: props.columnCount,
       cellSizeGetter: (params) => this._columnWidthGetter(params),
       estimatedCellSize: this._getEstimatedColumnSize(props)
     })
-    this._rowSizeAndPositionManager = new CellSizeAndPositionManager({ // @TODO (bvaughn) Use scaling impl
+    this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedWidth(),
       cellCount: props.rowCount,
       cellSizeGetter: (params) => this._rowHeightGetter(params),
@@ -266,7 +264,7 @@ export default class Grid extends Component {
    * This method is intended for advanced use-cases like CellMeasurer.
    */
   // @TODO (bvaughn) Add automated test coverage for this.
-  invalidateGridSizeAfterRender ({
+  invalidateCellSizeAfterRender ({
     columnIndex,
     rowIndex
   }) {
@@ -653,10 +651,6 @@ export default class Grid extends Component {
         }
       </div>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   /* ---------------------------- Helper methods ---------------------------- */

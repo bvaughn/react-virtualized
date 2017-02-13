@@ -4586,13 +4586,6 @@ rc@~1.1.6:
     minimist "^1.2.0"
     strip-json-comments "~1.0.4"
 
-react-addons-shallow-compare@16.0.0-alpha.2:
-  version "16.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/react-addons-shallow-compare/-/react-addons-shallow-compare-16.0.0-alpha.2.tgz#a5848da5c577e9c330bff8fcbf3ec6f9885227eb"
-  dependencies:
-    fbjs "^0.8.9"
-    object-assign "^4.1.0"
-
 react-addons-test-utils@16.0.0-alpha.2:
   version "16.0.0-alpha.2"
   resolved "https://registry.yarnpkg.com/react-addons-test-utils/-/react-addons-test-utils-16.0.0-alpha.2.tgz#cd1a32fea6511110617dd165f199ce4a424b868f"
