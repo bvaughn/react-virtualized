@@ -239,7 +239,7 @@ export default class GridExample extends PureComponent {
     const classNames = cn(styles.cell, styles.letterCell)
 
     // Don't modify styles.
-    // These are frozen by React now.
+    // These are frozen by React now (as of 16.0.0).
     // Since Grid caches and re-uses them, they aren't safe to modify.
     style = {
       ...style,

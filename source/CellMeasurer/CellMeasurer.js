@@ -10,6 +10,17 @@ type Props = {
   rowIndex: number
 };
 
+function warnAboutImproperUse (parent) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (
+      parent &&
+      parent.props.deferredMeasurementCache === undefined
+    ) {
+      console.warn('CellMeasurer should be rendered within a Grid that has a deferredMeasurementCache prop')
+    }
+  }
+}
+
 /**
  * Wraps a cell and measures its rendered content.
  * Measurements are stored in a per-cell cache.
@@ -35,7 +46,11 @@ export default class CellMeasurer extends PureComponent {
   render () {
     const { children } = this.props
 
-    // @TODO (bvaughn) __DEV__ mode check for parent.props.deferredMeasurementCache
+    if (process.env.NODE_ENV !== 'production') {
+      const { parent } = this.props
+
+      warnAboutImproperUse(parent)
+    }
 
     return typeof children === 'function'
       ? children({ measure: this._measure })
@@ -58,10 +73,12 @@ export default class CellMeasurer extends PureComponent {
       )
 
       // If size has changed, let Grid know to re-render.
-      parent.invalidateCellSizeAfterRender({
-        columnIndex,
-        rowIndex
-      })
+      if (parent !== undefined) {
+        parent.invalidateCellSizeAfterRender({
+          columnIndex,
+          rowIndex
+        })
+      }
     }
   }
 

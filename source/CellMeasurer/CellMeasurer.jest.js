@@ -29,18 +29,28 @@ function mockClientWidthAndHeight ({
   )
 }
 
-function renderHelper ({
+function createParent ({
   cache,
-  children = <div />,
   invalidateCellSizeAfterRender = jest.fn()
-}) {
+} = {}) {
+  return {
+    invalidateCellSizeAfterRender,
+    props: {
+      deferredMeasurementCache: cache
+    }
+  }
+}
+
+function renderHelper ({
+  cache = new CellMeasurerCache(),
+  children = <div />,
+  parent
+} = {}) {
   render(
     <CellMeasurer
       cache={cache}
       columnIndex={0}
-      parent={{
-        invalidateCellSizeAfterRender
-      }}
+      parent={parent}
       rowIndex={0}
       style={{}}
     >
@@ -52,7 +62,7 @@ function renderHelper ({
 describe('CellMeasurer', () => {
   it('componentDidMount() should measure content that is not already in the cache', () => {
     const cache = new CellMeasurerCache()
-    const invalidateCellSizeAfterRender = jest.fn()
+    const parent = createParent({ cache })
 
     mockClientWidthAndHeight({
       height: 20,
@@ -66,9 +76,9 @@ describe('CellMeasurer', () => {
     expect(offsetWidthMock.mock.calls).toHaveLength(0)
     expect(cache.has(0, 0)).toBe(false)
 
-    renderHelper({ cache, invalidateCellSizeAfterRender })
+    renderHelper({ cache, parent })
 
-    expect(invalidateCellSizeAfterRender).toHaveBeenCalled()
+    expect(parent.invalidateCellSizeAfterRender).toHaveBeenCalled()
     expect(offsetHeightMock.mock.calls).toHaveLength(1)
     expect(offsetWidthMock.mock.calls).toHaveLength(1)
     expect(cache.has(0, 0)).toBe(true)
@@ -80,7 +90,7 @@ describe('CellMeasurer', () => {
     const cache = new CellMeasurerCache()
     cache.set(0, 0, 100, 20)
 
-    const invalidateCellSizeAfterRender = jest.fn()
+    const parent = createParent({ cache })
 
     mockClientWidthAndHeight({
       height: 20,
@@ -89,24 +99,24 @@ describe('CellMeasurer', () => {
 
     expect(cache.has(0, 0)).toBe(true)
 
-    renderHelper({ cache, invalidateCellSizeAfterRender })
+    renderHelper({ cache, parent })
 
     const offsetHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetHeight').get
     const offsetWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetWidth').get
 
-    expect(invalidateCellSizeAfterRender).not.toHaveBeenCalled()
+    expect(parent.invalidateCellSizeAfterRender).not.toHaveBeenCalled()
     expect(offsetHeightMock.mock.calls).toHaveLength(0)
     expect(offsetWidthMock.mock.calls).toHaveLength(0)
   })
 
   it('componentDidUpdate() should measure content that is not already in the cache', () => {
     const cache = new CellMeasurerCache()
-    const invalidateCellSizeAfterRender = jest.fn()
+    const parent = createParent({ cache })
 
-    renderHelper({ cache, invalidateCellSizeAfterRender })
+    renderHelper({ cache, parent })
 
     cache.clear(0, 0)
-    invalidateCellSizeAfterRender.mockReset()
+    parent.invalidateCellSizeAfterRender.mockReset()
 
     expect(cache.has(0, 0)).toBe(false)
     expect(cache.getWidth(0, 0)).toBe(DEFAULT_WIDTH)
@@ -120,11 +130,11 @@ describe('CellMeasurer', () => {
     const offsetHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetHeight').get
     const offsetWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetWidth').get
 
-    renderHelper({ cache, invalidateCellSizeAfterRender })
+    renderHelper({ cache, parent })
 
     expect(cache.has(0, 0)).toBe(true)
 
-    expect(invalidateCellSizeAfterRender).toHaveBeenCalled()
+    expect(parent.invalidateCellSizeAfterRender).toHaveBeenCalled()
     expect(offsetHeightMock.mock.calls).toHaveLength(1)
     expect(offsetWidthMock.mock.calls).toHaveLength(1)
     expect(cache.getWidth(0, 0)).toBe(100)
@@ -135,7 +145,7 @@ describe('CellMeasurer', () => {
     const cache = new CellMeasurerCache()
     cache.set(0, 0, 100, 20)
 
-    const invalidateCellSizeAfterRender = jest.fn()
+    const parent = createParent({ cache })
 
     expect(cache.has(0, 0)).toBe(true)
 
@@ -144,13 +154,13 @@ describe('CellMeasurer', () => {
       width: 100
     })
 
-    renderHelper({ cache, invalidateCellSizeAfterRender })
-    renderHelper({ cache, invalidateCellSizeAfterRender })
+    renderHelper({ cache, parent })
+    renderHelper({ cache, parent })
 
     const offsetHeightMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetHeight').get
     const offsetWidthMock = Object.getOwnPropertyDescriptor(Element.prototype, 'offsetWidth').get
 
-    expect(invalidateCellSizeAfterRender).not.toHaveBeenCalled()
+    expect(parent.invalidateCellSizeAfterRender).not.toHaveBeenCalled()
     expect(offsetHeightMock.mock.calls).toHaveLength(0)
     expect(offsetWidthMock.mock.calls).toHaveLength(0)
   })
@@ -165,6 +175,37 @@ describe('CellMeasurer', () => {
 
     expect(children).toHaveBeenCalled()
 
-    console.log(children.mock.calls)
+    const params = children.mock.calls[0][0]
+
+    expect(typeof params.measure === 'function').toBe(true)
+  })
+
+  it('should still update cache without a parent Grid', () => {
+    spyOn(console, 'warn')
+
+    mockClientWidthAndHeight({
+      height: 20,
+      width: 100
+    })
+
+    const cache = new CellMeasurerCache()
+
+    renderHelper({ cache }) // No parent Grid
+
+    expect(cache.has(0, 0)).toBe(true)
+
+    expect(console.warn).not.toHaveBeenCalled()
+  })
+
+  it('should error if parent Grid does not specify a :deferredMeasurementCache prop', () => {
+    spyOn(console, 'warn')
+
+    const parent = createParent() // Parent Grid with no deferredMeasurementCache prop
+
+    renderHelper({ parent })
+
+    expect(console.warn).toHaveBeenCalledWith(
+      'CellMeasurer should be rendered within a Grid that has a deferredMeasurementCache prop'
+    )
   })
 })

@@ -4,7 +4,7 @@ import cn from 'classnames'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 
-// @TODO It would be nice to refactor Grid to use this code as well.
+// @TODO Merge Collection and CollectionView
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.

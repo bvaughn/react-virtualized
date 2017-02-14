@@ -81,7 +81,8 @@
       "fit",
       "getComputedStyle",
       "it",
-      "jest"
+      "jest",
+      "spyOn"
     ]
   },
   "jest": {
