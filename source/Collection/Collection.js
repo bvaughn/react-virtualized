@@ -64,6 +64,12 @@ export default class Collection extends PureComponent {
     this._setCollectionViewRef = this._setCollectionViewRef.bind(this)
   }
 
+  forceUpdate () {
+    if (this._collectionView !== undefined) {
+      this._collectionView.forceUpdate()
+    }
+  }
+
   /** See Collection#recomputeCellSizesAndPositions */
   recomputeCellSizesAndPositions () {
     this._cellCache = []

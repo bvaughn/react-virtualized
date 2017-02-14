@@ -719,4 +719,19 @@ describe('Collection', () => {
       done()
     })
   })
+
+  // See issue #568 for more
+  it('forceUpdate will also forceUpdate the inner CollectionView', () => {
+    const cellRenderer = jest.fn()
+    cellRenderer.mockImplementation(({ key }) => <div key={key} />)
+
+    const rendered = render(getMarkup({ cellRenderer }))
+
+    expect(cellRenderer).toHaveBeenCalled()
+
+    cellRenderer.mockReset()
+    rendered.forceUpdate()
+
+    expect(cellRenderer).toHaveBeenCalled()
+  })
 })
