@@ -329,9 +329,9 @@ export default class Grid extends PureComponent {
   componentDidMount () {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
 
-    if (this._gridSizeInvalidated()) {
-      return
-    }
+    // If cell sizes have been invalidated (eg we are using CellMeasurer) then reset cached positions.
+    // We must do this at the start of the method as we may calculate and update scroll position below.
+    this._handleInvalidatedGridSize()
 
     // If this component was first rendered server-side, scrollbar size will be undefined.
     // In that event we need to remeasure.
@@ -371,9 +371,9 @@ export default class Grid extends PureComponent {
     const { autoHeight, columnCount, height, rowCount, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
-    if (this._gridSizeInvalidated()) {
-      return
-    }
+    // If cell sizes have been invalidated (eg we are using CellMeasurer) then reset cached positions.
+    // We must do this at the start of the method as we may calculate and update scroll position below.
+    this._handleInvalidatedGridSize()
 
     // Handle edge case where column or row count has only just increased over 0.
     // In this case we may have to restore a previously-specified scroll offset.
@@ -804,7 +804,11 @@ export default class Grid extends PureComponent {
       : props.estimatedRowSize
   }
 
-  _gridSizeInvalidated () {
+  /**
+   * Check for batched CellMeasurer size invalidations.
+   * This will occur the first time one or more previously unmeasured cells are rendered.
+   */
+  _handleInvalidatedGridSize () {
     if (typeof this._deferredInvalidateColumnIndex === 'number') {
       const columnIndex = this._deferredInvalidateColumnIndex
       const rowIndex = this._deferredInvalidateRowIndex
@@ -813,11 +817,7 @@ export default class Grid extends PureComponent {
       delete this._deferredInvalidateRowIndex
 
       this.recomputeGridSize({ columnIndex, rowIndex })
-
-      return true
     }
-
-    return false
   }
 
   _invokeOnGridRenderedHelper () {
