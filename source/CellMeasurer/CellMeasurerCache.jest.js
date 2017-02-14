@@ -1,8 +1,19 @@
 import CellMeasurerCache, { DEFAULT_HEIGHT, DEFAULT_WIDTH } from './CellMeasurerCache'
 
 describe('CellMeasurerCache', () => {
-  // @TODO (bvaughn) Test fixed sizes and overrides for default
-  // @TODO (bvaughn) Test min width/height
+  it('should override defaultHeight/defaultWidth if minHeight/minWidth are greater', () => {
+    const cache = new CellMeasurerCache({
+      defaultHeight: 20,
+      defaultWidth: 100,
+      minHeight: 30,
+      minWidth: 150
+    })
+    cache.set(0, 0, 50, 10)
+    expect(cache.getHeight(0, 0)).toBe(30)
+    expect(cache.getWidth(0, 0)).toBe(150)
+    expect(cache.rowHeight({ index: 0 })).toBe(30)
+    expect(cache.columnWidth({ index: 0 })).toBe(150)
+  })
 
   it('should correctly report cache status', () => {
     const cache = new CellMeasurerCache()

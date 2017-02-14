@@ -43,13 +43,24 @@ export default class CellMeasurerCache {
   _rowHeightCache: Cache;
 
   constructor (params : CellMeasurerCacheParams = {}) {
-    this._defaultHeight = params.defaultHeight || DEFAULT_HEIGHT
-    this._defaultWidth = params.defaultWidth || DEFAULT_WIDTH
-    this._hasFixedHeight = params.fixedHeight === true
-    this._hasFixedWidth = params.fixedWidth === true
-    this._minHeight = params.minHeight || 0
-    this._minWidth = params.minWidth || 0
-    this._keyMapper = params.keyMapper || defaultKeyMapper
+    const {
+      defaultHeight,
+      defaultWidth,
+      fixedHeight,
+      fixedWidth,
+      keyMapper,
+      minHeight,
+      minWidth
+    } = params
+
+    this._hasFixedHeight = fixedHeight === true
+    this._hasFixedWidth = fixedWidth === true
+    this._minHeight = minHeight || 0
+    this._minWidth = minWidth || 0
+    this._keyMapper = keyMapper || defaultKeyMapper
+
+    this._defaultHeight = Math.max(this._minHeight, defaultHeight || DEFAULT_HEIGHT)
+    this._defaultWidth = Math.max(this._minWidth, defaultWidth || DEFAULT_WIDTH)
 
     this._columnCount = 0
     this._rowCount = 0
