@@ -26,8 +26,18 @@ export default function defaultCellRangeRenderer ({
   const deferredMode = typeof deferredMeasurementCache !== 'undefined'
 
   const renderedCells = []
-  const offsetAdjusted = verticalOffsetAdjustment || horizontalOffsetAdjustment
-  const canCacheStyle = !isScrolling || !offsetAdjusted
+
+  // Browsers have native size limits for elements (eg Chrome 33M pixels, IE 1.5M pixes).
+  // User cannot scroll beyond these size limitations.
+  // In order to work around this, ScalingCellSizeAndPositionManager compresses offsets.
+  // We should never cache styles for compressed offsets though as this can lead to bugs.
+  // See issue #576 for more.
+  const areOffsetsAdjusted = (
+    columnSizeAndPositionManager.areOffsetsAdjusted() ||
+    rowSizeAndPositionManager.areOffsetsAdjusted()
+  )
+
+  const canCacheStyle = !isScrolling || !areOffsetsAdjusted
 
   for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
     let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex)

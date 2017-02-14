@@ -26,6 +26,10 @@ export default class CellSizeAndPositionManager {
     this._lastBatchedIndex = -1
   }
 
+  areOffsetsAdjusted (): bool {
+    return false
+  }
+
   configure ({
     cellCount,
     estimatedCellSize
