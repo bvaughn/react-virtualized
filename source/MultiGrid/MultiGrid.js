@@ -50,6 +50,13 @@ export default class MultiGrid extends PureComponent {
     this._topRightGridRef = this._topRightGridRef.bind(this)
   }
 
+  forceUpdateGrids () {
+    this._bottomLeftGrid && this._bottomLeftGrid.forceUpdate()
+    this._bottomRightGrid && this._bottomRightGrid.forceUpdate()
+    this._topLeftGrid && this._topLeftGrid.forceUpdate()
+    this._topRightGrid && this._topRightGrid.forceUpdate()
+  }
+
   /** See Grid#measureAllCells */
   measureAllCells () {
     this._bottomLeftGrid && this._bottomLeftGrid.measureAllCells()
