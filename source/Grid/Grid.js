@@ -900,6 +900,12 @@ export default class Grid extends Component {
       return
     }
 
+    // On iOS, we can arrive at negative offsets by swiping past the start
+    // To prevent flicker here, we make playing in the negative offset zone cause nothing to happen.
+    if (event.target.scrollTop < 0) {
+      return
+    }
+
     // Prevent pointer events from interrupting a smooth scroll
     this._debounceScrollEnded()
 
