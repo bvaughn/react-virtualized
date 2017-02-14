@@ -127,11 +127,29 @@ export default function defaultCellRangeRenderer ({
         continue
       }
 
+      if (process.env.NODE_ENV !== 'production') {
+        warnAboutMissingStyle(parent, renderedCell)
+      }
+
       renderedCells.push(renderedCell)
     }
   }
 
   return renderedCells
+}
+
+function warnAboutMissingStyle (parent, renderedCell) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (
+      renderedCell &&
+      renderedCell.props.style === undefined &&
+      parent.__missingStyleWarning === undefined
+    ) {
+      parent.__missingStyleWarning = true
+
+      console.warn('Rendered cell should include style property for positioning.')
+    }
+  }
 }
 
 type DefaultCellRangeRendererParams = {

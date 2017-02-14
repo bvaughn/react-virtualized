@@ -3,11 +3,12 @@ import { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
 
 type Props = {
-  cache: any,
+  cache: mixed,
   children: mixed,
   columnIndex: number,
-  parent: any,
-  rowIndex: number
+  parent: mixed,
+  rowIndex: number,
+  style: mixed
 };
 
 function warnAboutImproperUse (parent) {
@@ -16,10 +17,14 @@ function warnAboutImproperUse (parent) {
       parent &&
       parent.props.deferredMeasurementCache === undefined
     ) {
-      console.warn('CellMeasurer should be rendered within a Grid that has a deferredMeasurementCache prop')
+      console.warn('CellMeasurer should be rendered within a Grid that has a deferredMeasurementCache prop.')
     }
   }
 }
+
+// Prevent Grid from warning about missing :style prop on CellMeasurer.
+// It's understood that style will often be passed to the child instead.
+const EMPTY_OBJECT = {}
 
 /**
  * Wraps a cell and measures its rendered content.
@@ -28,6 +33,10 @@ function warnAboutImproperUse (parent) {
  */
 export default class CellMeasurer extends PureComponent {
   props: Props;
+
+  static defaultProps = {
+    style: EMPTY_OBJECT
+  }
 
   constructor (props, context) {
     super(props, context)

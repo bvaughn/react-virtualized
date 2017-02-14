@@ -205,7 +205,7 @@ describe('CellMeasurer', () => {
     renderHelper({ parent })
 
     expect(console.warn).toHaveBeenCalledWith(
-      'CellMeasurer should be rendered within a Grid that has a deferredMeasurementCache prop'
+      'CellMeasurer should be rendered within a Grid that has a deferredMeasurementCache prop.'
     )
   })
 })

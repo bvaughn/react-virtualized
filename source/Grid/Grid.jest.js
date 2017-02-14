@@ -1381,9 +1381,9 @@ describe('Grid', () => {
   describe('pure', () => {
     it('should not re-render unless props have changed', () => {
       let cellRendererCalled = false
-      function cellRenderer () {
+      function cellRenderer ({ key, style }) {
         cellRendererCalled = true
-        return 'foo'
+        return <div key={key} style={style} />
       }
       const markup = getMarkup({ cellRenderer })
       render(markup)
@@ -1549,5 +1549,19 @@ describe('Grid', () => {
 
     expect(cellRendererCalls.length).toEqual(3)
     expect(firstProps.style).not.toBe(secondProps.style)
+  })
+
+  it('should warn about cells that forget to include the style property', () => {
+    spyOn(console, 'warn')
+
+    function cellRenderer (props) {
+      return <div />
+    }
+
+    render(getMarkup({
+      cellRenderer
+    }))
+
+    expect(console.warn).toHaveBeenCalledWith('Rendered cell should include style property for positioning.')
   })
 })

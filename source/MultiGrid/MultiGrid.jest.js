@@ -209,7 +209,7 @@ describe('MultiGrid', () => {
   describe('#forceUpdateGrids', () => {
     it('should call forceUpdate() on inner Grids', () => {
       const cellRenderer = jest.fn()
-      cellRenderer.mockImplementation(({ key }) => <div key={key} />)
+      cellRenderer.mockImplementation(({ key }) => <div key={key} style={{}} />)
 
       const rendered = render(getMarkup({
         cellRenderer,
