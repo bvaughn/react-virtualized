@@ -18,7 +18,7 @@ export default class DynamicWidthGrid extends PureComponent {
     super(props, context)
 
     this._cache = new CellMeasurerCache({
-      defaultHeight: 35,
+      defaultWidth: 100,
       fixedHeight: true
     })
 

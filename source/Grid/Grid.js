@@ -87,7 +87,10 @@ export default class Grid extends PureComponent {
     /** Optional inline style applied to inner cell-container */
     containerStyle: PropTypes.object,
 
-    // @TODO (bvaughn) Document this; and is this the best name?
+    /**
+     * If CellMeasurer is used to measure this Grid's children, this should be a pointer to its CellMeasurerCache.
+     * A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data.
+     */
     deferredMeasurementCache: PropTypes.object,
 
     /**

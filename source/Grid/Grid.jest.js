@@ -1551,7 +1551,7 @@ describe('Grid', () => {
     expect(firstProps.style).not.toBe(secondProps.style)
   })
 
-  it('should warn about cells that forget to include the style property', () => {
+  it('should warn about cells that forget to include the :style property', () => {
     spyOn(console, 'warn')
 
     function cellRenderer (props) {
@@ -1563,5 +1563,6 @@ describe('Grid', () => {
     }))
 
     expect(console.warn).toHaveBeenCalledWith('Rendered cell should include style property for positioning.')
+    expect(console.warn).toHaveBeenCalledTimes(1)
   })
 })

@@ -15,8 +15,8 @@ type CellMeasurerCacheParams = {
   defaultWidth ?: number,
   fixedHeight ?: boolean,
   fixedWidth ?: boolean,
-  minHeight: ?number,
-  minWidth: ?number,
+  minHeight?: number,
+  minWidth?: number,
   keyMapper ?: KeyMapper
 };
 

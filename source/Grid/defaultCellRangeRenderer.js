@@ -143,9 +143,9 @@ function warnAboutMissingStyle (parent, renderedCell) {
     if (
       renderedCell &&
       renderedCell.props.style === undefined &&
-      parent.__missingStyleWarning === undefined
+      parent.__warnedAboutMissingStyle !== true
     ) {
-      parent.__missingStyleWarning = true
+      parent.__warnedAboutMissingStyle = true
 
       console.warn('Rendered cell should include style property for positioning.')
     }

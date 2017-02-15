@@ -197,7 +197,7 @@ describe('CellMeasurer', () => {
     expect(console.warn).not.toHaveBeenCalled()
   })
 
-  it('should error if parent Grid does not specify a :deferredMeasurementCache prop', () => {
+  it('should warn if parent Grid does not specify a :deferredMeasurementCache prop', () => {
     spyOn(console, 'warn')
 
     const parent = createParent() // Parent Grid with no deferredMeasurementCache prop
@@ -207,5 +207,9 @@ describe('CellMeasurer', () => {
     expect(console.warn).toHaveBeenCalledWith(
       'CellMeasurer should be rendered within a Grid that has a deferredMeasurementCache prop.'
     )
+
+    renderHelper({ parent })
+
+    expect(console.warn).toHaveBeenCalledTimes(1)
   })
 })

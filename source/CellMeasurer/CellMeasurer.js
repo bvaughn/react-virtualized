@@ -15,8 +15,10 @@ function warnAboutImproperUse (parent) {
   if (process.env.NODE_ENV !== 'production') {
     if (
       parent &&
-      parent.props.deferredMeasurementCache === undefined
+      parent.props.deferredMeasurementCache === undefined &&
+      parent.__warnedAboutImproperUse !== true
     ) {
+      parent.__warnedAboutImproperUse = true
       console.warn('CellMeasurer should be rendered within a Grid that has a deferredMeasurementCache prop.')
     }
   }
