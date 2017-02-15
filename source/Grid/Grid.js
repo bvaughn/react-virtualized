@@ -643,6 +643,7 @@ export default class Grid extends Component {
       columnCount,
       height,
       overscanColumnCount,
+      overscanIndicesGetter,
       overscanRowCount,
       rowCount,
       width
