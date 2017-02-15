@@ -4,6 +4,7 @@ import { findDOMNode } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
 import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
+import CellMeasurerCache from '../CellMeasurer/CellMeasurerCache'
 import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
 import { DEFAULT_MAX_SCROLL_SIZE } from './utils/ScalingCellSizeAndPositionManager'
 
@@ -1549,6 +1550,22 @@ describe('Grid', () => {
 
     expect(cellRendererCalls.length).toEqual(3)
     expect(firstProps.style).not.toBe(secondProps.style)
+  })
+
+  it('should only cache styles when a :deferredMeasurementCache is provided if the cell has already been measured', () => {
+    const cache = new CellMeasurerCache()
+    cache.set(0, 0, 100, 100)
+    cache.set(1, 1, 100, 100)
+
+    const grid = render(getMarkup({
+      columnCount: 2,
+      deferredMeasurementCache: cache,
+      rowCount: 2
+    }))
+
+    const keys = Object.keys(grid._styleCache)
+
+    expect(keys).toEqual(['0-0', '1-1'])
   })
 
   it('should warn about cells that forget to include the :style property', () => {

@@ -59,7 +59,6 @@ export default function defaultCellRangeRenderer ({
       } else {
         // In deferred mode, cells will be initially rendered before we know their size.
         // Don't interfere with CellMeasurer's measurements by setting an invalid size.
-        // @TODO (bvaughn) Add automated test coverage for this.
         if (
           deferredMode &&
           !deferredMeasurementCache.has(rowIndex, columnIndex)
