@@ -1,9 +1,9 @@
-import getOverscanIndices, {
+import overscanIndicesGetter, {
   SCROLL_DIRECTION_BACKWARD,
   SCROLL_DIRECTION_FORWARD
-} from './getOverscanIndices'
+} from './defaultOverscanIndicesGetter'
 
-describe('getOverscanIndices', () => {
+describe('overscanIndicesGetter', () => {
   function testHelper ({
     cellCount,
     startIndex,
@@ -11,7 +11,7 @@ describe('getOverscanIndices', () => {
     overscanCellsCount,
     scrollDirection
   }) {
-    return getOverscanIndices({
+    return overscanIndicesGetter({
       cellCount,
       overscanCellsCount,
       scrollDirection,

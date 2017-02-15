@@ -4,7 +4,7 @@ import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
 import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
-import getOverscanIndices, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/getOverscanIndices'
+import defaultOverscanIndicesGetter, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/defaultOverscanIndicesGetter'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import shallowCompare from 'react-addons-shallow-compare'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
@@ -135,6 +135,19 @@ export default class Grid extends Component {
     overscanColumnCount: PropTypes.number.isRequired,
 
     /**
+     * Calculates the number of cells to overscan before and after a specified range.
+     * This function ensures that overscanning doesn't exceed the available cells.
+     * Should implement the following interface: ({
+     *   cellCount: number,
+     *   overscanCellsCount: number,
+     *   scrollDirection: number,
+     *   startIndex: number,
+     *   stopIndex: number
+     * }): {overscanStartIndex: number, overscanStopIndex: number}
+     */
+    overscanIndicesGetter: PropTypes.func.isRequired,
+
+    /**
      * Number of rows to render above/below the visible section of the grid.
      * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
      */
@@ -198,6 +211,7 @@ export default class Grid extends Component {
     onScroll: () => null,
     onSectionRendered: () => null,
     overscanColumnCount: 0,
+    overscanIndicesGetter: defaultOverscanIndicesGetter,
     overscanRowCount: 10,
     scrollingResetTimeInterval: DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
     scrollToAlignment: 'auto',
@@ -670,7 +684,7 @@ export default class Grid extends Component {
       this._renderedRowStartIndex = visibleRowIndices.start
       this._renderedRowStopIndex = visibleRowIndices.stop
 
-      const overscanColumnIndices = getOverscanIndices({
+      const overscanColumnIndices = overscanIndicesGetter({
         cellCount: columnCount,
         overscanCellsCount: overscanColumnCount,
         scrollDirection: scrollDirectionHorizontal,
@@ -678,7 +692,7 @@ export default class Grid extends Component {
         stopIndex: this._renderedColumnStopIndex
       })
 
-      const overscanRowIndices = getOverscanIndices({
+      const overscanRowIndices = overscanIndicesGetter({
         cellCount: rowCount,
         overscanCellsCount: overscanRowCount,
         scrollDirection: scrollDirectionVertical,
