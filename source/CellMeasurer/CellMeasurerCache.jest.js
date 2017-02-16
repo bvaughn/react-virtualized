@@ -29,13 +29,15 @@ describe('CellMeasurerCache', () => {
   it('should return the correct default sizes for uncached cells if specified', () => {
     const cache = new CellMeasurerCache({
       defaultHeight: 20,
-      defaultWidth: 100
+      defaultWidth: 100,
+      minHeight: 15,
+      minWidth: 80
     })
     expect(cache.getWidth(0, 0)).toBe(100)
     expect(cache.getHeight(0, 0)).toBe(20)
-    cache.set(0, 0, 150, 30)
-    expect(cache.getWidth(0, 0)).toBe(150)
-    expect(cache.getHeight(0, 0)).toBe(30)
+    cache.set(0, 0, 70, 10)
+    expect(cache.getWidth(0, 0)).toBe(80)
+    expect(cache.getHeight(0, 0)).toBe(15)
   })
 
   it('should clear a single cached cell', () => {
