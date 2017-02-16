@@ -26,13 +26,13 @@ It should be configured based on the type of measurements you need. It accepts t
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| defaultHeight | number | Umeasured cells will initially report this height |  
-| defaultWidth | number | Umeasured cells will initially report this width |
-| fixedHeight | boolean | Rendered cells will have a fixed height, dynamic width |
-| fixedWidth | boolean | Rendered cells will have a fixed width, dynamic height |
-| minHeight | number | Derived row height (of multiple cells) should not be less than this value |
-| minWidth | number | Derived column width (of multiple cells) should not be less than this value |
-| keyMapper | KeyMapper | Enables more intelligent mapping of a given column and row index to an item ID. This prevents a cell cache from being invalidated when its parent collection is modified. `(rowIndex: number, columnIndex: number) => any` |
+| defaultHeight | number | | Umeasured cells will initially report this height |  
+| defaultWidth | number | | Umeasured cells will initially report this width |
+| fixedHeight | boolean | | Rendered cells will have a fixed height, dynamic width |
+| fixedWidth | boolean | | Rendered cells will have a fixed width, dynamic height |
+| minHeight | number | | Derived row height (of multiple cells) should not be less than this value |
+| minWidth | number | | Derived column width (of multiple cells) should not be less than this value |
+| keyMapper | KeyMapper | | Enables more intelligent mapping of a given column and row index to an item ID. This prevents a cell cache from being invalidated when its parent collection is modified. `(rowIndex: number, columnIndex: number) => any` |
 
 ### Examples
 
