@@ -29,7 +29,7 @@ describe('InfiniteLoader', () => {
   function rowRenderer ({ index, key, style }) {
     rowRendererCalls.push(index)
     return (
-      <div key={key} />
+      <div key={key} style={style} />
     )
   }
 
