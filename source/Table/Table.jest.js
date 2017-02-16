@@ -76,8 +76,6 @@ describe('Table', () => {
     )
   }
 
-  // @TODO (bvaughn) Test new :parent param
-
   describe('children', () => {
     it('should accept Column children', () => {
       const children = [
@@ -983,5 +981,11 @@ describe('Table', () => {
   it('should set the width of the single-column inner Grid to auto', () => {
     const rendered = findDOMNode(render(getMarkup()))
     expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.width).toEqual('auto')
+  })
+
+  it('should relay the Grid :parent param to the Column :cellRenderer', () => {
+    const cellRenderer = jest.fn().mockReturnValue(null)
+    findDOMNode(render(getMarkup({ cellRenderer })))
+    expect(cellRenderer.mock.calls[0][0].parent).not.toBeUndefined()
   })
 })

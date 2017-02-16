@@ -38,8 +38,6 @@ describe('List', () => {
     )
   }
 
-  // @TODO (bvaughn) Test new :parent param
-
   describe('number of rendered children', () => {
     it('should render enough children to fill the view', () => {
       const rendered = findDOMNode(render(getMarkup()))
@@ -454,6 +452,12 @@ describe('List', () => {
     })))
     expect(rowRendererCalls[0].isVisible).toEqual(true)
     expect(rowRendererCalls[1].isVisible).toEqual(false)
+  })
+
+  it('should relay the Grid :parent param to the :rowRenderer', () => {
+    const rowRenderer = jest.fn().mockReturnValue(null)
+    findDOMNode(render(getMarkup({ rowRenderer })))
+    expect(rowRenderer.mock.calls[0][0].parent).not.toBeUndefined()
   })
 
   describe('pure', () => {
