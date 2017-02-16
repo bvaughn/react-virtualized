@@ -1,4 +1,3 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
 
@@ -18,11 +17,6 @@ module.exports = {
     'react-dom': 'ReactDOM'
   },
   plugins: [
-    new ExtractTextPlugin('../styles.css', {
-      allChunks: false,
-      beautify: true,
-      mangle: false
-    }),
     new webpack.optimize.UglifyJsPlugin({
       beautify: true,
       comments: true,
@@ -35,12 +29,6 @@ module.exports = {
         test: /\.js$/,
         loaders: ['babel'],
         include: path.join(__dirname, 'source')
-      },
-      {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract('css-loader!autoprefixer-loader?{browsers:["last 2 version", "Firefox 15"]}'),
-        include: path.join(__dirname, 'source')
-
       }
     ]
   }
