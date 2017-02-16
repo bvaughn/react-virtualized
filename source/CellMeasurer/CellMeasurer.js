@@ -93,7 +93,7 @@ export default class CellMeasurer extends PureComponent {
     }
   }
 
-  _measure (force = false) {
+  _measure () {
     const { cache, columnIndex, parent, rowIndex } = this.props
 
     const node = findDOMNode(this)
