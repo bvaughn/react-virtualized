@@ -38,12 +38,9 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: ['style', 'css?importLoaders=1'],
+        loaders: ['style', 'css?importLoaders=1&minimize=false'],
         include: path.join(__dirname, 'styles.css')
       }
     ]
-  },
-  postcss: function () {
-    return [autoprefixer]
   }
 }
