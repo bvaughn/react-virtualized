@@ -1585,8 +1585,8 @@ describe('Grid', () => {
     expect(console.warn).toHaveBeenCalledTimes(1)
   })
 
-  describe('invalidateCellSizeAfterRender', () => {
-    it('should invalidate cache and refresh displayed cells after mount', () => {
+  describe('deferredMeasurementCache', () => {
+    it('invalidateCellSizeAfterRender should invalidate cache and refresh displayed cells after mount', () => {
       const cache = new CellMeasurerCache()
 
       let invalidateCellSizeAfterRender = true
@@ -1659,6 +1659,40 @@ describe('Grid', () => {
 
       // 4 times for initial render + 4 once cellCache was cleared
       expect(cellRenderer).toHaveBeenCalledTimes(8)
+    })
+
+    it('should not cache cells until they have been measured by CellMeasurer', () => {
+      const cache = new CellMeasurerCache()
+
+      // Fake measure cell 0,0 but not cell 0,1
+      cache.set(0, 0, 100, 30)
+
+      const cellRenderer = jest.fn()
+      cellRenderer.mockImplementation(
+        (params) => <div key={params.key} style={params.style} />
+      )
+
+      const props = {
+        cellRenderer,
+        columnCount: 2,
+        deferredMeasurementCache: cache,
+        rowCount: 1
+      }
+
+      // Trigger 2 renders
+      // The second render should re-use the style for cell 0,0
+      // But should not re-use the style for cell 0,1 since it was not measured
+      const grid = render(getMarkup(props))
+      grid.forceUpdate()
+
+      // 0,0 - 0,1 - 0,0 - 0,1
+      expect(cellRenderer).toHaveBeenCalledTimes(4)
+      const style00A = cellRenderer.mock.calls[0][0].style
+      const style01A = cellRenderer.mock.calls[1][0].style
+      const style00B = cellRenderer.mock.calls[2][0].style
+      const style01B = cellRenderer.mock.calls[3][0].style
+      expect(style00A).toBe(style00B)
+      expect(style01A).not.toBe(style01B)
     })
   })
 })
