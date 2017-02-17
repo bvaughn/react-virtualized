@@ -26,6 +26,8 @@ Elements can have fixed or varying heights.
 | tabIndex | Number |  | Optional override of tab index default; defaults to `0`. |
 | width | Number | ✓ | Width of the list |
 
+Internally, the `List` uses a `Grid` to display the contents and all the given props will be passed through to the inner `Grid` component.
+
 ### Public Methods
 
 ##### forceUpdateGrid
