@@ -48,7 +48,7 @@ export default class DynamicWidthGrid extends PureComponent {
   _cellRenderer ({ columnIndex, key, parent, rowIndex, style }) {
     const { getClassName, getContent, list } = this.props
 
-    const datum = list.get(rowIndex + columnIndex % list.size)
+    const datum = list.get((rowIndex + columnIndex) % list.size)
     const classNames = getClassName({ columnIndex, rowIndex })
     const content = getContent({ index: columnIndex, datum, long: false })
 
