@@ -3,7 +3,6 @@ CellMeasurer
 
 High-order component that automatically measures a cell's contents by temporarily rendering it in a way that is not visible to the user.
 Specify a fixed width to measure dynamic height (or vice versa).
-
 This is an advanced component and has some limitations and performance considerations.
 [See below for more information](#limitations-and-performance-considerations).
 
@@ -13,8 +12,8 @@ This is an advanced component and has some limitations and performance considera
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | cache | `CellMeasurerCache` | ✓ | Cache to be shared between `CellMeasurer` and its parent `Grid`. Learn more [here](#cellmeasurercache). |
-| children | Element or Function | ✓ | Either a React element as a child (eg `<div />`) or a function (eg. `({ measure }) => <div />`). See below for more detailed examples.` |
-| columnIndex | number | ✓ | Index of column being measured (within the parent `Grid`). |
+| children | Element or Function | ✓ | Either a React element as a child (eg `<div />`) or a function (eg. `({ measure }) => <div />`). See [below](#using-cellmeasurer-with-images) for more detailed examples. |
+| columnIndex | number | ✓ | Index of column being measured (within the parent `Grid`) or 0 (if used within a `List` or `Table`). |
 | parent | `Grid` | ✓ | Reference to the parent `Grid`; this value is passed by `Grid` to the `cellRenderer` and should be passed along as-is. |
 | rowIndex | number | ✓ | Index of row being measured (within the parent `Grid`). |
 
@@ -33,6 +32,11 @@ It should be configured based on the type of measurements you need. It accepts t
 | minHeight | number | | Derived row height (of multiple cells) should not be less than this value |
 | minWidth | number | | Derived column width (of multiple cells) should not be less than this value |
 | keyMapper | KeyMapper | | Enables more intelligent mapping of a given column and row index to an item ID. This prevents a cell cache from being invalidated when its parent collection is modified. `(rowIndex: number, columnIndex: number) => any` |
+
+Note that while all of the individual parameters above are optional, you must supply at least some of them.
+`CellMeasurerCache` is not meant to measure cells that are both dyanmic width _and_ height.
+It would be unefficient to do so since the size of a row (or column) is equal to the largest cell within that row.
+See [below](#limitations-and-performance-considerations) for more information.
 
 ### Examples
 

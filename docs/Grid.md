@@ -164,9 +164,10 @@ function cellRenderer ({
   isScrolling, // The Grid is currently being scrolled
   isVisible,   // This cell is visible within the grid (eg it is not an overscanned cell)
   key,         // Unique key within array of cells
+  parent,      // Reference to the parent Grid (instance)
   rowIndex,    // Vertical (row) index of cell
   style        // Style object to be applied to cell (to position it);
-               // this must be passed through to the rendered cell element
+               // This must be passed through to the rendered cell element.
 }) {
   // Grid data is a 2d array in this example...
   const user = list[rowIndex][columnIndex]
@@ -179,11 +180,11 @@ function cellRenderer ({
   // Style is required since it specifies how the cell is to be sized and positioned,
   // and React Virtualized depends on this sizing/positioning for proper scrolling behavior.
   // By default, the grid component specifies, calculates, and initializes the following style properties:
-  //    height
-  //    width
+  //    position
   //    left
   //    top
-  //    position
+  //    height
+  //    width
   // You can add additional class names or style properties as you would like.
   // Key is also required by React to more efficiently manage the array of cells.
   return (
