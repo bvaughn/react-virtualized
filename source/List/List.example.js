@@ -3,15 +3,14 @@
  */
 import cn from 'classnames'
 import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import styles from './List.example.css'
 import AutoSizer from '../AutoSizer'
 import List from './List'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
-import shallowCompare from 'react-addons-shallow-compare'
 
-export default class ListExample extends Component {
+export default class ListExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   };
@@ -139,10 +138,6 @@ export default class ListExample extends Component {
         </div>
       </ContentBox>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _getDatum (index) {

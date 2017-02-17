@@ -1,11 +1,10 @@
 /** @flow */
 import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import AutoSizer from '../AutoSizer'
 import MultiGrid from './MultiGrid'
-import shallowCompare from 'react-addons-shallow-compare'
 import styles from './MultiGrid.example.css'
 
 const STYLE = {
@@ -26,7 +25,7 @@ const STYLE_TOP_RIGHT_GRID = {
   fontWeight: 'bold'
 }
 
-export default class MultiGridExample extends Component {
+export default class MultiGridExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   };
@@ -88,10 +87,6 @@ export default class MultiGridExample extends Component {
         </AutoSizer>
       </ContentBox>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _cellRenderer ({ columnIndex, key, rowIndex, style }) {

@@ -3,8 +3,8 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
-import shallowCompare from 'react-addons-shallow-compare'
 import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
+import CellMeasurerCache from '../CellMeasurer/CellMeasurerCache'
 import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/defaultOverscanIndicesGetter'
 import { DEFAULT_MAX_SCROLL_SIZE } from './utils/ScalingCellSizeAndPositionManager'
 
@@ -1382,9 +1382,9 @@ describe('Grid', () => {
   describe('pure', () => {
     it('should not re-render unless props have changed', () => {
       let cellRendererCalled = false
-      function cellRenderer () {
+      function cellRenderer ({ key, style }) {
         cellRendererCalled = true
-        return 'foo'
+        return <div key={key} style={style} />
       }
       const markup = getMarkup({ cellRenderer })
       render(markup)
@@ -1394,14 +1394,10 @@ describe('Grid', () => {
       expect(cellRendererCalled).toEqual(false)
     })
 
-    it('should not re-render grid components if they shallowCompare style', () => {
+    it('should not re-render grid components if they extend PureComponent', () => {
       let componentUpdates = 0
 
-      class GridComponent extends React.Component {
-        shouldComponentUpdate (nextProps, nextState) {
-          return shallowCompare(this, nextProps, nextState)
-        }
-
+      class GridComponent extends React.PureComponent {
         componentDidUpdate () {
           componentUpdates++
         }
@@ -1497,8 +1493,9 @@ describe('Grid', () => {
 
     it('should clear style cache if cell sizes change', () => {
       const cellRendererCalls = []
-      function cellRenderer (props) {
-        cellRendererCalls.push(props)
+      function cellRenderer (params) {
+        cellRendererCalls.push(params)
+        return <div key={params.key} style={params.style} />
       }
 
       const props = {
@@ -1529,8 +1526,9 @@ describe('Grid', () => {
 
   it('should not pull from the style cache while scrolling if there is an offset adjustment', () => {
     let cellRendererCalls = []
-    function cellRenderer (props) {
-      cellRendererCalls.push(props)
+    function cellRenderer (params) {
+      cellRendererCalls.push(params)
+      return <div key={params.key} style={params.style} />
     }
 
     const grid = render(getMarkup({
@@ -1554,5 +1552,147 @@ describe('Grid', () => {
 
     expect(cellRendererCalls.length).toEqual(3)
     expect(firstProps.style).not.toBe(secondProps.style)
+  })
+
+  it('should only cache styles when a :deferredMeasurementCache is provided if the cell has already been measured', () => {
+    const cache = new CellMeasurerCache()
+    cache.set(0, 0, 100, 100)
+    cache.set(1, 1, 100, 100)
+
+    const grid = render(getMarkup({
+      columnCount: 2,
+      deferredMeasurementCache: cache,
+      rowCount: 2
+    }))
+
+    const keys = Object.keys(grid._styleCache)
+
+    expect(keys).toEqual(['0-0', '1-1'])
+  })
+
+  it('should warn about cells that forget to include the :style property', () => {
+    spyOn(console, 'warn')
+
+    function cellRenderer (params) {
+      return <div key={params.key} />
+    }
+
+    render(getMarkup({
+      cellRenderer
+    }))
+
+    expect(console.warn).toHaveBeenCalledWith('Rendered cell should include style property for positioning.')
+    expect(console.warn).toHaveBeenCalledTimes(1)
+  })
+
+  describe('deferredMeasurementCache', () => {
+    it('invalidateCellSizeAfterRender should invalidate cache and refresh displayed cells after mount', () => {
+      const cache = new CellMeasurerCache()
+
+      let invalidateCellSizeAfterRender = true
+
+      const cellRenderer = jest.fn()
+      cellRenderer.mockImplementation(
+        (params) => {
+          // Don't get stuck in a loop
+          if (invalidateCellSizeAfterRender) {
+            invalidateCellSizeAfterRender = false
+
+            params.parent.invalidateCellSizeAfterRender({
+              columnIndex: 1,
+              rowIndex: 0
+            })
+          }
+          return <div key={params.key} style={params.style} />
+        })
+
+      const props = {
+        cellRenderer,
+        columnCount: 2,
+        deferredMeasurementCache: cache,
+        rowCount: 2
+      }
+
+      render(getMarkup(props))
+
+      // 4 times for initial render + 4 once cellCache was cleared
+      expect(cellRenderer).toHaveBeenCalledTimes(8)
+    })
+
+    it('should invalidate cache and refresh displayed cells after update', () => {
+      const cache = new CellMeasurerCache()
+
+      const cellRenderer = jest.fn()
+      cellRenderer.mockImplementation(
+        (params) => <div key={params.key} style={params.style} />
+      )
+
+      const props = {
+        cellRenderer,
+        columnCount: 2,
+        deferredMeasurementCache: cache,
+        rowCount: 2
+      }
+
+      const grid = render(getMarkup(props))
+
+      expect(cellRenderer).toHaveBeenCalledTimes(4)
+
+      let invalidateCellSizeAfterRender = false
+
+      cellRenderer.mockReset()
+      cellRenderer.mockImplementation(
+        (params) => {
+          // Don't get stuck in a loop
+          if (invalidateCellSizeAfterRender) {
+            invalidateCellSizeAfterRender = false
+            params.parent.invalidateCellSizeAfterRender({
+              columnIndex: 1,
+              rowIndex: 0
+            })
+          }
+          return <div key={params.key} style={params.style} />
+        })
+
+      invalidateCellSizeAfterRender = true
+      grid.recomputeGridSize()
+
+      // 4 times for initial render + 4 once cellCache was cleared
+      expect(cellRenderer).toHaveBeenCalledTimes(8)
+    })
+
+    it('should not cache cells until they have been measured by CellMeasurer', () => {
+      const cache = new CellMeasurerCache()
+
+      // Fake measure cell 0,0 but not cell 0,1
+      cache.set(0, 0, 100, 30)
+
+      const cellRenderer = jest.fn()
+      cellRenderer.mockImplementation(
+        (params) => <div key={params.key} style={params.style} />
+      )
+
+      const props = {
+        cellRenderer,
+        columnCount: 2,
+        deferredMeasurementCache: cache,
+        rowCount: 1
+      }
+
+      // Trigger 2 renders
+      // The second render should re-use the style for cell 0,0
+      // But should not re-use the style for cell 0,1 since it was not measured
+      const grid = render(getMarkup(props))
+      grid.forceUpdate()
+
+      // 0,0 - 0,1 - 0,0 - 0,1
+      expect(cellRenderer).toHaveBeenCalledTimes(4)
+      const style00A = cellRenderer.mock.calls[0][0].style
+      const style01A = cellRenderer.mock.calls[1][0].style
+      const style00B = cellRenderer.mock.calls[2][0].style
+      const style01B = cellRenderer.mock.calls[3][0].style
+      expect(style00A).toBe(style00B)
+      expect(style01A).not.toBe(style01B)
+    })
   })
 })

@@ -1,6 +1,6 @@
 /** @flow */
 import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import AutoSizer from '../AutoSizer'
@@ -8,10 +8,9 @@ import Column from './Column'
 import Table from './Table'
 import SortDirection from './SortDirection'
 import SortIndicator from './SortIndicator'
-import shallowCompare from 'react-addons-shallow-compare'
 import styles from './Table.example.css'
 
-export default class TableExample extends Component {
+export default class TableExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   };
@@ -216,10 +215,6 @@ export default class TableExample extends Component {
         </div>
       </ContentBox>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _getDatum (list, index) {

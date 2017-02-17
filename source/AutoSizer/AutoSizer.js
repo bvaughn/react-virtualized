@@ -1,6 +1,5 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import React, { PropTypes, PureComponent } from 'react'
 import createDetectElementResize from '../vendor/detectElementResize'
 
 /**
@@ -8,7 +7,7 @@ import createDetectElementResize from '../vendor/detectElementResize'
  * Child component should not be declared as a child but should rather be specified by a `ChildComponent` property.
  * All other properties will be passed through to the child component.
  */
-export default class AutoSizer extends Component {
+export default class AutoSizer extends PureComponent {
   static propTypes = {
     /**
     * Function responsible for rendering children.
@@ -88,10 +87,6 @@ export default class AutoSizer extends Component {
         {children({ height, width })}
       </div>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _onResize () {

@@ -111,6 +111,8 @@ describe('ColumnSizer', () => {
   })
 
   it('should error if the registered child is not a Grid or a MultiGrid', () => {
+    spyOn(console, 'error')
+
     expect(() => {
       render(
         <ColumnSizer

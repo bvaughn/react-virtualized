@@ -1,13 +1,12 @@
 /** @flow */
 import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from './AutoSizer'
 import List from '../List'
-import shallowCompare from 'react-addons-shallow-compare'
 import styles from './AutoSizer.example.css'
 
-export default class AutoSizerExample extends Component {
+export default class AutoSizerExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -76,10 +75,6 @@ export default class AutoSizerExample extends Component {
         </div>
       </ContentBox>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _rowRenderer ({ index, key, style }) {

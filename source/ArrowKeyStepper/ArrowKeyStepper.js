@@ -1,11 +1,10 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import React, { PropTypes, PureComponent } from 'react'
 
 /**
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
  */
-export default class ArrowKeyStepper extends Component {
+export default class ArrowKeyStepper extends PureComponent {
   static defaultProps = {
     disabled: false,
     mode: 'edges',
@@ -69,10 +68,6 @@ export default class ArrowKeyStepper extends Component {
         })}
       </div>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _onKeyDown (event) {

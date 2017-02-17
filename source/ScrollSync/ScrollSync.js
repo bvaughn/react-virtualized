@@ -1,10 +1,9 @@
-import { Component, PropTypes } from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import { PropTypes, PureComponent } from 'react'
 
 /**
  * HOC that simplifies the process of synchronizing scrolling between two or more virtualized components.
  */
-export default class ScrollSync extends Component {
+export default class ScrollSync extends PureComponent {
   static propTypes = {
     /**
      * Function responsible for rendering 2 or more virtualized components.
@@ -42,10 +41,6 @@ export default class ScrollSync extends Component {
       scrollTop,
       scrollWidth
     })
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _onScroll ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }) {

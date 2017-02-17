@@ -9,8 +9,10 @@ export default function defaultCellRangeRenderer ({
   columnSizeAndPositionManager,
   columnStartIndex,
   columnStopIndex,
+  deferredMeasurementCache,
   horizontalOffsetAdjustment,
   isScrolling,
+  parent, // Grid (or List or Table)
   rowSizeAndPositionManager,
   rowStartIndex,
   rowStopIndex,
@@ -21,9 +23,21 @@ export default function defaultCellRangeRenderer ({
   visibleColumnIndices,
   visibleRowIndices
 }: DefaultCellRangeRendererParams) {
+  const deferredMode = typeof deferredMeasurementCache !== 'undefined'
+
   const renderedCells = []
-  const offsetAdjusted = verticalOffsetAdjustment || horizontalOffsetAdjustment
-  const canCacheStyle = !isScrolling || !offsetAdjusted
+
+  // Browsers have native size limits for elements (eg Chrome 33M pixels, IE 1.5M pixes).
+  // User cannot scroll beyond these size limitations.
+  // In order to work around this, ScalingCellSizeAndPositionManager compresses offsets.
+  // We should never cache styles for compressed offsets though as this can lead to bugs.
+  // See issue #576 for more.
+  const areOffsetsAdjusted = (
+    columnSizeAndPositionManager.areOffsetsAdjusted() ||
+    rowSizeAndPositionManager.areOffsetsAdjusted()
+  )
+
+  const canCacheStyle = !isScrolling || !areOffsetsAdjusted
 
   for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
     let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex)
@@ -43,15 +57,33 @@ export default function defaultCellRangeRenderer ({
       if (canCacheStyle && styleCache[key]) {
         style = styleCache[key]
       } else {
-        style = {
-          height: rowDatum.size,
-          left: columnDatum.offset + horizontalOffsetAdjustment,
-          position: 'absolute',
-          top: rowDatum.offset + verticalOffsetAdjustment,
-          width: columnDatum.size
-        }
+        // In deferred mode, cells will be initially rendered before we know their size.
+        // Don't interfere with CellMeasurer's measurements by setting an invalid size.
+        if (
+          deferredMode &&
+          !deferredMeasurementCache.has(rowIndex, columnIndex)
+        ) {
+          // Position not-yet-measured cells at top/left 0,0,
+          // And give them width/height of 'auto' so they can grow larger than the parent Grid if necessary.
+          // Positioning them further to the right/bottom influences their measured size.
+          style = {
+            height: 'auto',
+            left: 0,
+            position: 'absolute',
+            top: 0,
+            width: 'auto'
+          }
+        } else {
+          style = {
+            height: rowDatum.size,
+            left: columnDatum.offset + horizontalOffsetAdjustment,
+            position: 'absolute',
+            top: rowDatum.offset + verticalOffsetAdjustment,
+            width: columnDatum.size
+          }
 
-        styleCache[key] = style
+          styleCache[key] = style
+        }
       }
 
       let cellRendererParams = {
@@ -59,6 +91,7 @@ export default function defaultCellRangeRenderer ({
         isScrolling,
         isVisible,
         key,
+        parent,
         rowIndex,
         style
       }
@@ -93,11 +126,29 @@ export default function defaultCellRangeRenderer ({
         continue
       }
 
+      if (process.env.NODE_ENV !== 'production') {
+        warnAboutMissingStyle(parent, renderedCell)
+      }
+
       renderedCells.push(renderedCell)
     }
   }
 
   return renderedCells
+}
+
+function warnAboutMissingStyle (parent, renderedCell) {
+  if (process.env.NODE_ENV !== 'production') {
+    if (
+      renderedCell &&
+      renderedCell.props.style === undefined &&
+      parent.__warnedAboutMissingStyle !== true
+    ) {
+      parent.__warnedAboutMissingStyle = true
+
+      console.warn('Rendered cell should include style property for positioning.')
+    }
+  }
 }
 
 type DefaultCellRangeRendererParams = {

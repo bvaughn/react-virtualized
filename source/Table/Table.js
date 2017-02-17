@@ -1,9 +1,8 @@
 /** @flow */
 import cn from 'classnames'
 import Column from './Column'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
-import shallowCompare from 'react-addons-shallow-compare'
 import Grid from '../Grid'
 import defaultRowRenderer from './defaultRowRenderer'
 import SortDirection from './SortDirection'
@@ -12,7 +11,7 @@ import SortDirection from './SortDirection'
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
  * This component expects explicit width, height, and padding parameters.
  */
-export default class Table extends Component {
+export default class Table extends PureComponent {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -334,14 +333,11 @@ export default class Table extends Component {
     )
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
-  }
-
   _createColumn ({
     column,
     columnIndex,
     isScrolling,
+    parent,
     rowData,
     rowIndex
   }) {
@@ -354,7 +350,7 @@ export default class Table extends Component {
     } = column.props
 
     const cellData = cellDataGetter({ columnData, dataKey, rowData })
-    const renderedCell = cellRenderer({ cellData, columnData, dataKey, isScrolling, rowData, rowIndex })
+    const renderedCell = cellRenderer({ cellData, columnData, dataKey, isScrolling, parent, rowData, rowIndex })
 
     const style = this._cachedColumnStyles[columnIndex]
 
@@ -443,6 +439,7 @@ export default class Table extends Component {
     rowIndex: index,
     isScrolling,
     key,
+    parent,
     style
   }) {
     const {
@@ -468,6 +465,7 @@ export default class Table extends Component {
         column,
         columnIndex,
         isScrolling,
+        parent,
         rowData,
         rowIndex: index,
         scrollbarWidth

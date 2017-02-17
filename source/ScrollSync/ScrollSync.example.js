@@ -1,10 +1,9 @@
 /** @flow */
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from '../AutoSizer'
 import Grid from '../Grid'
 import ScrollSync from './ScrollSync'
-import shallowCompare from 'react-addons-shallow-compare'
 import cn from 'classnames'
 import styles from './ScrollSync.example.css'
 import scrollbarSize from 'dom-helpers/util/scrollbarSize'
@@ -14,7 +13,7 @@ const LEFT_COLOR_TO = hexToRgb('#BC3959')
 const TOP_COLOR_FROM = hexToRgb('#000000')
 const TOP_COLOR_TO = hexToRgb('#333333')
 
-export default class GridExample extends Component {
+export default class GridExample extends PureComponent {
   constructor (props, context) {
     super(props, context)
 
@@ -175,10 +174,6 @@ export default class GridExample extends Component {
         </ScrollSync>
       </ContentBox>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _renderBodyCell ({ columnIndex, key, rowIndex, style }) {

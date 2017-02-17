@@ -1,20 +1,23 @@
 /** @flow */
 import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import AutoSizer from '../AutoSizer'
-import CellMeasurer from './CellMeasurer'
-import CellSizeCache from './defaultCellSizeCache'
-import Grid from '../Grid'
-import shallowCompare from 'react-addons-shallow-compare'
 import cn from 'classnames'
 import styles from './CellMeasurer.example.css'
+import DynamicWidthGrid from './CellMeasurer.DynamicWidthGrid.example.js'
+import DynamiHeightGrid from './CellMeasurer.DynamiHeightGrid.example.js'
+import DynamicHeightList from './CellMeasurer.DynamicHeightList.example.js'
+import DynamicHeightTableColumn from './CellMeasurer.DynamicHeightTableColumn.example.js'
 
-const COLUMN_WIDTH = 150
-const ROW_COUNT = 50
-const ROW_HEIGHT = 35
+const demoComponents = [
+  DynamicWidthGrid,
+  DynamiHeightGrid,
+  DynamicHeightList,
+  DynamicHeightTableColumn
+]
 
-export default class CellMeasurerExample extends Component {
+export default class CellMeasurerExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -22,16 +25,24 @@ export default class CellMeasurerExample extends Component {
   constructor (props, context) {
     super(props, context)
 
-    this._uniformSizeCellSizeCache = new CellSizeCache({
-      uniformColumnWidth: true,
-      uniformRowHeight: true
-    })
+    this.state = {
+      currentTab: 0
+    }
 
-    this._cellRenderer = this._cellRenderer.bind(this)
-    this._uniformCellRenderer = this._uniformCellRenderer.bind(this)
+    this._onClick = this._onClick.bind(this)
   }
 
   render () {
+    const { list } = this.context
+    const { currentTab } = this.state
+
+    const buttonProps = {
+      currentTab,
+      onClick: this._onClick
+    }
+
+    const DemoComponent = demoComponents[currentTab]
+
     return (
       <ContentBox>
         <ContentBoxHeader
@@ -41,81 +52,30 @@ export default class CellMeasurerExample extends Component {
         />
 
         <ContentBoxParagraph>
-          This component renders content for a given column or row in order to determine the widest or tallest cell.
-          It can be used to just-in-time measure dynamic content (eg. messages in a chat interface).
+          This component can be used to just-in-time measure dynamic content (eg. messages in a chat interface).
         </ContentBoxParagraph>
 
         <AutoSizer disableHeight>
           {({ width }) => (
             <div style={{ width }}>
-              <h3>Fixed height, dynamic width</h3>
-              <CellMeasurer
-                cellRenderer={this._cellRenderer}
-                columnCount={50}
-                height={ROW_HEIGHT}
-                rowCount={ROW_COUNT}
-              >
-                {({ getColumnWidth }) => (
-                  <Grid
-                    className={styles.BodyGrid}
-                    columnCount={50}
-                    columnWidth={getColumnWidth}
-                    height={150}
-                    overscanColumnCount={0}
-                    overscanRowCount={0}
-                    cellRenderer={this._cellRenderer}
-                    rowCount={ROW_COUNT}
-                    rowHeight={ROW_HEIGHT}
-                    width={width}
-                  />
-                )}
-              </CellMeasurer>
+              <div>
+                <strong>Grid</strong>:
+                <Tab id={0} {...buttonProps}>dynamic width text</Tab>
+                <Tab id={1} {...buttonProps}>dynamic height text</Tab>
 
-              <h3>Fixed width, dynamic height</h3>
-              <CellMeasurer
-                cellRenderer={this._cellRenderer}
-                columnCount={10}
-                rowCount={ROW_COUNT}
-                width={COLUMN_WIDTH}
-              >
-                {({ getRowHeight }) => (
-                  <Grid
-                    className={styles.BodyGrid}
-                    columnCount={10}
-                    columnWidth={COLUMN_WIDTH}
-                    height={150}
-                    overscanColumnCount={0}
-                    overscanRowCount={0}
-                    cellRenderer={this._cellRenderer}
-                    rowCount={ROW_COUNT}
-                    rowHeight={getRowHeight}
-                    width={width}
-                  />
-                )}
-              </CellMeasurer>
+                <strong>List</strong>:
+                <Tab id={2} {...buttonProps}>dynamic height image</Tab>
 
-              <h3>Uniform width and height</h3>
-              <CellMeasurer
-                cellRenderer={this._uniformCellRenderer}
-                cellSizeCache={this._uniformSizeCellSizeCache}
-                columnCount={100}
-                rowCount={ROW_COUNT}
-              >
-                {({ getColumnWidth, getRowHeight }) => (
-                  <Grid
-                    className={styles.BodyGrid}
-                    columnCount={100}
-                    columnWidth={getColumnWidth}
-                    height={150}
-                    overscanColumnCount={0}
-                    overscanRowCount={0}
-                    cellRenderer={this._uniformCellRenderer}
-                    rowCount={ROW_COUNT}
-                    rowHeight={getRowHeight}
-                    width={width}
-                  />
-                )}
-              </CellMeasurer>
+                <strong>Table</strong>:
+                <Tab id={3} {...buttonProps}>mixed fixed and dynamic height text</Tab>
+              </div>
+
+              <DemoComponent
+                getClassName={getClassName}
+                getContent={getContent}
+                list={list}
+                width={width}
+              />
             </div>
           )}
         </AutoSizer>
@@ -123,61 +83,43 @@ export default class CellMeasurerExample extends Component {
     )
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
-  }
-
-  _cellRenderer ({ columnIndex, key, rowIndex, style }) {
-    const datum = this._getDatum(rowIndex)
-    const rowClass = this._getRowClassName(rowIndex)
-    const classNames = cn(rowClass, styles.cell, {
-      [styles.centeredCell]: columnIndex > 2
+  _onClick (id) {
+    this.setState({
+      currentTab: id
     })
-
-    let content
-
-    switch (columnIndex % 3) {
-      case 0:
-        content = datum.color
-        break
-      case 1:
-        content = datum.name
-        break
-      case 2:
-        content = datum.random
-        break
-    }
-
-    return (
-      <div
-        className={classNames}
-        key={key}
-        style={style}
-      >
-        {content}
-      </div>
-    )
   }
+}
 
-  _getDatum (index) {
-    const { list } = this.context
+function getClassName ({ columnIndex, rowIndex }) {
+  const rowClass = rowIndex % 2 === 0 ? styles.evenRow : styles.oddRow
 
-    return list.get(index % list.size)
+  return cn(rowClass, styles.cell, {
+    [styles.centeredCell]: columnIndex > 2
+  })
+}
+
+function getContent ({ index, datum, long = true }) {
+  switch (index % 3) {
+    case 0:
+      return datum.color
+    case 1:
+      return datum.name
+    case 2:
+      return long ? datum.randomLong : datum.random
   }
+}
 
-  _getRowClassName (row) {
-    return row % 2 === 0 ? styles.evenRow : styles.oddRow
-  }
+function Tab ({ children, currentTab, id, onClick }) {
+  const classNames = cn(styles.Tab, {
+    [styles.ActiveTab]: currentTab === id
+  })
 
-  _uniformCellRenderer ({ columnIndex, key, rowIndex, style }) {
-    return (
-      <div
-        className={styles.uniformSizeCell}
-        key={key}
-        style={style}
-      >
-        {rowIndex}, {columnIndex}
-      </div>
-    )
-  }
+  return (
+    <button
+      className={classNames}
+      onClick={() => onClick(id)}
+    >
+      {children}
+    </button>
+  )
 }

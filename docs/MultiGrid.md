@@ -18,6 +18,20 @@ Some properties (eg `columnCount`, `rowCount`) are adjusted slightly to supporte
 | styleTopLeftGrid | object |  | Optional custom inline style to attach to top-left `Grid` element. |
 | styleTopRightGrid | object |  | Optional custom inline style to attach to top-right `Grid` element. |
 
+### Public Methods
+
+##### forceUpdateGrids
+
+Pass-thru that calls `forceUpdate` on all child `Grid`s.
+
+##### measureAllCells
+
+Pass-thru that calls `measureAllCells` on all child `Grid`s.
+
+##### recomputeGridSize
+
+Pass-thru that calls `recomputeGridSize` on all child `Grid`s.
+
 ### Examples
 
 ```jsx

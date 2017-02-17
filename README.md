@@ -95,17 +95,21 @@ ES6, CommonJS, and UMD builds are available with each distribution.
 For example:
 
 ```js
-// If you're using the Table component you'll need to include the default styles.
+// Most of react-virtualized's styles are functional (eg position, size).
+// Functional styles are applied directly to DOM elements.
+// The Table component ships with a few presentational styles as well.
+// They are optional, but if you want them you will need to also import the CSS file.
 // This only needs to be done once; probably during your application's bootstrapping process.
-// Grid and List base styles are purely functional and so they're all inline.
 import 'react-virtualized/styles.css'
 
-// Then you can import any react-virtualized components you need.
-// Tree-shaking is supported with ES6 modules (`jsnext:main` package target).
-import { Table } from 'react-virtualized'
+// You can import any component you want as a named export from 'react-virtualized', eg
+import { Column, Table } from 'react-virtualized'
+
+// Or for better tree-shaking support you can use deep imports, eg
+import { List } from 'react-virtualized/dist/commonjs/List'
 ```
 
-Alternately you can load a global-friendly UMD build:
+You can also use a global-friendly UMD build:
 
 ```html
 <link rel="stylesheet" href="path-to-react-virtualized/styles.css">
@@ -121,7 +125,6 @@ Dependencies
 React Virtualized has very few dependencies and most are managed by NPM automatically.
 However the following peer dependencies must be specified by your project in order to avoid version conflicts:
 [`react`](https://www.npmjs.com/package/react),
-[`react-addons-shallow-compare`](https://www.npmjs.com/package/react-addons-shallow-compare), and
 [`react-dom`](https://www.npmjs.com/package/react-dom).
 NPM will not automatically install these for you but it will show you a warning message with instructions on how to install them.
 
@@ -164,7 +167,8 @@ There are also a couple of how-to guides:
 * [Displaying items in reverse order](docs/reverseList.md)
 * [Using AutoSizer](docs/usingAutoSizer.md)
 * [Creating an infinite-loading list](docs/creatingAnInfiniteLoadingList.md)
-* [Displaying a reverse list](docs/reverseList.md)
+* [Natural sort Table](docs/tableWithNaturalSort.md)
+
 
 Examples
 ---------------

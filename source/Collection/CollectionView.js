@@ -1,11 +1,10 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import cn from 'classnames'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
-import shallowCompare from 'react-addons-shallow-compare'
 
-// @TODO It would be nice to refactor Grid to use this code as well.
+// @TODO Merge Collection and CollectionView
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -26,7 +25,7 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  * Monitors changes in properties (eg. cellCount) and state (eg. scroll offsets) to determine when rendering needs to occur.
  * This component does not render any visible content itself; it defers to the specified :cellLayoutManager.
  */
-export default class CollectionView extends Component {
+export default class CollectionView extends PureComponent {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -414,10 +413,6 @@ export default class CollectionView extends Component {
         }
       </div>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   /* ---------------------------- Helper methods ---------------------------- */

@@ -454,6 +454,12 @@ describe('List', () => {
     expect(rowRendererCalls[1].isVisible).toEqual(false)
   })
 
+  it('should relay the Grid :parent param to the :rowRenderer', () => {
+    const rowRenderer = jest.fn().mockReturnValue(null)
+    findDOMNode(render(getMarkup({ rowRenderer })))
+    expect(rowRenderer.mock.calls[0][0].parent).not.toBeUndefined()
+  })
+
   describe('pure', () => {
     it('should not re-render unless props have changed', () => {
       let rowRendererCalled = false

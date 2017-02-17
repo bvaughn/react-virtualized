@@ -1,15 +1,14 @@
 /** @flow */
 import Immutable from 'immutable'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import AutoSizer from '../AutoSizer'
 import Grid from './Grid'
-import shallowCompare from 'react-addons-shallow-compare'
 import cn from 'classnames'
 import styles from './Grid.example.css'
 
-export default class GridExample extends Component {
+export default class GridExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   };
@@ -158,10 +157,6 @@ export default class GridExample extends Component {
     )
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
-  }
-
   _cellRenderer ({ columnIndex, key, rowIndex, style }) {
     if (columnIndex === 0) {
       return this._renderLeftSideCell({ columnIndex, key, rowIndex, style })
@@ -243,7 +238,13 @@ export default class GridExample extends Component {
 
     const classNames = cn(styles.cell, styles.letterCell)
 
-    style.backgroundColor = datum.color
+    // Don't modify styles.
+    // These are frozen by React now (as of 16.0.0).
+    // Since Grid caches and re-uses them, they aren't safe to modify.
+    style = {
+      ...style,
+      backgroundColor: datum.color
+    }
 
     return (
       <div

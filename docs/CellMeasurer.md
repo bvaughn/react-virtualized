@@ -3,221 +3,143 @@ CellMeasurer
 
 High-order component that automatically measures a cell's contents by temporarily rendering it in a way that is not visible to the user.
 Specify a fixed width to measure dynamic height (or vice versa).
-
 This is an advanced component and has some limitations and performance considerations.
 [See below for more information](#limitations-and-performance-considerations).
 
-`CellMeasurer` is intended for use with `Grid` components but [can be adapted to work with `List` as well](#using-cellmeasurer-with-list).
+`CellMeasurer` can be used with `Grid`, `List`, and `Table` components. It is not intended to be used with the `Collection` component.
 
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| cellRenderer | Function | ✓ | Renders a cell given its indices. `({ columnIndex: number, rowIndex: number, index: number }): PropTypes.node`.<br/>**NOTE**: `index` is just an alias to `rowIndex` |
-| cellSizeCache | Object |  | Optional, custom caching strategy for cell sizes. Learn more [here](#cellsizecache). |
-| children | Function | ✓ | Function responsible for rendering a virtualized component; `({ getColumnWidth: Function, getRowHeight: Function, resetMeasurements: Function }) => PropTypes.element` |
-| columnCount | number | ✓ | Number of columns in the `Grid`; in order to measure a row's height, all of that row's columns must be rendered. |
-| container |  |  | A Node, Component instance, or function that returns either. If this property is not specified the document body will be used. |
-| height | number |  | Fixed height; specify this property to measure cell-width only. |
-| rowCount | number | ✓ | Number of rows in the `Grid`; in order to measure a column's width, all of that column's rows must be rendered. |
-| width | number |  | Fixed width; specify this property to measure cell-height only. |
+| cache | `CellMeasurerCache` | ✓ | Cache to be shared between `CellMeasurer` and its parent `Grid`. Learn more [here](#cellmeasurercache). |
+| children | Element or Function | ✓ | Either a React element as a child (eg `<div />`) or a function (eg. `({ measure }) => <div />`). See [below](#using-cellmeasurer-with-images) for more detailed examples. |
+| columnIndex | number | ✓ | Index of column being measured (within the parent `Grid`) or 0 (if used within a `List` or `Table`). |
+| parent | `Grid` | ✓ | Reference to the parent `Grid`; this value is passed by `Grid` to the `cellRenderer` and should be passed along as-is. |
+| rowIndex | number | ✓ | Index of row being measured (within the parent `Grid`). |
 
-### Children function
+### CellMeasurerCache
 
-The child function is passed the following named parameters:
+The `CellMeasurerCache` stores `CellMeasurer` measurements and shares them with a parent `Grid`.
+It should be configured based on the type of measurements you need. It accepts the following parameters:
 
-| Parameter | Type | Description |
-|:---|:---|:---|
-| getColumnWidth | Function | Callback to set as the `columnWidth` property of a `Grid` |
-| getRowHeight | Function | Callback to set as the `rowHeight` property of a `Grid` |
-| resetMeasurementForColumn(index) | Function | Use this function to clear cached measurements for specific column in `CellRenderer`; its size will be remeasured the next time it is requested. |
-| resetMeasurementForRow(index) | Function | Use this function to clear cached measurements for specific row in `CellRenderer`; its size will be remeasured the next time it is requested. |
-| resetMeasurements | Function | Use this function to clear cached measurements in `CellRenderer`; each cell will be remeasured the next time its size is requested. |
+### Prop Types
+| Property | Type | Required? | Description |
+|:---|:---|:---:|:---|
+| defaultHeight | number | | Umeasured cells will initially report this height |  
+| defaultWidth | number | | Umeasured cells will initially report this width |
+| fixedHeight | boolean | | Rendered cells will have a fixed height, dynamic width |
+| fixedWidth | boolean | | Rendered cells will have a fixed width, dynamic height |
+| minHeight | number | | Derived row height (of multiple cells) should not be less than this value |
+| minWidth | number | | Derived column width (of multiple cells) should not be less than this value |
+| keyMapper | KeyMapper | | Enables more intelligent mapping of a given column and row index to an item ID. This prevents a cell cache from being invalidated when its parent collection is modified. `(rowIndex: number, columnIndex: number) => any` |
 
-### CellSizeCache
-
-If you choose to override the `cellSizeCache` property your cache should support the following operations:
-
-```js
-class CellSizeCache {
-  clearAllColumnWidths (): void;
-  clearAllRowHeights (): void;
-  clearColumnWidth (index: number): void;
-  clearRowHeight (index: number): void;
-  getColumnWidth (index: number): number | undefined | null;
-  getRowHeight (index: number): number | undefined | null;
-  setColumnWidth (index: number, width: number): void;
-  setRowHeight (index: number, height: number): void;
-}
-```
-
-The [default caching strategy](https://github.com/bvaughn/react-virtualized/blob/master/source/CellMeasurer/defaultCellSizeCache.js) is exported as `defaultCellMeasurerCellSizeCache` should you wish to decorate it.
-You can also pass `uniformRowHeight` and/or `uniformColumnWidth` named parameters to the constructor for lists with a uniform (yet unknown) cell sizes.
-
-An [id-based caching strategy](#id-based-cell-size-cache) is also available for data that may be sorted.
-This strategy maps data ids to cell sizes rathe than index so that the sorting order of the data does not invalidate sizes.
+Note that while all of the individual parameters above are optional, you must supply at least some of them.
+`CellMeasurerCache` is not meant to measure cells that are both dyanmic width _and_ height.
+It would be unefficient to do so since the size of a row (or column) is equal to the largest cell within that row.
+See [below](#limitations-and-performance-considerations) for more information.
 
 ### Examples
 
-###### Default `cellSizeCache`
+###### Grid
 
 This example shows a `Grid` with fixed row heights and dynamic column widths.
 For more examples check out the component [demo page](https://bvaughn.github.io/react-virtualized/#/components/CellMeasurer).
 
 ```jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { CellMeasurer, Grid } from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
+import { CellMeasurer, CellMeasurerCache, Grid } from 'react-virtualized';
 
-ReactDOM.render(
-  <CellMeasurer
-    cellRenderer={cellRenderer}
-    columnCount={columnCount}
-    height={fixedRowHeight}
-    rowCount={rowCount}
-  >
-    {({ getColumnWidth }) => (
-      <Grid
-        columnCount={columnCount}
-        columnWidth={getColumnWidth}
-        height={height}
-        cellRenderer={cellRenderer}
-        rowCount={rowCount}
-        rowHeight={fixedRowHeight}
-        width={width}
-      />
-    )}
-  </CellMeasurer>,
-  document.getElementById('example')
-);
-```
+// In this example, average cell width is assumed to be about 100px.
+// This value will be used for the initial `Grid` layout.
+// Cell measurements smaller than 75px should also be rounded up.
+// Height is not dynamic.
+const cache = new CellMeasurerCache({
+  defaultWidth: 100,
+  minWidth: 75,
+  fixedHeight: true
+});
 
-#### ID-based cell size cache
+function cellRenderer ({ columnIndex, key, parent, rowIndex, style }) {
+  const content // Derive this from your data somehow
 
-`CellMeasurer` measures each cell once and then caches the measurements so it doesn't have to measure it again.
-By default this caching is done using the cell's row and column indices.
-Certain things (eg insertions, sorting) can invalidate this type of cache though.
-If your list is dynamic- you may consider using an id-based caching strategy instead.
-The `idCellMeasurerCellSizeCache` exists for this purpose:
-
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { CellMeasurer, Grid, idCellMeasurerCellSizeCache } from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
-
-ReactDOM.render(
-  <CellMeasurer
-    cellRenderer={cellRenderer}
-    cellSizeCache={idCellMeasurerCellSizeCache}
-    columnCount={columnCount}
-    rowCount={rowCount}
-  >
-    {({ getColumnWidth, getRowHeight }) => (
-      <Grid
-        columnCount={columnCount}
-        columnWidth={getColumnWidth}
-        height={height}
-        cellRenderer={cellRenderer}
-        rowCount={rowCount}
-        rowHeight={getRowHeight}
-        width={width}
-      />
-    )}
-  </CellMeasurer>,
-  document.getElementById('example')
-);
-```
-
-###### Customizing `cellSizeCache`
-
-The cell size cache can be optimized when width and/or height is uniform across cells.
-In this case the cache will allow only a single cell width/height measurement and then return that value for all other cells.
-You can use it like so:
-
-```jsx
-import {
-  CellMeasurer,
-  defaultCellMeasurerCellSizeCache as CellSizeCache,
-  Grid
-} from 'react-virtualized';
-
-// Column widths vary but row heights are uniform
-const cellSizeCache = new CellSizeCache({
-  uniformRowHeight: true,
-  uniformColumnWidth: false
-})
-
-function render () {
   return (
     <CellMeasurer
-      cellRenderer={cellRenderer}
-      cellSizeCache={cellSizeCache}
-      columnCount={columnCount}
-      rowCount={rowCount}
+      cache={cache}
+      columnIndex={columnIndex}
+      key={key}
+      parent={parent}
+      rowIndex={rowIndex}
     >
-      {({ getColumnWidth, getRowHeight }) => (
-        <Grid
-          columnCount={columnCount}
-          columnWidth={getColumnWidth}
-          cellRenderer={cellRenderer}
-          rowCount={rowCount}
-          rowHeight={getRowHeight}
-          {...otherProps}
-        />
-      )}
+      {content}
     </CellMeasurer>
-  )
+  );
+}
+
+function renderGrid (props) {
+  return (
+    <Grid
+      {...props}
+      columnWidth={cache.columnWidth}
+      deferredMeasurementCache={cache}
+      cellRenderer={cellRenderer}
+    />
+  );
 }
 ```
 
-###### Using `CellMeasurer` with `List`
+###### Using `CellMeasurer` with images
 
-`CellMeasurer` is intended for use with `Grid` components but can be adapted to work with `List` as well.
-Doing this is just a matter of renaming the `rowIndex` property specified by `CellMeasurer` to an `index` property expected by `rowRenderer`.
+This example shows how you might use the `CellMeasurer` component along with the `List` component in order to display dynamic-height rows.
+The difference between this example and the above example is that the height of the row is not determined until image data has loaded.
+To support this, a function-child is passed to `CellMeasurer` which then receives a `measure` parameter.
+`measure` should be called when cell content is ready to be measured (in this case, when the image has loaded).
 
 ```jsx
-<CellMeasurer
-  cellRenderer={
-    // CellMeasurer expects to work with a Grid
-    // But your rowRenderer was written for a List
-    // The only difference is the named parameter they
-    // So map the Grid params (eg rowIndex) to List params (eg index)
-    ({ rowIndex, ...rest }) => listProps.rowRenderer({ index: rowIndex, ...rest })
-  }
-  columnCount={1}
-  rowCount={listProps.rowCount}
-  width={listProps.width}
->
-  {({ getRowHeight }) => (
+import React from 'react';
+import { CellMeasurer, CellMeasurerCache, Grid } from 'react-virtualized';
+
+// In this example, average cell height is assumed to be about 50px.
+// This value will be used for the initial `Grid` layout.
+// Width is not dynamic.
+const cache = new CellMeasurerCache({
+  defaultHeight: 50,
+  fixedWidth: true
+});
+
+function rowRenderer ({ index, isScrolling, key, parent, style }) {
+  const source // This comes from your list data
+
+  return (
+    <CellMeasurer
+      cache={cache}
+      columnIndex={0}
+      key={key}
+      parent={parent}
+      rowIndex={index}
+    >
+      {({ measure }) => (
+        <img
+          onLoad={measure}
+          src={source}
+        />
+      )}
+    </CellMeasurer>
+  );
+}
+
+function renderList (props) {
+  return (
     <List
-      {...listProps}
-      rowHeight={getRowHeight}
+      {...props}
+      deferredMeasurementCache={cache}
+      rowHeight={cache.rowHeight}
+      rowRenderer={rowRenderer}
     />
-  )}
-</CellMeasurer>
+  );
+}
 ```
 
 ### Limitations and Performance Considerations
-
-###### Stateful Components
-
-The current implementation of `CellMeasurer` creates cells on demand, measures them, and then throws them away.
-Future versions of this component may try to clone or in some other way share cells with their parent `Grid` in order to improve performance.
-However until that happens, be wary of using `CellMeasurer` to measure stateful components.
-Since cells are just-in-time created for measuring purposes they will only be measured with their default state.
-To avoid this issue for now, use controlled props (instead of state) for cell rendering behavior.
-
-###### Styling
-
-Cells may be measured outside of the context of their intended `Grid` (or `List`).
-This means that they will not inherit the parent styles while being measured.
-Take care not rely on inherited styles for things that will affect measurement (eg `font-size`).
-(See [issue 352](https://github.com/bvaughn/react-virtualized/issues/352) for more background information.)
-
-Certain box-sizing settings (eg `box-sizing: border-box`) may cause slight discrepancies if borders are applied to a `Grid` whose cells are being measured.
-For this reason, it is recommended that you avoid placing borders on a `Grid` that uses a `CellMeasurer` and instead style its parent container.
-(See [issue 338](https://github.com/bvaughn/react-virtualized/issues/338) for more background information.)
 
 ###### Performance
 

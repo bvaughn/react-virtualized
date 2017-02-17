@@ -21,6 +21,10 @@ export default class ScalingCellSizeAndPositionManager {
     this._maxScrollSize = maxScrollSize
   }
 
+  areOffsetsAdjusted (): bool {
+    return this._cellSizeAndPositionManager.getTotalSize() > this._maxScrollSize
+  }
+
   configure (params): void {
     this._cellSizeAndPositionManager.configure(params)
   }

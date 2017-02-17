@@ -1,16 +1,15 @@
 /**
  * @flow
  */
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import styles from './ColumnSizer.example.css'
 import AutoSizer from '../AutoSizer'
 import ColumnSizer from './ColumnSizer'
 import Grid from '../Grid'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
-import shallowCompare from 'react-addons-shallow-compare'
 
-export default class ColumnSizerExample extends Component {
+export default class ColumnSizerExample extends PureComponent {
   constructor (props) {
     super(props)
 
@@ -104,10 +103,6 @@ export default class ColumnSizerExample extends Component {
         </div>
       </ContentBox>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _noColumnMaxWidthChange (event) {

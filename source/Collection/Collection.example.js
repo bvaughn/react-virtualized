@@ -1,11 +1,10 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import Immutable from 'immutable'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import AutoSizer from '../AutoSizer'
 import Collection from './Collection'
-import shallowCompare from 'react-addons-shallow-compare'
 import styles from './Collection.example.css'
 
 // Defines a pattern of sizes and positions for a range of 10 rotating cells
@@ -13,7 +12,7 @@ import styles from './Collection.example.css'
 const GUTTER_SIZE = 3
 const CELL_WIDTH = 75
 
-export default class CollectionExample extends Component {
+export default class CollectionExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   };
@@ -124,10 +123,6 @@ export default class CollectionExample extends Component {
         </AutoSizer>
       </ContentBox>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _cellRenderer ({ index, isScrolling, key, style }) {

@@ -206,6 +206,28 @@ describe('MultiGrid', () => {
     })
   })
 
+  describe('#forceUpdateGrids', () => {
+    it('should call forceUpdate() on inner Grids', () => {
+      const cellRenderer = jest.fn()
+      cellRenderer.mockImplementation(({ key }) => <div key={key} style={{}} />)
+
+      const rendered = render(getMarkup({
+        cellRenderer,
+        columnCount: 2,
+        fixedColumnCount: 1,
+        fixedRowCount: 1,
+        rowCount: 2
+      }))
+
+      expect(cellRenderer.mock.calls).toHaveLength(4)
+
+      cellRenderer.mockReset()
+      rendered.forceUpdateGrids()
+
+      expect(cellRenderer.mock.calls).toHaveLength(4)
+    })
+  })
+
   describe('styles', () => {
     it('should support custom style for the outer MultiGrid wrapper element', () => {
       const rendered = findDOMNode(render(getMarkup({

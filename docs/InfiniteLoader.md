@@ -41,6 +41,9 @@ import ReactDOM from 'react-dom';
 import { InfiniteLoader, List } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
+// This example assumes you have a way to know/load this information
+const remoteRowCount
+
 const list = [];
 
 function isRowLoaded ({ index }) {
@@ -77,7 +80,7 @@ ReactDOM.render(
         height={200}
         onRowsRendered={onRowsRendered}
         ref={registerChild}
-        rowCount={list.length}
+        rowCount={remoteRowCount}
         rowHeight={20}
         rowRenderer={rowRenderer}
         width={300}

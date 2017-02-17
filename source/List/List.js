@@ -1,8 +1,7 @@
 /** @flow */
 import Grid from '../Grid'
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import cn from 'classnames'
-import shallowCompare from 'react-addons-shallow-compare'
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -12,7 +11,7 @@ import shallowCompare from 'react-addons-shallow-compare'
  *
  * This component renders a virtualized list of elements with either fixed or dynamic heights.
  */
-export default class List extends Component {
+export default class List extends PureComponent {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -155,10 +154,6 @@ export default class List extends Component {
         scrollToRow={scrollToIndex}
       />
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _cellRenderer ({ rowIndex, style, ...rest }) {

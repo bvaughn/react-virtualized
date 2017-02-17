@@ -14,6 +14,7 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | columnCount | Number | ✓ | Number of columns in grid. |
 | columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number` |
 | containerStyle | Object |  | Optional custom inline style to attach to inner cell-container element. |
+| deferredMeasurementCache | `CellMeasurer` |  | If CellMeasurer is used to measure this Grid's children, this should be a pointer to its CellMeasurerCache. A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data. |
 | estimatedColumnSize | Number |  | Used to estimate the total width of a `Grid` before all of its columns have actually been measured. The estimated total width is adjusted as columns are rendered. |
 | estimatedRowSize | Number |  | Used to estimate the total height of a `Grid` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | height | Number | ✓ | Height of Grid; this property determines the number of visible (vs virtualized) rows. |
@@ -163,9 +164,10 @@ function cellRenderer ({
   isScrolling, // The Grid is currently being scrolled
   isVisible,   // This cell is visible within the grid (eg it is not an overscanned cell)
   key,         // Unique key within array of cells
+  parent,      // Reference to the parent Grid (instance)
   rowIndex,    // Vertical (row) index of cell
   style        // Style object to be applied to cell (to position it);
-               // this must be passed through to the rendered cell element
+               // This must be passed through to the rendered cell element.
 }) {
   // Grid data is a 2d array in this example...
   const user = list[rowIndex][columnIndex]
@@ -178,11 +180,11 @@ function cellRenderer ({
   // Style is required since it specifies how the cell is to be sized and positioned,
   // and React Virtualized depends on this sizing/positioning for proper scrolling behavior.
   // By default, the grid component specifies, calculates, and initializes the following style properties:
-  //    height
-  //    width
+  //    position
   //    left
   //    top
-  //    position
+  //    height
+  //    width
   // You can add additional class names or style properties as you would like.
   // Key is also required by React to more efficiently manage the array of cells.
   return (

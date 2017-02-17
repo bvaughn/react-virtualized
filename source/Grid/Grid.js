@@ -1,12 +1,11 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, PureComponent } from 'react'
 import cn from 'classnames'
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset'
 import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import defaultOverscanIndicesGetter, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/defaultOverscanIndicesGetter'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
-import shallowCompare from 'react-addons-shallow-compare'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
 import defaultCellRangeRenderer from './defaultCellRangeRenderer'
 
@@ -29,7 +28,7 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  * Renders tabular data with virtualization along the vertical and horizontal axes.
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
-export default class Grid extends Component {
+export default class Grid extends PureComponent {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -87,6 +86,12 @@ export default class Grid extends Component {
 
     /** Optional inline style applied to inner cell-container */
     containerStyle: PropTypes.object,
+
+    /**
+     * If CellMeasurer is used to measure this Grid's children, this should be a pointer to its CellMeasurerCache.
+     * A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data.
+     */
+    deferredMeasurementCache: PropTypes.object,
 
     /**
      * Used to estimate the total width of a Grid before all of its columns have actually been measured.
@@ -245,12 +250,20 @@ export default class Grid extends Component {
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth)
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight)
 
+    this._deferredInvalidateColumnIndex = null
+    this._deferredInvalidateRowIndex = null
+
+    const deferredMeasurementCache = props.deferredMeasurementCache
+    const deferredMode = typeof deferredMeasurementCache !== 'undefined'
+
     this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
+      batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedHeight(),
       cellCount: props.columnCount,
       cellSizeGetter: (params) => this._columnWidthGetter(params),
       estimatedCellSize: this._getEstimatedColumnSize(props)
     })
     this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
+      batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedWidth(),
       cellCount: props.rowCount,
       cellSizeGetter: (params) => this._rowHeightGetter(params),
       estimatedCellSize: this._getEstimatedRowSize(props)
@@ -259,6 +272,25 @@ export default class Grid extends Component {
     // See defaultCellRangeRenderer() for more information on the usage of these caches
     this._cellCache = {}
     this._styleCache = {}
+  }
+
+  /**
+   * Invalidate Grid size and recompute visible cells.
+   * This is a deferred wrapper for recomputeGridSize().
+   * It sets a flag to be evaluated on cDM/cDU to avoid unnecessary renders.
+   * This method is intended for advanced use-cases like CellMeasurer.
+   */
+  // @TODO (bvaughn) Add automated test coverage for this.
+  invalidateCellSizeAfterRender ({
+    columnIndex,
+    rowIndex
+  }) {
+    this._deferredInvalidateColumnIndex = typeof this._deferredInvalidateColumnIndex === 'number'
+      ? Math.min(this._deferredInvalidateColumnIndex, columnIndex)
+      : columnIndex
+    this._deferredInvalidateRowIndex = typeof this._deferredInvalidateRowIndex === 'number'
+      ? Math.min(this._deferredInvalidateRowIndex, rowIndex)
+      : rowIndex
   }
 
   /**
@@ -314,6 +346,10 @@ export default class Grid extends Component {
   componentDidMount () {
     const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
 
+    // If cell sizes have been invalidated (eg we are using CellMeasurer) then reset cached positions.
+    // We must do this at the start of the method as we may calculate and update scroll position below.
+    this._handleInvalidatedGridSize()
+
     // If this component was first rendered server-side, scrollbar size will be undefined.
     // In that event we need to remeasure.
     if (!this._scrollbarSizeMeasured) {
@@ -351,6 +387,10 @@ export default class Grid extends Component {
   componentDidUpdate (prevProps, prevState) {
     const { autoHeight, columnCount, height, rowCount, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
+
+    // If cell sizes have been invalidated (eg we are using CellMeasurer) then reset cached positions.
+    // We must do this at the start of the method as we may calculate and update scroll position below.
+    this._handleInvalidatedGridSize()
 
     // Handle edge case where column or row count has only just increased over 0.
     // In this case we may have to restore a previously-specified scroll offset.
@@ -630,10 +670,6 @@ export default class Grid extends Component {
     )
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
-  }
-
   /* ---------------------------- Helper methods ---------------------------- */
 
   _calculateChildrenToRender (props = this.props, state = this.state) {
@@ -641,6 +677,7 @@ export default class Grid extends Component {
       cellRenderer,
       cellRangeRenderer,
       columnCount,
+      deferredMeasurementCache,
       height,
       overscanColumnCount,
       overscanIndicesGetter,
@@ -713,8 +750,10 @@ export default class Grid extends Component {
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
         columnStopIndex: this._columnStopIndex,
+        deferredMeasurementCache,
         horizontalOffsetAdjustment,
         isScrolling,
+        parent: this,
         rowSizeAndPositionManager: this._rowSizeAndPositionManager,
         rowStartIndex: this._rowStartIndex,
         rowStopIndex: this._rowStopIndex,
@@ -781,6 +820,22 @@ export default class Grid extends Component {
     return typeof props.rowHeight === 'number'
       ? props.rowHeight
       : props.estimatedRowSize
+  }
+
+  /**
+   * Check for batched CellMeasurer size invalidations.
+   * This will occur the first time one or more previously unmeasured cells are rendered.
+   */
+  _handleInvalidatedGridSize () {
+    if (typeof this._deferredInvalidateColumnIndex === 'number') {
+      const columnIndex = this._deferredInvalidateColumnIndex
+      const rowIndex = this._deferredInvalidateRowIndex
+
+      delete this._deferredInvalidateColumnIndex
+      delete this._deferredInvalidateRowIndex
+
+      this.recomputeGridSize({ columnIndex, rowIndex })
+    }
   }
 
   _invokeOnGridRenderedHelper () {

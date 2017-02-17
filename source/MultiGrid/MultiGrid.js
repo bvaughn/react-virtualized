@@ -1,6 +1,5 @@
 /** @flow */
-import React, { Component, PropTypes } from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import React, { PropTypes, PureComponent } from 'react'
 import Grid from '../Grid'
 
 /**
@@ -10,7 +9,7 @@ import Grid from '../Grid'
  * If no sticky columns, only 1 sticky header Grid will be rendered.
  * If sticky columns, 2 sticky header Grids will be rendered.
  */
-export default class MultiGrid extends Component {
+export default class MultiGrid extends PureComponent {
   static propTypes = {
     fixedColumnCount: PropTypes.number.isRequired,
     fixedRowCount: PropTypes.number.isRequired,
@@ -51,19 +50,19 @@ export default class MultiGrid extends Component {
     this._topRightGridRef = this._topRightGridRef.bind(this)
   }
 
+  forceUpdateGrids () {
+    this._bottomLeftGrid && this._bottomLeftGrid.forceUpdate()
+    this._bottomRightGrid && this._bottomRightGrid.forceUpdate()
+    this._topLeftGrid && this._topLeftGrid.forceUpdate()
+    this._topRightGrid && this._topRightGrid.forceUpdate()
+  }
+
   /** See Grid#measureAllCells */
   measureAllCells () {
     this._bottomLeftGrid && this._bottomLeftGrid.measureAllCells()
     this._bottomRightGrid && this._bottomRightGrid.measureAllCells()
     this._topLeftGrid && this._topLeftGrid.measureAllCells()
     this._topRightGrid && this._topRightGrid.measureAllCells()
-  }
-
-  /** See issue #546 */
-  measureAllRows () {
-    console.warn('MultiGrid measureAllRows() is deprecated; use measureAllCells() instead.')
-
-    this.measureAllCells()
   }
 
   /** See Grid#recomputeGridSize */
@@ -166,10 +165,6 @@ export default class MultiGrid extends Component {
         </div>
       </div>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   _bottomLeftGridRef (ref) {
