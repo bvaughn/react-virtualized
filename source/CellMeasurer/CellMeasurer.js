@@ -70,6 +70,36 @@ export default class CellMeasurer extends Component {
     this.resetMeasurementForRow = this.resetMeasurementForRow.bind(this)
   }
 
+  getItemWidth({rowIndex, columnIndex}) {
+    let width = this._cellSizeCache.getItemWidth(rowIndex, columnIndex);
+
+    if (!width) {
+      width = this._measureCell({
+        clientWidth: true,
+        columnIndex,
+        rowIndex
+      }).width;
+
+      this._cellSizeCache.setItemWidth(rowIndex, columnIndex, width)
+    }
+    return width;
+  }
+
+  getItemHeight({rowIndex, columnIndex}) {
+    let height = this._cellSizeCache.getItemHeight(rowIndex, columnIndex);
+
+    if (!height) {
+      height = this._measureCell({
+        clientHeight: true,
+        columnIndex,
+        rowIndex
+      }).height
+
+      this._cellSizeCache.setItemHeight(rowIndex, columnIndex, height)
+    }
+    return height;
+  }
+
   getColumnWidth ({ index }) {
     const columnWidth = this._cellSizeCache.getColumnWidth(index)
     if (columnWidth != null) {
@@ -81,12 +111,10 @@ export default class CellMeasurer extends Component {
     let maxWidth = 0
 
     for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-      let { width } = this._measureCell({
-        clientWidth: true,
+      var width = this.getItemHeight({
+        rowIndex,
         columnIndex: index,
-        rowIndex
-      })
-
+      });
       maxWidth = Math.max(maxWidth, width)
     }
 
@@ -106,12 +134,10 @@ export default class CellMeasurer extends Component {
     let maxHeight = 0
 
     for (let columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-      let { height } = this._measureCell({
-        clientHeight: true,
+      var height = this.getItemHeight({
+        rowIndex: index,
         columnIndex,
-        rowIndex: index
       })
-
       maxHeight = Math.max(maxHeight, height)
     }
 
@@ -131,6 +157,8 @@ export default class CellMeasurer extends Component {
   resetMeasurements () {
     this._cellSizeCache.clearAllColumnWidths()
     this._cellSizeCache.clearAllRowHeights()
+    this._cellSizeCache.clearAllItemWidths()
+    this._cellSizeCache.clearAllItemHeights()
   }
 
   componentDidMount () {
