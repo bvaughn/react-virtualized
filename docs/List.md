@@ -1,11 +1,8 @@
 List
 ---------------
 
-This component renders a windowed list of elements.
-Elements can have fixed or varying heights.
-
-Note that `List` uses a `Grid` internally to display rows.
-All props passed to `List` are relayed to the inner `Grid`.
+This component renders a windowed list (rows) of elements.
+It uses a `Grid` internally to render the rows and all props are relayed to that inner `Grid`.
 That means that `List` also accepts [`Grid` props](Grid.md) in addition to the props shown below.
 
 ### Prop Types
