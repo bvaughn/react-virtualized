@@ -4,6 +4,10 @@ List
 This component renders a windowed list of elements.
 Elements can have fixed or varying heights.
 
+Note that `List` uses a `Grid` internally to display rows.
+All props passed to `List` are relayed to the inner `Grid`.
+That means that `List` also accepts [`Grid` props](Grid.md) in addition to the props shown below.
+
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
