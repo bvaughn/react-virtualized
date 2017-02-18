@@ -34,8 +34,8 @@ It should be configured based on the type of measurements you need. It accepts t
 | keyMapper | KeyMapper | | Enables more intelligent mapping of a given column and row index to an item ID. This prevents a cell cache from being invalidated when its parent collection is modified. `(rowIndex: number, columnIndex: number) => any` |
 
 Note that while all of the individual parameters above are optional, you must supply at least some of them.
-`CellMeasurerCache` is not meant to measure cells that are both dyanmic width _and_ height.
-It would be unefficient to do so since the size of a row (or column) is equal to the largest cell within that row.
+`CellMeasurerCache` is not meant to measure cells that are both dynamic width _and_ height.
+It would be inefficient to do so since the size of a row (or column) is equal to the largest cell within that row.
 See [below](#limitations-and-performance-considerations) for more information.
 
 ### Examples
