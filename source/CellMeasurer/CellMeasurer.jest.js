@@ -42,7 +42,9 @@ function createParent ({
 }
 
 function renderHelper ({
-  cache = new CellMeasurerCache(),
+  cache = new CellMeasurerCache({
+    fixedWidth: true
+  }),
   children = <div />,
   parent
 } = {}) {
@@ -61,7 +63,9 @@ function renderHelper ({
 
 describe('CellMeasurer', () => {
   it('componentDidMount() should measure content that is not already in the cache', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedWidth: true
+    })
     const parent = createParent({ cache })
 
     mockClientWidthAndHeight({
@@ -87,7 +91,9 @@ describe('CellMeasurer', () => {
   })
 
   it('componentDidMount() should not measure content that is already in the cache', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedWidth: true
+    })
     cache.set(0, 0, 100, 20)
 
     const parent = createParent({ cache })
@@ -110,7 +116,9 @@ describe('CellMeasurer', () => {
   })
 
   it('componentDidUpdate() should measure content that is not already in the cache', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedWidth: true
+    })
     const parent = createParent({ cache })
 
     renderHelper({ cache, parent })
@@ -142,7 +150,9 @@ describe('CellMeasurer', () => {
   })
 
   it('componentDidUpdate() should not measure content that is already in the cache', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedWidth: true
+    })
     cache.set(0, 0, 100, 20)
 
     const parent = createParent({ cache })
@@ -166,7 +176,9 @@ describe('CellMeasurer', () => {
   })
 
   it('componentDidUpdate() should pass a :measure param to a function child', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedWidth: true
+    })
 
     const children = jest.fn()
     children.mockReturnValue(<div />)
@@ -188,7 +200,9 @@ describe('CellMeasurer', () => {
       width: 100
     })
 
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedWidth: true
+    })
 
     renderHelper({ cache }) // No parent Grid
 

@@ -5,6 +5,8 @@ describe('CellMeasurerCache', () => {
     const cache = new CellMeasurerCache({
       defaultHeight: 20,
       defaultWidth: 100,
+      fixedHeight: true,
+      fixedWidth: true,
       minHeight: 30,
       minWidth: 150
     })
@@ -16,12 +18,18 @@ describe('CellMeasurerCache', () => {
   })
 
   it('should correctly report cache status', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedHeight: true,
+      fixedWidth: true
+    })
     expect(cache.has(0, 0)).toBe(false)
   })
 
   it('should cache cells', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedHeight: true,
+      fixedWidth: true
+    })
     cache.set(0, 0, 100, 20)
     expect(cache.has(0, 0)).toBe(true)
   })
@@ -30,6 +38,8 @@ describe('CellMeasurerCache', () => {
     const cache = new CellMeasurerCache({
       defaultHeight: 20,
       defaultWidth: 100,
+      fixedHeight: true,
+      fixedWidth: true,
       minHeight: 15,
       minWidth: 80
     })
@@ -41,7 +51,10 @@ describe('CellMeasurerCache', () => {
   })
 
   it('should clear a single cached cell', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedHeight: true,
+      fixedWidth: true
+    })
     cache.set(0, 0, 100, 20)
     cache.set(1, 0, 100, 20)
     expect(cache.has(0, 0)).toBe(true)
@@ -52,7 +65,10 @@ describe('CellMeasurerCache', () => {
   })
 
   it('should clear all cached cells', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedHeight: true,
+      fixedWidth: true
+    })
     cache.set(0, 0, 100, 20)
     cache.set(1, 0, 100, 20)
     expect(cache.has(0, 0)).toBe(true)
@@ -66,7 +82,11 @@ describe('CellMeasurerCache', () => {
     const keyMapper = jest.fn()
     keyMapper.mockReturnValue('a')
 
-    const cache = new CellMeasurerCache({ keyMapper })
+    const cache = new CellMeasurerCache({
+      fixedHeight: true,
+      fixedWidth: true,
+      keyMapper
+    })
     cache.set(0, 0, 100, 20)
     expect(cache.has(0, 0)).toBe(true)
 
@@ -77,7 +97,10 @@ describe('CellMeasurerCache', () => {
   })
 
   it('should provide a Grid-compatible :columnWidth method', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedHeight: true,
+      fixedWidth: true
+    })
     expect(cache.columnWidth({ index: 0 })).toBe(DEFAULT_WIDTH)
     cache.set(0, 0, 100, 50)
     expect(cache.columnWidth({ index: 0 })).toBe(100)
@@ -89,7 +112,10 @@ describe('CellMeasurerCache', () => {
   })
 
   it('should provide a Grid-compatible :rowHeight method', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedHeight: true,
+      fixedWidth: true
+    })
     expect(cache.rowHeight({ index: 0 })).toBe(DEFAULT_HEIGHT)
     cache.set(0, 0, 100, 50)
     expect(cache.rowHeight({ index: 0 })).toBe(50)
@@ -102,15 +128,68 @@ describe('CellMeasurerCache', () => {
 
   it('should return the :defaultWidth for :columnWidth if not measured', () => {
     const cache = new CellMeasurerCache({
-      defaultWidth: 25
+      defaultWidth: 25,
+      fixedHeight: true,
+      fixedWidth: true
     })
     expect(cache.columnWidth({ index: 0 })).toBe(25)
   })
 
   it('should return the :defaultHeight for :rowHeight if not measured', () => {
     const cache = new CellMeasurerCache({
-      defaultHeight: 25
+      defaultHeight: 25,
+      fixedHeight: true,
+      fixedWidth: true
     })
     expect(cache.rowHeight({ index: 0 })).toBe(25)
+  })
+
+  describe('DEV mode', () => {
+    it('should warn about dynamic width and height configurations', () => {
+      spyOn(console, 'warn')
+
+      const cache = new CellMeasurerCache({
+        fixedHeight: false,
+        fixedWidth: false
+      })
+
+      expect(cache.hasFixedHeight()).toBe(false)
+      expect(cache.hasFixedWidth()).toBe(false)
+      expect(console.warn).toHaveBeenCalledWith(
+        'CellMeasurerCache should only measure a cell\'s width or height. ' +
+        'You have configured CellMeasurerCache to measure both. ' +
+        'This will result in poor performance.'
+      )
+    })
+
+    it('should warn about dynamic width with a defaultWidth of 0', () => {
+      spyOn(console, 'warn')
+
+      const cache = new CellMeasurerCache({
+        defaultWidth: 0,
+        fixedHeight: true
+      })
+
+      expect(cache.getWidth(0, 0)).toBe(0)
+      expect(console.warn).toHaveBeenCalledWith(
+        'Fixed width CellMeasurerCache should specify a :defaultWidth greater than 0. ' +
+        'Failing to do so will lead to unnecessary layout and poor performance.'
+      )
+    })
+
+    it('should warn about dynamic height with a defaultHeight of 0', () => {
+      spyOn(console, 'warn')
+
+      const cache = new CellMeasurerCache({
+        defaultHeight: 0,
+        fixedWidth: true
+      })
+
+      expect(cache.getHeight(0, 0)).toBe(0)
+      expect(console.warn).toHaveBeenCalledWith(
+        'Fixed height CellMeasurerCache should specify a :defaultHeight greater than 0. ' +
+        'Failing to do so will lead to unnecessary layout and poor performance.'
+      )
+    })
   })
 })
