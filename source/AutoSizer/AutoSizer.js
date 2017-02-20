@@ -92,7 +92,7 @@ export default class AutoSizer extends PureComponent {
   _onResize () {
     const { onResize } = this.props
 
-    // Gaurd against AutoSizer component being removed from the DOM immediately after being added.
+    // Guard against AutoSizer component being removed from the DOM immediately after being added.
     // This can result in invalid style values which can result in NaN values if we don't handle them.
     // See issue #150 for more context.
 
