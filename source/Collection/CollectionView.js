@@ -140,11 +140,12 @@ export default class CollectionView extends PureComponent {
     super(props, context)
 
     this.state = {
-      calculateSizeAndPositionDataOnNextUpdate: false,
       isScrolling: false,
       scrollLeft: 0,
       scrollTop: 0
     }
+
+    this._calculateSizeAndPositionDataOnNextUpdate = false
 
     // Invokes callbacks only when their values have changed.
     this._onSectionRenderedMemoizer = createCallbackMemoizer()
@@ -163,9 +164,8 @@ export default class CollectionView extends PureComponent {
    * Since cell positions are calculated by callbacks, the collection view has no way of detecting when the underlying data has changed.
    */
   recomputeCellSizesAndPositions () {
-    this.setState({
-      calculateSizeAndPositionDataOnNextUpdate: true
-    })
+    this._calculateSizeAndPositionDataOnNextUpdate = true
+    this.forceUpdate()
   }
 
   /* ---------------------------- Component lifecycle methods ---------------------------- */
@@ -273,12 +273,14 @@ export default class CollectionView extends PureComponent {
    * 2) New scroll props overriding the current state
    * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
    */
-  componentWillUpdate (nextProps, nextState) {
+  componentWillReceiveProps (nextProps) {
+    const { scrollLeft, scrollTop } = this.state
+
     if (
       nextProps.cellCount === 0 &&
       (
-        nextState.scrollLeft !== 0 ||
-        nextState.scrollTop !== 0
+        scrollLeft !== 0 ||
+        scrollTop !== 0
       )
     ) {
       this._setScrollPosition({
@@ -298,15 +300,13 @@ export default class CollectionView extends PureComponent {
     if (
       nextProps.cellCount !== this.props.cellCount ||
       nextProps.cellLayoutManager !== this.props.cellLayoutManager ||
-      nextState.calculateSizeAndPositionDataOnNextUpdate
+      this._calculateSizeAndPositionDataOnNextUpdate
     ) {
       nextProps.cellLayoutManager.calculateSizeAndPositionData()
     }
 
-    if (nextState.calculateSizeAndPositionDataOnNextUpdate) {
-      this.setState({
-        calculateSizeAndPositionDataOnNextUpdate: false
-      })
+    if (this._calculateSizeAndPositionDataOnNextUpdate) {
+      this._calculateSizeAndPositionDataOnNextUpdate = false
     }
   }
 

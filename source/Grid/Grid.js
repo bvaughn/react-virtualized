@@ -526,12 +526,14 @@ export default class Grid extends PureComponent {
    * 2) New scroll props overriding the current state
    * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
    */
-  componentWillUpdate (nextProps, nextState) {
+  componentWillReceiveProps (nextProps) {
+    const { scrollLeft, scrollTop } = this.state
+
     if (
       nextProps.columnCount === 0 &&
-      nextState.scrollLeft !== 0 ||
+      scrollLeft !== 0 ||
       nextProps.rowCount === 0 &&
-      nextState.scrollTop !== 0
+      scrollTop !== 0
     ) {
       this._setScrollPosition({
         scrollLeft: 0,
@@ -582,7 +584,7 @@ export default class Grid extends PureComponent {
       nextCellSize: nextProps.columnWidth,
       nextScrollToIndex: nextProps.scrollToColumn,
       scrollToIndex: this.props.scrollToColumn,
-      updateScrollOffsetForScrollToIndex: () => this._updateScrollLeftForScrollToColumn(nextProps, nextState)
+      updateScrollOffsetForScrollToIndex: () => this._updateScrollLeftForScrollToColumn(nextProps, this.state)
     })
     calculateSizeAndPositionDataAndUpdateScrollOffset({
       cellCount: this.props.rowCount,
@@ -593,9 +595,11 @@ export default class Grid extends PureComponent {
       nextCellSize: nextProps.rowHeight,
       nextScrollToIndex: nextProps.scrollToRow,
       scrollToIndex: this.props.scrollToRow,
-      updateScrollOffsetForScrollToIndex: () => this._updateScrollTopForScrollToRow(nextProps, nextState)
+      updateScrollOffsetForScrollToIndex: () => this._updateScrollTopForScrollToRow(nextProps, this.state)
     })
+  }
 
+  componentWillUpdate (nextProps, nextState) {
     this._calculateChildrenToRender(nextProps, nextState)
   }
 
