@@ -3,9 +3,13 @@
  * `window` and other DOM elements.
  */
 export function getHeight (element) {
-  return element === window
-    ? window.innerHeight
-    : element.getBoundingClientRect().height
+  if (element === window) {
+    return typeof window.innerHeight === 'number'
+      ? window.innerHeight
+      : 0
+  }
+
+  return element.getBoundingClientRect().height
 }
 
 /**
