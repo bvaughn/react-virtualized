@@ -3,7 +3,7 @@ Changelog
 
 ##### 9.0.2
 * 🎉 Added additional DEV-only warnings for improperly configured `CellMeasurerCache` based on user-feedback for the new API.
-* 🐛 Fixed edge-case where restoring :columnCount from 0 wouldnt properly restore previous :scrollToRow offset (and vice versa for :rowCount and :scrollToColumn)
+* 🐛 Fixed edge-case where restoring `columnCount` from 0 wouldnt properly restore previous `scrollToRow` offset (and vice versa for `rowCount` and `scrollToColumn`)
 * Updated `Grid` and `Collection` to move some state-setting logic related to offsets from `componentWillUpdate` to `componentWillReceiveProps`. This change should have no externally visible impact.
 
 ##### 9.0.1
