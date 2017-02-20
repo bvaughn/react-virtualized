@@ -574,9 +574,22 @@ export default class Grid extends PureComponent {
       estimatedCellSize: this._getEstimatedRowSize(nextProps)
     })
 
+    let { columnCount, rowCount } = this.props
+
+    // Special case when either cols or rows were 0
+    // This would prevent any cells from rendering
+    // So we need to reset row scroll if cols changed from 0 (and vice versa)
+    if (
+      columnCount === 0 ||
+      rowCount === 0
+    ) {
+      columnCount = 0
+      rowCount = 0
+    }
+
     // Update scroll offsets if the size or number of cells have changed, invalidating the previous value
     calculateSizeAndPositionDataAndUpdateScrollOffset({
-      cellCount: this.props.columnCount,
+      cellCount: columnCount,
       cellSize: this.props.columnWidth,
       computeMetadataCallback: () => this._columnSizeAndPositionManager.resetCell(0),
       computeMetadataCallbackProps: nextProps,
@@ -587,7 +600,7 @@ export default class Grid extends PureComponent {
       updateScrollOffsetForScrollToIndex: () => this._updateScrollLeftForScrollToColumn(nextProps, this.state)
     })
     calculateSizeAndPositionDataAndUpdateScrollOffset({
-      cellCount: this.props.rowCount,
+      cellCount: rowCount,
       cellSize: this.props.rowHeight,
       computeMetadataCallback: () => this._rowSizeAndPositionManager.resetCell(0),
       computeMetadataCallbackProps: nextProps,

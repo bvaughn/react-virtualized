@@ -378,6 +378,40 @@ describe('Grid', () => {
 
       expect(node.scrollTop).toBe(1920)
     })
+
+    it('should restore scroll offset for column when row count increases from 0 (and vice versa)', () => {
+      const props = {
+        columnWidth: 50,
+        columnCount: 100,
+        height: 100,
+        rowCount: 100,
+        rowHeight: 20,
+        scrollToColumn: 50,
+        scrollToRow: 50,
+        width: 100
+      }
+      const grid = render(getMarkup(props))
+      expect(grid.state.scrollLeft).toEqual(2450)
+      expect(grid.state.scrollTop).toEqual(920)
+      render(getMarkup({
+        ...props,
+        columnCount: 0
+      }))
+      expect(grid.state.scrollLeft).toEqual(0)
+      expect(grid.state.scrollTop).toEqual(0)
+      render(getMarkup(props))
+      expect(grid.state.scrollLeft).toEqual(2450)
+      expect(grid.state.scrollTop).toEqual(920)
+      render(getMarkup({
+        ...props,
+        rowCount: 0
+      }))
+      expect(grid.state.scrollLeft).toEqual(0)
+      expect(grid.state.scrollTop).toEqual(0)
+      render(getMarkup(props))
+      expect(grid.state.scrollLeft).toEqual(2450)
+      expect(grid.state.scrollTop).toEqual(920)
+    })
   })
 
   describe('property updates', () => {
@@ -1579,7 +1613,9 @@ describe('Grid', () => {
   })
 
   it('should only cache styles when a :deferredMeasurementCache is provided if the cell has already been measured', () => {
-    const cache = new CellMeasurerCache()
+    const cache = new CellMeasurerCache({
+      fixedWidth: true
+    })
     cache.set(0, 0, 100, 100)
     cache.set(1, 1, 100, 100)
 
@@ -1611,7 +1647,9 @@ describe('Grid', () => {
 
   describe('deferredMeasurementCache', () => {
     it('invalidateCellSizeAfterRender should invalidate cache and refresh displayed cells after mount', () => {
-      const cache = new CellMeasurerCache()
+      const cache = new CellMeasurerCache({
+        fixedWidth: true
+      })
 
       let invalidateCellSizeAfterRender = true
 
@@ -1644,7 +1682,9 @@ describe('Grid', () => {
     })
 
     it('should invalidate cache and refresh displayed cells after update', () => {
-      const cache = new CellMeasurerCache()
+      const cache = new CellMeasurerCache({
+        fixedWidth: true
+      })
 
       const cellRenderer = jest.fn()
       cellRenderer.mockImplementation(
@@ -1686,7 +1726,9 @@ describe('Grid', () => {
     })
 
     it('should not cache cells until they have been measured by CellMeasurer', () => {
-      const cache = new CellMeasurerCache()
+      const cache = new CellMeasurerCache({
+        fixedWidth: true
+      })
 
       // Fake measure cell 0,0 but not cell 0,1
       cache.set(0, 0, 100, 30)
