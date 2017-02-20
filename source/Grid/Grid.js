@@ -252,6 +252,8 @@ export default class Grid extends PureComponent {
 
     this._deferredInvalidateColumnIndex = null
     this._deferredInvalidateRowIndex = null
+    this._recomputeScrollLeftFlag = false
+    this._recomputeScrollTopFlag = false
 
     const deferredMeasurementCache = props.deferredMeasurementCache
     const deferredMode = typeof deferredMeasurementCache !== 'undefined'
@@ -314,8 +316,16 @@ export default class Grid extends PureComponent {
     columnIndex = 0,
     rowIndex = 0
   } = {}) {
+    const { scrollToColumn, scrollToRow } = this.props
+
     this._columnSizeAndPositionManager.resetCell(columnIndex)
     this._rowSizeAndPositionManager.resetCell(rowIndex)
+
+    // Cell sizes may be determined by a function property.
+    // In this case the cDU handler can't know if they changed.
+    // Store this flag to let the next cDU pass know it needs to recompute the scroll offset.
+    this._recomputeScrollLeftFlag = scrollToColumn >= 0 && columnIndex <= scrollToColumn
+    this._recomputeScrollTopFlag = scrollToRow >= 0 && rowIndex <= scrollToRow
 
     // Clear cell cache in case we are scrolling;
     // Invalid row heights likely mean invalid cached content as well.
@@ -436,32 +446,43 @@ export default class Grid extends PureComponent {
 
     // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
     // @TODO Do we also need this check or can the one in componentWillUpdate() suffice?
-    updateScrollIndexHelper({
-      cellSizeAndPositionManager: this._columnSizeAndPositionManager,
-      previousCellsCount: prevProps.columnCount,
-      previousCellSize: prevProps.columnWidth,
-      previousScrollToAlignment: prevProps.scrollToAlignment,
-      previousScrollToIndex: prevProps.scrollToColumn,
-      previousSize: prevProps.width,
-      scrollOffset: scrollLeft,
-      scrollToAlignment,
-      scrollToIndex: scrollToColumn,
-      size: width,
-      updateScrollIndexCallback: (scrollToColumn) => this._updateScrollLeftForScrollToColumn({ ...this.props, scrollToColumn })
-    })
-    updateScrollIndexHelper({
-      cellSizeAndPositionManager: this._rowSizeAndPositionManager,
-      previousCellsCount: prevProps.rowCount,
-      previousCellSize: prevProps.rowHeight,
-      previousScrollToAlignment: prevProps.scrollToAlignment,
-      previousScrollToIndex: prevProps.scrollToRow,
-      previousSize: prevProps.height,
-      scrollOffset: scrollTop,
-      scrollToAlignment,
-      scrollToIndex: scrollToRow,
-      size: height,
-      updateScrollIndexCallback: (scrollToRow) => this._updateScrollTopForScrollToRow({ ...this.props, scrollToRow })
-    })
+    if (this._recomputeScrollLeftFlag) {
+      this._recomputeScrollLeftFlag = false
+      this._updateScrollLeftForScrollToColumn(this.props)
+    } else {
+      updateScrollIndexHelper({
+        cellSizeAndPositionManager: this._columnSizeAndPositionManager,
+        previousCellsCount: prevProps.columnCount,
+        previousCellSize: prevProps.columnWidth,
+        previousScrollToAlignment: prevProps.scrollToAlignment,
+        previousScrollToIndex: prevProps.scrollToColumn,
+        previousSize: prevProps.width,
+        scrollOffset: scrollLeft,
+        scrollToAlignment,
+        scrollToIndex: scrollToColumn,
+        size: width,
+        updateScrollIndexCallback: (scrollToColumn) => this._updateScrollLeftForScrollToColumn(this.props)
+      })
+    }
+
+    if (this._recomputeScrollTopFlag) {
+      this._recomputeScrollTopFlag = false
+      this._updateScrollTopForScrollToRow(this.props)
+    } else {
+      updateScrollIndexHelper({
+        cellSizeAndPositionManager: this._rowSizeAndPositionManager,
+        previousCellsCount: prevProps.rowCount,
+        previousCellSize: prevProps.rowHeight,
+        previousScrollToAlignment: prevProps.scrollToAlignment,
+        previousScrollToIndex: prevProps.scrollToRow,
+        previousSize: prevProps.height,
+        scrollOffset: scrollTop,
+        scrollToAlignment,
+        scrollToIndex: scrollToRow,
+        size: height,
+        updateScrollIndexCallback: (scrollToRow) => this._updateScrollTopForScrollToRow(this.props)
+      })
+    }
 
     // Update onRowsRendered callback if start/stop indices have changed
     this._invokeOnGridRenderedHelper()

@@ -354,6 +354,30 @@ describe('Grid', () => {
       // So the minimum amount of scrolling leaves the 50th item at the bottom (just scrolled into view).
       expect(grid.state.scrollTop).toEqual(900)
     })
+
+    // See issue #565
+    it('should update scroll position to account for changed cell sizes within a function prop wrapper', () => {
+      let rowHeight = 20
+
+      const props = {
+        height: 100,
+        rowCount: 100,
+        rowHeight: ({ index }) => index === 99 ? rowHeight : 20,
+        scrollToRow: 99
+      }
+
+      const grid = render(getMarkup(props))
+      const node = findDOMNode(grid)
+
+      expect(node.scrollTop).toBe(1900)
+
+      rowHeight = 40
+      grid.recomputeGridSize({
+        rowIndex: 99
+      })
+
+      expect(node.scrollTop).toBe(1920)
+    })
   })
 
   describe('property updates', () => {
