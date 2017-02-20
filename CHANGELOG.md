@@ -1,6 +1,13 @@
 Changelog
 ------------
 
+##### 9.0.1
+* 🐛 Edge-case bug with scroll-to-index and cell size function property (#565)
+* 🐛 Edge-case bug with `WindowScroller` and mocked `window` object
+
+# 9.0.0
+Version 9 changes and upgrade steps are described in detail on the [version 9 pull request](https://github.com/bvaughn/react-virtualized/pull/577).
+
 ##### 8.11.4
 * 🐛 Better guard against minification/uglification in `ColumnSizer` when verifying child is either a `Grid` or a `MultiGrid`. (#558)
 
