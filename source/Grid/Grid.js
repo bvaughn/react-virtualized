@@ -5,7 +5,6 @@ import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculate
 import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import defaultOverscanIndicesGetter, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/defaultOverscanIndicesGetter'
-import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
 import defaultCellRangeRenderer from './defaultCellRangeRenderer'
 
@@ -104,6 +103,11 @@ export default class Grid extends PureComponent {
      * The estimated total height is adjusted as rows are rendered.
      */
     estimatedRowSize: PropTypes.number.isRequired,
+
+    /**
+     * Exposed for testing purposes only.
+     */
+    getScrollbarSize: PropTypes.func.isRequired,
 
     /**
      * Height of Grid; this property determines the number of visible (vs virtualized) rows.
@@ -212,6 +216,7 @@ export default class Grid extends PureComponent {
     cellRangeRenderer: defaultCellRangeRenderer,
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
+    getScrollbarSize: require('dom-helpers/util/scrollbarSize'),
     noContentRenderer: () => null,
     onScroll: () => null,
     onSectionRendered: () => null,
@@ -354,7 +359,7 @@ export default class Grid extends PureComponent {
   }
 
   componentDidMount () {
-    const { scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
+    const { getScrollbarSize, scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
 
     // If cell sizes have been invalidated (eg we are using CellMeasurer) then reset cached positions.
     // We must do this at the start of the method as we may calculate and update scroll position below.
@@ -500,6 +505,8 @@ export default class Grid extends PureComponent {
   }
 
   componentWillMount () {
+    const { getScrollbarSize } = this.props
+
     // If this component is being rendered server-side, getScrollbarSize() will return undefined.
     // We handle this case in componentDidMount()
     this._scrollbarSize = getScrollbarSize()
@@ -957,15 +964,17 @@ export default class Grid extends PureComponent {
   }
 
   _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {
-    const { columnCount, scrollToAlignment, scrollToColumn, width } = props
+    const { columnCount, height, scrollToAlignment, scrollToColumn, width } = props
     const { scrollLeft } = state
 
     if (scrollToColumn >= 0 && columnCount > 0) {
       const targetIndex = Math.max(0, Math.min(columnCount - 1, scrollToColumn))
+      const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
+      const scrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0
 
       const calculatedScrollLeft = this._columnSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
-        containerSize: width,
+        containerSize: width - scrollBarSize,
         currentOffset: scrollLeft,
         targetIndex
       })
@@ -979,15 +988,17 @@ export default class Grid extends PureComponent {
   }
 
   _updateScrollTopForScrollToRow (props = this.props, state = this.state) {
-    const { height, rowCount, scrollToAlignment, scrollToRow } = props
+    const { height, rowCount, scrollToAlignment, scrollToRow, width } = props
     const { scrollTop } = state
 
     if (scrollToRow >= 0 && rowCount > 0) {
       const targetIndex = Math.max(0, Math.min(rowCount - 1, scrollToRow))
+      const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
+      const scrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0
 
       const calculatedScrollTop = this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
-        containerSize: height,
+        containerSize: height - scrollBarSize,
         currentOffset: scrollTop,
         targetIndex
       })
