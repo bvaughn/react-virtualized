@@ -23,7 +23,7 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered. This callback is only invoked when visible rows have changed: `({ columnOverscanStartIndex: number, columnOverscanStopIndex: number, columnStartIndex: number, columnStopIndex: number, rowOverscanStartIndex: number, rowOverscanStopIndex: number, rowStartIndex: number, rowStopIndex: number }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, clientWidth: number, scrollHeight: number, scrollLeft: number, scrollTop: number, scrollWidth: number }): void` |
 | overscanColumnCount | Number |  | Number of columns to render before/after the visible slice of the grid. This can help reduce flickering during scrolling on certain browsers/devices. |
-| overscanIndicesGetter | Function |  | Responsible for calculating the number of cells to overscan before and after a specified range [Learn more](#overscanIndicesGetter) |
+| overscanIndicesGetter | Function |  | Responsible for calculating the number of cells to overscan before and after a specified range [Learn more](#overscanindicesgetter) |
 | overscanRowCount | Number |  | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browsers/devices. |
 | rowCount | Number | ✓ | Number of rows in grid. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
