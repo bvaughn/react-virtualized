@@ -34,7 +34,7 @@ function loadScriptsAndStyles (source) {
 }
 
 function loadReact () {
-  var baseDir = 'https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0'
+  var baseDir = 'https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2'
   var reactParam = getUrlParam('react')
 
   if (reactParam) {
@@ -43,6 +43,6 @@ function loadReact () {
       : `https://cdnjs.cloudflare.com/ajax/libs/react/${reactParam}`
   }
 
-  loadScript(`${baseDir}/react-with-addons.min.js`)
+  loadScript(`${baseDir}/react.min.js`)
   loadScript(`${baseDir}/react-dom.min.js`)
 }
