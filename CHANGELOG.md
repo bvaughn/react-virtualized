@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.0.3
+* 🐛 `Grid` takes scrollbar size into account when aligning cells for `scrollToColumn` or `scrollToRow` usage.
+
 ##### 9.0.2
 * 🎉 Added additional DEV-only warnings for improperly configured `CellMeasurerCache` based on user-feedback for the new API.
 * 🐛 Fixed edge-case where restoring `columnCount` from 0 wouldnt properly restore previous `scrollToRow` offset (and vice versa for `rowCount` and `scrollToColumn`)
