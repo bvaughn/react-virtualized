@@ -57,8 +57,8 @@ export default class DynamicHeightList extends PureComponent {
         cache={this._cache}
         columnIndex={0}
         key={key}
-        parent={parent}
         rowIndex={index}
+        parent={parent}
       >
         {({ measure }) => (
           <div

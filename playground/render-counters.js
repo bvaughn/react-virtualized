@@ -1,8 +1,7 @@
-const { Component } = React
-const { shallowCompare } = React.addons
+const { PureComponent } = React
 const { AutoSizer, List } = ReactVirtualized
 
-class ListExample extends Component {
+class ListExample extends PureComponent {
   render() {
     return React.createElement(
       AutoSizer,
@@ -18,10 +17,6 @@ class ListExample extends Component {
     );
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
-  }
-
   _rowRenderer({ index, isScrolling, key, style }) {
     return React.createElement(Row, {
       index: index,
@@ -31,7 +26,7 @@ class ListExample extends Component {
   }
 }
 
-class Row extends Component {
+class Row extends PureComponent {
   constructor(props, context) {
     super(props, context);
 
@@ -63,10 +58,6 @@ class Row extends Component {
       ', ',
       this._renderCount
     );
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
   }
 }
 
