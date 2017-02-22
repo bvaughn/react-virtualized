@@ -1,14 +1,12 @@
-Thanks for using react-virtualized! Here are a couple of things to consider before filing an issue:
+Thanks for using react-virtualized! :)
+
+Before creating an issue...
 
 # Are you asking a question?
-Please don't file Github issues to ask questions. Use Stack Overflow (http://stackoverflow.com/questions/tagged/react-virtualized) with a #react-virtualized tag or the react-virtualized Gitter chat room (https://gitter.im/bvaughn/react-virtualized).
-
-Both of these areas are monitored by people other than me and so are likely to get faster responses. Question issues may be closed without a response.
+Please don't file Github issues to ask questions. Use Stack Overflow with a #react-virtualized tag [http://stackoverflow.com/questions/tagged/react-virtualized] or ask in the react-virtualized Slack channel [https://react-virtualized.now.sh].
 
 # Are you reporting a bug or runtime error?
-Setting up a test case that demonstrates a bug can be difficult and time consuming. However this can often be a huge help and time saver for me. Since I maintain this library in my spare time and without any charges, I ask that you take the time to provide me with some way of reproducing the issue you are reporting. (Videos can be helpful but in most cases I will want to actually see a live demo and view your source code.)
-
-Here is a Plunker you can fork that has React Virtualized loaded and supports JSX syntax: https://plnkr.co/edit/6syKo8cx3RfoO96hXFT1
+Please include either a failing unit test or a Plnkr demonstrating the bug you are reporting. You can start by forking this Plnk! https://plnkr.co/edit/6syKo8cx3RfoO96hXFT1
 
 You may also find the online Babel tool (https://babeljs.io/repl/) quite helpful if you wish to use ES6/ES7 syntax not yet supported by the browser you are using.
 
