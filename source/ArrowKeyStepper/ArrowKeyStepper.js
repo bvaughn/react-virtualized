@@ -40,14 +40,25 @@ export default class ArrowKeyStepper extends PureComponent {
     this._onSectionRendered = this._onSectionRendered.bind(this)
   }
 
-  componentWillUpdate (nextProps, nextState) {
+  componentWillReceiveProps (nextProps) {
     const { scrollToColumn, scrollToRow } = nextProps
 
-    if (this.props.scrollToColumn !== scrollToColumn) {
-      this.setState({ scrollToColumn })
-    }
+    const {
+      scrollToColumn: prevScrollToColumn,
+      scrollToRow: prevScrollToRow
+    } = this.props
 
-    if (this.props.scrollToRow !== scrollToRow) {
+    if (
+      prevScrollToColumn !== scrollToColumn &&
+      prevScrollToRow !== scrollToRow
+    ) {
+      this.setState({
+        scrollToColumn,
+        scrollToRow
+      })
+    } else if (prevScrollToColumn !== scrollToColumn) {
+      this.setState({ scrollToColumn })
+    } else if (prevScrollToRow !== scrollToRow) {
       this.setState({ scrollToRow })
     }
   }
