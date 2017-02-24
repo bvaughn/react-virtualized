@@ -122,11 +122,15 @@ export default class CellMeasurerCache {
 
     delete this._cellHeightCache[key]
     delete this._cellWidthCache[key]
+
+    this._updateCachedColumnAndRowSizes(rowIndex, columnIndex)
   }
 
   clearAll () : void {
     this._cellHeightCache = {}
     this._cellWidthCache = {}
+    this._columnWidthCache = {}
+    this._rowHeightCache = {}
   }
 
   columnWidth = ({ index } : IndexParam) => {
@@ -199,6 +203,13 @@ export default class CellMeasurerCache {
     this._cellHeightCache[key] = height
     this._cellWidthCache[key] = width
 
+    this._updateCachedColumnAndRowSizes(rowIndex, columnIndex)
+  }
+
+  _updateCachedColumnAndRowSizes (
+    rowIndex: number,
+    columnIndex: number
+  ) : void {
     // :columnWidth and :rowHeight are derived based on all cells in a column/row.
     // Pre-cache these derived values for faster lookup later.
     // Reads are expected to occur more frequently than writes in this case.

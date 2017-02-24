@@ -144,6 +144,44 @@ describe('CellMeasurerCache', () => {
     expect(cache.rowHeight({ index: 0 })).toBe(25)
   })
 
+  it('should recalculate cached :columnWidth when cells are cleared', () => {
+    const cache = new CellMeasurerCache({
+      fixedHeight: true
+    })
+    expect(cache.columnWidth({ index: 0 })).toBe(DEFAULT_WIDTH)
+    cache.set(0, 0, 125, 50)
+    expect(cache.columnWidth({ index: 0 })).toBe(125)
+    cache.set(1, 0, 150, 50)
+    expect(cache.columnWidth({ index: 0 })).toBe(150)
+    cache.clear(1, 0)
+    expect(cache.columnWidth({ index: 0 })).toBe(125)
+    cache.clear(0, 0)
+    expect(cache.columnWidth({ index: 0 })).toBe(DEFAULT_WIDTH)
+    cache.set(0, 0, 125, 50)
+    expect(cache.columnWidth({ index: 0 })).toBe(125)
+    cache.clearAll()
+    expect(cache.columnWidth({ index: 0 })).toBe(DEFAULT_WIDTH)
+  })
+
+  it('should recalculate cached :rowHeight when cells are cleared', () => {
+    const cache = new CellMeasurerCache({
+      fixedWidth: true
+    })
+    expect(cache.rowHeight({ index: 0 })).toBe(DEFAULT_HEIGHT)
+    cache.set(0, 0, 125, 50)
+    expect(cache.rowHeight({ index: 0 })).toBe(50)
+    cache.set(0, 1, 150, 75)
+    expect(cache.rowHeight({ index: 0 })).toBe(75)
+    cache.clear(0, 1)
+    expect(cache.rowHeight({ index: 0 })).toBe(50)
+    cache.clear(0, 0)
+    expect(cache.rowHeight({ index: 0 })).toBe(DEFAULT_HEIGHT)
+    cache.set(0, 0, 125, 50)
+    expect(cache.rowHeight({ index: 0 })).toBe(50)
+    cache.clearAll()
+    expect(cache.rowHeight({ index: 0 })).toBe(DEFAULT_HEIGHT)
+  })
+
   describe('DEV mode', () => {
     it('should warn about dynamic width and height configurations', () => {
       spyOn(console, 'warn')
