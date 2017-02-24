@@ -63,10 +63,7 @@ export default class DynamicHeightList extends PureComponent {
         {({ measure }) => (
           <div
             className={classNames}
-            style={{
-              ...style,
-              height: 'auto'
-            }}
+            style={style}
           >
             <img
               onLoad={measure}

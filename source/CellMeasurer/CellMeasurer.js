@@ -97,6 +97,19 @@ export default class CellMeasurer extends PureComponent {
     const { cache, columnIndex, parent, rowIndex } = this.props
 
     const node = findDOMNode(this)
+
+    // If we are re-measuring a cell that has already been measured,
+    // It will have a hard-coded width/height from the previous measurement.
+    // The fact that we are measuring indicates this measurement is probably stale,
+    // So explicitly clear it out (eg set to "auto") so we can recalculate.
+    // See issue #593 for more info.
+    if (!cache.hasFixedWidth()) {
+      node.style.width = 'auto'
+    }
+    if (!cache.hasFixedHeight()) {
+      node.style.height = 'auto'
+    }
+
     const height = node.offsetHeight
     const width = node.offsetWidth
 

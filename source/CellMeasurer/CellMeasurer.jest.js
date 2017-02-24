@@ -1,6 +1,7 @@
 /* global Element */
 
 import React from 'react'
+import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import CellMeasurer from './CellMeasurer'
 import CellMeasurerCache, { DEFAULT_HEIGHT, DEFAULT_WIDTH } from './CellMeasurerCache'
@@ -225,5 +226,35 @@ describe('CellMeasurer', () => {
     renderHelper({ parent })
 
     expect(console.warn).toHaveBeenCalledTimes(1)
+  })
+
+  // See issue #593
+  it('should explicitly set widht/height style to "auto" before re-measuring', () => {
+    const cache = new CellMeasurerCache({
+      fixedWidth: true
+    })
+    const parent = createParent({ cache })
+    const child = jest.fn()
+    child.mockImplementation(
+      (params) => <div style={{ width: 100, height: 30 }}></div>
+    )
+
+    const node = findDOMNode(render(
+      <CellMeasurer
+        cache={cache}
+        columnIndex={0}
+        parent={parent}
+        rowIndex={0}
+        style={{}}
+      >
+        {child}
+      </CellMeasurer>
+    ))
+
+    expect(node.style.height).toBe('30px')
+
+    child.mock.calls[0][0].measure()
+
+    expect(node.style.height).toBe('auto')
   })
 })
