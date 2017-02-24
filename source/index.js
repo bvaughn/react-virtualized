@@ -11,6 +11,7 @@ export {
   defaultCellDataGetter as defaultTableCellDataGetter,
   defaultCellRenderer as defaultTableCellRenderer,
   defaultHeaderRenderer as defaultTableHeaderRenderer,
+  defaultHeaderRowRenderer as defaultTableHeaderRowRenderer,
   defaultRowRenderer as defaultTableRowRenderer,
   Table,
   Column,

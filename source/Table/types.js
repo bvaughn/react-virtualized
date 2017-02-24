@@ -1,4 +1,5 @@
 /** @flow */
+import Column from './Column';
 
 export type CellDataGetterParams = {
   columnData: ?any,
@@ -14,6 +15,15 @@ export type CellRendererParams = {
   rowIndex: number
 };
 
+export type HeaderRowRendererParams = {
+  className: string,
+  columns: any[],
+  style: any,
+  scrollbarWidth: number,
+  height: number,
+  width: number
+};
+
 export type HeaderRendererParams = {
   columnData: ?any,
   dataKey: string,
@@ -25,7 +35,7 @@ export type HeaderRendererParams = {
 
 export type RowRendererParams = {
   className: string,
-  columns: Array,
+  columns: any[],
   index: number,
   isScrolling: boolean,
   onRowClick: ?Function,

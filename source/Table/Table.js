@@ -5,6 +5,7 @@ import React, { PropTypes, PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
 import Grid from '../Grid'
 import defaultRowRenderer from './defaultRowRenderer'
+import defaultHeaderRowRenderer from './defaultHeaderRowRenderer'
 import SortDirection from './SortDirection'
 
 /**
@@ -155,6 +156,20 @@ export default class Table extends PureComponent {
      */
     rowRenderer: PropTypes.func,
 
+    /**
+     * Responsible for rendering a table row given an array of columns:
+     * Should implement the following interface: ({
+     *   className: string,
+     *   columns: any[],
+     *   rowData: any,
+     *   style: any,
+     *   scrollbarWidth: number,
+     *   height: number,
+     *   width: number
+     * }): PropTypes.node
+     */
+    headerRowRenderer: PropTypes.func,
+
     /** Optional custom inline style to attach to table rows. */
     rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
 
@@ -199,6 +214,7 @@ export default class Table extends PureComponent {
     onScroll: () => null,
     overscanRowCount: 10,
     rowRenderer: defaultRowRenderer,
+    headerRowRenderer: defaultHeaderRowRenderer,
     rowStyle: {},
     scrollToAlignment: 'auto',
     style: {}
@@ -295,18 +311,14 @@ export default class Table extends PureComponent {
         style={style}
       >
         {!disableHeader && (
-          <div
-            className={cn('ReactVirtualized__Table__headerRow', rowClass)}
-            style={{
-              ...rowStyleObject,
-              height: headerHeight,
-              overflow: 'hidden',
-              paddingRight: scrollbarWidth,
-              width: width
-            }}
-          >
-            {this._getRenderedHeaderRow()}
-          </div>
+          this.props.headerRowRenderer({
+            className:cn('ReactVirtualized__Table__headerRow', rowClass),
+            style: rowStyleObject,
+            height: headerHeight,
+            scrollbarWidth,
+            width,
+            columns: this._getRenderedHeaderRow()
+          })
         )}
 
         <Grid
