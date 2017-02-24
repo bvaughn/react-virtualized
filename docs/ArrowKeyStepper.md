@@ -18,6 +18,11 @@ The appearance of this wrapper element can be customized using the `className` p
 | scrollToColumn | Number |  | Optional default/initial `scrollToColumn` value |
 | scrollToRow | Number |  | Optional default/initial `scrollToRow` value |
 
+### Public Methods
+
+##### setScrollIndexes
+Override the local state of the component with new values for `scrollToRow` and `scrollToColumn`.
+
 ### Children function
 
 The child function is passed the following named parameters:
