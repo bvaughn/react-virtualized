@@ -1,6 +1,13 @@
 Changelog
 ------------
 
+##### 9.0.5
+* 🎉 Explicitly set `width`/`height` style to "auto" before re-measuring `CellMeasurer` content so that new measurements can be taken. ([#593](https://github.com/bvaughn/react-virtualized/issues/593))
+* 🐛 CellMeasurerCache now correctly recomputes cached row height and column width values when cells are cleared. ([#594](https://github.com/bvaughn/react-virtualized/issues/594))
+
+##### 9.0.4
+* 🐛 Moved flow-bin from 'dependencies' to 'devDependencies'. This was accidentally placed as a dep before.
+
 ##### 9.0.3
 * 🐛 `Grid` takes scrollbar size into account when aligning cells for `scrollToColumn` or `scrollToRow` usage. ([#543](https://github.com/bvaughn/react-virtualized/issues/543))
 
