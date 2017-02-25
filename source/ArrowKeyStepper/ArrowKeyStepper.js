@@ -63,7 +63,10 @@ export default class ArrowKeyStepper extends PureComponent {
     }
   }
 
-  setScrollIndexes (scrollToRow, scrollToColumn) {
+  setScrollIndexes ({
+    scrollToColumn,
+    scrollToRow
+  }) {
     this.setState({
       scrollToRow,
       scrollToColumn

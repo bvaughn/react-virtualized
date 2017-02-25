@@ -20,7 +20,7 @@ The appearance of this wrapper element can be customized using the `className` p
 
 ### Public Methods
 
-##### setScrollIndexes
+##### setScrollIndexes ({ scrollToColumn: number, scrollToRow: number })
 Override the local state of the component with new values for `scrollToRow` and `scrollToColumn`.
 
 ### Children function
