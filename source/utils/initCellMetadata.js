@@ -10,7 +10,7 @@ export default function initCellMetadata ({
   cellCount,
   size
 }) {
-  const sizeGetter = size instanceof Function
+  const sizeGetter = typeof size === 'function'
     ? size
     : ({ index }) => size
 

@@ -271,8 +271,8 @@ export default class Table extends PureComponent {
 
     const availableRowsHeight = disableHeader ? height : height - headerHeight
 
-    const rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName
-    const rowStyleObject = rowStyle instanceof Function ? rowStyle({ index: -1 }) : rowStyle
+    const rowClass = typeof rowClassName === 'function' ? rowClassName({ index: -1 }) : rowClassName
+    const rowStyleObject = typeof rowStyle === 'function' ? rowStyle({ index: -1 }) : rowStyle
 
     // Precompute and cache column styles before rendering rows and columns to speed things up
     this._cachedColumnStyles = []
@@ -456,8 +456,8 @@ export default class Table extends PureComponent {
 
     const { scrollbarWidth } = this.state
 
-    const rowClass = rowClassName instanceof Function ? rowClassName({ index }) : rowClassName
-    const rowStyleObject = rowStyle instanceof Function ? rowStyle({ index }) : rowStyle
+    const rowClass = typeof rowClassName === 'function' ? rowClassName({ index }) : rowClassName
+    const rowStyleObject = typeof rowStyle === 'function' ? rowStyle({ index }) : rowStyle
     const rowData = rowGetter({ index })
 
     const columns = React.Children.toArray(children).map(
@@ -532,7 +532,7 @@ export default class Table extends PureComponent {
   _getRowHeight (rowIndex) {
     const { rowHeight } = this.props
 
-    return rowHeight instanceof Function
+    return typeof rowHeight === 'function'
       ? rowHeight({ index: rowIndex })
       : rowHeight
   }

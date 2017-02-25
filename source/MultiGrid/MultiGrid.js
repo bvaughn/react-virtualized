@@ -206,7 +206,7 @@ export default class MultiGrid extends PureComponent {
   _columnWidthRightGrid ({ index }) {
     const { fixedColumnCount, columnWidth } = this.props
 
-    return columnWidth instanceof Function
+    return typeof columnWidth === 'function'
       ? columnWidth({ index: index + fixedColumnCount })
       : columnWidth
   }
@@ -223,7 +223,7 @@ export default class MultiGrid extends PureComponent {
     const { fixedColumnCount, columnWidth } = props
 
     if (this._leftGridWidth == null) {
-      if (columnWidth instanceof Function) {
+      if (typeof columnWidth === 'function') {
         let leftGridWidth = 0
 
         for (let index = 0; index < fixedColumnCount; index++) {
@@ -251,7 +251,7 @@ export default class MultiGrid extends PureComponent {
     const { fixedRowCount, rowHeight } = props
 
     if (this._topGridHeight == null) {
-      if (rowHeight instanceof Function) {
+      if (typeof rowHeight === 'function') {
         let topGridHeight = 0
 
         for (let index = 0; index < fixedRowCount; index++) {
@@ -516,7 +516,7 @@ export default class MultiGrid extends PureComponent {
   _rowHeightBottomGrid ({ index }) {
     const { fixedRowCount, rowHeight } = this.props
 
-    return rowHeight instanceof Function
+    return typeof rowHeight === 'function'
       ? rowHeight({ index: index + fixedRowCount })
       : rowHeight
   }

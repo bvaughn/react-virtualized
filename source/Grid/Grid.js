@@ -954,7 +954,7 @@ export default class Grid extends PureComponent {
   }
 
   _wrapPropertyGetter (value) {
-    return value instanceof Function
+    return typeof value === 'function'
       ? value
       : () => value
   }

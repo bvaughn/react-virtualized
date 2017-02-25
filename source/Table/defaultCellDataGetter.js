@@ -11,7 +11,7 @@ export default function defaultCellDataGetter ({
   dataKey,
   rowData
 }: CellDataGetterParams) {
-  if (rowData.get instanceof Function) {
+  if (typeof rowData.get === 'function') {
     return rowData.get(dataKey)
   } else {
     return rowData[dataKey]
