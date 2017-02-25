@@ -18,7 +18,7 @@ describe('ArrowKeyStepper', () => {
   function renderHelper (props = {}) {
     let onSectionRenderedCallback
 
-    const node = findDOMNode(render(
+    const component = render(
       <ArrowKeyStepper
         columnCount={10}
         mode='edges'
@@ -36,9 +36,11 @@ describe('ArrowKeyStepper', () => {
           )
         }}
       </ArrowKeyStepper>
-    ))
+    )
+    const node = findDOMNode(component)
 
     return {
+      component,
       node,
       onSectionRendered: onSectionRenderedCallback
     }
@@ -117,6 +119,26 @@ describe('ArrowKeyStepper', () => {
     })
     Simulate.keyDown(node, {key: 'ArrowRight'})
     assertCurrentScrollTo(node, 2, 1)
+    Simulate.keyDown(node, {key: 'ArrowDown'})
+    assertCurrentScrollTo(node, 2, 2)
+  })
+
+  it('should accept updated :scrollToColumn and :scrollToRow values via setScrollIndexes()', () => {
+    const { component, node } = renderHelper({
+      mode: 'cells',
+      scrollToColumn: 2,
+      scrollToRow: 4
+    })
+    Simulate.keyDown(node, {key: 'ArrowDown'})
+    assertCurrentScrollTo(node, 2, 5)
+    component.setScrollIndexes({
+      scrollToColumn: 1,
+      scrollToRow: 1
+    })
+    Simulate.keyDown(node, {key: 'ArrowRight'})
+    assertCurrentScrollTo(node, 2, 1)
+    Simulate.keyDown(node, {key: 'ArrowDown'})
+    assertCurrentScrollTo(node, 2, 2)
   })
 
   it('should not update :scrollToColumn or :scrollToRow when :disabled', () => {
