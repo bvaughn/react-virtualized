@@ -189,7 +189,7 @@ export default class Grid extends PureComponent {
     /**
      * Column index to ensure visible (by forcefully scrolling if necessary)
      */
-    scrollToColumn: PropTypes.number,
+    scrollToColumn: PropTypes.number.isRequired,
 
     /** Vertical offset. */
     scrollTop: PropTypes.number,
@@ -197,7 +197,7 @@ export default class Grid extends PureComponent {
     /**
      * Row index to ensure visible (by forcefully scrolling if necessary)
      */
-    scrollToRow: PropTypes.number,
+    scrollToRow: PropTypes.number.isRequired,
 
     /** Optional inline style */
     style: PropTypes.object,
@@ -225,6 +225,8 @@ export default class Grid extends PureComponent {
     overscanRowCount: 10,
     scrollingResetTimeInterval: DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
     scrollToAlignment: 'auto',
+    scrollToColumn: -1,
+    scrollToRow: -1,
     style: {},
     tabIndex: 0
   };

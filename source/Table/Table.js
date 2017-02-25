@@ -162,7 +162,7 @@ export default class Table extends PureComponent {
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
-    scrollToIndex: PropTypes.number,
+    scrollToIndex: PropTypes.number.isRequired,
 
     /** Vertical offset. */
     scrollTop: PropTypes.number,
@@ -201,6 +201,7 @@ export default class Table extends PureComponent {
     rowRenderer: defaultRowRenderer,
     rowStyle: {},
     scrollToAlignment: 'auto',
+    scrollToIndex: -1,
     style: {}
   };
 
