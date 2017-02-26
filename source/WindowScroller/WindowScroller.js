@@ -14,10 +14,10 @@ export default class WindowScroller extends PureComponent {
     children: PropTypes.func.isRequired,
 
     /** Callback to be invoked on-resize: ({ height }) */
-    onResize: PropTypes.func,
+    onResize: PropTypes.func.isRequired,
 
     /** Callback to be invoked on-scroll: ({ scrollTop }) */
-    onScroll: PropTypes.func,
+    onScroll: PropTypes.func.isRequired,
 
     /** Element to attach scroll event listeners. Defaults to window. */
     scrollElement: PropTypes.any
