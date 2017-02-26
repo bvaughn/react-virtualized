@@ -13,6 +13,7 @@ This may change with a future release but for the time being this HOC is should 
 | children | Function | ✓ | Function responsible for rendering children. This function should implement the following signature: `({ height: number, isScrolling: boolean, scrollTop: number }) => PropTypes.element` |
 | onResize | Function |  | Callback to be invoked on-resize; it is passed the following named parameters: `({ height: number })`. | 
 | onScroll | Function |  | Callback to be invoked on-scroll; it is passed the following named parameters: `({ scrollTop: number })`. | 
+| scrollElement | any |  | Element to attach scroll event listeners. Defaults to window. |
 
 ### Public Methods
 
