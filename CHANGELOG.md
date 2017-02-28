@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 9.1.0
+* 🎉 Public method `setScrollIndexes` added to `ArrowKeyStepper` to enable easier overrides of current/default focused cell. - ([@alexandro81](https://github.com/alexandro81) - [#592](https://github.com/bvaughn/react-virtualized/pull/592))
+* ✨ Replaced `value instanceof Function` checks with `typeof value === 'function'` for improved robustness with iframes/frames/popups. (Learn more [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof#instanceof_and_multiple_context_(e.g._frames_or_windows)).) ([@rickychien](https://github.com/rickychien) - [#596](https://github.com/bvaughn/react-virtualized/pull/596))
+* 🐛 `Grid` props `scrollToColumn` and `scrollToRow` as well as `Collection` prop `scrollToCell` now default to `-1` to avoid false positives from `null>=0` check. - ([#595](https://github.com/bvaughn/react-virtualized/issues/595))
+
 ##### 9.0.5
 * 🎉 Explicitly set `width`/`height` style to "auto" before re-measuring `CellMeasurer` content so that new measurements can be taken. ([#593](https://github.com/bvaughn/react-virtualized/issues/593))
 * 🐛 CellMeasurerCache now correctly recomputes cached row height and column width values when cells are cleared. ([#594](https://github.com/bvaughn/react-virtualized/issues/594))

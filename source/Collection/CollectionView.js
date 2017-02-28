@@ -101,7 +101,7 @@ export default class CollectionView extends PureComponent {
     /**
      * Cell index to ensure visible (by forcefully scrolling if necessary).
      */
-    scrollToCell: PropTypes.number,
+    scrollToCell: PropTypes.number.isRequired,
 
     /**
      * Vertical offset.
@@ -132,6 +132,7 @@ export default class CollectionView extends PureComponent {
     onScroll: () => null,
     onSectionRendered: () => null,
     scrollToAlignment: 'auto',
+    scrollToCell: -1,
     style: {},
     verticalOverscanSize: 0
   };

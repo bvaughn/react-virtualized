@@ -71,7 +71,7 @@ export default class List extends PureComponent {
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
-    scrollToIndex: PropTypes.number,
+    scrollToIndex: PropTypes.number.isRequired,
 
     /** Vertical offset. */
     scrollTop: PropTypes.number,
@@ -93,6 +93,7 @@ export default class List extends PureComponent {
     onScroll: () => null,
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
+    scrollToIndex: -1,
     style: {}
   };
 

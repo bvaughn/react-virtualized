@@ -21,8 +21,7 @@ export default class InfiniteLoaderExample extends PureComponent {
     this.state = {
       loadedRowCount: 0,
       loadedRowsMap: {},
-      loadingRowCount: 0,
-      randomScrollToIndex: null
+      loadingRowCount: 0
     }
 
     this._timeoutIdMap = {}
@@ -41,7 +40,7 @@ export default class InfiniteLoaderExample extends PureComponent {
 
   render () {
     const { list } = this.context
-    const { loadedRowCount, loadingRowCount, randomScrollToIndex } = this.state
+    const { loadedRowCount, loadingRowCount } = this.state
 
     return (
       <ContentBox>
@@ -87,7 +86,6 @@ export default class InfiniteLoaderExample extends PureComponent {
                   rowCount={list.size}
                   rowHeight={30}
                   rowRenderer={this._rowRenderer}
-                  scrollToIndex={randomScrollToIndex}
                   width={width}
                 />
               )}
