@@ -21,7 +21,7 @@ export default class Column extends Component {
     /**
      * Callback responsible for rendering a cell's contents.
      * ({ cellData: any, columnData: any, dataKey: string, rowData: any, rowIndex: number }): node
-     */
+     */ 
     cellRenderer: PropTypes.func,
 
     /** Optional CSS class to apply to cell */

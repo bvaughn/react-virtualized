@@ -193,6 +193,7 @@ export interface TableProps {
     rowGetter?: (info: { index: number }) => any;
     rowHeight: number | ((info: { index: number }) => number);
     rowRenderer?: RowRenderer;
+    headerRowRenderer?: HeaderRowRenderer;
     rowStyle?: React.CSSProperties | ((info: { index: number }) => React.CSSProperties);
     scrollToAlignment?: string;
     scrollToIndex?: number;

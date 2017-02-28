@@ -312,7 +312,7 @@ export default class Table extends PureComponent {
       >
         {!disableHeader && (
           this.props.headerRowRenderer({
-            className:cn('ReactVirtualized__Table__headerRow', rowClass),
+            className: cn('ReactVirtualized__Table__headerRow', rowClass),
             style: rowStyleObject,
             height: headerHeight,
             scrollbarWidth,

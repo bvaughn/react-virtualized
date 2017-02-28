@@ -1,6 +1,4 @@
 /** @flow */
-import Column from './Column';
-
 export type CellDataGetterParams = {
   columnData: ?any,
   dataKey: string,
