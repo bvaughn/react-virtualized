@@ -57,19 +57,19 @@ export interface VirtualScrollProps {
     width: number;
 }
 export class VirtualScroll extends React.Component<VirtualScrollProps, {}> { }
-// TODO 
+// TODO add proper typing
 export type CollectionProps = any;
 export class Collection extends React.Component<CollectionProps, {}> { }
-// TODO 
+// TODO  add proper typing
 export type FlexTableProps = any;
 export class FlexTable extends React.Component<FlexTableProps, {}> { }
-// TODO 
+// TODO  add proper typing
 export type FlexColumnProps = any;
 export class FlexColumn extends React.Component<FlexColumnProps, {}> { }
-// TODO 
+// TODO  add proper typing
 export type SortDirectionProps = any;
 export class SortDirection extends React.Component<SortDirectionProps, {}> { }
-// TODO 
+// TODO  add proper typing
 export type GridProps = any;
 export class Grid extends React.Component<GridProps, {}> { }
 
