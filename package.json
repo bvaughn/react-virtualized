@@ -160,6 +160,5 @@
     "transform": [
       "loose-envify"
     ]
-  },
-  "types": ""
+  }
 }
