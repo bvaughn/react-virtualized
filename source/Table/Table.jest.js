@@ -819,6 +819,7 @@ describe('Table', () => {
       expect(onScrollCalls).toEqual([{
         clientHeight: 80,
         scrollHeight: 1000,
+        scrollLeft: 0,
         scrollTop: 0
       }])
     })
@@ -838,6 +839,7 @@ describe('Table', () => {
       expect(onScrollCalls[1]).toEqual({
         clientHeight: 80,
         scrollHeight: 1000,
+        scrollLeft: 0,
         scrollTop: 100
       })
     })
