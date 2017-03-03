@@ -209,9 +209,11 @@ export default class Table extends PureComponent {
     super(props)
 
     this.state = {
-      scrollbarWidth: 0
+      scrollbarWidth: 0,
+      headerRowTranslateX: 0
     }
 
+    this._everScrolledX = false
     this._createColumn = this._createColumn.bind(this)
     this._createRow = this._createRow.bind(this)
     this._onScroll = this._onScroll.bind(this)
@@ -268,7 +270,7 @@ export default class Table extends PureComponent {
       style,
       width
     } = this.props
-    const { scrollbarWidth } = this.state
+    const { scrollbarWidth, headerRowTranslateX } = this.state
 
     const availableRowsHeight = disableHeader ? height : height - headerHeight
 
@@ -277,7 +279,9 @@ export default class Table extends PureComponent {
 
     // Precompute and cache column styles before rendering rows and columns to speed things up
     this._cachedColumnStyles = []
+    let totalColumnWidth = 0
     React.Children.toArray(children).forEach((column, index) => {
+      totalColumnWidth += column.props.width
       const flexStyles = this._getFlexStyleForColumn(column, column.props.style)
 
       this._cachedColumnStyles[index] = {
@@ -303,7 +307,8 @@ export default class Table extends PureComponent {
               height: headerHeight,
               overflow: 'hidden',
               paddingRight: scrollbarWidth,
-              width: width
+              width: width,
+              transform: `translate(${headerRowTranslateX}px, 0px)`
             }}
           >
             {this._getRenderedHeaderRow()}
@@ -315,7 +320,7 @@ export default class Table extends PureComponent {
           autoContainerWidth
           className={cn('ReactVirtualized__Table__Grid', gridClassName)}
           cellRenderer={this._createRow}
-          columnWidth={width}
+          columnWidth={totalColumnWidth}
           columnCount={1}
           height={availableRowsHeight}
           id={undefined}
@@ -325,10 +330,7 @@ export default class Table extends PureComponent {
           ref={this._setRef}
           scrollbarWidth={scrollbarWidth}
           scrollToRow={scrollToIndex}
-          style={{
-            ...gridStyle,
-            overflowX: 'hidden'
-          }}
+          style={gridStyle}
         />
       </div>
     )
@@ -461,22 +463,27 @@ export default class Table extends PureComponent {
     const rowStyleObject = typeof rowStyle === 'function' ? rowStyle({ index }) : rowStyle
     const rowData = rowGetter({ index })
 
+    let rowWidth = 0
     const columns = React.Children.toArray(children).map(
-      (column, columnIndex) => this._createColumn({
-        column,
-        columnIndex,
-        isScrolling,
-        parent,
-        rowData,
-        rowIndex: index,
-        scrollbarWidth
-      })
+      (column, columnIndex) => {
+        rowWidth += column.props.width
+        return this._createColumn({
+          column,
+          columnIndex,
+          isScrolling,
+          parent,
+          rowData,
+          rowIndex: index,
+          scrollbarWidth
+        })
+      }
     )
 
     const className = cn('ReactVirtualized__Table__row', rowClass)
     const flattenedStyle = {
       ...style,
       ...rowStyleObject,
+      width: rowWidth,
       height: this._getRowHeight(index),
       overflow: 'hidden',
       paddingRight: scrollbarWidth
@@ -538,10 +545,19 @@ export default class Table extends PureComponent {
       : rowHeight
   }
 
-  _onScroll ({ clientHeight, scrollHeight, scrollTop }) {
+  _onScroll ({ clientHeight, scrollHeight, scrollLeft, scrollTop }) {
     const { onScroll } = this.props
 
-    onScroll({ clientHeight, scrollHeight, scrollTop })
+    onScroll({ clientHeight, scrollHeight, scrollLeft, scrollTop })
+
+    // if horizontal scroll, adjust table header translation so it will "scroll" with the grid
+    if ((scrollLeft > 0) || this._everScrolledX) {
+      this._everScrolledX = true
+
+      this.setState({
+        headerRowTranslateX: -scrollLeft
+      })
+    }
   }
 
   _onSectionRendered ({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) {
