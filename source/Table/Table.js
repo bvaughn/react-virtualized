@@ -336,7 +336,7 @@ export default class Table extends PureComponent {
           onScroll={this._onScroll}
           onSectionRendered={this._onSectionRendered}
           ref={this._setRef}
-          role={null}
+          role='rowgroup'
           scrollbarWidth={scrollbarWidth}
           scrollToRow={scrollToIndex}
           style={{

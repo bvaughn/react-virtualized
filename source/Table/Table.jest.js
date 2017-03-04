@@ -887,10 +887,10 @@ describe('Table', () => {
       expect(row.getAttribute('role')).toEqual('row')
     })
 
-    it('should not set aria role on the grid', () => {
+    it('should set appropriate aria role on the grid', () => {
       const rendered = findDOMNode(render(getMarkup()))
       const grid = rendered.querySelector('.ReactVirtualized__Table__Grid')
-      expect(grid.getAttribute('role')).toEqual(null)
+      expect(grid.getAttribute('role')).toEqual('rowgroup')
     })
 
     it('should set aria role on a row', () => {
