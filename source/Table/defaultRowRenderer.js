@@ -27,7 +27,6 @@ export default function defaultRowRenderer ({
     onRowMouseOut
   ) {
     a11yProps['aria-label'] = 'row'
-    a11yProps.role = 'row'
     a11yProps.tabIndex = 0
 
     if (onRowClick) {
@@ -49,6 +48,7 @@ export default function defaultRowRenderer ({
       {...a11yProps}
       className={className}
       key={key}
+      role='row'
       style={style}
     >
       {columns}

@@ -9,6 +9,7 @@ export default function defaultHeaderRowRenderer ({
 }: HeaderRowRendererParams) {
   return <div
     className={className}
+    role='row'
     style={style}
   >
     {columns}

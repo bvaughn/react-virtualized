@@ -1465,6 +1465,19 @@ describe('Grid', () => {
     })
   })
 
+  describe('role', () => {
+    it('should have grid role by default', () => {
+      const rendered = findDOMNode(render(getMarkup()))
+      expect(rendered.getAttribute('role')).toEqual('grid')
+    })
+
+    it('should allow role to be overridden', () => {
+      const role = null
+      const rendered = findDOMNode(render(getMarkup({ role })))
+      expect(rendered.getAttribute('role')).toEqual(role)
+    })
+  })
+
   describe('pure', () => {
     it('should not re-render unless props have changed', () => {
       let cellRendererCalled = false

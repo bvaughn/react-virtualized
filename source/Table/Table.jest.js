@@ -876,13 +876,35 @@ describe('Table', () => {
   })
 
   describe('a11y properties', () => {
+    it('should set aria role on the table', () => {
+      const node = findDOMNode(render(getMarkup()))
+      expect(node.getAttribute('role')).toEqual('grid')
+    })
+
+    it('should set aria role on the header row', () => {
+      const rendered = findDOMNode(render(getMarkup()))
+      const row = rendered.querySelector('.ReactVirtualized__Table__headerRow')
+      expect(row.getAttribute('role')).toEqual('row')
+    })
+
+    it('should not set aria role on the grid', () => {
+      const rendered = findDOMNode(render(getMarkup()))
+      const grid = rendered.querySelector('.ReactVirtualized__Table__Grid')
+      expect(grid.getAttribute('role')).toEqual(null)
+    })
+
+    it('should set aria role on a row', () => {
+      const rendered = findDOMNode(render(getMarkup()))
+      const row = rendered.querySelector('.ReactVirtualized__Table__row')
+      expect(row.getAttribute('role')).toEqual('row')
+    })
+
     it('should attach a11y properties to a row if :onRowClick is specified', () => {
       const rendered = findDOMNode(render(getMarkup({
         onRowClick: () => {}
       })))
       const row = rendered.querySelector('.ReactVirtualized__Table__row')
       expect(row.getAttribute('aria-label')).toEqual('row')
-      expect(row.getAttribute('role')).toEqual('row')
       expect(row.tabIndex).toEqual(0)
     })
 
@@ -892,7 +914,6 @@ describe('Table', () => {
       })))
       const row = rendered.querySelector('.ReactVirtualized__Table__row')
       expect(row.getAttribute('aria-label')).toEqual(null)
-      expect(row.getAttribute('role')).toEqual(null)
       expect(row.tabIndex).toEqual(-1)
     })
 
