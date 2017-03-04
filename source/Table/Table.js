@@ -56,6 +56,23 @@ export default class Table extends PureComponent {
     /** Fixed height of header row */
     headerHeight: PropTypes.number.isRequired,
 
+    /**
+     * Responsible for rendering a table row given an array of columns:
+     * Should implement the following interface: ({
+     *   className: string,
+     *   columns: any[],
+     *   rowData: any,
+     *   style: any,
+     *   scrollbarWidth: number,
+     *   height: number,
+     *   width: number
+     * }): PropTypes.node
+     */
+    headerRowRenderer: PropTypes.func,
+
+    /** Optional custom inline style to attach to table header columns. */
+    headerStyle: PropTypes.object,
+
     /** Fixed/available height for out DOM element */
     height: PropTypes.number.isRequired,
 
@@ -70,9 +87,6 @@ export default class Table extends PureComponent {
     * ({ columnData: any, dataKey: string }): void
     */
     onHeaderClick: PropTypes.func,
-
-    /** Optional custom inline style to attach to table header columns. */
-    headerStyle: PropTypes.object,
 
     /**
      * Callback invoked when a user clicks on a table row.
@@ -155,20 +169,6 @@ export default class Table extends PureComponent {
      * }): PropTypes.node
      */
     rowRenderer: PropTypes.func,
-
-    /**
-     * Responsible for rendering a table row given an array of columns:
-     * Should implement the following interface: ({
-     *   className: string,
-     *   columns: any[],
-     *   rowData: any,
-     *   style: any,
-     *   scrollbarWidth: number,
-     *   height: number,
-     *   width: number
-     * }): PropTypes.node
-     */
-    headerRowRenderer: PropTypes.func,
 
     /** Optional custom inline style to attach to table rows. */
     rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
