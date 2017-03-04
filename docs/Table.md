@@ -17,6 +17,7 @@ This component expects explicit `width` and `height` parameters.
 | gridStyle | Object |  | Optional inline style to attach to inner Grid element |
 | headerClassName | String |  | CSS class to apply to all column headers |
 | headerHeight | Number | ✓ | Fixed height of header row |
+| headerRowRenderer | Function |  | Responsible for rendering the table header row given an array of columns. [Learn more](#headerrowrenderer) |
 | headerStyle | Object |  | Optional custom inline style to attach to table header columns. |
 | height | Number | ✓ | Fixed/available height for out DOM element |
 | id | String |  | Optional custom id to attach to root `Table` element. |
@@ -88,11 +89,25 @@ The Table component supports the following static class names
 | ReactVirtualized__Table__sortableHeaderColumn | Applied to header columns that are sortable |
 | ReactVirtualized__Table__sortableHeaderIcon | SVG sort indicator |
 
+### headerRowRenderer
+
+This is an advanced property.
+It is useful for situations where you require additional hooks into `Table` to render additiona, custom UI elements.
+You may want to start by forking the [`defaultTableHeaderRowRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultHeaderRowRenderer.js) function.
+
+This function accepts the following named parameters:
+
+| Property | Description |
+|:---|:---|
+| className | Header class name |
+| columns | Array of React nodes |
+| style | Header style object |
+
 ### rowRenderer
 
 This is an advanced property.
 It is useful for situations where you require additional hooks into `Table` (eg integration with a library like `react-sortable-hoc`).
-If you do want to override `rowRenderer` the easiest way is to decorate the default implementation like so:
+If you do override `rowRenderer` the easiest way is to decorate the default implementation like so:
 
 ```jsx
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
