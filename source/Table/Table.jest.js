@@ -76,6 +76,8 @@ describe('Table', () => {
     )
   }
 
+  beforeEach(() => jest.resetModules())
+
   describe('children', () => {
     it('should accept Column children', () => {
       const children = [
@@ -394,6 +396,23 @@ describe('Table', () => {
       expect(sortCalls.length).toEqual(2)
       Simulate.keyDown(nameColumn, {key: 'F'})
       expect(sortCalls.length).toEqual(2)
+    })
+  })
+
+  describe('headerRowRenderer', () => {
+    it('should render a custom header row if one is provided', () => {
+      const headerRowRenderer = jest.fn().mockReturnValue(<div>foo bar</div>)
+      const rendered = findDOMNode(render(getMarkup({
+        headerHeight: 33,
+        headerRowRenderer,
+        rowClassName: 'someRowClass'
+      })))
+      expect(rendered.textContent).toContain('foo bar')
+      expect(headerRowRenderer).toHaveBeenCalled()
+      const params = headerRowRenderer.mock.calls[0][0]
+      expect(params.className).toContain('someRowClass')
+      expect(params.columns).toHaveLength(2)
+      expect(params.style.height).toBe(33)
     })
   })
 
