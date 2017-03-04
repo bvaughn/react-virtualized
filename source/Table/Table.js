@@ -415,12 +415,12 @@ export default class Table extends PureComponent {
         ? SortDirection.ASC
         : SortDirection.DESC
 
-      const onClick = (evt) => {
+      const onClick = (event) => {
         sortEnabled && sort({
           sortBy: dataKey,
           sortDirection: newSortDirection
         })
-        onHeaderClick && onHeaderClick({ evt, columnData, dataKey })
+        onHeaderClick && onHeaderClick({ columnData, dataKey, event })
       }
 
       const onKeyDown = (event) => {

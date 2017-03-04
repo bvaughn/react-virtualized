@@ -31,16 +31,16 @@ export default function defaultRowRenderer ({
     a11yProps.tabIndex = 0
 
     if (onRowClick) {
-      a11yProps.onClick = (evt) => onRowClick({ evt, index, rowData })
+      a11yProps.onClick = (event) => onRowClick({ event, index, rowData })
     }
     if (onRowDoubleClick) {
-      a11yProps.onDoubleClick = (evt) => onRowDoubleClick({ evt, index, rowData })
+      a11yProps.onDoubleClick = (event) => onRowDoubleClick({ event, index, rowData })
     }
     if (onRowMouseOut) {
-      a11yProps.onMouseOut = (evt) => onRowMouseOut({ evt, index, rowData })
+      a11yProps.onMouseOut = (event) => onRowMouseOut({ event, index, rowData })
     }
     if (onRowMouseOver) {
-      a11yProps.onMouseOver = (evt) => onRowMouseOver({ evt, index, rowData })
+      a11yProps.onMouseOver = (event) => onRowMouseOver({ event, index, rowData })
     }
   }
 
