@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.2.0
+* 🎉 New `Table` prop, `headerRowRenderer`. ([@kaoDev](https://github.com/kaoDev) - [#600](https://github.com/bvaughn/react-virtualized/pull/600))
+
 ##### 9.1.0
 * 🎉 Public method `setScrollIndexes` added to `ArrowKeyStepper` to enable easier overrides of current/default focused cell. - ([@alexandro81](https://github.com/alexandro81) - [#592](https://github.com/bvaughn/react-virtualized/pull/592))
 * ✨ Replaced `value instanceof Function` checks with `typeof value === 'function'` for improved robustness with iframes/frames/popups. (Learn more [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof#instanceof_and_multiple_context_(e.g._frames_or_windows)).) ([@rickychien](https://github.com/rickychien) - [#596](https://github.com/bvaughn/react-virtualized/pull/596))
