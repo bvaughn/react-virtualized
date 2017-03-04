@@ -355,11 +355,19 @@ export default class Grid extends PureComponent {
     columnIndex,
     rowIndex
   }) {
+    const { columnCount } = this.props
+
     const props = this.props
-    this._updateScrollLeftForScrollToColumn({
-      ...props,
-      scrollToColumn: columnIndex
-    })
+
+    // Don't adjust scroll offset for single-column grids (eg List, Table).
+    // This can cause a funky scroll offset because of the vertical scrollbar width.
+    if (columnCount > 1) {
+      this._updateScrollLeftForScrollToColumn({
+        ...props,
+        scrollToColumn: columnIndex
+      })
+    }
+
     this._updateScrollTopForScrollToRow({
       ...props,
       scrollToRow: rowIndex
