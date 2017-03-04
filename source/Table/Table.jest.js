@@ -463,20 +463,21 @@ describe('Table', () => {
 
     it('should honor :onHeaderClick for custom header', () => {
       const columnData = { foo: 'foo', bar: 'bar' }
-      const onHeaderClickCalls = []
+      const onHeaderClick = jest.fn()
       const rendered = findDOMNode(render(getMarkup({
         columnData,
         headerRenderer: (params) => 'custom header',
-        onHeaderClick: ({ columnData, dataKey }) => onHeaderClickCalls.push([dataKey, columnData])
+        onHeaderClick
       })))
       const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
       Simulate.click(nameColumn)
 
-      expect(onHeaderClickCalls.length).toEqual(1)
-      const onHeaderClickCall = onHeaderClickCalls[0]
-      expect(onHeaderClickCall[0]).toEqual('name')
-      expect(onHeaderClickCall[1]).toEqual(columnData)
+      expect(onHeaderClick).toHaveBeenCalledTimes(1)
+      const params = onHeaderClick.mock.calls[0][0]
+      expect(params.dataKey).toEqual('name')
+      expect(params.columnData).toEqual(columnData)
+      expect(params.event.type).toEqual('click')
     })
   })
 
@@ -501,67 +502,75 @@ describe('Table', () => {
 
   describe('onHeaderClick', () => {
     it('should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is disabled', () => {
-      let onHeaderClickCalls = []
+      const onHeaderClick = jest.fn()
       const rendered = findDOMNode(render(getMarkup({
         disableSort: true,
-        onHeaderClick: ({ columnData, dataKey }) => onHeaderClickCalls.push({dataKey, columnData})
+        onHeaderClick
       })))
       const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
       Simulate.click(nameColumn)
-      expect(onHeaderClickCalls.length).toEqual(1)
-      expect(onHeaderClickCalls[0].dataKey).toEqual('name')
-      expect(onHeaderClickCalls[0].columnData.data).toEqual(123)
+
+      expect(onHeaderClick).toHaveBeenCalledTimes(1)
+      const params = onHeaderClick.mock.calls[0][0]
+      expect(params.dataKey).toEqual('name')
+      expect(params.columnData.data).toEqual(123)
+      expect(params.event.type).toEqual('click')
     })
 
     it('should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is enabled', () => {
-      let onHeaderClickCalls = []
+      const onHeaderClick = jest.fn()
       const rendered = findDOMNode(render(getMarkup({
         disableSort: false,
-        onHeaderClick: ({ columnData, dataKey }) => onHeaderClickCalls.push({dataKey, columnData})
+        onHeaderClick
       })))
       const nameColumn = rendered.querySelector('.ReactVirtualized__Table__headerColumn:first-of-type')
 
       Simulate.click(nameColumn)
-      expect(onHeaderClickCalls.length).toEqual(1)
-      expect(onHeaderClickCalls[0].dataKey).toEqual('name')
-      expect(onHeaderClickCalls[0].columnData.data).toEqual(123)
+
+      expect(onHeaderClick).toHaveBeenCalledTimes(1)
+      const params = onHeaderClick.mock.calls[0][0]
+      expect(params.dataKey).toEqual('name')
+      expect(params.columnData.data).toEqual(123)
+      expect(params.event.type).toEqual('click')
     })
   })
 
   describe('onRowClick', () => {
     it('should call :onRowClick with the correct :rowIndex when a row is clicked', () => {
-      const onRowClickCalls = []
+      const onRowClick = jest.fn()
       const rendered = findDOMNode(render(getMarkup({
-        onRowClick: ({ index }) => onRowClickCalls.push(index)
+        onRowClick
       })))
       const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
       Simulate.click(rows[0])
       Simulate.click(rows[3])
-      expect(onRowClickCalls).toEqual([0, 3])
+      expect(onRowClick).toHaveBeenCalledTimes(2)
+      expect(onRowClick.mock.calls.map(call => call[0].index)).toEqual([0, 3])
     })
   })
 
   describe('onRowDoubleClick', () => {
     it('should call :onRowDoubleClick with the correct :rowIndex when a row is clicked', () => {
-      const onRowDoubleClickCalls = []
+      const onRowDoubleClick = jest.fn()
       const rendered = findDOMNode(render(getMarkup({
-        onRowDoubleClick: ({ index }) => onRowDoubleClickCalls.push(index)
+        onRowDoubleClick
       })))
       const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
       Simulate.doubleClick(rows[0])
       Simulate.doubleClick(rows[3])
-      expect(onRowDoubleClickCalls).toEqual([0, 3])
+      expect(onRowDoubleClick).toHaveBeenCalledTimes(2)
+      expect(onRowDoubleClick.mock.calls.map(call => call[0].index)).toEqual([0, 3])
     })
   })
 
   describe('onRowMouseOver/Out', () => {
     it('should call :onRowMouseOver and :onRowMouseOut with the correct :rowIndex when the mouse is moved over rows', () => {
-      let onRowMouseOverCalls = []
-      let onRowMouseOutCalls = []
+      let onRowMouseOver = jest.fn()
+      let onRowMouseOut = jest.fn()
       const rendered = findDOMNode(render(getMarkup({
-        onRowMouseOver: ({ index }) => onRowMouseOverCalls.push(index),
-        onRowMouseOut: ({ index }) => onRowMouseOutCalls.push(index)
+        onRowMouseOver,
+        onRowMouseOut
       })))
 
       const simulateMouseOver = (from, to) => {
@@ -570,11 +579,15 @@ describe('Table', () => {
       }
 
       const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
+
       simulateMouseOver(rows[0], rows[1])
       simulateMouseOver(rows[1], rows[2])
       simulateMouseOver(rows[2], rows[3])
-      expect(onRowMouseOverCalls).toEqual([1, 2, 3])
-      expect(onRowMouseOutCalls).toEqual([0, 1, 2])
+
+      expect(onRowMouseOver).toHaveBeenCalled()
+      expect(onRowMouseOut).toHaveBeenCalled()
+      expect(onRowMouseOver.mock.calls.map(call => call[0].index)).toEqual([1, 2, 3])
+      expect(onRowMouseOut.mock.calls.map(call => call[0].index)).toEqual([0, 1, 2])
     })
   })
 
