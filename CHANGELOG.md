@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.2.1
+* 🐛 Fixed potential scrollbar offset bug in `MultiGrid` by giving top and left `Grid`s a little extra space to scroll into. ([#535](https://github.com/bvaughn/react-virtualized/pull/535))
+
 ##### 9.2.0
 * 🎉 New `Table` prop, `headerRowRenderer`. ([@kaoDev](https://github.com/kaoDev) - [#600](https://github.com/bvaughn/react-virtualized/pull/600))
 * 🎉 All `Table` event handlers now receive a named `event` params ([@paulbrom](https://github.com/paulbrom) - [#605](https://github.com/bvaughn/react-virtualized/pull/605))
