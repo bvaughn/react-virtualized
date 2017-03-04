@@ -4,6 +4,7 @@ Changelog
 ##### 9.2.0
 * 🎉 New `Table` prop, `headerRowRenderer`. ([@kaoDev](https://github.com/kaoDev) - [#600](https://github.com/bvaughn/react-virtualized/pull/600))
 * 🎉 All `Table` event handlers now receive a named `event` params ([@paulbrom](https://github.com/paulbrom) - [#605](https://github.com/bvaughn/react-virtualized/pull/605))
+* 🎉 Aria roles for `Table` improved to specify `role="row"` for table rows and `role="rowgroup"` for iner `Grid`. ([@jchen527](https://github.com/jchen527) - [#607](https://github.com/bvaughn/react-virtualized/pull/607))
 
 ##### 9.1.0
 * 🎉 Public method `setScrollIndexes` added to `ArrowKeyStepper` to enable easier overrides of current/default focused cell. - ([@alexandro81](https://github.com/alexandro81) - [#592](https://github.com/bvaughn/react-virtualized/pull/592))
