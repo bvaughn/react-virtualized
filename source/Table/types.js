@@ -15,11 +15,8 @@ export type CellRendererParams = {
 
 export type HeaderRowRendererParams = {
   className: string,
-  columns: any[],
-  style: any,
-  scrollbarWidth: number,
-  height: number,
-  width: number
+  columns: Array<any>,
+  style: any
 };
 
 export type HeaderRendererParams = {
@@ -33,7 +30,7 @@ export type HeaderRendererParams = {
 
 export type RowRendererParams = {
   className: string,
-  columns: any[],
+  columns: Array<any>,
   index: number,
   isScrolling: boolean,
   onRowClick: ?Function,

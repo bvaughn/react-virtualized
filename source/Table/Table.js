@@ -61,11 +61,7 @@ export default class Table extends PureComponent {
      * Should implement the following interface: ({
      *   className: string,
      *   columns: any[],
-     *   rowData: any,
-     *   style: any,
-     *   scrollbarWidth: number,
-     *   height: number,
-     *   width: number
+     *   style: any
      * }): PropTypes.node
      */
     headerRowRenderer: PropTypes.func,
@@ -275,6 +271,7 @@ export default class Table extends PureComponent {
       gridClassName,
       gridStyle,
       headerHeight,
+      headerRowRenderer,
       height,
       id,
       noRowsRenderer,
@@ -312,13 +309,16 @@ export default class Table extends PureComponent {
         style={style}
       >
         {!disableHeader && (
-          this.props.headerRowRenderer({
+          headerRowRenderer({
             className: cn('ReactVirtualized__Table__headerRow', rowClass),
-            style: rowStyleObject,
-            height: headerHeight,
-            scrollbarWidth,
-            width,
-            columns: this._getRenderedHeaderRow()
+            columns: this._getHeaderColumns(),
+            style: {
+              ...rowStyleObject,
+              height: headerHeight,
+              overflow: 'hidden',
+              paddingRight: scrollbarWidth,
+              width: width
+            }
           })
         )}
 
@@ -533,7 +533,7 @@ export default class Table extends PureComponent {
     return style
   }
 
-  _getRenderedHeaderRow () {
+  _getHeaderColumns () {
     const { children, disableHeader } = this.props
     const items = disableHeader ? [] : React.Children.toArray(children)
 

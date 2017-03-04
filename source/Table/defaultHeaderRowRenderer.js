@@ -4,21 +4,12 @@ import type { HeaderRowRendererParams } from './types'
 
 export default function defaultHeaderRowRenderer ({
   className,
-  style,
-  height,
-  width,
-  scrollbarWidth,
-  columns
+  columns,
+  style
 }: HeaderRowRendererParams) {
   return <div
     className={className}
-    style={{
-      ...style,
-      height: height,
-      overflow: 'hidden',
-      paddingRight: scrollbarWidth,
-      width: width
-    }}
+    style={style}
   >
     {columns}
   </div>
