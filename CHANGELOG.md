@@ -4,7 +4,7 @@ Changelog
 ##### 9.2.0
 * 🎉 New `Table` prop, `headerRowRenderer`. ([@kaoDev](https://github.com/kaoDev) - [#600](https://github.com/bvaughn/react-virtualized/pull/600))
 * 🎉 All `Table` event handlers now receive a named `event` params ([@paulbrom](https://github.com/paulbrom) - [#605](https://github.com/bvaughn/react-virtualized/pull/605))
-* 🎉 Aria roles for `Table` improved to specify `role="row"` for table rows and `role="rowgroup"` for iner `Grid`. ([@jchen527](https://github.com/jchen527) - [#607](https://github.com/bvaughn/react-virtualized/pull/607))
+* 🎉 Aria roles for `Table` improved to specify `role="row"` for table rows and `role="rowgroup"` for inner `Grid`. ([@jchen527](https://github.com/jchen527) - [#607](https://github.com/bvaughn/react-virtualized/pull/607))
 * 🐛 Calling `scrollToRow` for `List` or `Table` no longer potentially messes up horizontal scroll position. ([#603](https://github.com/bvaughn/react-virtualized/issues/603))
 
 ##### 9.1.0
