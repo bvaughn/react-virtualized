@@ -34,8 +34,10 @@ export default class MultiGrid extends PureComponent {
     super(props, context)
 
     this.state = {
+      horizontalScrollbarSize: 0,
       scrollLeft: 0,
-      scrollTop: 0
+      scrollTop: 0,
+      verticalScrollbarSize: 0
     }
 
     this._bottomLeftGridRef = this._bottomLeftGridRef.bind(this)
@@ -94,14 +96,14 @@ export default class MultiGrid extends PureComponent {
 
     this._leftGridWidth = null
     this._topGridHeight = null
-    this._maybeCalculateCachedStyles(null, this.props)
+    this._maybeCalculateCachedStyles(null, this.props, null, this.state)
   }
 
   componentWillMount () {
-    this._maybeCalculateCachedStyles(null, this.props)
+    this._maybeCalculateCachedStyles(null, this.props, null, this.state)
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps, nextState) {
     const { columnWidth, fixedColumnCount, fixedRowCount, rowHeight } = this.props
 
     if (
@@ -118,7 +120,7 @@ export default class MultiGrid extends PureComponent {
       this._topGridHeight = null
     }
 
-    this._maybeCalculateCachedStyles(this.props, nextProps)
+    this._maybeCalculateCachedStyles(this.props, nextProps, this.state, nextState)
   }
 
   render () {
@@ -176,12 +178,30 @@ export default class MultiGrid extends PureComponent {
   }
 
   _cellRendererBottomLeftGrid ({ rowIndex, ...rest }) {
-    const { cellRenderer, fixedRowCount } = this.props
+    const {
+      cellRenderer,
+      fixedRowCount,
+      rowCount
+    } = this.props
 
-    return cellRenderer({
-      ...rest,
-      rowIndex: rowIndex + fixedRowCount
-    })
+    if (rowIndex === rowCount - 1) {
+      const { horizontalScrollbarSize } = this.state
+
+      return (
+        <div
+          key={rest.key}
+          style={{
+            ...rest.style,
+            height: horizontalScrollbarSize
+          }}
+        />
+      )
+    } else {
+      return cellRenderer({
+        ...rest,
+        rowIndex: rowIndex + fixedRowCount
+      })
+    }
   }
 
   _cellRendererBottomRightGrid ({ columnIndex, rowIndex, ...rest }) {
@@ -195,16 +215,42 @@ export default class MultiGrid extends PureComponent {
   }
 
   _cellRendererTopRightGrid ({ columnIndex, ...rest }) {
-    const { cellRenderer, fixedColumnCount } = this.props
+    const {
+      cellRenderer,
+      columnCount,
+      fixedColumnCount
+    } = this.props
 
-    return cellRenderer({
-      ...rest,
-      columnIndex: columnIndex + fixedColumnCount
-    })
+    if (columnIndex === columnCount - 1) {
+      const { verticalScrollbarSize } = this.state
+
+      return (
+        <div
+          key={rest.key}
+          style={{
+            ...rest.style,
+            width: verticalScrollbarSize
+          }}
+        />
+      )
+    } else {
+      return cellRenderer({
+        ...rest,
+        columnIndex: columnIndex + fixedColumnCount
+      })
+    }
   }
 
   _columnWidthRightGrid ({ index }) {
-    const { fixedColumnCount, columnWidth } = this.props
+    const { columnCount, fixedColumnCount, columnWidth } = this.props
+
+    // An extra cell is added to the count
+    // This gives the smaller Grid extra room for offset,
+    // In case the main (bottom right) Grid has a scrollbar
+    // If no scrollbar, the extra space is overflow:hidden anyway
+    if (index === columnCount) {
+      return 20
+    }
 
     return typeof columnWidth === 'function'
       ? columnWidth({ index: index + fixedColumnCount })
@@ -271,7 +317,7 @@ export default class MultiGrid extends PureComponent {
    * Avoid recreating inline styles each render; this bypasses Grid's shallowCompare.
    * This method recalculates styles only when specific props change.
    */
-  _maybeCalculateCachedStyles (prevProps, props) {
+  _maybeCalculateCachedStyles (prevProps, props, prevState, state) {
     const {
       columnWidth,
       height,
@@ -424,7 +470,7 @@ export default class MultiGrid extends PureComponent {
         columnCount={fixedColumnCount}
         height={this._getBottomGridHeight(props)}
         ref={this._bottomLeftGridRef}
-        rowCount={Math.max(0, rowCount - fixedRowCount)}
+        rowCount={Math.max(0, rowCount - fixedRowCount) + 1/* See _rowHeightBottomGrid */}
         rowHeight={this._rowHeightBottomGrid}
         scrollTop={scrollTop}
         style={this._bottomLeftGridStyle}
@@ -501,7 +547,7 @@ export default class MultiGrid extends PureComponent {
       <Grid
         {...props}
         cellRenderer={this._cellRendererTopRightGrid}
-        columnCount={Math.max(0, columnCount - fixedColumnCount)}
+        columnCount={Math.max(0, columnCount - fixedColumnCount) + 1/* See _columnWidthRightGrid */}
         columnWidth={this._columnWidthRightGrid}
         height={this._getTopGridHeight(props)}
         ref={this._topRightGridRef}
@@ -514,7 +560,15 @@ export default class MultiGrid extends PureComponent {
   }
 
   _rowHeightBottomGrid ({ index }) {
-    const { fixedRowCount, rowHeight } = this.props
+    const { fixedRowCount, rowCount, rowHeight } = this.props
+
+    // An extra cell is added to the count
+    // This gives the smaller Grid extra room for offset,
+    // In case the main (bottom right) Grid has a scrollbar
+    // If no scrollbar, the extra space is overflow:hidden anyway
+    if (index === rowCount) {
+      return 20
+    }
 
     return typeof rowHeight === 'function'
       ? rowHeight({ index: index + fixedRowCount })
