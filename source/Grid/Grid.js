@@ -163,6 +163,11 @@ export default class Grid extends PureComponent {
     overscanRowCount: PropTypes.number.isRequired,
 
     /**
+     * ARIA role for the grid element.
+     */
+    role: PropTypes.string,
+
+    /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * Should implement the following interface: ({ index: number }): number
      */
@@ -223,6 +228,7 @@ export default class Grid extends PureComponent {
     overscanColumnCount: 0,
     overscanIndicesGetter: defaultOverscanIndicesGetter,
     overscanRowCount: 10,
+    role: 'grid',
     scrollingResetTimeInterval: DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
     scrollToAlignment: 'auto',
     scrollToColumn: -1,
@@ -634,6 +640,7 @@ export default class Grid extends PureComponent {
       height,
       id,
       noContentRenderer,
+      role,
       style,
       tabIndex,
       width
@@ -687,7 +694,7 @@ export default class Grid extends PureComponent {
         className={cn('ReactVirtualized__Grid', className)}
         id={id}
         onScroll={this._onScroll}
-        role='grid'
+        role={role}
         style={{
           ...gridStyle,
           ...style

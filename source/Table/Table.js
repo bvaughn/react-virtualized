@@ -306,6 +306,7 @@ export default class Table extends PureComponent {
       <div
         className={cn('ReactVirtualized__Table', className)}
         id={id}
+        role='grid'
         style={style}
       >
         {!disableHeader && (
@@ -335,6 +336,7 @@ export default class Table extends PureComponent {
           onScroll={this._onScroll}
           onSectionRendered={this._onSectionRendered}
           ref={this._setRef}
+          role={null}
           scrollbarWidth={scrollbarWidth}
           scrollToRow={scrollToIndex}
           style={{
