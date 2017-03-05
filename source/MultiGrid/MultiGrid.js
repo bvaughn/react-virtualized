@@ -2,6 +2,8 @@
 import React, { PropTypes, PureComponent } from 'react'
 import Grid from '../Grid'
 
+const SCROLLBAR_SIZE_BUFFER = 20
+
 /**
  * Renders 1, 2, or 4 Grids depending on configuration.
  * A main (body) Grid will always be rendered.
@@ -34,10 +36,8 @@ export default class MultiGrid extends PureComponent {
     super(props, context)
 
     this.state = {
-      horizontalScrollbarSize: 0,
       scrollLeft: 0,
-      scrollTop: 0,
-      verticalScrollbarSize: 0
+      scrollTop: 0
     }
 
     this._bottomLeftGridRef = this._bottomLeftGridRef.bind(this)
@@ -184,15 +184,13 @@ export default class MultiGrid extends PureComponent {
       rowCount
     } = this.props
 
-    if (rowIndex === rowCount - 1) {
-      const { horizontalScrollbarSize } = this.state
-
+    if (rowIndex === rowCount - fixedRowCount) {
       return (
         <div
           key={rest.key}
           style={{
             ...rest.style,
-            height: horizontalScrollbarSize
+            height: SCROLLBAR_SIZE_BUFFER
           }}
         />
       )
@@ -221,15 +219,13 @@ export default class MultiGrid extends PureComponent {
       fixedColumnCount
     } = this.props
 
-    if (columnIndex === columnCount - 1) {
-      const { verticalScrollbarSize } = this.state
-
+    if (columnIndex === columnCount - fixedColumnCount) {
       return (
         <div
           key={rest.key}
           style={{
             ...rest.style,
-            width: verticalScrollbarSize
+            width: SCROLLBAR_SIZE_BUFFER
           }}
         />
       )
@@ -249,7 +245,7 @@ export default class MultiGrid extends PureComponent {
     // In case the main (bottom right) Grid has a scrollbar
     // If no scrollbar, the extra space is overflow:hidden anyway
     if (index === columnCount) {
-      return 20
+      return SCROLLBAR_SIZE_BUFFER
     }
 
     return typeof columnWidth === 'function'
@@ -567,7 +563,7 @@ export default class MultiGrid extends PureComponent {
     // In case the main (bottom right) Grid has a scrollbar
     // If no scrollbar, the extra space is overflow:hidden anyway
     if (index === rowCount) {
-      return 20
+      return SCROLLBAR_SIZE_BUFFER
     }
 
     return typeof rowHeight === 'function'
