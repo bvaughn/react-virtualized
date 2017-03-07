@@ -19,7 +19,7 @@ That means that `List` also accepts [`Grid` props](Grid.md) in addition to the p
 | overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browsers/devices. |
 | rowCount | Number | ✓ | Number of rows in list. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
-| rowRenderer | Function | ✓ | Responsible for rendering a row. Signature should look like `({ index: number, key: string, style: Object, isScrolling: boolean }): React.PropTypes.node` and the returned element must handle index, key and style.|
+| rowRenderer | Function | ✓ | Responsible for rendering a row. [Learn more](#rowrenderer).|
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Forced vertical scroll offset; can be used to synchronize scrolling between components |
@@ -55,6 +55,49 @@ This method will also force a render cycle (via `forceUpdate`) to ensure that th
 
 Ensure row is visible.
 This method can be used to safely scroll back to a cell that a user has scrolled away from even if it was previously scrolled to.
+
+### rowRenderer
+
+Responsible for rendering a single row, given its index.
+This function accepts the following named parameters:
+
+```jsx
+function rowRenderer ({
+  index,       // Index of row
+  isScrolling, // The List is currently being scrolled
+  isVisible,   // This row is visible within the List (eg it is not an overscanned row)
+  key,         // Unique key within array of rendered rows
+  parent,      // Reference to the parent List (instance)
+  style        // Style object to be applied to row (to position it);
+               // This must be passed through to the rendered row element.
+}) {
+  const user = list[index]
+
+  // If row content is complex, consider rendering a light-weight placeholder while scrolling.
+  const content = isScrolling
+    ? '...'
+    : <User user={user} />
+
+  // Style is required since it specifies how the row is to be sized and positioned.
+  // React Virtualized depends on this sizing/positioning for proper scrolling behavior.
+  // By default, the List component provides following style properties:
+  //    position
+  //    left
+  //    top
+  //    height
+  //    width
+  // You can add additional class names or style properties as you would like.
+  // Key is also required by React to more efficiently manage the array of rows.
+  return (
+    <div
+      key={key}
+      style={style}
+    >
+      {content}
+    </div>
+  )
+}
+```
 
 ### Class names
 
