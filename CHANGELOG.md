@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.2.2
+* 🐛 Fixed small scrollbar offset bug in `MultiGrid`. ([#609](https://github.com/bvaughn/react-virtualized/issues/609))
+
 ##### 9.2.1
 * 🐛 Fixed potential scrollbar offset bug in `MultiGrid` by giving top and left `Grid`s a little extra space to scroll into. ([#535](https://github.com/bvaughn/react-virtualized/pull/535))
 
