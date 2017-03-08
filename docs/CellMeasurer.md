@@ -70,7 +70,15 @@ function cellRenderer ({ columnIndex, key, parent, rowIndex, style }) {
       parent={parent}
       rowIndex={rowIndex}
     >
-      {content}
+      <div
+        style={{
+          ...style,
+          height: 35,
+          whiteSpace: 'nowrap'
+        }}
+      >
+        {content}
+      </div>
     </CellMeasurer>
   );
 }
@@ -118,10 +126,13 @@ function rowRenderer ({ index, isScrolling, key, parent, style }) {
       rowIndex={index}
     >
       {({ measure }) => (
-        <img
-          onLoad={measure}
-          src={source}
-        />
+        // 'style' attribute required to position cell (within parent List)
+        <div style={style}>
+          <img
+            onLoad={measure}
+            src={source}
+          />
+        </div>
       )}
     </CellMeasurer>
   );
