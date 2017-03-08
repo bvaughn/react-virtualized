@@ -3,7 +3,7 @@ import { findDOMNode } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
 import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
-import CellMeasurerCache from '../CellMeasurer/CellMeasurerCache'
+import { CellMeasurer, CellMeasurerCache } from '../CellMeasurer'
 import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/defaultOverscanIndicesGetter'
 import { DEFAULT_MAX_SCROLL_SIZE } from './utils/ScalingCellSizeAndPositionManager'
 
@@ -1671,19 +1671,54 @@ describe('Grid', () => {
     expect(keys).toEqual(['0-0', '1-1'])
   })
 
-  it('should warn about cells that forget to include the :style property', () => {
-    spyOn(console, 'warn')
+  describe('DEV warnings', () => {
+    it('should warn about cells that forget to include the :style property', () => {
+      spyOn(console, 'warn')
 
-    function cellRenderer (params) {
-      return <div key={params.key} />
-    }
+      function cellRenderer (params) {
+        return <div key={params.key} />
+      }
 
-    render(getMarkup({
-      cellRenderer
-    }))
+      render(getMarkup({
+        cellRenderer
+      }))
 
-    expect(console.warn).toHaveBeenCalledWith('Rendered cell should include style property for positioning.')
-    expect(console.warn).toHaveBeenCalledTimes(1)
+      expect(console.warn).toHaveBeenCalledWith('Rendered cell should include style property for positioning.')
+      expect(console.warn).toHaveBeenCalledTimes(1)
+    })
+
+    it('should warn about CellMeasurer measured cells that forget to include the :style property', () => {
+      spyOn(console, 'warn')
+
+      const cache = new CellMeasurerCache({
+        fixedWidth: true
+      })
+
+      const cellRenderer = jest.fn()
+      cellRenderer.mockImplementation(
+        (params) => (
+          <CellMeasurer
+            cache={cache}
+            columnIndex={params.columnIndex}
+            parent={params.parent}
+            rowIndex={params.rowIndex}
+            style={params.style}
+          >
+            <div key={params.key} />
+          </CellMeasurer>
+        )
+      )
+
+      render(getMarkup({
+        cellRenderer,
+        columnCount: 1,
+        deferredMeasurementCache: cache,
+        rowCount: 1
+      }))
+
+      expect(console.warn).toHaveBeenCalledWith('Rendered cell should include style property for positioning.')
+      expect(console.warn).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('deferredMeasurementCache', () => {

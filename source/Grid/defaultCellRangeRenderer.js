@@ -139,14 +139,25 @@ export default function defaultCellRangeRenderer ({
 
 function warnAboutMissingStyle (parent, renderedCell) {
   if (process.env.NODE_ENV !== 'production') {
-    if (
-      renderedCell &&
-      renderedCell.props.style === undefined &&
-      parent.__warnedAboutMissingStyle !== true
-    ) {
-      parent.__warnedAboutMissingStyle = true
+    if (renderedCell) {
+      // If the direct child is a CellMeasurer, then we should check its child
+      // See issue #611
+      if (
+        renderedCell.type &&
+        renderedCell.type.__internalCellMeasurerFlag
+      ) {
+        renderedCell = renderedCell.props.children
+      }
 
-      console.warn('Rendered cell should include style property for positioning.')
+      if (
+        renderedCell &&
+        renderedCell.props.style === undefined &&
+        parent.__warnedAboutMissingStyle !== true
+      ) {
+        parent.__warnedAboutMissingStyle = true
+
+        console.warn('Rendered cell should include style property for positioning.')
+      }
     }
   }
 }

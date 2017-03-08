@@ -24,10 +24,6 @@ function warnAboutImproperUse (parent) {
   }
 }
 
-// Prevent Grid from warning about missing :style prop on CellMeasurer.
-// It's understood that style will often be passed to the child instead.
-const EMPTY_OBJECT = {}
-
 /**
  * Wraps a cell and measures its rendered content.
  * Measurements are stored in a per-cell cache.
@@ -35,10 +31,6 @@ const EMPTY_OBJECT = {}
  */
 export default class CellMeasurer extends PureComponent {
   props: Props;
-
-  static defaultProps = {
-    style: EMPTY_OBJECT
-  }
 
   constructor (props, context) {
     super(props, context)
@@ -130,4 +122,9 @@ export default class CellMeasurer extends PureComponent {
       })
     }
   }
+}
+
+// Used for DEV mode warning check
+if (process.env.NODE_ENV !== 'production') {
+  CellMeasurer.__internalCellMeasurerFlag = true
 }
