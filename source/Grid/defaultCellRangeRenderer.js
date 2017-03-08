@@ -151,6 +151,7 @@ function warnAboutMissingStyle (parent, renderedCell) {
 
       if (
         renderedCell &&
+        renderedCell.props &&
         renderedCell.props.style === undefined &&
         parent.__warnedAboutMissingStyle !== true
       ) {
