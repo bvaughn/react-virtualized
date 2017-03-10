@@ -16,7 +16,7 @@ That means that `List` also accepts [`Grid` props](Grid.md) in addition to the p
 | noRowsRenderer | Function |  | Callback used to render placeholder content when `rowCount` is 0 |
 | onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, scrollHeight: number, scrollTop: number }): void` |
-| overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browsers/devices. |
+| overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important not about this property. |
 | rowCount | Number | ✓ | Number of rows in list. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
 | rowRenderer | Function | ✓ | Responsible for rendering a row. [Learn more](#rowrenderer).|
