@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 9.2.3
+* 🐛 `CellMeasurer` should work better out of the box with `MultiGrid`.
+* 🐛 `CellMeasurerCache` should return correct values from `rowHeight` and `columnWidth` functions when `keyMapper` is used. ([#613](https://github.com/bvaughn/react-virtualized/pull/613))
+
 ##### 9.2.2
 * 🐛 Fixed small scrollbar offset bug in `MultiGrid`. ([#609](https://github.com/bvaughn/react-virtualized/issues/609))
 
