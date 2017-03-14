@@ -228,6 +228,50 @@ describe('MultiGrid', () => {
     })
   })
 
+  describe('#invalidateCellSizeAfterRender', () => {
+    it('should call invalidateCellSizeAfterRender() on inner Grids', () => {
+      const cellRenderer = jest.fn()
+      cellRenderer.mockImplementation(({ key }) => <div key={key} style={{}} />)
+
+      const rendered = render(getMarkup({
+        cellRenderer,
+        columnCount: 2,
+        fixedColumnCount: 1,
+        fixedRowCount: 1,
+        rowCount: 2
+      }))
+
+      cellRenderer.mockReset()
+      rendered.invalidateCellSizeAfterRender({
+        columnIndex: 0,
+        rowIndex: 0
+      })
+
+      rendered.forceUpdate()
+
+      expect(cellRenderer.mock.calls).toHaveLength(4)
+    })
+
+    it('should specify itself as the :parent for CellMeasurer rendered cells', () => {
+      // HACK For some reason, using Jest mock broke here
+      let savedParent
+      function cellRenderer ({ key, parent }) {
+        savedParent = parent
+        return <div key={key} style={{}} />
+      }
+
+      const rendered = render(getMarkup({
+        cellRenderer,
+        columnCount: 2,
+        fixedColumnCount: 1,
+        fixedRowCount: 1,
+        rowCount: 2
+      }))
+
+      expect(savedParent).toBe(rendered)
+    })
+  })
+
   describe('styles', () => {
     it('should support custom style for the outer MultiGrid wrapper element', () => {
       const rendered = findDOMNode(render(getMarkup({

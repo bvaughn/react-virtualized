@@ -719,6 +719,7 @@ export default class Grid extends PureComponent {
               maxHeight: totalRowsHeight,
               overflow: 'hidden',
               pointerEvents: isScrolling ? 'none' : '',
+              position: 'relative',
               ...containerStyle
             }}
           >
@@ -893,8 +894,8 @@ export default class Grid extends PureComponent {
       const columnIndex = this._deferredInvalidateColumnIndex
       const rowIndex = this._deferredInvalidateRowIndex
 
-      delete this._deferredInvalidateColumnIndex
-      delete this._deferredInvalidateRowIndex
+      this._deferredInvalidateColumnIndex = null
+      this._deferredInvalidateRowIndex = null
 
       this.recomputeGridSize({ columnIndex, rowIndex })
     }

@@ -40,6 +40,9 @@ export default class MultiGrid extends PureComponent {
       scrollTop: 0
     }
 
+    this._deferredInvalidateColumnIndex = null
+    this._deferredInvalidateRowIndex = null
+
     this._bottomLeftGridRef = this._bottomLeftGridRef.bind(this)
     this._bottomRightGridRef = this._bottomRightGridRef.bind(this)
     this._cellRendererBottomLeftGrid = this._cellRendererBottomLeftGrid.bind(this)
@@ -57,6 +60,19 @@ export default class MultiGrid extends PureComponent {
     this._bottomRightGrid && this._bottomRightGrid.forceUpdate()
     this._topLeftGrid && this._topLeftGrid.forceUpdate()
     this._topRightGrid && this._topRightGrid.forceUpdate()
+  }
+
+  /** See Grid#invalidateCellSizeAfterRender */
+  invalidateCellSizeAfterRender ({
+    columnIndex = 0,
+    rowIndex = 0
+  } = {}) {
+    this._deferredInvalidateColumnIndex = typeof this._deferredInvalidateColumnIndex === 'number'
+      ? Math.min(this._deferredInvalidateColumnIndex, columnIndex)
+      : columnIndex
+    this._deferredInvalidateRowIndex = typeof this._deferredInvalidateRowIndex === 'number'
+      ? Math.min(this._deferredInvalidateRowIndex, rowIndex)
+      : rowIndex
   }
 
   /** See Grid#measureAllCells */
@@ -99,6 +115,14 @@ export default class MultiGrid extends PureComponent {
     this._maybeCalculateCachedStyles(null, this.props, null, this.state)
   }
 
+  componentDidMount () {
+    this._handleInvalidatedGridSize()
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    this._handleInvalidatedGridSize()
+  }
+
   componentWillMount () {
     this._maybeCalculateCachedStyles(null, this.props, null, this.state)
   }
@@ -133,6 +157,13 @@ export default class MultiGrid extends PureComponent {
       scrollToRow,
       ...rest
     } = this.props
+
+    // Don't render any of our Grids if there are no cells.
+    // This mirrors what Grid does,
+    // And prevents us from recording inaccurage measurements when used with CellMeasurer.
+    if (this.props.width === 0 || this.props.height === 0) {
+      return null
+    }
 
     // scrollTop and scrollToRow props are explicitly filtered out and ignored
 
@@ -197,6 +228,7 @@ export default class MultiGrid extends PureComponent {
     } else {
       return cellRenderer({
         ...rest,
+        parent: this,
         rowIndex: rowIndex + fixedRowCount
       })
     }
@@ -208,6 +240,7 @@ export default class MultiGrid extends PureComponent {
     return cellRenderer({
       ...rest,
       columnIndex: columnIndex + fixedColumnCount,
+      parent: this,
       rowIndex: rowIndex + fixedRowCount
     })
   }
@@ -232,7 +265,8 @@ export default class MultiGrid extends PureComponent {
     } else {
       return cellRenderer({
         ...rest,
-        columnIndex: columnIndex + fixedColumnCount
+        columnIndex: columnIndex + fixedColumnCount,
+        parent: this
       })
     }
   }
@@ -244,7 +278,7 @@ export default class MultiGrid extends PureComponent {
     // This gives the smaller Grid extra room for offset,
     // In case the main (bottom right) Grid has a scrollbar
     // If no scrollbar, the extra space is overflow:hidden anyway
-    if (index === columnCount) {
+    if (index === columnCount - fixedColumnCount) {
       return SCROLLBAR_SIZE_BUFFER
     }
 
@@ -307,6 +341,22 @@ export default class MultiGrid extends PureComponent {
     }
 
     return this._topGridHeight
+  }
+
+  _handleInvalidatedGridSize () {
+    if (typeof this._deferredInvalidateColumnIndex === 'number') {
+      const columnIndex = this._deferredInvalidateColumnIndex
+      const rowIndex = this._deferredInvalidateRowIndex
+
+      this._deferredInvalidateColumnIndex = null
+      this._deferredInvalidateRowIndex = null
+
+      this.recomputeGridSize({
+        columnIndex,
+        rowIndex
+      })
+      this.forceUpdate()
+    }
   }
 
   /**
@@ -562,7 +612,7 @@ export default class MultiGrid extends PureComponent {
     // This gives the smaller Grid extra room for offset,
     // In case the main (bottom right) Grid has a scrollbar
     // If no scrollbar, the extra space is overflow:hidden anyway
-    if (index === rowCount) {
+    if (index === rowCount - fixedRowCount) {
       return SCROLLBAR_SIZE_BUFFER
     }
 

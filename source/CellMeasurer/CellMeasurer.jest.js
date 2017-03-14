@@ -212,22 +212,6 @@ describe('CellMeasurer', () => {
     expect(console.warn).not.toHaveBeenCalled()
   })
 
-  it('should warn if parent Grid does not specify a :deferredMeasurementCache prop', () => {
-    spyOn(console, 'warn')
-
-    const parent = createParent() // Parent Grid with no deferredMeasurementCache prop
-
-    renderHelper({ parent })
-
-    expect(console.warn).toHaveBeenCalledWith(
-      'CellMeasurer should be rendered within a Grid that has a deferredMeasurementCache prop.'
-    )
-
-    renderHelper({ parent })
-
-    expect(console.warn).toHaveBeenCalledTimes(1)
-  })
-
   // See issue #593
   it('should explicitly set widht/height style to "auto" before re-measuring', () => {
     const cache = new CellMeasurerCache({
@@ -251,10 +235,12 @@ describe('CellMeasurer', () => {
       </CellMeasurer>
     ))
 
-    expect(node.style.height).toBe('30px')
+    node.style.width = 100
+    node.style.height = 30
 
     child.mock.calls[0][0].measure()
 
     expect(node.style.height).toBe('auto')
+    expect(node.style.width).not.toBe('auto')
   })
 })

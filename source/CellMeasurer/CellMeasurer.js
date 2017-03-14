@@ -11,19 +11,6 @@ type Props = {
   style: mixed
 };
 
-function warnAboutImproperUse (parent) {
-  if (process.env.NODE_ENV !== 'production') {
-    if (
-      parent &&
-      parent.props.deferredMeasurementCache === undefined &&
-      parent.__warnedAboutImproperUse !== true
-    ) {
-      parent.__warnedAboutImproperUse = true
-      console.warn('CellMeasurer should be rendered within a Grid that has a deferredMeasurementCache prop.')
-    }
-  }
-}
-
 /**
  * Wraps a cell and measures its rendered content.
  * Measurements are stored in a per-cell cache.
@@ -49,12 +36,6 @@ export default class CellMeasurer extends PureComponent {
   render () {
     const { children } = this.props
 
-    if (process.env.NODE_ENV !== 'production') {
-      const { parent } = this.props
-
-      warnAboutImproperUse(parent)
-    }
-
     return typeof children === 'function'
       ? children({ measure: this._measure })
       : children
@@ -65,8 +46,22 @@ export default class CellMeasurer extends PureComponent {
 
     if (!cache.has(rowIndex, columnIndex)) {
       const node = findDOMNode(this)
-      const height = node.offsetHeight
-      const width = node.offsetWidth
+
+      // TODO Check for a bad combination of fixedWidth and missing numeric width or vice versa with height
+
+      // Even if we are measuring initially- if we're inside of a MultiGrid component,
+      // Explicitly clear width/height before measuring to avoid being tainted by another Grid.
+      // eg top/left Grid renders before bottom/right Grid
+      // Since the CellMeasurerCache is shared between them this taints derived cell size values.
+      if (!cache.hasFixedWidth()) {
+        node.style.width = 'auto'
+      }
+      if (!cache.hasFixedHeight()) {
+        node.style.height = 'auto'
+      }
+
+      const height = Math.ceil(node.offsetHeight)
+      const width = Math.ceil(node.offsetWidth)
 
       cache.set(
         rowIndex,
@@ -76,7 +71,10 @@ export default class CellMeasurer extends PureComponent {
       )
 
       // If size has changed, let Grid know to re-render.
-      if (parent !== undefined) {
+      if (
+        parent &&
+        typeof parent.invalidateCellSizeAfterRender === 'function'
+      ) {
         parent.invalidateCellSizeAfterRender({
           columnIndex,
           rowIndex
@@ -102,8 +100,8 @@ export default class CellMeasurer extends PureComponent {
       node.style.height = 'auto'
     }
 
-    const height = node.offsetHeight
-    const width = node.offsetWidth
+    const height = Math.ceil(node.offsetHeight)
+    const width = Math.ceil(node.offsetWidth)
 
     if (
       height !== cache.getHeight(rowIndex, columnIndex) ||
@@ -116,10 +114,15 @@ export default class CellMeasurer extends PureComponent {
         height
       )
 
-      parent.recomputeGridSize({
-        columnIndex,
-        rowIndex
-      })
+      if (
+        parent &&
+        typeof parent.recomputeGridSize === 'function'
+      ) {
+        parent.recomputeGridSize({
+          columnIndex,
+          rowIndex
+        })
+      }
     }
   }
 }
