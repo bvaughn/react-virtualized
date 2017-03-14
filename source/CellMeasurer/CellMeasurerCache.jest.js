@@ -83,6 +83,8 @@ describe('CellMeasurerCache', () => {
     keyMapper.mockReturnValue('a')
 
     const cache = new CellMeasurerCache({
+      defaultHeight: 30,
+      defaultWidth: 50,
       fixedHeight: true,
       fixedWidth: true,
       keyMapper
@@ -90,10 +92,21 @@ describe('CellMeasurerCache', () => {
     cache.set(0, 0, 100, 20)
     expect(cache.has(0, 0)).toBe(true)
 
-    keyMapper.mock.calls.splice(0)
+    // Changing the returned key should cause cache misses
+    keyMapper.mockReset()
     keyMapper.mockReturnValue('b')
     expect(cache.has(0, 0)).toBe(false)
-    expect(keyMapper.mock.calls).toHaveLength(1)
+    expect(cache.columnWidth(0)).toBe(50)
+    expect(cache.rowHeight(0)).toBe(30)
+    expect(keyMapper.mock.calls).toHaveLength(3)
+
+    // Restoring it should fix
+    keyMapper.mockReset()
+    keyMapper.mockReturnValue('a')
+    expect(cache.has(0, 0)).toBe(true)
+    expect(cache.columnWidth(0)).toBe(100)
+    expect(cache.rowHeight(0)).toBe(20)
+    expect(keyMapper.mock.calls).toHaveLength(3)
   })
 
   it('should provide a Grid-compatible :columnWidth method', () => {
