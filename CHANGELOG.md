@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.3.0
+* 🎉 Added `resetLoadMoreRowsCache` method to `InfiniteLoader` to reset any cached data about loaded rows. This method should be called if any/all loaded data needs to be refetched (eg a filtered list where the search criteria changes). ([#612](https://github.com/bvaughn/react-virtualized/issues/612))
+
 ##### 9.2.3
 * 🐛 `CellMeasurer` should work better out of the box with `MultiGrid`.
 * 🐛 `CellMeasurerCache` should return correct values from `rowHeight` and `columnWidth` functions when `keyMapper` is used. ([#613](https://github.com/bvaughn/react-virtualized/pull/613))
