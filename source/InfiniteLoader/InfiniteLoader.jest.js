@@ -230,6 +230,21 @@ describe('InfiniteLoader', () => {
     innerOnRowsRendered({ startIndex: 0, stopIndex: 20 })
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 20 }])
   })
+
+  it('resetLoadMoreRowsCache should reset memoized state', () => {
+    const component = render(getMarkup({
+      isRowLoaded: () => false,
+      minimumBatchSize: 20,
+      threshold: 0
+    }))
+    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 19 }])
+    innerOnRowsRendered({ startIndex: 0, stopIndex: 15 })
+    loadMoreRowsCalls.splice(0)
+    expect(loadMoreRowsCalls).toEqual([])
+    component.resetLoadMoreRowsCache()
+    innerOnRowsRendered({ startIndex: 0, stopIndex: 15 })
+    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 19 }])
+  })
 })
 
 describe('scanForUnloadedRanges', () => {

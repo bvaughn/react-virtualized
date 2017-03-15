@@ -20,6 +20,11 @@ This is an advanced component and can be confusing in certain situations.
 | rowCount | Number | ✓ | Number of rows in list; can be arbitrary high number if actual number is unknown. |
 | threshold | Number |  | Threshold at which to pre-fetch data. A threshold X means that data will start loading when a user scrolls within X rows. Defaults to `15`. |
 
+### Public Methods
+
+##### resetLoadMoreRowsCache
+Reset any cached data about already-loaded rows. This method should be called if any/all loaded data needs to be refetched (eg a filtered list where the search criteria changes).
+
 ### Children function
 
 The child function is passed the following named parameters:

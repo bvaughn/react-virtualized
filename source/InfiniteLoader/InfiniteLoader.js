@@ -68,6 +68,10 @@ export default class InfiniteLoader extends PureComponent {
     this._registerChild = this._registerChild.bind(this)
   }
 
+  resetLoadMoreRowsCache() {
+    this._loadMoreRowsMemoizer = createCallbackMemoizer()
+  }
+
   render () {
     const { children } = this.props
 
