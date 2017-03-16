@@ -1038,15 +1038,6 @@ export default class Grid extends PureComponent {
       return
     }
 
-    // On iOS, we can arrive at negative offsets by swiping past the start
-    // To prevent flicker here, we make playing in the negative offset zone cause nothing to happen.
-    if (event.target.scrollTop < 0) {
-      return
-    }
-
-    // Prevent pointer events from interrupting a smooth scroll
-    this._debounceScrollEnded()
-
     // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
     // This causes a series of rapid renders that is slow for long lists.
@@ -1057,6 +1048,16 @@ export default class Grid extends PureComponent {
     const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
     const scrollLeft = Math.min(Math.max(0, totalColumnsWidth - width + scrollbarSize), event.target.scrollLeft)
     const scrollTop = Math.min(Math.max(0, totalRowsHeight - height + scrollbarSize), event.target.scrollTop)
+
+    // On iOS, we can arrive at negative offsets by swiping past the start or past the end
+    // Luckily for us, scrollTop above already models these constraints
+    // So, if scrollTop !== event.target.scrollTop, then we're scrolling outside the constraints and don't need rerenders
+    if (event.target.scrollTop !== scrollTop) {
+      return
+    }
+
+    // Prevent pointer events from interrupting a smooth scroll
+    this._debounceScrollEnded()
 
     // Certain devices (like Apple touchpad) rapid-fire duplicate events.
     // Don't force a re-render if this is the case.
