@@ -7,6 +7,7 @@ import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import defaultOverscanIndicesGetter, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/defaultOverscanIndicesGetter'
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
 import defaultCellRangeRenderer from './defaultCellRangeRenderer'
+import scrollbarSize from 'dom-helpers/util/scrollbarSize'
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -221,7 +222,7 @@ export default class Grid extends PureComponent {
     cellRangeRenderer: defaultCellRangeRenderer,
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
-    getScrollbarSize: require('dom-helpers/util/scrollbarSize'),
+    getScrollbarSize: scrollbarSize,
     noContentRenderer: () => null,
     onScroll: () => null,
     onSectionRendered: () => null,
