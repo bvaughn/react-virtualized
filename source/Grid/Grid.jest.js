@@ -1637,12 +1637,12 @@ describe('Grid', () => {
       rowHeight: 100,
       columnWidth: 100,
       rowCount: DEFAULT_MAX_SCROLL_SIZE * 2 / 100, // lots of offset
-      scrollTop: DEFAULT_MAX_SCROLL_SIZE
+      scrollTop: 2000
     }))
 
     simulateScroll({
       grid,
-      scrollTop: DEFAULT_MAX_SCROLL_SIZE + 100
+      scrollTop: 2100
     })
 
     // cellRendererCalls[0] is the element at rowIndex 0

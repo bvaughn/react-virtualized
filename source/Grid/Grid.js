@@ -1038,21 +1038,29 @@ export default class Grid extends PureComponent {
       return
     }
 
+    const { autoHeight, height, width } = this.props
+
+    const {
+      scrollLeft: eventScrollLeft,
+      scrollTop: eventScrollTop
+    } = event.target
+
     // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
     // This causes a series of rapid renders that is slow for long lists.
-    // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-    const { autoHeight, height, width } = this.props
+    // We can avoid that by doing some simple bounds checking to ensure that scroll offsets never exceed their bounds.
     const scrollbarSize = this._scrollbarSize
     const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
     const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
-    const scrollLeft = Math.min(Math.max(0, totalColumnsWidth - width + scrollbarSize), event.target.scrollLeft)
-    const scrollTop = Math.min(Math.max(0, totalRowsHeight - height + scrollbarSize), event.target.scrollTop)
+    const scrollLeft = Math.min(Math.max(0, totalColumnsWidth - width + scrollbarSize), eventScrollLeft)
+    const scrollTop = Math.min(Math.max(0, totalRowsHeight - height + scrollbarSize), eventScrollTop)
 
-    // On iOS, we can arrive at negative offsets by swiping past the start or past the end
-    // Luckily for us, scrollTop above already models these constraints
-    // So, if scrollTop !== event.target.scrollTop, then we're scrolling outside the constraints and don't need rerenders
-    if (event.target.scrollTop !== scrollTop) {
+    // On iOS, we can arrive at negative offsets by swiping past the start or end.
+    // Avoid re-rendering in this case as it can cause problems; see #532 for more.
+    if (
+      eventScrollLeft !== scrollLeft ||
+      eventScrollTop !== scrollTop
+    ) {
       return
     }
 
