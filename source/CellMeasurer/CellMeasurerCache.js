@@ -141,6 +141,14 @@ export default class CellMeasurerCache {
       : this._defaultWidth
   }
 
+  get defaultHeight () : number {
+    return this._defaultHeight
+  }
+
+  get defaultWidth () : number {
+    return this._defaultWidth
+  }
+
   hasFixedHeight () : boolean {
     return this._hasFixedHeight
   }
@@ -151,7 +159,7 @@ export default class CellMeasurerCache {
 
   getHeight (
     rowIndex: number,
-    columnIndex: number
+    columnIndex: ?number
   ) : ?number {
     const key = this._keyMapper(rowIndex, columnIndex)
 
@@ -162,7 +170,7 @@ export default class CellMeasurerCache {
 
   getWidth (
     rowIndex: number,
-    columnIndex: number
+    columnIndex: ?number
   ) : ?number {
     const key = this._keyMapper(rowIndex, columnIndex)
 
@@ -173,7 +181,7 @@ export default class CellMeasurerCache {
 
   has (
     rowIndex: number,
-    columnIndex: number
+    columnIndex: ?number
   ) : boolean {
     const key = this._keyMapper(rowIndex, columnIndex)
 
