@@ -116,6 +116,21 @@ export default class MultiGrid extends PureComponent {
   }
 
   componentDidMount () {
+    const { scrollLeft, scrollTop } = this.props
+
+    if (scrollLeft >= 0 || scrollTop >= 0) {
+      const newState = {}
+
+      if (scrollLeft >= 0) {
+        newState.scrollLeft = scrollLeft
+      }
+
+      if (scrollTop >= 0) {
+        newState.scrollTop = scrollTop
+      }
+
+      this.setState(newState)
+    }
     this._handleInvalidatedGridSize()
   }
 
@@ -144,6 +159,23 @@ export default class MultiGrid extends PureComponent {
       this._topGridHeight = null
     }
 
+    if (
+      nextProps.scrollLeft !== this.state.scrollLeft ||
+      nextProps.scrollTop !== this.state.scrollTop
+    ) {
+      const newState = {}
+
+      if (nextProps.scrollLeft != null) {
+        newState.scrollLeft = nextProps.scrollLeft
+      }
+
+      if (nextProps.scrollTop != null) {
+        newState.scrollTop = nextProps.scrollTop
+      }
+
+      this.setState(newState)
+    }
+
     this._maybeCalculateCachedStyles(this.props, nextProps, this.state, nextState)
   }
 
@@ -165,7 +197,7 @@ export default class MultiGrid extends PureComponent {
       return null
     }
 
-    // scrollTop and scrollToRow props are explicitly filtered out and ignored
+    // scrollTop and scrollLeft props are explicitly filtered out and ignored
 
     const {
       scrollLeft,
