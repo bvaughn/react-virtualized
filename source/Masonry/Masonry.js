@@ -2,22 +2,13 @@
 import React, { PureComponent } from 'react'
 import cn from 'classnames'
 import PositionCache from './PositionCache'
+import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
  */
 export const DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150
-
-// Other considerations:
-// • Pre-measure threshold (in pixels)
-// • Ovescan threshold (in pixels)
-
-// TODO Should I create a new CellMeasurerCache for Masonry?
-//      Make it clearer that only 1 index is okay.
-//      Don't warn about measuring both width and height.
-
-// TODO Should I require positioner to specify a :top and :columnIndex rather than :left?
 
 /**
  * This component efficiently displays arbitrarily positioned cells using windowing techniques.
@@ -54,7 +45,7 @@ export default class Masonry extends PureComponent {
     keyMapper: identity,
     onCellsRendered: noop,
     onScroll: noop,
-    overscanSize: 0,
+    overscanByPixels: 20,
     role: 'grid',
     scrollingResetTimeInterval: DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
     style: emptyObject,
@@ -63,9 +54,13 @@ export default class Masonry extends PureComponent {
 
   _invalidateOnUpdateStartIndex: ?number = null;
   _invalidateOnUpdateStopIndex: ?number = null;
+  _onCellsRenderedMemoizer = createCallbackMemoizer();
+  _onScrollMemoizer = createCallbackMemoizer(false);
   _positionCache: PositionCache = new PositionCache();
-  _startIndex: number = 0;
-  _stopIndex: number = -1;
+  _startIndex: ?number = null;
+  _startIndexMemoized: ?number = null;
+  _stopIndex: ?number = null;
+  _stopIndexMemoized: ?number = null;
 
   constructor (props, context) {
     super(props, context)
@@ -107,12 +102,14 @@ export default class Masonry extends PureComponent {
 
   componentDidMount () {
     this._checkInvalidateOnUpdate()
+    this._invokeOnScrollCallback()
+    this._invokeOnCellsRenderedCallback()
   }
 
   componentDidUpdate (prevProps, prevState) {
     this._checkInvalidateOnUpdate()
-
-    // TODO Call onCellsRendered callback
+    this._invokeOnScrollCallback()
+    this._invokeOnCellsRenderedCallback()
   }
 
   render () {
@@ -121,10 +118,10 @@ export default class Masonry extends PureComponent {
       cellMeasurerCache,
       cellRenderer,
       className,
-      columnCount,
       height,
       id,
       keyMapper,
+      overscanByPixels,
       role,
       style,
       tabIndex,
@@ -138,12 +135,7 @@ export default class Masonry extends PureComponent {
 
     const children = []
 
-    // TODO Style overflow based on the size and presence scrollbars
-    const estimatedHeight = this._positionCache.estimateTotalHeight(
-      cellCount,
-      columnCount,
-      cellMeasurerCache.defaultHeight
-    )
+    const estimateTotalHeight = this._getEstimatedTotalHeight()
 
     const shortestColumnSize = this._positionCache.shortestColumnSize
     const measuredCellCount = this._positionCache.count
@@ -153,12 +145,11 @@ export default class Masonry extends PureComponent {
       shortestColumnSize < scrollTop + height &&
       measuredCellCount < cellCount
     ) {
-      // TODO Account for a configurable pre-measure threshold
       const batchSize =
         Math.min(
           cellCount - measuredCellCount,
           Math.ceil(
-            (scrollTop + height - shortestColumnSize) / cellMeasurerCache.defaultHeight *
+            (scrollTop + height + overscanByPixels - shortestColumnSize) / cellMeasurerCache.defaultHeight *
             width / cellMeasurerCache.defaultWidth
           )
         )
@@ -177,11 +168,16 @@ export default class Masonry extends PureComponent {
         )
       }
     } else {
-      // TODO Support overscan rendering
+      let stopIndex
+      let startIndex
+
       this._positionCache.range(
         scrollTop,
-        height,
+        height + overscanByPixels,
         (index: number, left: number, top: number) => {
+          startIndex = Math.min(startIndex, index)
+          stopIndex = Math.min(stopIndex, index)
+
           children.push(
             cellRenderer({
               index,
@@ -197,6 +193,9 @@ export default class Masonry extends PureComponent {
               }
             })
           )
+
+          this._startIndex = startIndex
+          this._stopIndex = stopIndex
         }
       )
     }
@@ -214,7 +213,7 @@ export default class Masonry extends PureComponent {
           direction: 'ltr',
           height,
           overflowX: 'hidden',
-          overflowY: 'auto',
+          overflowY: estimateTotalHeight < height ? 'hidden' : 'auto',
           position: 'relative',
           width,
           WebkitOverflowScrolling: 'touch',
@@ -227,9 +226,9 @@ export default class Masonry extends PureComponent {
           className='ReactVirtualized__Masonry__innerScrollContainer'
           style={{
             width: '100%',
-            height: estimatedHeight,
+            height: estimateTotalHeight,
             maxWidth: '100%',
-            maxHeight: estimatedHeight,
+            maxHeight: estimateTotalHeight,
             overflow: 'hidden',
             pointerEvents: isScrolling ? 'none' : '',
             position: 'relative'
@@ -275,6 +274,55 @@ export default class Masonry extends PureComponent {
     })
   }
 
+  _getEstimatedTotalHeight () {
+    const {
+      cellCount,
+      cellMeasurerCache,
+      columnCount
+    } = this.props
+
+    return this._positionCache.estimateTotalHeight(
+      cellCount,
+      columnCount,
+      cellMeasurerCache.defaultHeight
+    )
+  }
+
+  _invokeOnScrollCallback () {
+    const {
+      height,
+      onScroll
+    } = this.props
+    const { scrollTop } = this.state
+
+    if (this._onScrollMemoized !== onScroll) {
+      onScroll({
+        clientHeight: height,
+        scrollHeight: this._getEstimatedTotalHeight(),
+        scrollTop
+      })
+
+      this._onScrollMemoized = onScroll
+    }
+  }
+
+  _invokeOnCellsRenderedCallback () {
+    if (
+      this._startIndexMemoized !== this._startIndex ||
+      this._stopIndexMemoized !== this._stopIndex
+    ) {
+      const { onCellsRendered } = this.props
+
+      onCellsRendered({
+        startIndex: this._startIndex,
+        stopIndex: this._stopIndex
+      })
+
+      this._startIndexMemoized = this._startIndex
+      this._stopIndexMemoized = this._stopIndex
+    }
+  }
+
   _populatePositionCache (
     startIndex: number,
     stopIndex: number
@@ -301,11 +349,21 @@ export default class Masonry extends PureComponent {
   }
 
   _onScroll (event) {
-    // TODO Account for scrollbar size and other min/max conditions like Grid
-    const {
-      scrollLeft,
-      scrollTop
-    } = event.target
+    const { height } = this.props
+
+    const eventScrollTop = event.target.scrollTop
+
+    // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
+    // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
+    // This causes a series of rapid renders that is slow for long lists.
+    // We can avoid that by doing some simple bounds checking to ensure that scroll offsets never exceed their bounds.
+    const scrollTop = Math.min(Math.max(0, this._getEstimatedTotalHeight() - height), eventScrollTop)
+
+    // On iOS, we can arrive at negative offsets by swiping past the start or end.
+    // Avoid re-rendering in this case as it can cause problems; see #532 for more.
+    if (eventScrollTop !== scrollTop) {
+      return
+    }
 
     // Prevent pointer events from interrupting a smooth scroll
     this._debounceResetIsScrolling()
@@ -314,18 +372,12 @@ export default class Masonry extends PureComponent {
     // Don't force a re-render if this is the case.
     // The mouse may move faster then the animation frame does.
     // Use requestAnimationFrame to avoid over-updating.
-    if (
-      this.state.scrollLeft !== scrollLeft ||
-      this.state.scrollTop !== scrollTop
-    ) {
+    if (this.state.scrollTop !== scrollTop) {
       this.setState({
         isScrolling: true,
-        scrollLeft,
         scrollTop
       })
     }
-
-    // TODO Call onScroll callback
   }
 }
 
@@ -378,7 +430,7 @@ type Props = {
   keyMapper: KeyMapper,
   onCellsRendered: ?OnCellsRenderedCallback,
   onScroll: ?OnScrollCallback,
-  overscanSize: number,
+  overscanByPixels: number,
   role: string,
   scrollingResetTimeInterval: number,
   style: mixed,
