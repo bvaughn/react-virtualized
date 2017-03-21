@@ -198,7 +198,7 @@ export default class MultiGrid extends PureComponent {
       return null
     }
 
-    // scrollTop and scroll props are explicitly filtered out and ignored
+    // scrollTop and scrollLeft props are explicitly filtered out and ignored
 
     const {
       scrollLeft,
