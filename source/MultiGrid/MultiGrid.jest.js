@@ -328,10 +328,7 @@ describe('MultiGrid', () => {
     })
 
     it('should adjust :scrollTop and :scrollLeft when scrollTop and scrollLeft change', () => {
-      render(getMarkup({
-        columnWidth: 50,
-        fixedColumnCount: 2
-      }))
+      render(getMarkup())
       const rendered = findDOMNode(render(getMarkup({
         scrollTop: 750,
         scrollLeft: 900

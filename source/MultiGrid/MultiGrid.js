@@ -118,14 +118,14 @@ export default class MultiGrid extends PureComponent {
   componentDidMount () {
     const { scrollLeft, scrollTop } = this.props
 
-    if (scrollLeft >= 0 || scrollTop >= 0) {
+    if (scrollLeft > 0 || scrollTop > 0) {
       const newState = {}
 
-      if (scrollLeft >= 0) {
+      if (scrollLeft > 0) {
         newState.scrollLeft = scrollLeft
       }
 
-      if (scrollTop >= 0) {
+      if (scrollTop > 0) {
         newState.scrollTop = scrollTop
       }
 
@@ -160,16 +160,22 @@ export default class MultiGrid extends PureComponent {
     }
 
     if (
-      nextProps.scrollLeft !== this.state.scrollLeft ||
-      nextProps.scrollTop !== this.state.scrollTop
+      nextProps.scrollLeft !== this.props.scrollLeft ||
+      nextProps.scrollTop !== this.props.scrollTop
     ) {
       const newState = {}
 
-      if (nextProps.scrollLeft != null) {
+      if (
+        nextProps.scrollLeft != null &&
+        nextProps.scrollLeft >= 0
+      ) {
         newState.scrollLeft = nextProps.scrollLeft
       }
 
-      if (nextProps.scrollTop != null) {
+      if (
+        nextProps.scrollTop != null &&
+        nextProps.scrollTop >= 0
+      ) {
         newState.scrollTop = nextProps.scrollTop
       }
 
