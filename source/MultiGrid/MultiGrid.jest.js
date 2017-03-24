@@ -300,4 +300,47 @@ describe('MultiGrid', () => {
       expect(bottomRightGrid.style.backgroundColor).toEqual('red')
     })
   })
+  describe('scrollTop and scrollLeft', () => {
+    it('should adjust :scrollLeft for top-right and main grids when scrollLeft is used', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnWidth: 50,
+        fixedColumnCount: 2,
+        scrollLeft: 850
+      })))
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
+      const topRightGrid = grids[1]
+      const bottomRightGrid = grids[3]
+      expect(topRightGrid.scrollLeft).toEqual(850)
+      expect(bottomRightGrid.scrollLeft).toEqual(850)
+    })
+
+    it('should adjust :scrollTop for bottom-left and main grids when scrollTop is used', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        columnWidth: 50,
+        fixedColumnCount: 2,
+        scrollTop: 500
+      })))
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
+      const bottomLeftGrid = grids[2]
+      const bottomRightGrid = grids[3]
+      expect(bottomLeftGrid.scrollTop).toEqual(500)
+      expect(bottomRightGrid.scrollTop).toEqual(500)
+    })
+
+    it('should adjust :scrollTop and :scrollLeft when scrollTop and scrollLeft change', () => {
+      render(getMarkup())
+      const rendered = findDOMNode(render(getMarkup({
+        scrollTop: 750,
+        scrollLeft: 900
+      })))
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
+      const topRightGrid = grids[1]
+      const bottomLeftGrid = grids[2]
+      const bottomRightGrid = grids[3]
+      expect(topRightGrid.scrollLeft).toEqual(900)
+      expect(bottomRightGrid.scrollLeft).toEqual(900)
+      expect(bottomLeftGrid.scrollTop).toEqual(750)
+      expect(bottomRightGrid.scrollTop).toEqual(750)
+    })
+  })
 })
