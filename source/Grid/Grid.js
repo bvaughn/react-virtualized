@@ -787,6 +787,7 @@ export default class Grid extends PureComponent {
       this._renderedRowStopIndex = visibleRowIndices.stop
 
       const overscanColumnIndices = overscanIndicesGetter({
+        direction: 'horizontal',
         cellCount: columnCount,
         overscanCellsCount: overscanColumnCount,
         scrollDirection: scrollDirectionHorizontal,
@@ -795,6 +796,7 @@ export default class Grid extends PureComponent {
       })
 
       const overscanRowIndices = overscanIndicesGetter({
+        direction: 'vertical',
         cellCount: rowCount,
         overscanCellsCount: overscanRowCount,
         scrollDirection: scrollDirectionVertical,

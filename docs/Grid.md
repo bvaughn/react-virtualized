@@ -154,6 +154,22 @@ function cellRangeRenderer ({
 This is an advanced property.
 This function is responsible for calculating the number of cells to overscan before and after a specified range. By default, React Virtualized optimizes the number of cells to overscan based on scroll direction. If you'd like to customize this behavior, you may want to fork the [`defaultOverscanIndicesGetter`](https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/defaultOverscanIndicesGetter.js) function.
 
+```
+function overscanIndicesGetter ({
+  direction,          // One of "horizontal" or "vertical"
+  cellCount,          // Number of rows or columns in the current axis
+  scrollDirection,    // 1 (forwards) or -1 (backwards)
+  overscanCellsCount, // Maximum number of cells to over-render in either direction
+  startIndex,         // Begin of range of visible cells
+  stopIndex           // End of range of visible cells
+}) {
+  return {
+    overscanStartIndex: Math.max(0, startIndex - overscanCellsCount),
+    overscanStopIndex: Math.min(cellCount - 1, stopIndex + overscanCellsCount)
+  }
+}
+```
+
 ### cellRenderer
 
 Responsible for rendering a single cell, given its row and column index.
