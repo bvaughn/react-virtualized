@@ -1,8 +1,8 @@
 export const SCROLL_DIRECTION_BACKWARD = -1
 export const SCROLL_DIRECTION_FORWARD = 1
 
-export const SCROLL_DIRECTION_HORIZONTAL = "horizontal"
-export const SCROLL_DIRECTION_VERTICAL = "vertical"
+export const SCROLL_DIRECTION_HORIZONTAL = 'horizontal'
+export const SCROLL_DIRECTION_VERTICAL = 'vertical'
 /**
  * Calculates the number of cells to overscan before and after a specified range.
  * This function ensures that overscanning doesn't exceed the available cells.
