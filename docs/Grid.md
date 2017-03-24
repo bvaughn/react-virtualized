@@ -23,8 +23,8 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered. This callback is only invoked when visible rows have changed: `({ columnOverscanStartIndex: number, columnOverscanStopIndex: number, columnStartIndex: number, columnStopIndex: number, rowOverscanStartIndex: number, rowOverscanStopIndex: number, rowStartIndex: number, rowStopIndex: number }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, clientWidth: number, scrollHeight: number, scrollLeft: number, scrollTop: number, scrollWidth: number }): void` |
 | overscanColumnCount | Number |  | Number of columns to render before/after the visible slice of the grid. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important not about this property. |
-| overscanIndicesGetter | Function |  | Responsible for calculating the number of cells to overscan before and after a specified range [Learn more](#overscanindicesgetter) `({ direction: string, cellCount: number, overscanCellsCount: number, scrollDirection: number, startIndex: number, stopIndex: number }): {overscanStartIndex: number,overscanStopIndex: number}` |
-| overscanRowCount | Number |  | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important not about this property.|
+| overscanIndicesGetter | Function |  | Responsible for calculating the number of cells to overscan before and after a specified range [Learn more](#overscanindicesgetter) |
+| overscanRowCount | Number |  | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important not about this property. |
 | role | String |  | Optional override of ARIA role default; defaults to `grid`. |
 | rowCount | Number | ✓ | Number of rows in grid. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
@@ -153,6 +153,22 @@ function cellRangeRenderer ({
 ### overscanIndicesGetter
 This is an advanced property.
 This function is responsible for calculating the number of cells to overscan before and after a specified range. By default, React Virtualized optimizes the number of cells to overscan based on scroll direction. If you'd like to customize this behavior, you may want to fork the [`defaultOverscanIndicesGetter`](https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/defaultOverscanIndicesGetter.js) function.
+
+```
+function overscanIndicesGetter ({
+  direction,          // One of "horizontal" or "vertical"
+  cellCount,          // Number of rows or columns in the current axis
+  scrollDirection,    // 1 (forwards) or -1 (backwards)
+  overscanCellsCount, // Maximum number of cells to over-render in either direction
+  startIndex,         // Begin of range of visible cells
+  stopIndex           // End of range of visible cells
+}) {
+  return {
+    overscanStartIndex: Math.max(0, startIndex - overscanCellsCount),
+    overscanStopIndex: Math.min(cellCount - 1, stopIndex + overscanCellsCount)
+  }
+}
+```
 
 ### cellRenderer
 
