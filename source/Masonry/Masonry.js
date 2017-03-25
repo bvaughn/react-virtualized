@@ -2,7 +2,6 @@
 import React, { PureComponent } from 'react'
 import cn from 'classnames'
 import PositionCache from './PositionCache'
-import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -54,8 +53,6 @@ export default class Masonry extends PureComponent {
 
   _invalidateOnUpdateStartIndex: ?number = null;
   _invalidateOnUpdateStopIndex: ?number = null;
-  _onCellsRenderedMemoizer = createCallbackMemoizer();
-  _onScrollMemoizer = createCallbackMemoizer(false);
   _positionCache: PositionCache = new PositionCache();
   _startIndex: ?number = null;
   _startIndexMemoized: ?number = null;
@@ -142,7 +139,7 @@ export default class Masonry extends PureComponent {
 
     // We need to measure more cells before layout
     if (
-      shortestColumnSize < scrollTop + height &&
+      shortestColumnSize < scrollTop + height + overscanByPixels &&
       measuredCellCount < cellCount
     ) {
       const batchSize =
@@ -172,11 +169,16 @@ export default class Masonry extends PureComponent {
       let startIndex
 
       this._positionCache.range(
-        scrollTop,
+        scrollTop - overscanByPixels,
         height + overscanByPixels,
         (index: number, left: number, top: number) => {
-          startIndex = Math.min(startIndex, index)
-          stopIndex = Math.min(stopIndex, index)
+          if (typeof startIndex === 'undefined') {
+            startIndex = index
+            stopIndex = index
+          } else {
+            startIndex = Math.min(startIndex, index)
+            stopIndex = Math.max(stopIndex, index)
+          }
 
           children.push(
             cellRenderer({
@@ -295,14 +297,14 @@ export default class Masonry extends PureComponent {
     } = this.props
     const { scrollTop } = this.state
 
-    if (this._onScrollMemoized !== onScroll) {
+    if (this._onScrollMemoized !== scrollTop) {
       onScroll({
         clientHeight: height,
         scrollHeight: this._getEstimatedTotalHeight(),
         scrollTop
       })
 
-      this._onScrollMemoized = onScroll
+      this._onScrollMemoized = scrollTop
     }
   }
 
