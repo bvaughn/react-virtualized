@@ -6,3 +6,13 @@
   background-color: #f7f7f7;
   word-break: break-all;
 }
+
+.checkboxLabel {
+  margin-left: .5rem;
+}
+.checkboxLabel:first-of-type {
+  margin-left: 0;
+}
+.checkbox {
+  margin-right: 5px;
+}

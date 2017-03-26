@@ -138,11 +138,20 @@ describe('Masonry', () => {
 
     it('should measure additional cells on scroll when it runs out of measured cells', () => {
       const cellMeasurerCache = createCellMeasurerCache()
-      const rendered = findDOMNode(render(getMarkup({ cellMeasurerCache })))
+      const renderCallback = jest.fn().mockImplementation(index => index)
+      const cellRenderer = createCellRenderer(cellMeasurerCache, renderCallback)
+      const rendered = findDOMNode(render(getMarkup({ cellRenderer, cellMeasurerCache })))
       expect(cellMeasurerCache.has(9)).toBe(false)
+
+      renderCallback.mockClear()
+
       simulateScroll(rendered, 101)
       expect(cellMeasurerCache.has(9)).toBe(true)
       expect(cellMeasurerCache.has(10)).toBe(false)
+
+      // The first batch-measured cell in the new block should be the 10th one
+      // Verify that we measured the correct cell...
+      expect(renderCallback.mock.calls[0][0]).toBe(9)
     })
 
     it('should only render enough cells to fill the viewport plus overscanByPixels', () => {
@@ -155,19 +164,66 @@ describe('Masonry', () => {
       simulateScroll(rendered, 1001)
       assertVisibleCells(rendered, '27,29,30,31,32,33,34,35')
     })
+
+    it('should still render correctly when autoHeight is true (eg WindowScroller)', () => {
+      // Share instances between renders to avoid resetting state in ways we don't intend
+      const cellMeasurerCache = createCellMeasurerCache()
+      const cellPositioner = createCellPositioner(cellMeasurerCache)
+
+      let rendered = findDOMNode(render(getMarkup({
+        autoHeight: true,
+        cellMeasurerCache,
+        cellPositioner
+      })))
+      assertVisibleCells(rendered, '0,1,2,3,4,5')
+      rendered = findDOMNode(render(getMarkup({
+        autoHeight: true,
+        cellMeasurerCache,
+        cellPositioner,
+        scrollTop: 51
+      })))
+      assertVisibleCells(rendered, '0,1,2,3,4,5,6')
+      rendered = findDOMNode(render(getMarkup({
+        autoHeight: true,
+        cellMeasurerCache,
+        cellPositioner,
+        scrollTop: 101
+      })))
+      assertVisibleCells(rendered, '0,2,3,4,5,6,7,8')
+      rendered = findDOMNode(render(getMarkup({
+        autoHeight: true,
+        cellMeasurerCache,
+        cellPositioner,
+        scrollTop: 1001
+      })))
+      assertVisibleCells(rendered, '27,29,30,31,32,33,34,35')
+    })
   })
 
   describe('recomputeCellPositions', () => {
     it('should refresh all cell positions', () => {
+      // Share instances between renders to avoid resetting state in ways we don't intend
       const cellMeasurerCache = createCellMeasurerCache()
-      let rendered = findDOMNode(render(getMarkup({ cellMeasurerCache })))
-      assertVisibleCells(rendered, '0,1,2,3,4,5')
-      const component = render(getMarkup({
+      const cellPositioner = jest.fn().mockImplementation(
+        createCellPositioner(cellMeasurerCache)
+      )
+
+      let rendered = findDOMNode(render(getMarkup({
         cellMeasurerCache,
-        cellPositioner: index => ({
+        cellPositioner
+      })))
+      assertVisibleCells(rendered, '0,1,2,3,4,5')
+
+      cellPositioner.mockImplementation(
+        index => ({
           left: 0,
           top: index * CELL_SIZE_MULTIPLIER
         })
+      )
+
+      const component = render(getMarkup({
+        cellMeasurerCache,
+        cellPositioner
       }))
       rendered = findDOMNode(component)
       assertVisibleCells(rendered, '0,1,2,3,4,5')

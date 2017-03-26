@@ -41,6 +41,7 @@ export default class Masonry extends PureComponent {
   props: Props;
 
   static defaultProps = {
+    autoHeight: false,
     keyMapper: identity,
     onCellsRendered: noop,
     onScroll: noop,
@@ -109,8 +110,28 @@ export default class Masonry extends PureComponent {
     this._invokeOnCellsRenderedCallback()
   }
 
+  componentWillUnmount () {
+    if (this._debounceResetIsScrollingId) {
+      clearTimeout(this._debounceResetIsScrollingId)
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const { scrollTop } = this.props
+
+    if (scrollTop !== nextProps.scrollTop) {
+      this._debounceResetIsScrolling()
+
+      this.setState({
+        isScrolling: true,
+        scrollTop: nextProps.scrollTop
+      })
+    }
+  }
+
   render () {
     const {
+      autoHeight,
       cellCount,
       cellMeasurerCache,
       cellRenderer,
@@ -151,10 +172,10 @@ export default class Masonry extends PureComponent {
           )
         )
 
-      for (let index = 0; index < batchSize; index++) {
+      for (let index = measuredCellCount; index < measuredCellCount + batchSize; index++) {
         children.push(
           cellRenderer({
-            index: index + measuredCellCount,
+            index: index,
             isScrolling,
             key: keyMapper(index),
             parent: this,
@@ -213,7 +234,7 @@ export default class Masonry extends PureComponent {
         style={{
           boxSizing: 'border-box',
           direction: 'ltr',
-          height,
+          height: autoHeight ? 'auto' : height,
           overflowX: 'hidden',
           overflowY: estimateTotalHeight < height ? 'hidden' : 'auto',
           position: 'relative',
@@ -430,6 +451,7 @@ type Position = {
 export type Positioner = (index: number) => Position;
 
 type Props = {
+  autoHeight: boolean,
   cellCount: number,
   cellMeasurerCache: CellMeasurerCache,
   cellPositioner: Positioner,

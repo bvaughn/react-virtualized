@@ -5,6 +5,7 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import { CellMeasurer, CellMeasurerCache } from '../CellMeasurer'
 import AutoSizer from '../AutoSizer'
+import WindowScroller from '../WindowScroller'
 import createCellPositioner from './createCellPositioner'
 import Masonry from './Masonry'
 import styles from './Masonry.example.css'
@@ -30,11 +31,13 @@ export default class GridExample extends PureComponent {
     this.state = {
       columnWidth: 200,
       height: 300,
-      gutterSize: 10
+      gutterSize: 10,
+      windowScrollerEnabled: false
     }
 
     this._cellRenderer = this._cellRenderer.bind(this)
     this._onResize = this._onResize.bind(this)
+    this._renderAutoSizer = this._renderAutoSizer.bind(this)
     this._renderMasonry = this._renderMasonry.bind(this)
     this._setMasonryRef = this._setMasonryRef.bind(this)
   }
@@ -43,8 +46,21 @@ export default class GridExample extends PureComponent {
     const {
       columnWidth,
       height,
-      gutterSize
+      gutterSize,
+      windowScrollerEnabled
     } = this.state
+
+    let child
+
+    if (windowScrollerEnabled) {
+      child = (
+        <WindowScroller>
+          {this._renderAutoSizer}
+        </WindowScroller>
+      )
+    } else {
+      child = this._renderAutoSizer({ height })
+    }
 
     return (
       <ContentBox>
@@ -58,6 +74,26 @@ export default class GridExample extends PureComponent {
           Optimized for masonry layouts.
           Cells are j.i.t. measured and layed out as a user scrolls.
           Sizes are cached so that resize/reflow is fast and does not require re-measuring.
+        </ContentBoxParagraph>
+
+        <ContentBoxParagraph>
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Use WindowScroller?'
+              checked={windowScrollerEnabled}
+              className={styles.checkbox}
+              type='checkbox'
+              onChange={event => {
+                // HACK Because this demo switches between using WindowScroller and not,
+                // It's easier to clear the cache when toggling modes to avoid a partially stale state.
+                this._cache.clearAll()
+                this.setState({
+                  windowScrollerEnabled: event.target.checked
+                })
+              }}
+            />
+            Use <code>WindowScroller</code>?
+          </label>
         </ContentBoxParagraph>
 
         <InputRow>
@@ -81,7 +117,7 @@ export default class GridExample extends PureComponent {
                 columnWidth: parseInt(event.target.value, 10) || 200
               }, () => {
                 this._calculateColumnCount()
-                this._initOrResetPositioner()
+                this._resetCellPositioner()
                 this._masonry.clearCellPositions()
               })
             }}
@@ -96,7 +132,7 @@ export default class GridExample extends PureComponent {
                 gutterSize: parseInt(event.target.value, 10) || 10
               }, () => {
                 this._calculateColumnCount()
-                this._initOrResetPositioner()
+                this._resetCellPositioner()
                 this._masonry.recomputeCellPositions()
               })
             }}
@@ -104,13 +140,7 @@ export default class GridExample extends PureComponent {
           />
         </InputRow>
 
-        <AutoSizer
-          disableHeight
-          height={height}
-          onResize={this._onResize}
-        >
-          {this._renderMasonry}
-        </AutoSizer>
+        {child}
       </ContentBox>
     )
   }
@@ -159,21 +189,15 @@ export default class GridExample extends PureComponent {
     )
   }
 
-  _initOrResetPositioner () {
-    const {
-      columnWidth,
-      gutterSize
-    } = this.state
-
+  _initCellPositioner () {
     if (typeof this._cellPositioner === 'undefined') {
+      const {
+        columnWidth,
+        gutterSize
+      } = this.state
+
       this._cellPositioner = createCellPositioner({
         cellMeasurerCache: this._cache,
-        columnCount: this._columnCount,
-        columnWidth,
-        spacer: gutterSize
-      })
-    } else {
-      this._cellPositioner.reset({
         columnCount: this._columnCount,
         columnWidth,
         spacer: gutterSize
@@ -181,31 +205,64 @@ export default class GridExample extends PureComponent {
     }
   }
 
-  _onResize (prevProps, prevState) {
+  _onResize ({ height, width }) {
+    this._width = width
+
     this._columnHeights = {}
     this._calculateColumnCount()
-    this._initOrResetPositioner()
+    this._resetCellPositioner()
     this._masonry.recomputeCellPositions()
+  }
+
+  _renderAutoSizer ({ height, scrollTop }) {
+    this._height = height
+    this._scrollTop = scrollTop
+
+    return (
+      <AutoSizer
+        disableHeight
+        onResize={this._onResize}
+        scrollTop={this._scrollTop}
+      >
+        {this._renderMasonry}
+      </AutoSizer>
+    )
   }
 
   _renderMasonry ({ width }) {
     this._width = width
-    this._calculateColumnCount()
-    this._initOrResetPositioner()
 
-    const { height } = this.state
+    this._calculateColumnCount()
+    this._initCellPositioner()
+
+    const { height, windowScrollerEnabled } = this.state
 
     return (
       <Masonry
+        autoHeight={windowScrollerEnabled}
         cellCount={1000}
         cellMeasurerCache={this._cache}
         cellPositioner={this._cellPositioner}
         cellRenderer={this._cellRenderer}
-        height={height}
+        height={windowScrollerEnabled ? this._height : height}
         ref={this._setMasonryRef}
+        scrollTop={this._scrollTop}
         width={width}
       />
     )
+  }
+
+  _resetCellPositioner () {
+    const {
+      columnWidth,
+      gutterSize
+    } = this.state
+
+    this._cellPositioner.reset({
+      columnCount: this._columnCount,
+      columnWidth,
+      spacer: gutterSize
+    })
   }
 
   _setMasonryRef (ref) {
