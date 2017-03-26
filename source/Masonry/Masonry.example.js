@@ -21,8 +21,7 @@ export default class GridExample extends PureComponent {
     this._cache = new CellMeasurerCache({
       defaultHeight: 250,
       defaultWidth: 200,
-      fixedWidth: true,
-      keyMapper: (index) => index
+      fixedWidth: true
     })
 
     this._columnHeights = {}
@@ -161,9 +160,8 @@ export default class GridExample extends PureComponent {
     return (
       <CellMeasurer
         cache={this._cache}
-        columnIndex={0}
+        index={index}
         key={key}
-        rowIndex={index}
         parent={parent}
       >
         <div

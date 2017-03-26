@@ -159,7 +159,7 @@ export default class CellMeasurerCache {
 
   getHeight (
     rowIndex: number,
-    columnIndex: ?number
+    columnIndex: ?number = 0
   ) : ?number {
     const key = this._keyMapper(rowIndex, columnIndex)
 
@@ -170,7 +170,7 @@ export default class CellMeasurerCache {
 
   getWidth (
     rowIndex: number,
-    columnIndex: ?number
+    columnIndex: ?number = 0
   ) : ?number {
     const key = this._keyMapper(rowIndex, columnIndex)
 
@@ -181,7 +181,7 @@ export default class CellMeasurerCache {
 
   has (
     rowIndex: number,
-    columnIndex: ?number
+    columnIndex: ?number = 0
   ) : boolean {
     const key = this._keyMapper(rowIndex, columnIndex)
 

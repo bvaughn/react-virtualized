@@ -56,10 +56,9 @@ function cellRenderer ({
 }) {
   return (
     <CellMeasurer
-      cache={this._cache}
-      columnIndex={0}
+      cache={cellMeasurerCache}
+      index={index}
       key={key}
-      rowIndex={index}
       parent={parent}
     >
       <div style={style}>
@@ -68,4 +67,90 @@ function cellRenderer ({
     </CellMeasurer>
   );
 }
+```
+
+### Basic `Masonry` Example
+
+Below is a very basic `Masonry` example with a naive layout algorithm.
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { CellMeasurer, CellMeasurerCache, Masonry } from 'react-virtualized';
+
+// Array of images with captions
+const list = [];
+
+// Our masonry layout will contain 3 columns
+const columnCount = 3
+
+// Track the heigh of each of our 3 columns
+const columnHeights = {}
+
+// Default sizes help Masonry decide how many images to batch-measure
+const cache = new CellMeasurerCache({
+  defaultHeight: 250,
+  defaultWidth: 200,
+  fixedWidth: true
+})
+
+function cellPositioner (index) {
+  // Super naive Masonry layout
+  let columnIndex = 0
+  if (index < columnCount) {
+    columnIndex = index
+  } else {
+    for (let index in columnHeights) {
+      if (columnHeights[index] < columnHeights[columnIndex]) {
+        columnIndex = index
+      }
+    }
+  }
+
+  const left = columnIndex * (columnWidth + gutterSize)
+  const top = columnHeights[columnIndex] || 0
+
+  columnHeights[columnIndex] = top + gutterSize + cache.getHeight(index)
+
+  return {
+    left,
+    top
+  }
+}
+
+function cellRenderer ({ index, key, parent, style }) {
+  const datum = list[index]
+
+  return (
+    <CellMeasurer
+      cache={cache}
+      index={index}
+      key={key}
+      parent={parent}
+    >
+      {({ measure }) => (
+        <div style={style}>
+          <img
+            onLoad={measure}
+            src={datum.source}
+          />
+          <h4>{datum.caption}</h4>
+        </div>
+      )}
+    </CellMeasurer>
+  )
+}
+
+// Render your grid
+ReactDOM.render(
+  <Masonry
+    cellCount={list.length}
+    cellMeasurerCache={cache}
+    cellPositioner={cellPositioner}
+    cellRenderer={cellRenderer}
+    height={600}
+    width={800}
+  />,
+  document.getElementById('example')
+);
 ```

@@ -223,7 +223,6 @@ Below is a very basic `Grid` example. The grid displays an array of objects with
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Grid } from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
 
 // Grid data as an array of arrays
 const list = [

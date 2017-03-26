@@ -67,9 +67,8 @@ function createCellRenderer (cache, renderCallback) {
     return (
       <CellMeasurer
         cache={cache}
-        columnIndex={0}
+        index={index}
         key={key}
-        rowIndex={index}
         parent={parent}
       >
         <div
