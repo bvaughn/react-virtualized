@@ -1,6 +1,13 @@
 Changelog
 ------------
 
+##### 9.4.0
+* 🎉 New `Masonry` component optimized for Pinterest-style layouts. Check out the [docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/Masonry.md) and [demo page](https://bvaughn.github.io/react-virtualized/#/components/Masonry) to learn more. ([#618](https://github.com/bvaughn/react-virtualized/pull/618))
+* 🎉 `MultiGrid` supports `scrollLeft` and `scrollTop` props for controlled scrolling. ([@julianwong94](https://github.com/julianwong94) - [#624](https://github.com/bvaughn/react-virtualized/pull/624))
+* 🎉 New `direction` parameter passed to `overscanIndicesGetter` with values "horizontal" or "vertical". ([@offsky](https://github.com/offsky) - [#629](https://github.com/bvaughn/react-virtualized/pull/629))
+* 🐛 Replaced inline `require` statement with header `import` in `Grid` for better integration with the Rollup module bundler. ([@odogono](https://github.com/odogono) - [#617](https://github.com/bvaughn/react-virtualized/pull/617))
+* 🐛 Improved guard for edge-case scrolling issue with rubberband scrolling in iOS. ([@dtoddtarsi](https://github.com/offsky) - [#616](https://github.com/bvaughn/react-virtualized/pull/616))
+
 ##### 9.3.0
 * 🎉 Added `resetLoadMoreRowsCache` method to `InfiniteLoader` to reset any cached data about loaded rows. This method should be called if any/all loaded data needs to be refetched (eg a filtered list where the search criteria changes). ([#612](https://github.com/bvaughn/react-virtualized/issues/612))
 
