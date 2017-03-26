@@ -20,6 +20,7 @@ Phase one is repeated if the user scrolls beyond the current layout's bounds. If
 * Each item can have a unique, lazily-measured height.
 * The width of all items in a column must be equal. (Items may not span multiple columns.)
 * The left position of all items within a column must align.
+* Cell measurements must be synchronous. Size impacts layout and async measurements would require frequent layout invalidation. Support for this may be added in the future but for now the use of the `CellMeasurer` render callback's async `measure` parameter is not supported.
 
 ### Prop Types
 | Property | Type | Required? | Description |
@@ -128,15 +129,16 @@ function cellRenderer ({ index, key, parent, style }) {
       key={key}
       parent={parent}
     >
-      {({ measure }) => (
-        <div style={style}>
-          <img
-            onLoad={measure}
-            src={datum.source}
-          />
-          <h4>{datum.caption}</h4>
-        </div>
-      )}
+      <div style={style}>
+        <img
+          src={datum.source}
+          style={{
+            height: datum.imageHeight,
+            width: datum.imageWidth
+          }}
+        />
+        <h4>{datum.caption}</h4>
+      </div>
     </CellMeasurer>
   )
 }
