@@ -79,6 +79,18 @@ export default class AutoSizer extends PureComponent {
       outerStyle.width = 0
     }
 
+    /**
+     * TODO: Avoid rendering children before the initial measurements have been collected.
+     * At best this would just be wasting cycles.
+     * Add this check into version 10 though as it could break too many ref callbacks in version 9.
+    if (
+      height !== 0 &&
+      width !== 0
+    ) {
+      child = children({ height, width })
+    }
+    */
+
     return (
       <div
         ref={this._setRef}
@@ -90,7 +102,11 @@ export default class AutoSizer extends PureComponent {
   }
 
   _onResize () {
-    const { onResize } = this.props
+    const {
+      disableHeight,
+      disableWidth,
+      onResize
+    } = this.props
 
     // Guard against AutoSizer component being removed from the DOM immediately after being added.
     // This can result in invalid style values which can result in NaN values if we don't handle them.
@@ -105,12 +121,22 @@ export default class AutoSizer extends PureComponent {
     const paddingTop = parseInt(style.paddingTop, 10) || 0
     const paddingBottom = parseInt(style.paddingBottom, 10) || 0
 
-    this.setState({
-      height: height - paddingTop - paddingBottom,
-      width: width - paddingLeft - paddingRight
-    })
+    const newHeight = height - paddingTop - paddingBottom
+    const newWidth = width - paddingLeft - paddingRight
 
-    onResize({ height, width })
+    if (
+      !disableHeight &&
+      this.state.height !== newHeight ||
+      !disableWidth &&
+      this.state.width !== newWidth
+    ) {
+      this.setState({
+        height: height - paddingTop - paddingBottom,
+        width: width - paddingLeft - paddingRight
+      })
+
+      onResize({ height, width })
+    }
   }
 
   _setRef (autoSizer) {

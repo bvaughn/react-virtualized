@@ -8,6 +8,7 @@ Changelog
 * ✨ Replaced inline `require` statement with header `import` in `Grid` for better integration with the Rollup module bundler. ([@odogono](https://github.com/odogono) - [#617](https://github.com/bvaughn/react-virtualized/pull/617))
 * 🐛 Improved guard for edge-case scrolling issue with rubberband scrolling in iOS. ([@dtoddtarsi](https://github.com/offsky) - [#616](https://github.com/bvaughn/react-virtualized/pull/616))
 * ✨ Replaced `getBoundingClientRect()` with slightly faster `offsetWidth` and `offsetHeight` inside of `AutoSizer`.
+* ✨ `AutoSizer` no longer re-renders nor calls `onResize` callback unless `width` and/or `height` have changed (depending on which properties are being watched).
 
 ##### 9.3.0
 * 🎉 Added `resetLoadMoreRowsCache` method to `InfiniteLoader` to reset any cached data about loaded rows. This method should be called if any/all loaded data needs to be refetched (eg a filtered list where the search criteria changes). ([#612](https://github.com/bvaughn/react-virtualized/issues/612))

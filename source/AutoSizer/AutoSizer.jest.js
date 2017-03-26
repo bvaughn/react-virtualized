@@ -5,7 +5,7 @@ import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import AutoSizer from './AutoSizer'
 
-function ChildComponent ({ height, width, foo, bar }) {
+function DefaultChildComponent ({ height, width, foo, bar }) {
   return (
     <div>{`width:${width}, height:${height}, foo:${foo}, bar:${bar}`}</div>
   )
@@ -14,10 +14,12 @@ function ChildComponent ({ height, width, foo, bar }) {
 describe('AutoSizer', () => {
   function getMarkup ({
     bar = 123,
+    ChildComponent = DefaultChildComponent,
     disableHeight = false,
     disableWidth = false,
     foo = 456,
     height = 100,
+    onResize,
     paddingBottom = 0,
     paddingLeft = 0,
     paddingRight = 0,
@@ -38,7 +40,11 @@ describe('AutoSizer', () => {
 
     return (
       <div style={style}>
-        <AutoSizer>
+        <AutoSizer
+          disableHeight={disableHeight}
+          disableWidth={disableWidth}
+          onResize={onResize}
+        >
           {({ height, width }) => (
             <ChildComponent
               width={disableWidth ? undefined : width}
@@ -123,5 +129,66 @@ describe('AutoSizer', () => {
     expect(rendered.textContent).toContain('height:400')
     expect(rendered.textContent).toContain('width:300')
     done()
+  })
+
+  describe('onResize and (re)render', () => {
+    it('should trigger when size changes', async (done) => {
+      const onResize = jest.fn()
+      const ChildComponent = jest.fn().mockImplementation(DefaultChildComponent)
+      const rendered = findDOMNode(render(getMarkup({
+        ChildComponent,
+        height: 100,
+        onResize,
+        width: 200
+      })))
+      ChildComponent.mockClear() // TODO Improve initial check in version 10; see AutoSizer render()
+      expect(onResize).toHaveBeenCalledTimes(1)
+      await simulateResize({ element: rendered, height: 400, width: 300 })
+      expect(ChildComponent).toHaveBeenCalledTimes(1)
+      expect(onResize).toHaveBeenCalledTimes(2)
+      done()
+    })
+
+    it('should only trigger when height changes for disableWidth == true', async (done) => {
+      const onResize = jest.fn()
+      const ChildComponent = jest.fn().mockImplementation(DefaultChildComponent)
+      const rendered = findDOMNode(render(getMarkup({
+        ChildComponent,
+        disableWidth: true,
+        height: 100,
+        onResize,
+        width: 200
+      })))
+      ChildComponent.mockClear() // TODO Improve initial check in version 10; see AutoSizer render()
+      expect(onResize).toHaveBeenCalledTimes(1)
+      await simulateResize({ element: rendered, height: 100, width: 300 })
+      expect(ChildComponent).toHaveBeenCalledTimes(0)
+      expect(onResize).toHaveBeenCalledTimes(1)
+      await simulateResize({ element: rendered, height: 200, width: 300 })
+      expect(ChildComponent).toHaveBeenCalledTimes(1)
+      expect(onResize).toHaveBeenCalledTimes(2)
+      done()
+    })
+
+    it('should only trigger when width changes for disableHeight == true', async (done) => {
+      const onResize = jest.fn()
+      const ChildComponent = jest.fn().mockImplementation(DefaultChildComponent)
+      const rendered = findDOMNode(render(getMarkup({
+        ChildComponent,
+        disableHeight: true,
+        height: 100,
+        onResize,
+        width: 200
+      })))
+      ChildComponent.mockClear() // TODO Improve initial check in version 10; see AutoSizer render()
+      expect(onResize).toHaveBeenCalledTimes(1)
+      await simulateResize({ element: rendered, height: 200, width: 200 })
+      expect(ChildComponent).toHaveBeenCalledTimes(0)
+      expect(onResize).toHaveBeenCalledTimes(1)
+      await simulateResize({ element: rendered, height: 200, width: 300 })
+      expect(ChildComponent).toHaveBeenCalledTimes(1)
+      expect(onResize).toHaveBeenCalledTimes(2)
+      done()
+    })
   })
 })
