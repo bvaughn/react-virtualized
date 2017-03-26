@@ -280,12 +280,14 @@ export default class Masonry extends PureComponent {
     const {
       cellCount,
       cellMeasurerCache,
-      columnCount
+      width
     } = this.props
+
+    const estimatedColumnCount = Math.floor(width / cellMeasurerCache.defaultWidth)
 
     return this._positionCache.estimateTotalHeight(
       cellCount,
-      columnCount,
+      estimatedColumnCount,
       cellMeasurerCache.defaultHeight
     )
   }
@@ -426,7 +428,6 @@ type Props = {
   cellPositioner: Positioner,
   cellRenderer: CellRenderer,
   className: ?string,
-  columnCount: number,
   height: number,
   id: ?string,
   keyMapper: KeyMapper,

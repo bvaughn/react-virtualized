@@ -29,7 +29,6 @@ Phase one is repeated if the user scrolls beyond the current layout's bounds. If
 | cellPositioner | function | ✓ | Positions a cell given an index: `(index: number) => ({ left: number, top: number })` |
 | cellRenderer | function | ✓ | Responsible for rendering a cell given an index. [Learn more](#cellrenderer) |
 | className | string |  | Optional custom CSS class name to attach to root `Masonry` element. |
-| columnCount | number | ✓ |  |
 | height | number | ✓ | Height of the component; this value determines the number of visible items. |
 | id | string |  | Optional custom id to attach to root `Masonry` element. |
 | keyMapper | function |  | Maps an index to a unique id to store cached measurement and position info for a cell. This prevents eg cached measurements from being invalidated when a collection is re-ordered. `(index: number) => any` |

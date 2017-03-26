@@ -206,7 +206,6 @@ export default class GridExample extends PureComponent {
         cellMeasurerCache={this._cache}
         cellPositioner={this._cellPositioner}
         cellRenderer={this._cellRenderer}
-        columnCount={this._columnCount}
         height={height}
         ref={this._setMasonryRef}
         width={width}
