@@ -25,7 +25,7 @@ Phase one is repeated if the user scrolls beyond the current layout's bounds. If
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | cellCount | number | ✓ | Total number of items |
-| cellMeasurerCache | mixed | ✓ | Caches lazily-measured sizes. Learn more [here](CellMeasurer.md#cellmeasurercache). |
+| cellMeasurerCache | mixed | ✓ | Caches item measurements. Default sizes help `Masonry` decide how many images to batch-measure. Learn more [here](CellMeasurer.md#cellmeasurercache). |
 | cellPositioner | function | ✓ | Positions a cell given an index: `(index: number) => ({ left: number, top: number })` |
 | cellRenderer | function | ✓ | Responsible for rendering a cell given an index. [Learn more](#cellrenderer) |
 | className | string |  | Optional custom CSS class name to attach to root `Masonry` element. |
