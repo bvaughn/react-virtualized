@@ -34,12 +34,7 @@ describe('AutoSizer', () => {
       width
     }
 
-    // AutoSizer uses getBoundingClientRect().
-    // Jest runs in JSDom which doesn't support measurements APIs.
-    Element.prototype.getBoundingClientRect = jest.fn(() => ({
-      width,
-      height
-    }))
+    mockOffsetSize(width, height)
 
     return (
       <div style={style}>
@@ -55,6 +50,19 @@ describe('AutoSizer', () => {
         </AutoSizer>
       </div>
     )
+  }
+
+  // AutoSizer uses offsetWidth and offsetHeight.
+  // Jest runs in JSDom which doesn't support measurements APIs.
+  function mockOffsetSize (width, height) {
+    Object.defineProperty(Element.prototype, 'offsetHeight', {
+      configurable: true,
+      value: height
+    })
+    Object.defineProperty(Element.prototype, 'offsetWidth', {
+      configurable: true,
+      value: width
+    })
   }
 
   it('should relay properties to ChildComponent or React child', () => {
@@ -93,14 +101,7 @@ describe('AutoSizer', () => {
   })
 
   async function simulateResize ({ element, height, width }) {
-    // Specific to the implementation of detectElementResize helper
-    element.offsetHeight = height
-    element.offsetWidth = width
-
-    Element.prototype.getBoundingClientRect.mockReturnValue({
-      width,
-      height
-    })
+    mockOffsetSize(width, height)
 
     // Trigger detectElementResize library by faking a scroll event
     // TestUtils Simulate doesn't work here in JSDom so we manually dispatch

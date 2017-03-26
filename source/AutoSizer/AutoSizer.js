@@ -96,9 +96,8 @@ export default class AutoSizer extends PureComponent {
     // This can result in invalid style values which can result in NaN values if we don't handle them.
     // See issue #150 for more context.
 
-    const boundingRect = this._parentNode.getBoundingClientRect()
-    const height = boundingRect.height || 0
-    const width = boundingRect.width || 0
+    const height = this._parentNode.offsetHeight || 0
+    const width = this._parentNode.offsetWidth || 0
 
     const style = window.getComputedStyle(this._parentNode) || {}
     const paddingLeft = parseInt(style.paddingLeft, 10) || 0
