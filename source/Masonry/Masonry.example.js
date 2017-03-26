@@ -5,6 +5,7 @@ import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/Conte
 import { LabeledInput, InputRow } from '../demo/LabeledInput'
 import { CellMeasurer, CellMeasurerCache } from '../CellMeasurer'
 import AutoSizer from '../AutoSizer'
+import createCellPositioner from './createCellPositioner'
 import Masonry from './Masonry'
 import styles from './Masonry.example.css'
 
@@ -32,7 +33,6 @@ export default class GridExample extends PureComponent {
       gutterSize: 10
     }
 
-    this._cellPositioner = this._cellPositioner.bind(this)
     this._cellRenderer = this._cellRenderer.bind(this)
     this._onResize = this._onResize.bind(this)
     this._renderMasonry = this._renderMasonry.bind(this)
@@ -81,6 +81,7 @@ export default class GridExample extends PureComponent {
                 columnWidth: parseInt(event.target.value, 10) || 200
               }, () => {
                 this._calculateColumnCount()
+                this._initOrResetPositioner()
                 this._masonry.clearCellPositions()
               })
             }}
@@ -95,6 +96,7 @@ export default class GridExample extends PureComponent {
                 gutterSize: parseInt(event.target.value, 10) || 10
               }, () => {
                 this._calculateColumnCount()
+                this._initOrResetPositioner()
                 this._masonry.recomputeCellPositions()
               })
             }}
@@ -120,35 +122,6 @@ export default class GridExample extends PureComponent {
     } = this.state
 
     this._columnCount = Math.floor(this._width / (columnWidth + gutterSize))
-  }
-
-  _cellPositioner (index) {
-    const {
-      columnWidth,
-      gutterSize
-    } = this.state
-
-    // Super naive Masonry layout
-    let columnIndex = 0
-    if (index < this._columnCount) {
-      columnIndex = index
-    } else {
-      for (let index in this._columnHeights) {
-        if (this._columnHeights[index] < this._columnHeights[columnIndex]) {
-          columnIndex = index
-        }
-      }
-    }
-
-    const left = columnIndex * (columnWidth + gutterSize)
-    const top = this._columnHeights[columnIndex] || 0
-
-    this._columnHeights[columnIndex] = top + gutterSize + this._cache.getHeight(index)
-
-    return {
-      left,
-      top
-    }
   }
 
   _cellRenderer ({ index, key, parent, style }) {
@@ -186,15 +159,39 @@ export default class GridExample extends PureComponent {
     )
   }
 
+  _initOrResetPositioner () {
+    const {
+      columnWidth,
+      gutterSize
+    } = this.state
+
+    if (typeof this._cellPositioner === 'undefined') {
+      this._cellPositioner = createCellPositioner({
+        cellMeasurerCache: this._cache,
+        columnCount: this._columnCount,
+        columnWidth,
+        spacer: gutterSize
+      })
+    } else {
+      this._cellPositioner.reset({
+        columnCount: this._columnCount,
+        columnWidth,
+        spacer: gutterSize
+      })
+    }
+  }
+
   _onResize (prevProps, prevState) {
     this._columnHeights = {}
     this._calculateColumnCount()
+    this._initOrResetPositioner()
     this._masonry.recomputeCellPositions()
   }
 
   _renderMasonry ({ width }) {
     this._width = width
     this._calculateColumnCount()
+    this._initOrResetPositioner()
 
     const { height } = this.state
 

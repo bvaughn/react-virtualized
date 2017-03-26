@@ -27,7 +27,7 @@ Phase one is repeated if the user scrolls beyond the current layout's bounds. If
 |:---|:---|:---:|:---|
 | cellCount | number | ✓ | Total number of items |
 | cellMeasurerCache | mixed | ✓ | Caches item measurements. Default sizes help `Masonry` decide how many images to batch-measure. Learn more [here](CellMeasurer.md#cellmeasurercache). |
-| cellPositioner | function | ✓ | Positions a cell given an index: `(index: number) => ({ left: number, top: number })` |
+| cellPositioner | function | ✓ | Positions a cell given an index: `(index: number) => ({ left: number, top: number })`. [Learn more](#createmasonrycellpositioner) |
 | cellRenderer | function | ✓ | Responsible for rendering a cell given an index. [Learn more](#cellrenderer) |
 | className | string |  | Optional custom CSS class name to attach to root `Masonry` element. |
 | height | number | ✓ | Height of the component; this value determines the number of visible items. |
@@ -70,6 +70,53 @@ function cellRenderer ({
 }
 ```
 
+### createMasonryCellPositioner
+
+`Masonry` provides a built-in positioner for a simple layout. This positioner requires a few configuration settings:
+
+| Property | Type | Required? | Description |
+|:---|:---|:---:|:---|
+| cellMeasurerCache | `CellMeasurerCache` | ✓ | Contains cell measurements (eg item height). |
+| columnCount | number | ✓ | Number of columns to use in layout. |
+| columnWidth | number | ✓ | Column width. |
+| spacer | number |  | Empty space between columns; defaults to 0. |
+
+You can use this layout as shown below:
+
+```js
+const cellPositioner = createMasonryCellPositioner({
+  cellMeasurerCache: cache,
+  columnCount: 3,
+  columnWidth: 200,
+  spacer: 10
+})
+
+let masonryRef
+
+function renderMasonry (props) {
+  return (
+    <Masonry
+      cellMeasurerCache={cache}
+      cellPositioner={cellPositioner}
+      ref={ref => masonryRef = ref}
+      {...props}
+    />
+  )
+}
+```
+
+If any of the configuration settings change due to external changes (eg window resize event) you can update them using the `reset` method as shown below:
+
+```js
+cellPositioner.reset({
+  columnCount: 4,
+  columnWidth: 250,
+  spacer: 15
+})
+
+masonryRef.recomputeCellPositions()
+```
+
 ### Basic `Masonry` Example
 
 Below is a very basic `Masonry` example with a naive layout algorithm.
@@ -77,16 +124,15 @@ Below is a very basic `Masonry` example with a naive layout algorithm.
 ```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { CellMeasurer, CellMeasurerCache, Masonry } from 'react-virtualized';
+import {
+  CellMeasurer,
+  CellMeasurerCache,
+  createMasonryCellPositioner,
+  Masonry
+} from 'react-virtualized';
 
 // Array of images with captions
 const list = [];
-
-// Our masonry layout will contain 3 columns
-const columnCount = 3
-
-// Track the heigh of each of our 3 columns
-const columnHeights = {}
 
 // Default sizes help Masonry decide how many images to batch-measure
 const cache = new CellMeasurerCache({
@@ -95,29 +141,13 @@ const cache = new CellMeasurerCache({
   fixedWidth: true
 })
 
-function cellPositioner (index) {
-  // Super naive Masonry layout
-  let columnIndex = 0
-  if (index < columnCount) {
-    columnIndex = index
-  } else {
-    for (let index in columnHeights) {
-      if (columnHeights[index] < columnHeights[columnIndex]) {
-        columnIndex = index
-      }
-    }
-  }
-
-  const left = columnIndex * (columnWidth + gutterSize)
-  const top = columnHeights[columnIndex] || 0
-
-  columnHeights[columnIndex] = top + gutterSize + cache.getHeight(index)
-
-  return {
-    left,
-    top
-  }
-}
+// Our masonry layout will use 3 columns with a 10px gutter between
+const cellPositioner = createMasonryCellPositioner({
+  cellMeasurerCache: cache,
+  columnCount: 3,
+  columnWidth: 200,
+  spacer: 10
+})
 
 function cellRenderer ({ index, key, parent, style }) {
   const datum = list[index]

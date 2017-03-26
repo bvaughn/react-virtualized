@@ -2,6 +2,7 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
+import createCellPositionerUtil from './createCellPositioner'
 import Masonry from './Masonry'
 import { CellMeasurer, CellMeasurerCache } from '../CellMeasurer'
 
@@ -29,30 +30,11 @@ function createCellMeasurerCache (props = {}) {
 }
 
 function createCellPositioner (cache) {
-  const columnHeights = []
-  for (let i = 0; i < COLUMN_COUNT; i++) {
-    columnHeights[i] = 0
-  }
-
-  return function cellPositioner (index) {
-    // Super naive Masonry layout
-    let columnIndex = 0
-    for (let i = 1; i < columnHeights.length; i++) {
-      if (columnHeights[i] < columnHeights[columnIndex]) {
-        columnIndex = i
-      }
-    }
-
-    const left = columnIndex * CELL_SIZE_MULTIPLIER
-    const top = columnHeights[columnIndex] || 0
-
-    columnHeights[columnIndex] = top + cache.getHeight(index)
-
-    return {
-      left,
-      top
-    }
-  }
+  return createCellPositionerUtil({
+    cellMeasurerCache: cache,
+    columnCount: COLUMN_COUNT,
+    columnWidth: CELL_SIZE_MULTIPLIER
+  })
 }
 
 function createCellRenderer (cache, renderCallback) {

@@ -13,7 +13,10 @@ export {
 } from './Grid'
 export { InfiniteLoader } from './InfiniteLoader'
 export { List } from './List'
-export { Masonry } from './Masonry'
+export {
+  createCellPositioner as createMasonryCellPositioner,
+  Masonry
+} from './Masonry'
 export { MultiGrid } from './MultiGrid'
 export { ScrollSync } from './ScrollSync'
 export {

@@ -4,4 +4,5 @@
   border-radius: .5rem;
   padding: 0.5rem;
   background-color: #f7f7f7;
+  word-break: break-all;
 }

@@ -396,6 +396,13 @@ function noop () {
 
 type KeyMapper = (index: number) => mixed;
 
+export type CellMeasurerCache = {
+  defaultHeight: number,
+  defaultWidth: number,
+  getHeight: (index: number) => number,
+  getWidth: (index: number) => number
+};
+
 type CellRenderer = (params: {|
   index: number,
   isScrolling: boolean,
@@ -420,11 +427,11 @@ type Position = {
   top: number
 };
 
-type Positioner = (index: number) => Position;
+export type Positioner = (index: number) => Position;
 
 type Props = {
   cellCount: number,
-  cellMeasurerCache: mixed,
+  cellMeasurerCache: CellMeasurerCache,
   cellPositioner: Positioner,
   cellRenderer: CellRenderer,
   className: ?string,
