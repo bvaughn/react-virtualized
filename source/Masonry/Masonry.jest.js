@@ -270,4 +270,17 @@ describe('Masonry', () => {
       ])
     })
   })
+
+  describe('keyMapper', () => {
+    it('should pass the correct key to rendered cells', () => {
+      const keyMapper = jest.fn().mockImplementation(index => `key:${index}`)
+      const cellRenderer = jest.fn().mockImplementation(({ index, key, style }) => (
+        <div key={key} style={style}>{index}</div>
+      ))
+      findDOMNode(render(getMarkup({ cellRenderer, keyMapper })))
+      expect(keyMapper).toHaveBeenCalled()
+      expect(cellRenderer).toHaveBeenCalled()
+      expect(cellRenderer.mock.calls[0][0].key).toEqual('key:0')
+    })
+  })
 })
