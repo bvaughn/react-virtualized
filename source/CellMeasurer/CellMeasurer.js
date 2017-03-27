@@ -5,10 +5,10 @@ import { findDOMNode } from 'react-dom'
 type Props = {
   cache: mixed,
   children: mixed,
-  columnIndex: number,
+  columnIndex: ?number,
+  index: ?number,
   parent: mixed,
-  rowIndex: number,
-  style: mixed
+  rowIndex: ?number,
 };
 
 /**
@@ -42,7 +42,12 @@ export default class CellMeasurer extends PureComponent {
   }
 
   _maybeMeasureCell () {
-    const { cache, columnIndex, parent, rowIndex } = this.props
+    const {
+      cache,
+      columnIndex = 0,
+      parent,
+      rowIndex = this.props.index
+    } = this.props
 
     if (!cache.has(rowIndex, columnIndex)) {
       const node = findDOMNode(this)
@@ -84,7 +89,12 @@ export default class CellMeasurer extends PureComponent {
   }
 
   _measure () {
-    const { cache, columnIndex, parent, rowIndex } = this.props
+    const {
+      cache,
+      columnIndex = 0,
+      parent,
+      rowIndex = this.props.index
+    } = this.props
 
     const node = findDOMNode(this)
 

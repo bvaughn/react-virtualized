@@ -8,6 +8,18 @@ export {
 export { Collection } from './Collection'
 export { ColumnSizer } from './ColumnSizer'
 export {
+  defaultCellRangeRenderer,
+  Grid
+} from './Grid'
+export { InfiniteLoader } from './InfiniteLoader'
+export { List } from './List'
+export {
+  createCellPositioner as createMasonryCellPositioner,
+  Masonry
+} from './Masonry'
+export { MultiGrid } from './MultiGrid'
+export { ScrollSync } from './ScrollSync'
+export {
   defaultCellDataGetter as defaultTableCellDataGetter,
   defaultCellRenderer as defaultTableCellRenderer,
   defaultHeaderRenderer as defaultTableHeaderRenderer,
@@ -18,12 +30,4 @@ export {
   SortDirection,
   SortIndicator
 } from './Table'
-export {
-  defaultCellRangeRenderer,
-  Grid
-} from './Grid'
-export { InfiniteLoader } from './InfiniteLoader'
-export { List } from './List'
-export { MultiGrid } from './MultiGrid'
-export { ScrollSync } from './ScrollSync'
 export { WindowScroller } from './WindowScroller'

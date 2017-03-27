@@ -18,6 +18,7 @@ import ColumnSizerExample from '../ColumnSizer/ColumnSizer.example'
 import GridExample from '../Grid/Grid.example'
 import InfiniteLoaderExample from '../InfiniteLoader/InfiniteLoader.example'
 import ListExample from '../List/List.example'
+import MasonryExample from '../Masonry/Masonry.example'
 import MultiGridExample from '../MultiGrid/MultiGrid.example'
 import ScrollSyncExample from '../ScrollSync/ScrollSync.example'
 import TableExample from '../Table/Table.example'
@@ -30,6 +31,7 @@ const COMPONENT_EXAMPLES_MAP = {
   '/components/Collection': CollectionExample,
   '/components/ColumnSizer': ColumnSizerExample,
   '/components/Grid': GridExample,
+  '/components/Masonry': MasonryExample,
   '/components/InfiniteLoader': InfiniteLoaderExample,
   '/components/List': ListExample,
   '/components/MultiGrid': MultiGridExample,
@@ -107,6 +109,7 @@ export default class Application extends PureComponent {
               <ComponentLink to='/components/Collection'>Collection</ComponentLink>
               <ComponentLink to='/components/Grid'>Grid</ComponentLink>
               <ComponentLink to='/components/List'>List</ComponentLink>
+              <ComponentLink to='/components/Masonry'>Masonry</ComponentLink>
               <ComponentLink to='/components/Table'>Table</ComponentLink>
             </div>
 
