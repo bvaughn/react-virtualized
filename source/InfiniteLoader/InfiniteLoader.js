@@ -99,7 +99,7 @@ export default class InfiniteLoader extends PureComponent {
             })
           ) {
             if (this._registeredChild) {
-              forceUpdateReactVirtualizedComponent(this._registeredChild)
+              forceUpdateReactVirtualizedComponent(this._registeredChild, this._lastRenderedStartIndex)
             }
           }
         })
@@ -243,13 +243,13 @@ export function scanForUnloadedRanges ({
  * So it's important to invalidate that cache by recalculating sizes
  * before forcing a rerender.
  */
-export function forceUpdateReactVirtualizedComponent (component) {
+export function forceUpdateReactVirtualizedComponent (component, currentIndex = 0) {
   const recomputeSize = typeof component.recomputeGridSize === 'function'
     ? component.recomputeGridSize
     : component.recomputeRowHeights
 
   if (recomputeSize) {
-    recomputeSize.call(component)
+    recomputeSize.call(component, currentIndex)
   } else {
     component.forceUpdate()
   }
