@@ -92,7 +92,7 @@ The Table component supports the following static class names
 ### headerRowRenderer
 
 This is an advanced property.
-It is useful for situations where you require additional hooks into `Table` to render additiona, custom UI elements.
+It is useful for situations where you require additional hooks into `Table` to render additional custom UI elements.
 You may want to start by forking the [`defaultTableHeaderRowRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultHeaderRowRenderer.js) function.
 
 This function accepts the following named parameters:
