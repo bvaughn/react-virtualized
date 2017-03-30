@@ -7,8 +7,8 @@ import type { CellRendererParams } from './types'
  */
 export default function defaultCellRenderer ({
   cellData,
-  cellDataKey,
   columnData,
+  dataKey,
   rowData,
   rowIndex
 }: CellRendererParams): string {
