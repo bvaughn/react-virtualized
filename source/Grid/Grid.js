@@ -1040,6 +1040,15 @@ export default class Grid extends PureComponent {
       return
     }
 
+    // On iOS, we can arrive at negative offsets by swiping past the start.
+    // To prevent flicker here, we make playing in the negative offset zone cause nothing to happen.
+    if (event.target.scrollTop < 0) {
+      return
+    }
+
+    // Prevent pointer events from interrupting a smooth scroll
+    this._debounceScrollEnded()
+
     const { autoHeight, height, width } = this.props
 
     const {
@@ -1056,18 +1065,6 @@ export default class Grid extends PureComponent {
     const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
     const scrollLeft = Math.min(Math.max(0, totalColumnsWidth - width + scrollbarSize), eventScrollLeft)
     const scrollTop = Math.min(Math.max(0, totalRowsHeight - height + scrollbarSize), eventScrollTop)
-
-    // On iOS, we can arrive at negative offsets by swiping past the start or end.
-    // Avoid re-rendering in this case as it can cause problems; see #532 for more.
-    if (
-      eventScrollLeft !== scrollLeft ||
-      eventScrollTop !== scrollTop
-    ) {
-      return
-    }
-
-    // Prevent pointer events from interrupting a smooth scroll
-    this._debounceScrollEnded()
 
     // Certain devices (like Apple touchpad) rapid-fire duplicate events.
     // Don't force a re-render if this is the case.
