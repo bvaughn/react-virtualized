@@ -340,50 +340,49 @@ describe('isRangeVisible', () => {
 
 describe('forceUpdateReactVirtualizedComponent', () => {
   it('should call :recomputeGridSize if defined', () => {
-    let recomputedGridSize = false
+    const recomputeGridSize = jest.fn()
     class TestComponent extends Component {
-      recomputeGridSize () {
-        recomputedGridSize = true
-      }
+      recomputeGridSize = recomputeGridSize
       render () {
         return <div />
       }
     }
     forceUpdateReactVirtualizedComponent(
-      render(<TestComponent />)
+      render(<TestComponent />),
+      10
     )
-    expect(recomputedGridSize).toEqual(true)
+    expect(recomputeGridSize).toHaveBeenCalledTimes(1)
+    expect(recomputeGridSize).toHaveBeenCalledWith(10)
   })
 
   it('should called :recomputeRowHeights if defined', () => {
-    let recomputedRowHeights = false
+    const recomputeRowHeights = jest.fn()
     class TestComponent extends Component {
-      recomputeRowHeights () {
-        recomputedRowHeights = true
-      }
+      recomputeRowHeights = recomputeRowHeights
       render () {
         return <div />
       }
     }
     forceUpdateReactVirtualizedComponent(
-      render(<TestComponent />)
+      render(<TestComponent />),
+      10
     )
-    expect(recomputedRowHeights).toEqual(true)
+    expect(recomputeRowHeights).toHaveBeenCalledTimes(1)
+    expect(recomputeRowHeights).toHaveBeenCalledWith(10)
   })
 
   it('should call :forceUpdate otherwise', () => {
-    let forceUpdated = false
+    const forceUpdate = jest.fn()
     class TestComponent extends Component {
-      forceUpdate () {
-        forceUpdated = true
-      }
+      forceUpdate = forceUpdate
       render () {
         return <div />
       }
     }
     forceUpdateReactVirtualizedComponent(
-      render(<TestComponent />)
+      render(<TestComponent />),
+      10
     )
-    expect(forceUpdated).toEqual(true)
+    expect(forceUpdate).toHaveBeenCalledTimes(1)
   })
 })
