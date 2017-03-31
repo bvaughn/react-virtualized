@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 9.4.1
+* 🐛 Edge-case `InfiniteLoader` bug fix; prevent jumping to the first row when scrolling fast. ([@reVrost](https://github.com/reVrost) - [#632](https://github.com/bvaughn/react-virtualized/pull/632))
+* 🐛 Reverted unexpected regression from [#616](https://github.com/bvaughn/react-virtualized/pull/616) until a safer fix can be found.
+
 ##### 9.4.0
 * 🎉 New `Masonry` component optimized for Pinterest-style layouts. Check out the [docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/Masonry.md) and [demo page](https://bvaughn.github.io/react-virtualized/#/components/Masonry) to learn more. ([#618](https://github.com/bvaughn/react-virtualized/pull/618))
 * 🎉 `MultiGrid` supports `scrollLeft` and `scrollTop` props for controlled scrolling. ([@julianwong94](https://github.com/julianwong94) - [#624](https://github.com/bvaughn/react-virtualized/pull/624))
