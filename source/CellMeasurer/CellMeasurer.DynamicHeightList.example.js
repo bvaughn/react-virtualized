@@ -48,9 +48,9 @@ export default class DynamicHeightList extends PureComponent {
     const classNames = getClassName({ columnIndex: 0, rowIndex: index })
 
     const imageWidth = 300
-    const imageHeight = datum.size * 2
+    const imageHeight = datum.size * (1 + index % 3)
 
-    const source = `http://fillmurray.com/${imageWidth}/${imageHeight}`
+    const source = `https://fillmurray.com/${imageWidth}/${imageHeight}`
 
     return (
       <CellMeasurer
