@@ -440,6 +440,7 @@ export default class MultiGrid extends PureComponent {
     ) {
       this._containerOuterStyle = {
         height,
+        overflow: 'visible', // Let :focus outline show through
         width,
         ...style
       }
@@ -458,7 +459,7 @@ export default class MultiGrid extends PureComponent {
 
       this._containerBottomStyle = {
         height: height - this._getTopGridHeight(props),
-        overflow: 'hidden',
+        overflow: 'visible', // Let :focus outline show through
         position: 'relative',
         width
       }
@@ -470,7 +471,6 @@ export default class MultiGrid extends PureComponent {
     ) {
       this._bottomLeftGridStyle = {
         left: 0,
-        outline: 0,
         overflowX: 'hidden',
         overflowY: 'hidden',
         position: 'absolute',
@@ -485,7 +485,6 @@ export default class MultiGrid extends PureComponent {
     ) {
       this._bottomRightGridStyle = {
         left: this._getLeftGridWidth(props),
-        outline: 0,
         position: 'absolute',
         ...styleBottomRightGrid
       }
@@ -497,7 +496,6 @@ export default class MultiGrid extends PureComponent {
     ) {
       this._topLeftGridStyle = {
         left: 0,
-        outline: 0,
         overflowX: 'hidden',
         overflowY: 'hidden',
         position: 'absolute',
@@ -513,7 +511,6 @@ export default class MultiGrid extends PureComponent {
     ) {
       this._topRightGridStyle = {
         left: this._getLeftGridWidth(props),
-        outline: 0,
         overflowX: 'hidden',
         overflowY: 'hidden',
         position: 'absolute',
@@ -558,6 +555,7 @@ export default class MultiGrid extends PureComponent {
         rowHeight={this._rowHeightBottomGrid}
         scrollTop={scrollTop}
         style={this._bottomLeftGridStyle}
+        tabIndex={null}
         width={this._getLeftGridWidth(props)}
       />
     )
@@ -610,6 +608,7 @@ export default class MultiGrid extends PureComponent {
         ref={this._topLeftGridRef}
         rowCount={fixedRowCount}
         style={this._topLeftGridStyle}
+        tabIndex={null}
         width={this._getLeftGridWidth(props)}
       />
     )
@@ -638,6 +637,7 @@ export default class MultiGrid extends PureComponent {
         rowCount={fixedRowCount}
         scrollLeft={scrollLeft}
         style={this._topRightGridStyle}
+        tabIndex={null}
         width={this._getRightGridWidth(props)}
       />
     )

@@ -8,8 +8,7 @@ import MultiGrid from './MultiGrid'
 import styles from './MultiGrid.example.css'
 
 const STYLE = {
-  border: '1px solid #ddd',
-  overflow: 'hidden'
+  border: '1px solid #ddd'
 }
 const STYLE_BOTTOM_LEFT_GRID = {
   borderRight: '2px solid #aaa',
