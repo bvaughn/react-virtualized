@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 9.4.2
+* 🐛 Small accessibility fix to `MultiGrid` so that focus outline shows through by default for main (bottom/right) `Grid`. Top and left `Grid`s are also not tab-focusable by default now since they are scroll-observers anyway.
+* ✨ Added `columnWidth` parameter to `ColumnSizer` and deprecated `getColumnWidth` callback. The callback was not necessary since `columnWidth` doesn't change without a re-render and fixed number values perform better in `Grid` due to some internal optimizations anyway.
+
 ##### 9.4.1
 * 🐛 Edge-case `InfiniteLoader` bug fix; prevent jumping to the first row when scrolling fast. ([@reVrost](https://github.com/reVrost) - [#632](https://github.com/bvaughn/react-virtualized/pull/632))
 * 🐛 Reverted unexpected regression from [#616](https://github.com/bvaughn/react-virtualized/pull/616) until a safer fix can be found.
