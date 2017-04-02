@@ -76,7 +76,7 @@ export default class ColumnSizerExample extends PureComponent {
                 key='GridColumnSizer'
                 width={width}
               >
-                {({ adjustedWidth, getColumnWidth, registerChild }) => (
+                {({ adjustedWidth, columnWidth, registerChild }) => (
                   <div
                     className={styles.GridContainer}
                     style={{
@@ -86,7 +86,7 @@ export default class ColumnSizerExample extends PureComponent {
                   >
                     <Grid
                       ref={registerChild}
-                      columnWidth={getColumnWidth}
+                      columnWidth={columnWidth}
                       columnCount={columnCount}
                       height={50}
                       noContentRenderer={this._noContentRenderer}

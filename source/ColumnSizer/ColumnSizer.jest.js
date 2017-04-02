@@ -30,11 +30,11 @@ describe('ColumnSizer', () => {
         columnCount={columnCount}
         width={width}
       >
-        {({ adjustedWidth, getColumnWidth, registerChild }) => (
+        {({ adjustedWidth, columnWidth, registerChild }) => (
           <div>
             <Grid
               columnCount={columnCount}
-              columnWidth={getColumnWidth}
+              columnWidth={columnWidth}
               height={50}
               ref={registerChild}
               cellRenderer={cellRenderer}
@@ -43,7 +43,7 @@ describe('ColumnSizer', () => {
               width={adjustedWidth}
             />
             <div className='debug'>
-              {`adjustedWidth:${adjustedWidth} columnWidth:${getColumnWidth()}`}
+              {`adjustedWidth:${adjustedWidth} columnWidth:${columnWidth}`}
             </div>
           </div>
         )}
@@ -121,7 +121,7 @@ describe('ColumnSizer', () => {
           columnCount={100}
           width={100}
         >
-          {({ adjustedWidth, getColumnWidth, registerChild }) => (
+          {({ adjustedWidth, columnWidth, registerChild }) => (
             <div ref={registerChild} />
           )}
         </ColumnSizer>

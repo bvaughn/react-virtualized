@@ -80,6 +80,7 @@ export default class ColumnSizer extends PureComponent {
 
     return children({
       adjustedWidth,
+      columnWidth,
       getColumnWidth: () => columnWidth,
       registerChild: this._registerChild
     })

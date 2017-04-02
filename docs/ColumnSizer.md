@@ -18,7 +18,8 @@ The child function is passed the following named parameters:
 | Parameter | Type | Description |
 |:---|:---|:---|
 | adjustedWidth | Number | This number reflects the lesser of the overall `Grid` width or the width of all columns. Use this to make your `Grid` shrink to fit sparse content. |
-| getColumnWidth | Function | This function should be passed to the `Grid`'s `columnWidth` property. |
+| columnWidth | Number | This value should be passed to the `Grid`'s `columnWidth` property. |
+| getColumnWidth | Function | This value can be passed to the `Grid`'s `columnWidth` property but it's recommended that you use the `columnWidth` property instead. This is a legacy property. |
 | registerChild | Function | This function should be set as the child's `ref` property. It enables a set of rows to be refreshed once their data has finished loading. |
 
 ### Examples
