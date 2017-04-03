@@ -105,8 +105,11 @@ import 'react-virtualized/styles.css'
 // You can import any component you want as a named export from 'react-virtualized', eg
 import { Column, Table } from 'react-virtualized'
 
-// Or for better tree-shaking support you can use deep imports, eg
-import { List } from 'react-virtualized/dist/commonjs/List'
+// But if you only use a few react-virtualized components,
+// And you're concerned about increasing your application's bundle size,
+// You can directly import only the components you need, like so:
+import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
+import List from 'react-virtualized/dist/commonjs/List'
 ```
 
 You can also use a global-friendly UMD build:
