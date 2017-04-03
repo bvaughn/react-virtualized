@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.5.0
+* 🎉 `Grid` supports state-override of `isScrolling` value via new `isScrolling` prop. This enables cache-while-scrolling of cells when used with `WindowScroller`. ([@olavk](https://github.com/olavk) - [#639](https://github.com/bvaughn/react-virtualized/pull/639))
+
 ##### 9.4.2
 * 🐛 Small accessibility fix to `MultiGrid` so that focus outline shows through by default for main (bottom/right) `Grid`. Top and left `Grid`s are also not tab-focusable by default now since they are scroll-observers anyway.
 * ✨ Added `columnWidth` parameter to `ColumnSizer` and deprecated `getColumnWidth` callback. The callback was not necessary since `columnWidth` doesn't change without a re-render and fixed number values perform better in `Grid` due to some internal optimizations anyway.
