@@ -121,6 +121,11 @@ export default class Grid extends PureComponent {
     id: PropTypes.string,
 
     /**
+     * Provide a way to override isScrolling through props. Useful for WindowScroller to use cell caching.
+     */
+    isScrolling: PropTypes.bool,
+
+    /**
      * Optional renderer to be used in place of rows when either :rowCount or :columnCount is 0.
      */
     noContentRenderer: PropTypes.func.isRequired,
@@ -751,12 +756,17 @@ export default class Grid extends PureComponent {
     } = props
 
     const {
-      isScrolling,
       scrollDirectionHorizontal,
       scrollDirectionVertical,
       scrollLeft,
       scrollTop
     } = state
+
+    let isScrolling = state.isScrolling;
+    if (Object.hasOwnProperty.call(props, 'isScrolling')) {
+      // If isScrolling is defined in props, use it to override the value in state
+      isScrolling = props.isScrolling
+    }
 
     this._childrenToDisplay = []
 
