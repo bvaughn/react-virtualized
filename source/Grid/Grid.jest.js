@@ -1132,6 +1132,25 @@ describe('Grid', () => {
     done()
   })
 
+  it('should pass the cellRenderer an :isScrolling flag based on props override', () => {
+    const cellRenderer = jest.fn()
+    cellRenderer.mockImplementation(({ key }) => <div key={key} />)
+    render(getMarkup({
+      cellRenderer,
+      isScrolling: true
+    }))
+    expect(cellRenderer).toHaveBeenCalled()
+    expect(cellRenderer.mock.calls[0][0].isScrolling).toBe(true)
+    cellRenderer.mockReset()
+    render(getMarkup({
+      cellRenderer,
+      isScrolling: false,
+      width: DEFAULT_WIDTH + 1
+    }))
+    expect(cellRenderer).toHaveBeenCalled()
+    expect(cellRenderer.mock.calls[0][0].isScrolling).toBe(false)
+  })
+
   it('should pass the cellRenderer an :isVisible flag', () => {
     const cellRendererCalls = []
     function cellRenderer (props) {

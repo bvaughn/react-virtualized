@@ -19,6 +19,7 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | estimatedRowSize | Number |  | Used to estimate the total height of a `Grid` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | height | Number | ✓ | Height of Grid; this property determines the number of visible (vs virtualized) rows. |
 | id | String |  | Optional custom id to attach to root `Grid` element. |
+| isScrolling | Boolean |  | Override internal is-scrolling state tracking. This property is primarily intended for use with the WindowScroller component. |
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowCount` or `columnCount` is empty: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered. This callback is only invoked when visible rows have changed: `({ columnOverscanStartIndex: number, columnOverscanStopIndex: number, columnStartIndex: number, columnStopIndex: number, rowOverscanStartIndex: number, rowOverscanStopIndex: number, rowStartIndex: number, rowStopIndex: number }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, clientWidth: number, scrollHeight: number, scrollLeft: number, scrollTop: number, scrollWidth: number }): void` |

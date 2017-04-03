@@ -81,10 +81,11 @@ export default class WindowScrollerExample extends PureComponent {
                     autoHeight
                     className={styles.List}
                     height={height}
+                    isScrolling={isScrolling}
                     overscanRowCount={2}
                     rowCount={list.size}
                     rowHeight={30}
-                    rowRenderer={({ index, isVisible, key, style }) => this._rowRenderer({ index, isScrolling, isVisible, key, style })}
+                    rowRenderer={this._rowRenderer}
                     scrollTop={scrollTop}
                     width={width}
                   />

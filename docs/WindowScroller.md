@@ -37,6 +37,7 @@ ReactDOM.render(
       <List
         autoHeight
         height={height}
+        isScrolling={isScrolling}
         rowCount={...}
         rowHeight={...}
         rowRenderer={...}
