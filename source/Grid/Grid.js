@@ -265,6 +265,7 @@ export default class Grid extends PureComponent {
     this._onScroll = this._onScroll.bind(this)
     this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
+    this._getCalculatedScrollTop = this._getCalculatedScrollTop.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
 
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth)
@@ -379,6 +380,13 @@ export default class Grid extends PureComponent {
       ...props,
       scrollToRow: rowIndex
     })
+  }
+
+  /**
+   * Gets a calculated value to be used for `scrollTop`
+   */
+  getScrollTop (props = this.props, state = this.state) {
+    return this._getCalculatedScrollTop(props, state) || 0;
   }
 
   componentDidMount () {
@@ -1023,7 +1031,7 @@ export default class Grid extends PureComponent {
     }
   }
 
-  _updateScrollTopForScrollToRow (props = this.props, state = this.state) {
+  _getCalculatedScrollTop (props = this.props, state = this.state) {
     const { height, rowCount, scrollToAlignment, scrollToRow, width } = props
     const { scrollTop } = state
 
@@ -1032,18 +1040,23 @@ export default class Grid extends PureComponent {
       const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
       const scrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0
 
-      const calculatedScrollTop = this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
+      return this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
         containerSize: height - scrollBarSize,
         currentOffset: scrollTop,
         targetIndex
       })
+    }
+  }
 
-      if (scrollTop !== calculatedScrollTop) {
-        this._setScrollPosition({
-          scrollTop: calculatedScrollTop
-        })
-      }
+  _updateScrollTopForScrollToRow (props = this.props, state = this.state) {
+    const { scrollTop } = state
+    const calculatedScrollTop = this._getCalculatedScrollTop(props, state)
+
+    if (calculatedScrollTop >= 0 && scrollTop !== calculatedScrollTop) {
+      this._setScrollPosition({
+        scrollTop: calculatedScrollTop
+      })
     }
   }
 

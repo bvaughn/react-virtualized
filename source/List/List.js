@@ -122,6 +122,11 @@ export default class List extends PureComponent {
     })
   }
 
+  /** See Grid#getScrollTop */
+  getScrollTop (props = this.props) {
+    return this.Grid.getScrollTop(props)
+  }
+
   /** See Grid#scrollToCell */
   scrollToRow (index = 0) {
     this.Grid.scrollToCell({
