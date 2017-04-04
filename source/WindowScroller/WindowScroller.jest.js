@@ -14,15 +14,18 @@ function ChildComponent ({ scrollTop, isScrolling, height }) {
 
 function mockGetBoundingClientRectForHeader ({
   documentOffset = 0,
-  height
+  height,
+  width
 }) {
   // Mock the WindowScroller element and window separately
   // The only way to mock the former (before its created) is globally
   Element.prototype.getBoundingClientRect = jest.fn(() => ({
-    top: height
+    top: height,
+    left: width
   }))
   document.documentElement.getBoundingClientRect = jest.fn(() => ({
-    top: documentOffset
+    top: documentOffset,
+    left: documentOffset
   }))
 }
 
@@ -47,7 +50,8 @@ function getMarkup ({
   // But WindowScroller requires it
   mockGetBoundingClientRectForHeader({
     documentOffset,
-    height: headerElements ? headerElements.props.style.height : 0
+    height: headerElements ? headerElements.props.style.height : 0,
+    width: headerElements ? headerElements.props.style.width : 0
   })
 
   if (headerElements) {
@@ -72,9 +76,11 @@ function simulateWindowScroll ({
 }
 
 function simulateWindowResize ({
-  height = 0
+  height = 0,
+  width = 0
 }) {
   window.innerHeight = height
+  window.innerWidth = width
   document.dispatchEvent(new window.Event('resize', { bubbles: true }))
 }
 
@@ -82,19 +88,22 @@ describe('WindowScroller', () => {
   // Set default window height and scroll position between tests
   beforeEach(() => {
     window.scrollY = 0
+    window.scrollX = 0
     window.innerHeight = 500
+    window.innerWidth = 500
   })
 
   // Starts updating scrollTop only when the top position is reached
-  it('should have correct top property to be defined on :_positionFromTop', () => {
+  it('should have correct top and left properties to be defined on :_positionFromTop and :_positionFromLeft', () => {
     const component = render(getMarkup())
     const rendered = findDOMNode(component)
-    const top = rendered.getBoundingClientRect().top
+    const { top, left } = rendered.getBoundingClientRect()
     expect(component._positionFromTop).toEqual(top)
+    expect(component._positionFromLeft).toEqual(left)
   })
 
   // Test edge-case reported in bvaughn/react-virtualized/pull/346
-  it('should have correct top property to be defined on :_positionFromTop if documentElement is scrolled', () => {
+  it('should have correct top and left properties to be defined on :_positionFromTop and :_positionFromLeft if documentElement is scrolled', () => {
     render.unmount()
 
     // Simulate scrolled documentElement
@@ -102,8 +111,9 @@ describe('WindowScroller', () => {
       documentOffset: -100
     }))
     const rendered = findDOMNode(component)
-    const top = rendered.getBoundingClientRect().top
+    const { top, left } = rendered.getBoundingClientRect()
     expect(component._positionFromTop).toEqual(top + 100)
+    expect(component._positionFromLeft).toEqual(left + 100)
     // Reset override
     delete document.documentElement.getBoundingClientRect
   })
@@ -150,7 +160,8 @@ describe('WindowScroller', () => {
 
       expect(onScrollCalls.length).toEqual(1)
       expect(onScrollCalls[0]).toEqual({
-        scrollTop: 5000
+        scrollTop: 5000,
+        scrollLeft: 0
       })
 
       done()
@@ -198,11 +209,12 @@ describe('WindowScroller', () => {
         onResize: params => onResizeCalls.push(params)
       }))
 
-      simulateWindowResize({ height: 1000 })
+      simulateWindowResize({ height: 1000, width: 1024 })
 
       expect(onResizeCalls.length).toEqual(1)
       expect(onResizeCalls[0]).toEqual({
-        height: 1000
+        height: 1000,
+        width: 1024
       })
     })
 
@@ -241,44 +253,51 @@ describe('WindowScroller', () => {
       let windowScroller
 
       render(getMarkup({
-        headerElements: <div id='header' style={{ height: 100 }}></div>,
+        headerElements: <div id='header' style={{ height: 100, width: 100 }}></div>,
         ref: (ref) => {
           windowScroller = ref
         }
       }))
 
       expect(windowScroller._positionFromTop).toBe(100)
+      expect(windowScroller._positionFromLeft).toBe(100)
 
       mockGetBoundingClientRectForHeader({
-        height: 200
+        height: 200,
+        width: 200
       })
 
       expect(windowScroller._positionFromTop).toBe(100)
+      expect(windowScroller._positionFromLeft).toBe(100)
 
-      simulateWindowResize({ height: 1000 })
+      simulateWindowResize({ height: 1000, width: 1000 })
 
       expect(windowScroller._positionFromTop).toBe(200)
+      expect(windowScroller._positionFromLeft).toBe(200)
     })
 
     it('should recalculate the offset from the top if called externally', () => {
       let windowScroller
 
       render(getMarkup({
-        headerElements: <div id='header' style={{ height: 100 }}></div>,
+        headerElements: <div id='header' style={{ height: 100, width: 100 }}></div>,
         ref: (ref) => {
           windowScroller = ref
         }
       }))
 
       expect(windowScroller._positionFromTop).toBe(100)
+      expect(windowScroller._positionFromLeft).toBe(100)
 
       mockGetBoundingClientRectForHeader({
-        height: 200
+        height: 200,
+        width: 200
       })
 
       windowScroller.updatePosition()
 
       expect(windowScroller._positionFromTop).toBe(200)
+      expect(windowScroller._positionFromLeft).toBe(200)
     })
   })
 })
