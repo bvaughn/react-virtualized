@@ -264,6 +264,7 @@ export default class Grid extends PureComponent {
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this)
+    this._getCalculatedScrollLeft = this._getCalculatedScrollLeft.bind(this)
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._getCalculatedScrollTop = this._getCalculatedScrollTop.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
@@ -380,6 +381,13 @@ export default class Grid extends PureComponent {
       ...props,
       scrollToRow: rowIndex
     })
+  }
+
+  /**
+   * Gets a calculated value to be used for `scrollLeft`
+   */
+  getScrollLeft (props = this.props, state = this.state) {
+    return this._getCalculatedScrollLeft(props, state) || 0;
   }
 
   /**
@@ -1007,7 +1015,7 @@ export default class Grid extends PureComponent {
     return this._wrapPropertyGetter(size)
   }
 
-  _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {
+  _getCalculatedScrollLeft (props = this.props, state = this.state) {
     const { columnCount, height, scrollToAlignment, scrollToColumn, width } = props
     const { scrollLeft } = state
 
@@ -1016,18 +1024,23 @@ export default class Grid extends PureComponent {
       const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
       const scrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0
 
-      const calculatedScrollLeft = this._columnSizeAndPositionManager.getUpdatedOffsetForIndex({
+      return this._columnSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
         containerSize: width - scrollBarSize,
         currentOffset: scrollLeft,
         targetIndex
       })
+    }
+  }
 
-      if (scrollLeft !== calculatedScrollLeft) {
-        this._setScrollPosition({
-          scrollLeft: calculatedScrollLeft
-        })
-      }
+  _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {
+    const { scrollLeft } = state
+    const calculatedScrollLeft = this._getCalculatedScrollLeft(props, state)
+
+    if (calculatedScrollLeft >= 0 && scrollLeft !== calculatedScrollLeft) {
+      this._setScrollPosition({
+        scrollLeft: calculatedScrollLeft
+      })
     }
   }
 

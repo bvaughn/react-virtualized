@@ -366,6 +366,21 @@ describe('Grid', () => {
       expect(grid.state.scrollTop).toEqual(900)
     })
 
+    it('should support getScrollLeft() method', () => {
+      const grid = render(getMarkup())
+      const initialScrollLeft = grid.getScrollLeft()
+      const calculatedScrollLeft = grid.getScrollLeft({
+        ...grid.props,
+        scrollToColumn: 24
+      })
+
+      expect(initialScrollLeft).toEqual(0)
+      // 100 columns * 50 item width = 5,000 total item width
+      // 4 columns can be visible at a time and :scrollLeft is initially 0,
+      // So the minimum amount of scrolling leaves the 25th item at the right (just scrolled into view).
+      expect(calculatedScrollLeft).toEqual(1050)
+    })
+
     it('should support getScrollTop() method', () => {
       const grid = render(getMarkup())
       const initialScrollTop = grid.getScrollTop()
