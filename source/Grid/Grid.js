@@ -268,6 +268,7 @@ export default class Grid extends PureComponent {
     this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
     this._getCalculatedScrollTop = this._getCalculatedScrollTop.bind(this)
     this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
+    this._setScrollPosition = this._setScrollPosition.bind(this)
 
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth)
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight)
@@ -381,6 +382,17 @@ export default class Grid extends PureComponent {
       ...props,
       scrollToRow: rowIndex
     })
+  }
+
+  /**
+   * Ensure offset position is visible
+   * Useful for animating position changes
+   */
+  scrollToPosition ({
+    scrollLeft = 0,
+    scrollTop = 0
+  } = {}) {
+    this._setScrollPosition({ scrollLeft, scrollTop })
   }
 
   /**

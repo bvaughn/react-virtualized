@@ -366,6 +366,19 @@ describe('Grid', () => {
       expect(grid.state.scrollTop).toEqual(900)
     })
 
+    it('should support scrollToPosition() public method', () => {
+      const grid = render(getMarkup())
+      expect(grid.state.scrollLeft).toEqual(0)
+      expect(grid.state.scrollTop).toEqual(0)
+
+      grid.scrollToPosition({
+        scrollLeft: 50,
+        scrollTop: 50
+      })
+      expect(grid.state.scrollLeft).toEqual(50)
+      expect(grid.state.scrollTop).toEqual(50)
+    })
+
     it('should support getScrollLeft() method', () => {
       const grid = render(getMarkup())
       const initialScrollLeft = grid.getScrollLeft()

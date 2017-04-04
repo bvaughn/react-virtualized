@@ -135,6 +135,11 @@ export default class List extends PureComponent {
     })
   }
 
+  /** See Grid#scrollToPosition */
+  scrollToPosition (scrollTop = 0) {
+    this.Grid.scrollToPosition({ scrollTop })
+  }
+
   render () {
     const {
       className,
