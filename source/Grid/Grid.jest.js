@@ -1470,6 +1470,35 @@ describe('Grid', () => {
     })
   })
 
+  describe('autoWidth', () => {
+    it('should set the container width to auto to adjust to innerScrollContainer width', () => {
+      const props = {
+        autoWidth: true
+      }
+      const rendered = findDOMNode(render(getMarkup(props)))
+      expect(rendered.style.width).toEqual('auto')
+    })
+
+    it('should have container width still affecting number of columns rendered', () => {
+      const props = {
+        width: 500,
+        autoWidth: true
+      }
+      const rendered = findDOMNode(render(getMarkup(props)))
+      expect(rendered.querySelectorAll('.gridItem').length).toEqual(50) // 5 rows x 10 columns
+    })
+
+    it('should have innerScrollContainer width to be equal number of columns * columnWidth', () => {
+      const props = {
+        autoWidth: true
+      }
+      const grid = render(getMarkup(props))
+      const rendered = findDOMNode(grid)
+      expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.width).toEqual('2500px') // 50 columns * 50px columnWidth
+      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000)
+    })
+  })
+
   describe('tabIndex', () => {
     it('should be focusable by default', () => {
       const rendered = findDOMNode(render(getMarkup()))

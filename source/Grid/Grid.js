@@ -45,6 +45,12 @@ export default class Grid extends PureComponent {
     autoHeight: PropTypes.bool,
 
     /**
+     * Removes fixed width from the scrollingContainer so that the total width
+     * of rows can stretch the window. Intended for use with WindowScroller
+     */
+    autoWidth: PropTypes.bool,
+
+    /**
      * Responsible for rendering a cell given an row and column index.
      * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
      */
@@ -423,7 +429,7 @@ export default class Grid extends PureComponent {
    * 1) New scroll-to-cell props have been set
    */
   componentDidUpdate (prevProps, prevState) {
-    const { autoHeight, columnCount, height, rowCount, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
+    const { autoHeight, autoWidth, columnCount, height, rowCount, scrollToAlignment, scrollToColumn, scrollToRow, width } = this.props
     const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state
 
     // If cell sizes have been invalidated (eg we are using CellMeasurer) then reset cached positions.
@@ -457,8 +463,8 @@ export default class Grid extends PureComponent {
         this._scrollingContainer.scrollLeft = scrollLeft
       }
 
-      // @TRICKY :autoHeight property instructs Grid to leave :scrollTop management to an external HOC (eg WindowScroller).
-      // In this case we should avoid checking scrollingContainer.scrollTop since it forces layout/flow.
+      // @TRICKY :autoHeight and :autoWidth properties instructs Grid to leave :scrollTop and :scrollLeft management to an external HOC (eg WindowScroller).
+      // In this case we should avoid checking scrollingContainer.scrollTop and scrollingContainer.scrollLeft since it forces layout/flow.
       if (
         !autoHeight &&
         scrollTop >= 0 &&
@@ -469,6 +475,17 @@ export default class Grid extends PureComponent {
         )
       ) {
         this._scrollingContainer.scrollTop = scrollTop
+      }
+      if (
+        !autoWidth &&
+        scrollLeft >= 0 &&
+        (
+          scrollLeft !== prevState.scrollLeft &&
+          scrollLeft !== this._scrollingContainer.scrollLeft ||
+          columnOrRowCountJustIncreasedFromZero
+        )
+      ) {
+        this._scrollingContainer.scrollLeft = scrollLeft
       }
     }
 
@@ -650,6 +667,7 @@ export default class Grid extends PureComponent {
     const {
       autoContainerWidth,
       autoHeight,
+      autoWidth,
       className,
       containerStyle,
       height,
@@ -668,7 +686,7 @@ export default class Grid extends PureComponent {
       direction: 'ltr',
       height: autoHeight ? 'auto' : height,
       position: 'relative',
-      width,
+      width: autoWidth ? 'auto' : width,
       WebkitOverflowScrolling: 'touch',
       willChange: 'transform'
     }
@@ -1064,7 +1082,7 @@ export default class Grid extends PureComponent {
     // Prevent pointer events from interrupting a smooth scroll
     this._debounceScrollEnded()
 
-    const { autoHeight, height, width } = this.props
+    const { autoHeight, autoWidth, height, width } = this.props
 
     const {
       scrollLeft: eventScrollLeft,
@@ -1103,6 +1121,9 @@ export default class Grid extends PureComponent {
 
       if (!autoHeight) {
         newState.scrollTop = scrollTop
+      }
+      if (!autoWidth) {
+        newState.scrollLeft = scrollLeft
       }
 
       this.setState(newState)
