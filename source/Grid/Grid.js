@@ -1090,8 +1090,17 @@ export default class Grid extends PureComponent {
       this.state.scrollTop !== scrollTop
     ) {
       // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
-      const scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
-      const scrollDirectionVertical = scrollTop > this.state.scrollTop ? SCROLL_DIRECTION_FORWARD : SCROLL_DIRECTION_BACKWARD
+      // Don't change direction for an axis unless scroll offset has changed.
+      const scrollDirectionHorizontal = scrollLeft !== this.state.scrollLeft
+        ? scrollLeft > this.state.scrollLeft
+          ? SCROLL_DIRECTION_FORWARD
+          : SCROLL_DIRECTION_BACKWARD
+        : this.state.scrollDirectionHorizontal
+      const scrollDirectionVertical = scrollTop !== this.state.scrollTop
+        ? scrollTop > this.state.scrollTop
+          ? SCROLL_DIRECTION_FORWARD
+          : SCROLL_DIRECTION_BACKWARD
+        : this.state.scrollDirectionVertical
 
       const newState = {
         isScrolling: true,

@@ -936,8 +936,7 @@ describe('Grid', () => {
     })
 
     it('should set the correct scroll direction', () => {
-      // Do not pass in the initial state as props, otherwise the internal state is forbidden from
-      // updating itself
+      // Do not pass in the initial state as props, otherwise the internal state is forbidden from updating itself
       const grid = render(getMarkup())
 
       // Simulate a scroll to set the initial internal state
@@ -993,6 +992,48 @@ describe('Grid', () => {
 
       expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
       expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
+    })
+
+    it('should not reset scroll direction for one axis when scrolled in another', () => {
+      // Do not pass in the initial state as props, otherwise the internal state is forbidden from updating itself
+      const grid = render(getMarkup())
+
+      // Simulate a scroll to set the initial internal state
+      simulateScroll({
+        grid,
+        scrollLeft: 0,
+        scrollTop: 5
+      })
+
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
+
+      simulateScroll({
+        grid,
+        scrollLeft: 5,
+        scrollTop: 5
+      })
+
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_FORWARD)
+
+      simulateScroll({
+        grid,
+        scrollLeft: 5,
+        scrollTop: 0
+      })
+
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_FORWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_BACKWARD)
+
+      simulateScroll({
+        grid,
+        scrollLeft: 0,
+        scrollTop: 0
+      })
+
+      expect(grid.state.scrollDirectionHorizontal).toEqual(SCROLL_DIRECTION_BACKWARD)
+      expect(grid.state.scrollDirectionVertical).toEqual(SCROLL_DIRECTION_BACKWARD)
     })
 
     it('should overscan in the direction being scrolled', async (done) => {
