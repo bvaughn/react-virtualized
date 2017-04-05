@@ -264,11 +264,6 @@ export default class Grid extends PureComponent {
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this)
-    this._getCalculatedScrollLeft = this._getCalculatedScrollLeft.bind(this)
-    this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
-    this._getCalculatedScrollTop = this._getCalculatedScrollTop.bind(this)
-    this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
-    this._setScrollPosition = this._setScrollPosition.bind(this)
 
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth)
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight)
@@ -389,24 +384,33 @@ export default class Grid extends PureComponent {
    * Useful for animating position changes
    */
   scrollToPosition ({
-    scrollLeft = 0,
-    scrollTop = 0
+    scrollLeft,
+    scrollTop
   } = {}) {
     this._setScrollPosition({ scrollLeft, scrollTop })
   }
 
   /**
-   * Gets a calculated value to be used for `scrollLeft`
+   * Gets offsets for a given cell and alignment
    */
-  getScrollLeft (props = this.props, state = this.state) {
-    return this._getCalculatedScrollLeft(props, state) || 0;
-  }
+  getOffsetForCell ({
+    columnIndex,
+    rowIndex,
+    scrollToAlignment = this.props.scrollToAlignment
+  } = {}) {
+    const scrollToColumn = columnIndex >= 0 ? columnIndex : this.props.scrollToColumn
+    const scrollToRow = rowIndex >= 0 ? rowIndex : this.props.scrollToRow
+    const offsetProps = {
+      ...this.props,
+      scrollToColumn,
+      scrollToRow,
+      scrollToAlignment
+    }
 
-  /**
-   * Gets a calculated value to be used for `scrollTop`
-   */
-  getScrollTop (props = this.props, state = this.state) {
-    return this._getCalculatedScrollTop(props, state) || 0;
+    return {
+      scrollLeft: this._getCalculatedScrollLeft(offsetProps),
+      scrollTop: this._getCalculatedScrollTop(offsetProps)
+    }
   }
 
   componentDidMount () {

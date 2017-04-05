@@ -379,34 +379,20 @@ describe('Grid', () => {
       expect(grid.state.scrollTop).toEqual(50)
     })
 
-    it('should support getScrollLeft() method', () => {
+    it('should support getOffsetForCell() public method', () => {
       const grid = render(getMarkup())
-      const initialScrollLeft = grid.getScrollLeft()
-      const calculatedScrollLeft = grid.getScrollLeft({
-        ...grid.props,
-        scrollToColumn: 24
+      const { scrollLeft, scrollTop } = grid.getOffsetForCell({
+        columnIndex: 24,
+        rowIndex: 49
       })
-
-      expect(initialScrollLeft).toEqual(0)
       // 100 columns * 50 item width = 5,000 total item width
       // 4 columns can be visible at a time and :scrollLeft is initially 0,
       // So the minimum amount of scrolling leaves the 25th item at the right (just scrolled into view).
-      expect(calculatedScrollLeft).toEqual(1050)
-    })
-
-    it('should support getScrollTop() method', () => {
-      const grid = render(getMarkup())
-      const initialScrollTop = grid.getScrollTop()
-      const calculatedScrollTop = grid.getScrollTop({
-        ...grid.props,
-        scrollToRow: 49
-      })
-
-      expect(initialScrollTop).toEqual(0)
+      expect(scrollLeft).toEqual(1050)
       // 100 rows * 20 item height = 2,000 total item height
       // 5 rows can be visible at a time and :scrollTop is initially 0,
       // So the minimum amount of scrolling leaves the 50th item at the bottom (just scrolled into view).
-      expect(calculatedScrollTop).toEqual(900)
+      expect(scrollTop).toEqual(900)
     })
 
     // See issue #565

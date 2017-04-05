@@ -122,9 +122,17 @@ export default class List extends PureComponent {
     })
   }
 
-  /** See Grid#getScrollTop */
-  getScrollTop (props = this.props) {
-    return this.Grid.getScrollTop(props)
+  /** See Grid#getOffsetForCell */
+  getOffsetForRow ({
+    rowIndex,
+    scrollToAlignment
+  }) {
+    const { scrollTop } = this.Grid.getOffsetForCell({
+      columnIndex: 0,
+      rowIndex,
+      scrollToAlignment
+    })
+    return scrollTop
   }
 
   /** See Grid#scrollToCell */
