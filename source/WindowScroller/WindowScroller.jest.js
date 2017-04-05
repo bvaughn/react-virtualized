@@ -67,9 +67,11 @@ function getMarkup ({
 }
 
 function simulateWindowScroll ({
+  scrollX = 0,
   scrollY = 0
 }) {
   document.body.style.height = '10000px'
+  window.scrollX = scrollX
   window.scrollY = scrollY
   document.dispatchEvent(new window.Event('scroll', { bubbles: true }))
   document.body.style.height = ''
@@ -148,21 +150,35 @@ describe('WindowScroller', () => {
 
   describe('onScroll', () => {
     it('should trigger callback when window scrolls', async done => {
-      const onScrollCalls = []
-      render(getMarkup({
-        onScroll: params => onScrollCalls.push(params)
-      }))
+      const onScroll = jest.fn()
+      render(getMarkup({ onScroll }))
 
       simulateWindowScroll({ scrollY: 5000 })
 
       // Allow scrolling timeout to complete so that the component computes state
       await new Promise(resolve => setTimeout(resolve, 150))
 
-      expect(onScrollCalls.length).toEqual(1)
-      expect(onScrollCalls[0]).toEqual({
-        scrollTop: 5000,
-        scrollLeft: 0
+      expect(onScroll).toHaveBeenCalledWith(
+        {
+          scrollLeft: 0,
+          scrollTop: 5000
+        }
+      )
+
+      simulateWindowScroll({
+        scrollX: 2500,
+        scrollY: 5000
       })
+
+      // Allow scrolling timeout to complete so that the component computes state
+      await new Promise(resolve => setTimeout(resolve, 150))
+
+      expect(onScroll).toHaveBeenCalledWith(
+        {
+          scrollLeft: 2500,
+          scrollTop: 5000
+        }
+      )
 
       done()
     })
@@ -253,51 +269,51 @@ describe('WindowScroller', () => {
       let windowScroller
 
       render(getMarkup({
-        headerElements: <div id='header' style={{ height: 100, width: 100 }}></div>,
+        headerElements: <div id='header' style={{ height: 100, width: 150 }}></div>,
         ref: (ref) => {
           windowScroller = ref
         }
       }))
 
       expect(windowScroller._positionFromTop).toBe(100)
-      expect(windowScroller._positionFromLeft).toBe(100)
+      expect(windowScroller._positionFromLeft).toBe(150)
 
       mockGetBoundingClientRectForHeader({
         height: 200,
-        width: 200
+        width: 300
       })
 
       expect(windowScroller._positionFromTop).toBe(100)
-      expect(windowScroller._positionFromLeft).toBe(100)
+      expect(windowScroller._positionFromLeft).toBe(150)
 
       simulateWindowResize({ height: 1000, width: 1000 })
 
       expect(windowScroller._positionFromTop).toBe(200)
-      expect(windowScroller._positionFromLeft).toBe(200)
+      expect(windowScroller._positionFromLeft).toBe(300)
     })
 
     it('should recalculate the offset from the top if called externally', () => {
       let windowScroller
 
       render(getMarkup({
-        headerElements: <div id='header' style={{ height: 100, width: 100 }}></div>,
+        headerElements: <div id='header' style={{ height: 100, width: 150 }}></div>,
         ref: (ref) => {
           windowScroller = ref
         }
       }))
 
       expect(windowScroller._positionFromTop).toBe(100)
-      expect(windowScroller._positionFromLeft).toBe(100)
+      expect(windowScroller._positionFromLeft).toBe(150)
 
       mockGetBoundingClientRectForHeader({
         height: 200,
-        width: 200
+        width: 300
       })
 
       windowScroller.updatePosition()
 
       expect(windowScroller._positionFromTop).toBe(200)
-      expect(windowScroller._positionFromLeft).toBe(200)
+      expect(windowScroller._positionFromLeft).toBe(300)
     })
   })
 })

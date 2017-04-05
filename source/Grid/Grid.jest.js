@@ -1536,7 +1536,7 @@ describe('Grid', () => {
       const grid = render(getMarkup(props))
       const rendered = findDOMNode(grid)
       expect(rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer').style.width).toEqual('2500px') // 50 columns * 50px columnWidth
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000)
+      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(2500)
     })
   })
 

@@ -39,14 +39,14 @@ export default class Grid extends PureComponent {
     autoContainerWidth: PropTypes.bool,
 
     /**
-     * Removes fixed height from the scrollingContainer so that the total height
-     * of rows can stretch the window. Intended for use with WindowScroller
+     * Removes fixed height from the scrollingContainer so that the total height of rows can stretch the window.
+     * Intended for use with WindowScroller
      */
     autoHeight: PropTypes.bool,
 
     /**
-     * Removes fixed width from the scrollingContainer so that the total width
-     * of rows can stretch the window. Intended for use with WindowScroller
+     * Removes fixed width from the scrollingContainer so that the total width of rows can stretch the window.
+     * Intended for use with WindowScroller
      */
     autoWidth: PropTypes.bool,
 
@@ -452,30 +452,8 @@ export default class Grid extends PureComponent {
     // So we only set these when we require an adjustment of the scroll position.
     // See issue #2 for more information.
     if (scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
-      if (
-        scrollLeft >= 0 &&
-        (
-          scrollLeft !== prevState.scrollLeft &&
-          scrollLeft !== this._scrollingContainer.scrollLeft ||
-          columnOrRowCountJustIncreasedFromZero
-        )
-      ) {
-        this._scrollingContainer.scrollLeft = scrollLeft
-      }
-
       // @TRICKY :autoHeight and :autoWidth properties instructs Grid to leave :scrollTop and :scrollLeft management to an external HOC (eg WindowScroller).
       // In this case we should avoid checking scrollingContainer.scrollTop and scrollingContainer.scrollLeft since it forces layout/flow.
-      if (
-        !autoHeight &&
-        scrollTop >= 0 &&
-        (
-          scrollTop !== prevState.scrollTop &&
-          scrollTop !== this._scrollingContainer.scrollTop ||
-          columnOrRowCountJustIncreasedFromZero
-        )
-      ) {
-        this._scrollingContainer.scrollTop = scrollTop
-      }
       if (
         !autoWidth &&
         scrollLeft >= 0 &&
@@ -486,6 +464,17 @@ export default class Grid extends PureComponent {
         )
       ) {
         this._scrollingContainer.scrollLeft = scrollLeft
+      }
+      if (
+        !autoHeight &&
+        scrollTop >= 0 &&
+        (
+          scrollTop !== prevState.scrollTop &&
+          scrollTop !== this._scrollingContainer.scrollTop ||
+          columnOrRowCountJustIncreasedFromZero
+        )
+      ) {
+        this._scrollingContainer.scrollTop = scrollTop
       }
     }
 
@@ -1124,7 +1113,6 @@ export default class Grid extends PureComponent {
         isScrolling: true,
         scrollDirectionHorizontal,
         scrollDirectionVertical,
-        scrollLeft,
         scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.OBSERVED
       }
 

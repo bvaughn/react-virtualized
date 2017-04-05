@@ -9,14 +9,14 @@ export default class WindowScroller extends PureComponent {
     /**
      * Function responsible for rendering children.
      * This function should implement the following signature:
-     * ({ height, isScrolling, scrollTop }) => PropTypes.element
+     * ({ height, isScrolling, scrollLeft, scrollTop, width }) => PropTypes.element
      */
     children: PropTypes.func.isRequired,
 
-    /** Callback to be invoked on-resize: ({ height }) */
+    /** Callback to be invoked on-resize: ({ height, width }) */
     onResize: PropTypes.func.isRequired,
 
-    /** Callback to be invoked on-scroll: ({ scrollTop }) */
+    /** Callback to be invoked on-scroll: ({ scrollLeft, scrollTop }) */
     onScroll: PropTypes.func.isRequired,
 
     /** Element to attach scroll event listeners. Defaults to window. */
@@ -40,6 +40,7 @@ export default class WindowScroller extends PureComponent {
       height,
       width,
       isScrolling: false,
+      scrollLeft: 0,
       scrollTop: 0
     }
 
@@ -63,7 +64,10 @@ export default class WindowScroller extends PureComponent {
     this._positionFromLeft = offset.left
 
     const dimensions = getDimensions(scrollElement)
-    if (height !== dimensions.height || width !== dimensions.width) {
+    if (
+      height !== dimensions.height ||
+      width !== dimensions.width
+    ) {
       this.setState({
         height: dimensions.height,
         width: dimensions.width
