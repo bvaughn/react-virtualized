@@ -2,6 +2,9 @@ Changelog
 ------------
 
 ##### 9.6.0
+* 🐛 Fixed an invalid import in a vendored file.
+
+##### 9.6.0
 * 🎉 `WindowScroller` and `Grid` now support horizontal window-scrolling via new `autoWidth` property. ([@maxnowack](https://github.com/maxnowack) - [#644](https://github.com/bvaughn/react-virtualized/pull/644))
 * 🐛 Fixed a Content Security Policy (CSP) issue in an upstream dependency that impacted users of the `Masonry` component. For more information see issue [#640](https://github.com/bvaughn/react-virtualized/issues/640).
 * ✨ `List` and `Table` always overscan 1 row in the direction _not_ being scrolled to better support keyboard nativigation (via TAB and SHIFT+TAB). For more information see [issue #625](https://github.com/bvaughn/react-virtualized/issues/625).

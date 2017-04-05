@@ -13,8 +13,6 @@ var NOT_FOUND = 0
 var SUCCESS = 1
 var EMPTY = 2
 
-module.exports = createWrapper
-
 function IntervalTreeNode(mid, left, right, leftPoints, rightPoints) {
   this.mid = mid
   this.left = left
@@ -364,7 +362,7 @@ Object.defineProperty(tproto, "intervals", {
   }
 })
 
-function createWrapper(intervals) {
+export default function createWrapper(intervals) {
   if(!intervals || intervals.length === 0) {
     return new IntervalTree(null)
   }
