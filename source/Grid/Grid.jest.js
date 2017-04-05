@@ -4,7 +4,7 @@ import { Simulate } from 'react-addons-test-utils'
 import { render } from '../TestUtils'
 import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
 import { CellMeasurer, CellMeasurerCache } from '../CellMeasurer'
-import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './utils/defaultOverscanIndicesGetter'
+import { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTION_FORWARD } from './defaultOverscanIndicesGetter'
 import { DEFAULT_MAX_SCROLL_SIZE } from './utils/ScalingCellSizeAndPositionManager'
 
 const DEFAULT_COLUMN_WIDTH = 50
@@ -424,7 +424,7 @@ describe('Grid', () => {
       expect(grid.state.scrollTop).toEqual(920)
     })
 
-    it('should take scrollbar size into account when aligning cells', () => {
+    it('should take scrollbar size into account when aligning cells', () => {
       const grid = render(getMarkup({
         columnWidth: 50,
         columnCount: 100,

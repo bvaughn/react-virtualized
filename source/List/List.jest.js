@@ -4,6 +4,7 @@ import { render } from '../TestUtils'
 import { Simulate } from 'react-addons-test-utils'
 import Immutable from 'immutable'
 import List from './List'
+import { defaultOverscanIndicesGetter } from '../Grid'
 
 describe('List', () => {
   const array = []
@@ -11,6 +12,15 @@ describe('List', () => {
     array.push(`Name ${i}`)
   }
   const names = Immutable.fromJS(array)
+
+  // Override default behavior of overscanning by at least 1 (for accessibility)
+  // Because it makes for simple tests below
+  function overscanIndicesGetter ({ direction, cellCount, overscanCellsCount, scrollDirection, startIndex, stopIndex }) {
+    return {
+      overscanStartIndex: startIndex,
+      overscanStopIndex: stopIndex
+    }
+  }
 
   function getMarkup (props = {}) {
     function rowRenderer ({ index, key, style }) {
@@ -28,6 +38,7 @@ describe('List', () => {
     return (
       <List
         height={100}
+        overscanIndicesGetter={overscanIndicesGetter}
         overscanRowCount={0}
         rowHeight={10}
         rowCount={names.size}
@@ -281,50 +292,26 @@ describe('List', () => {
 
   describe('overscanRowCount', () => {
     it('should not overscan by default', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+      const mock = jest.fn()
+      mock.mockImplementation(overscanIndicesGetter)
+
       render(getMarkup({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params)
+        overscanIndicesGetter: mock
       }))
-      expect(overscanStartIndex).toEqual(startIndex)
-      expect(overscanStopIndex).toEqual(stopIndex)
+      expect(mock.mock.calls[0][0].overscanCellsCount).toEqual(0)
+      expect(mock.mock.calls[1][0].overscanCellsCount).toEqual(0)
     })
 
     it('should overscan the specified amount', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
-      render(getMarkup({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowCount: 10,
-        scrollToIndex: 30
-      }))
-      expect(overscanStartIndex).toEqual(21)
-      expect(startIndex).toEqual(21)
-      expect(stopIndex).toEqual(30)
-      expect(overscanStopIndex).toEqual(40)
-    })
+      const mock = jest.fn()
+      mock.mockImplementation(overscanIndicesGetter)
 
-    it('should not overscan beyond the start of the list', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
       render(getMarkup({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+        overscanIndicesGetter: mock,
         overscanRowCount: 10
       }))
-      expect(overscanStartIndex).toEqual(0)
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(9)
-      expect(overscanStopIndex).toEqual(19)
-    })
-
-    it('should not overscan beyond the end of the list', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
-      render(getMarkup({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowCount: 10,
-        rowCount: 15
-      }))
-      expect(overscanStartIndex).toEqual(0)
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(9)
-      expect(overscanStopIndex).toEqual(14)
+      expect(mock.mock.calls[0][0].overscanCellsCount).toEqual(0)
+      expect(mock.mock.calls[1][0].overscanCellsCount).toEqual(10)
     })
   })
 
@@ -446,6 +433,7 @@ describe('List', () => {
     }
     findDOMNode(render(getMarkup({
       height: 50,
+      overscanIndicesGetter: defaultOverscanIndicesGetter,
       overscanRowCount: 1,
       rowHeight: 50,
       rowRenderer

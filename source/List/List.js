@@ -1,5 +1,5 @@
 /** @flow */
-import Grid from '../Grid'
+import Grid, { accessibilityOverscanIndicesGetter } from '../Grid'
 import React, { PropTypes, PureComponent } from 'react'
 import cn from 'classnames'
 
@@ -43,17 +43,20 @@ export default class List extends PureComponent {
     onRowsRendered: PropTypes.func.isRequired,
 
     /**
-     * Number of rows to render above/below the visible bounds of the list.
-     * These rows can help for smoother scrolling on touch devices.
-     */
-    overscanRowCount: PropTypes.number.isRequired,
-
-    /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
      * ({ clientHeight, scrollHeight, scrollTop }): void
      */
     onScroll: PropTypes.func.isRequired,
+
+    /** See Grid#overscanIndicesGetter */
+    overscanIndicesGetter: PropTypes.func.isRequired,
+
+    /**
+     * Number of rows to render above/below the visible bounds of the list.
+     * These rows can help for smoother scrolling on touch devices.
+     */
+    overscanRowCount: PropTypes.number.isRequired,
 
     /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
@@ -91,6 +94,7 @@ export default class List extends PureComponent {
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
+    overscanIndicesGetter: accessibilityOverscanIndicesGetter,
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
     scrollToIndex: -1,

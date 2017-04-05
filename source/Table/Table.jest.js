@@ -28,6 +28,15 @@ describe('Table', () => {
     return array[index]
   }
 
+  // Override default behavior of overscanning by at least 1 (for accessibility)
+  // Because it makes for simple tests below
+  function overscanIndicesGetter ({ direction, cellCount, overscanCellsCount, scrollDirection, startIndex, stopIndex }) {
+    return {
+      overscanStartIndex: startIndex,
+      overscanStopIndex: stopIndex
+    }
+  }
+
   function getMarkup ({
     cellDataGetter,
     cellRenderer,
@@ -44,6 +53,7 @@ describe('Table', () => {
         headerHeight={20}
         height={100}
         overscanRowCount={0}
+        overscanIndicesGetter={overscanIndicesGetter}
         rowCount={list.size}
         rowGetter={immutableRowGetter}
         rowHeight={10}
@@ -795,50 +805,26 @@ describe('Table', () => {
 
   describe('overscanRowCount', () => {
     it('should not overscan by default', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
+      const mock = jest.fn()
+      mock.mockImplementation(overscanIndicesGetter)
+
       render(getMarkup({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params)
+        overscanIndicesGetter: mock
       }))
-      expect(overscanStartIndex).toEqual(startIndex)
-      expect(overscanStopIndex).toEqual(stopIndex)
+      expect(mock.mock.calls[0][0].overscanCellsCount).toEqual(0)
+      expect(mock.mock.calls[1][0].overscanCellsCount).toEqual(0)
     })
 
     it('should overscan the specified amount', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
-      render(getMarkup({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowCount: 10,
-        scrollToIndex: 30
-      }))
-      expect(overscanStartIndex).toEqual(23)
-      expect(startIndex).toEqual(23)
-      expect(stopIndex).toEqual(30)
-      expect(overscanStopIndex).toEqual(40)
-    })
+      const mock = jest.fn()
+      mock.mockImplementation(overscanIndicesGetter)
 
-    it('should not overscan beyond the start of the list', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
       render(getMarkup({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
+        overscanIndicesGetter: mock,
         overscanRowCount: 10
       }))
-      expect(overscanStartIndex).toEqual(0)
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(7)
-      expect(overscanStopIndex).toEqual(17)
-    })
-
-    it('should not overscan beyond the end of the list', () => {
-      let overscanStartIndex, overscanStopIndex, startIndex, stopIndex
-      render(getMarkup({
-        onRowsRendered: params => ({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex } = params),
-        overscanRowCount: 10,
-        rowCount: 15
-      }))
-      expect(overscanStartIndex).toEqual(0)
-      expect(startIndex).toEqual(0)
-      expect(stopIndex).toEqual(7)
-      expect(overscanStopIndex).toEqual(14)
+      expect(mock.mock.calls[0][0].overscanCellsCount).toEqual(0)
+      expect(mock.mock.calls[1][0].overscanCellsCount).toEqual(10)
     })
   })
 

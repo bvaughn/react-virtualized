@@ -3,7 +3,7 @@ import cn from 'classnames'
 import Column from './Column'
 import React, { PropTypes, PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
-import Grid from '../Grid'
+import Grid, { accessibilityOverscanIndicesGetter } from '../Grid'
 import defaultRowRenderer from './defaultRowRenderer'
 import defaultHeaderRowRenderer from './defaultHeaderRowRenderer'
 import SortDirection from './SortDirection'
@@ -121,6 +121,9 @@ export default class Table extends PureComponent {
      */
     onScroll: PropTypes.func.isRequired,
 
+    /** See Grid#overscanIndicesGetter */
+    overscanIndicesGetter: PropTypes.func.isRequired,
+
     /**
      * Number of rows to render above/below the visible bounds of the list.
      * These rows can help for smoother scrolling on touch devices.
@@ -208,6 +211,7 @@ export default class Table extends PureComponent {
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
+    overscanIndicesGetter: accessibilityOverscanIndicesGetter,
     overscanRowCount: 10,
     rowRenderer: defaultRowRenderer,
     headerRowRenderer: defaultHeaderRowRenderer,

@@ -8,7 +8,9 @@ export {
 export { Collection } from './Collection'
 export { ColumnSizer } from './ColumnSizer'
 export {
+  accessibilityOverscanIndicesGetter,
   defaultCellRangeRenderer,
+  defaultOverscanIndicesGetter,
   Grid
 } from './Grid'
 export { InfiniteLoader } from './InfiniteLoader'
