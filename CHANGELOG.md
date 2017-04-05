@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 9.6.0 (not yet released)
+* ✨ `List` and `Table` always overscan 1 row in the direction _not_ being scrolled to better support keyboard nativigation (via TAB and SHIFT+TAB). For more information see [issue #625](https://github.com/bvaughn/react-virtualized/issues/625).
+* ✨ `Grid` no longer alters scroll direction for one axis (eg vertical) if a scroll event occurs for another axis (eg horizontal).
+
 ##### 9.5.0
 * 🎉 `Grid` supports state-override of `isScrolling` value via new `isScrolling` prop. This enables cache-while-scrolling of cells when used with `WindowScroller`. ([@olavk](https://github.com/olavk) - [#639](https://github.com/bvaughn/react-virtualized/pull/639))
 
