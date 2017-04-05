@@ -2,7 +2,7 @@
 import { PropTypes, PureComponent } from 'react'
 import ReactDOM from 'react-dom'
 import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
-import { getHeight, getPositionFromTop, getScrollTop } from './utils/dimensions'
+import { getDimensions, getPositionOffset, getScrollOffset } from './utils/dimensions'
 
 export default class WindowScroller extends PureComponent {
   static propTypes = {
@@ -32,12 +32,13 @@ export default class WindowScroller extends PureComponent {
     super(props)
 
     // Handle server-side rendering case
-    const height = typeof window !== 'undefined'
-      ? getHeight(props.scrollElement || window)
-      : 0
+    const { width, height } = typeof window !== 'undefined'
+      ? getDimensions(props.scrollElement || window)
+      : { width: 0, height: 0 }
 
     this.state = {
       height,
+      width,
       isScrolling: false,
       scrollTop: 0
     }
@@ -54,21 +55,22 @@ export default class WindowScroller extends PureComponent {
 
   updatePosition (scrollElement) {
     const { onResize } = this.props
-    const { height } = this.state
+    const { height, width } = this.state
 
     scrollElement = scrollElement || this.props.scrollElement || window
-    this._positionFromTop = getPositionFromTop(
-      ReactDOM.findDOMNode(this),
-      scrollElement
-    )
+    const offset = getPositionOffset(ReactDOM.findDOMNode(this), scrollElement)
+    this._positionFromTop = offset.top
+    this._positionFromLeft = offset.left
 
-    const newHeight = getHeight(scrollElement)
-    if (height !== newHeight) {
+    const dimensions = getDimensions(scrollElement)
+    if (height !== dimensions.height || width !== dimensions.width) {
       this.setState({
-        height: newHeight
+        height: dimensions.height,
+        width: dimensions.width
       })
       onResize({
-        height: newHeight
+        height: dimensions.height,
+        width: dimensions.width
       })
     }
   }
@@ -103,11 +105,13 @@ export default class WindowScroller extends PureComponent {
 
   render () {
     const { children } = this.props
-    const { isScrolling, scrollTop, height } = this.state
+    const { isScrolling, scrollTop, scrollLeft, height, width } = this.state
 
     return children({
+      width,
       height,
       isScrolling,
+      scrollLeft,
       scrollTop
     })
   }
@@ -121,14 +125,18 @@ export default class WindowScroller extends PureComponent {
     const { onScroll } = this.props
 
     const scrollElement = this.props.scrollElement || window
-    const scrollTop = Math.max(0, getScrollTop(scrollElement) - this._positionFromTop)
+    const scrollOffset = getScrollOffset(scrollElement)
+    const scrollLeft = Math.max(0, scrollOffset.left - this._positionFromLeft)
+    const scrollTop = Math.max(0, scrollOffset.top - this._positionFromTop)
 
     this.setState({
       isScrolling: true,
+      scrollLeft,
       scrollTop
     })
 
     onScroll({
+      scrollLeft,
       scrollTop
     })
   }
