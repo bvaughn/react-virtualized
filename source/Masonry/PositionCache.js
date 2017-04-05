@@ -1,5 +1,5 @@
 /** @flow */
-import createIntervalTree from 'interval-tree-1d'
+import createIntervalTree from '../vendor/intervalTree'
 
 type RenderCallback = (index: number, left: number, top: number) => void;
 
