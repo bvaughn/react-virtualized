@@ -239,6 +239,19 @@ export default class Table extends PureComponent {
     this.Grid.forceUpdate()
   }
 
+  /** See Grid#getOffsetForCell */
+  getOffsetForRow ({
+    alignment,
+    index
+  }) {
+    const { scrollTop } = this.Grid.getOffsetForCell({
+      alignment,
+      rowIndex: index
+    })
+
+    return scrollTop
+  }
+
   /** See Grid#measureAllCells */
   measureAllRows () {
     this.Grid.measureAllCells()
@@ -249,6 +262,11 @@ export default class Table extends PureComponent {
     this.Grid.recomputeGridSize({
       rowIndex: index
     })
+  }
+
+  /** See Grid#scrollToPosition */
+  scrollToPosition (scrollTop = 0) {
+    this.Grid.scrollToPosition({ scrollTop })
   }
 
   /** See Grid#scrollToCell */

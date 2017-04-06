@@ -55,6 +55,10 @@ Calling `forceUpdate` on `Table` may not re-render the inner `Grid` since it use
 Use this method if you want to manually trigger a re-render.
 This may be appropriate if the underlying row data has changed but the row sizes themselves have not.
 
+##### getOffsetForRow ({ alignment: ?string, index: ?number })
+
+Gets offset for a given row and alignment.
+
 ##### measureAllRows
 Pre-measure all rows in a `Table`.
 
@@ -69,6 +73,11 @@ If the `rowHeight` is a number it can compare before and after values but if it 
 In the event that a dynamic `rowHeight` function is in use and the row heights have changed this function should be manually called by the "smart" container parent.
 
 This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered table.
+
+##### scrollToPosition (scrollTop: number)
+
+Scroll to the specified offset.
+Useful for animating position changes.
 
 ##### scrollToRow (index: number)
 
