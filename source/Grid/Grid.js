@@ -270,8 +270,6 @@ export default class Grid extends PureComponent {
     this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(this)
     this._onScroll = this._onScroll.bind(this)
     this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this)
-    this._updateScrollLeftForScrollToColumn = this._updateScrollLeftForScrollToColumn.bind(this)
-    this._updateScrollTopForScrollToRow = this._updateScrollTopForScrollToRow.bind(this)
 
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth)
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight)
@@ -385,6 +383,40 @@ export default class Grid extends PureComponent {
       ...props,
       scrollToRow: rowIndex
     })
+  }
+
+  /**
+   * Ensure offset position is visible
+   * Useful for animating position changes
+   */
+  scrollToPosition ({
+    scrollLeft,
+    scrollTop
+  } = {}) {
+    this._setScrollPosition({ scrollLeft, scrollTop })
+  }
+
+  /**
+   * Gets offsets for a given cell and alignment
+   */
+  getOffsetForCell ({
+    columnIndex,
+    rowIndex,
+    scrollToAlignment = this.props.scrollToAlignment
+  } = {}) {
+    const scrollToColumn = columnIndex >= 0 ? columnIndex : this.props.scrollToColumn
+    const scrollToRow = rowIndex >= 0 ? rowIndex : this.props.scrollToRow
+    const offsetProps = {
+      ...this.props,
+      scrollToColumn,
+      scrollToRow,
+      scrollToAlignment
+    }
+
+    return {
+      scrollLeft: this._getCalculatedScrollLeft(offsetProps),
+      scrollTop: this._getCalculatedScrollTop(offsetProps)
+    }
   }
 
   componentDidMount () {
@@ -1006,7 +1038,7 @@ export default class Grid extends PureComponent {
     return this._wrapPropertyGetter(size)
   }
 
-  _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {
+  _getCalculatedScrollLeft (props = this.props, state = this.state) {
     const { columnCount, height, scrollToAlignment, scrollToColumn, width } = props
     const { scrollLeft } = state
 
@@ -1015,22 +1047,27 @@ export default class Grid extends PureComponent {
       const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize()
       const scrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0
 
-      const calculatedScrollLeft = this._columnSizeAndPositionManager.getUpdatedOffsetForIndex({
+      return this._columnSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
         containerSize: width - scrollBarSize,
         currentOffset: scrollLeft,
         targetIndex
       })
-
-      if (scrollLeft !== calculatedScrollLeft) {
-        this._setScrollPosition({
-          scrollLeft: calculatedScrollLeft
-        })
-      }
     }
   }
 
-  _updateScrollTopForScrollToRow (props = this.props, state = this.state) {
+  _updateScrollLeftForScrollToColumn (props = this.props, state = this.state) {
+    const { scrollLeft } = state
+    const calculatedScrollLeft = this._getCalculatedScrollLeft(props, state)
+
+    if (calculatedScrollLeft >= 0 && scrollLeft !== calculatedScrollLeft) {
+      this._setScrollPosition({
+        scrollLeft: calculatedScrollLeft
+      })
+    }
+  }
+
+  _getCalculatedScrollTop (props = this.props, state = this.state) {
     const { height, rowCount, scrollToAlignment, scrollToRow, width } = props
     const { scrollTop } = state
 
@@ -1039,18 +1076,23 @@ export default class Grid extends PureComponent {
       const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize()
       const scrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0
 
-      const calculatedScrollTop = this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
+      return this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
         containerSize: height - scrollBarSize,
         currentOffset: scrollTop,
         targetIndex
       })
+    }
+  }
 
-      if (scrollTop !== calculatedScrollTop) {
-        this._setScrollPosition({
-          scrollTop: calculatedScrollTop
-        })
-      }
+  _updateScrollTopForScrollToRow (props = this.props, state = this.state) {
+    const { scrollTop } = state
+    const calculatedScrollTop = this._getCalculatedScrollTop(props, state)
+
+    if (calculatedScrollTop >= 0 && scrollTop !== calculatedScrollTop) {
+      this._setScrollPosition({
+        scrollTop: calculatedScrollTop
+      })
     }
   }
 

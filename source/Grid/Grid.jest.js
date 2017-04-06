@@ -366,6 +366,35 @@ describe('Grid', () => {
       expect(grid.state.scrollTop).toEqual(900)
     })
 
+    it('should support scrollToPosition() public method', () => {
+      const grid = render(getMarkup())
+      expect(grid.state.scrollLeft).toEqual(0)
+      expect(grid.state.scrollTop).toEqual(0)
+
+      grid.scrollToPosition({
+        scrollLeft: 50,
+        scrollTop: 50
+      })
+      expect(grid.state.scrollLeft).toEqual(50)
+      expect(grid.state.scrollTop).toEqual(50)
+    })
+
+    it('should support getOffsetForCell() public method', () => {
+      const grid = render(getMarkup())
+      const { scrollLeft, scrollTop } = grid.getOffsetForCell({
+        columnIndex: 24,
+        rowIndex: 49
+      })
+      // 100 columns * 50 item width = 5,000 total item width
+      // 4 columns can be visible at a time and :scrollLeft is initially 0,
+      // So the minimum amount of scrolling leaves the 25th item at the right (just scrolled into view).
+      expect(scrollLeft).toEqual(1050)
+      // 100 rows * 20 item height = 2,000 total item height
+      // 5 rows can be visible at a time and :scrollTop is initially 0,
+      // So the minimum amount of scrolling leaves the 50th item at the bottom (just scrolled into view).
+      expect(scrollTop).toEqual(900)
+    })
+
     // See issue #565
     it('should update scroll position to account for changed cell sizes within a function prop wrapper', () => {
       let rowHeight = 20

@@ -126,12 +126,30 @@ export default class List extends PureComponent {
     })
   }
 
+  /** See Grid#getOffsetForCell */
+  getOffsetForRow ({
+    rowIndex,
+    scrollToAlignment
+  }) {
+    const { scrollTop } = this.Grid.getOffsetForCell({
+      columnIndex: 0,
+      rowIndex,
+      scrollToAlignment
+    })
+    return scrollTop
+  }
+
   /** See Grid#scrollToCell */
   scrollToRow (index = 0) {
     this.Grid.scrollToCell({
       columnIndex: 0,
       rowIndex: index
     })
+  }
+
+  /** See Grid#scrollToPosition */
+  scrollToPosition (scrollTop = 0) {
+    this.Grid.scrollToPosition({ scrollTop })
   }
 
   render () {
