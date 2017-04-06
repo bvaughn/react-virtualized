@@ -1,8 +1,11 @@
 Changelog
 ------------
 
-##### 9.6.0
-* 🐛 Fixed an invalid import in a vendored file.
+##### 9.7.0
+* Added public animation-friendly API methods to `Grid`/`List`/`Table` for an alternative to props-based animating. ([@imadha](https://github.com/imadha) - [#641](https://github.com/bvaughn/react-virtualized/pull/641))
+
+##### 9.6.1
+* 🐛 Fixed module syntax error in vendered file.
 
 ##### 9.6.0
 * 🎉 `WindowScroller` and `Grid` now support horizontal window-scrolling via new `autoWidth` property. ([@maxnowack](https://github.com/maxnowack) - [#644](https://github.com/bvaughn/react-virtualized/pull/644))
