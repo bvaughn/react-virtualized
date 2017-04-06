@@ -41,6 +41,10 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 
 ### Public Methods
 
+##### getOffsetForCell ({ alignment: ?string, columnIndex: ?number, rowIndex: ?number })
+
+Gets offsets for a given cell and alignment.
+
 ##### measureAllCells
 
 Pre-measure all columns and rows in a `Grid`.
@@ -61,6 +65,11 @@ This method will also force a render cycle (via `forceUpdate`) to ensure that th
 
 Ensure column and row are visible.
 This method can be used to safely scroll back to a cell that a user has scrolled away from even if it was previously scrolled to.
+
+##### scrollToPosition ({ scrollLeft, scrollTop })
+
+Scroll to the specified offset(s).
+Useful for animating position changes.
 
 ### Class names
 

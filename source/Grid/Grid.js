@@ -301,6 +301,27 @@ export default class Grid extends PureComponent {
   }
 
   /**
+   * Gets offsets for a given cell and alignment.
+   */
+  getOffsetForCell ({
+    alignment = this.props.scrollToAlignment,
+    columnIndex = this.props.scrollToColumn,
+    rowIndex = this.props.scrollToRow
+  } = {}) {
+    const offsetProps = {
+      ...this.props,
+      scrollToAlignment: alignment,
+      scrollToColumn: columnIndex,
+      scrollToRow: rowIndex
+    }
+
+    return {
+      scrollLeft: this._getCalculatedScrollLeft(offsetProps),
+      scrollTop: this._getCalculatedScrollTop(offsetProps)
+    }
+  }
+
+  /**
    * Invalidate Grid size and recompute visible cells.
    * This is a deferred wrapper for recomputeGridSize().
    * It sets a flag to be evaluated on cDM/cDU to avoid unnecessary renders.
@@ -386,37 +407,14 @@ export default class Grid extends PureComponent {
   }
 
   /**
-   * Ensure offset position is visible
-   * Useful for animating position changes
+   * Scroll to the specified offset(s).
+   * Useful for animating position changes.
    */
   scrollToPosition ({
     scrollLeft,
     scrollTop
   } = {}) {
     this._setScrollPosition({ scrollLeft, scrollTop })
-  }
-
-  /**
-   * Gets offsets for a given cell and alignment
-   */
-  getOffsetForCell ({
-    columnIndex,
-    rowIndex,
-    scrollToAlignment = this.props.scrollToAlignment
-  } = {}) {
-    const scrollToColumn = columnIndex >= 0 ? columnIndex : this.props.scrollToColumn
-    const scrollToRow = rowIndex >= 0 ? rowIndex : this.props.scrollToRow
-    const offsetProps = {
-      ...this.props,
-      scrollToColumn,
-      scrollToRow,
-      scrollToAlignment
-    }
-
-    return {
-      scrollLeft: this._getCalculatedScrollLeft(offsetProps),
-      scrollTop: this._getCalculatedScrollTop(offsetProps)
-    }
   }
 
   componentDidMount () {

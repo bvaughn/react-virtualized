@@ -61,6 +61,18 @@ describe('List', () => {
     })
   })
 
+  describe('scrollToPosition', () => {
+    it('should scroll to the top', () => {
+      const instance = render(getMarkup({
+        rowHeight: 10
+      }))
+      instance.scrollToPosition(100)
+      const rendered = findDOMNode(instance)
+      expect(rendered.textContent).toContain('Name 10')
+      expect(rendered.textContent).toContain('Name 19')
+    })
+  })
+
   /** Tests scrolling via initial props */
   describe('scrollToIndex', () => {
     it('should scroll to the top', () => {

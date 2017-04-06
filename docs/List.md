@@ -36,6 +36,10 @@ Calling `forceUpdate` on `List` may not re-render the inner `Grid` since it uses
 Use this method if you want to manually trigger a re-render.
 This may be appropriate if the underlying row data has changed but the row sizes themselves have not.
 
+##### getOffsetForRow ({ alignment: ?string, index: ?number })
+
+Gets offset for a given row and alignment.
+
 ##### measureAllRows
 Pre-measure all rows in a `List`.
 
@@ -55,6 +59,11 @@ This method will also force a render cycle (via `forceUpdate`) to ensure that th
 
 Ensure row is visible.
 This method can be used to safely scroll back to a cell that a user has scrolled away from even if it was previously scrolled to.
+
+##### scrollToPosition (scrollTop: number)
+
+Scroll to the specified offset.
+Useful for animating position changes.
 
 ### rowRenderer
 

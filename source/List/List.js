@@ -128,14 +128,14 @@ export default class List extends PureComponent {
 
   /** See Grid#getOffsetForCell */
   getOffsetForRow ({
-    rowIndex,
-    scrollToAlignment
+    alignment,
+    index
   }) {
     const { scrollTop } = this.Grid.getOffsetForCell({
-      columnIndex: 0,
-      rowIndex,
-      scrollToAlignment
+      alignment,
+      rowIndex: index
     })
+
     return scrollTop
   }
 

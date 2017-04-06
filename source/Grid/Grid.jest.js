@@ -364,6 +364,20 @@ describe('Grid', () => {
       // 5 rows can be visible at a time and :scrollTop is initially 0,
       // So the minimum amount of scrolling leaves the 50th item at the bottom (just scrolled into view).
       expect(grid.state.scrollTop).toEqual(900)
+
+      // Change column without affecting row
+      grid.scrollToCell({
+        columnIndex: 49
+      })
+      expect(grid.state.scrollLeft).toEqual(2300)
+      expect(grid.state.scrollTop).toEqual(900)
+
+      // Change row without affecting column
+      grid.scrollToCell({
+        rowIndex: 99
+      })
+      expect(grid.state.scrollLeft).toEqual(2300)
+      expect(grid.state.scrollTop).toEqual(1900)
     })
 
     it('should support scrollToPosition() public method', () => {
@@ -373,9 +387,23 @@ describe('Grid', () => {
 
       grid.scrollToPosition({
         scrollLeft: 50,
-        scrollTop: 50
+        scrollTop: 100
       })
       expect(grid.state.scrollLeft).toEqual(50)
+      expect(grid.state.scrollTop).toEqual(100)
+
+      // Change column without affecting row
+      grid.scrollToPosition({
+        scrollLeft: 25
+      })
+      expect(grid.state.scrollLeft).toEqual(25)
+      expect(grid.state.scrollTop).toEqual(100)
+
+      // Change row without affecting column
+      grid.scrollToPosition({
+        scrollTop: 50
+      })
+      expect(grid.state.scrollLeft).toEqual(25)
       expect(grid.state.scrollTop).toEqual(50)
     })
 
