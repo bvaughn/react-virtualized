@@ -137,7 +137,7 @@ export default class WindowScrollerExample extends PureComponent {
         className={className}
         style={style}
       >
-        <i style={{marginRight: 5}}>{index}</i>{row.name}
+        {row.name}
       </div>
     )
   }
