@@ -129,26 +129,16 @@ export default class WindowScroller extends PureComponent {
   _onChildScroll ({ scrollTop }) {
     if (this.state.scrollTop === scrollTop) return
 
-    // Need this setTimeout here because otherwise for some reason by the time the 'scroll'
-    // event that happens after the `scrollTo` call, the `window.scrollY` value is incorrect.
-    // Visually, if setTimeout is not here, the scroll position changes back to the top
-    // even after calling `scrollTo` below.
-    // What makes this even weirder, this happens only if you scroll to a row index
-    // via the `scrollToRow` prop. This does not happen with the imperative method.
-    // setTimeout(() => {
-      const scrollElement = this.scrollElement
-      if (scrollElement.scrollTo) {
-        scrollElement.scrollTo(0, scrollTop + this._positionFromTop)
-        console.log('window.scrollY right after calling scrollTo', window.scrollY)
-      } else {
-        scrollElement.scrollTop = scrollTop + this._positionFromTop
-      }
-    // }, 0)
+    const scrollElement = this.scrollElement
+    if (scrollElement.scrollTo) {
+      scrollElement.scrollTo(0, scrollTop + this._positionFromTop)
+    } else {
+      scrollElement.scrollTop = scrollTop + this._positionFromTop
+    }
   }
 
   // Referenced by utils/onScroll
   __handleWindowScrollEvent (event) {
-    console.log('window.scrollY in scroll event', window.scrollY)
     const { onScroll } = this.props
 
     const scrollElement = this.props.scrollElement || window

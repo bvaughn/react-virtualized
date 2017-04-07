@@ -158,6 +158,8 @@ export default class WindowScrollerExample extends PureComponent {
       scrollToIndex = undefined
     }
 
-    this.setState({ scrollToIndex })
+    setTimeout(() => {
+      this.setState({ scrollToIndex })
+    }, 0)
   }
 }
