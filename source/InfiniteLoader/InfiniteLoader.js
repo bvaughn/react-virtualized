@@ -1,5 +1,6 @@
 /** @flow */
-import { PropTypes, PureComponent } from 'react'
+import { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 
 /**

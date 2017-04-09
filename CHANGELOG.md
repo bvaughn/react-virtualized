@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.7.2
+* ✨ Removed lingering `React.PropTypes` reference in `InfiniteLoader`.
+
 ##### 9.7.1
 * ✨ Added `prop-types` dependency to avoid deprecation warnings for React 15.5+.
 
