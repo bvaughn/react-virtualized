@@ -1,5 +1,6 @@
 /** @flow */
-import { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import { PureComponent } from 'react'
 
 /**
  * High-order component that auto-calculates column-widths for `Grid` cells.

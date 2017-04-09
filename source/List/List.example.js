@@ -3,7 +3,8 @@
  */
 import cn from 'classnames'
 import Immutable from 'immutable'
-import React, { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import styles from './List.example.css'
 import AutoSizer from '../AutoSizer'
 import List from './List'

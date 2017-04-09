@@ -1,6 +1,7 @@
 /** @flow */
 import Immutable from 'immutable'
-import React, { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import CellMeasurer from './CellMeasurer'
 import CellMeasurerCache from './CellMeasurerCache'
 import MultiGrid from '../MultiGrid'

@@ -1,6 +1,7 @@
 /** @flow */
 import Immutable from 'immutable'
-import React, { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import { HashRouter, Match, Redirect } from 'react-router'
 
 import ComponentLink from './ComponentLink'

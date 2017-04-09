@@ -1,5 +1,6 @@
 /** @flow */
-import React, { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import cn from 'classnames'
 import createCallbackMemoizer from '../utils/createCallbackMemoizer'
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'

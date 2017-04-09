@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.7.1
+* ✨ Added `prop-types` dependency to avoid deprecation warnings for React 15.5+.
+
 ##### 9.7.0
 * Added public animation-friendly API methods to `Grid`/`List`/`Table` for an alternative to props-based animating. ([@imadha](https://github.com/imadha) - [#641](https://github.com/bvaughn/react-virtualized/pull/641))
 

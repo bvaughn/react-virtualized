@@ -1,6 +1,7 @@
 /** @flow */
 import Grid, { accessibilityOverscanIndicesGetter } from '../Grid'
-import React, { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import cn from 'classnames'
 
 /**

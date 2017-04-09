@@ -1,7 +1,8 @@
 /** @flow */
 import cn from 'classnames'
 import Column from './Column'
-import React, { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
 import Grid, { accessibilityOverscanIndicesGetter } from '../Grid'
 import defaultRowRenderer from './defaultRowRenderer'

@@ -1,5 +1,6 @@
 /** @flow */
-import { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import { PureComponent } from 'react'
 import ReactDOM from 'react-dom'
 import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
 import { getDimensions, getPositionOffset, getScrollOffset } from './utils/dimensions'

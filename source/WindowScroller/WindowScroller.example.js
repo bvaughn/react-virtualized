@@ -1,7 +1,8 @@
 /** @flow */
 import cn from 'classnames'
 import Immutable from 'immutable'
-import React, { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
 import WindowScroller from './WindowScroller'
 import List from '../List'

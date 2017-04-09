@@ -1,5 +1,6 @@
 /** @flow */
-import React, { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import createDetectElementResize from '../vendor/detectElementResize'
 
 /**

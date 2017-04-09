@@ -1,4 +1,5 @@
-import { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import { PureComponent } from 'react'
 
 /**
  * HOC that simplifies the process of synchronizing scrolling between two or more virtualized components.

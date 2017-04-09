@@ -3,7 +3,7 @@
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
-  "version": "9.7.0",
+  "version": "9.7.1",
   "homepage": "https://github.com/bvaughn/react-virtualized",
   "main": "dist/commonjs/index.js",
   "module": "dist/es/index.js",
@@ -150,7 +150,8 @@
     "babel-runtime": "^6.11.6",
     "classnames": "^2.2.3",
     "dom-helpers": "^2.4.0 || ^3.0.0",
-    "loose-envify": "^1.3.0"
+    "loose-envify": "^1.3.0",
+    "prop-types": "^15.5.4"
   },
   "peerDependencies": {
     "react": "^15.3.0 || ^16.0.0-alpha",

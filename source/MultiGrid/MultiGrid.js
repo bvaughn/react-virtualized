@@ -1,5 +1,6 @@
 /** @flow */
-import React, { PropTypes, PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import Grid from '../Grid'
 
 const SCROLLBAR_SIZE_BUFFER = 20
