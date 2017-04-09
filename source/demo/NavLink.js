@@ -1,6 +1,6 @@
 /** @flow */
 import React from 'react'
-import { Link } from 'react-router'
+import { NavLink as RRNavLink } from 'react-router-dom'
 import Icon from './Icon'
 import styles from './NavLink.css'
 
@@ -19,13 +19,13 @@ export default function NavLink ({ children, href, iconType, to }) {
 
   if (to) {
     link = (
-      <Link
+      <RRNavLink
         activeClassName={styles.ActiveNavLink}
         className={styles.NavLink}
         to={to}
       >
         {icon} {children}
-      </Link>
+      </RRNavLink>
     )
   } else {
     link = (

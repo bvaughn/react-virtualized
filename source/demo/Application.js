@@ -2,7 +2,8 @@
 import Immutable from 'immutable'
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
-import { HashRouter, Match, Redirect } from 'react-router'
+import { Redirect } from 'react-router'
+import { HashRouter, Route } from 'react-router-dom'
 
 import ComponentLink from './ComponentLink'
 import styles from './Application.css'
@@ -128,17 +129,17 @@ export default class Application extends PureComponent {
 
           <div className={bodyStyle} ref={e => this.setState({ customElement: e })}>
             <div className={styles.column}>
-              <Match pattern='/wizard' component={Wizard} />
+              <Route path='/wizard' component={Wizard} />
               {Object.keys(COMPONENT_EXAMPLES_MAP).map((route) => (
-                <Match
-                  component={COMPONENT_EXAMPLES_MAP[route]}
+                <Route
                   key={route}
-                  pattern={route}
+                  path={route}
+                  component={COMPONENT_EXAMPLES_MAP[route]}
                 />
               ))}
-              <Match
+              <Route
                 exactly
-                pattern='/'
+                path='/'
                 render={() => (
                   <Redirect to='/components/List' />
                 )}

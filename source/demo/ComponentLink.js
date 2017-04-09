@@ -1,18 +1,18 @@
 /** @flow */
 import React from 'react'
-import { Link } from 'react-router'
+import { NavLink } from 'react-router-dom'
 import styles from './ComponentLink.css'
 
 export default function ComponentLink ({ children, to }) {
   return (
     <li className={styles.NavListItem}>
-      <Link
+      <NavLink
         activeClassName={styles.ActiveComponentLink}
         className={styles.ComponentLink}
         to={to}
       >
         {children}
-      </Link>
+      </NavLink>
     </li>
   )
 }

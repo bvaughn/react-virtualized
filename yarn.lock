@@ -2651,14 +2651,14 @@ header-case@^1.0.0:
     no-case "^2.2.0"
     upper-case "^1.1.3"
 
-history@^4.3.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/history/-/history-4.4.0.tgz#b1369588cb9e5d80219d0b1f866b0ac62c14a7f8"
+history@^4.5.1, history@^4.6.0:
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/history/-/history-4.6.1.tgz#911cf8eb65728555a94f2b12780a0c531a14d2fd"
   dependencies:
     invariant "^2.2.1"
     loose-envify "^1.2.0"
     resolve-pathname "^2.0.0"
-    value-equal "^0.1.1"
+    value-equal "^0.2.0"
     warning "^3.0.0"
 
 hoek@2.x.x:
@@ -2840,9 +2840,9 @@ interpret@^0.6.4:
   version "0.6.6"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-0.6.6.tgz#fecd7a18e7ce5ca6abfb953e1f86213a49f1625b"
 
-invariant@^2.2.0, invariant@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.1.tgz#b097010547668c7e337028ebe816ebe36c8a8d54"
+invariant@^2.2.0, invariant@^2.2.1, invariant@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.2.tgz#9e1f56ac0acdb6bf303306f338be3b204ae60360"
   dependencies:
     loose-envify "^1.0.0"
 
@@ -3612,7 +3612,13 @@ longest@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
 
-loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.2.0, loose-envify@^1.3.0:
+loose-envify@^1.0.0, loose-envify@^1.2.0, loose-envify@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.3.1.tgz#d1a8ad33fa9ce0e713d65fdd0ac8b748d478c848"
+  dependencies:
+    js-tokens "^3.0.0"
+
+loose-envify@^1.1.0, loose-envify@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.3.0.tgz#6b26248c42f6d4fa4b0d8542f78edfcde35642a8"
   dependencies:
@@ -4547,7 +4553,7 @@ qs@~6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.3.0.tgz#f403b264f23bc01228c74131b407f18d5ea5d442"
 
-query-string@4.2.3, query-string@^4.1.0:
+query-string@^4.1.0:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/query-string/-/query-string-4.2.3.tgz#9f27273d207a25a8ee4c7b8c74dcd45d556db822"
   dependencies:
@@ -4599,12 +4605,6 @@ react-addons-test-utils@16.0.0-alpha.2:
     fbjs "^0.8.9"
     object-assign "^4.1.0"
 
-react-broadcast@^0.1.1:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/react-broadcast/-/react-broadcast-0.1.2.tgz#950de63578a2af399a396067a617af7402182330"
-  dependencies:
-    invariant "^2.2.1"
-
 react-codemirror@^0.2.6:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/react-codemirror/-/react-codemirror-0.2.6.tgz#e71e35717ce6effae68df1dbf2b5a75b84a44f84"
@@ -4632,14 +4632,22 @@ react-proxy@^1.1.7:
     lodash "^4.6.1"
     react-deep-force-update "^1.0.0"
 
-react-router@^4.0.0-alpha.5:
-  version "4.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-4.0.0-alpha.5.tgz#9d80514f9bbbec040dffbd4f9cf241da2830e318"
+react-router-dom@4.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-4.0.0.tgz#4fa4418e14b8cfc5bcc0bdea0c4083fb8c2aef10"
   dependencies:
-    history "^4.3.0"
+    history "^4.5.1"
+    react-router "^4.0.0"
+
+react-router@4.0, react-router@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-4.0.0.tgz#6532075231f0bb5077c2005c1d417ad6165b3997"
+  dependencies:
+    history "^4.6.0"
+    invariant "^2.2.2"
+    loose-envify "^1.3.1"
     path-to-regexp "^1.5.3"
-    query-string "4.2.3"
-    react-broadcast "^0.1.1"
+    warning "^3.0.0"
 
 react-transform-catch-errors@^1.0.2:
   version "1.0.2"
@@ -5586,9 +5594,9 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
 
-value-equal@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/value-equal/-/value-equal-0.1.1.tgz#b174df21f203c81e17f2e4d59d3a900024cbef7b"
+value-equal@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/value-equal/-/value-equal-0.2.0.tgz#4f41c60a3fc011139a2ec3d3340a8998ae8b69c0"
 
 vary@~1.1.0:
   version "1.1.0"
