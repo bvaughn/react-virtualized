@@ -6,6 +6,7 @@ Documentation
 * [Collection](Collection.md)
 * [Grid](Grid.md)
 * [List](List.md)
+* [Masonry](Masonry.md)
 * [Table](Table.md)
   * [Column](Column.md)
   * [SortDirection](SortDirection.md)

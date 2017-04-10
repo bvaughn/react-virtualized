@@ -188,6 +188,7 @@ Here are some online demos of each component:
 * [Grid](https://bvaughn.github.io/react-virtualized/#/components/Grid)
 * [InfiniteLoader](https://bvaughn.github.io/react-virtualized/#/components/InfiniteLoader)
 * [List](https://bvaughn.github.io/react-virtualized/#/components/List)
+* [Masonry](https://bvaughn.github.io/react-virtualized/#/components/Masonry)
 * [MultiGrid](https://bvaughn.github.io/react-virtualized/#/components/MultiGrid)
 * [ScrollSync](https://bvaughn.github.io/react-virtualized/#/components/ScrollSync)
 * [Table](https://bvaughn.github.io/react-virtualized/#/components/Table)
