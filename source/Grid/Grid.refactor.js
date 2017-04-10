@@ -1,6 +1,5 @@
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
-import React, { Component } from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import React, { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
 
 // When a user scrolls slower than this we should smooth scroll.
@@ -32,7 +31,7 @@ type PropTypes = {
   width: number
 };
 
-export default class Grid extends Component {
+export default class Grid extends PureComponent {
   prop: PropTypes;
 
   static defaultProps = {
@@ -246,10 +245,6 @@ export default class Grid extends Component {
         </div>
       </div>
     )
-  }
-
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
   }
 
   /**
