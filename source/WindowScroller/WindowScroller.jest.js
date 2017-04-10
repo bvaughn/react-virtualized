@@ -7,7 +7,7 @@ import { IS_SCROLLING_TIMEOUT } from './utils/onScroll'
 import WindowScroller from './WindowScroller'
 
 class ChildComponent extends React.Component {
-  render() {
+  render () {
     const { scrollTop, isScrolling, height } = this.props
 
     return (
@@ -328,7 +328,7 @@ describe('WindowScroller', () => {
     let originalScrollTo
     beforeEach(() => {
       originalScrollTo = window.scrollTo
-      window.scrollTo = (scrollX, scrollY) => simulateWindowScroll({ scrollX, scrollY });
+      window.scrollTo = (scrollX, scrollY) => simulateWindowScroll({ scrollX, scrollY })
     })
 
     afterEach(() => {
@@ -354,13 +354,9 @@ describe('WindowScroller', () => {
     })
 
     it('should not scroll the scrollElement if trying to scroll to where we already are', () => {
-      let windowScroller, childComponent
-
+      let childComponent
 
       render(getMarkup({
-        ref: (ref) => {
-          windowScroller = ref
-        },
         childRef: (ref) => {
           childComponent = ref
         }
