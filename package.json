@@ -30,7 +30,7 @@
     "prepublish": "npm run build",
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --config webpack.config.dev.js",
     "test": "npm run lint && npm run test:jest",
-    "test:jest": "jest --no-watchman",
+    "test:jest": "jest --no-watchman --runInBand",
     "watch": "watch 'clear && npm run test -s' source",
     "watch:jest": "jest --no-watchman --watch"
   },
