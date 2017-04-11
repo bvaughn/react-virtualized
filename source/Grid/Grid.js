@@ -552,6 +552,12 @@ export default class Grid extends PureComponent {
     // Update onRowsRendered callback if start/stop indices have changed
     this._invokeOnGridRenderedHelper()
 
+    // If scrolling is controlled outside this component, trigger a scroll end
+    // whenever we are no longer scrolling
+    if (prevProps.isScrolling === true && this.props.isScrolling === false) {
+      this._debounceScrollEnded()
+    }
+
     // Changes to :scrollLeft or :scrollTop should also notify :onScroll listeners
     if (
       scrollLeft !== prevState.scrollLeft ||

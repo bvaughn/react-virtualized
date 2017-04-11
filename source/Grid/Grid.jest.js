@@ -1383,6 +1383,45 @@ describe('Grid', () => {
       done()
     })
 
+    it('should clear cache once :isScrolling via props is false', async () => {
+      const cellRendererCalls = []
+      function cellRenderer ({ columnIndex, key, rowIndex, style }) {
+        cellRendererCalls.push({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, key, rowIndex, style })
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollTop: 0,
+        isScrolling: true,
+        width: 100
+      }
+
+      render(getMarkup(props))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+
+      render(getMarkup({
+        ...props,
+        isScrolling: false
+      }))
+
+      // Allow scrolling timeout to complete so that cell cache is reset
+      await new Promise(resolve => setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL * 2))
+
+      cellRendererCalls.splice(0)
+
+      render(getMarkup({
+        ...props,
+        isScrolling: true
+      }))
+      expect(cellRendererCalls.length).not.toEqual(0)
+    })
+
     it('should clear cache if :recomputeGridSize is called', () => {
       const cellRendererCalls = []
       function cellRenderer ({ columnIndex, key, rowIndex, style }) {
