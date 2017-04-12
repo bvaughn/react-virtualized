@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.7.3
+* Clear cell and style cache when controlled-scroll mode `Grid` stops scrolling. ([@leoasis](https://github.com/leoasis) - [#649](https://github.com/bvaughn/react-virtualized/pull/649))
+
 ##### 9.7.2
 * ✨ Removed lingering `React.PropTypes` reference in `InfiniteLoader`.
 
