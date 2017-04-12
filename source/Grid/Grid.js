@@ -552,12 +552,6 @@ export default class Grid extends PureComponent {
     // Update onRowsRendered callback if start/stop indices have changed
     this._invokeOnGridRenderedHelper()
 
-    // If scrolling is controlled outside this component, trigger a scroll end
-    // whenever we are no longer scrolling
-    if (prevProps.isScrolling === true && this.props.isScrolling === false) {
-      this._debounceScrollEnded()
-    }
-
     // Changes to :scrollLeft or :scrollTop should also notify :onScroll listeners
     if (
       scrollLeft !== prevState.scrollLeft ||
@@ -658,6 +652,15 @@ export default class Grid extends PureComponent {
     ) {
       columnCount = 0
       rowCount = 0
+    }
+
+    // If scrolling is controlled outside this component, clear cache when scrolling stops
+    if (
+      nextProps.autoHeight &&
+      nextProps.isScrolling === false &&
+      this.props.isScrolling === true
+    ) {
+      this._resetStyleCache()
     }
 
     // Update scroll offsets if the size or number of cells have changed, invalidating the previous value
@@ -904,27 +907,7 @@ export default class Grid extends PureComponent {
 
   _debounceScrollEndedCallback () {
     this._disablePointerEventsTimeoutId = null
-
-    const styleCache = this._styleCache
-
-    // Reset cell and style caches once scrolling stops.
-    // This makes Grid simpler to use (since cells commonly change).
-    // And it keeps the caches from growing too large.
-    // Performance is most sensitive when a user is scrolling.
-    this._cellCache = {}
-    this._styleCache = {}
-
-    // Copy over the visible cell styles so avoid unnecessary re-render.
-    for (let rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) {
-      for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
-        let key = `${rowIndex}-${columnIndex}`
-        this._styleCache[key] = styleCache[key]
-      }
-    }
-
-    this.setState({
-      isScrolling: false
-    })
+    this._resetStyleCache()
   }
 
   _getEstimatedColumnSize (props) {
@@ -1088,6 +1071,29 @@ export default class Grid extends PureComponent {
         targetIndex
       })
     }
+  }
+
+  _resetStyleCache () {
+    const styleCache = this._styleCache
+
+    // Reset cell and style caches once scrolling stops.
+    // This makes Grid simpler to use (since cells commonly change).
+    // And it keeps the caches from growing too large.
+    // Performance is most sensitive when a user is scrolling.
+    this._cellCache = {}
+    this._styleCache = {}
+
+    // Copy over the visible cell styles so avoid unnecessary re-render.
+    for (let rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) {
+      for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
+        let key = `${rowIndex}-${columnIndex}`
+        this._styleCache[key] = styleCache[key]
+      }
+    }
+
+    this.setState({
+      isScrolling: false
+    })
   }
 
   _updateScrollTopForScrollToRow (props = this.props, state = this.state) {
