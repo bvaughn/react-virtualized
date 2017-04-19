@@ -3,7 +3,7 @@ Thanks for using react-virtualized! :)
 Before creating an issue...
 
 # Are you asking a question?
-Please don't file Github issues to ask questions. Use Stack Overflow with a #react-virtualized tag [http://stackoverflow.com/questions/tagged/react-virtualized] or ask in the react-virtualized Slack channel [https://react-virtualized.now.sh].
+Please don't file GitHub issues to ask questions. Use Stack Overflow with a #react-virtualized tag [http://stackoverflow.com/questions/tagged/react-virtualized] or ask in the react-virtualized Slack channel [https://react-virtualized.now.sh].
 
 # Are you reporting a bug or runtime error?
 Please include either a failing unit test or a Plnkr demonstrating the bug you are reporting. You can start by forking this Plnk! https://plnkr.co/edit/6syKo8cx3RfoO96hXFT1
