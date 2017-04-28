@@ -23,6 +23,9 @@ export default class AutoSizer extends PureComponent {
     /** Disable dynamic :width property */
     disableWidth: PropTypes.bool,
 
+    /** Nonce of the inlined stylesheet for Content Security Policy */
+    nonce: PropTypes.string,
+
     /** Callback to be invoked on-resize: ({ height, width }) */
     onResize: PropTypes.func.isRequired
   };
@@ -51,7 +54,7 @@ export default class AutoSizer extends PureComponent {
 
     // Defer requiring resize handler in order to support server-side rendering.
     // See issue #41
-    this._detectElementResize = createDetectElementResize()
+    this._detectElementResize = createDetectElementResize(this.props.nonce)
     this._detectElementResize.addResizeListener(this._parentNode, this._onResize)
 
     this._onResize()
