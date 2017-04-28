@@ -138,7 +138,7 @@ export default class Application extends PureComponent {
                 />
               ))}
               <Route
-                exactly
+                exact
                 path='/'
                 render={() => (
                   <Redirect to='/components/List' />
