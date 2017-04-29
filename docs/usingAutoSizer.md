@@ -75,3 +75,15 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
 ```
 
 You can see an example of this [here](https://bvaughn.github.io/react-virtualized/#/components/InfiniteLoader).
+
+### Applying Content Security Policy
+[The specification of Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#intro)
+describes as the following:
+
+> This document defines Content Security Policy, a mechanism web applications
+> can use to mitigate a broad class of content injection vulnerabilities, such
+> as cross-site scripting (XSS).
+
+To apply Content Security Policy, you need to pass a nonce to
+_react-virtualized_ and accordingly set `nonce-source` to `Content-Security-Policy` field
+in HTTP header.

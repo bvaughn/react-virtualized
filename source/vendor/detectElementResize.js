@@ -7,9 +7,10 @@
  * 1) Guard against unsafe 'window' and 'document' references (to support SSR).
  * 2) Defer initialization code via a top-level function wrapper (to support SSR).
  * 3) Avoid unnecessary reflows by not measuring size for scroll events bubbling from children.
+ * 4) Add nonce for style element.
  **/
 
-export default function createDetectElementResize () {
+export default function createDetectElementResize (nonce) {
   // Check `document` and `window` in case of server-side rendering
   var _window
   if (typeof window !== 'undefined') {
@@ -118,6 +119,7 @@ export default function createDetectElementResize () {
 
       style.id = 'detectElementResize';
       style.type = 'text/css';
+      style.setAttribute('nonce', nonce);
       if (style.styleSheet) {
         style.styleSheet.cssText = css;
       } else {
