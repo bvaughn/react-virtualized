@@ -5,7 +5,7 @@
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize'
 import React from 'react'
 import { findDOMNode } from 'react-dom'
-import { Simulate } from 'react-addons-test-utils'
+import { Simulate } from 'react-dom/test-utils'
 import { render } from '../TestUtils'
 import Collection from './Collection'
 import { CELLS, SECTION_SIZE } from './TestData'

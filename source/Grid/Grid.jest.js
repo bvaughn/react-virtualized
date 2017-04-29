@@ -1,6 +1,6 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
-import { Simulate } from 'react-addons-test-utils'
+import { Simulate } from 'react-dom/test-utils'
 import { render } from '../TestUtils'
 import Grid, { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from './Grid'
 import { CellMeasurer, CellMeasurerCache } from '../CellMeasurer'
@@ -1887,11 +1887,12 @@ describe('Grid', () => {
           <CellMeasurer
             cache={cache}
             columnIndex={params.columnIndex}
+            key={params.key}
             parent={params.parent}
             rowIndex={params.rowIndex}
             style={params.style}
           >
-            <div key={params.key} />
+            <div />
           </CellMeasurer>
         )
       )

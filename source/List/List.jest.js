@@ -1,7 +1,7 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
-import { Simulate } from 'react-addons-test-utils'
+import { Simulate } from 'react-dom/test-utils'
 import Immutable from 'immutable'
 import List from './List'
 import { defaultOverscanIndicesGetter } from '../Grid'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
-import { Simulate } from 'react-addons-test-utils'
+import { Simulate } from 'react-dom/test-utils'
 import { render } from '../TestUtils'
 import createCellPositionerUtil from './createCellPositioner'
 import Masonry from './Masonry'

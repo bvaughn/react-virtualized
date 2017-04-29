@@ -2,7 +2,7 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import ArrowKeyStepper from './ArrowKeyStepper'
-import { Simulate } from 'react-addons-test-utils'
+import { Simulate } from 'react-dom/test-utils'
 
 function renderTextContent (scrollToColumn, scrollToRow) {
   return `scrollToColumn:${scrollToColumn}, scrollToRow:${scrollToRow}`
