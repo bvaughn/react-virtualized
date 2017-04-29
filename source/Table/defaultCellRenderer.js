@@ -8,10 +8,11 @@ import type { CellRendererParams } from './types'
 export default function defaultCellRenderer ({
   cellData,
   columnData,
+  columnIndex,
   dataKey,
+  isScrolling,
   rowData,
-  rowIndex,
-  columnIndex
+  rowIndex
 }: CellRendererParams): string {
   if (cellData == null) {
     return ''

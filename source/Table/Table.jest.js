@@ -259,7 +259,7 @@ describe('Table', () => {
   describe('forceUpdateGrid', () => {
     it('should refresh inner Grid content when called', () => {
       let marker = 'a'
-      function cellRenderer ({ cellData, columnData, dataKey, rowData, rowIndex, columnIndex }) {
+      function cellRenderer ({ rowIndex }) {
         return `${rowIndex}${marker}`
       }
       const component = render(getMarkup({ cellRenderer }))
@@ -284,7 +284,7 @@ describe('Table', () => {
 
     it('should use a custom cellRenderer if specified', () => {
       const rendered = findDOMNode(render(getMarkup({
-        cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex, columnIndex }) => `Custom ${cellData}`
+        cellRenderer: ({ cellData }) => `Custom ${cellData}`
       })))
       const nameColumns = rendered.querySelectorAll('.ReactVirtualized__Table__rowColumn:first-of-type')
       Array.from(nameColumns).forEach((nameColumn, index) => {
@@ -295,7 +295,7 @@ describe('Table', () => {
 
     it('should set the rendered cell content as the cell :title if it is a string', () => {
       const rendered = findDOMNode(render(getMarkup({
-        cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex, columnIndex }) => 'Custom'
+        cellRenderer: () => 'Custom'
       })))
       const nameColumn = rendered.querySelector('.ReactVirtualized__Table__rowColumn:first-of-type')
       expect(nameColumn.getAttribute('title')).toContain('Custom')
@@ -303,7 +303,7 @@ describe('Table', () => {
 
     it('should not set a cell :title if the rendered cell content is not a string', () => {
       const rendered = findDOMNode(render(getMarkup({
-        cellRenderer: ({ cellData, columnData, dataKey, rowData, rowIndex, columnIndex }) => <div>Custom</div>
+        cellRenderer: () => <div>Custom</div>
       })))
       const nameColumn = rendered.querySelector('.ReactVirtualized__Table__rowColumn:first-of-type')
       expect(nameColumn.getAttribute('title')).toEqual(null)

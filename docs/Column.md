@@ -48,6 +48,7 @@ It should implement the following signature:
 function ({
   cellData: any,
   columnData: any,
+  columnIndex: number,
   dataKey: string,
   isScrolling: boolean,
   rowData: any,
