@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 9.7.4
+* 🎉 Add `nonce` attribute to `AutoSizer` for better [Content Security Policy compliance](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute). ([@akihikodaki](https://github.com/akihikodaki) - [#663](https://github.com/bvaughn/react-virtualized/pull/663))
+* ✨ `Column` renderers now accept a `columnIndex` parameter as well. This allows multiple `Table` columns to more easily use `CellMeasurer` to compute the min row height. ([@BamaBoy](https://github.com/BamaBoy) - [#662](https://github.com/bvaughn/react-virtualized/pull/662))
+
 ##### 9.7.3
 * Clear cell and style cache when controlled-scroll mode `Grid` stops scrolling. ([@leoasis](https://github.com/leoasis) - [#649](https://github.com/bvaughn/react-virtualized/pull/649))
 
