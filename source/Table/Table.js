@@ -388,7 +388,7 @@ export default class Table extends PureComponent {
     } = column.props
 
     const cellData = cellDataGetter({ columnData, dataKey, rowData })
-    const renderedCell = cellRenderer({ cellData, columnData, dataKey, isScrolling, parent, rowData, rowIndex })
+    const renderedCell = cellRenderer({ cellData, columnData, dataKey, isScrolling, parent, rowData, rowIndex, columnIndex })
 
     const style = this._cachedColumnStyles[columnIndex]
 

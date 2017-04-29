@@ -10,7 +10,8 @@ export default function defaultCellRenderer ({
   columnData,
   dataKey,
   rowData,
-  rowIndex
+  rowIndex,
+  columnIndex
 }: CellRendererParams): string {
   if (cellData == null) {
     return ''
