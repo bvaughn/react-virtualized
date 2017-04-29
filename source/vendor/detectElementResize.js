@@ -119,7 +119,11 @@ export default function createDetectElementResize (nonce) {
 
       style.id = 'detectElementResize';
       style.type = 'text/css';
-      style.setAttribute('nonce', nonce);
+
+      if (nonce != null) {
+        style.setAttribute('nonce', nonce);
+      }
+
       if (style.styleSheet) {
         style.styleSheet.cssText = css;
       } else {

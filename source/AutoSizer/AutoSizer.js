@@ -47,6 +47,8 @@ export default class AutoSizer extends PureComponent {
   }
 
   componentDidMount () {
+    const { nonce } = this.props
+
     // Delay access of parentNode until mount.
     // This handles edge-cases where the component has already been unmounted before its ref has been set,
     // As well as libraries like react-lite which have a slightly different lifecycle.
@@ -54,7 +56,7 @@ export default class AutoSizer extends PureComponent {
 
     // Defer requiring resize handler in order to support server-side rendering.
     // See issue #41
-    this._detectElementResize = createDetectElementResize(this.props.nonce)
+    this._detectElementResize = createDetectElementResize(nonce)
     this._detectElementResize.addResizeListener(this._parentNode, this._onResize)
 
     this._onResize()

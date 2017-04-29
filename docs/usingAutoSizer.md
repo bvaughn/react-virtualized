@@ -84,6 +84,4 @@ describes as the following:
 > can use to mitigate a broad class of content injection vulnerabilities, such
 > as cross-site scripting (XSS).
 
-To apply Content Security Policy, you need to pass a nonce to
-_react-virtualized_ and accordingly set `nonce-source` to `Content-Security-Policy` field
-in HTTP header.
+To apply Content Security Policy, pass a `nonce` to _react-virtualized_ and add a matching `nonce-source` to the `Content-Security-Policy` field in HTTP header.
