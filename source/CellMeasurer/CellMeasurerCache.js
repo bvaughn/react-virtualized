@@ -1,4 +1,5 @@
 /** @flow */
+import defaultKeyMapper from '../utils/defaultKeyMapper'
 
 export const DEFAULT_HEIGHT = 30
 export const DEFAULT_WIDTH = 100
@@ -240,11 +241,4 @@ export default class CellMeasurerCache {
     this._columnWidthCache[columnKey] = columnWidth
     this._rowHeightCache[rowKey] = rowHeight
   }
-}
-
-function defaultKeyMapper (
-  rowIndex: number,
-  columnIndex: number
-): any {
-  return `${rowIndex}-${columnIndex}`
 }

@@ -1858,6 +1858,25 @@ describe('Grid', () => {
     expect(keys).toEqual(['0-0', '1-1'])
   })
 
+  it('should use the keyMapper of :deferredMeasurementCache to cache the styles', () => {
+    const cache = new CellMeasurerCache({
+      fixedWidth: true,
+      keyMapper: (rowIndex, columnIndex) => `${rowIndex}|${columnIndex}`
+    })
+    cache.set(0, 0, 100, 100)
+    cache.set(1, 1, 100, 100)
+
+    const grid = render(getMarkup({
+      columnCount: 2,
+      deferredMeasurementCache: cache,
+      rowCount: 2
+    }))
+
+    const keys = Object.keys(grid._styleCache)
+
+    expect(keys).toEqual(['0|0', '1|1'])
+  })
+
   describe('DEV warnings', () => {
     it('should warn about cells that forget to include the :style property', () => {
       spyOn(console, 'warn')
