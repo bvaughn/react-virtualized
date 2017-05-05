@@ -28,7 +28,7 @@ This component expects explicit `width` and `height` parameters.
 | onRowMouseOut | Function | | Callback invoked when the mouse leaves a table row. `({ event: Event, index: number, rowData: any }): void` |
 | onRowMouseOver | Function |  | Callback invoked when a user moves the mouse over a table row. `({ event: Event, index: number, rowData: any }): void` |
 | onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
-| overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important not about this property. |
+| overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important note about this property. |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, scrollHeight: number, scrollTop: number }): void` |
 | rowClassName | String or Function |  | CSS class to apply to all table rows (including the header row). This value may be either a static string or a function with the signature `({ index: number }): string`. Note that for the header row an index of `-1` is provided. |
 | rowCount | Number | ✓ | Number of rows in table. |
