@@ -41,6 +41,22 @@ export default class CellMeasurer extends PureComponent {
       : children
   }
 
+  _getCellMeasures (node) {
+    const { cache } = this.props
+
+    if (!cache.hasFixedWidth()) {
+      node.style.width = 'auto'
+    }
+    if (!cache.hasFixedHeight()) {
+      node.style.height = 'auto'
+    }
+
+    const height = Math.ceil(node.offsetHeight)
+    const width = Math.ceil(node.offsetWidth)
+
+    return { height, width };
+  }
+
   _maybeMeasureCell () {
     const {
       cache,
@@ -51,6 +67,8 @@ export default class CellMeasurer extends PureComponent {
 
     if (!cache.has(rowIndex, columnIndex)) {
       const node = findDOMNode(this)
+      const oldWidth = node.style.width
+      const oldHeight = node.style.height
 
       // TODO Check for a bad combination of fixedWidth and missing numeric width or vice versa with height
 
@@ -58,15 +76,14 @@ export default class CellMeasurer extends PureComponent {
       // Explicitly clear width/height before measuring to avoid being tainted by another Grid.
       // eg top/left Grid renders before bottom/right Grid
       // Since the CellMeasurerCache is shared between them this taints derived cell size values.
-      if (!cache.hasFixedWidth()) {
-        node.style.width = 'auto'
-      }
-      if (!cache.hasFixedHeight()) {
-        node.style.height = 'auto'
-      }
+      const { height, width } = this._getCellMeasures(node);
 
-      const height = Math.ceil(node.offsetHeight)
-      const width = Math.ceil(node.offsetWidth)
+      if (oldWidth) {
+        node.style.width = oldWidth
+      }
+      if (oldHeight) {
+        node.style.height = oldHeight
+      }
 
       cache.set(
         rowIndex,
@@ -97,21 +114,22 @@ export default class CellMeasurer extends PureComponent {
     } = this.props
 
     const node = findDOMNode(this)
+    const oldWidth = node.style.width
+    const oldHeight = node.style.height
 
     // If we are re-measuring a cell that has already been measured,
     // It will have a hard-coded width/height from the previous measurement.
     // The fact that we are measuring indicates this measurement is probably stale,
     // So explicitly clear it out (eg set to "auto") so we can recalculate.
     // See issue #593 for more info.
-    if (!cache.hasFixedWidth()) {
-      node.style.width = 'auto'
-    }
-    if (!cache.hasFixedHeight()) {
-      node.style.height = 'auto'
-    }
+    const { height, width } = this._getCellMeasures(node)
 
-    const height = Math.ceil(node.offsetHeight)
-    const width = Math.ceil(node.offsetWidth)
+    if (oldWidth) {
+      node.style.width = oldWidth
+    }
+    if (oldHeight) {
+      node.style.height = oldHeight
+    }
 
     if (
       height !== cache.getHeight(rowIndex, columnIndex) ||
