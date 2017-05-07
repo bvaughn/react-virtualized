@@ -225,17 +225,30 @@ export default class CellMeasurerCache {
     // :columnWidth and :rowHeight are derived based on all cells in a column/row.
     // Pre-cache these derived values for faster lookup later.
     // Reads are expected to occur more frequently than writes in this case.
-    let columnWidth = 0
-    for (let i = 0; i < this._rowCount; i++) {
-      columnWidth = Math.max(columnWidth, this.getWidth(i, columnIndex))
-    }
-    let rowHeight = 0
-    for (let i = 0; i < this._columnCount; i++) {
-      rowHeight = Math.max(rowHeight, this.getHeight(rowIndex, i))
-    }
-
     const columnKey = this._keyMapper(0, columnIndex)
     const rowKey = this._keyMapper(rowIndex, 0)
+    let columnWidth = 0
+    if (this._hasFixedWidth) {
+      // if has fixed width columns, no need to calculate width for each row
+      columnWidth = this._columnWidthCache[columnKey] || columnWidth;
+      columnWidth = Math.max(columnWidth, this.getWidth(rowIndex, columnIndex))
+    }
+    else {
+      for (let i = 0; i < this._rowCount; i++) {
+        columnWidth = Math.max(columnWidth, this.getWidth(i, columnIndex))
+      }
+    }
+    let rowHeight = 0
+    if (this._hasFixedHeight) {
+      // if has fixed height rows, no need to calculate height for each column
+      rowHeight = this._rowHeightCache[rowKey] || rowHeight;
+      rowHeight = Math.max(rowHeight, this.getHeight(rowIndex, columnIndex))
+    }
+    else {
+      for (let i = 0; i < this._columnCount; i++) {
+        rowHeight = Math.max(rowHeight, this.getHeight(rowIndex, i))
+      }
+    }
 
     this._columnWidthCache[columnKey] = columnWidth
     this._rowHeightCache[rowKey] = rowHeight
