@@ -230,10 +230,9 @@ export default class CellMeasurerCache {
     let columnWidth = 0
     if (this._hasFixedWidth) {
       // if has fixed width columns, no need to calculate width for each row
-      columnWidth = this._columnWidthCache[columnKey] || columnWidth;
+      columnWidth = this._columnWidthCache[columnKey] || columnWidth
       columnWidth = Math.max(columnWidth, this.getWidth(rowIndex, columnIndex))
-    }
-    else {
+    } else {
       for (let i = 0; i < this._rowCount; i++) {
         columnWidth = Math.max(columnWidth, this.getWidth(i, columnIndex))
       }
@@ -241,10 +240,9 @@ export default class CellMeasurerCache {
     let rowHeight = 0
     if (this._hasFixedHeight) {
       // if has fixed height rows, no need to calculate height for each column
-      rowHeight = this._rowHeightCache[rowKey] || rowHeight;
+      rowHeight = this._rowHeightCache[rowKey] || rowHeight
       rowHeight = Math.max(rowHeight, this.getHeight(rowIndex, columnIndex))
-    }
-    else {
+    } else {
       for (let i = 0; i < this._columnCount; i++) {
         rowHeight = Math.max(rowHeight, this.getHeight(rowIndex, i))
       }
