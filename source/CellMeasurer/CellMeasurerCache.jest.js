@@ -35,11 +35,11 @@ describe('CellMeasurerCache', () => {
   })
 
   it('should return the correct default sizes for uncached cells if specified', () => {
+    spyOn(console, 'warn') // Ignore warning about variable width and height
+
     const cache = new CellMeasurerCache({
       defaultHeight: 20,
       defaultWidth: 100,
-      fixedHeight: true,
-      fixedWidth: true,
       minHeight: 15,
       minWidth: 80
     })
@@ -82,11 +82,11 @@ describe('CellMeasurerCache', () => {
     const keyMapper = jest.fn()
     keyMapper.mockReturnValue('a')
 
+    spyOn(console, 'warn') // Ignore warning about variable width and height
+
     const cache = new CellMeasurerCache({
       defaultHeight: 30,
       defaultWidth: 50,
-      fixedHeight: true,
-      fixedWidth: true,
       keyMapper
     })
     cache.set(0, 0, 100, 20)
@@ -111,8 +111,7 @@ describe('CellMeasurerCache', () => {
 
   it('should provide a Grid-compatible :columnWidth method', () => {
     const cache = new CellMeasurerCache({
-      fixedHeight: true,
-      fixedWidth: true
+      fixedHeight: true
     })
     expect(cache.columnWidth({ index: 0 })).toBe(DEFAULT_WIDTH)
     cache.set(0, 0, 100, 50)
@@ -126,7 +125,6 @@ describe('CellMeasurerCache', () => {
 
   it('should provide a Grid-compatible :rowHeight method', () => {
     const cache = new CellMeasurerCache({
-      fixedHeight: true,
       fixedWidth: true
     })
     expect(cache.rowHeight({ index: 0 })).toBe(DEFAULT_HEIGHT)

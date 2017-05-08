@@ -161,22 +161,30 @@ export default class CellMeasurerCache {
     rowIndex: number,
     columnIndex: ?number = 0
   ) : ?number {
-    const key = this._keyMapper(rowIndex, columnIndex)
+    if (this._hasFixedHeight) {
+      return this._defaultHeight
+    } else {
+      const key = this._keyMapper(rowIndex, columnIndex)
 
-    return this._cellHeightCache.hasOwnProperty(key)
-      ? Math.max(this._minHeight, this._cellHeightCache[key])
-      : this._defaultHeight
+      return this._cellHeightCache.hasOwnProperty(key)
+        ? Math.max(this._minHeight, this._cellHeightCache[key])
+        : this._defaultHeight
+    }
   }
 
   getWidth (
     rowIndex: number,
     columnIndex: ?number = 0
   ) : ?number {
-    const key = this._keyMapper(rowIndex, columnIndex)
+    if (this._hasFixedWidth) {
+      return this._defaultWidth
+    } else {
+      const key = this._keyMapper(rowIndex, columnIndex)
 
-    return this._cellWidthCache.hasOwnProperty(key)
-      ? Math.max(this._minWidth, this._cellWidthCache[key])
-      : this._defaultWidth
+      return this._cellWidthCache.hasOwnProperty(key)
+        ? Math.max(this._minWidth, this._cellWidthCache[key])
+        : this._defaultWidth
+    }
   }
 
   has (
@@ -225,31 +233,23 @@ export default class CellMeasurerCache {
     // :columnWidth and :rowHeight are derived based on all cells in a column/row.
     // Pre-cache these derived values for faster lookup later.
     // Reads are expected to occur more frequently than writes in this case.
-    const columnKey = this._keyMapper(0, columnIndex)
-    const rowKey = this._keyMapper(rowIndex, 0)
-    let columnWidth = 0
-    if (this._hasFixedWidth) {
-      // if has fixed width columns, no need to calculate width for each row
-      columnWidth = this._columnWidthCache[columnKey] || columnWidth
-      columnWidth = Math.max(columnWidth, this.getWidth(rowIndex, columnIndex))
-    } else {
+    // Only update non-fixed dimensions though to avoid doing unnecessary work.
+    if (!this._hasFixedWidth) {
+      let columnWidth = 0
       for (let i = 0; i < this._rowCount; i++) {
         columnWidth = Math.max(columnWidth, this.getWidth(i, columnIndex))
       }
+      const columnKey = this._keyMapper(0, columnIndex)
+      this._columnWidthCache[columnKey] = columnWidth
     }
-    let rowHeight = 0
-    if (this._hasFixedHeight) {
-      // if has fixed height rows, no need to calculate height for each column
-      rowHeight = this._rowHeightCache[rowKey] || rowHeight
-      rowHeight = Math.max(rowHeight, this.getHeight(rowIndex, columnIndex))
-    } else {
+    if (!this._hasFixedHeight) {
+      let rowHeight = 0
       for (let i = 0; i < this._columnCount; i++) {
         rowHeight = Math.max(rowHeight, this.getHeight(rowIndex, i))
       }
+      const rowKey = this._keyMapper(rowIndex, 0)
+      this._rowHeightCache[rowKey] = rowHeight
     }
-
-    this._columnWidthCache[columnKey] = columnWidth
-    this._rowHeightCache[rowKey] = rowHeight
   }
 }
 
