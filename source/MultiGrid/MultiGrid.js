@@ -1,6 +1,7 @@
 /** @flow */
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
+import CellMeasurerCacheDecorator from './CellMeasurerCacheDecorator'
 import Grid from '../Grid'
 
 const SCROLLBAR_SIZE_BUFFER = 20
@@ -140,7 +141,35 @@ export default class MultiGrid extends PureComponent {
   }
 
   componentWillMount () {
+    const { deferredMeasurementCache, fixedColumnCount, fixedRowCount } = this.props
+
     this._maybeCalculateCachedStyles(null, this.props, null, this.state)
+
+    if (deferredMeasurementCache) {
+      this._deferredMeasurementCacheBottomLeftGrid = fixedRowCount > 0
+        ? new CellMeasurerCacheDecorator({
+          cellMeasurerCache: deferredMeasurementCache,
+          columnIndexOffset: 0,
+          rowIndexOffset: fixedRowCount
+        })
+        : deferredMeasurementCache
+
+      this._deferredMeasurementCacheBottomRightGrid = fixedColumnCount > 0 || fixedRowCount > 0
+        ? new CellMeasurerCacheDecorator({
+          cellMeasurerCache: deferredMeasurementCache,
+          columnIndexOffset: fixedColumnCount,
+          rowIndexOffset: fixedRowCount
+        })
+        : deferredMeasurementCache
+
+      this._deferredMeasurementCacheTopRightGrid = fixedColumnCount > 0
+        ? new CellMeasurerCacheDecorator({
+          cellMeasurerCache: deferredMeasurementCache,
+          columnIndexOffset: fixedColumnCount,
+          rowIndexOffset: 0
+        })
+        : deferredMeasurementCache
+    }
   }
 
   componentWillReceiveProps (nextProps, nextState) {
@@ -550,6 +579,7 @@ export default class MultiGrid extends PureComponent {
         {...props}
         cellRenderer={this._cellRendererBottomLeftGrid}
         columnCount={fixedColumnCount}
+        deferredMeasurementCache={this._deferredMeasurementCacheBottomLeftGrid}
         height={this._getBottomGridHeight(props)}
         ref={this._bottomLeftGridRef}
         rowCount={Math.max(0, rowCount - fixedRowCount) + 1/* See _rowHeightBottomGrid */}
@@ -578,6 +608,7 @@ export default class MultiGrid extends PureComponent {
         cellRenderer={this._cellRendererBottomRightGrid}
         columnCount={Math.max(0, columnCount - fixedColumnCount)}
         columnWidth={this._columnWidthRightGrid}
+        deferredMeasurementCache={this._deferredMeasurementCacheBottomRightGrid}
         height={this._getBottomGridHeight(props)}
         onScroll={this._onScroll}
         ref={this._bottomRightGridRef}
@@ -633,6 +664,7 @@ export default class MultiGrid extends PureComponent {
         cellRenderer={this._cellRendererTopRightGrid}
         columnCount={Math.max(0, columnCount - fixedColumnCount) + 1/* See _columnWidthRightGrid */}
         columnWidth={this._columnWidthRightGrid}
+        deferredMeasurementCache={this._deferredMeasurementCacheTopRightGrid}
         height={this._getTopGridHeight(props)}
         ref={this._topRightGridRef}
         rowCount={fixedRowCount}

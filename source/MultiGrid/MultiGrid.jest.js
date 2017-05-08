@@ -2,6 +2,7 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
 import MultiGrid from './MultiGrid'
+import { CellMeasurerCache } from '../CellMeasurer'
 
 // These tests only focus on what MultiGrid does specifically.
 // The inner Grid component is tested in depth elsewhere.
@@ -341,6 +342,77 @@ describe('MultiGrid', () => {
       expect(bottomRightGrid.scrollLeft).toEqual(900)
       expect(bottomLeftGrid.scrollTop).toEqual(750)
       expect(bottomRightGrid.scrollTop).toEqual(750)
+    })
+  })
+
+  describe('deferredMeasurementCache', (props = {}) => {
+    function getDeferredMeasurementCache () {
+      const deferredMeasurementCache = new CellMeasurerCache({
+        fixedHeight: true,
+        fixedWidth: true
+      })
+
+      deferredMeasurementCache._columnIndices = {}
+      deferredMeasurementCache._rowIndices = {}
+      deferredMeasurementCache.has = (rowIndex, columnIndex) => {
+        deferredMeasurementCache._columnIndices[columnIndex] = columnIndex
+        deferredMeasurementCache._rowIndices[rowIndex] = rowIndex
+        return true
+      }
+
+      return deferredMeasurementCache
+    }
+
+    it('should wrap top-right and bottom-right deferredMeasurementCache if fixedColumnCount is > 0', () => {
+      const deferredMeasurementCache = getDeferredMeasurementCache()
+      render(getMarkup({
+        deferredMeasurementCache: deferredMeasurementCache,
+        columnCount: 3,
+        fixedColumnCount: 1,
+        fixedRowCount: 0,
+        rowCount: 1
+      }))
+
+      expect(Object.keys(deferredMeasurementCache._columnIndices)).toEqual(['0', '1', '2'])
+    })
+
+    it('should not wrap top-right and bottom-right deferredMeasurementCache if fixedColumnCount is 0', () => {
+      const deferredMeasurementCache = getDeferredMeasurementCache()
+      render(getMarkup({
+        deferredMeasurementCache: deferredMeasurementCache,
+        columnCount: 2,
+        fixedColumnCount: 0,
+        fixedRowCount: 0,
+        rowCount: 1
+      }))
+
+      expect(Object.keys(deferredMeasurementCache._columnIndices)).toEqual(['0', '1'])
+    })
+
+    it('should wrap bottom-left and bottom-right deferredMeasurementCache if fixedRowCount is > 0', () => {
+      const deferredMeasurementCache = getDeferredMeasurementCache()
+      render(getMarkup({
+        deferredMeasurementCache: deferredMeasurementCache,
+        columnCount: 1,
+        fixedColumnCount: 0,
+        fixedRowCount: 1,
+        rowCount: 3
+      }))
+
+      expect(Object.keys(deferredMeasurementCache._rowIndices)).toEqual(['0', '1', '2'])
+    })
+
+    it('should not wrap bottom-left and bottom-right deferredMeasurementCache if fixedRowCount is 0', () => {
+      const deferredMeasurementCache = getDeferredMeasurementCache()
+      render(getMarkup({
+        deferredMeasurementCache: deferredMeasurementCache,
+        columnCount: 1,
+        fixedColumnCount: 0,
+        fixedRowCount: 0,
+        rowCount: 2
+      }))
+
+      expect(Object.keys(deferredMeasurementCache._rowIndices)).toEqual(['0', '1'])
     })
   })
 })

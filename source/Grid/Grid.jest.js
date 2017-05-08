@@ -1232,7 +1232,7 @@ describe('Grid', () => {
 
   it('should pass the cellRenderer an :isScrolling flag based on props override', () => {
     const cellRenderer = jest.fn()
-    cellRenderer.mockImplementation(({ key }) => <div key={key} />)
+    cellRenderer.mockImplementation(({ key, style }) => <div key={key} style={style} />)
     render(getMarkup({
       cellRenderer,
       isScrolling: true
