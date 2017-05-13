@@ -82,6 +82,8 @@ The following wonderful companies have sponsored react-virtualized:
 <a href="https://opencollective.com/react-virtualized/backer/28/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/28/avatar.svg"></a>
 <a href="https://opencollective.com/react-virtualized/backer/29/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/29/avatar.svg"></a>
 
+[![Join the chat at https://gitter.im/bvaughn/react-virtualized](https://badges.gitter.im/bvaughn/react-virtualized.svg)](https://gitter.im/bvaughn/react-virtualized?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Getting started
 ---------------
 
