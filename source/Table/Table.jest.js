@@ -41,6 +41,7 @@ describe('Table', () => {
     cellDataGetter,
     cellRenderer,
     columnData = { data: 123 },
+    columnID,
     columnStyle,
     disableSort = false,
     headerRenderer,
@@ -70,6 +71,7 @@ describe('Table', () => {
           headerRenderer={headerRenderer}
           disableSort={disableSort}
           style={columnStyle}
+          id={columnID}
         />
         <Column
           label='Email'
@@ -885,6 +887,21 @@ describe('Table', () => {
       expect(row.getAttribute('role')).toEqual('row')
     })
 
+    it('should set aria role on a cell', () => {
+      const rendered = findDOMNode(render(getMarkup()))
+      const cell = rendered.querySelector('.ReactVirtualized__Table__rowColumn')
+      expect(cell.getAttribute('role')).toEqual('gridcell')
+    })
+
+    it('should set aria-describedby on a cell when the column has an id', () => {
+      const columnID = 'column-header-test'
+      const rendered = findDOMNode(render(getMarkup({
+        columnID
+      })))
+      const cell = rendered.querySelector('.ReactVirtualized__Table__rowColumn')
+      expect(cell.getAttribute('aria-describedby')).toEqual(columnID)
+    })
+
     it('should attach a11y properties to a row if :onRowClick is specified', () => {
       const rendered = findDOMNode(render(getMarkup({
         onRowClick: () => {}
@@ -903,6 +920,39 @@ describe('Table', () => {
       expect(row.tabIndex).toEqual(-1)
     })
 
+    it('should set aria role on a header column', () => {
+      const rendered = findDOMNode(render(getMarkup()))
+      const header = rendered.querySelector('.ReactVirtualized__Table__headerColumn')
+      expect(header.getAttribute('role')).toEqual('columnheader')
+    })
+
+    it('should set aria-sort ascending on a header column if the column is sorted ascending', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        sortBy: 'name',
+        sortDirection: SortDirection.ASC
+      })))
+      const header = rendered.querySelector('.ReactVirtualized__Table__headerColumn')
+      expect(header.getAttribute('aria-sort')).toEqual('ascending')
+    })
+
+    it('should set aria-sort descending on a header column if the column is sorted descending', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        sortBy: 'name',
+        sortDirection: SortDirection.DESC
+      })))
+      const header = rendered.querySelector('.ReactVirtualized__Table__headerColumn')
+      expect(header.getAttribute('aria-sort')).toEqual('descending')
+    })
+
+    it('should set id on a header column when the column has an id', () => {
+      const columnID = 'column-header-test'
+      const rendered = findDOMNode(render(getMarkup({
+        columnID
+      })))
+      const header = rendered.querySelector('.ReactVirtualized__Table__headerColumn')
+      expect(header.getAttribute('id')).toEqual(columnID)
+    })
+
     it('should attach a11y properties to a header column if sort is enabled', () => {
       const rendered = findDOMNode(render(getMarkup({
         disableSort: false,
@@ -910,7 +960,6 @@ describe('Table', () => {
       })))
       const row = rendered.querySelector('.ReactVirtualized__Table__headerColumn')
       expect(row.getAttribute('aria-label')).toEqual('Name')
-      expect(row.getAttribute('role')).toEqual('rowheader')
       expect(row.tabIndex).toEqual(0)
     })
 
@@ -920,7 +969,6 @@ describe('Table', () => {
       })))
       const row = rendered.querySelector('.ReactVirtualized__Table__headerColumn')
       expect(row.getAttribute('aria-label')).toEqual(null)
-      expect(row.getAttribute('role')).toEqual(null)
       expect(row.tabIndex).toEqual(-1)
     })
   })

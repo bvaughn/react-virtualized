@@ -384,7 +384,8 @@ export default class Table extends PureComponent {
       cellRenderer,
       className,
       columnData,
-      dataKey
+      dataKey,
+      id
     } = column.props
 
     const cellData = cellDataGetter({ columnData, dataKey, rowData })
@@ -396,10 +397,18 @@ export default class Table extends PureComponent {
       ? renderedCell
       : null
 
+    const a11yProps = {}
+
+    if (id) {
+      a11yProps['aria-describedby'] = id
+    }
+
     return (
       <div
+        {...a11yProps}
         key={`Row${rowIndex}-Col${columnIndex}`}
         className={cn('ReactVirtualized__Table__rowColumn', className)}
+        role='gridcell'
         style={style}
         title={title}
       >
@@ -410,7 +419,7 @@ export default class Table extends PureComponent {
 
   _createHeader ({ column, index }) {
     const { headerClassName, headerStyle, onHeaderClick, sort, sortBy, sortDirection } = this.props
-    const { dataKey, disableSort, headerRenderer, label, columnData } = column.props
+    const { dataKey, disableSort, headerRenderer, id, label, columnData } = column.props
     const sortEnabled = !disableSort && sort
 
     const classNames = cn(
@@ -455,10 +464,19 @@ export default class Table extends PureComponent {
       }
 
       a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey
-      a11yProps.role = 'rowheader'
       a11yProps.tabIndex = 0
       a11yProps.onClick = onClick
       a11yProps.onKeyDown = onKeyDown
+    }
+
+    if (sortBy === dataKey) {
+      a11yProps['aria-sort'] = sortDirection === SortDirection.ASC
+        ? 'ascending'
+        : 'descending'
+    }
+
+    if (id) {
+      a11yProps.id = id
     }
 
     return (
@@ -466,6 +484,7 @@ export default class Table extends PureComponent {
         {...a11yProps}
         key={`Header-Col${index}`}
         className={classNames}
+        role='columnheader'
         style={style}
       >
         {renderedHeader}
