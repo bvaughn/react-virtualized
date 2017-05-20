@@ -223,7 +223,7 @@ describe('CellMeasurer', () => {
       (params) => <div style={{ width: 100, height: 30 }}></div>
     )
 
-    let measurer;
+    let measurer
     const node = findDOMNode(render(
       <CellMeasurer
         ref={(ref) => { measurer = ref }}
@@ -237,7 +237,7 @@ describe('CellMeasurer', () => {
       </CellMeasurer>
     ))
 
-    const { height, width } = measurer._getCellMeasures(node)
+    const { height, width } = measurer._getCellMeasurements(node)
     expect(height).toBeGreaterThan(0)
     expect(width).toBeGreaterThan(0)
 

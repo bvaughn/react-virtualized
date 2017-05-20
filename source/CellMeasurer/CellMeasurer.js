@@ -41,7 +41,7 @@ export default class CellMeasurer extends PureComponent {
       : children
   }
 
-  _getCellMeasures (node) {
+  _getCellMeasurements (node) {
     const { cache } = this.props
 
     if (!cache.hasFixedWidth()) {
@@ -54,7 +54,7 @@ export default class CellMeasurer extends PureComponent {
     const height = Math.ceil(node.offsetHeight)
     const width = Math.ceil(node.offsetWidth)
 
-    return { height, width };
+    return { height, width }
   }
 
   _maybeMeasureCell () {
@@ -76,7 +76,7 @@ export default class CellMeasurer extends PureComponent {
       // Explicitly clear width/height before measuring to avoid being tainted by another Grid.
       // eg top/left Grid renders before bottom/right Grid
       // Since the CellMeasurerCache is shared between them this taints derived cell size values.
-      const { height, width } = this._getCellMeasures(node);
+      const { height, width } = this._getCellMeasurements(node)
 
       if (oldWidth) {
         node.style.width = oldWidth
@@ -122,7 +122,7 @@ export default class CellMeasurer extends PureComponent {
     // The fact that we are measuring indicates this measurement is probably stale,
     // So explicitly clear it out (eg set to "auto") so we can recalculate.
     // See issue #593 for more info.
-    const { height, width } = this._getCellMeasures(node)
+    const { height, width } = this._getCellMeasurements(node)
 
     if (oldWidth) {
       node.style.width = oldWidth
