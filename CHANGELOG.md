@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 9.7.6
+* ✨ Better aria roles set for `Table` column cells and headers. ([@jchen527](https://github.com/jchen527) - [#681](https://github.com/bvaughn/react-virtualized/pull/681))
+* 🐛 `CellMeasurer` restores `width` and `height` `style` values after measuring to avoid edge-case layout bugs. ([@marcelmokos](https://github.com/marcelmokos) - [#675](https://github.com/bvaughn/react-virtualized/pull/675))
+
 ##### 9.7.5
 * ✨ Improved performance for `CellMeasurerCache` by removing some unnecessary computations for fixed-width/fixed-height use cases. ([@RaviDasari](https://github.com/RaviDasari) - [#676](https://github.com/bvaughn/react-virtualized/pull/676))
 * 🐛 `MultiGrid` ensures correct row/column indices are passed to `CellMeasurerCache` for top-right and bottom `Grid`s. ([#670](https://github.com/bvaughn/react-virtualized/pull/670))
