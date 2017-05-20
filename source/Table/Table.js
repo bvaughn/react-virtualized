@@ -397,7 +397,9 @@ export default class Table extends PureComponent {
       ? renderedCell
       : null
 
-    const a11yProps = {}
+    const a11yProps = {
+      role: 'gridcell'
+    }
 
     if (id) {
       a11yProps['aria-describedby'] = id
@@ -408,7 +410,6 @@ export default class Table extends PureComponent {
         {...a11yProps}
         key={`Row${rowIndex}-Col${columnIndex}`}
         className={cn('ReactVirtualized__Table__rowColumn', className)}
-        role='gridcell'
         style={style}
         title={title}
       >
@@ -441,7 +442,9 @@ export default class Table extends PureComponent {
       sortDirection
     })
 
-    const a11yProps = {}
+    const a11yProps = {
+      role: 'columnheader'
+    }
 
     if (sortEnabled || onHeaderClick) {
       // If this is a sortable header, clicking it should update the table data's sorting.
@@ -484,7 +487,6 @@ export default class Table extends PureComponent {
         {...a11yProps}
         key={`Header-Col${index}`}
         className={classNames}
-        role='columnheader'
         style={style}
       >
         {renderedHeader}
