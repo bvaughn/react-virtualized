@@ -223,6 +223,39 @@ describe('CellMeasurer', () => {
       (params) => <div style={{ width: 100, height: 30 }}></div>
     )
 
+    let measurer;
+    const node = findDOMNode(render(
+      <CellMeasurer
+        ref={(ref) => { measurer = ref }}
+        cache={cache}
+        columnIndex={0}
+        parent={parent}
+        rowIndex={0}
+        style={{}}
+      >
+        {child}
+      </CellMeasurer>
+    ))
+
+    const { height, width } = measurer._getCellMeasures(node)
+    expect(height).toBeGreaterThan(0)
+    expect(width).toBeGreaterThan(0)
+
+    expect(node.style.height).toBe('auto')
+    expect(node.style.width).not.toBe('auto')
+  })
+
+  // See issue #660
+  it('should set widht/height style to values before measuring with style "auto"', () => {
+    const cache = new CellMeasurerCache({
+      fixedHeight: true
+    })
+    const parent = createParent({ cache })
+    const child = jest.fn()
+    child.mockImplementation(
+      (params) => <div style={{ width: 100, height: 30 }}></div>
+    )
+
     const node = findDOMNode(render(
       <CellMeasurer
         cache={cache}
@@ -235,12 +268,12 @@ describe('CellMeasurer', () => {
       </CellMeasurer>
     ))
 
-    node.style.width = 100
-    node.style.height = 30
+    node.style.width = 200
+    node.style.height = 60
 
     child.mock.calls[0][0].measure()
 
-    expect(node.style.height).toBe('auto')
-    expect(node.style.width).not.toBe('auto')
+    expect(node.style.height).toBe('30px')
+    expect(node.style.width).toBe('100px')
   })
 })
