@@ -25,6 +25,12 @@ export default class DynamicHeightTableColumn extends PureComponent {
     this._rowGetter = this._rowGetter.bind(this)
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.width !== this.props.width) {
+      this._cache.clearAll()
+    }
+  }
+
   render () {
     const { width } = this.props
 
