@@ -213,7 +213,7 @@ describe('CellMeasurer', () => {
   })
 
   // See issue #593
-  it('should explicitly set widht/height style to "auto" before re-measuring', () => {
+  it('should explicitly set width/height style to "auto" before re-measuring', () => {
     const cache = new CellMeasurerCache({
       fixedWidth: true
     })
@@ -237,16 +237,28 @@ describe('CellMeasurer', () => {
       </CellMeasurer>
     ))
 
+    const styleHeights = [30]
+    const styleWidths = [100]
+    Object.defineProperties(node.style, {
+      height: {
+        get: () => styleHeights[styleHeights.length - 1],
+        set: value => styleHeights.push(value)
+      },
+      width: {
+        get: () => styleWidths[styleWidths.length - 1],
+        set: value => styleWidths.push(value)
+      }
+    })
+
     const { height, width } = measurer._getCellMeasurements(node)
     expect(height).toBeGreaterThan(0)
     expect(width).toBeGreaterThan(0)
-
-    expect(node.style.height).toBe('auto')
-    expect(node.style.width).not.toBe('auto')
+    expect(styleHeights).toEqual([30, 'auto', 30])
+    expect(styleWidths).toEqual([100, 100])
   })
 
   // See issue #660
-  it('should set widht/height style to values before measuring with style "auto"', () => {
+  it('should reset width/height style values after measuring with style "auto"', () => {
     const cache = new CellMeasurerCache({
       fixedHeight: true
     })
