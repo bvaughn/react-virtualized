@@ -42,6 +42,9 @@
     "type": "git",
     "url": "https://github.com/bvaughn/react-virtualized.git"
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "react",
     "reactjs",
