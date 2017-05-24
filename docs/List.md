@@ -95,7 +95,8 @@ function rowRenderer ({
   //    top
   //    height
   //    width
-  // You can add additional class names or style properties as you would like.
+  // You can add additional class names or style properties as you would like,
+  // for example adding the property pointerEvents: 'auto' can be useful to get immediate interactivity.
   // Key is also required by React to more efficiently manage the array of rows.
   return (
     <div
