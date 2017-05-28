@@ -162,6 +162,7 @@ describe('ArrowKeyStepper', () => {
       numCalls++
     }
     const { node } = renderHelper({
+      isControlled: true,
       onScrollToChange
     })
 
@@ -183,6 +184,7 @@ describe('ArrowKeyStepper', () => {
     })
 
     renderHelper({
+      isControlled: true,
       onScrollToChange,
       node,
       scrollToColumn: 0,

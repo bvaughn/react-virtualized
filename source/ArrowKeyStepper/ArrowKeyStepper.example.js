@@ -87,6 +87,7 @@ export default class ArrowKeyStepperExample extends PureComponent {
         <ArrowKeyStepper
           columnCount={100}
           key={isClickable}
+          isControlled={isClickable}
           onScrollToChange={isClickable ? this._selectCell : undefined}
           mode={mode}
           rowCount={100}
