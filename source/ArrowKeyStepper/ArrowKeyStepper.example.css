@@ -20,3 +20,11 @@
 .Radio {
   margin-left: 0.5rem;
 }
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+}
+.checkbox {
+  margin-right: 5px;
+}

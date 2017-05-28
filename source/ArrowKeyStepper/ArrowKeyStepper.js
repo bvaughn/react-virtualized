@@ -14,11 +14,12 @@ export default class ArrowKeyStepper extends PureComponent {
   };
 
   static propTypes = {
-    children: PropTypes.func.isRequired,
+    children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
     className: PropTypes.string,
     columnCount: PropTypes.number.isRequired,
     disabled: PropTypes.bool.isRequired,
     mode: PropTypes.oneOf(['cells', 'edges']),
+    onScrollToChange: PropTypes.func,
     rowCount: PropTypes.number.isRequired,
     scrollToColumn: PropTypes.number.isRequired,
     scrollToRow: PropTypes.number.isRequired
@@ -42,6 +43,10 @@ export default class ArrowKeyStepper extends PureComponent {
   }
 
   componentWillReceiveProps (nextProps) {
+    if (!this._isComponentState()) {
+      return
+    }
+
     const { scrollToColumn, scrollToRow } = nextProps
 
     const {
@@ -76,7 +81,7 @@ export default class ArrowKeyStepper extends PureComponent {
 
   render () {
     const { className, children } = this.props
-    const { scrollToColumn, scrollToRow } = this.state
+    const { scrollToColumn, scrollToRow } = this._getRelevantState()
 
     return (
       <div
@@ -92,6 +97,10 @@ export default class ArrowKeyStepper extends PureComponent {
     )
   }
 
+  _isComponentState () {
+    return typeof this.props.onScrollToChange !== 'function'
+  }
+
   _onKeyDown (event) {
     const { columnCount, disabled, mode, rowCount } = this.props
 
@@ -102,9 +111,9 @@ export default class ArrowKeyStepper extends PureComponent {
     const {
       scrollToColumn: scrollToColumnPrevious,
       scrollToRow: scrollToRowPrevious
-    } = this.state
+    } = this._getRelevantState()
 
-    let { scrollToColumn, scrollToRow } = this.state
+    let { scrollToColumn, scrollToRow } = this._getRelevantState()
 
     // The above cases all prevent default event event behavior.
     // This is to keep the grid from scrolling after the snap-to update.
@@ -137,7 +146,7 @@ export default class ArrowKeyStepper extends PureComponent {
     ) {
       event.preventDefault()
 
-      this.setState({ scrollToColumn, scrollToRow })
+      this._setRelevantState({ scrollToColumn, scrollToRow })
     }
   }
 
@@ -146,5 +155,17 @@ export default class ArrowKeyStepper extends PureComponent {
     this._columnStopIndex = columnStopIndex
     this._rowStartIndex = rowStartIndex
     this._rowStopIndex = rowStopIndex
+  }
+
+  _getRelevantState () {
+    return this._isComponentState() ? this.state : this.props
+  }
+
+  _setRelevantState ({ scrollToColumn, scrollToRow }) {
+    if (this._isComponentState()) {
+      this.setState({ scrollToColumn, scrollToRow })
+    } else {
+      this.props.onScrollToChange({ scrollToColumn, scrollToRow })
+    }
   }
 }
