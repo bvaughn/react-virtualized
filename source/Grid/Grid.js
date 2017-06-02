@@ -424,7 +424,7 @@ export default class Grid extends PureComponent {
    */
   handleScroll ({
     scrollLeft: eventScrollLeft,
-    scrollTop: eventScrollTop,
+    scrollTop: eventScrollTop
   }) {
     // Prevent pointer events from interrupting a smooth scroll
     this._debounceScrollEnded()
@@ -1186,6 +1186,6 @@ export default class Grid extends PureComponent {
       return
     }
 
-    this.handleScroll(event.target);
+    this.handleScroll(event.target)
   }
 }
