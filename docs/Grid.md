@@ -71,6 +71,11 @@ This method can be used to safely scroll back to a cell that a user has scrolled
 Scroll to the specified offset(s).
 Useful for animating position changes.
 
+##### handleScroll ({ scrollLeft, scrollTop })
+
+Handle scroll event.
+Can be used to pass an external scroll event.
+
 ### Class names
 
 The Grid component supports the following static class names
