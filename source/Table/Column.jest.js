@@ -1,6 +1,8 @@
+import React from 'react'
 import Immutable from 'immutable'
 import defaultCellDataGetter from './defaultCellDataGetter'
 import defaultCellRenderer from './defaultCellRenderer'
+import defaultHeaderRenderer from './defaultHeaderRenderer'
 
 describe('Column', () => {
   const rowData = Immutable.Map({
@@ -57,6 +59,32 @@ describe('Column', () => {
         rowData,
         rowIndex: 0
       })).toEqual('')
+    })
+  })
+
+  describe('defaultHeaderRenderer', () => {
+    it('should render a value for specified attributes', () => {
+      expect(defaultHeaderRenderer({
+        dataKey: 'foo',
+        label: 'squirrel'
+      })[0].props.children).toEqual('squirrel')
+
+      const label = <div className='rabbit'>Rabbit</div>
+      expect(defaultHeaderRenderer({
+        dataKey: 'bar',
+        label: label
+      })[0].props.children).toEqual(label)
+    })
+
+    it('should render empty string for null or missing attributes', () => {
+      expect(defaultHeaderRenderer({
+        dataKey: 'foo',
+        label: null
+      })[0].props.children).toBeNull()
+      expect(defaultHeaderRenderer({
+        dataKey: 'bar',
+        label: undefined
+      })[0].props.children).toBeUndefined()
     })
   })
 })

@@ -48,7 +48,7 @@ export default class Column extends Component {
 
     /**
      * Optional callback responsible for rendering a column header contents.
-     * ({ columnData: object, dataKey: string, disableSort: boolean, label: string, sortBy: string, sortDirection: string }): PropTypes.node
+     * ({ columnData: object, dataKey: string, disableSort: boolean, label: node, sortBy: string, sortDirection: string }): PropTypes.node
      */
     headerRenderer: PropTypes.func.isRequired,
 
@@ -56,7 +56,7 @@ export default class Column extends Component {
     id: PropTypes.string,
 
     /** Header label for this column */
-    label: PropTypes.string,
+    label: PropTypes.node,
 
     /** Maximum width of column; this property will only be used if :flexGrow is > 0. */
     maxWidth: PropTypes.number,
