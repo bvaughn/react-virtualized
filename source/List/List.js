@@ -115,18 +115,6 @@ export default class List extends PureComponent {
     this.Grid.forceUpdate()
   }
 
-  /** See Grid#measureAllCells */
-  measureAllRows () {
-    this.Grid.measureAllCells()
-  }
-
-  /** See Grid#recomputeGridSize */
-  recomputeRowHeights (index = 0) {
-    this.Grid.recomputeGridSize({
-      rowIndex: index
-    })
-  }
-
   /** See Grid#getOffsetForCell */
   getOffsetForRow ({
     alignment,
@@ -138,6 +126,18 @@ export default class List extends PureComponent {
     })
 
     return scrollTop
+  }
+
+  /** See Grid#measureAllCells */
+  measureAllRows () {
+    this.Grid.measureAllCells()
+  }
+
+  /** See Grid#recomputeGridSize */
+  recomputeRowHeights (index = 0) {
+    this.Grid.recomputeGridSize({
+      rowIndex: index
+    })
   }
 
   /** See Grid#scrollToPosition */

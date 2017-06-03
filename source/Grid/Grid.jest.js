@@ -407,6 +407,20 @@ describe('Grid', () => {
       expect(grid.state.scrollTop).toEqual(50)
     })
 
+    it('should support handleScrollEvent() public method', () => {
+      const grid = render(getMarkup())
+      expect(grid.state.scrollLeft).toEqual(0)
+      expect(grid.state.scrollTop).toEqual(0)
+
+      grid.handleScrollEvent({
+        scrollLeft: 50,
+        scrollTop: 100
+      })
+      expect(grid.state.isScrolling).toEqual(true)
+      expect(grid.state.scrollLeft).toEqual(50)
+      expect(grid.state.scrollTop).toEqual(100)
+    })
+
     it('should support getOffsetForCell() public method', () => {
       const grid = render(getMarkup())
       const { scrollLeft, scrollTop } = grid.getOffsetForCell({

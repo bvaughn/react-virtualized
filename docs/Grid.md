@@ -45,6 +45,11 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 
 Gets offsets for a given cell and alignment.
 
+##### handleScrollEvent ({ scrollLeft, scrollTop })
+
+This method handles a scroll event originating from an external scroll control.
+It's an advanced method and should probably not be used unless you're implementing a custom scroll-bar solution.
+
 ##### measureAllCells
 
 Pre-measure all columns and rows in a `Grid`.
@@ -70,11 +75,6 @@ This method can be used to safely scroll back to a cell that a user has scrolled
 
 Scroll to the specified offset(s).
 Useful for animating position changes.
-
-##### handleScroll ({ scrollLeft, scrollTop })
-
-Handle scroll event.
-Can be used to pass an external scroll event.
 
 ### Class names
 
