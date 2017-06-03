@@ -23,7 +23,7 @@ export type HeaderRendererParams = {
   columnData: ?any,
   dataKey: string,
   disableSort: ?boolean,
-  label: ?string,
+  label: ?any,
   sortBy: ?string,
   sortDirection: ?string
 };
