@@ -21,7 +21,7 @@ That means that `List` also accepts [`Grid` props](Grid.md) in addition to the p
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
 | rowRenderer | Function | ✓ | Responsible for rendering a row. [Learn more](#rowrenderer).|
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
-| scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
+| scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Forced vertical scroll offset; can be used to synchronize scrolling between components |
 | style | Object |  | Optional custom inline style to attach to root `List` element. |
 | tabIndex | Number |  | Optional override of tab index default; defaults to `0`. |
