@@ -101,6 +101,12 @@ export default class Grid extends PureComponent {
     deferredMeasurementCache: PropTypes.object,
 
     /**
+     * When Using deferredMeasurementCache, set this to false to skip pre-rendering
+     * of all cells for size calculations.
+     */
+    deferredMeasurementBatchAll: PropTypes.bool,
+
+    /**
      * Used to estimate the total width of a Grid before all of its columns have actually been measured.
      * The estimated total width is adjusted as columns are rendered.
      */
@@ -248,7 +254,8 @@ export default class Grid extends PureComponent {
     scrollToColumn: -1,
     scrollToRow: -1,
     style: {},
-    tabIndex: 0
+    tabIndex: 0,
+    deferredMeasurementBatchAll: true,
   };
 
   constructor (props, context) {
@@ -284,13 +291,13 @@ export default class Grid extends PureComponent {
     const deferredMode = typeof deferredMeasurementCache !== 'undefined'
 
     this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
-      batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedHeight(),
+      batchAllCells: deferredMode && props.deferredMeasurementBatchAll && !deferredMeasurementCache.hasFixedHeight(),
       cellCount: props.columnCount,
       cellSizeGetter: (params) => this._columnWidthGetter(params),
       estimatedCellSize: this._getEstimatedColumnSize(props)
     })
     this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
-      batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedWidth(),
+      batchAllCells: deferredMode && props.deferredMeasurementBatchAll && !deferredMeasurementCache.hasFixedWidth(),
       cellCount: props.rowCount,
       cellSizeGetter: (params) => this._rowHeightGetter(params),
       estimatedCellSize: this._getEstimatedRowSize(props)
