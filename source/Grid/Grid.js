@@ -9,6 +9,7 @@ import defaultOverscanIndicesGetter, { SCROLL_DIRECTION_BACKWARD, SCROLL_DIRECTI
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper'
 import defaultCellRangeRenderer from './defaultCellRangeRenderer'
 import scrollbarSize from 'dom-helpers/util/scrollbarSize'
+import defaultKeyMapper from '../utils/defaultKeyMapper'
 
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
@@ -282,6 +283,8 @@ export default class Grid extends PureComponent {
 
     const deferredMeasurementCache = props.deferredMeasurementCache
     const deferredMode = typeof deferredMeasurementCache !== 'undefined'
+
+    this._keyMapper = deferredMode ? deferredMeasurementCache._keyMapper : defaultKeyMapper
 
     this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedHeight(),
@@ -944,6 +947,7 @@ export default class Grid extends PureComponent {
         deferredMeasurementCache,
         horizontalOffsetAdjustment,
         isScrolling,
+        keyMapper: this._keyMapper,
         parent: this,
         rowSizeAndPositionManager: this._rowSizeAndPositionManager,
         rowStartIndex: this._rowStartIndex,
@@ -1157,7 +1161,7 @@ export default class Grid extends PureComponent {
     // Copy over the visible cell styles so avoid unnecessary re-render.
     for (let rowIndex = this._rowStartIndex; rowIndex <= this._rowStopIndex; rowIndex++) {
       for (let columnIndex = this._columnStartIndex; columnIndex <= this._columnStopIndex; columnIndex++) {
-        let key = `${rowIndex}-${columnIndex}`
+        let key = this._keyMapper(rowIndex, columnIndex)
         this._styleCache[key] = styleCache[key]
       }
     }
