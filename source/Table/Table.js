@@ -98,6 +98,12 @@ export default class Table extends PureComponent {
     onRowDoubleClick: PropTypes.func,
 
     /**
+     * Callback invoked when a user clicks context menu on a table row.
+     * ({ index: number }): void
+     */
+    onRowContextMenu: PropTypes.func,
+
+    /**
      * Callback invoked when the mouse leaves a table row.
      * ({ index: number }): void
      */
@@ -162,6 +168,7 @@ export default class Table extends PureComponent {
      *   isScrolling: boolean,
      *   onRowClick: ?Function,
      *   onRowDoubleClick: ?Function,
+     *   onRowContextMenu: ?Function,
      *   onRowMouseOver: ?Function,
      *   onRowMouseOut: ?Function,
      *   rowData: any,
@@ -505,6 +512,7 @@ export default class Table extends PureComponent {
       children,
       onRowClick,
       onRowDoubleClick,
+      onRowContextMenu,
       onRowMouseOver,
       onRowMouseOut,
       rowClassName,
@@ -548,6 +556,7 @@ export default class Table extends PureComponent {
       key,
       onRowClick,
       onRowDoubleClick,
+      onRowContextMenu,
       onRowMouseOver,
       onRowMouseOut,
       rowData,

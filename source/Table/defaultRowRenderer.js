@@ -13,6 +13,7 @@ export default function defaultRowRenderer ({
   key,
   onRowClick,
   onRowDoubleClick,
+  onRowContextMenu,
   onRowMouseOver,
   onRowMouseOut,
   rowData,
@@ -23,6 +24,7 @@ export default function defaultRowRenderer ({
   if (
     onRowClick ||
     onRowDoubleClick ||
+    onRowContextMenu ||
     onRowMouseOver ||
     onRowMouseOut
   ) {
@@ -34,6 +36,9 @@ export default function defaultRowRenderer ({
     }
     if (onRowDoubleClick) {
       a11yProps.onDoubleClick = (event) => onRowDoubleClick({ event, index, rowData })
+    }
+    if (onRowContextMenu) {
+      a11yProps.onContextMenu = (event) => onRowContextMenu({ event, index, rowData })
     }
     if (onRowMouseOut) {
       a11yProps.onMouseOut = (event) => onRowMouseOut({ event, index, rowData })

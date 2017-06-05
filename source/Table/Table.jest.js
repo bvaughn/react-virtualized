@@ -576,6 +576,20 @@ describe('Table', () => {
     })
   })
 
+  describe('onRowContextMenu', () => {
+    it.only('should call :onRowContextMenu with the correct :rowIndex when a row is clicked', () => {
+      const onRowContextMenu = jest.fn()
+      const rendered = findDOMNode(render(getMarkup({
+        onRowContextMenu
+      })))
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row')
+      Simulate.contextMenu(rows[0])
+      Simulate.contextMenu(rows[3])
+      expect(onRowContextMenu).toHaveBeenCalledTimes(2)
+      expect(onRowContextMenu.mock.calls.map(call => call[0].index)).toEqual([0, 3])
+    })
+  })
+
   describe('onRowMouseOver/Out', () => {
     it('should call :onRowMouseOver and :onRowMouseOut with the correct :rowIndex when the mouse is moved over rows', () => {
       let onRowMouseOver = jest.fn()

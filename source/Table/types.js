@@ -35,6 +35,7 @@ export type RowRendererParams = {
   isScrolling: boolean,
   onRowClick: ?Function,
   onRowDoubleClick: ?Function,
+  onRowContextMenu: ?Function,
   onRowMouseOver: ?Function,
   onRowMouseOut: ?Function,
   rowData: any,
