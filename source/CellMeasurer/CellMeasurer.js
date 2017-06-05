@@ -1,5 +1,5 @@
 /** @flow */
-import { PureComponent } from 'react'
+import { PureComponent, cloneElement } from 'react'
 import { findDOMNode } from 'react-dom'
 
 type Props = {
@@ -34,11 +34,19 @@ export default class CellMeasurer extends PureComponent {
   }
 
   render () {
-    const { children } = this.props
+    const {
+      children,
+      cache, // eslint-disable-line no-unused-vars
+      columnIndex, // eslint-disable-line no-unused-vars
+      parent, // eslint-disable-line no-unused-vars
+      rowIndex, // eslint-disable-line no-unused-vars
+      style, // eslint-disable-line no-unused-vars
+      ...rest
+    } = this.props
 
     return typeof children === 'function'
-      ? children({ measure: this._measure })
-      : children
+      ? children({ ...rest, measure: this._measure })
+      : cloneElement(children, rest)
   }
 
   _getCellMeasurements () {
