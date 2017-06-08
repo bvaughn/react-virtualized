@@ -776,7 +776,9 @@ export default class Grid extends PureComponent {
       role,
       style,
       tabIndex,
-      width
+      width,
+      rowCount,
+      columnCount
     } = this.props
 
     const isScrolling = this._isScrolling()
@@ -815,7 +817,7 @@ export default class Grid extends PureComponent {
     const childrenToDisplay = this._childrenToDisplay
 
     const showNoContentRenderer = (
-      childrenToDisplay.length === 0 &&
+      (rowCount === 0 || columnCount === 0) &&
       height > 0 &&
       width > 0
     )
@@ -834,7 +836,7 @@ export default class Grid extends PureComponent {
         }}
         tabIndex={tabIndex}
       >
-        {childrenToDisplay.length > 0 &&
+        {(rowCount > 0 && columnCount > 0) &&
           <div
             className='ReactVirtualized__Grid__innerScrollContainer'
             style={{
