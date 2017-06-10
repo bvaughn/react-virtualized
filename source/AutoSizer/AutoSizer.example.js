@@ -45,7 +45,7 @@ export default class AutoSizerExample extends PureComponent {
               aria-label='Hide description (to show resize)?'
               className={styles.checkbox}
               type='checkbox'
-              value={hideDescription}
+              checked={hideDescription}
               onChange={event => this.setState({ hideDescription: event.target.checked })}
             />
             Hide description (to show resize)?

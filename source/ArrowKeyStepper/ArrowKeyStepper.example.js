@@ -12,16 +12,21 @@ export default class ArrowKeyStepperExample extends PureComponent {
     super(props)
 
     this.state = {
-      mode: 'edges'
+      mode: 'edges',
+      isClickable: true,
+      scrollToColumn: 0,
+      scrollToRow: 0
     }
 
     this._getColumnWidth = this._getColumnWidth.bind(this)
     this._getRowHeight = this._getRowHeight.bind(this)
     this._cellRenderer = this._cellRenderer.bind(this)
+    this._selectCell = this._selectCell.bind(this)
+    this._onClickableChange = this._onClickableChange.bind(this)
   }
 
   render () {
-    const { mode } = this.state
+    const { mode, isClickable, scrollToColumn, scrollToRow } = this.state
 
     return (
       <ContentBox>
@@ -66,10 +71,28 @@ export default class ArrowKeyStepperExample extends PureComponent {
           </label>
         </ContentBoxParagraph>
 
+        <ContentBoxParagraph>
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label='Enable click selection? (resets selection)'
+              className={styles.checkbox}
+              type='checkbox'
+              checked={isClickable}
+              onChange={this._onClickableChange}
+            />
+            Enable click selection? (resets selection)
+          </label>
+        </ContentBoxParagraph>
+
         <ArrowKeyStepper
           columnCount={100}
+          key={isClickable}
+          isControlled={isClickable}
+          onScrollToChange={isClickable ? this._selectCell : undefined}
           mode={mode}
           rowCount={100}
+          scrollToColumn={scrollToColumn}
+          scrollToRow={scrollToRow}
         >
           {({ onSectionRendered, scrollToColumn, scrollToRow }) => (
             <div>
@@ -118,10 +141,23 @@ export default class ArrowKeyStepperExample extends PureComponent {
       <div
         className={className}
         key={key}
+        onClick={this.state.isClickable && (() => this._selectCell({ scrollToColumn: columnIndex, scrollToRow: rowIndex }))}
         style={style}
       >
         {`r:${rowIndex}, c:${columnIndex}`}
       </div>
     )
+  }
+
+  _selectCell ({ scrollToColumn, scrollToRow }) {
+    this.setState({ scrollToColumn, scrollToRow })
+  }
+
+  _onClickableChange (event) {
+    this.setState({
+      isClickable: event.target.checked,
+      scrollToColumn: 0,
+      scrollToRow: 0
+    })
   }
 }

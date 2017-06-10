@@ -152,6 +152,47 @@ describe('ArrowKeyStepper', () => {
     assertCurrentScrollTo(node, 0, 0)
   })
 
+  it('should call :onScrollToChange for key down', () => {
+    let numCalls = 0
+    let scrollToColumn
+    let scrollToRow
+    const onScrollToChange = params => {
+      scrollToColumn = params.scrollToColumn
+      scrollToRow = params.scrollToRow
+      numCalls++
+    }
+    const { node } = renderHelper({
+      isControlled: true,
+      onScrollToChange
+    })
+
+    Simulate.keyDown(node, {key: 'ArrowDown'})
+    expect(numCalls).toEqual(1)
+    expect(scrollToColumn).toEqual(0)
+    expect(scrollToRow).toEqual(1)
+  })
+
+  it('should not call :onScrollToChange for prop update', () => {
+    let numCalls = 0
+    const onScrollToChange = params => {
+      numCalls++
+    }
+    const { node } = renderHelper({
+      onScrollToChange,
+      scrollToColumn: 0,
+      scrollToRow: 0
+    })
+
+    renderHelper({
+      isControlled: true,
+      onScrollToChange,
+      node,
+      scrollToColumn: 0,
+      scrollToRow: 1
+    })
+    expect(numCalls).toEqual(0)
+  })
+
   describe('mode === "edges"', () => {
     it('should update :scrollToColumn and :scrollToRow relative to the most recent :onSectionRendered event', () => {
       const { node, onSectionRendered } = renderHelper()
