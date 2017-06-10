@@ -160,9 +160,13 @@ export default class ArrowKeyStepper extends PureComponent {
   }
 
   _updateScrollState ({ scrollToColumn, scrollToRow }) {
-    if (this.props.isControlled) {
-      this.props.onScrollToChange({ scrollToColumn, scrollToRow })
-    } else {
+    const {isControlled, onScrollToChange} = this.props
+
+    if (typeof onScrollToChange === 'function') {
+      onScrollToChange({ scrollToColumn, scrollToRow })
+    }
+
+    if (!isControlled) {
       this.setState({ scrollToColumn, scrollToRow })
     }
   }

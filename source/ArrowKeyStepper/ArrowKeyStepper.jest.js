@@ -153,23 +153,23 @@ describe('ArrowKeyStepper', () => {
   })
 
   it('should call :onScrollToChange for key down', () => {
-    let numCalls = 0
-    let scrollToColumn
-    let scrollToRow
-    const onScrollToChange = params => {
-      scrollToColumn = params.scrollToColumn
-      scrollToRow = params.scrollToRow
-      numCalls++
-    }
-    const { node } = renderHelper({
-      isControlled: true,
-      onScrollToChange
-    })
+    ([true, false]).forEach(isControlled => {
+      const onScrollToChange = jest.fn()
+      const { node } = renderHelper({
+        isControlled: true,
+        onScrollToChange
+      })
 
-    Simulate.keyDown(node, {key: 'ArrowDown'})
-    expect(numCalls).toEqual(1)
-    expect(scrollToColumn).toEqual(0)
-    expect(scrollToRow).toEqual(1)
+      expect(onScrollToChange.mock.calls).toHaveLength(0)
+
+      Simulate.keyDown(node, {key: 'ArrowDown'})
+
+      expect(onScrollToChange.mock.calls).toHaveLength(1)
+
+      const {scrollToColumn, scrollToRow} = onScrollToChange.mock.calls[0][0]
+      expect(scrollToColumn).toEqual(0)
+      expect(scrollToRow).toEqual(1)
+    })
   })
 
   it('should not call :onScrollToChange for prop update', () => {
