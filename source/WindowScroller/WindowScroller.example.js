@@ -12,9 +12,9 @@ import styles from './WindowScroller.example.css'
 
 export default class WindowScrollerExample extends PureComponent {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired,
     customElement: PropTypes.any,
     isScrollingCustomElement: PropTypes.bool.isRequired,
+    list: PropTypes.instanceOf(Immutable.List).isRequired,
     setScrollingCustomElement: PropTypes.func
   }
 
@@ -22,20 +22,20 @@ export default class WindowScrollerExample extends PureComponent {
     super(props)
 
     this.state = {
-      showHeaderText: true,
-      scrollToIndex: undefined
+      scrollToIndex: undefined,
+      showHeaderText: true
     }
 
     this._hideHeader = this._hideHeader.bind(this)
-    this._rowRenderer = this._rowRenderer.bind(this)
     this._onCheckboxChange = this._onCheckboxChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
+    this._rowRenderer = this._rowRenderer.bind(this)
     this._setRef = this._setRef.bind(this)
   }
 
   render () {
-    const { list, isScrollingCustomElement, customElement } = this.context
-    const { showHeaderText, scrollToIndex } = this.state
+    const { customElement, isScrollingCustomElement, list } = this.context
+    const { scrollToIndex, showHeaderText } = this.state
 
     return (
       <ContentBox>
@@ -86,7 +86,7 @@ export default class WindowScrollerExample extends PureComponent {
             ref={this._setRef}
             scrollElement={isScrollingCustomElement ? customElement : null}
           >
-            {({ height, isScrolling, scrollTop, onChildScroll }) => (
+            {({ height, isScrolling, onChildScroll, scrollTop }) => (
               <AutoSizer disableHeight>
                 {({ width }) => (
                   <List
@@ -95,14 +95,14 @@ export default class WindowScrollerExample extends PureComponent {
                     className={styles.List}
                     height={height}
                     isScrolling={isScrolling}
+                    onScroll={onChildScroll}
                     overscanRowCount={2}
                     rowCount={list.size}
                     rowHeight={30}
                     rowRenderer={this._rowRenderer}
-                    scrollTop={scrollTop}
                     scrollToIndex={scrollToIndex}
+                    scrollTop={scrollTop}
                     width={width}
-                    onScroll={onChildScroll}
                   />
                 )}
               </AutoSizer>

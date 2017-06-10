@@ -117,28 +117,29 @@ export default class WindowScroller extends PureComponent {
     const { isScrolling, scrollTop, scrollLeft, height, width } = this.state
 
     return children({
-      width,
+      onChildScroll: this._onChildScroll,
       height,
       isScrolling,
       scrollLeft,
       scrollTop,
-      onChildScroll: this._onChildScroll
+      width
     })
-  }
-
-  _onResize (event) {
-    this.updatePosition()
   }
 
   _onChildScroll ({ scrollTop }) {
     if (this.state.scrollTop === scrollTop) return
 
     const scrollElement = this.scrollElement
-    if (scrollElement.scrollTo) {
+
+    if (typeof scrollElement.scrollTo === 'function') {
       scrollElement.scrollTo(0, scrollTop + this._positionFromTop)
     } else {
       scrollElement.scrollTop = scrollTop + this._positionFromTop
     }
+  }
+
+  _onResize (event) {
+    this.updatePosition()
   }
 
   // Referenced by utils/onScroll

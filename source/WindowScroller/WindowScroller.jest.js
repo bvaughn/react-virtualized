@@ -41,13 +41,13 @@ function getMarkup ({
 } = {}) {
   const windowScroller = (
     <WindowScroller {...props}>
-      {({ height, isScrolling, scrollTop, onChildScroll }) => (
+      {({ height, isScrolling, onChildScroll, scrollTop }) => (
         <ChildComponent
           ref={childRef}
           height={height}
           isScrolling={isScrolling}
-          scrollTop={scrollTop}
           onScroll={onChildScroll}
+          scrollTop={scrollTop}
         />
       )}
     </WindowScroller>

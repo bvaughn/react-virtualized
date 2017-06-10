@@ -33,16 +33,16 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 
 ReactDOM.render(
   <WindowScroller>
-    {({ height, isScrolling, scrollTop, onChildScroll }) => (
+    {({ height, isScrolling, onChildScroll, scrollTop }) => (
       <List
         autoHeight
         height={height}
         isScrolling={isScrolling}
+        onScroll={onChildScroll}
         rowCount={...}
         rowHeight={...}
         rowRenderer={...}
         scrollTop={scrollTop}
-        onScroll={onChildScroll}
         width={...}
       />
     )}
