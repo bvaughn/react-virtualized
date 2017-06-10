@@ -6,10 +6,14 @@ import { render } from '../TestUtils'
 import { IS_SCROLLING_TIMEOUT } from './utils/onScroll'
 import WindowScroller from './WindowScroller'
 
-function ChildComponent ({ scrollTop, isScrolling, height }) {
-  return (
-    <div>{`scrollTop:${scrollTop}, isScrolling:${isScrolling}, height:${height}`}</div>
-  )
+class ChildComponent extends React.Component {
+  render () {
+    const { scrollTop, isScrolling, height } = this.props
+
+    return (
+      <div>{`scrollTop:${scrollTop}, isScrolling:${isScrolling}, height:${height}`}</div>
+    )
+  }
 }
 
 function mockGetBoundingClientRectForHeader ({
@@ -32,15 +36,18 @@ function mockGetBoundingClientRectForHeader ({
 function getMarkup ({
   headerElements,
   documentOffset,
+  childRef,
   ...props
 } = {}) {
   const windowScroller = (
     <WindowScroller {...props}>
-      {({ height, isScrolling, scrollTop }) => (
+      {({ height, isScrolling, scrollTop, onChildScroll }) => (
         <ChildComponent
+          ref={childRef}
           height={height}
           isScrolling={isScrolling}
           scrollTop={scrollTop}
+          onScroll={onChildScroll}
         />
       )}
     </WindowScroller>
@@ -314,6 +321,90 @@ describe('WindowScroller', () => {
 
       expect(windowScroller._positionFromTop).toBe(200)
       expect(windowScroller._positionFromLeft).toBe(300)
+    })
+  })
+
+  describe('when child scrolls', () => {
+    let originalScrollTo
+    beforeEach(() => {
+      originalScrollTo = window.scrollTo
+      window.scrollTo = (scrollX, scrollY) => simulateWindowScroll({ scrollX, scrollY })
+    })
+
+    afterEach(() => {
+      window.scrollTo = originalScrollTo
+      render.unmount()
+    })
+
+    it('should scroll the scrollElement (when it is window) the desired amount', () => {
+      let windowScroller, childComponent
+
+      render(getMarkup({
+        ref: (ref) => {
+          windowScroller = ref
+        },
+        childRef: (ref) => {
+          childComponent = ref
+        }
+      }))
+
+      childComponent.props.onScroll({ scrollTop: 200 })
+
+      expect(window.scrollY).toEqual(200 + windowScroller._positionFromTop)
+    })
+
+    it('should not scroll the scrollElement if trying to scroll to where we already are', () => {
+      let childComponent
+
+      render(getMarkup({
+        childRef: (ref) => {
+          childComponent = ref
+        }
+      }))
+
+      simulateWindowScroll({ scrollY: 200 })
+
+      window.scrollTo = jest.fn()
+
+      childComponent.props.onScroll({ scrollTop: 200 })
+
+      expect(window.scrollTo).not.toHaveBeenCalled()
+    })
+
+    it('should scroll the scrollElement (when it is an element) the desired amount', () => {
+      let windowScroller, childComponent
+      const divEl = document.createElement('div')
+
+      render(getMarkup({
+        ref: (ref) => {
+          windowScroller = ref
+        },
+        scrollElement: divEl,
+        childRef: (ref) => {
+          childComponent = ref
+        }
+      }))
+
+      childComponent.props.onScroll({ scrollTop: 200 })
+
+      expect(divEl.scrollTop).toEqual(200 + windowScroller._positionFromTop)
+    })
+
+    it('should update own scrollTop', () => {
+      let windowScroller, childComponent
+
+      render(getMarkup({
+        ref: (ref) => {
+          windowScroller = ref
+        },
+        childRef: (ref) => {
+          childComponent = ref
+        }
+      }))
+
+      childComponent.props.onScroll({ scrollTop: 200 })
+
+      expect(windowScroller.state.scrollTop).toEqual(200)
     })
   })
 })
