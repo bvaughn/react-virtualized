@@ -1,7 +1,7 @@
 Changelog
 ------------
 
-##### 9.8.0 (currently NPM `@next`)
+##### 9.8.0
 * 🎉 `WindowScroller` supports `scrollToIndex` prop. ([@leoasis](https://github.com/leoasis) - [#643](https://github.com/bvaughn/react-virtualized/pull/643))
 * 🎉 Allow `ArrowKeyStepper` to be used as a controlled component. ([@mking-clari](https://github.com/mking-clari) - [#688](https://github.com/bvaughn/react-virtualized/pull/688))
 * 🎉New `handleScroll` method on `Grid` to better support custom scrollbars. ([@5angel](https://github.com/5angel) - [#693](https://github.com/bvaughn/react-virtualized/pull/693))
