@@ -490,7 +490,7 @@ export default class Grid extends PureComponent {
   }
 
   componentDidMount () {
-    const { getScrollbarSize, scrollLeft, scrollToColumn, scrollTop, scrollToRow } = this.props
+    const { getScrollbarSize, height, scrollLeft, scrollToColumn, scrollTop, scrollToRow, width } = this.props
 
     // If cell sizes have been invalidated (eg we are using CellMeasurer) then reset cached positions.
     // We must do this at the start of the method as we may calculate and update scroll position below.
@@ -508,8 +508,13 @@ export default class Grid extends PureComponent {
       this._setScrollPosition({ scrollLeft, scrollTop })
     }
 
-    if (scrollToColumn >= 0 || scrollToRow >= 0) {
+    // Don't update scroll offset if the size is 0; we don't render any cells in this case.
+    // Setting a state may cause us to later thing we've updated the offce when we haven't.
+    const sizeIsBiggerThanZero = height > 0 && width > 0
+    if (scrollToColumn >= 0 && sizeIsBiggerThanZero) {
       this._updateScrollLeftForScrollToColumn()
+    }
+    if (scrollToRow >= 0 && sizeIsBiggerThanZero) {
       this._updateScrollTopForScrollToRow()
     }
 
@@ -580,6 +585,14 @@ export default class Grid extends PureComponent {
       }
     }
 
+    // Special case where the previous size was 0:
+    // In this case we don't show any windowed cells at all.
+    // So we should always recalculate offset aftward.
+    const sizeJustIncreasedFromZero = (
+      (prevProps.width === 0 || prevProps.height === 0) &&
+      (height > 0 && width > 0)
+    )
+
     // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
     // @TODO Do we also need this check or can the one in componentWillUpdate() suffice?
     if (this._recomputeScrollLeftFlag) {
@@ -597,6 +610,7 @@ export default class Grid extends PureComponent {
         scrollToAlignment,
         scrollToIndex: scrollToColumn,
         size: width,
+        sizeJustIncreasedFromZero,
         updateScrollIndexCallback: (scrollToColumn) => this._updateScrollLeftForScrollToColumn(this.props)
       })
     }
@@ -616,6 +630,7 @@ export default class Grid extends PureComponent {
         scrollToAlignment,
         scrollToIndex: scrollToRow,
         size: height,
+        sizeJustIncreasedFromZero,
         updateScrollIndexCallback: (scrollToRow) => this._updateScrollTopForScrollToRow(this.props)
       })
     }

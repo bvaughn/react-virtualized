@@ -6,6 +6,7 @@ Changelog
 * 🎉 Allow `ArrowKeyStepper` to be used as a controlled component. ([@mking-clari](https://github.com/mking-clari) - [#688](https://github.com/bvaughn/react-virtualized/pull/688))
 * 🎉New `handleScroll` method on `Grid` to better support custom scrollbars. ([@5angel](https://github.com/5angel) - [#693](https://github.com/bvaughn/react-virtualized/pull/693))
 * 🐛 Added edge-case gaurd to `WindowScroller ` to prevent calling `setState` when unmounted. ([@liorbrauer](https://github.com/liorbrauer) - [#689](https://github.com/bvaughn/react-virtualized/pull/689))
+* 🐛 Fixed edge-case in `Grid` where setting an initial scroll-to offset with a `height` or `width` of 0 caused the scroll-to prop to be ignored when size later changed. ([#691](https://github.com/bvaughn/react-virtualized/pull/691))
 
 ##### 9.7.6
 * ✨ Better aria roles set for `Table` column cells and headers. ([@jchen527](https://github.com/jchen527) - [#681](https://github.com/bvaughn/react-virtualized/pull/681))

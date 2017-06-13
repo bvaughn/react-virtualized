@@ -25,12 +25,14 @@ export default function updateScrollIndexHelper ({
   scrollToAlignment,
   scrollToIndex,
   size,
+  sizeJustIncreasedFromZero,
   updateScrollIndexCallback
 }) {
   const cellCount = cellSizeAndPositionManager.getCellCount()
   const hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < cellCount
   const sizeHasChanged = (
     size !== previousSize ||
+    sizeJustIncreasedFromZero ||
     !previousCellSize ||
     (
       typeof cellSize === 'number' &&
