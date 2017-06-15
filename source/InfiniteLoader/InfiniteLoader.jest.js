@@ -259,10 +259,7 @@ describe('InfiniteLoader', () => {
     component.resetLoadMoreRowsCache(true)
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 15 }])
   })
-
 })
-
-
 
 describe('scanForUnloadedRanges', () => {
   function createIsRowLoaded (rows) {
