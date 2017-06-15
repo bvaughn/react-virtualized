@@ -245,7 +245,24 @@ describe('InfiniteLoader', () => {
     innerOnRowsRendered({ startIndex: 0, stopIndex: 15 })
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 19 }])
   })
+
+  it('resetLoadMoreRowsCache should call :loadMoreRows if parameter passed', () => {
+    const component = render(getMarkup({
+      isRowLoaded: () => false,
+      minimumBatchSize: 20,
+      threshold: 0
+    }));
+    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 19 }])
+    innerOnRowsRendered({ startIndex: 0, stopIndex: 15 })
+    loadMoreRowsCalls.splice(0)
+    expect(loadMoreRowsCalls).toEqual([])
+    component.resetLoadMoreRowsCache(true)
+    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 15 }])
+  })
+
 })
+
+
 
 describe('scanForUnloadedRanges', () => {
   function createIsRowLoaded (rows) {
