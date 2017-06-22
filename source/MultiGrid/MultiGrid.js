@@ -505,7 +505,7 @@ export default class MultiGrid extends PureComponent {
     ) {
       this._bottomLeftGridStyle = {
         left: 0,
-        overflowX: 'auto',
+        overflowX: 'hidden',
         overflowY: 'auto',
         position: 'absolute',
         ...styleBottomLeftGrid
@@ -546,7 +546,7 @@ export default class MultiGrid extends PureComponent {
       this._topRightGridStyle = {
         left: this._getLeftGridWidth(props),
         overflowX: 'auto',
-        overflowY: 'auto',
+        overflowY: 'hidden',
         position: 'absolute',
         top: 0,
         ...styleTopRightGrid
