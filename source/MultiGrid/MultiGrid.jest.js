@@ -51,8 +51,8 @@ describe('MultiGrid', () => {
       expect(topLeft.style.getPropertyValue('overflow-x')).toEqual('hidden')
       expect(topLeft.style.getPropertyValue('overflow-y')).toEqual('hidden')
       expect(topRight.style.getPropertyValue('overflow-x')).toEqual('auto')
-      expect(topRight.style.getPropertyValue('overflow-y')).toEqual('auto')
-      expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('auto')
+      expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden')
+      expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden')
       expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('auto')
       expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto')
       expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto')
@@ -66,7 +66,7 @@ describe('MultiGrid', () => {
       const grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
       expect(grids.length).toEqual(2)
       const [bottomLeft, bottomRight] = grids
-      expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('auto')
+      expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden')
       expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('auto')
       expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto')
       expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto')
@@ -81,7 +81,7 @@ describe('MultiGrid', () => {
       expect(grids.length).toEqual(2)
       const [topRight, bottomRight] = grids
       expect(topRight.style.getPropertyValue('overflow-x')).toEqual('auto')
-      expect(topRight.style.getPropertyValue('overflow-y')).toEqual('auto')
+      expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden')
       expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto')
       expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto')
     })
