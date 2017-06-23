@@ -16,7 +16,9 @@ const SCROLLBAR_SIZE_BUFFER = 20
 export default class MultiGrid extends PureComponent {
   static propTypes = {
     fixedColumnCount: PropTypes.number.isRequired,
+    fixedColumnScrollInteraction: PropTypes.bool.isRequired,
     fixedRowCount: PropTypes.number.isRequired,
+    fixedRowScrollInteraction: PropTypes.bool.isRequired,
     style: PropTypes.object.isRequired,
     styleBottomLeftGrid: PropTypes.object.isRequired,
     styleBottomRightGrid: PropTypes.object.isRequired,
@@ -26,7 +28,9 @@ export default class MultiGrid extends PureComponent {
 
   static defaultProps = {
     fixedColumnCount: 0,
+    fixedColumnScrollInteraction: false,
     fixedRowCount: 0,
+    fixedRowScrollInteraction: false,
     style: {},
     styleBottomLeftGrid: {},
     styleBottomRightGrid: {},
@@ -440,7 +444,9 @@ export default class MultiGrid extends PureComponent {
       columnWidth,
       height,
       fixedColumnCount,
+      fixedColumnScrollInteraction,
       fixedRowCount,
+      fixedRowScrollInteraction,
       rowHeight,
       style,
       styleBottomLeftGrid,
@@ -506,7 +512,7 @@ export default class MultiGrid extends PureComponent {
       this._bottomLeftGridStyle = {
         left: 0,
         overflowX: 'hidden',
-        overflowY: 'auto',
+        overflowY: fixedColumnScrollInteraction ? 'auto' : 'hidden',
         position: 'absolute',
         ...styleBottomLeftGrid
       }
@@ -545,7 +551,7 @@ export default class MultiGrid extends PureComponent {
     ) {
       this._topRightGridStyle = {
         left: this._getLeftGridWidth(props),
-        overflowX: 'auto',
+        overflowX: fixedRowScrollInteraction ? 'auto' : 'hidden',
         overflowY: 'hidden',
         position: 'absolute',
         top: 0,
@@ -568,29 +574,24 @@ export default class MultiGrid extends PureComponent {
 
   _onScrollLeft (scrollInfo) {
     const {scrollLeft} = scrollInfo
-    this.setState({
-      scrollLeft
+    this._onScroll({
+      scrollLeft,
+      scrollTop: this.state.scrollTop
     })
-    const onScroll = this.props.onScroll
-    if (onScroll) {
-      onScroll(scrollInfo)
-    }
   }
 
   _onScrollTop (scrollInfo) {
     const {scrollTop} = scrollInfo
-    this.setState({
-      scrollTop
+    this._onScroll({
+      scrollTop,
+      scrollLeft: this.state.scrollLeft
     })
-    const onScroll = this.props.onScroll
-    if (onScroll) {
-      onScroll(scrollInfo)
-    }
   }
 
   _renderBottomLeftGrid (props) {
     const {
       fixedColumnCount,
+      fixedColumnScrollInteraction,
       fixedRowCount,
       rowCount,
       scrollTop
@@ -607,7 +608,7 @@ export default class MultiGrid extends PureComponent {
         columnCount={fixedColumnCount}
         deferredMeasurementCache={this._deferredMeasurementCacheBottomLeftGrid}
         height={this._getBottomGridHeight(props)}
-        onScroll={this._onScrollTop}
+        onScroll={fixedColumnScrollInteraction ? this._onScrollTop : undefined}
         ref={this._bottomLeftGridRef}
         rowCount={Math.max(0, rowCount - fixedRowCount) + 1/* See _rowHeightBottomGrid */}
         rowHeight={this._rowHeightBottomGrid}
@@ -678,6 +679,7 @@ export default class MultiGrid extends PureComponent {
       columnCount,
       fixedColumnCount,
       fixedRowCount,
+      fixedRowScrollInteraction,
       scrollLeft
     } = props
 
@@ -693,7 +695,7 @@ export default class MultiGrid extends PureComponent {
         columnWidth={this._columnWidthRightGrid}
         deferredMeasurementCache={this._deferredMeasurementCacheTopRightGrid}
         height={this._getTopGridHeight(props)}
-        onScroll={this._onScrollLeft}
+        onScroll={fixedRowScrollInteraction ? this._onScrollLeft : undefined}
         ref={this._topRightGridRef}
         rowCount={fixedRowCount}
         scrollLeft={scrollLeft}
