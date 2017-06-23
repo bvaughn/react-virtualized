@@ -24,6 +24,9 @@ export default class List extends PureComponent {
 
     /** Optional CSS class name */
     className: PropTypes.string,
+    
+    /** Optional inline style applied to inner cell-container */
+    containerStyle: PropTypes.object,
 
     /**
      * Used to estimate the total height of a List before all of its rows have actually been measured.
@@ -156,6 +159,7 @@ export default class List extends PureComponent {
   render () {
     const {
       className,
+      containerStyle,
       noRowsRenderer,
       scrollToIndex,
       width
@@ -171,6 +175,7 @@ export default class List extends PureComponent {
         className={classNames}
         columnWidth={width}
         columnCount={1}
+        containerStyle={containerStyle}
         noContentRenderer={noRowsRenderer}
         onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}
