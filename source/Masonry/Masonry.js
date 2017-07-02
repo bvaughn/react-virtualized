@@ -3,6 +3,8 @@ import React, { PureComponent } from 'react'
 import cn from 'classnames'
 import PositionCache from './PositionCache'
 
+const emptyObject = {}
+
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
@@ -405,8 +407,6 @@ export default class Masonry extends PureComponent {
     }
   }
 }
-
-const emptyObject = {}
 
 function identity (value) {
   return value
