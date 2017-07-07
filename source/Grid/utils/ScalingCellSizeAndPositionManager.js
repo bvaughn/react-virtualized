@@ -43,7 +43,7 @@ export default class ScalingCellSizeAndPositionManager {
 
   /**
    * Number of pixels a cell at the given position (offset) should be shifted in order to fit within the scaled container.
-   * The offset passed to this function is scalled (safe) as well.
+   * The offset passed to this function is scaled (safe) as well.
    */
   getOffsetAdjustment ({
     containerSize,

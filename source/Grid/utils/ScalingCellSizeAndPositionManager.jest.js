@@ -19,7 +19,7 @@ describe('ScalingCellSizeAndPositionManager', () => {
   }
 
   describe('_getOffsetPercentage', () => {
-    it('should eturn the correct offset fraction', () => {
+    it('should return the correct offset fraction', () => {
       var expectations = [
         { offset: 0, expectedOffsetPercentage: 0 },
         { offset: 35, expectedOffsetPercentage: 0.5 },
