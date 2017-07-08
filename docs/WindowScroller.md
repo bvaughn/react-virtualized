@@ -14,6 +14,7 @@ This may change with a future release but for the time being this HOC is should 
 | onResize | Function |  | Callback to be invoked on-resize; it is passed the following named parameters: `({ height: number, width: number })`. |
 | onScroll | Function |  | Callback to be invoked on-scroll; it is passed the following named parameters: `({ scrollTop: number, scrollLeft: number })`. |
 | scrollElement | any |  | Element to attach scroll event listeners. Defaults to `window`. |
+| scrollingResetTimeInterval | Number |  | Wait this amount of time after the last scroll event before resetting WindowScroller `pointer-events`; defaults to 150ms. |
 
 ### Public Methods
 

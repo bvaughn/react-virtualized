@@ -30,9 +30,18 @@ function enablePointerEventsAfterDelay () {
     clearTimeout(disablePointerEventsTimeoutId)
   }
 
+  var maximumTimeout = IS_SCROLLING_TIMEOUT
+  mountedInstances.forEach(function (instance) {
+    if (instance.props.scrollingResetTimeInterval) {
+      if (instance.props.scrollingResetTimeInterval > maximumTimeout) {
+        maximumTimeout = instance.props.scrollingResetTimeInterval
+      }
+    }
+  })
+
   disablePointerEventsTimeoutId = setTimeout(
       enablePointerEventsAfterDelayCallback,
-      IS_SCROLLING_TIMEOUT
+      maximumTimeout
     )
 }
 

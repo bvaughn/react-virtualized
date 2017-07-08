@@ -223,6 +223,34 @@ describe('WindowScroller', () => {
 
       done()
     })
+
+    it('should support a custom :scrollingResetTimeInterval prop', async (done) => {
+      const component = render(getMarkup({
+        scrollingResetTimeInterval: 500
+      }))
+
+      const rendered = findDOMNode(component)
+
+      expect(rendered.textContent).toContain('isScrolling:false')
+
+      simulateWindowScroll({ scrollY: 5000 })
+
+      expect(rendered.textContent).toContain('isScrolling:true')
+
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect(rendered.textContent).toContain('isScrolling:true')
+
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      expect(rendered.textContent).toContain('isScrolling:true')
+
+      await new Promise(resolve => setTimeout(resolve, 300))
+
+      expect(rendered.textContent).toContain('isScrolling:false')
+
+      done()
+    })
   })
 
   describe('onResize', () => {
