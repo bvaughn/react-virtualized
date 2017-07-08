@@ -115,6 +115,26 @@ describe('MultiGrid', () => {
       })))
       expect(rendered.querySelectorAll('.ReactVirtualized__Grid').length).toEqual(2)
     })
+
+    it('should allow scrolling of fixed Grids when configured for fixed columns and rows with scroll interaction', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        fixedColumnCount: 1,
+        fixedColumnScrollInteraction: true,
+        fixedRowCount: 1,
+        fixedRowScrollInteraction: true
+      })))
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
+      expect(grids.length).toEqual(4)
+      const [topLeft, topRight, bottomLeft, bottomRight] = grids
+      expect(topLeft.style.getPropertyValue('overflow-x')).toEqual('hidden')
+      expect(topLeft.style.getPropertyValue('overflow-y')).toEqual('hidden')
+      expect(topRight.style.getPropertyValue('overflow-x')).toEqual('auto')
+      expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden')
+      expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden')
+      expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('auto')
+      expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto')
+      expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto')
+    })
   })
 
   describe('#recomputeGridSize', () => {
