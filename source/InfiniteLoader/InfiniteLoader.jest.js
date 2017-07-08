@@ -246,18 +246,33 @@ describe('InfiniteLoader', () => {
     expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 19 }])
   })
 
-  it('resetLoadMoreRowsCache should call :loadMoreRows if parameter passed', () => {
+  it('resetLoadMoreRowsCache should call :loadMoreRows if :autoReload parameter is true', () => {
     const component = render(getMarkup({
       isRowLoaded: () => false,
-      minimumBatchSize: 20,
+      minimumBatchSize: 1,
       threshold: 0
-    }));
-    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 19 }])
-    innerOnRowsRendered({ startIndex: 0, stopIndex: 15 })
+    }))
+
+    // Simulate a new range of rows being loaded
     loadMoreRowsCalls.splice(0)
-    expect(loadMoreRowsCalls).toEqual([])
+    innerOnRowsRendered({ startIndex: 0, stopIndex: 10 })
     component.resetLoadMoreRowsCache(true)
-    expect(loadMoreRowsCalls).toEqual([{ startIndex: 0, stopIndex: 15 }])
+    expect(loadMoreRowsCalls[loadMoreRowsCalls.length - 1]).toEqual(
+      { startIndex: 0, stopIndex: 10 }
+    )
+
+    // Simulate a new range of rows being loaded
+    loadMoreRowsCalls.splice(0)
+    innerOnRowsRendered({ startIndex: 20, stopIndex: 30 })
+    expect(loadMoreRowsCalls[loadMoreRowsCalls.length - 1]).toEqual(
+      { startIndex: 20, stopIndex: 30 }
+    )
+
+    loadMoreRowsCalls.splice(0)
+    component.resetLoadMoreRowsCache(true)
+    expect(loadMoreRowsCalls[loadMoreRowsCalls.length - 1]).toEqual(
+      { startIndex: 20, stopIndex: 30 }
+    )
   })
 })
 

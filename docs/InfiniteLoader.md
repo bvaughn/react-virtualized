@@ -22,8 +22,8 @@ This is an advanced component and can be confusing in certain situations.
 
 ### Public Methods
 
-##### resetLoadMoreRowsCache (callLoadMoreRows: boolean)
-Reset any cached data about already-loaded rows. This method should be called if any/all loaded data needs to be refetched (eg a filtered list where the search criteria changes). If `callLoadMoreRows` passed as true, the last loaded batch would be automatically reloaded.
+##### resetLoadMoreRowsCache (autoReload: boolean = false)
+Reset any cached data about already-loaded rows. This method should be called if any/all loaded data needs to be refetched (eg a filtered list where the search criteria changes). If `autoReload` passed as true, the last loaded batch would be automatically reloaded.
 
 ### Children function
 

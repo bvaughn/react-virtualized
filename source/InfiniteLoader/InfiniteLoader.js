@@ -69,11 +69,11 @@ export default class InfiniteLoader extends PureComponent {
     this._registerChild = this._registerChild.bind(this)
   }
 
-  resetLoadMoreRowsCache (callLoadMoreRows) {
-    const { loadMoreRows } = this.props
+  resetLoadMoreRowsCache (autoReload) {
     this._loadMoreRowsMemoizer = createCallbackMemoizer()
-    if (callLoadMoreRows) {
-      loadMoreRows({ startIndex: this._lastRenderedStartIndex, stopIndex: this._lastRenderedStopIndex })
+
+    if (autoReload) {
+      this._doStuff(this._lastRenderedStartIndex, this._lastRenderedStopIndex)
     }
   }
 
@@ -113,10 +113,14 @@ export default class InfiniteLoader extends PureComponent {
   }
 
   _onRowsRendered ({ startIndex, stopIndex }) {
-    const { isRowLoaded, minimumBatchSize, rowCount, threshold } = this.props
-
     this._lastRenderedStartIndex = startIndex
     this._lastRenderedStopIndex = stopIndex
+
+    this._doStuff(startIndex, stopIndex)
+  }
+
+  _doStuff (startIndex, stopIndex) {
+    const { isRowLoaded, minimumBatchSize, rowCount, threshold } = this.props
 
     const unloadedRanges = scanForUnloadedRanges({
       isRowLoaded,
