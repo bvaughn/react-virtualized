@@ -5,3 +5,9 @@ general:
 machine:
   node:
     version: v6.6.0
+dependencies:
+  override:
+    - yarn
+test:
+  override:
+    - yarn test
