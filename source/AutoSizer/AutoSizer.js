@@ -3,48 +3,48 @@ import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 import createDetectElementResize from '../vendor/detectElementResize'
 
+type Size = {
+  height: number,
+  width: number
+}
+
+type Props = {
+  /**
+  * Function responsible for rendering children.
+  */
+  children: (size: Size) => React.Children,
+
+  /** Disable dynamic :height property */
+  disableHeight?: boolean,
+
+  /** Disable dynamic :width property */
+  disableWidth?: boolean,
+
+  /** Nonce of the inlined stylesheet for Content Security Policy */
+  nonce?: string,
+
+  /** Callback to be invoked on-resize */
+  onResize: (size: Size) => void
+}
+
 /**
  * Decorator component that automatically adjusts the width and height of a single child.
  * Child component should not be declared as a child but should rather be specified by a `ChildComponent` property.
  * All other properties will be passed through to the child component.
  */
 export default class AutoSizer extends PureComponent {
-  static propTypes = {
-    /**
-    * Function responsible for rendering children.
-    * This function should implement the following signature:
-    * ({ height, width }) => PropTypes.element
-    */
-    children: PropTypes.func.isRequired,
-
-    /** Disable dynamic :height property */
-    disableHeight: PropTypes.bool,
-
-    /** Disable dynamic :width property */
-    disableWidth: PropTypes.bool,
-
-    /** Nonce of the inlined stylesheet for Content Security Policy */
-    nonce: PropTypes.string,
-
-    /** Callback to be invoked on-resize: ({ height, width }) */
-    onResize: PropTypes.func.isRequired
-  };
-
   static defaultProps = {
     onResize: () => {}
   };
 
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      height: 0,
-      width: 0
-    }
-
-    this._onResize = this._onResize.bind(this)
-    this._setRef = this._setRef.bind(this)
+  props: Props;
+  state = {
+    height: 0,
+    width: 0
   }
+  _parentNode: HTMLElement
+  _autoSizer: HTMLElement
+  _detectElementResize: any;
 
   componentDidMount () {
     const { nonce } = this.props
@@ -52,7 +52,7 @@ export default class AutoSizer extends PureComponent {
     // Delay access of parentNode until mount.
     // This handles edge-cases where the component has already been unmounted before its ref has been set,
     // As well as libraries like react-lite which have a slightly different lifecycle.
-    this._parentNode = this._autoSizer.parentNode
+    this._parentNode = ((this._autoSizer.parentNode: any): HTMLElement)
 
     // Defer requiring resize handler in order to support server-side rendering.
     // See issue #41
@@ -75,7 +75,7 @@ export default class AutoSizer extends PureComponent {
     // Outer div should not force width/height since that may prevent containers from shrinking.
     // Inner component should overflow and use calculated width/height.
     // See issue #68 for more information.
-    const outerStyle = { overflow: 'visible' }
+    const outerStyle: { overflow: string, height?: number, width?: number} = { overflow: 'visible' }
 
     if (!disableHeight) {
       outerStyle.height = 0
@@ -107,7 +107,7 @@ export default class AutoSizer extends PureComponent {
     )
   }
 
-  _onResize () {
+  _onResize = () => {
     const {
       disableHeight,
       disableWidth,
@@ -145,7 +145,7 @@ export default class AutoSizer extends PureComponent {
     }
   }
 
-  _setRef (autoSizer) {
+  _setRef = (autoSizer: HTMLElement) => {
     this._autoSizer = autoSizer
   }
 }

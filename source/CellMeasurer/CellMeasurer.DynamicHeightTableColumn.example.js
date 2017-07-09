@@ -1,5 +1,5 @@
 /** @flow */
-import Immutable from 'immutable'
+import { List as ImmutableList } from 'immutable'
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 import CellMeasurer from './CellMeasurer'
@@ -7,25 +7,27 @@ import CellMeasurerCache from './CellMeasurerCache'
 import { Column, Table } from '../Table'
 import styles from './CellMeasurer.example.css'
 
+type Datum = {
+  color: string,
+  name: string,
+  randomLong: string,
+  random: string
+}
+
+type Props = {
+  list: ImmutableList<Datum>,
+  width: number
+}
+
 export default class DynamicHeightTableColumn extends PureComponent {
-  static propTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired,
-    width: PropTypes.number.isRequired
-  }
+  props: Props
 
-  constructor (props, context) {
-    super(props, context)
+  _cache = new CellMeasurerCache({
+    fixedWidth: true,
+    minHeight: 25
+  })
 
-    this._cache = new CellMeasurerCache({
-      fixedWidth: true,
-      minHeight: 25
-    })
-
-    this._columnCellRenderer = this._columnCellRenderer.bind(this)
-    this._rowGetter = this._rowGetter.bind(this)
-  }
-
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps: Props) {
     if (nextProps.width !== this.props.width) {
       this._cache.clearAll()
     }
@@ -68,7 +70,14 @@ export default class DynamicHeightTableColumn extends PureComponent {
     )
   }
 
-  _columnCellRenderer ({ cellData, columnData, dataKey, parent, rowData, rowIndex }) {
+  _columnCellRenderer = ({ cellData, columnData, dataKey, parent, rowData, rowIndex }: {
+    cellData: mixed,
+    columnData: mixed,
+    dataKey: string,
+    parent: mixed,
+    rowData: mixed,
+    rowIndex: number
+  }) => {
     const { list } = this.props
 
     const datum = list.get(rowIndex % list.size)
@@ -96,7 +105,7 @@ export default class DynamicHeightTableColumn extends PureComponent {
     )
   }
 
-  _rowGetter ({ index }) {
+  _rowGetter = ({ index }: { index: number }) => {
     const { list } = this.props
 
     return list.get(index % list.size)

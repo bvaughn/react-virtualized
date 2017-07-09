@@ -1,15 +1,16 @@
 /** @flow */
-import { PureComponent } from 'react'
+import React, { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
+import CellMeasurerCache from './CellMeasurerCache.js';
 
 type Props = {
-  cache: mixed,
-  children: mixed,
-  columnIndex: ?number,
-  index: ?number,
+  cache: CellMeasurerCache,
+  children: ((params: { measure: () => void }) => React.Children) | React.Children,
+  columnIndex?: number,
+  index?: number,
   parent: mixed,
-  rowIndex: ?number,
-};
+  rowIndex?: number,
+}
 
 /**
  * Wraps a cell and measures its rendered content.
@@ -17,19 +18,15 @@ type Props = {
  * Cached-content is not be re-measured.
  */
 export default class CellMeasurer extends PureComponent {
-  props: Props;
+  static __internalCellMeasurerFlag = false
 
-  constructor (props, context) {
-    super(props, context)
-
-    this._measure = this._measure.bind(this)
-  }
+  props: Props
 
   componentDidMount () {
     this._maybeMeasureCell()
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate () {
     this._maybeMeasureCell()
   }
 
@@ -45,6 +42,13 @@ export default class CellMeasurer extends PureComponent {
     const { cache } = this.props
 
     const node = findDOMNode(this)
+
+    if (!(node instanceof HTMLElement)) {
+      return {
+        width: 0,
+        height: 0
+      };
+    }
 
     // TODO Check for a bad combination of fixedWidth and missing numeric width or vice versa with height
 
@@ -82,12 +86,9 @@ export default class CellMeasurer extends PureComponent {
   }
 
   _maybeMeasureCell () {
-    const {
-      cache,
-      columnIndex = 0,
-      parent,
-      rowIndex = this.props.index
-    } = this.props
+    const { cache, parent } = this.props
+    const rowIndex = this.props.rowIndex || this.props.index || 0
+    const columnIndex = this.props.columnIndex || 0
 
     if (!cache.has(rowIndex, columnIndex)) {
       const { height, width } = this._getCellMeasurements()
@@ -112,13 +113,10 @@ export default class CellMeasurer extends PureComponent {
     }
   }
 
-  _measure () {
-    const {
-      cache,
-      columnIndex = 0,
-      parent,
-      rowIndex = this.props.index
-    } = this.props
+  _measure = () => {
+    const { cache, parent } = this.props
+    const rowIndex = this.props.rowIndex || this.props.index || 0
+    const columnIndex = this.props.columnIndex || 0
 
     const { height, width } = this._getCellMeasurements()
 
