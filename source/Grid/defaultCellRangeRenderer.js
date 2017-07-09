@@ -37,7 +37,7 @@ export default function defaultCellRangeRenderer ({
     rowSizeAndPositionManager.areOffsetsAdjusted()
   )
 
-  const canCacheStyle = !isScrolling && !areOffsetsAdjusted;
+  const canCacheStyle = !isScrolling && !areOffsetsAdjusted
 
   for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
     let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex)

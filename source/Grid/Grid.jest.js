@@ -1505,7 +1505,7 @@ describe('Grid', () => {
         isScrolling: true
       }))
 
-      expect(cellRenderer.mock.calls[0][0].style).toBe(scrollingStyle)
+      expect(cellRenderer.mock.calls[0][0].style).not.toBe(scrollingStyle)
       expect(cellRenderer).toHaveBeenCalledTimes(1) // Only cached when scrolling
     })
 
@@ -1805,7 +1805,7 @@ describe('Grid', () => {
       }
 
       const grid = render(getMarkup(props))
-      simulateScroll({ grid, scrollTop: 1 })
+      simulateScroll({ grid, scrollToIndex: 1 })
 
       expect(componentUpdates).toEqual(0)
     })
