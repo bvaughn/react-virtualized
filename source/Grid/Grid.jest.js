@@ -1355,6 +1355,43 @@ describe('Grid', () => {
       ])
     })
 
+    it('should not cache cells if the offsets are not adjusted', () => {
+      const cellRendererCalls = []
+      function cellRenderer ({ columnIndex, key, rowIndex, style }) {
+        cellRendererCalls.push({ columnIndex, rowIndex })
+        return defaultCellRenderer({ columnIndex, key, rowIndex, style })
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        rowCount: 100000,
+        scrollToRow: 0,
+        width: 100
+      }
+
+      render(getMarkup({
+        ...props,
+        scrollToRow: 0
+      }))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+
+      cellRendererCalls.splice(0)
+
+      render(getMarkup({
+        ...props,
+        scrollToRow: 1
+      }))
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 }
+      ])
+    })
+
     it('should cache a cell once it has been rendered while scrolling', () => {
       const cellRendererCalls = []
       function cellRenderer ({ columnIndex, key, rowIndex, style }) {

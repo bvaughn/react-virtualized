@@ -11,7 +11,7 @@ import defaultCellRangeRenderer from './defaultCellRangeRenderer'
 import scrollbarSize from 'dom-helpers/util/scrollbarSize'
 
 /**
- * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
+ * Specifies the number of milliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
  */
 export const DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150
@@ -601,7 +601,7 @@ export default class Grid extends PureComponent {
 
     // Special case where the previous size was 0:
     // In this case we don't show any windowed cells at all.
-    // So we should always recalculate offset aftward.
+    // So we should always recalculate offset afterwards.
     const sizeJustIncreasedFromZero = (
       (prevProps.width === 0 || prevProps.height === 0) &&
       (height > 0 && width > 0)

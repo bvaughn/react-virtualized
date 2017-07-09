@@ -111,7 +111,7 @@ export default class CellSizeAndPositionManager {
 
   /**
    * Total size of all cells being measured.
-   * This value will be completedly estimated initially.
+   * This value will be completely estimated initially.
    * As cells as measured the estimate will be updated.
    */
   getTotalSize (): number {

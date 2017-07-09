@@ -81,7 +81,7 @@ describe('CellSizeAndPositionManager', () => {
       expect(() => cellSizeAndPositionManager.getSizeAndPositionOfCell(100)).toThrow()
     })
 
-    it('should returnt he correct size and position information for the requested cell', () => {
+    it('should return the correct size and position information for the requested cell', () => {
       const { cellSizeAndPositionManager } = getCellSizeAndPositionManager()
       expect(cellSizeAndPositionManager.getSizeAndPositionOfCell(0).offset).toEqual(0)
       expect(cellSizeAndPositionManager.getSizeAndPositionOfCell(0).size).toEqual(10)
