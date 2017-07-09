@@ -1,5 +1,5 @@
 /** @flow */
-import Immutable from 'immutable'
+import { List as ImmutableList } from 'immutable'
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
@@ -9,18 +9,12 @@ import styles from './AutoSizer.example.css'
 
 export default class AutoSizerExample extends PureComponent {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(ImmutableList).isRequired
   }
 
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      hideDescription: false
-    }
-
-    this._rowRenderer = this._rowRenderer.bind(this)
-  }
+  state = {
+    hideDescription: false
+  };
 
   render () {
     const { list } = this.context
@@ -78,7 +72,7 @@ export default class AutoSizerExample extends PureComponent {
     )
   }
 
-  _rowRenderer ({ index, key, style }) {
+  _rowRenderer = ({ index, key, style }: { index: number, key: string, style: CSSStyleDeclaration }) => {
     const { list } = this.context
     const row = list.get(index)
 
