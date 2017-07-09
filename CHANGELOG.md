@@ -1,6 +1,13 @@
 Changelog
 ------------
 
+##### 9.9.0
+* 🎉 `InfiniteLoader` API method `resetLoadMoreRowsCache` accepts optional parameter to auto-reload most recent range of rows. ([@BamaBoy](https://github.com/BamaBoy) - [#704](https://github.com/bvaughn/react-virtualized/pull/704))
+* 🎉 `MultiGrid` now supports scrolling when hovering over fixed rows or columns by way of new `enableFixedColumnScroll` and `enableFixedRowScroll` props. ([@danalloway](https://github.com/danalloway) - [#708](https://github.com/bvaughn/react-virtualized/pull/708))
+* 🎉 `WindowScroller` supports new configurable `scrollingResetTimeInterval` prop (similar to `Grid`). ([@djeeg](https://github.com/djeeg) - [#728](https://github.com/bvaughn/react-virtualized/pull/728))
+* 🐛 Edge-case bugfix for style caching of `Grids` locked with `ScrollSync`. ([@nathanpower](https://github.com/nathanpower) - [#727](https://github.com/bvaughn/react-virtualized/pull/727))
+* ✨ New `onScrollbarPresenceChange` prop added to `Grid`.
+
 ##### 9.8.0
 * 🎉 `WindowScroller` supports `scrollToIndex` prop. ([@leoasis](https://github.com/leoasis) - [#643](https://github.com/bvaughn/react-virtualized/pull/643))
 * 🎉 Allow `ArrowKeyStepper` to be used as a controlled component. ([@mking-clari](https://github.com/mking-clari) - [#688](https://github.com/bvaughn/react-virtualized/pull/688))
