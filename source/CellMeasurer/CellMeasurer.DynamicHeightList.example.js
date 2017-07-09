@@ -1,5 +1,5 @@
 /** @flow */
-import Immutable from 'immutable'
+import { List as ImmutableList } from 'immutable'
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 import CellMeasurer from './CellMeasurer'
@@ -7,23 +7,19 @@ import CellMeasurerCache from './CellMeasurerCache'
 import List from '../List'
 import styles from './CellMeasurer.example.css'
 
+type Props = {
+  getClassName: (params: { rowIndex: number, columnIndex: number }) => string,
+  list: ImmutableList<*>,
+  width: number
+}
+
 export default class DynamicHeightList extends PureComponent {
-  static propTypes = {
-    getClassName: PropTypes.func.isRequired,
-    list: PropTypes.instanceOf(Immutable.List).isRequired,
-    width: PropTypes.number.isRequired
-  }
+  props: Props
 
-  constructor (props, context) {
-    super(props, context)
-
-    this._cache = new CellMeasurerCache({
-      fixedWidth: true,
-      minHeight: 50
-    })
-
-    this._rowRenderer = this._rowRenderer.bind(this)
-  }
+  _cache = new CellMeasurerCache({
+    fixedWidth: true,
+    minHeight: 50
+  })
 
   render () {
     const { width } = this.props
@@ -42,7 +38,13 @@ export default class DynamicHeightList extends PureComponent {
     )
   }
 
-  _rowRenderer ({ index, isScrolling, key, parent, style }) {
+  _rowRenderer = ({ index, isScrolling, key, parent, style }: {
+    index: number,
+    isScrolling: boolean,
+    key: string,
+    parent: mixed,
+    style: CSSStyleDeclaration
+  }) => {
     const { getClassName, list } = this.props
 
     const datum = list.get(index % list.size)

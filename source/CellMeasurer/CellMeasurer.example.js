@@ -1,5 +1,5 @@
 /** @flow */
-import Immutable from 'immutable'
+import { List as ImmutableList } from 'immutable'
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
@@ -22,17 +22,11 @@ const demoComponents = [
 
 export default class CellMeasurerExample extends PureComponent {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(ImmutableList).isRequired
   }
 
-  constructor (props, context) {
-    super(props, context)
-
-    this.state = {
-      currentTab: 0
-    }
-
-    this._onClick = this._onClick.bind(this)
+  state = {
+    currentTab: 0
   }
 
   render () {
@@ -89,14 +83,14 @@ export default class CellMeasurerExample extends PureComponent {
     )
   }
 
-  _onClick (id) {
+  _onClick = (id: number) => {
     this.setState({
       currentTab: id
     })
   }
 }
 
-function getClassName ({ columnIndex, rowIndex }) {
+function getClassName ({ columnIndex, rowIndex }): string {
   const rowClass = rowIndex % 2 === 0 ? styles.evenRow : styles.oddRow
 
   return cn(rowClass, styles.cell, {
@@ -112,6 +106,8 @@ function getContent ({ index, datum, long = true }) {
       return datum.name
     case 2:
       return long ? datum.randomLong : datum.random
+    default:
+      return ''
   }
 }
 

@@ -1,5 +1,5 @@
 /** @flow */
-import Immutable from 'immutable'
+import { List as ImmutableList } from 'immutable'
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 import CellMeasurer from './CellMeasurer'
@@ -7,24 +7,28 @@ import CellMeasurerCache from './CellMeasurerCache'
 import Grid from '../Grid'
 import styles from './CellMeasurer.example.css'
 
+type Datum = {
+  color: string,
+  name: string,
+  randomLong: string,
+  random: string
+}
+
+type Props = {
+  getClassName: (params: { columnIndex: number, rowIndex: number }) => string,
+  getContent: (params: { index: number, datum: Datum, long: boolean }) => string,
+  list: ImmutableList<Datum>,
+  width: number
+}
+
 export default class DynamicWidthGrid extends PureComponent {
-  static propTypes = {
-    getClassName: PropTypes.func.isRequired,
-    getContent: PropTypes.func.isRequired,
-    list: PropTypes.instanceOf(Immutable.List).isRequired,
-    width: PropTypes.number.isRequired
-  }
+  props: Props
 
-  constructor (props, context) {
-    super(props, context)
+  _cache = new CellMeasurerCache({
+    defaultWidth: 100,
+    fixedHeight: true
+  })
 
-    this._cache = new CellMeasurerCache({
-      defaultWidth: 100,
-      fixedHeight: true
-    })
-
-    this._cellRenderer = this._cellRenderer.bind(this)
-  }
 
   render () {
     const { width } = this.props
@@ -46,7 +50,13 @@ export default class DynamicWidthGrid extends PureComponent {
     )
   }
 
-  _cellRenderer ({ columnIndex, key, parent, rowIndex, style }) {
+  _cellRenderer = ({ columnIndex, key, parent, rowIndex, style }: {
+    columnIndex: number,
+    key: string,
+    parent: mixed,
+    rowIndex: number,
+    style: CSSStyleDeclaration
+  }) => {
     const { getClassName, getContent, list } = this.props
 
     const datum = list.get((rowIndex + columnIndex) % list.size)
