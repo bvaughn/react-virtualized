@@ -2073,4 +2073,77 @@ describe('Grid', () => {
       expect(style01A).not.toBe(style01B)
     })
   })
+
+  describe('onScrollbarPresenceChange', () => {
+    it('should not trigger on-mount if scrollbars are hidden', () => {
+      const onScrollbarPresenceChange = jest.fn()
+
+      render(getMarkup({
+        columnCount: 1,
+        getScrollbarSize: getScrollbarSize20,
+        onScrollbarPresenceChange,
+        rowCount: 1
+      }))
+      expect(onScrollbarPresenceChange).not.toHaveBeenCalled()
+    })
+
+    it('should trigger on-mount if scrollbars are visible', () => {
+      const onScrollbarPresenceChange = jest.fn()
+
+      render(getMarkup({
+        columnCount: 100,
+        getScrollbarSize: getScrollbarSize20,
+        onScrollbarPresenceChange,
+        rowCount: 100
+      }))
+      expect(onScrollbarPresenceChange).toHaveBeenCalled()
+
+      const args = onScrollbarPresenceChange.mock.calls[0][0]
+      expect(args.horizontal).toBe(true)
+      expect(args.size).toBe(getScrollbarSize20())
+      expect(args.vertical).toBe(true)
+    })
+
+    it('should trigger on-update if scrollbar visibility has changed', () => {
+      const onScrollbarPresenceChange = jest.fn()
+      render(getMarkup({
+        columnCount: 1,
+        getScrollbarSize: getScrollbarSize20,
+        onScrollbarPresenceChange,
+        rowCount: 1
+      }))
+      expect(onScrollbarPresenceChange).not.toHaveBeenCalled()
+
+      render(getMarkup({
+        columnCount: 100,
+        getScrollbarSize: getScrollbarSize20,
+        onScrollbarPresenceChange,
+        rowCount: 100
+      }))
+      expect(onScrollbarPresenceChange).toHaveBeenCalled()
+
+      const args = onScrollbarPresenceChange.mock.calls[0][0]
+      expect(args.horizontal).toBe(true)
+      expect(args.size).toBe(getScrollbarSize20())
+      expect(args.vertical).toBe(true)
+    })
+
+    it('should not trigger on-update if scrollbar visibility does not change', () => {
+      const onScrollbarPresenceChange = jest.fn()
+      render(getMarkup({
+        columnCount: 1,
+        getScrollbarSize: getScrollbarSize20,
+        onScrollbarPresenceChange,
+        rowCount: 1
+      }))
+      expect(onScrollbarPresenceChange).not.toHaveBeenCalled()
+      render(getMarkup({
+        columnCount: 2,
+        getScrollbarSize: getScrollbarSize20,
+        onScrollbarPresenceChange,
+        rowCount: 2
+      }))
+      expect(onScrollbarPresenceChange).not.toHaveBeenCalled()
+    })
+  })
 })

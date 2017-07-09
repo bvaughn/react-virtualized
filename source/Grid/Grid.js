@@ -146,6 +146,13 @@ export default class Grid extends PureComponent {
     onScroll: PropTypes.func.isRequired,
 
     /**
+     * Called whenever a horizontal or vertical scrollbar is added or removed.
+     * This prop is not intended for end-user use;
+     * It is used by MultiGrid to support fixed-row/fixed-column scroll syncing.
+     */
+    onScrollbarPresenceChange: PropTypes.func.isRequired,
+
+    /**
      * Callback invoked with information about the section of the Grid that was just rendered.
      * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
      */
@@ -238,6 +245,7 @@ export default class Grid extends PureComponent {
     getScrollbarSize: scrollbarSize,
     noContentRenderer: () => null,
     onScroll: () => null,
+    onScrollbarPresenceChange: () => null,
     onSectionRendered: () => null,
     overscanColumnCount: 0,
     overscanIndicesGetter: defaultOverscanIndicesGetter,
@@ -279,6 +287,10 @@ export default class Grid extends PureComponent {
     this._deferredInvalidateRowIndex = null
     this._recomputeScrollLeftFlag = false
     this._recomputeScrollTopFlag = false
+
+    this._horizontalScrollBarSize = 0
+    this._verticalScrollBarSize = 0
+    this._scrollbarPresenceChanged = false
 
     const deferredMeasurementCache = props.deferredMeasurementCache
     const deferredMode = typeof deferredMeasurementCache !== 'undefined'
@@ -528,6 +540,8 @@ export default class Grid extends PureComponent {
       totalColumnsWidth: this._columnSizeAndPositionManager.getTotalSize(),
       totalRowsHeight: this._rowSizeAndPositionManager.getTotalSize()
     })
+
+    this._maybeCallOnScrollbarPresenceChange()
   }
 
   /**
@@ -648,6 +662,8 @@ export default class Grid extends PureComponent {
 
       this._invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalColumnsWidth, totalRowsHeight })
     }
+
+    this._maybeCallOnScrollbarPresenceChange()
   }
 
   componentWillMount () {
@@ -814,6 +830,15 @@ export default class Grid extends PureComponent {
     // For more info see issue #116
     const verticalScrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0
     const horizontalScrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0
+
+    if (
+      horizontalScrollBarSize !== this._horizontalScrollBarSize ||
+      verticalScrollBarSize !== this._verticalScrollBarSize
+    ) {
+      this._horizontalScrollBarSize = horizontalScrollBarSize
+      this._verticalScrollBarSize = verticalScrollBarSize
+      this._scrollbarPresenceChanged = true
+    }
 
     // Also explicitly init styles to 'auto' if scrollbars are required.
     // This works around an obscure edge case where external CSS styles have not yet been loaded,
@@ -1069,6 +1094,20 @@ export default class Grid extends PureComponent {
     return Object.hasOwnProperty.call(props, 'isScrolling')
       ? props.isScrolling
       : state.isScrolling
+  }
+
+  _maybeCallOnScrollbarPresenceChange () {
+    if (this._scrollbarPresenceChanged) {
+      const {onScrollbarPresenceChange} = this.props
+
+      this._scrollbarPresenceChanged = false
+
+      onScrollbarPresenceChange({
+        horizontal: this._horizontalScrollBarSize > 0,
+        size: this._scrollbarSize,
+        vertical: this._verticalScrollBarSize > 0
+      })
+    }
   }
 
   _setScrollingContainerRef (ref) {

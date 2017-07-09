@@ -15,10 +15,10 @@ const SCROLLBAR_SIZE_BUFFER = 20
  */
 export default class MultiGrid extends PureComponent {
   static propTypes = {
+    enableFixedColumnScroll: PropTypes.bool.isRequired,
+    enableFixedRowScroll: PropTypes.bool.isRequired,
     fixedColumnCount: PropTypes.number.isRequired,
-    fixedColumnScrollInteraction: PropTypes.bool.isRequired,
     fixedRowCount: PropTypes.number.isRequired,
-    fixedRowScrollInteraction: PropTypes.bool.isRequired,
     style: PropTypes.object.isRequired,
     styleBottomLeftGrid: PropTypes.object.isRequired,
     styleBottomRightGrid: PropTypes.object.isRequired,
@@ -27,10 +27,10 @@ export default class MultiGrid extends PureComponent {
   };
 
   static defaultProps = {
+    enableFixedColumnScroll: false,
+    enableFixedRowScroll: false,
     fixedColumnCount: 0,
-    fixedColumnScrollInteraction: false,
     fixedRowCount: 0,
-    fixedRowScrollInteraction: false,
     style: {},
     styleBottomLeftGrid: {},
     styleBottomRightGrid: {},
@@ -43,7 +43,10 @@ export default class MultiGrid extends PureComponent {
 
     this.state = {
       scrollLeft: 0,
-      scrollTop: 0
+      scrollTop: 0,
+      scrollbarSize: 0,
+      showHorizontalScrollbar: false,
+      showVerticalScrollbar: false
     }
 
     this._deferredInvalidateColumnIndex = null
@@ -56,6 +59,7 @@ export default class MultiGrid extends PureComponent {
     this._cellRendererTopRightGrid = this._cellRendererTopRightGrid.bind(this)
     this._columnWidthRightGrid = this._columnWidthRightGrid.bind(this)
     this._onScroll = this._onScroll.bind(this)
+    this._onScrollbarPresenceChange = this._onScrollbarPresenceChange.bind(this)
     this._onScrollLeft = this._onScrollLeft.bind(this)
     this._onScrollTop = this._onScrollTop.bind(this)
     this._rowHeightBottomGrid = this._rowHeightBottomGrid.bind(this)
@@ -349,13 +353,14 @@ export default class MultiGrid extends PureComponent {
 
   _columnWidthRightGrid ({ index }) {
     const { columnCount, fixedColumnCount, columnWidth } = this.props
+    const { scrollbarSize, showHorizontalScrollbar } = this.state
 
     // An extra cell is added to the count
     // This gives the smaller Grid extra room for offset,
     // In case the main (bottom right) Grid has a scrollbar
     // If no scrollbar, the extra space is overflow:hidden anyway
-    if (index === columnCount - fixedColumnCount) {
-      return SCROLLBAR_SIZE_BUFFER
+    if (showHorizontalScrollbar && index === columnCount - fixedColumnCount) {
+      return scrollbarSize
     }
 
     return typeof columnWidth === 'function'
@@ -442,11 +447,11 @@ export default class MultiGrid extends PureComponent {
   _maybeCalculateCachedStyles (prevProps, props, prevState, state) {
     const {
       columnWidth,
+      enableFixedColumnScroll,
+      enableFixedRowScroll,
       height,
       fixedColumnCount,
-      fixedColumnScrollInteraction,
       fixedRowCount,
-      fixedRowScrollInteraction,
       rowHeight,
       style,
       styleBottomLeftGrid,
@@ -512,7 +517,7 @@ export default class MultiGrid extends PureComponent {
       this._bottomLeftGridStyle = {
         left: 0,
         overflowX: 'hidden',
-        overflowY: fixedColumnScrollInteraction ? 'auto' : 'hidden',
+        overflowY: enableFixedColumnScroll ? 'auto' : 'hidden',
         position: 'absolute',
         ...styleBottomLeftGrid
       }
@@ -551,7 +556,7 @@ export default class MultiGrid extends PureComponent {
     ) {
       this._topRightGridStyle = {
         left: this._getLeftGridWidth(props),
-        overflowX: fixedRowScrollInteraction ? 'auto' : 'hidden',
+        overflowX: enableFixedRowScroll ? 'auto' : 'hidden',
         overflowY: 'hidden',
         position: 'absolute',
         top: 0,
@@ -569,6 +574,21 @@ export default class MultiGrid extends PureComponent {
     const onScroll = this.props.onScroll
     if (onScroll) {
       onScroll(scrollInfo)
+    }
+  }
+
+  _onScrollbarPresenceChange ({horizontal, size, vertical}) {
+    const {showHorizontalScrollbar, showVerticalScrollbar} = this.state
+
+    if (
+      horizontal !== showHorizontalScrollbar ||
+      vertical !== showVerticalScrollbar
+    ) {
+      this.setState({
+        scrollbarSize: size,
+        showHorizontalScrollbar: horizontal,
+        showVerticalScrollbar: vertical
+      })
     }
   }
 
@@ -590,16 +610,19 @@ export default class MultiGrid extends PureComponent {
 
   _renderBottomLeftGrid (props) {
     const {
+      enableFixedColumnScroll,
       fixedColumnCount,
-      fixedColumnScrollInteraction,
       fixedRowCount,
       rowCount,
       scrollTop
     } = props
+    const { showVerticalScrollbar } = this.state
 
     if (!fixedColumnCount) {
       return null
     }
+
+    const additionalRowCount = showVerticalScrollbar ? 1 : 0
 
     return (
       <Grid
@@ -608,9 +631,9 @@ export default class MultiGrid extends PureComponent {
         columnCount={fixedColumnCount}
         deferredMeasurementCache={this._deferredMeasurementCacheBottomLeftGrid}
         height={this._getBottomGridHeight(props)}
-        onScroll={fixedColumnScrollInteraction ? this._onScrollTop : undefined}
+        onScroll={enableFixedColumnScroll ? this._onScrollTop : undefined}
         ref={this._bottomLeftGridRef}
-        rowCount={Math.max(0, rowCount - fixedRowCount) + 1/* See _rowHeightBottomGrid */}
+        rowCount={Math.max(0, rowCount - fixedRowCount) + additionalRowCount}
         rowHeight={this._rowHeightBottomGrid}
         scrollTop={scrollTop}
         style={this._bottomLeftGridStyle}
@@ -639,6 +662,7 @@ export default class MultiGrid extends PureComponent {
         deferredMeasurementCache={this._deferredMeasurementCacheBottomRightGrid}
         height={this._getBottomGridHeight(props)}
         onScroll={this._onScroll}
+        onScrollbarPresenceChange={this._onScrollbarPresenceChange}
         ref={this._bottomRightGridRef}
         rowCount={Math.max(0, rowCount - fixedRowCount)}
         rowHeight={this._rowHeightBottomGrid}
@@ -677,25 +701,28 @@ export default class MultiGrid extends PureComponent {
   _renderTopRightGrid (props) {
     const {
       columnCount,
+      enableFixedRowScroll,
       fixedColumnCount,
       fixedRowCount,
-      fixedRowScrollInteraction,
       scrollLeft
     } = props
+    const { showHorizontalScrollbar } = this.state
 
     if (!fixedRowCount) {
       return null
     }
 
+    const additionalColumnCount = showHorizontalScrollbar ? 1 : 0
+
     return (
       <Grid
         {...props}
         cellRenderer={this._cellRendererTopRightGrid}
-        columnCount={Math.max(0, columnCount - fixedColumnCount) + 1/* See _columnWidthRightGrid */}
+        columnCount={Math.max(0, columnCount - fixedColumnCount) + additionalColumnCount}
         columnWidth={this._columnWidthRightGrid}
         deferredMeasurementCache={this._deferredMeasurementCacheTopRightGrid}
         height={this._getTopGridHeight(props)}
-        onScroll={fixedRowScrollInteraction ? this._onScrollLeft : undefined}
+        onScroll={enableFixedRowScroll ? this._onScrollLeft : undefined}
         ref={this._topRightGridRef}
         rowCount={fixedRowCount}
         scrollLeft={scrollLeft}
@@ -708,13 +735,14 @@ export default class MultiGrid extends PureComponent {
 
   _rowHeightBottomGrid ({ index }) {
     const { fixedRowCount, rowCount, rowHeight } = this.props
+    const { scrollbarSize, showVerticalScrollbar } = this.state
 
     // An extra cell is added to the count
     // This gives the smaller Grid extra room for offset,
     // In case the main (bottom right) Grid has a scrollbar
     // If no scrollbar, the extra space is overflow:hidden anyway
-    if (index === rowCount - fixedRowCount) {
-      return SCROLLBAR_SIZE_BUFFER
+    if (showVerticalScrollbar && index === rowCount - fixedRowCount) {
+      return scrollbarSize
     }
 
     return typeof rowHeight === 'function'

@@ -118,10 +118,10 @@ describe('MultiGrid', () => {
 
     it('should allow scrolling of fixed Grids when configured for fixed columns and rows with scroll interaction', () => {
       const rendered = findDOMNode(render(getMarkup({
+        enableFixedColumnScroll: true,
+        enableFixedRowScroll: true,
         fixedColumnCount: 1,
-        fixedColumnScrollInteraction: true,
-        fixedRowCount: 1,
-        fixedRowScrollInteraction: true
+        fixedRowCount: 1
       })))
       const grids = rendered.querySelectorAll('.ReactVirtualized__Grid')
       expect(grids.length).toEqual(4)

@@ -10,6 +10,8 @@ Some properties (eg `columnCount`, `rowCount`) are adjusted slightly to supporte
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
+| enableFixedColumnScroll | boolean |  | Fixed column can be actively scrolled; disabled by default |
+| enableFixedRowScroll | boolean |  | Fixed row can be actively scrolled; disabled by default |
 | fixedColumnCount | number |  | Number of fixed columns; defaults to `0` |
 | fixedRowCount | number |  | Number of fixed rows; defaults to `0` |
 | style | object |  | Optional custom inline style to attach to root `MultiGrid` element. |
