@@ -3,8 +3,7 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { render } from '../TestUtils'
-import { IS_SCROLLING_TIMEOUT } from './utils/onScroll'
-import WindowScroller from './WindowScroller'
+import WindowScroller, { IS_SCROLLING_TIMEOUT } from './WindowScroller'
 
 class ChildComponent extends React.Component {
   render () {

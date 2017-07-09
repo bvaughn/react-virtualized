@@ -74,8 +74,8 @@ export default class MultiGridExample extends PureComponent {
               cellRenderer={this._cellRenderer}
               columnWidth={75}
               columnCount={50}
-              enableFixedColumnScroll={true}
-              enableFixedRowScroll={true}
+              enableFixedColumnScroll
+              enableFixedRowScroll
               height={300}
               rowHeight={40}
               rowCount={100}

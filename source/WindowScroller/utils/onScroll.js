@@ -2,12 +2,6 @@ let mountedInstances = []
 let originalBodyPointerEvents = null
 let disablePointerEventsTimeoutId = null
 
-/**
- * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
- * This improves performance and makes scrolling smoother.
- */
-export const IS_SCROLLING_TIMEOUT = 150
-
 function enablePointerEventsIfDisabled () {
   if (disablePointerEventsTimeoutId) {
     disablePointerEventsTimeoutId = null
@@ -30,13 +24,12 @@ function enablePointerEventsAfterDelay () {
     clearTimeout(disablePointerEventsTimeoutId)
   }
 
-  var maximumTimeout = IS_SCROLLING_TIMEOUT
-  mountedInstances.forEach(function (instance) {
-    if (instance.props.scrollingResetTimeInterval) {
-      if (instance.props.scrollingResetTimeInterval > maximumTimeout) {
-        maximumTimeout = instance.props.scrollingResetTimeInterval
-      }
-    }
+  var maximumTimeout = 0
+  mountedInstances.forEach(instance => {
+    maximumTimeout = Math.max(
+      maximumTimeout,
+      instance.props.scrollingResetTimeInterval
+    )
   })
 
   disablePointerEventsTimeoutId = setTimeout(

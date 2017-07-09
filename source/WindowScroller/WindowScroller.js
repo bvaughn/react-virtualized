@@ -5,6 +5,12 @@ import ReactDOM from 'react-dom'
 import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
 import { getDimensions, getPositionOffset, getScrollOffset } from './utils/dimensions'
 
+/**
+ * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
+ * This improves performance and makes scrolling smoother.
+ */
+export const IS_SCROLLING_TIMEOUT = 150
+
 export default class WindowScroller extends PureComponent {
   static propTypes = {
     /**
@@ -21,12 +27,18 @@ export default class WindowScroller extends PureComponent {
     onScroll: PropTypes.func.isRequired,
 
     /** Element to attach scroll event listeners. Defaults to window. */
-    scrollElement: PropTypes.any
+    scrollElement: PropTypes.any,
+
+    /**
+     * Wait this amount of time after the last scroll event before resetting child `pointer-events`.
+     */
+    scrollingResetTimeInterval: PropTypes.number.isRequired
   };
 
   static defaultProps = {
     onResize: () => {},
-    onScroll: () => {}
+    onScroll: () => {},
+    scrollingResetTimeInterval: IS_SCROLLING_TIMEOUT
   };
 
   constructor (props) {
