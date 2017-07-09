@@ -7,22 +7,17 @@ import Grid from '../Grid'
 import cn from 'classnames'
 import styles from './ArrowKeyStepper.example.css'
 
+type Scroll = {
+  scrollToColumn: number,
+  scrollToRow: number
+};
+
 export default class ArrowKeyStepperExample extends PureComponent {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      mode: 'edges',
-      isClickable: true,
-      scrollToColumn: 0,
-      scrollToRow: 0
-    }
-
-    this._getColumnWidth = this._getColumnWidth.bind(this)
-    this._getRowHeight = this._getRowHeight.bind(this)
-    this._cellRenderer = this._cellRenderer.bind(this)
-    this._selectCell = this._selectCell.bind(this)
-    this._onClickableChange = this._onClickableChange.bind(this)
+  state = {
+    mode: 'edges',
+    isClickable: true,
+    scrollToColumn: 0,
+    scrollToRow: 0
   }
 
   render () {
@@ -124,15 +119,15 @@ export default class ArrowKeyStepperExample extends PureComponent {
     )
   }
 
-  _getColumnWidth ({ index }) {
+  _getColumnWidth = ({ index }: { index: number }) => {
     return (1 + (index % 3)) * 60
   }
 
-  _getRowHeight ({ index }) {
+  _getRowHeight = ({ index }: { index: number }) => {
     return (1 + (index % 3)) * 30
   }
 
-  _cellRenderer ({ columnIndex, key, rowIndex, scrollToColumn, scrollToRow, style }) {
+  _cellRenderer = ({ columnIndex, key, rowIndex, scrollToColumn, scrollToRow, style }: any) => {
     const className = cn(styles.Cell, {
       [styles.FocusedCell]: columnIndex === scrollToColumn && rowIndex === scrollToRow
     })
@@ -149,15 +144,17 @@ export default class ArrowKeyStepperExample extends PureComponent {
     )
   }
 
-  _selectCell ({ scrollToColumn, scrollToRow }) {
+  _selectCell = ({ scrollToColumn, scrollToRow }: Scroll) => {
     this.setState({ scrollToColumn, scrollToRow })
   }
 
-  _onClickableChange (event) {
-    this.setState({
-      isClickable: event.target.checked,
-      scrollToColumn: 0,
-      scrollToRow: 0
-    })
+  _onClickableChange = (event: MouseEvent) => {
+    if (event.target instanceof HTMLInputElement) {
+      this.setState({
+        isClickable: event.target.checked,
+        scrollToColumn: 0,
+        scrollToRow: 0
+      })
+    }
   }
 }
