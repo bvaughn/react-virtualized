@@ -1,4 +1,19 @@
 [ignore]
+.*/node_modules/.*
+.*/ArrowKeyStepper/.*
+.*/AutoSizer/.*
+.*/CellMeasurer/.*
+.*/Collection/.*
+.*/ColumnSizer/.*
+.*/Grid/.*
+.*/InfiniteLoader/.*
+.*/List/.*
+.*/Masonry/.*
+.*/MultiGrid/.*
+.*/ScrollSync/.*
+.*/Table/.*
+.*/WindowScroller/.*
+.*/demo/.*
 
 [include]
 
