@@ -15,8 +15,8 @@ type CellMeasurerCacheParams = {
   defaultWidth ?: number,
   fixedHeight ?: boolean,
   fixedWidth ?: boolean,
-  minHeight?: number,
-  minWidth?: number,
+  minHeight ?: number,
+  minWidth ?: number,
   keyMapper ?: KeyMapper
 };
 
@@ -32,15 +32,19 @@ type IndexParam = {
  * Caches measurements for a given cell.
  */
 export default class CellMeasurerCache {
-  _cellHeightCache: Cache;
-  _cellWidthCache: Cache;
-  _columnWidthCache: Cache;
-  _defaultHeight: ?number;
-  _defaultWidth: ?number;
-  _minHeight: ?number;
-  _minWidth: ?number;
+  _cellHeightCache: Cache = {};
+  _cellWidthCache: Cache = {};
+  _columnWidthCache: Cache = {};
+  _rowHeightCache: Cache = {};
+  _defaultHeight: number;
+  _defaultWidth: number;
+  _minHeight: number;
+  _minWidth: number;
   _keyMapper: KeyMapper;
-  _rowHeightCache: Cache;
+  _hasFixedHeight: boolean;
+  _hasFixedWidth: boolean;
+  _columnCount = 0;
+  _rowCount = 0;
 
   constructor (params : CellMeasurerCacheParams = {}) {
     const {
@@ -104,20 +108,9 @@ export default class CellMeasurerCache {
         )
       }
     }
-
-    this._columnCount = 0
-    this._rowCount = 0
-
-    this._cellHeightCache = {}
-    this._cellWidthCache = {}
-    this._columnWidthCache = {}
-    this._rowHeightCache = {}
   }
 
-  clear (
-    rowIndex: number,
-    columnIndex: number
-  ) : void {
+  clear (rowIndex: number, columnIndex: number) {
     const key = this._keyMapper(rowIndex, columnIndex)
 
     delete this._cellHeightCache[key]
@@ -126,7 +119,7 @@ export default class CellMeasurerCache {
     this._updateCachedColumnAndRowSizes(rowIndex, columnIndex)
   }
 
-  clearAll () : void {
+  clearAll () {
     this._cellHeightCache = {}
     this._cellWidthCache = {}
     this._columnWidthCache = {}
@@ -157,10 +150,7 @@ export default class CellMeasurerCache {
     return this._hasFixedWidth
   }
 
-  getHeight (
-    rowIndex: number,
-    columnIndex: ?number = 0
-  ) : ?number {
+  getHeight (rowIndex: number, columnIndex: number = 0) : number {
     if (this._hasFixedHeight) {
       return this._defaultHeight
     } else {
@@ -172,10 +162,7 @@ export default class CellMeasurerCache {
     }
   }
 
-  getWidth (
-    rowIndex: number,
-    columnIndex: ?number = 0
-  ) : ?number {
+  getWidth (rowIndex: number, columnIndex: number = 0) : number {
     if (this._hasFixedWidth) {
       return this._defaultWidth
     } else {
@@ -187,10 +174,7 @@ export default class CellMeasurerCache {
     }
   }
 
-  has (
-    rowIndex: number,
-    columnIndex: ?number = 0
-  ) : boolean {
+  has (rowIndex: number, columnIndex: number = 0) : boolean {
     const key = this._keyMapper(rowIndex, columnIndex)
 
     return this._cellHeightCache.hasOwnProperty(key)
@@ -204,12 +188,7 @@ export default class CellMeasurerCache {
       : this._defaultHeight
   }
 
-  set (
-    rowIndex: number,
-    columnIndex: number,
-    width: number,
-    height: number
-  ) : void {
+  set (rowIndex: number, columnIndex: number, width: number, height: number) {
     const key = this._keyMapper(rowIndex, columnIndex)
 
     if (columnIndex >= this._columnCount) {
@@ -226,10 +205,7 @@ export default class CellMeasurerCache {
     this._updateCachedColumnAndRowSizes(rowIndex, columnIndex)
   }
 
-  _updateCachedColumnAndRowSizes (
-    rowIndex: number,
-    columnIndex: number
-  ) : void {
+  _updateCachedColumnAndRowSizes (rowIndex: number, columnIndex: number) {
     // :columnWidth and :rowHeight are derived based on all cells in a column/row.
     // Pre-cache these derived values for faster lookup later.
     // Reads are expected to occur more frequently than writes in this case.
@@ -253,9 +229,6 @@ export default class CellMeasurerCache {
   }
 }
 
-function defaultKeyMapper (
-  rowIndex: number,
-  columnIndex: number
-): any {
+function defaultKeyMapper (rowIndex: number, columnIndex: number) {
   return `${rowIndex}-${columnIndex}`
 }
