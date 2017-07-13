@@ -3,7 +3,7 @@ import React from 'react'
 import { findDOMNode } from 'react-dom'
 import CellMeasurerCache from './CellMeasurerCache.js';
 
-type Children = (params: { measure: () => void }) => React.Children
+type Children = (params: { measure: () => void }) => React.Element<*>
 
 type Cell = {
   columnIndex: number,
@@ -12,7 +12,7 @@ type Cell = {
 
 type Props = {
   cache: CellMeasurerCache,
-  children: Children | React.Children,
+  children: Children | React.Element<*>,
   columnIndex?: number,
   index?: number,
   parent: {
