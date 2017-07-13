@@ -74,6 +74,9 @@ export default class List extends PureComponent {
     /** See Grid#scrollToAlignment */
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
+    /** See Grid#scrollToOffset */
+    scrollToOffset: PropTypes.number.isRequired,
+
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number.isRequired,
 
@@ -98,6 +101,7 @@ export default class List extends PureComponent {
     overscanIndicesGetter: accessibilityOverscanIndicesGetter,
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
+    scrollToOffset: 0,
     scrollToIndex: -1,
     style: {}
   };

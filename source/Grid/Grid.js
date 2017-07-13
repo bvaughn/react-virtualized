@@ -212,6 +212,9 @@ export default class Grid extends PureComponent {
      */
     scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
+    /** How far from the calculated 'alignment' position to scroll to (default: 0) */
+    scrollToOffset: PropTypes.number.isRequired,
+
     /**
      * Column index to ensure visible (by forcefully scrolling if necessary)
      */
@@ -253,6 +256,7 @@ export default class Grid extends PureComponent {
     role: 'grid',
     scrollingResetTimeInterval: DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
     scrollToAlignment: 'auto',
+    scrollToOffset: 0,
     scrollToColumn: -1,
     scrollToRow: -1,
     style: {},
@@ -314,16 +318,18 @@ export default class Grid extends PureComponent {
   }
 
   /**
-   * Gets offsets for a given cell and alignment.
+   * Gets offsets for a given cell, alignment and user-provided offset.
    */
   getOffsetForCell ({
     alignment = this.props.scrollToAlignment,
+    userOffset = this.props.scrollToOffset,
     columnIndex = this.props.scrollToColumn,
     rowIndex = this.props.scrollToRow
   } = {}) {
     const offsetProps = {
       ...this.props,
       scrollToAlignment: alignment,
+      scrollToOffset: userOffset,
       scrollToColumn: columnIndex,
       scrollToRow: rowIndex
     }
@@ -1181,7 +1187,7 @@ export default class Grid extends PureComponent {
   }
 
   _getCalculatedScrollTop (props = this.props, state = this.state) {
-    const { height, rowCount, scrollToAlignment, scrollToRow, width } = props
+    const { height, rowCount, scrollToAlignment, scrollToOffset, scrollToRow, width } = props
     const { scrollTop } = state
 
     if (scrollToRow >= 0 && rowCount > 0) {
@@ -1191,6 +1197,7 @@ export default class Grid extends PureComponent {
 
       return this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
+        userOffset: scrollToOffset,
         containerSize: height - scrollBarSize,
         currentOffset: scrollTop,
         targetIndex

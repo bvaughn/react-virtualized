@@ -25,6 +25,7 @@ export default class ListExample extends PureComponent {
       overscanRowCount: 10,
       rowCount: context.list.size,
       scrollToIndex: undefined,
+      scrollToOffset: 0,
       showScrollingPlaceholder: false,
       useDynamicRowHeight: false
     }
@@ -33,6 +34,7 @@ export default class ListExample extends PureComponent {
     this._noRowsRenderer = this._noRowsRenderer.bind(this)
     this._onRowCountChange = this._onRowCountChange.bind(this)
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
+    this._onScrollToOffsetChange = this._onScrollToOffsetChange.bind(this)
     this._rowRenderer = this._rowRenderer.bind(this)
   }
 
@@ -43,6 +45,7 @@ export default class ListExample extends PureComponent {
       overscanRowCount,
       rowCount,
       scrollToIndex,
+      scrollToOffset,
       showScrollingPlaceholder,
       useDynamicRowHeight
     } = this.state
@@ -99,6 +102,13 @@ export default class ListExample extends PureComponent {
             value={scrollToIndex || ''}
           />
           <LabeledInput
+            label='"Scroll to" offset'
+            name='scrollToOffset'
+            placeholder='0'
+            onChange={this._onScrollToOffsetChange}
+            value={scrollToOffset}
+          />
+          <LabeledInput
             label='List height'
             name='listHeight'
             onChange={event => this.setState({ listHeight: parseInt(event.target.value, 10) || 1 })}
@@ -132,6 +142,7 @@ export default class ListExample extends PureComponent {
                 rowHeight={useDynamicRowHeight ? this._getRowHeight : listRowHeight}
                 rowRenderer={this._rowRenderer}
                 scrollToIndex={scrollToIndex}
+                scrollToOffset={scrollToOffset}
                 width={width}
               />
             )}
@@ -174,6 +185,16 @@ export default class ListExample extends PureComponent {
     }
 
     this.setState({ scrollToIndex })
+  }
+
+  _onScrollToOffsetChange (event) {
+    let scrollToOffset = parseInt(event.target.value, 10)
+
+    if (isNaN(scrollToOffset)) {
+      scrollToOffset = undefined
+    }
+
+    this.setState({ scrollToOffset })
   }
 
   _rowRenderer ({ index, isScrolling, key, style }) {
