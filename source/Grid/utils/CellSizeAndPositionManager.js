@@ -126,6 +126,7 @@ export default class CellSizeAndPositionManager {
    * If the current offset is too great or small, it will be adjusted just enough to ensure the specified index is visible.
    *
    * @param align Desired alignment within container; one of "auto" (default), "start", or "end"
+   * @param userOffset User-provided offset distance from the calculated alignment (default: 0)
    * @param containerSize Size (width or height) of the container viewport
    * @param currentOffset Container's current (x or y) offset
    * @param totalSize Total size (width or height) of all cells
@@ -133,6 +134,7 @@ export default class CellSizeAndPositionManager {
    */
   getUpdatedOffsetForIndex ({
     align = 'auto',
+    userOffset = 0,
     containerSize,
     currentOffset,
     targetIndex
@@ -164,7 +166,7 @@ export default class CellSizeAndPositionManager {
 
     const totalSize = this.getTotalSize()
 
-    return Math.max(0, Math.min(totalSize - containerSize, idealOffset))
+    return Math.max(0, Math.min(totalSize - containerSize, idealOffset)) + userOffset
   }
 
   getVisibleCellRange (params: GetVisibleCellRangeParams): VisibleCellRange {

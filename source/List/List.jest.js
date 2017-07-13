@@ -131,6 +131,17 @@ describe('List', () => {
       expect(rendered.textContent).toContain('Name 44')
       expect(rendered.textContent).toContain('Name 54')
     })
+
+    it('should scroll to the correct position for :scrollToOffset', () => {
+      const rendered = findDOMNode(render(getMarkup({
+        scrollToAlignment: 'start',
+        scrollToOffset: 10,
+        scrollToIndex: 49
+      })))
+      // 100 items * 10 item height = 1,000 total item height; 10 items can be visible at a time.
+      expect(rendered.textContent).toContain('Name 50')
+      expect(rendered.textContent).toContain('Name 59')
+    })
   })
 
   describe('property updates', () => {

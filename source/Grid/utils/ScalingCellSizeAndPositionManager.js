@@ -76,6 +76,7 @@ export default class ScalingCellSizeAndPositionManager {
   /** See CellSizeAndPositionManager#getUpdatedOffsetForIndex */
   getUpdatedOffsetForIndex ({
     align = 'auto',
+    userOffset = 0,
     containerSize,
     currentOffset, // safe
     targetIndex,
@@ -88,6 +89,7 @@ export default class ScalingCellSizeAndPositionManager {
 
     const offset = this._cellSizeAndPositionManager.getUpdatedOffsetForIndex({
       align,
+      userOffset,
       containerSize,
       currentOffset,
       targetIndex,

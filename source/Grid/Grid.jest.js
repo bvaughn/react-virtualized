@@ -331,6 +331,22 @@ describe('Grid', () => {
       expect(grid.state.scrollTop).toEqual(940)
     })
 
+    it('should scroll to the correct position for :scrollToOffset', () => {
+      const grid = render(getMarkup({
+        scrollToAlignment: 'start',
+        scrollToOffset: 20,
+        scrollToColumn: 24,
+        scrollToRow: 49
+      }))
+      // 100 columns * 50 item width = 5,000 total item width
+      // 100 rows * 20 item height = 2,000 total item height
+      // 4 columns and 5 rows can be visible at a time.
+      // The minimum amount of scrolling leaves the specified cell in the bottom/right corner (just scrolled into view).
+      // Since alignment is set to "start" we should scroll past this point until the cell is aligned top/left.
+      expect(grid.state.scrollLeft).toEqual(1200)
+      expect(grid.state.scrollTop).toEqual(1000)
+    })
+
     // Tests issue #691
     it('should set the correct :scrollLeft after height increases from 0', () => {
       render.unmount()
