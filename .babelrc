@@ -2,6 +2,7 @@
   "env": {
     "commonjs": {
       "plugins": [
+        "flow-react-proptypes",
         [
           "transform-react-remove-prop-types", {
             "mode": "wrap"
@@ -50,6 +51,7 @@
     "es": {
       "plugins": [
         "transform-runtime",
+        "flow-react-proptypes",
         [
           "transform-react-remove-prop-types", {
             "mode": "wrap"
@@ -65,7 +67,6 @@
     "production": {
       "comments": false,
       "plugins": [
-        "transform-react-remove-prop-types",
         "transform-runtime"
       ],
       "presets": [

@@ -1,4 +1,3 @@
-/* @flow */
 export { ArrowKeyStepper } from './ArrowKeyStepper'
 export { AutoSizer } from './AutoSizer'
 export {
