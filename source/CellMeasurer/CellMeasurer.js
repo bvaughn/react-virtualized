@@ -1,7 +1,7 @@
 /** @flow */
 import React from 'react'
 import { findDOMNode } from 'react-dom'
-import CellMeasurerCache from './CellMeasurerCache.js';
+import CellMeasurerCache from './CellMeasurerCache.js'
 
 type Children = (params: { measure: () => void }) => React.Element<*>
 
