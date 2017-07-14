@@ -80,6 +80,7 @@
       "fdescribe",
       "fit",
       "getComputedStyle",
+      "HTMLElement",
       "it",
       "jest",
       "spyOn"

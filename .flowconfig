@@ -2,7 +2,6 @@
 .*/node_modules/.*
 .*/ArrowKeyStepper/.*
 .*/AutoSizer/.*
-.*/CellMeasurer/.*
 .*/Collection/.*
 .*/ColumnSizer/.*
 .*/Grid/.*
@@ -20,3 +19,4 @@
 [libs]
 
 [options]
+unsafe.enable_getters_and_setters=true
