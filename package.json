@@ -27,7 +27,6 @@
     "prebuild": "yarn run lint",
     "predeploy": "cp ./circle.yml ./build/",
     "prettier": "prettier --write 'source/**/*.js'",
-    "pretest": "yarn run prettier && yarn run lint && yarn run typecheck",
     "postpublish": "yarn run deploy",
     "posttest": "[ -z \"$CI\" ] || codecov",
     "prepublish": "yarn run build",
@@ -37,6 +36,11 @@
     "watch": "watch 'clear && yarn run test -s' source",
     "watch:jest": "jest --no-watchman --watch"
   },
+  "pre-commit": [
+    "typecheck",
+    "prettier",
+    "lint"
+  ],
   "files": [
     "dist",
     "styles.css"
@@ -138,6 +142,7 @@
     "postcss": "^5.0.14",
     "postcss-cli": "^4.1.0",
     "postcss-loader": "^2.0.6",
+    "pre-commit": "^1.2.2",
     "prettier": "^1.5.3",
     "raf": "^3.3.0",
     "react": "next",
