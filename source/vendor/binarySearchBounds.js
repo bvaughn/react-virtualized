@@ -8,30 +8,32 @@
  **/
 
 function _GEA(a, l, h, y) {
-  var i = h + 1
+  var i = h + 1;
   while (l <= h) {
-    var m = l + h >>> 1, x = a[m]
+    var m = (l + h) >>> 1,
+      x = a[m];
     if (x >= y) {
-      i = m
-      h = m - 1
+      i = m;
+      h = m - 1;
     } else {
-      l = m + 1
+      l = m + 1;
     }
   }
-  return i
+  return i;
 }
 function _GEP(a, l, h, y, c) {
-  var i = h + 1
+  var i = h + 1;
   while (l <= h) {
-    var m = l + h >>> 1, x = a[m]
+    var m = (l + h) >>> 1,
+      x = a[m];
     if (c(x, y) >= 0) {
-      i = m
-      h = m - 1
+      i = m;
+      h = m - 1;
     } else {
-      l = m + 1
+      l = m + 1;
     }
   }
-  return i
+  return i;
 }
 function dispatchBsearchGE(a, y, c, l, h) {
   if (typeof c === "function") {
@@ -41,42 +43,44 @@ function dispatchBsearchGE(a, y, c, l, h) {
       h === void 0 ? a.length - 1 : h | 0,
       y,
       c
-    )
+    );
   } else {
     return _GEA(
       a,
       c === void 0 ? 0 : c | 0,
       l === void 0 ? a.length - 1 : l | 0,
       y
-    )
+    );
   }
 }
 
 function _GTA(a, l, h, y) {
-  var i = h + 1
+  var i = h + 1;
   while (l <= h) {
-    var m = l + h >>> 1, x = a[m]
+    var m = (l + h) >>> 1,
+      x = a[m];
     if (x > y) {
-      i = m
-      h = m - 1
+      i = m;
+      h = m - 1;
     } else {
-      l = m + 1
+      l = m + 1;
     }
   }
-  return i
+  return i;
 }
 function _GTP(a, l, h, y, c) {
-  var i = h + 1
+  var i = h + 1;
   while (l <= h) {
-    var m = l + h >>> 1, x = a[m]
+    var m = (l + h) >>> 1,
+      x = a[m];
     if (c(x, y) > 0) {
-      i = m
-      h = m - 1
+      i = m;
+      h = m - 1;
     } else {
-      l = m + 1
+      l = m + 1;
     }
   }
-  return i
+  return i;
 }
 function dispatchBsearchGT(a, y, c, l, h) {
   if (typeof c === "function") {
@@ -86,42 +90,44 @@ function dispatchBsearchGT(a, y, c, l, h) {
       h === void 0 ? a.length - 1 : h | 0,
       y,
       c
-    )
+    );
   } else {
     return _GTA(
       a,
       c === void 0 ? 0 : c | 0,
       l === void 0 ? a.length - 1 : l | 0,
       y
-    )
+    );
   }
 }
 
 function _LTA(a, l, h, y) {
-  var i = l - 1
+  var i = l - 1;
   while (l <= h) {
-    var m = l + h >>> 1, x = a[m]
+    var m = (l + h) >>> 1,
+      x = a[m];
     if (x < y) {
-      i = m
-      l = m + 1
+      i = m;
+      l = m + 1;
     } else {
-      h = m - 1
+      h = m - 1;
     }
   }
-  return i
+  return i;
 }
 function _LTP(a, l, h, y, c) {
-  var i = l - 1
+  var i = l - 1;
   while (l <= h) {
-    var m = l + h >>> 1, x = a[m]
+    var m = (l + h) >>> 1,
+      x = a[m];
     if (c(x, y) < 0) {
-      i = m
-      l = m + 1
+      i = m;
+      l = m + 1;
     } else {
-      h = m - 1
+      h = m - 1;
     }
   }
-  return i
+  return i;
 }
 function dispatchBsearchLT(a, y, c, l, h) {
   if (typeof c === "function") {
@@ -131,42 +137,44 @@ function dispatchBsearchLT(a, y, c, l, h) {
       h === void 0 ? a.length - 1 : h | 0,
       y,
       c
-    )
+    );
   } else {
     return _LTA(
       a,
       c === void 0 ? 0 : c | 0,
       l === void 0 ? a.length - 1 : l | 0,
       y
-    )
+    );
   }
 }
 
 function _LEA(a, l, h, y) {
-  var i = l - 1
+  var i = l - 1;
   while (l <= h) {
-    var m = l + h >>> 1, x = a[m]
+    var m = (l + h) >>> 1,
+      x = a[m];
     if (x <= y) {
-      i = m
-      l = m + 1
+      i = m;
+      l = m + 1;
     } else {
-      h = m - 1
+      h = m - 1;
     }
   }
-  return i
+  return i;
 }
 function _LEP(a, l, h, y, c) {
-  var i = l - 1
+  var i = l - 1;
   while (l <= h) {
-    var m = l + h >>> 1, x = a[m]
+    var m = (l + h) >>> 1,
+      x = a[m];
     if (c(x, y) <= 0) {
-      i = m
-      l = m + 1
+      i = m;
+      l = m + 1;
     } else {
-      h = m - 1
+      h = m - 1;
     }
   }
-  return i
+  return i;
 }
 function dispatchBsearchLE(a, y, c, l, h) {
   if (typeof c === "function") {
@@ -176,45 +184,47 @@ function dispatchBsearchLE(a, y, c, l, h) {
       h === void 0 ? a.length - 1 : h | 0,
       y,
       c
-    )
+    );
   } else {
     return _LEA(
       a,
       c === void 0 ? 0 : c | 0,
       l === void 0 ? a.length - 1 : l | 0,
       y
-    )
+    );
   }
 }
 
 function _EQA(a, l, h, y) {
-  l - 1
+  l - 1;
   while (l <= h) {
-    var m = l + h >>> 1, x = a[m]
+    var m = (l + h) >>> 1,
+      x = a[m];
     if (x === y) {
-      return m
+      return m;
     } else if (x <= y) {
-      l = m + 1
+      l = m + 1;
     } else {
-      h = m - 1
+      h = m - 1;
     }
   }
-  return -1
+  return -1;
 }
 function _EQP(a, l, h, y, c) {
-  l - 1
+  l - 1;
   while (l <= h) {
-    var m = l + h >>> 1, x = a[m]
-    var p = c(x, y)
+    var m = (l + h) >>> 1,
+      x = a[m];
+    var p = c(x, y);
     if (p === 0) {
-      return m
+      return m;
     } else if (p <= 0) {
-      l = m + 1
+      l = m + 1;
     } else {
-      h = m - 1
+      h = m - 1;
     }
   }
-  return -1
+  return -1;
 }
 function dispatchBsearchEQ(a, y, c, l, h) {
   if (typeof c === "function") {
@@ -224,14 +234,14 @@ function dispatchBsearchEQ(a, y, c, l, h) {
       h === void 0 ? a.length - 1 : h | 0,
       y,
       c
-    )
+    );
   } else {
     return _EQA(
       a,
       c === void 0 ? 0 : c | 0,
       l === void 0 ? a.length - 1 : l | 0,
       y
-    )
+    );
   }
 }
 
@@ -241,4 +251,4 @@ export default {
   lt: dispatchBsearchLT,
   le: dispatchBsearchLE,
   eq: dispatchBsearchEQ
-}
+};

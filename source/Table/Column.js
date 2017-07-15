@@ -1,9 +1,9 @@
 /** @flow */
-import PropTypes from 'prop-types'
-import { Component } from 'react'
-import defaultHeaderRenderer from './defaultHeaderRenderer'
-import defaultCellRenderer from './defaultCellRenderer'
-import defaultCellDataGetter from './defaultCellDataGetter'
+import PropTypes from "prop-types";
+import { Component } from "react";
+import defaultHeaderRenderer from "./defaultHeaderRenderer";
+import defaultCellRenderer from "./defaultCellRenderer";
+import defaultCellDataGetter from "./defaultCellDataGetter";
 
 /**
  * Describes the header and cell contents of a table column.
@@ -11,7 +11,7 @@ import defaultCellDataGetter from './defaultCellDataGetter'
 export default class Column extends Component {
   static propTypes = {
     /** Optional aria-label value to set on the column header */
-    'aria-label': PropTypes.string,
+    "aria-label": PropTypes.string,
 
     /**
      * Callback responsible for returning a cell's data, given its :dataKey

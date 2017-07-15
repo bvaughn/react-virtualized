@@ -1,10 +1,10 @@
 import overscanIndicesGetter, {
   SCROLL_DIRECTION_BACKWARD,
   SCROLL_DIRECTION_FORWARD
-} from './accessibilityOverscanIndicesGetter'
+} from "./accessibilityOverscanIndicesGetter";
 
-describe('overscanIndicesGetter', () => {
-  function testHelper ({
+describe("overscanIndicesGetter", () => {
+  function testHelper({
     cellCount,
     startIndex,
     stopIndex,
@@ -17,10 +17,10 @@ describe('overscanIndicesGetter', () => {
       scrollDirection,
       startIndex,
       stopIndex
-    })
+    });
   }
 
-  it('should still overscan by 1 (for keyboard accessibility) if :overscanCellsCount is 0', () => {
+  it("should still overscan by 1 (for keyboard accessibility) if :overscanCellsCount is 0", () => {
     expect(
       testHelper({
         cellCount: 100,
@@ -32,7 +32,7 @@ describe('overscanIndicesGetter', () => {
     ).toEqual({
       overscanStartIndex: 9,
       overscanStopIndex: 21
-    })
+    });
 
     expect(
       testHelper({
@@ -45,10 +45,10 @@ describe('overscanIndicesGetter', () => {
     ).toEqual({
       overscanStartIndex: 9,
       overscanStopIndex: 21
-    })
-  })
+    });
+  });
 
-  it('should overscan forward', () => {
+  it("should overscan forward", () => {
     expect(
       testHelper({
         cellCount: 100,
@@ -60,10 +60,10 @@ describe('overscanIndicesGetter', () => {
     ).toEqual({
       overscanStartIndex: 19,
       overscanStopIndex: 40
-    })
-  })
+    });
+  });
 
-  it('should overscan backward', () => {
+  it("should overscan backward", () => {
     expect(
       testHelper({
         cellCount: 100,
@@ -75,10 +75,10 @@ describe('overscanIndicesGetter', () => {
     ).toEqual({
       overscanStartIndex: 10,
       overscanStopIndex: 31
-    })
-  })
+    });
+  });
 
-  it('should not overscan beyond the start of the list', () => {
+  it("should not overscan beyond the start of the list", () => {
     expect(
       testHelper({
         cellCount: 100,
@@ -90,10 +90,10 @@ describe('overscanIndicesGetter', () => {
     ).toEqual({
       overscanStartIndex: 0,
       overscanStopIndex: 16
-    })
-  })
+    });
+  });
 
-  it('should not overscan beyond the end of the list', () => {
+  it("should not overscan beyond the end of the list", () => {
     expect(
       testHelper({
         cellCount: 25,
@@ -105,6 +105,6 @@ describe('overscanIndicesGetter', () => {
     ).toEqual({
       overscanStartIndex: 9,
       overscanStopIndex: 24
-    })
-  })
-})
+    });
+  });
+});

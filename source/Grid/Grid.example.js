@@ -1,21 +1,25 @@
 /** @flow */
-import Immutable from 'immutable'
-import PropTypes from 'prop-types'
-import React, { PureComponent } from 'react'
-import { ContentBox, ContentBoxHeader, ContentBoxParagraph } from '../demo/ContentBox'
-import { LabeledInput, InputRow } from '../demo/LabeledInput'
-import AutoSizer from '../AutoSizer'
-import Grid from './Grid'
-import cn from 'classnames'
-import styles from './Grid.example.css'
+import Immutable from "immutable";
+import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
+import {
+  ContentBox,
+  ContentBoxHeader,
+  ContentBoxParagraph
+} from "../demo/ContentBox";
+import { LabeledInput, InputRow } from "../demo/LabeledInput";
+import AutoSizer from "../AutoSizer";
+import Grid from "./Grid";
+import cn from "classnames";
+import styles from "./Grid.example.css";
 
 export default class GridExample extends PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired
   };
 
-  constructor (props, context) {
-    super(props, context)
+  constructor(props, context) {
+    super(props, context);
 
     this.state = {
       columnCount: 1000,
@@ -27,22 +31,22 @@ export default class GridExample extends PureComponent {
       scrollToColumn: undefined,
       scrollToRow: undefined,
       useDynamicRowHeight: false
-    }
+    };
 
-    this._cellRenderer = this._cellRenderer.bind(this)
-    this._getColumnWidth = this._getColumnWidth.bind(this)
-    this._getRowClassName = this._getRowClassName.bind(this)
-    this._getRowHeight = this._getRowHeight.bind(this)
-    this._noContentRenderer = this._noContentRenderer.bind(this)
-    this._onColumnCountChange = this._onColumnCountChange.bind(this)
-    this._onRowCountChange = this._onRowCountChange.bind(this)
-    this._onScrollToColumnChange = this._onScrollToColumnChange.bind(this)
-    this._onScrollToRowChange = this._onScrollToRowChange.bind(this)
-    this._renderBodyCell = this._renderBodyCell.bind(this)
-    this._renderLeftSideCell = this._renderLeftSideCell.bind(this)
+    this._cellRenderer = this._cellRenderer.bind(this);
+    this._getColumnWidth = this._getColumnWidth.bind(this);
+    this._getRowClassName = this._getRowClassName.bind(this);
+    this._getRowHeight = this._getRowHeight.bind(this);
+    this._noContentRenderer = this._noContentRenderer.bind(this);
+    this._onColumnCountChange = this._onColumnCountChange.bind(this);
+    this._onRowCountChange = this._onRowCountChange.bind(this);
+    this._onScrollToColumnChange = this._onScrollToColumnChange.bind(this);
+    this._onScrollToRowChange = this._onScrollToRowChange.bind(this);
+    this._renderBodyCell = this._renderBodyCell.bind(this);
+    this._renderLeftSideCell = this._renderLeftSideCell.bind(this);
   }
 
-  render () {
+  render() {
     const {
       columnCount,
       height,
@@ -53,29 +57,32 @@ export default class GridExample extends PureComponent {
       scrollToColumn,
       scrollToRow,
       useDynamicRowHeight
-    } = this.state
+    } = this.state;
 
     return (
       <ContentBox>
         <ContentBoxHeader
-          text='Grid'
-          sourceLink='https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/Grid.example.js'
-          docsLink='https://github.com/bvaughn/react-virtualized/blob/master/docs/Grid.md'
+          text="Grid"
+          sourceLink="https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/Grid.example.js"
+          docsLink="https://github.com/bvaughn/react-virtualized/blob/master/docs/Grid.md"
         />
 
         <ContentBoxParagraph>
-          Renders tabular data with virtualization along the vertical and horizontal axes.
-          Row heights and column widths must be calculated ahead of time and specified as a fixed size or returned by a getter function.
+          Renders tabular data with virtualization along the vertical and
+          horizontal axes. Row heights and column widths must be calculated
+          ahead of time and specified as a fixed size or returned by a getter
+          function.
         </ContentBoxParagraph>
 
         <ContentBoxParagraph>
           <label className={styles.checkboxLabel}>
             <input
-              aria-label='Use dynamic row height?'
+              aria-label="Use dynamic row height?"
               className={styles.checkbox}
-              type='checkbox'
+              type="checkbox"
               value={useDynamicRowHeight}
-              onChange={event => this._updateUseDynamicRowHeights(event.target.checked)}
+              onChange={event =>
+                this._updateUseDynamicRowHeights(event.target.checked)}
             />
             Use dynamic row height?
           </label>
@@ -83,60 +90,70 @@ export default class GridExample extends PureComponent {
 
         <InputRow>
           <LabeledInput
-            label='Num columns'
-            name='columnCount'
+            label="Num columns"
+            name="columnCount"
             onChange={this._onColumnCountChange}
             value={columnCount}
           />
           <LabeledInput
-            label='Num rows'
-            name='rowCount'
+            label="Num rows"
+            name="rowCount"
             onChange={this._onRowCountChange}
             value={rowCount}
           />
           <LabeledInput
-            label='Scroll to column'
-            name='onScrollToColumn'
-            placeholder='Index...'
+            label="Scroll to column"
+            name="onScrollToColumn"
+            placeholder="Index..."
             onChange={this._onScrollToColumnChange}
-            value={scrollToColumn || ''}
+            value={scrollToColumn || ""}
           />
           <LabeledInput
-            label='Scroll to row'
-            name='onScrollToRow'
-            placeholder='Index...'
+            label="Scroll to row"
+            name="onScrollToRow"
+            placeholder="Index..."
             onChange={this._onScrollToRowChange}
-            value={scrollToRow || ''}
+            value={scrollToRow || ""}
           />
           <LabeledInput
-            label='List height'
-            name='height'
-            onChange={event => this.setState({ height: parseInt(event.target.value, 10) || 1 })}
+            label="List height"
+            name="height"
+            onChange={event =>
+              this.setState({ height: parseInt(event.target.value, 10) || 1 })}
             value={height}
           />
           <LabeledInput
             disabled={useDynamicRowHeight}
-            label='Row height'
-            name='rowHeight'
-            onChange={event => this.setState({ rowHeight: parseInt(event.target.value, 10) || 1 })}
+            label="Row height"
+            name="rowHeight"
+            onChange={event =>
+              this.setState({
+                rowHeight: parseInt(event.target.value, 10) || 1
+              })}
             value={rowHeight}
           />
           <LabeledInput
-            label='Overscan columns'
-            name='overscanColumnCount'
-            onChange={event => this.setState({ overscanColumnCount: parseInt(event.target.value, 10) || 0 })}
+            label="Overscan columns"
+            name="overscanColumnCount"
+            onChange={event =>
+              this.setState({
+                overscanColumnCount: parseInt(event.target.value, 10) || 0
+              })}
             value={overscanColumnCount}
           />
           <LabeledInput
-            label='Overscan rows'
-            name='overscanRowCount'
-            onChange={event => this.setState({ overscanRowCount: parseInt(event.target.value, 10) || 0 })}
+            label="Overscan rows"
+            name="overscanRowCount"
+            onChange={event =>
+              this.setState({
+                overscanRowCount: parseInt(event.target.value, 10) || 0
+              })}
             value={overscanRowCount}
           />
         </InputRow>
 
         <AutoSizer disableHeight>
-          {({ width }) => (
+          {({ width }) =>
             <Grid
               cellRenderer={this._cellRenderer}
               className={styles.BodyGrid}
@@ -151,93 +168,84 @@ export default class GridExample extends PureComponent {
               scrollToColumn={scrollToColumn}
               scrollToRow={scrollToRow}
               width={width}
-            />
-          )}
+            />}
         </AutoSizer>
       </ContentBox>
-    )
+    );
   }
 
-  _cellRenderer ({ columnIndex, key, rowIndex, style }) {
+  _cellRenderer({ columnIndex, key, rowIndex, style }) {
     if (columnIndex === 0) {
-      return this._renderLeftSideCell({ columnIndex, key, rowIndex, style })
+      return this._renderLeftSideCell({ columnIndex, key, rowIndex, style });
     } else {
-      return this._renderBodyCell({ columnIndex, key, rowIndex, style })
+      return this._renderBodyCell({ columnIndex, key, rowIndex, style });
     }
   }
 
-  _getColumnWidth ({ index }) {
+  _getColumnWidth({ index }) {
     switch (index) {
       case 0:
-        return 50
+        return 50;
       case 1:
-        return 100
+        return 100;
       case 2:
-        return 300
+        return 300;
       default:
-        return 80
+        return 80;
     }
   }
 
-  _getDatum (index) {
-    const { list } = this.context
+  _getDatum(index) {
+    const { list } = this.context;
 
-    return list.get(index % list.size)
+    return list.get(index % list.size);
   }
 
-  _getRowClassName (row) {
-    return row % 2 === 0 ? styles.evenRow : styles.oddRow
+  _getRowClassName(row) {
+    return row % 2 === 0 ? styles.evenRow : styles.oddRow;
   }
 
-  _getRowHeight ({ index }) {
-    return this._getDatum(index).size
+  _getRowHeight({ index }) {
+    return this._getDatum(index).size;
   }
 
-  _noContentRenderer () {
-    return (
-      <div className={styles.noCells}>
-        No cells
-      </div>
-    )
+  _noContentRenderer() {
+    return <div className={styles.noCells}>No cells</div>;
   }
 
-  _renderBodyCell ({ columnIndex, key, rowIndex, style }) {
-    const rowClass = this._getRowClassName(rowIndex)
-    const datum = this._getDatum(rowIndex)
+  _renderBodyCell({ columnIndex, key, rowIndex, style }) {
+    const rowClass = this._getRowClassName(rowIndex);
+    const datum = this._getDatum(rowIndex);
 
-    let content
+    let content;
 
     switch (columnIndex) {
       case 1:
-        content = datum.name
-        break
+        content = datum.name;
+        break;
       case 2:
-        content = datum.random
-        break
+        content = datum.random;
+        break;
       default:
-        content = `r:${rowIndex}, c:${columnIndex}`
-        break
+        content = `r:${rowIndex}, c:${columnIndex}`;
+        break;
     }
 
     const classNames = cn(rowClass, styles.cell, {
       [styles.centeredCell]: columnIndex > 2
-    })
+    });
 
     return (
-      <div
-        className={classNames}
-        key={key}
-        style={style}
-      >
+      <div className={classNames} key={key} style={style}>
         {content}
       </div>
-    )
+    );
   }
 
-  _renderLeftSideCell ({ key, rowIndex, style }) {
-    const datum = this._getDatum(rowIndex)
+  _renderLeftSideCell({ key, rowIndex, style }) {
+    const datum = this._getDatum(rowIndex);
 
-    const classNames = cn(styles.cell, styles.letterCell)
+    const classNames = cn(styles.cell, styles.letterCell);
 
     // Don't modify styles.
     // These are frozen by React now (as of 16.0.0).
@@ -245,56 +253,55 @@ export default class GridExample extends PureComponent {
     style = {
       ...style,
       backgroundColor: datum.color
-    }
+    };
 
     return (
-      <div
-        className={classNames}
-        key={key}
-        style={style}
-      >
+      <div className={classNames} key={key} style={style}>
         {datum.name.charAt(0)}
       </div>
-    )
+    );
   }
 
-  _updateUseDynamicRowHeights (value) {
+  _updateUseDynamicRowHeights(value) {
     this.setState({
       useDynamicRowHeight: value
-    })
+    });
   }
 
-  _onColumnCountChange (event) {
-    const columnCount = parseInt(event.target.value, 10) || 0
+  _onColumnCountChange(event) {
+    const columnCount = parseInt(event.target.value, 10) || 0;
 
-    this.setState({ columnCount })
+    this.setState({ columnCount });
   }
 
-  _onRowCountChange (event) {
-    const rowCount = parseInt(event.target.value, 10) || 0
+  _onRowCountChange(event) {
+    const rowCount = parseInt(event.target.value, 10) || 0;
 
-    this.setState({ rowCount })
+    this.setState({ rowCount });
   }
 
-  _onScrollToColumnChange (event) {
-    const { columnCount } = this.state
-    let scrollToColumn = Math.min(columnCount - 1, parseInt(event.target.value, 10))
+  _onScrollToColumnChange(event) {
+    const { columnCount } = this.state;
+    let scrollToColumn = Math.min(
+      columnCount - 1,
+      parseInt(event.target.value, 10)
+    );
 
     if (isNaN(scrollToColumn)) {
-      scrollToColumn = undefined
+      scrollToColumn = undefined;
     }
 
-    this.setState({ scrollToColumn })
+    this.setState({ scrollToColumn });
   }
 
-  _onScrollToRowChange (event) {
-    const { rowCount } = this.state
-    let scrollToRow = Math.min(rowCount - 1, parseInt(event.target.value, 10))
+  _onScrollToRowChange(event) {
+    const { rowCount } = this.state;
+    let scrollToRow = Math.min(rowCount - 1, parseInt(event.target.value, 10));
 
     if (isNaN(scrollToRow)) {
-      scrollToRow = undefined
+      scrollToRow = undefined;
     }
 
-    this.setState({ scrollToRow })
+    this.setState({ scrollToRow });
   }
 }

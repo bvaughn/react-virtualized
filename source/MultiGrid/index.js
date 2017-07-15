@@ -1,3 +1,3 @@
 /** @flow */
-export default from './MultiGrid'
-export MultiGrid from './MultiGrid'
+export default from "./MultiGrid";
+export MultiGrid from "./MultiGrid";

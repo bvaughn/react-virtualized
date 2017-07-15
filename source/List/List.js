@@ -1,8 +1,8 @@
 /** @flow */
-import Grid, { accessibilityOverscanIndicesGetter } from '../Grid'
-import PropTypes from 'prop-types'
-import React, { PureComponent } from 'react'
-import cn from 'classnames'
+import Grid, { accessibilityOverscanIndicesGetter } from "../Grid";
+import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
+import cn from "classnames";
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -14,7 +14,7 @@ import cn from 'classnames'
  */
 export default class List extends PureComponent {
   static propTypes = {
-    'aria-label': PropTypes.string,
+    "aria-label": PropTypes.string,
 
     /**
      * Removes fixed height from the scrollingContainer so that the total height
@@ -63,7 +63,8 @@ export default class List extends PureComponent {
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * ({ index: number }): number
      */
-    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func])
+      .isRequired,
 
     /** Responsible for rendering a row given an index; ({ index: number }): node */
     rowRenderer: PropTypes.func.isRequired,
@@ -72,7 +73,8 @@ export default class List extends PureComponent {
     rowCount: PropTypes.number.isRequired,
 
     /** See Grid#scrollToAlignment */
-    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
+    scrollToAlignment: PropTypes.oneOf(["auto", "end", "start", "center"])
+      .isRequired,
 
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number.isRequired,
@@ -97,71 +99,63 @@ export default class List extends PureComponent {
     onScroll: () => null,
     overscanIndicesGetter: accessibilityOverscanIndicesGetter,
     overscanRowCount: 10,
-    scrollToAlignment: 'auto',
+    scrollToAlignment: "auto",
     scrollToIndex: -1,
     style: {}
   };
 
-  constructor (props, context) {
-    super(props, context)
+  constructor(props, context) {
+    super(props, context);
 
-    this._cellRenderer = this._cellRenderer.bind(this)
-    this._onScroll = this._onScroll.bind(this)
-    this._onSectionRendered = this._onSectionRendered.bind(this)
-    this._setRef = this._setRef.bind(this)
+    this._cellRenderer = this._cellRenderer.bind(this);
+    this._onScroll = this._onScroll.bind(this);
+    this._onSectionRendered = this._onSectionRendered.bind(this);
+    this._setRef = this._setRef.bind(this);
   }
 
-  forceUpdateGrid () {
-    this.Grid.forceUpdate()
+  forceUpdateGrid() {
+    this.Grid.forceUpdate();
   }
 
   /** See Grid#getOffsetForCell */
-  getOffsetForRow ({
-    alignment,
-    index
-  }) {
+  getOffsetForRow({ alignment, index }) {
     const { scrollTop } = this.Grid.getOffsetForCell({
       alignment,
       rowIndex: index
-    })
+    });
 
-    return scrollTop
+    return scrollTop;
   }
 
   /** See Grid#measureAllCells */
-  measureAllRows () {
-    this.Grid.measureAllCells()
+  measureAllRows() {
+    this.Grid.measureAllCells();
   }
 
   /** See Grid#recomputeGridSize */
-  recomputeRowHeights (index = 0) {
+  recomputeRowHeights(index = 0) {
     this.Grid.recomputeGridSize({
       rowIndex: index
-    })
+    });
   }
 
   /** See Grid#scrollToPosition */
-  scrollToPosition (scrollTop = 0) {
-    this.Grid.scrollToPosition({ scrollTop })
+  scrollToPosition(scrollTop = 0) {
+    this.Grid.scrollToPosition({ scrollTop });
   }
 
   /** See Grid#scrollToCell */
-  scrollToRow (index = 0) {
+  scrollToRow(index = 0) {
     this.Grid.scrollToCell({
       columnIndex: 0,
       rowIndex: index
-    })
+    });
   }
 
-  render () {
-    const {
-      className,
-      noRowsRenderer,
-      scrollToIndex,
-      width
-    } = this.props
+  render() {
+    const { className, noRowsRenderer, scrollToIndex, width } = this.props;
 
-    const classNames = cn('ReactVirtualized__List', className)
+    const classNames = cn("ReactVirtualized__List", className);
 
     return (
       <Grid
@@ -177,49 +171,54 @@ export default class List extends PureComponent {
         ref={this._setRef}
         scrollToRow={scrollToIndex}
       />
-    )
+    );
   }
 
-  _cellRenderer ({ rowIndex, style, ...rest }) {
-    const { rowRenderer } = this.props
+  _cellRenderer({ rowIndex, style, ...rest }) {
+    const { rowRenderer } = this.props;
 
     // TRICKY The style object is sometimes cached by Grid.
     // This prevents new style objects from bypassing shallowCompare().
     // However as of React 16, style props are auto-frozen (at least in dev mode)
     // Check to make sure we can still modify the style before proceeding.
     // https://github.com/facebook/react/commit/977357765b44af8ff0cfea327866861073095c12#commitcomment-20648713
-    const { writable } = Object.getOwnPropertyDescriptor(style, 'width')
+    const { writable } = Object.getOwnPropertyDescriptor(style, "width");
     if (writable) {
       // By default, List cells should be 100% width.
       // This prevents them from flowing under a scrollbar (if present).
-      style.width = '100%'
+      style.width = "100%";
     }
 
     return rowRenderer({
       index: rowIndex,
       style,
       ...rest
-    })
+    });
   }
 
-  _setRef (ref) {
-    this.Grid = ref
+  _setRef(ref) {
+    this.Grid = ref;
   }
 
-  _onScroll ({ clientHeight, scrollHeight, scrollTop }) {
-    const { onScroll } = this.props
+  _onScroll({ clientHeight, scrollHeight, scrollTop }) {
+    const { onScroll } = this.props;
 
-    onScroll({ clientHeight, scrollHeight, scrollTop })
+    onScroll({ clientHeight, scrollHeight, scrollTop });
   }
 
-  _onSectionRendered ({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) {
-    const { onRowsRendered } = this.props
+  _onSectionRendered({
+    rowOverscanStartIndex,
+    rowOverscanStopIndex,
+    rowStartIndex,
+    rowStopIndex
+  }) {
+    const { onRowsRendered } = this.props;
 
     onRowsRendered({
       overscanStartIndex: rowOverscanStartIndex,
       overscanStopIndex: rowOverscanStopIndex,
       startIndex: rowStartIndex,
       stopIndex: rowStopIndex
-    })
+    });
   }
 }

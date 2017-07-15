@@ -1,13 +1,13 @@
 /** @flow */
-import cn from 'classnames'
-import Column from './Column'
-import PropTypes from 'prop-types'
-import React, { PureComponent } from 'react'
-import { findDOMNode } from 'react-dom'
-import Grid, { accessibilityOverscanIndicesGetter } from '../Grid'
-import defaultRowRenderer from './defaultRowRenderer'
-import defaultHeaderRowRenderer from './defaultHeaderRowRenderer'
-import SortDirection from './SortDirection'
+import cn from "classnames";
+import Column from "./Column";
+import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
+import { findDOMNode } from "react-dom";
+import Grid, { accessibilityOverscanIndicesGetter } from "../Grid";
+import defaultRowRenderer from "./defaultRowRenderer";
+import defaultHeaderRowRenderer from "./defaultHeaderRowRenderer";
+import SortDirection from "./SortDirection";
 
 /**
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
@@ -15,7 +15,7 @@ import SortDirection from './SortDirection'
  */
 export default class Table extends PureComponent {
   static propTypes = {
-    'aria-label': PropTypes.string,
+    "aria-label": PropTypes.string,
 
     /**
      * Removes fixed height from the scrollingContainer so that the total height
@@ -25,10 +25,10 @@ export default class Table extends PureComponent {
 
     /** One or more Columns describing the data displayed in this row */
     children: (props, propName, componentName) => {
-      const children = React.Children.toArray(props.children)
+      const children = React.Children.toArray(props.children);
       for (let i = 0; i < children.length; i++) {
         if (children[i].type !== Column) {
-          return new Error('Table only accepts children of type Column')
+          return new Error("Table only accepts children of type Column");
         }
       }
     },
@@ -148,7 +148,8 @@ export default class Table extends PureComponent {
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * ({ index: number }): number
      */
-    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func])
+      .isRequired,
 
     /** Number of rows in table. */
     rowCount: PropTypes.number.isRequired,
@@ -171,10 +172,12 @@ export default class Table extends PureComponent {
     rowRenderer: PropTypes.func,
 
     /** Optional custom inline style to attach to table rows. */
-    rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
+    rowStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func])
+      .isRequired,
 
     /** See Grid#scrollToAlignment */
-    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
+    scrollToAlignment: PropTypes.oneOf(["auto", "end", "start", "center"])
+      .isRequired,
 
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number.isRequired,
@@ -217,76 +220,73 @@ export default class Table extends PureComponent {
     rowRenderer: defaultRowRenderer,
     headerRowRenderer: defaultHeaderRowRenderer,
     rowStyle: {},
-    scrollToAlignment: 'auto',
+    scrollToAlignment: "auto",
     scrollToIndex: -1,
     style: {}
   };
 
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
       scrollbarWidth: 0
-    }
+    };
 
-    this._createColumn = this._createColumn.bind(this)
-    this._createRow = this._createRow.bind(this)
-    this._onScroll = this._onScroll.bind(this)
-    this._onSectionRendered = this._onSectionRendered.bind(this)
-    this._setRef = this._setRef.bind(this)
+    this._createColumn = this._createColumn.bind(this);
+    this._createRow = this._createRow.bind(this);
+    this._onScroll = this._onScroll.bind(this);
+    this._onSectionRendered = this._onSectionRendered.bind(this);
+    this._setRef = this._setRef.bind(this);
   }
 
-  forceUpdateGrid () {
-    this.Grid.forceUpdate()
+  forceUpdateGrid() {
+    this.Grid.forceUpdate();
   }
 
   /** See Grid#getOffsetForCell */
-  getOffsetForRow ({
-    alignment,
-    index
-  }) {
+  getOffsetForRow({ alignment, index }) {
     const { scrollTop } = this.Grid.getOffsetForCell({
       alignment,
       rowIndex: index
-    })
+    });
 
-    return scrollTop
+    return scrollTop;
   }
 
   /** See Grid#measureAllCells */
-  measureAllRows () {
-    this.Grid.measureAllCells()
+  measureAllRows() {
+    this.Grid.measureAllCells();
   }
 
   /** See Grid#recomputeGridSize */
-  recomputeRowHeights (index = 0) {
+  recomputeRowHeights(index = 0) {
     this.Grid.recomputeGridSize({
       rowIndex: index
-    })
+    });
   }
 
   /** See Grid#scrollToPosition */
-  scrollToPosition (scrollTop = 0) {
-    this.Grid.scrollToPosition({ scrollTop })
+  scrollToPosition(scrollTop = 0) {
+    this.Grid.scrollToPosition({ scrollTop });
   }
 
   /** See Grid#scrollToCell */
-  scrollToRow (index = 0) {
+  scrollToRow(index = 0) {
     this.Grid.scrollToCell({
       columnIndex: 0,
       rowIndex: index
-    })
+    });
   }
 
-  componentDidMount () {
-    this._setScrollbarWidth()
+  componentDidMount() {
+    this._setScrollbarWidth();
   }
 
-  componentDidUpdate () {
-    this._setScrollbarWidth()
+  componentDidUpdate() {
+    this._setScrollbarWidth();
   }
 
-  render () {
+  render() {
     const {
       children,
       className,
@@ -303,53 +303,59 @@ export default class Table extends PureComponent {
       scrollToIndex,
       style,
       width
-    } = this.props
-    const { scrollbarWidth } = this.state
+    } = this.props;
+    const { scrollbarWidth } = this.state;
 
-    const availableRowsHeight = disableHeader ? height : height - headerHeight
+    const availableRowsHeight = disableHeader ? height : height - headerHeight;
 
-    const rowClass = typeof rowClassName === 'function' ? rowClassName({ index: -1 }) : rowClassName
-    const rowStyleObject = typeof rowStyle === 'function' ? rowStyle({ index: -1 }) : rowStyle
+    const rowClass =
+      typeof rowClassName === "function"
+        ? rowClassName({ index: -1 })
+        : rowClassName;
+    const rowStyleObject =
+      typeof rowStyle === "function" ? rowStyle({ index: -1 }) : rowStyle;
 
     // Precompute and cache column styles before rendering rows and columns to speed things up
-    this._cachedColumnStyles = []
+    this._cachedColumnStyles = [];
     React.Children.toArray(children).forEach((column, index) => {
-      const flexStyles = this._getFlexStyleForColumn(column, column.props.style)
+      const flexStyles = this._getFlexStyleForColumn(
+        column,
+        column.props.style
+      );
 
       this._cachedColumnStyles[index] = {
         ...flexStyles,
-        overflow: 'hidden'
-      }
-    })
+        overflow: "hidden"
+      };
+    });
 
     // Note that we specify :rowCount, :scrollbarWidth, :sortBy, and :sortDirection as properties on Grid even though these have nothing to do with Grid.
     // This is done because Grid is a pure component and won't update unless its properties or state has changed.
     // Any property that should trigger a re-render of Grid then is specified here to avoid a stale display.
     return (
       <div
-        className={cn('ReactVirtualized__Table', className)}
+        className={cn("ReactVirtualized__Table", className)}
         id={id}
-        role='grid'
+        role="grid"
         style={style}
       >
-        {!disableHeader && (
+        {!disableHeader &&
           headerRowRenderer({
-            className: cn('ReactVirtualized__Table__headerRow', rowClass),
+            className: cn("ReactVirtualized__Table__headerRow", rowClass),
             columns: this._getHeaderColumns(),
             style: {
               ...rowStyleObject,
               height: headerHeight,
-              overflow: 'hidden',
+              overflow: "hidden",
               paddingRight: scrollbarWidth,
               width: width
             }
-          })
-        )}
+          })}
 
         <Grid
           {...this.props}
           autoContainerWidth
-          className={cn('ReactVirtualized__Table__Grid', gridClassName)}
+          className={cn("ReactVirtualized__Table__Grid", gridClassName)}
           cellRenderer={this._createRow}
           columnWidth={width}
           columnCount={1}
@@ -359,19 +365,19 @@ export default class Table extends PureComponent {
           onScroll={this._onScroll}
           onSectionRendered={this._onSectionRendered}
           ref={this._setRef}
-          role='rowgroup'
+          role="rowgroup"
           scrollbarWidth={scrollbarWidth}
           scrollToRow={scrollToIndex}
           style={{
             ...gridStyle,
-            overflowX: 'hidden'
+            overflowX: "hidden"
           }}
         />
       </div>
-    )
+    );
   }
 
-  _createColumn ({
+  _createColumn({
     column,
     columnIndex,
     isScrolling,
@@ -386,52 +392,73 @@ export default class Table extends PureComponent {
       columnData,
       dataKey,
       id
-    } = column.props
+    } = column.props;
 
-    const cellData = cellDataGetter({ columnData, dataKey, rowData })
-    const renderedCell = cellRenderer({ cellData, columnData, columnIndex, dataKey, isScrolling, parent, rowData, rowIndex })
+    const cellData = cellDataGetter({ columnData, dataKey, rowData });
+    const renderedCell = cellRenderer({
+      cellData,
+      columnData,
+      columnIndex,
+      dataKey,
+      isScrolling,
+      parent,
+      rowData,
+      rowIndex
+    });
 
-    const style = this._cachedColumnStyles[columnIndex]
+    const style = this._cachedColumnStyles[columnIndex];
 
-    const title = typeof renderedCell === 'string'
-      ? renderedCell
-      : null
+    const title = typeof renderedCell === "string" ? renderedCell : null;
 
     const a11yProps = {
-      role: 'gridcell'
-    }
+      role: "gridcell"
+    };
 
     if (id) {
-      a11yProps['aria-describedby'] = id
+      a11yProps["aria-describedby"] = id;
     }
 
     return (
       <div
         {...a11yProps}
         key={`Row${rowIndex}-Col${columnIndex}`}
-        className={cn('ReactVirtualized__Table__rowColumn', className)}
+        className={cn("ReactVirtualized__Table__rowColumn", className)}
         style={style}
         title={title}
       >
         {renderedCell}
       </div>
-    )
+    );
   }
 
-  _createHeader ({ column, index }) {
-    const { headerClassName, headerStyle, onHeaderClick, sort, sortBy, sortDirection } = this.props
-    const { dataKey, disableSort, headerRenderer, id, label, columnData } = column.props
-    const sortEnabled = !disableSort && sort
+  _createHeader({ column, index }) {
+    const {
+      headerClassName,
+      headerStyle,
+      onHeaderClick,
+      sort,
+      sortBy,
+      sortDirection
+    } = this.props;
+    const {
+      dataKey,
+      disableSort,
+      headerRenderer,
+      id,
+      label,
+      columnData
+    } = column.props;
+    const sortEnabled = !disableSort && sort;
 
     const classNames = cn(
-      'ReactVirtualized__Table__headerColumn',
+      "ReactVirtualized__Table__headerColumn",
       headerClassName,
       column.props.headerClassName,
       {
-        'ReactVirtualized__Table__sortableHeaderColumn': sortEnabled
+        ReactVirtualized__Table__sortableHeaderColumn: sortEnabled
       }
-    )
-    const style = this._getFlexStyleForColumn(column, headerStyle)
+    );
+    const style = this._getFlexStyleForColumn(column, headerStyle);
 
     const renderedHeader = headerRenderer({
       columnData,
@@ -440,46 +467,47 @@ export default class Table extends PureComponent {
       label,
       sortBy,
       sortDirection
-    })
+    });
 
     const a11yProps = {
-      role: 'columnheader'
-    }
+      role: "columnheader"
+    };
 
     if (sortEnabled || onHeaderClick) {
       // If this is a sortable header, clicking it should update the table data's sorting.
-      const newSortDirection = sortBy !== dataKey || sortDirection === SortDirection.DESC
-        ? SortDirection.ASC
-        : SortDirection.DESC
+      const newSortDirection =
+        sortBy !== dataKey || sortDirection === SortDirection.DESC
+          ? SortDirection.ASC
+          : SortDirection.DESC;
 
-      const onClick = (event) => {
-        sortEnabled && sort({
-          sortBy: dataKey,
-          sortDirection: newSortDirection
-        })
-        onHeaderClick && onHeaderClick({ columnData, dataKey, event })
-      }
+      const onClick = event => {
+        sortEnabled &&
+          sort({
+            sortBy: dataKey,
+            sortDirection: newSortDirection
+          });
+        onHeaderClick && onHeaderClick({ columnData, dataKey, event });
+      };
 
-      const onKeyDown = (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          onClick(event)
+      const onKeyDown = event => {
+        if (event.key === "Enter" || event.key === " ") {
+          onClick(event);
         }
-      }
+      };
 
-      a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey
-      a11yProps.tabIndex = 0
-      a11yProps.onClick = onClick
-      a11yProps.onKeyDown = onKeyDown
+      a11yProps["aria-label"] = column.props["aria-label"] || label || dataKey;
+      a11yProps.tabIndex = 0;
+      a11yProps.onClick = onClick;
+      a11yProps.onKeyDown = onKeyDown;
     }
 
     if (sortBy === dataKey) {
-      a11yProps['aria-sort'] = sortDirection === SortDirection.ASC
-        ? 'ascending'
-        : 'descending'
+      a11yProps["aria-sort"] =
+        sortDirection === SortDirection.ASC ? "ascending" : "descending";
     }
 
     if (id) {
-      a11yProps.id = id
+      a11yProps.id = id;
     }
 
     return (
@@ -491,16 +519,10 @@ export default class Table extends PureComponent {
       >
         {renderedHeader}
       </div>
-    )
+    );
   }
 
-  _createRow ({
-    rowIndex: index,
-    isScrolling,
-    key,
-    parent,
-    style
-  }) {
+  _createRow({ rowIndex: index, isScrolling, key, parent, style }) {
     const {
       children,
       onRowClick,
@@ -511,34 +533,40 @@ export default class Table extends PureComponent {
       rowGetter,
       rowRenderer,
       rowStyle
-    } = this.props
+    } = this.props;
 
-    const { scrollbarWidth } = this.state
+    const { scrollbarWidth } = this.state;
 
-    const rowClass = typeof rowClassName === 'function' ? rowClassName({ index }) : rowClassName
-    const rowStyleObject = typeof rowStyle === 'function' ? rowStyle({ index }) : rowStyle
-    const rowData = rowGetter({ index })
+    const rowClass =
+      typeof rowClassName === "function"
+        ? rowClassName({ index })
+        : rowClassName;
+    const rowStyleObject =
+      typeof rowStyle === "function" ? rowStyle({ index }) : rowStyle;
+    const rowData = rowGetter({ index });
 
-    const columns = React.Children.toArray(children).map(
-      (column, columnIndex) => this._createColumn({
-        column,
-        columnIndex,
-        isScrolling,
-        parent,
-        rowData,
-        rowIndex: index,
-        scrollbarWidth
-      })
-    )
+    const columns = React.Children
+      .toArray(children)
+      .map((column, columnIndex) =>
+        this._createColumn({
+          column,
+          columnIndex,
+          isScrolling,
+          parent,
+          rowData,
+          rowIndex: index,
+          scrollbarWidth
+        })
+      );
 
-    const className = cn('ReactVirtualized__Table__row', rowClass)
+    const className = cn("ReactVirtualized__Table__row", rowClass);
     const flattenedStyle = {
       ...style,
       ...rowStyleObject,
       height: this._getRowHeight(index),
-      overflow: 'hidden',
+      overflow: "hidden",
       paddingRight: scrollbarWidth
-    }
+    };
 
     return rowRenderer({
       className,
@@ -552,77 +580,81 @@ export default class Table extends PureComponent {
       onRowMouseOut,
       rowData,
       style: flattenedStyle
-    })
+    });
   }
 
   /**
    * Determines the flex-shrink, flex-grow, and width values for a cell (header or column).
    */
-  _getFlexStyleForColumn (column, customStyle = {}) {
-    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${column.props.width}px`
+  _getFlexStyleForColumn(column, customStyle = {}) {
+    const flexValue = `${column.props.flexGrow} ${column.props
+      .flexShrink} ${column.props.width}px`;
 
     const style = {
       ...customStyle,
       flex: flexValue,
       msFlex: flexValue,
       WebkitFlex: flexValue
-    }
+    };
 
     if (column.props.maxWidth) {
-      style.maxWidth = column.props.maxWidth
+      style.maxWidth = column.props.maxWidth;
     }
 
     if (column.props.minWidth) {
-      style.minWidth = column.props.minWidth
+      style.minWidth = column.props.minWidth;
     }
 
-    return style
+    return style;
   }
 
-  _getHeaderColumns () {
-    const { children, disableHeader } = this.props
-    const items = disableHeader ? [] : React.Children.toArray(children)
+  _getHeaderColumns() {
+    const { children, disableHeader } = this.props;
+    const items = disableHeader ? [] : React.Children.toArray(children);
 
-    return items.map((column, index) =>
-      this._createHeader({ column, index })
-    )
+    return items.map((column, index) => this._createHeader({ column, index }));
   }
 
-  _getRowHeight (rowIndex) {
-    const { rowHeight } = this.props
+  _getRowHeight(rowIndex) {
+    const { rowHeight } = this.props;
 
-    return typeof rowHeight === 'function'
+    return typeof rowHeight === "function"
       ? rowHeight({ index: rowIndex })
-      : rowHeight
+      : rowHeight;
   }
 
-  _onScroll ({ clientHeight, scrollHeight, scrollTop }) {
-    const { onScroll } = this.props
+  _onScroll({ clientHeight, scrollHeight, scrollTop }) {
+    const { onScroll } = this.props;
 
-    onScroll({ clientHeight, scrollHeight, scrollTop })
+    onScroll({ clientHeight, scrollHeight, scrollTop });
   }
 
-  _onSectionRendered ({ rowOverscanStartIndex, rowOverscanStopIndex, rowStartIndex, rowStopIndex }) {
-    const { onRowsRendered } = this.props
+  _onSectionRendered({
+    rowOverscanStartIndex,
+    rowOverscanStopIndex,
+    rowStartIndex,
+    rowStopIndex
+  }) {
+    const { onRowsRendered } = this.props;
 
     onRowsRendered({
       overscanStartIndex: rowOverscanStartIndex,
       overscanStopIndex: rowOverscanStopIndex,
       startIndex: rowStartIndex,
       stopIndex: rowStopIndex
-    })
+    });
   }
 
-  _setRef (ref) {
-    this.Grid = ref
+  _setRef(ref) {
+    this.Grid = ref;
   }
 
-  _setScrollbarWidth () {
-    const Grid = findDOMNode(this.Grid)
-    const clientWidth = Grid.clientWidth || 0
-    const offsetWidth = Grid.offsetWidth || 0
-    const scrollbarWidth = offsetWidth - clientWidth
+  _setScrollbarWidth() {
+    const Grid = findDOMNode(this.Grid);
+    const clientWidth = Grid.clientWidth || 0;
+    const offsetWidth = Grid.offsetWidth || 0;
+    const scrollbarWidth = offsetWidth - clientWidth;
 
-    this.setState({ scrollbarWidth })
+    this.setState({ scrollbarWidth });
   }
 }
