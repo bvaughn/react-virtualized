@@ -1,7 +1,3 @@
-Thanks for using react-virtualized! :)
-
-Before creating an issue...
-
 # Are you asking a question?
 Please don't file GitHub issues to ask questions. Use Stack Overflow with a #react-virtualized tag [http://stackoverflow.com/questions/tagged/react-virtualized] or ask in the react-virtualized Slack channel [https://react-virtualized.now.sh].
 
