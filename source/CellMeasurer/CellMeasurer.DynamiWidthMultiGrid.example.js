@@ -1,10 +1,10 @@
-import Immutable from 'immutable'
-import PropTypes from 'prop-types'
-import React, { PureComponent } from 'react'
-import CellMeasurer from './CellMeasurer'
-import CellMeasurerCache from './CellMeasurerCache'
-import MultiGrid from '../MultiGrid'
-import styles from './CellMeasurer.example.css'
+import Immutable from "immutable";
+import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
+import CellMeasurer from "./CellMeasurer";
+import CellMeasurerCache from "./CellMeasurerCache";
+import MultiGrid from "../MultiGrid";
+import styles from "./CellMeasurer.example.css";
 
 export default class DynamiHeightMultiGrid extends PureComponent {
   static propTypes = {
@@ -12,22 +12,22 @@ export default class DynamiHeightMultiGrid extends PureComponent {
     getContent: PropTypes.func.isRequired,
     list: PropTypes.instanceOf(Immutable.List).isRequired,
     width: PropTypes.number.isRequired
-  }
+  };
 
-  constructor (props, context) {
-    super(props, context)
+  constructor(props, context) {
+    super(props, context);
 
     this._cache = new CellMeasurerCache({
       defaultHeight: 30,
       defaultWidth: 150,
       fixedHeight: true
-    })
+    });
 
-    this._cellRenderer = this._cellRenderer.bind(this)
+    this._cellRenderer = this._cellRenderer.bind(this);
   }
 
-  render () {
-    const { width } = this.props
+  render() {
+    const { width } = this.props;
 
     return (
       <MultiGrid
@@ -45,18 +45,18 @@ export default class DynamiHeightMultiGrid extends PureComponent {
         rowHeight={30}
         width={width}
       />
-    )
+    );
   }
 
-  _cellRenderer ({ columnIndex, key, parent, rowIndex, style }) {
-    const { getClassName, getContent, list } = this.props
+  _cellRenderer({ columnIndex, key, parent, rowIndex, style }) {
+    const { getClassName, getContent, list } = this.props;
 
-    const datum = list.get((rowIndex + columnIndex) % list.size)
-    const classNames = getClassName({ columnIndex, rowIndex })
-    let content = getContent({ index: rowIndex, datum, long: false })
+    const datum = list.get((rowIndex + columnIndex) % list.size);
+    const classNames = getClassName({ columnIndex, rowIndex });
+    let content = getContent({ index: rowIndex, datum, long: false });
 
     if (columnIndex === 0) {
-      content = content.substr(0, 50)
+      content = content.substr(0, 50);
     }
 
     return (
@@ -71,12 +71,12 @@ export default class DynamiHeightMultiGrid extends PureComponent {
           className={classNames}
           style={{
             ...style,
-            whiteSpace: 'nowrap'
+            whiteSpace: "nowrap"
           }}
         >
           {content}
         </div>
       </CellMeasurer>
-    )
+    );
   }
 }

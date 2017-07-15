@@ -1,7 +1,7 @@
 /** @flow */
-import { PureComponent } from 'react'
-import PropTypes from 'prop-types'
-import createCallbackMemoizer from '../utils/createCallbackMemoizer'
+import { PureComponent } from "react";
+import PropTypes from "prop-types";
+import createCallbackMemoizer from "../utils/createCallbackMemoizer";
 
 /**
  * Higher-order component that manages lazy-loading for "infinite" data.
@@ -60,37 +60,37 @@ export default class InfiniteLoader extends PureComponent {
     threshold: 15
   };
 
-  constructor (props, context) {
-    super(props, context)
+  constructor(props, context) {
+    super(props, context);
 
-    this._loadMoreRowsMemoizer = createCallbackMemoizer()
+    this._loadMoreRowsMemoizer = createCallbackMemoizer();
 
-    this._onRowsRendered = this._onRowsRendered.bind(this)
-    this._registerChild = this._registerChild.bind(this)
+    this._onRowsRendered = this._onRowsRendered.bind(this);
+    this._registerChild = this._registerChild.bind(this);
   }
 
-  resetLoadMoreRowsCache (autoReload) {
-    this._loadMoreRowsMemoizer = createCallbackMemoizer()
+  resetLoadMoreRowsCache(autoReload) {
+    this._loadMoreRowsMemoizer = createCallbackMemoizer();
 
     if (autoReload) {
-      this._doStuff(this._lastRenderedStartIndex, this._lastRenderedStopIndex)
+      this._doStuff(this._lastRenderedStartIndex, this._lastRenderedStopIndex);
     }
   }
 
-  render () {
-    const { children } = this.props
+  render() {
+    const { children } = this.props;
 
     return children({
       onRowsRendered: this._onRowsRendered,
       registerChild: this._registerChild
-    })
+    });
   }
 
-  _loadUnloadedRanges (unloadedRanges) {
-    const { loadMoreRows } = this.props
+  _loadUnloadedRanges(unloadedRanges) {
+    const { loadMoreRows } = this.props;
 
     unloadedRanges.forEach(unloadedRange => {
-      let promise = loadMoreRows(unloadedRange)
+      let promise = loadMoreRows(unloadedRange);
       if (promise) {
         promise.then(() => {
           // Refresh the visible rows if any of them have just been loaded.
@@ -104,23 +104,26 @@ export default class InfiniteLoader extends PureComponent {
             })
           ) {
             if (this._registeredChild) {
-              forceUpdateReactVirtualizedComponent(this._registeredChild, this._lastRenderedStartIndex)
+              forceUpdateReactVirtualizedComponent(
+                this._registeredChild,
+                this._lastRenderedStartIndex
+              );
             }
           }
-        })
+        });
       }
-    })
+    });
   }
 
-  _onRowsRendered ({ startIndex, stopIndex }) {
-    this._lastRenderedStartIndex = startIndex
-    this._lastRenderedStopIndex = stopIndex
+  _onRowsRendered({ startIndex, stopIndex }) {
+    this._lastRenderedStartIndex = startIndex;
+    this._lastRenderedStopIndex = stopIndex;
 
-    this._doStuff(startIndex, stopIndex)
+    this._doStuff(startIndex, stopIndex);
   }
 
-  _doStuff (startIndex, stopIndex) {
-    const { isRowLoaded, minimumBatchSize, rowCount, threshold } = this.props
+  _doStuff(startIndex, stopIndex) {
+    const { isRowLoaded, minimumBatchSize, rowCount, threshold } = this.props;
 
     const unloadedRanges = scanForUnloadedRanges({
       isRowLoaded,
@@ -128,69 +131,72 @@ export default class InfiniteLoader extends PureComponent {
       rowCount,
       startIndex: Math.max(0, startIndex - threshold),
       stopIndex: Math.min(rowCount - 1, stopIndex + threshold)
-    })
+    });
 
     // For memoize comparison
     const squashedUnloadedRanges = unloadedRanges.reduce(
-      (reduced, unloadedRange) => reduced.concat([unloadedRange.startIndex, unloadedRange.stopIndex]),
+      (reduced, unloadedRange) =>
+        reduced.concat([unloadedRange.startIndex, unloadedRange.stopIndex]),
       []
-    )
+    );
 
     this._loadMoreRowsMemoizer({
       callback: () => {
-        this._loadUnloadedRanges(unloadedRanges)
+        this._loadUnloadedRanges(unloadedRanges);
       },
       indices: { squashedUnloadedRanges }
-    })
+    });
   }
 
-  _registerChild (registeredChild) {
-    this._registeredChild = registeredChild
+  _registerChild(registeredChild) {
+    this._registeredChild = registeredChild;
   }
 }
 
 /**
  * Determines if the specified start/stop range is visible based on the most recently rendered range.
  */
-export function isRangeVisible ({
+export function isRangeVisible({
   lastRenderedStartIndex,
   lastRenderedStopIndex,
   startIndex,
   stopIndex
 }) {
-  return !(startIndex > lastRenderedStopIndex || stopIndex < lastRenderedStartIndex)
+  return !(
+    startIndex > lastRenderedStopIndex || stopIndex < lastRenderedStartIndex
+  );
 }
 
 /**
  * Returns all of the ranges within a larger range that contain unloaded rows.
  */
-export function scanForUnloadedRanges ({
+export function scanForUnloadedRanges({
   isRowLoaded,
   minimumBatchSize,
   rowCount,
   startIndex,
   stopIndex
 }) {
-  const unloadedRanges = []
+  const unloadedRanges = [];
 
-  let rangeStartIndex = null
-  let rangeStopIndex = null
+  let rangeStartIndex = null;
+  let rangeStopIndex = null;
 
   for (let index = startIndex; index <= stopIndex; index++) {
-    let loaded = isRowLoaded({ index })
+    let loaded = isRowLoaded({ index });
 
     if (!loaded) {
-      rangeStopIndex = index
+      rangeStopIndex = index;
       if (rangeStartIndex === null) {
-        rangeStartIndex = index
+        rangeStartIndex = index;
       }
     } else if (rangeStopIndex !== null) {
       unloadedRanges.push({
         startIndex: rangeStartIndex,
         stopIndex: rangeStopIndex
-      })
+      });
 
-      rangeStartIndex = rangeStopIndex = null
+      rangeStartIndex = rangeStopIndex = null;
     }
   }
 
@@ -198,47 +204,45 @@ export function scanForUnloadedRanges ({
   // Scan forward to try filling our :minimumBatchSize.
   if (rangeStopIndex !== null) {
     const potentialStopIndex = Math.min(
-      Math.max(
-        rangeStopIndex,
-        rangeStartIndex + minimumBatchSize - 1
-      ),
+      Math.max(rangeStopIndex, rangeStartIndex + minimumBatchSize - 1),
       rowCount - 1
-    )
+    );
 
     for (let index = rangeStopIndex + 1; index <= potentialStopIndex; index++) {
       if (!isRowLoaded({ index })) {
-        rangeStopIndex = index
+        rangeStopIndex = index;
       } else {
-        break
+        break;
       }
     }
 
     unloadedRanges.push({
       startIndex: rangeStartIndex,
       stopIndex: rangeStopIndex
-    })
+    });
   }
 
   // Check to see if our first range ended prematurely.
   // In this case we should scan backwards to try filling our :minimumBatchSize.
   if (unloadedRanges.length) {
-    const firstUnloadedRange = unloadedRanges[0]
+    const firstUnloadedRange = unloadedRanges[0];
 
     while (
-      firstUnloadedRange.stopIndex - firstUnloadedRange.startIndex + 1 < minimumBatchSize &&
+      firstUnloadedRange.stopIndex - firstUnloadedRange.startIndex + 1 <
+        minimumBatchSize &&
       firstUnloadedRange.startIndex > 0
     ) {
-      let index = firstUnloadedRange.startIndex - 1
+      let index = firstUnloadedRange.startIndex - 1;
 
       if (!isRowLoaded({ index })) {
-        firstUnloadedRange.startIndex = index
+        firstUnloadedRange.startIndex = index;
       } else {
-        break
+        break;
       }
     }
   }
 
-  return unloadedRanges
+  return unloadedRanges;
 }
 
 /**
@@ -252,14 +256,18 @@ export function scanForUnloadedRanges ({
  * So it's important to invalidate that cache by recalculating sizes
  * before forcing a rerender.
  */
-export function forceUpdateReactVirtualizedComponent (component, currentIndex = 0) {
-  const recomputeSize = typeof component.recomputeGridSize === 'function'
-    ? component.recomputeGridSize
-    : component.recomputeRowHeights
+export function forceUpdateReactVirtualizedComponent(
+  component,
+  currentIndex = 0
+) {
+  const recomputeSize =
+    typeof component.recomputeGridSize === "function"
+      ? component.recomputeGridSize
+      : component.recomputeRowHeights;
 
   if (recomputeSize) {
-    recomputeSize.call(component, currentIndex)
+    recomputeSize.call(component, currentIndex);
   } else {
-    component.forceUpdate()
+    component.forceUpdate();
   }
 }

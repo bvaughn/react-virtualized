@@ -11,7 +11,7 @@
  * @param scrollToIndex Scroll-to-index
  * @param updateScrollOffsetForScrollToIndex Callback to invoke if the scroll position should be recalculated
  */
-export default function calculateSizeAndPositionDataAndUpdateScrollOffset ({
+export default function calculateSizeAndPositionDataAndUpdateScrollOffset({
   cellCount,
   cellSize,
   computeMetadataCallback,
@@ -26,20 +26,15 @@ export default function calculateSizeAndPositionDataAndUpdateScrollOffset ({
   // In that event users should use the manual recompute methods to inform of changes.
   if (
     cellCount !== nextCellsCount ||
-    (
-      (
-        typeof cellSize === 'number' ||
-        typeof nextCellSize === 'number'
-      ) &&
-      cellSize !== nextCellSize
-    )
+    ((typeof cellSize === "number" || typeof nextCellSize === "number") &&
+      cellSize !== nextCellSize)
   ) {
-    computeMetadataCallback(computeMetadataCallbackProps)
+    computeMetadataCallback(computeMetadataCallbackProps);
 
     // Updated cell metadata may have hidden the previous scrolled-to item.
     // In this case we should also update the scrollTop to ensure it stays visible.
     if (scrollToIndex >= 0 && scrollToIndex === nextScrollToIndex) {
-      updateScrollOffsetForScrollToIndex()
+      updateScrollOffsetForScrollToIndex();
     }
   }
 }

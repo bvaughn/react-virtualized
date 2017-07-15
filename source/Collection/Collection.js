@@ -1,10 +1,10 @@
 /** @flow */
-import PropTypes from 'prop-types'
-import React, { PureComponent } from 'react'
-import CollectionView from './CollectionView'
-import calculateSizeAndPositionData from './utils/calculateSizeAndPositionData'
-import getUpdatedOffsetForIndex from '../utils/getUpdatedOffsetForIndex'
-import type { ScrollPosition, SizeInfo } from './types'
+import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
+import CollectionView from "./CollectionView";
+import calculateSizeAndPositionData from "./utils/calculateSizeAndPositionData";
+import getUpdatedOffsetForIndex from "../utils/getUpdatedOffsetForIndex";
+import type { ScrollPosition, SizeInfo } from "./types";
 
 /**
  * Renders scattered or non-linear data.
@@ -12,7 +12,7 @@ import type { ScrollPosition, SizeInfo } from './types'
  */
 export default class Collection extends PureComponent {
   static propTypes = {
-    'aria-label': PropTypes.string,
+    "aria-label": PropTypes.string,
 
     /**
      * Number of cells in Collection.
@@ -48,39 +48,39 @@ export default class Collection extends PureComponent {
   };
 
   static defaultProps = {
-    'aria-label': 'grid',
+    "aria-label": "grid",
     cellGroupRenderer: defaultCellGroupRenderer
   };
 
-  constructor (props, context) {
-    super(props, context)
+  constructor(props, context) {
+    super(props, context);
 
-    this._cellMetadata = []
-    this._lastRenderedCellIndices = []
+    this._cellMetadata = [];
+    this._lastRenderedCellIndices = [];
 
     // Cell cache during scroll (for perforamnce)
-    this._cellCache = []
+    this._cellCache = [];
 
-    this._isScrollingChange = this._isScrollingChange.bind(this)
-    this._setCollectionViewRef = this._setCollectionViewRef.bind(this)
+    this._isScrollingChange = this._isScrollingChange.bind(this);
+    this._setCollectionViewRef = this._setCollectionViewRef.bind(this);
   }
 
-  forceUpdate () {
+  forceUpdate() {
     if (this._collectionView !== undefined) {
-      this._collectionView.forceUpdate()
+      this._collectionView.forceUpdate();
     }
   }
 
   /** See Collection#recomputeCellSizesAndPositions */
-  recomputeCellSizesAndPositions () {
-    this._cellCache = []
-    this._collectionView.recomputeCellSizesAndPositions()
+  recomputeCellSizesAndPositions() {
+    this._cellCache = [];
+    this._collectionView.recomputeCellSizesAndPositions();
   }
 
   /** React lifecycle methods */
 
-  render () {
-    const { ...props } = this.props
+  render() {
+    const { ...props } = this.props;
 
     return (
       <CollectionView
@@ -89,37 +89,37 @@ export default class Collection extends PureComponent {
         ref={this._setCollectionViewRef}
         {...props}
       />
-    )
+    );
   }
 
   /** CellLayoutManager interface */
 
-  calculateSizeAndPositionData () {
-    const { cellCount, cellSizeAndPositionGetter, sectionSize } = this.props
+  calculateSizeAndPositionData() {
+    const { cellCount, cellSizeAndPositionGetter, sectionSize } = this.props;
 
     const data = calculateSizeAndPositionData({
       cellCount,
       cellSizeAndPositionGetter,
       sectionSize
-    })
+    });
 
-    this._cellMetadata = data.cellMetadata
-    this._sectionManager = data.sectionManager
-    this._height = data.height
-    this._width = data.width
+    this._cellMetadata = data.cellMetadata;
+    this._sectionManager = data.sectionManager;
+    this._height = data.height;
+    this._width = data.width;
   }
 
   /**
    * Returns the most recently rendered set of cell indices.
    */
-  getLastRenderedIndices () {
-    return this._lastRenderedCellIndices
+  getLastRenderedIndices() {
+    return this._lastRenderedCellIndices;
   }
 
   /**
    * Calculates the minimum amount of change from the current scroll position to ensure the specified cell is (fully) visible.
    */
-  getScrollPositionForCell ({
+  getScrollPositionForCell({
     align,
     cellIndex,
     height,
@@ -127,13 +127,10 @@ export default class Collection extends PureComponent {
     scrollTop,
     width
   }): ScrollPosition {
-    const { cellCount } = this.props
+    const { cellCount } = this.props;
 
-    if (
-      cellIndex >= 0 &&
-      cellIndex < cellCount
-    ) {
-      const cellMetadata = this._cellMetadata[cellIndex]
+    if (cellIndex >= 0 && cellIndex < cellCount) {
+      const cellMetadata = this._cellMetadata[cellIndex];
 
       scrollLeft = getUpdatedOffsetForIndex({
         align,
@@ -142,7 +139,7 @@ export default class Collection extends PureComponent {
         containerSize: width,
         currentOffset: scrollLeft,
         targetIndex: cellIndex
-      })
+      });
 
       scrollTop = getUpdatedOffsetForIndex({
         align,
@@ -151,30 +148,24 @@ export default class Collection extends PureComponent {
         containerSize: height,
         currentOffset: scrollTop,
         targetIndex: cellIndex
-      })
+      });
     }
 
     return {
       scrollLeft,
       scrollTop
-    }
+    };
   }
 
-  getTotalSize (): SizeInfo {
+  getTotalSize(): SizeInfo {
     return {
       height: this._height,
       width: this._width
-    }
+    };
   }
 
-  cellRenderers ({
-    height,
-    isScrolling,
-    width,
-    x,
-    y
-  }) {
-    const { cellGroupRenderer, cellRenderer } = this.props
+  cellRenderers({ height, isScrolling, width, x, y }) {
+    const { cellGroupRenderer, cellRenderer } = this.props;
 
     // Store for later calls to getLastRenderedIndices()
     this._lastRenderedCellIndices = this._sectionManager.getCellIndices({
@@ -182,29 +173,30 @@ export default class Collection extends PureComponent {
       width,
       x,
       y
-    })
+    });
 
     return cellGroupRenderer({
       cellCache: this._cellCache,
       cellRenderer,
-      cellSizeAndPositionGetter: ({ index }) => this._sectionManager.getCellMetadata({ index }),
+      cellSizeAndPositionGetter: ({ index }) =>
+        this._sectionManager.getCellMetadata({ index }),
       indices: this._lastRenderedCellIndices,
       isScrolling
-    })
+    });
   }
 
-  _isScrollingChange (isScrolling) {
+  _isScrollingChange(isScrolling) {
     if (!isScrolling) {
-      this._cellCache = []
+      this._cellCache = [];
     }
   }
 
-  _setCollectionViewRef (ref) {
-    this._collectionView = ref
+  _setCollectionViewRef(ref) {
+    this._collectionView = ref;
   }
 }
 
-function defaultCellGroupRenderer ({
+function defaultCellGroupRenderer({
   cellCache,
   cellRenderer,
   cellSizeAndPositionGetter,
@@ -212,8 +204,8 @@ function defaultCellGroupRenderer ({
   isScrolling
 }) {
   return indices
-    .map((index) => {
-      const cellMetadata = cellSizeAndPositionGetter({ index })
+    .map(index => {
+      const cellMetadata = cellSizeAndPositionGetter({ index });
 
       let cellRendererProps = {
         index,
@@ -222,11 +214,11 @@ function defaultCellGroupRenderer ({
         style: {
           height: cellMetadata.height,
           left: cellMetadata.x,
-          position: 'absolute',
+          position: "absolute",
           top: cellMetadata.y,
           width: cellMetadata.width
         }
-      }
+      };
 
       // Avoid re-creating cells while scrolling.
       // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
@@ -234,13 +226,13 @@ function defaultCellGroupRenderer ({
       // This cache will be thrown away once scrolling complets.
       if (isScrolling) {
         if (!(index in cellCache)) {
-          cellCache[index] = cellRenderer(cellRendererProps)
+          cellCache[index] = cellRenderer(cellRendererProps);
         }
 
-        return cellCache[index]
+        return cellCache[index];
       } else {
-        return cellRenderer(cellRendererProps)
+        return cellRenderer(cellRendererProps);
       }
     })
-    .filter((renderedCell) => !!renderedCell)
+    .filter(renderedCell => !!renderedCell);
 }
