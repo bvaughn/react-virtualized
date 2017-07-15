@@ -4,12 +4,10 @@ general:
       - gh-pages
 
 machine:
-  node:
-    version: v6.6.0
-
-machine:
-  environment:
+  environmnent:
     PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
+  node:
+    version: 7.6.0
 
 dependencies:
   override:
