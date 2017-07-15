@@ -9,7 +9,6 @@ export default function defaultRowRenderer({
   className,
   columns,
   index,
-  isScrolling,
   key,
   onRowClick,
   onRowDoubleClick,

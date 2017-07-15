@@ -148,8 +148,7 @@ describe("ColumnSizer", () => {
           columnCount={100}
           width={100}
         >
-          {({ adjustedWidth, columnWidth, registerChild }) =>
-            <div ref={registerChild} />}
+          {({ registerChild }) => <div ref={registerChild} />}
         </ColumnSizer>
       );
     }).toThrow();

@@ -47,10 +47,7 @@ export default class CellSizeAndPositionManager {
     return this._lastMeasuredIndex;
   }
 
-  getOffsetAdjustment({
-    containerSize,
-    offset // safe
-  }: ContainerSizeAndOffset): number {
+  getOffsetAdjustment(): number {
     return 0;
   }
 
@@ -306,11 +303,6 @@ type CellSizeAndPositionManagerConstructorParams = {
 type ConfigureParams = {
   cellCount: number,
   estimatedCellSize: number
-};
-
-type ContainerSizeAndOffset = {
-  containerSize: number,
-  offset: number
 };
 
 type GetVisibleCellRangeParams = {

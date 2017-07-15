@@ -152,7 +152,7 @@ describe("ArrowKeyStepper", () => {
   });
 
   it("should call :onScrollToChange for key down", () => {
-    [true, false].forEach(isControlled => {
+    [true, false].forEach(() => {
       const onScrollToChange = jest.fn();
       const { node } = renderHelper({
         isControlled: true,
@@ -173,7 +173,7 @@ describe("ArrowKeyStepper", () => {
 
   it("should not call :onScrollToChange for prop update", () => {
     let numCalls = 0;
-    const onScrollToChange = params => {
+    const onScrollToChange = () => {
       numCalls++;
     };
     const { node } = renderHelper({

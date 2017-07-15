@@ -6,13 +6,7 @@ import type { CellRendererParams } from "./types";
  * You should override the column's cellRenderer if your data is some other type of object.
  */
 export default function defaultCellRenderer({
-  cellData,
-  columnData,
-  columnIndex,
-  dataKey,
-  isScrolling,
-  rowData,
-  rowIndex
+  cellData
 }: CellRendererParams): string {
   if (cellData == null) {
     return "";

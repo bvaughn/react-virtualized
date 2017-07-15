@@ -15,7 +15,6 @@ export const SCROLL_DIRECTION_VERTICAL = "vertical";
  * @param stopIndex End of range of visible cells
  */
 export default function defaultOverscanIndicesGetter({
-  direction,
   cellCount,
   overscanCellsCount,
   scrollDirection,

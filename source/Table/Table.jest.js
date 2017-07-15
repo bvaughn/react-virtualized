@@ -30,14 +30,7 @@ describe("Table", () => {
 
   // Override default behavior of overscanning by at least 1 (for accessibility)
   // Because it makes for simple tests below
-  function overscanIndicesGetter({
-    direction,
-    cellCount,
-    overscanCellsCount,
-    scrollDirection,
-    startIndex,
-    stopIndex
-  }) {
+  function overscanIndicesGetter({ startIndex, stopIndex }) {
     return {
       overscanStartIndex: startIndex,
       overscanStopIndex: stopIndex
@@ -334,7 +327,7 @@ describe("Table", () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
-            cellDataGetter: ({ columnData, dataKey, rowData }) =>
+            cellDataGetter: ({ dataKey, rowData }) =>
               `Custom ${dataKey} for row ${rowData.get("id")}`
           })
         )
@@ -617,7 +610,7 @@ describe("Table", () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
-            headerRenderer: params => "custom header",
+            headerRenderer: () => "custom header",
             sort: ({ sortBy, sortDirection }) =>
               sortCalls.push([sortBy, sortDirection]),
             sortBy: "name",
@@ -644,7 +637,7 @@ describe("Table", () => {
         render(
           getMarkup({
             columnData,
-            headerRenderer: params => "custom header",
+            headerRenderer: () => "custom header",
             onHeaderClick
           })
         )
@@ -823,7 +816,7 @@ describe("Table", () => {
         )
       );
       const rows = rendered.querySelectorAll(".ReactVirtualized__Table__row");
-      Array.from(rows).forEach((row, index) => {
+      Array.from(rows).forEach(row => {
         expect(row.className).toContain(staticClassName);
       });
     });

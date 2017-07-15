@@ -205,7 +205,7 @@ export default class GridExample extends PureComponent {
     }
   }
 
-  _onResize({ height, width }) {
+  _onResize({ width }) {
     this._width = width;
 
     this._columnHeights = {};

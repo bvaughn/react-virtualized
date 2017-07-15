@@ -54,7 +54,7 @@ describe("updateScrollIndexHelper", () => {
 
     let updateScrollIndexCallbackCalled = false;
 
-    function updateScrollIndexCallback(params) {
+    function updateScrollIndexCallback() {
       updateScrollIndexCallbackCalled = true;
     }
 

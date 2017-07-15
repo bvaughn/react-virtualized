@@ -114,7 +114,7 @@ export default class Masonry extends PureComponent {
     this._invokeOnCellsRenderedCallback();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     this._checkInvalidateOnUpdate();
     this._invokeOnScrollCallback();
     this._invokeOnCellsRenderedCallback();

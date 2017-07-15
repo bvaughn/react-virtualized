@@ -7,9 +7,7 @@ import type { HeaderRendererParams } from "./types";
  * Default table header renderer.
  */
 export default function defaultHeaderRenderer({
-  columnData,
   dataKey,
-  disableSort,
   label,
   sortBy,
   sortDirection

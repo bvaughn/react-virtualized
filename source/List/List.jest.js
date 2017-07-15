@@ -15,14 +15,7 @@ describe("List", () => {
 
   // Override default behavior of overscanning by at least 1 (for accessibility)
   // Because it makes for simple tests below
-  function overscanIndicesGetter({
-    direction,
-    cellCount,
-    overscanCellsCount,
-    scrollDirection,
-    startIndex,
-    stopIndex
-  }) {
+  function overscanIndicesGetter({ startIndex, stopIndex }) {
     return {
       overscanStartIndex: startIndex,
       overscanStopIndex: stopIndex

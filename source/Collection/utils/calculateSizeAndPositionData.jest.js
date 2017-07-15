@@ -24,7 +24,7 @@ describe("calculateSizeAndPositionData", () => {
     expect(() =>
       calculateSizeAndPositionData({
         cellCount: 3,
-        cellSizeAndPositionGetter: ({ index }) => {}
+        cellSizeAndPositionGetter: () => {}
       })
     ).toThrow();
   });

@@ -24,7 +24,7 @@ export default class Table extends PureComponent {
     autoHeight: PropTypes.bool,
 
     /** One or more Columns describing the data displayed in this row */
-    children: (props, propName, componentName) => {
+    children: props => {
       const children = React.Children.toArray(props.children);
       for (let i = 0; i < children.length; i++) {
         if (children[i].type !== Column) {

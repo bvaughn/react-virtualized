@@ -892,7 +892,7 @@ describe("Grid", () => {
       render(
         getMarkup({
           height: 0,
-          onSectionRendered: params => numCalls++
+          onSectionRendered: () => numCalls++
         })
       );
       expect(numCalls).toEqual(0);

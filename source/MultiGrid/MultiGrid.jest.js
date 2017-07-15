@@ -454,7 +454,7 @@ describe("MultiGrid", () => {
     });
   });
 
-  describe("deferredMeasurementCache", (props = {}) => {
+  describe("deferredMeasurementCache", () => {
     function getDeferredMeasurementCache() {
       const deferredMeasurementCache = new CellMeasurerCache({
         fixedHeight: true,

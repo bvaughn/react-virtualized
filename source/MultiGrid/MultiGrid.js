@@ -152,7 +152,7 @@ export default class MultiGrid extends PureComponent {
     this._handleInvalidatedGridSize();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     this._handleInvalidatedGridSize();
   }
 
@@ -450,7 +450,7 @@ export default class MultiGrid extends PureComponent {
    * Avoid recreating inline styles each render; this bypasses Grid's shallowCompare.
    * This method recalculates styles only when specific props change.
    */
-  _maybeCalculateCachedStyles(prevProps, props, prevState, state) {
+  _maybeCalculateCachedStyles(prevProps, props) {
     const {
       columnWidth,
       enableFixedColumnScroll,

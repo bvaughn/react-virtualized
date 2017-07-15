@@ -41,7 +41,7 @@ export default class DynamicHeightList extends PureComponent {
     );
   }
 
-  _rowRenderer({ index, isScrolling, key, parent, style }) {
+  _rowRenderer({ index, key, parent, style }) {
     const { getClassName, list } = this.props;
 
     const datum = list.get(index % list.size);

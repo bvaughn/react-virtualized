@@ -67,14 +67,7 @@ export default class DynamicHeightTableColumn extends PureComponent {
     );
   }
 
-  _columnCellRenderer({
-    cellData,
-    columnData,
-    dataKey,
-    parent,
-    rowData,
-    rowIndex
-  }) {
+  _columnCellRenderer({ dataKey, parent, rowIndex }) {
     const { list } = this.props;
 
     const datum = list.get(rowIndex % list.size);

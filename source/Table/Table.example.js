@@ -202,8 +202,7 @@ export default class TableExample extends PureComponent {
                 {!hideIndexRow &&
                   <Column
                     label="Index"
-                    cellDataGetter={({ columnData, dataKey, rowData }) =>
-                      rowData.index}
+                    cellDataGetter={({ rowData }) => rowData.index}
                     dataKey="index"
                     disableSort={!this._isSortEnabled()}
                     width={60}
@@ -220,13 +219,7 @@ export default class TableExample extends PureComponent {
                   label="The description label is really long so that it will be truncated"
                   dataKey="random"
                   className={styles.exampleColumn}
-                  cellRenderer={({
-                    cellData,
-                    columnData,
-                    dataKey,
-                    rowData,
-                    rowIndex
-                  }) => cellData}
+                  cellRenderer={({ cellData }) => cellData}
                   flexGrow={1}
                 />
               </Table>}
@@ -246,14 +239,7 @@ export default class TableExample extends PureComponent {
     return this._getDatum(list, index).size;
   }
 
-  _headerRenderer({
-    columnData,
-    dataKey,
-    disableSort,
-    label,
-    sortBy,
-    sortDirection
-  }) {
+  _headerRenderer({ dataKey, sortBy, sortDirection }) {
     return (
       <div>
         Full Name

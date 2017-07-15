@@ -37,7 +37,7 @@ export default class ColumnSizer extends PureComponent {
     this._registerChild = this._registerChild.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const { columnMaxWidth, columnMinWidth, columnCount, width } = this.props;
 
     if (

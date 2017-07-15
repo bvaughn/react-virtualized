@@ -155,12 +155,12 @@ export default class WindowScroller extends PureComponent {
     }
   }
 
-  _onResize(event) {
+  _onResize() {
     this.updatePosition();
   }
 
   // Referenced by utils/onScroll
-  __handleWindowScrollEvent(event) {
+  __handleWindowScrollEvent() {
     if (!this._isMounted) return;
 
     const { onScroll } = this.props;

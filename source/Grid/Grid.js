@@ -655,7 +655,7 @@ export default class Grid extends PureComponent {
         scrollToIndex: scrollToColumn,
         size: width,
         sizeJustIncreasedFromZero,
-        updateScrollIndexCallback: scrollToColumn =>
+        updateScrollIndexCallback: () =>
           this._updateScrollLeftForScrollToColumn(this.props)
       });
     }
@@ -676,7 +676,7 @@ export default class Grid extends PureComponent {
         scrollToIndex: scrollToRow,
         size: height,
         sizeJustIncreasedFromZero,
-        updateScrollIndexCallback: scrollToRow =>
+        updateScrollIndexCallback: () =>
           this._updateScrollTopForScrollToRow(this.props)
       });
     }

@@ -93,7 +93,6 @@ export default function createDetectElementResize(nonce) {
 
     /* Detect CSS Animations support to detect element display/re-attach */
     var animation = false,
-      animationstring = "animation",
       keyframeprefix = "",
       animationstartevent = "animationstart",
       domPrefixes = "Webkit Moz O ms".split(" "),
@@ -111,7 +110,6 @@ export default function createDetectElementResize(nonce) {
         for (var i = 0; i < domPrefixes.length; i++) {
           if (elm.style[domPrefixes[i] + "AnimationName"] !== undefined) {
             pfx = domPrefixes[i];
-            animationstring = pfx + "Animation";
             keyframeprefix = "-" + pfx.toLowerCase() + "-";
             animationstartevent = startEvents[i];
             animation = true;

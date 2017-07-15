@@ -7,7 +7,7 @@
  * @return Object mapping cell index to cell metadata (size, offset)
  */
 export default function initCellMetadata({ cellCount, size }) {
-  const sizeGetter = typeof size === "function" ? size : ({ index }) => size;
+  const sizeGetter = typeof size === "function" ? size : () => size;
 
   const cellMetadata = [];
   let offset = 0;

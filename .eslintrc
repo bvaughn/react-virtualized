@@ -8,9 +8,13 @@
   },
   "plugins": [
     "flowtype",
-    "prettier"
+    "prettier",
+    "react"
   ],
   "rules": {
-    "prettier/prettier": "error"
+    "no-unused-vars": [ERROR, {"args": "all", "argsIgnorePattern": "^_"}],
+    "react/jsx-uses-react": ERROR,
+    "react/jsx-uses-vars": ERROR,
+    "prettier/prettier": ERROR
   }
 }

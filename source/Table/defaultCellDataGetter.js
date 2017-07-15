@@ -7,7 +7,6 @@ import type { CellDataGetterParams } from "./types";
  * You should override the column's cellDataGetter if your data is some other type of object.
  */
 export default function defaultCellDataGetter({
-  columnData,
   dataKey,
   rowData
 }: CellDataGetterParams) {

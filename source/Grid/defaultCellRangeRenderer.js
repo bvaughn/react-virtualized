@@ -16,8 +16,6 @@ export default function defaultCellRangeRenderer({
   rowSizeAndPositionManager,
   rowStartIndex,
   rowStopIndex,
-  scrollLeft,
-  scrollTop,
   styleCache,
   verticalOffsetAdjustment,
   visibleColumnIndices,

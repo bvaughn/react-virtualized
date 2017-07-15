@@ -372,7 +372,7 @@ describe("Collection", () => {
         height: 1
       };
 
-      function cellSizeAndPositionGetter({ index }) {
+      function cellSizeAndPositionGetter() {
         return offscreenSizeAndPosition;
       }
 
