@@ -1042,12 +1042,14 @@ export default class Grid extends PureComponent {
    * This prevents jerky/stuttery mouse-wheel scrolling.
    */
   _debounceScrollEnded () {
+    const { scrollingResetTimeInterval } = this.props;
+
     if (this._disablePointerEventsTimeoutId) {
       window.cancelAnimationFrame(this._disablePointerEventsTimeoutId)
     }
 
     const delay = () => {
-      if (Date.now() - this._scrollDebounceStart >= this.props.scrollingResetTimeInterval) {
+      if (Date.now() - this._scrollDebounceStart >= scrollingResetTimeInterval) {
         this._debounceScrollEndedCallback()
       } else {
         this._disablePointerEventsTimeoutId = window.requestAnimationFrame(delay)

@@ -291,12 +291,14 @@ export default class Masonry extends PureComponent {
   }
 
   _debounceResetIsScrolling () {
+    const { scrollingResetTimeInterval } = this.props;
+
     if (this._debounceResetIsScrollingId) {
       window.cancelAnimationFrame(this._debounceResetIsScrollingId)
     }
 
     const delay = () => {
-      if (Date.now() - this._scrollDebounceStart >= this.props.scrollingResetTimeInterval) {
+      if (Date.now() - this._scrollDebounceStart >= scrollingResetTimeInterval) {
         this._debounceResetIsScrollingCallback()
       } else {
         this._debounceResetIsScrollingId = window.requestAnimationFrame(delay)
