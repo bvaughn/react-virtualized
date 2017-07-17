@@ -35,6 +35,7 @@ const SCROLL_POSITION_CHANGE_REASONS = {
 export default class Grid extends PureComponent {
   static propTypes = {
     "aria-label": PropTypes.string,
+    "aria-readonly": PropTypes.bool,
 
     /**
      * Set the width of the inner scrollable container to 'auto'.
@@ -94,6 +95,11 @@ export default class Grid extends PureComponent {
      */
     columnWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.func])
       .isRequired,
+
+    /**
+     * ARIA role for the cell-container.
+     */
+    containerRole: PropTypes.string,
 
     /** Optional inline style applied to inner cell-container */
     containerStyle: PropTypes.object,
@@ -245,7 +251,9 @@ export default class Grid extends PureComponent {
 
   static defaultProps = {
     "aria-label": "grid",
+    "aria-readonly": true,
     cellRangeRenderer: defaultCellRangeRenderer,
+    containerRole: "rowgroup",
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
     getScrollbarSize: scrollbarSize,
@@ -836,6 +844,7 @@ export default class Grid extends PureComponent {
       autoHeight,
       autoWidth,
       className,
+      containerRole,
       containerStyle,
       height,
       id,
@@ -897,6 +906,7 @@ export default class Grid extends PureComponent {
       <div
         ref={this._setScrollingContainerRef}
         aria-label={this.props["aria-label"]}
+        aria-readonly={this.props["aria-readonly"]}
         className={cn("ReactVirtualized__Grid", className)}
         id={id}
         onScroll={this._onScroll}
@@ -910,6 +920,7 @@ export default class Grid extends PureComponent {
         {childrenToDisplay.length > 0 &&
           <div
             className="ReactVirtualized__Grid__innerScrollContainer"
+            role={containerRole}
             style={{
               width: autoContainerWidth ? "auto" : totalColumnsWidth,
               height: totalRowsHeight,
