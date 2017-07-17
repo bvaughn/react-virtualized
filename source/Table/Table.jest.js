@@ -766,6 +766,27 @@ describe("Table", () => {
     });
   });
 
+  describe("onRowRightClick", () => {
+    it("should call :onRowRightClick with the correct :rowIndex when a row is right-clicked", () => {
+      const onRowRightClick = jest.fn();
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            onRowRightClick
+          })
+        )
+      );
+      const rows = rendered.querySelectorAll(".ReactVirtualized__Table__row");
+      Simulate.contextMenu(rows[0]);
+      Simulate.contextMenu(rows[3]);
+      expect(onRowRightClick).toHaveBeenCalledTimes(2);
+      expect(onRowRightClick.mock.calls.map(call => call[0].index)).toEqual([
+        0,
+        3
+      ]);
+    });
+  });
+
   describe("onRowMouseOver/Out", () => {
     it("should call :onRowMouseOver and :onRowMouseOut with the correct :rowIndex when the mouse is moved over rows", () => {
       let onRowMouseOver = jest.fn();

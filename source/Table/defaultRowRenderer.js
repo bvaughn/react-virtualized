@@ -12,6 +12,7 @@ export default function defaultRowRenderer({
   key,
   onRowClick,
   onRowDoubleClick,
+  onRowRightClick,
   onRowMouseOver,
   onRowMouseOut,
   rowData,
@@ -19,7 +20,13 @@ export default function defaultRowRenderer({
 }: RowRendererParams) {
   const a11yProps = {};
 
-  if (onRowClick || onRowDoubleClick || onRowMouseOver || onRowMouseOut) {
+  if (
+    onRowClick ||
+    onRowDoubleClick ||
+    onRowRightClick ||
+    onRowMouseOver ||
+    onRowMouseOut
+  ) {
     a11yProps["aria-label"] = "row";
     a11yProps.tabIndex = 0;
 
@@ -29,6 +36,10 @@ export default function defaultRowRenderer({
     if (onRowDoubleClick) {
       a11yProps.onDoubleClick = event =>
         onRowDoubleClick({ event, index, rowData });
+    }
+    if (onRowRightClick) {
+      a11yProps.onContextMenu = event =>
+        onRowRightClick({ event, index, rowData });
     }
     if (onRowMouseOut) {
       a11yProps.onMouseOut = event => onRowMouseOut({ event, index, rowData });
