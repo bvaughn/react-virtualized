@@ -1,18 +1,52 @@
+// @flow
+
+import type { Alignment } from "../types.js";
+
+import ScalingCellSizeAndPositionManager from "./ScalingCellSizeAndPositionManager.js";
+
 /**
  * Helper function that determines when to update scroll offsets to ensure that a scroll-to-index remains visible.
  * This function also ensures that the scroll ofset isn't past the last column/row of cells.
- *
- * @param cellsSize Width or height of cells for the current axis
- * @param cellSizeAndPositionManager Manages size and position metadata of cells
- * @param previousCellsCount Previous number of rows or columns
- * @param previousCellsSize Previous width or height of cells
- * @param previousScrollToIndex Previous scroll-to-index
- * @param previousSize Previous width or height of the virtualized container
- * @param scrollOffset Current scrollLeft or scrollTop
- * @param scrollToIndex Scroll-to-index
- * @param size Width or height of the virtualized container
- * @param updateScrollIndexCallback Callback to invoke with an scroll-to-index value
  */
+
+type Params = {
+  // Width or height of cells for the current axis
+  cellSize?: number,
+
+  // Manages size and position metadata of cells
+  cellSizeAndPositionManager: ScalingCellSizeAndPositionManager,
+
+  // Previous number of rows or columns
+  previousCellsCount: number,
+
+  // Previous width or height of cells
+  previousCellSize: ?number,
+
+  previousScrollToAlignment: Alignment,
+
+  // Previous scroll-to-index
+  previousScrollToIndex: number,
+
+  // Previous width or height of the virtualized container
+  previousSize: number,
+
+  // Current scrollLeft or scrollTop
+  scrollOffset: number,
+
+  scrollToAlignment: Alignment,
+
+  // Scroll-to-index
+  scrollToIndex: number,
+
+  // Width or height of the virtualized container
+  size: number,
+
+  sizeJustIncreasedFromZero: boolean,
+
+  // Callback to invoke with an scroll-to-index value
+  updateScrollIndexCallback: (index: number) => void
+};
+
 export default function updateScrollIndexHelper({
   cellSize,
   cellSizeAndPositionManager,
@@ -27,7 +61,7 @@ export default function updateScrollIndexHelper({
   size,
   sizeJustIncreasedFromZero,
   updateScrollIndexCallback
-}) {
+}: Params) {
   const cellCount = cellSizeAndPositionManager.getCellCount();
   const hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < cellCount;
   const sizeHasChanged =

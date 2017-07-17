@@ -1,6 +1,13 @@
 /** @flow */
-export default from "./Grid";
-export Grid from "./Grid";
-export accessibilityOverscanIndicesGetter from "./accessibilityOverscanIndicesGetter";
-export defaultCellRangeRenderer from "./defaultCellRangeRenderer";
-export defaultOverscanIndicesGetter from "./defaultOverscanIndicesGetter";
+
+export { default } from "./Grid";
+export { default as Grid } from "./Grid";
+export {
+  default as accessibilityOverscanIndicesGetter
+} from "./accessibilityOverscanIndicesGetter";
+export {
+  default as defaultCellRangeRenderer
+} from "./defaultCellRangeRenderer";
+export {
+  default as defaultOverscanIndicesGetter
+} from "./defaultOverscanIndicesGetter";

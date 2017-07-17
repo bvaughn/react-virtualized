@@ -1,8 +1,33 @@
 /** @flow */
+
+import CellSizeAndPositionManager from "./utils/CellSizeAndPositionManager.js";
+
 /**
  * Default implementation of cellRangeRenderer used by Grid.
  * This renderer supports cell-caching while the user is scrolling.
  */
+
+type DefaultCellRangeRendererParams = {
+  cellCache: Object,
+  cellRenderer: Function,
+  columnSizeAndPositionManager: CellSizeAndPositionManager,
+  columnStartIndex: number,
+  columnStopIndex: number,
+  deferredMeasurementCache: Object,
+  horizontalOffsetAdjustment: number,
+  isScrolling: boolean,
+  parent: any,
+  rowSizeAndPositionManager: CellSizeAndPositionManager,
+  rowStartIndex: number,
+  rowStopIndex: number,
+  scrollLeft: number,
+  scrollTop: number,
+  styleCache: Object,
+  verticalOffsetAdjustment: number,
+  visibleColumnIndices: Object,
+  visibleRowIndices: Object
+};
+
 export default function defaultCellRangeRenderer({
   cellCache,
   cellRenderer,
@@ -163,22 +188,3 @@ function warnAboutMissingStyle(parent, renderedCell) {
     }
   }
 }
-
-type DefaultCellRangeRendererParams = {
-  cellCache: Object,
-  cellRenderer: Function,
-  columnSizeAndPositionManager: Object,
-  columnStartIndex: number,
-  columnStopIndex: number,
-  horizontalOffsetAdjustment: number,
-  isScrolling: boolean,
-  rowSizeAndPositionManager: Object,
-  rowStartIndex: number,
-  rowStopIndex: number,
-  scrollLeft: number,
-  scrollTop: number,
-  styleCache: Object,
-  verticalOffsetAdjustment: number,
-  visibleColumnIndices: Object,
-  visibleRowIndices: Object
-};
