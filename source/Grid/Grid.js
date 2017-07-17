@@ -1041,17 +1041,21 @@ export default class Grid extends PureComponent {
    * This flag is used to disable pointer events on the scrollable portion of the Grid.
    * This prevents jerky/stuttery mouse-wheel scrolling.
    */
-  _debounceScrollEnded() {
-    const { scrollingResetTimeInterval } = this.props;
-
+  _debounceScrollEnded () {
     if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId);
+      window.cancelAnimationFrame(this._disablePointerEventsTimeoutId)
     }
 
-    this._disablePointerEventsTimeoutId = setTimeout(
-      this._debounceScrollEndedCallback,
-      scrollingResetTimeInterval
-    );
+    const delay = () => {
+      if (Date.now() - this._scrollDebounceStart >= this.props.scrollingResetTimeInterval) {
+        this._debounceScrollEndedCallback()
+      } else {
+        this._disablePointerEventsTimeoutId = window.requestAnimationFrame(delay)
+      }
+    }
+
+    this._scrollDebounceStart = Date.now()
+    this._disablePointerEventsTimeoutId = window.requestAnimationFrame(delay)
   }
 
   _debounceScrollEndedCallback() {

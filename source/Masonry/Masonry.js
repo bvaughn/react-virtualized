@@ -290,17 +290,21 @@ export default class Masonry extends PureComponent {
     }
   }
 
-  _debounceResetIsScrolling() {
-    const { scrollingResetTimeInterval } = this.props;
-
+  _debounceResetIsScrolling () {
     if (this._debounceResetIsScrollingId) {
-      clearTimeout(this._debounceResetIsScrollingId);
+      window.cancelAnimationFrame(this._debounceResetIsScrollingId)
     }
 
-    this._debounceResetIsScrollingId = setTimeout(
-      this._debounceResetIsScrollingCallback,
-      scrollingResetTimeInterval
-    );
+    const delay = () => {
+      if (Date.now() - this._scrollDebounceStart >= this.props.scrollingResetTimeInterval) {
+        this._debounceResetIsScrollingCallback()
+      } else {
+        this._debounceResetIsScrollingId = window.requestAnimationFrame(delay)
+      }
+    }
+
+    this._scrollDebounceStart = Date.now()
+    this._debounceResetIsScrollingId = window.requestAnimationFrame(delay)
   }
 
   _debounceResetIsScrollingCallback() {
