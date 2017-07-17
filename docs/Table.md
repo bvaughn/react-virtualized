@@ -25,9 +25,9 @@ This component expects explicit `width` and `height` parameters.
 | onHeaderClick | Function |  | Callback invoked when a user clicks on a table header. `({ columnData: any, dataKey: string, event: Event }): void` |
 | onRowClick | Function |  | Callback invoked when a user clicks on a table row. `({ event: Event, index: number, rowData: any }): void` |
 | onRowDoubleClick | Function |  | Callback invoked when a user double-clicks on a table row. `({ event: Event, index: number, rowData: any }): void` |
-| onRowRightClick | Function |  | Callback invoked when a user right-clicks on a table row. `({ event: Event, index: number, rowData: any }): void` |
 | onRowMouseOut | Function | | Callback invoked when the mouse leaves a table row. `({ event: Event, index: number, rowData: any }): void` |
 | onRowMouseOver | Function |  | Callback invoked when a user moves the mouse over a table row. `({ event: Event, index: number, rowData: any }): void` |
+| onRowRightClick | Function |  | Callback invoked when a user right-clicks on a table row. `({ event: Event, index: number, rowData: any }): void` |
 | onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
 | overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important note about this property. |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, scrollHeight: number, scrollTop: number }): void` |

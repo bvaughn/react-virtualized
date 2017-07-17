@@ -12,9 +12,9 @@ export default function defaultRowRenderer({
   key,
   onRowClick,
   onRowDoubleClick,
-  onRowRightClick,
-  onRowMouseOver,
   onRowMouseOut,
+  onRowMouseOver,
+  onRowRightClick,
   rowData,
   style
 }: RowRendererParams) {
@@ -23,9 +23,9 @@ export default function defaultRowRenderer({
   if (
     onRowClick ||
     onRowDoubleClick ||
-    onRowRightClick ||
+    onRowMouseOut ||
     onRowMouseOver ||
-    onRowMouseOut
+    onRowRightClick
   ) {
     a11yProps["aria-label"] = "row";
     a11yProps.tabIndex = 0;
@@ -37,16 +37,16 @@ export default function defaultRowRenderer({
       a11yProps.onDoubleClick = event =>
         onRowDoubleClick({ event, index, rowData });
     }
-    if (onRowRightClick) {
-      a11yProps.onContextMenu = event =>
-        onRowRightClick({ event, index, rowData });
-    }
     if (onRowMouseOut) {
       a11yProps.onMouseOut = event => onRowMouseOut({ event, index, rowData });
     }
     if (onRowMouseOver) {
       a11yProps.onMouseOver = event =>
         onRowMouseOver({ event, index, rowData });
+    }
+    if (onRowRightClick) {
+      a11yProps.onContextMenu = event =>
+        onRowRightClick({ event, index, rowData });
     }
   }
 

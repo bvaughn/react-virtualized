@@ -98,12 +98,6 @@ export default class Table extends PureComponent {
     onRowDoubleClick: PropTypes.func,
 
     /**
-     * Callback invoked when a user right-clicks on a table row.
-     * ({ index: number }): void
-     */
-    onRowRightClick: PropTypes.func,
-
-    /**
      * Callback invoked when the mouse leaves a table row.
      * ({ index: number }): void
      */
@@ -114,6 +108,12 @@ export default class Table extends PureComponent {
      * ({ index: number }): void
      */
     onRowMouseOver: PropTypes.func,
+
+    /**
+     * Callback invoked when a user right-clicks on a table row.
+     * ({ index: number }): void
+     */
+    onRowRightClick: PropTypes.func,
 
     /**
      * Callback invoked with information about the slice of rows that were just rendered.
