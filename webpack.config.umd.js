@@ -2,12 +2,15 @@ const path = require('path')
 const webpack = require('webpack')
 
 module.exports = {
+  resolveLoader: {
+    moduleExtensions: ["-loader"]
+  },
   devtool: 'source-map',
   entry: {
     'react-virtualized': './source/index.js'
   },
   output: {
-    path: 'dist/umd',
+    path: path.join(__dirname, 'dist/umd'),
     filename: '[name].js',
     libraryTarget: 'umd',
     library: 'ReactVirtualized'
