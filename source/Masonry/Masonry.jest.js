@@ -257,15 +257,13 @@ describe('Masonry', () => {
     })
 
     it('should be reset after a small debounce when scrolling stops', () => {
-      jest.useFakeTimers()
       const cellMeasurerCache = createCellMeasurerCache()
       const renderCallback = jest.fn().mockImplementation(index => index)
       const cellRenderer = createCellRenderer(cellMeasurerCache, renderCallback)
       const rendered = findDOMNode(render(getMarkup({ cellMeasurerCache, cellRenderer })))
       simulateScroll(rendered, 51)
       renderCallback.mockClear()
-      jest.runOnlyPendingTimers()
-      expect(renderCallback.mock.calls[0][1].isScrolling).toEqual(false)
+      setTimeout(() => expect(renderCallback.mock.calls[0][1].isScrolling).toEqual(false), 0)
     })
   })
 

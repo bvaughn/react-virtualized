@@ -5,4 +5,4 @@ jest.mock('dom-helpers/util/scrollbarSize', () => {
 })
 
 // Polyfill requestAnimationFrame() for ReactDOMFrameScheduling
-global.requestAnimationFrame = require('raf')
+require('raf').polyfill()
