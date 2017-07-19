@@ -3,12 +3,15 @@ const path = require('path')
 const webpack = require('webpack')
 
 module.exports = {
+  resolveLoader: {
+    moduleExtensions: ["-loader"]
+  },
   devtool: 'source-map',
   entry: {
     demo: './source/demo/index'
   },
   output: {
-    path: 'build',
+    path: path.join(__dirname, 'build'),
     filename: 'static/[name].js'
   },
   plugins: [

@@ -1,5 +1,3 @@
-/* global Element */
-
 import React from "react";
 import { findDOMNode } from "react-dom";
 import { render } from "../TestUtils";
@@ -11,14 +9,13 @@ import CellMeasurerCache, {
 
 // Accounts for the fact that JSDom doesn't support measurements.
 function mockClientWidthAndHeight({ height, width }) {
-  Object.defineProperty(Element.prototype, "offsetHeight", {
-    configurable: true,
-    get: jest.fn().mockReturnValue(height)
-  });
-
-  Object.defineProperty(Element.prototype, "offsetWidth", {
-    configurable: true,
-    get: jest.fn().mockReturnValue(width)
+  Object.defineProperties(window.HTMLElement.prototype, {
+    offsetHeight: {
+      get: jest.fn().mockReturnValue(height)
+    },
+    offsetWidth: {
+      get: jest.fn().mockReturnValue(width)
+    }
   });
 }
 
@@ -35,9 +32,7 @@ function createParent(
 
 function renderHelper(
   {
-    cache = new CellMeasurerCache({
-      fixedWidth: true
-    }),
+    cache = new CellMeasurerCache({ fixedWidth: true }),
     children = <div />,
     parent
   } = {}
@@ -68,11 +63,11 @@ describe("CellMeasurer", () => {
     });
 
     const offsetHeightMock = Object.getOwnPropertyDescriptor(
-      Element.prototype,
+      window.HTMLElement.prototype,
       "offsetHeight"
     ).get;
     const offsetWidthMock = Object.getOwnPropertyDescriptor(
-      Element.prototype,
+      window.HTMLElement.prototype,
       "offsetWidth"
     ).get;
 
@@ -108,11 +103,11 @@ describe("CellMeasurer", () => {
     renderHelper({ cache, parent });
 
     const offsetHeightMock = Object.getOwnPropertyDescriptor(
-      Element.prototype,
+      window.HTMLElement.prototype,
       "offsetHeight"
     ).get;
     const offsetWidthMock = Object.getOwnPropertyDescriptor(
-      Element.prototype,
+      window.HTMLElement.prototype,
       "offsetWidth"
     ).get;
 
@@ -142,11 +137,11 @@ describe("CellMeasurer", () => {
     });
 
     const offsetHeightMock = Object.getOwnPropertyDescriptor(
-      Element.prototype,
+      window.HTMLElement.prototype,
       "offsetHeight"
     ).get;
     const offsetWidthMock = Object.getOwnPropertyDescriptor(
-      Element.prototype,
+      window.HTMLElement.prototype,
       "offsetWidth"
     ).get;
 
@@ -180,11 +175,11 @@ describe("CellMeasurer", () => {
     renderHelper({ cache, parent });
 
     const offsetHeightMock = Object.getOwnPropertyDescriptor(
-      Element.prototype,
+      window.HTMLElement.prototype,
       "offsetHeight"
     ).get;
     const offsetWidthMock = Object.getOwnPropertyDescriptor(
-      Element.prototype,
+      window.HTMLElement.prototype,
       "offsetWidth"
     ).get;
 

@@ -1,5 +1,3 @@
-/* global Element, Event */
-
 import React from "react";
 import { findDOMNode } from "react-dom";
 import { render } from "../TestUtils";
@@ -62,13 +60,17 @@ describe("AutoSizer", () => {
   // AutoSizer uses offsetWidth and offsetHeight.
   // Jest runs in JSDom which doesn't support measurements APIs.
   function mockOffsetSize(width, height) {
-    Object.defineProperty(Element.prototype, "offsetHeight", {
-      configurable: true,
-      value: height
-    });
-    Object.defineProperty(Element.prototype, "offsetWidth", {
-      configurable: true,
-      value: width
+    Object.defineProperties(window.HTMLElement.prototype, {
+      offsetHeight: {
+        get: function() {
+          return parseFloat(height) || 0;
+        }
+      },
+      offsetWidth: {
+        get: function() {
+          return parseFloat(width) || 0;
+        }
+      }
     });
   }
 

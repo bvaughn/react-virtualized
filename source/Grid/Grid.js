@@ -14,6 +14,7 @@ import defaultOverscanIndicesGetter, {
 import updateScrollIndexHelper from "./utils/updateScrollIndexHelper";
 import defaultCellRangeRenderer from "./defaultCellRangeRenderer";
 import scrollbarSize from "dom-helpers/util/scrollbarSize";
+import isChrome from "../utils/isChrome";
 
 /**
  * Specifies the number of milliseconds during which to disable pointer events while a scroll is in progress.
@@ -1121,14 +1122,26 @@ export default class Grid extends PureComponent {
   _debounceScrollEnded() {
     const { scrollingResetTimeInterval } = this.props;
 
-    if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId);
-    }
+    if (isChrome()) {
+      // Chrome has a feature that throttles timeouts. Animation frames
+      // should be used instead https://github.com/bvaughn/react-virtualized/issues/722
+      if (this._disablePointerEventsTimeoutId) {
+        window.cancelAnimationFrame(this._disablePointerEventsTimeoutId);
+      }
 
-    this._disablePointerEventsTimeoutId = setTimeout(
-      this._debounceScrollEndedCallback,
-      scrollingResetTimeInterval
-    );
+      this._disablePointerEventsTimeoutId = window.requestAnimationFrame(
+        this._debounceScrollEndedCallback
+      );
+    } else {
+      if (this._disablePointerEventsTimeoutId) {
+        clearTimeout(this._disablePointerEventsTimeoutId);
+      }
+
+      this._disablePointerEventsTimeoutId = setTimeout(
+        this._debounceScrollEndedCallback,
+        scrollingResetTimeInterval
+      );
+    }
   }
 
   _debounceScrollEndedCallback = () => {
