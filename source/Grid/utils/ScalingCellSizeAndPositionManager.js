@@ -1,5 +1,13 @@
 /** @flow */
+
+import type { CellSizeGetter, Alignment, VisibleCellRange } from "../types.js";
+
 import CellSizeAndPositionManager from "./CellSizeAndPositionManager";
+
+type ContainerSizeAndOffset = {
+  containerSize: number,
+  offset: number
+};
 
 /**
  * Browsers have scroll offset limitations (eg Chrome stops scrolling at ~33.5M pixels where as Edge tops out at ~1.5M pixels).
@@ -8,11 +16,22 @@ import CellSizeAndPositionManager from "./CellSizeAndPositionManager";
  */
 export const DEFAULT_MAX_SCROLL_SIZE = 1500000;
 
+type Params = {
+  maxScrollSize?: number,
+  batchAllCells: boolean,
+  cellCount: number,
+  cellSizeGetter: CellSizeGetter,
+  estimatedCellSize: number
+};
+
 /**
  * Extends CellSizeAndPositionManager and adds scaling behavior for lists that are too large to fit within a browser's native limits.
  */
 export default class ScalingCellSizeAndPositionManager {
-  constructor({ maxScrollSize = DEFAULT_MAX_SCROLL_SIZE, ...params }) {
+  _cellSizeAndPositionManager: CellSizeAndPositionManager;
+  _maxScrollSize: number;
+
+  constructor({ maxScrollSize = DEFAULT_MAX_SCROLL_SIZE, ...params }: Params) {
     // Favor composition over inheritance to simplify IE10 support
     this._cellSizeAndPositionManager = new CellSizeAndPositionManager(params);
     this._maxScrollSize = maxScrollSize;
@@ -24,7 +43,7 @@ export default class ScalingCellSizeAndPositionManager {
     );
   }
 
-  configure(params): void {
+  configure(params: { cellCount: number, estimatedCellSize: number }) {
     this._cellSizeAndPositionManager.configure(params);
   }
 
@@ -80,8 +99,12 @@ export default class ScalingCellSizeAndPositionManager {
     align = "auto",
     containerSize,
     currentOffset, // safe
-    targetIndex,
-    totalSize
+    targetIndex
+  }: {
+    align: Alignment,
+    containerSize: number,
+    currentOffset: number,
+    targetIndex: number
   }) {
     currentOffset = this._safeOffsetToOffset({
       containerSize,
@@ -92,8 +115,7 @@ export default class ScalingCellSizeAndPositionManager {
       align,
       containerSize,
       currentOffset,
-      targetIndex,
-      totalSize
+      targetIndex
     });
 
     return this._offsetToSafeOffset({
@@ -126,6 +148,10 @@ export default class ScalingCellSizeAndPositionManager {
     containerSize,
     offset, // safe
     totalSize
+  }: {
+    containerSize: number,
+    offset: number,
+    totalSize: number
   }) {
     return totalSize <= containerSize
       ? 0
@@ -172,13 +198,3 @@ export default class ScalingCellSizeAndPositionManager {
     }
   }
 }
-
-type ContainerSizeAndOffset = {
-  containerSize: number,
-  offset: number
-};
-
-type VisibleCellRange = {
-  start: ?number,
-  stop: ?number
-};
