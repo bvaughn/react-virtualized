@@ -31,7 +31,7 @@ export default class Column extends Component {
     /** Optional additional data passed to this column's :cellDataGetter */
     columnData: PropTypes.object,
 
-    /** Uniquely identifies the row-data attribute correspnding to this cell */
+    /** Uniquely identifies the row-data attribute corresponding to this cell */
     dataKey: PropTypes.any.isRequired,
 
     /** If sort is enabled for the table at large, disable it for this column */
