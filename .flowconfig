@@ -12,6 +12,8 @@
 .*/WindowScroller/.*
 .*/demo/.*
 
+.*/node_modules/babel-plugin-transform-react-remove-prop-types/.*
+
 [include]
 
 [libs]
