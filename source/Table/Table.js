@@ -27,7 +27,8 @@ export default class Table extends PureComponent {
     children: props => {
       const children = React.Children.toArray(props.children);
       for (let i = 0; i < children.length; i++) {
-        if (children[i].type !== Column) {
+        const childType = children[i].type;
+        if (childType !== Column && !(childType.prototype instanceof Column)) {
           return new Error("Table only accepts children of type Column");
         }
       }
