@@ -287,16 +287,23 @@ describe("Masonry", () => {
       expect(renderCallback.mock.calls[0][1].isScrolling).toEqual(true);
     });
 
-    it('should be reset after a small debounce when scrolling stops', () => {
-      const cellMeasurerCache = createCellMeasurerCache()
-      const renderCallback = jest.fn().mockImplementation(index => index)
-      const cellRenderer = createCellRenderer(cellMeasurerCache, renderCallback)
-      const rendered = findDOMNode(render(getMarkup({ cellMeasurerCache, cellRenderer })))
-      simulateScroll(rendered, 51)
-      renderCallback.mockClear()
-      setTimeout(() => expect(renderCallback.mock.calls[0][1].isScrolling).toEqual(false), 0)
-    })
-  })
+    it("should be reset after a small debounce when scrolling stops", () => {
+      const cellMeasurerCache = createCellMeasurerCache();
+      const renderCallback = jest.fn().mockImplementation(index => index);
+      const cellRenderer = createCellRenderer(
+        cellMeasurerCache,
+        renderCallback
+      );
+      const rendered = findDOMNode(
+        render(getMarkup({ cellMeasurerCache, cellRenderer }))
+      );
+      simulateScroll(rendered, 51);
+      renderCallback.mockClear();
+      setTimeout(() => {
+        expect(renderCallback.mock.calls[0][1].isScrolling).toEqual(false);
+      }, 0);
+    });
+  });
 
   describe("callbacks", () => {
     it("should call onCellsRendered when rendered cells change", () => {

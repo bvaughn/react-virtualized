@@ -289,6 +289,7 @@ export default class Grid extends PureComponent {
     );
     this._onScroll = this._onScroll.bind(this);
     this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this);
+    this._delayScrollEnded = this._delayScrollEnded.bind(this);
 
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth);
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight);
@@ -1037,27 +1038,33 @@ export default class Grid extends PureComponent {
   }
 
   /**
+   * Check if the difference between current time and the last scroll ended event is greater.
+   * than the scrollingResetTimeInterval prop, else schedule this function to execute again.
+   */
+  _delayScrollEnded() {
+    const { scrollingResetTimeInterval } = this.props;
+    if (Date.now() - this._scrollDebounceStart >= scrollingResetTimeInterval) {
+      this._debounceScrollEndedCallback();
+    } else {
+      this._disablePointerEventsTimeoutId = window.requestAnimationFrame(
+        this._delayScrollEnded
+      );
+    }
+  }
+
+  /**
    * Sets an :isScrolling flag for a small window of time.
    * This flag is used to disable pointer events on the scrollable portion of the Grid.
    * This prevents jerky/stuttery mouse-wheel scrolling.
    */
-  _debounceScrollEnded () {
-    const { scrollingResetTimeInterval } = this.props;
-
+  _debounceScrollEnded() {
     if (this._disablePointerEventsTimeoutId) {
-      window.cancelAnimationFrame(this._disablePointerEventsTimeoutId)
+      window.cancelAnimationFrame(this._disablePointerEventsTimeoutId);
     }
-
-    const delay = () => {
-      if (Date.now() - this._scrollDebounceStart >= scrollingResetTimeInterval) {
-        this._debounceScrollEndedCallback()
-      } else {
-        this._disablePointerEventsTimeoutId = window.requestAnimationFrame(delay)
-      }
-    }
-
-    this._scrollDebounceStart = Date.now()
-    this._disablePointerEventsTimeoutId = window.requestAnimationFrame(delay)
+    this._scrollDebounceStart = Date.now();
+    this._disablePointerEventsTimeoutId = window.requestAnimationFrame(
+      this._delayScrollEnded
+    );
   }
 
   _debounceScrollEndedCallback() {
