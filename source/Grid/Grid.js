@@ -1,6 +1,8 @@
 /** @flow */
+
+import type { CellSizeGetter, Alignment } from "./types.js";
+
 import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
 import cn from "classnames";
 import calculateSizeAndPositionDataAndUpdateScrollOffset from "./utils/calculateSizeAndPositionDataAndUpdateScrollOffset";
 import ScalingCellSizeAndPositionManager from "./utils/ScalingCellSizeAndPositionManager";
@@ -28,224 +30,256 @@ const SCROLL_POSITION_CHANGE_REASONS = {
   REQUESTED: "requested"
 };
 
+type ScrollPosition = { scrollTop: number, scrollLeft: number };
+
+type CellPosition = { columnIndex: number, rowIndex: number };
+
+type CellRenderer = (props: CellPosition) => React.Element<*>;
+
+type Props = {
+  "aria-label": string,
+  "aria-readonly": boolean,
+
+  /**
+   * Set the width of the inner scrollable container to 'auto'.
+   * This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar.
+   */
+  autoContainerWidth: boolean,
+
+  /**
+   * Removes fixed height from the scrollingContainer so that the total height of rows can stretch the window.
+   * Intended for use with WindowScroller
+   */
+  autoHeight: boolean,
+
+  /**
+   * Removes fixed width from the scrollingContainer so that the total width of rows can stretch the window.
+   * Intended for use with WindowScroller
+   */
+  autoWidth: boolean,
+
+  /**
+   * Responsible for rendering a cell given an row and column index.
+   */
+  cellRenderer: CellRenderer,
+
+  /**
+   * Responsible for rendering a group of cells given their index ranges.
+   */
+  cellRangeRenderer: (params: {
+    cellCache: Object,
+    cellRenderer: CellRenderer,
+    columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
+    columnStartIndex: number,
+    columnStopIndex: number,
+    isScrolling: boolean,
+    rowSizeAndPositionManager: ScalingCellSizeAndPositionManager,
+    rowStartIndex: number,
+    rowStopIndex: number,
+    scrollLeft: number,
+    scrollTop: number
+  }) => React.Element<*>[],
+  /**
+   * Optional custom CSS class name to attach to root Grid element.
+   */
+  className?: string,
+
+  /**
+   * Number of columns in grid.
+   */
+  columnCount: number,
+
+  /**
+   * Either a fixed column width (number) or a function that returns the width of a column given its index.
+   */
+  columnWidth: CellSizeGetter | number,
+
+  /**
+   * ARIA role for the cell-container.
+   */
+  containerRole: string,
+
+  /** Optional inline style applied to inner cell-container */
+  containerStyle?: Object,
+
+  /**
+   * If CellMeasurer is used to measure this Grid's children, this should be a pointer to its CellMeasurerCache.
+   * A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data.
+   */
+  deferredMeasurementCache?: Object,
+
+  /**
+   * Used to estimate the total width of a Grid before all of its columns have actually been measured.
+   * The estimated total width is adjusted as columns are rendered.
+   */
+  estimatedColumnSize: number,
+
+  /**
+   * Used to estimate the total height of a Grid before all of its rows have actually been measured.
+   * The estimated total height is adjusted as rows are rendered.
+   */
+  estimatedRowSize: number,
+
+  /**
+   * Exposed for testing purposes only.
+   */
+  getScrollbarSize: () => number,
+
+  /**
+   * Height of Grid; this property determines the number of visible (vs virtualized) rows.
+   */
+  height: number,
+
+  /**
+   * Optional custom id to attach to root Grid element.
+   */
+  id?: string,
+
+  /**
+   * Override internal is-scrolling state tracking.
+   * This property is primarily intended for use with the WindowScroller component.
+   */
+  isScrolling?: boolean,
+
+  /**
+   * Optional renderer to be used in place of rows when either :rowCount or :columnCount is 0.
+   */
+  noContentRenderer: () => React.Element<*> | null,
+
+  /**
+   * Callback invoked whenever the scroll offset changes within the inner scrollable region.
+   * This callback can be used to sync scrolling between lists, tables, or grids.
+   */
+  onScroll: (params: {
+    clientHeight: number,
+    clientWidth: number,
+    scrollHeight: number,
+    scrollLeft: number,
+    scrollTop: number,
+    scrollWidth: number
+  }) => void,
+
+  /**
+   * Called whenever a horizontal or vertical scrollbar is added or removed.
+   * This prop is not intended for end-user use;
+   * It is used by MultiGrid to support fixed-row/fixed-column scroll syncing.
+   */
+  onScrollbarPresenceChange: (params: {
+    horizontal: boolean,
+    vertical: boolean,
+    size: number
+  }) => void,
+
+  /**
+   * Callback invoked with information about the section of the Grid that was just rendered.
+   */
+  onSectionRendered: (params: {
+    columnStartIndex: number,
+    columnStopIndex: number,
+    rowStartIndex: number,
+    rowStopIndex: number
+  }) => void,
+
+  /**
+   * Number of columns to render before/after the visible section of the grid.
+   * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
+   */
+  overscanColumnCount: number,
+
+  /**
+   * Calculates the number of cells to overscan before and after a specified range.
+   * This function ensures that overscanning doesn't exceed the available cells.
+   */
+  overscanIndicesGetter: (params: {
+    cellCount: number,
+    overscanCellsCount: number,
+    scrollDirection: number,
+    startIndex: number,
+    stopIndex: number
+  }) => {
+    overscanStartIndex: number,
+    overscanStopIndex: number
+  },
+
+  /**
+   * Number of rows to render above/below the visible section of the grid.
+   * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
+   */
+  overscanRowCount: number,
+
+  /**
+   * ARIA role for the grid element.
+   */
+  role: string,
+
+  /**
+   * Either a fixed row height (number) or a function that returns the height of a row given its index.
+   * Should implement the following interface: ({ index: number }): number
+   */
+  rowHeight: CellSizeGetter | number,
+
+  /**
+   * Number of rows in grid.
+   */
+  rowCount: number,
+
+  /** Wait this amount of time after the last scroll event before resetting Grid `pointer-events`. */
+  scrollingResetTimeInterval: number,
+
+  /** Horizontal offset. */
+  scrollLeft: number,
+
+  /**
+   * Controls scroll-to-cell behavior of the Grid.
+   * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
+   * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
+   */
+  scrollToAlignment: Alignment,
+
+  /**
+   * Column index to ensure visible (by forcefully scrolling if necessary)
+   */
+  scrollToColumn: number,
+
+  /** Vertical offset. */
+  scrollTop: number,
+
+  /**
+   * Row index to ensure visible (by forcefully scrolling if necessary)
+   */
+  scrollToRow: number,
+
+  /** Optional inline style */
+  style: Object,
+
+  /** Tab index for focus */
+  tabIndex: number,
+
+  /**
+   * Width of Grid; this property determines the number of visible (vs virtualized) columns.
+   */
+  width: number
+};
+
+type State = {
+  isScrolling: boolean,
+  scrollDirectionHorizontal: -1 | 1,
+  scrollDirectionVertical: -1 | 1,
+  scrollLeft: number,
+  scrollTop: number,
+  scrollPositionChangeReason?: "observed" | "requested"
+};
+
 /**
  * Renders tabular data with virtualization along the vertical and horizontal axes.
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
 export default class Grid extends PureComponent {
-  static propTypes = {
-    "aria-label": PropTypes.string,
-
-    /**
-     * Set the width of the inner scrollable container to 'auto'.
-     * This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar.
-     */
-    autoContainerWidth: PropTypes.bool,
-
-    /**
-     * Removes fixed height from the scrollingContainer so that the total height of rows can stretch the window.
-     * Intended for use with WindowScroller
-     */
-    autoHeight: PropTypes.bool,
-
-    /**
-     * Removes fixed width from the scrollingContainer so that the total width of rows can stretch the window.
-     * Intended for use with WindowScroller
-     */
-    autoWidth: PropTypes.bool,
-
-    /**
-     * Responsible for rendering a cell given an row and column index.
-     * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
-     */
-    cellRenderer: PropTypes.func.isRequired,
-
-    /**
-     * Responsible for rendering a group of cells given their index ranges.
-     * Should implement the following interface: ({
-     *   cellCache: Map,
-     *   cellRenderer: Function,
-     *   columnSizeAndPositionManager: CellSizeAndPositionManager,
-     *   columnStartIndex: number,
-     *   columnStopIndex: number,
-     *   isScrolling: boolean,
-     *   rowSizeAndPositionManager: CellSizeAndPositionManager,
-     *   rowStartIndex: number,
-     *   rowStopIndex: number,
-     *   scrollLeft: number,
-     *   scrollTop: number
-     * }): Array<PropTypes.node>
-     */
-    cellRangeRenderer: PropTypes.func.isRequired,
-
-    /**
-     * Optional custom CSS class name to attach to root Grid element.
-     */
-    className: PropTypes.string,
-
-    /**
-     * Number of columns in grid.
-     */
-    columnCount: PropTypes.number.isRequired,
-
-    /**
-     * Either a fixed column width (number) or a function that returns the width of a column given its index.
-     * Should implement the following interface: (index: number): number
-     */
-    columnWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.func])
-      .isRequired,
-
-    /** Optional inline style applied to inner cell-container */
-    containerStyle: PropTypes.object,
-
-    /**
-     * If CellMeasurer is used to measure this Grid's children, this should be a pointer to its CellMeasurerCache.
-     * A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data.
-     */
-    deferredMeasurementCache: PropTypes.object,
-
-    /**
-     * Used to estimate the total width of a Grid before all of its columns have actually been measured.
-     * The estimated total width is adjusted as columns are rendered.
-     */
-    estimatedColumnSize: PropTypes.number.isRequired,
-
-    /**
-     * Used to estimate the total height of a Grid before all of its rows have actually been measured.
-     * The estimated total height is adjusted as rows are rendered.
-     */
-    estimatedRowSize: PropTypes.number.isRequired,
-
-    /**
-     * Exposed for testing purposes only.
-     */
-    getScrollbarSize: PropTypes.func.isRequired,
-
-    /**
-     * Height of Grid; this property determines the number of visible (vs virtualized) rows.
-     */
-    height: PropTypes.number.isRequired,
-
-    /**
-     * Optional custom id to attach to root Grid element.
-     */
-    id: PropTypes.string,
-
-    /**
-     * Override internal is-scrolling state tracking.
-     * This property is primarily intended for use with the WindowScroller component.
-     */
-    isScrolling: PropTypes.bool,
-
-    /**
-     * Optional renderer to be used in place of rows when either :rowCount or :columnCount is 0.
-     */
-    noContentRenderer: PropTypes.func.isRequired,
-
-    /**
-     * Callback invoked whenever the scroll offset changes within the inner scrollable region.
-     * This callback can be used to sync scrolling between lists, tables, or grids.
-     * ({ clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth }): void
-     */
-    onScroll: PropTypes.func.isRequired,
-
-    /**
-     * Called whenever a horizontal or vertical scrollbar is added or removed.
-     * This prop is not intended for end-user use;
-     * It is used by MultiGrid to support fixed-row/fixed-column scroll syncing.
-     */
-    onScrollbarPresenceChange: PropTypes.func.isRequired,
-
-    /**
-     * Callback invoked with information about the section of the Grid that was just rendered.
-     * ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }): void
-     */
-    onSectionRendered: PropTypes.func.isRequired,
-
-    /**
-     * Number of columns to render before/after the visible section of the grid.
-     * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
-     */
-    overscanColumnCount: PropTypes.number.isRequired,
-
-    /**
-     * Calculates the number of cells to overscan before and after a specified range.
-     * This function ensures that overscanning doesn't exceed the available cells.
-     * Should implement the following interface: ({
-     *   cellCount: number,
-     *   overscanCellsCount: number,
-     *   scrollDirection: number,
-     *   startIndex: number,
-     *   stopIndex: number
-     * }): {overscanStartIndex: number, overscanStopIndex: number}
-     */
-    overscanIndicesGetter: PropTypes.func.isRequired,
-
-    /**
-     * Number of rows to render above/below the visible section of the grid.
-     * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
-     */
-    overscanRowCount: PropTypes.number.isRequired,
-
-    /**
-     * ARIA role for the grid element.
-     */
-    role: PropTypes.string,
-
-    /**
-     * Either a fixed row height (number) or a function that returns the height of a row given its index.
-     * Should implement the following interface: ({ index: number }): number
-     */
-    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func])
-      .isRequired,
-
-    /**
-     * Number of rows in grid.
-     */
-    rowCount: PropTypes.number.isRequired,
-
-    /** Wait this amount of time after the last scroll event before resetting Grid `pointer-events`. */
-    scrollingResetTimeInterval: PropTypes.number,
-
-    /** Horizontal offset. */
-    scrollLeft: PropTypes.number,
-
-    /**
-     * Controls scroll-to-cell behavior of the Grid.
-     * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
-     * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
-     */
-    scrollToAlignment: PropTypes.oneOf(["auto", "end", "start", "center"])
-      .isRequired,
-
-    /**
-     * Column index to ensure visible (by forcefully scrolling if necessary)
-     */
-    scrollToColumn: PropTypes.number.isRequired,
-
-    /** Vertical offset. */
-    scrollTop: PropTypes.number,
-
-    /**
-     * Row index to ensure visible (by forcefully scrolling if necessary)
-     */
-    scrollToRow: PropTypes.number.isRequired,
-
-    /** Optional inline style */
-    style: PropTypes.object,
-
-    /** Tab index for focus */
-    tabIndex: PropTypes.number,
-
-    /**
-     * Width of Grid; this property determines the number of visible (vs virtualized) columns.
-     */
-    width: PropTypes.number.isRequired
-  };
-
   static defaultProps = {
     "aria-label": "grid",
+    "aria-readonly": true,
     cellRangeRenderer: defaultCellRangeRenderer,
+    containerRole: "rowgroup",
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
     getScrollbarSize: scrollbarSize,
@@ -265,63 +299,82 @@ export default class Grid extends PureComponent {
     tabIndex: 0
   };
 
-  constructor(props, context) {
-    super(props, context);
+  props: Props;
 
-    this.state = {
-      isScrolling: false,
-      scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
-      scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
-      scrollLeft: 0,
-      scrollTop: 0
-    };
+  state: State = {
+    isScrolling: false,
+    scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
+    scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
+    scrollLeft: 0,
+    scrollTop: 0
+  };
 
-    // Invokes onSectionRendered callback only when start/stop row or column indices change
-    this._onGridRenderedMemoizer = createCallbackMemoizer();
-    this._onScrollMemoizer = createCallbackMemoizer(false);
+  // Invokes onSectionRendered callback only when start/stop row or column indices change
+  _onGridRenderedMemoizer = createCallbackMemoizer();
+  _onScrollMemoizer = createCallbackMemoizer(false);
 
-    // Bind functions to instance so they don't lose context when passed around
-    this._debounceScrollEndedCallback = this._debounceScrollEndedCallback.bind(
-      this
-    );
-    this._invokeOnGridRenderedHelper = this._invokeOnGridRenderedHelper.bind(
-      this
-    );
-    this._onScroll = this._onScroll.bind(this);
-    this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this);
-    this._delayScrollEnded = this._delayScrollEnded.bind(this);
+  _deferredInvalidateColumnIndex = null;
+  _deferredInvalidateRowIndex = null;
+  _recomputeScrollLeftFlag = false;
+  _recomputeScrollTopFlag = false;
+
+  _horizontalScrollBarSize = 0;
+  _verticalScrollBarSize = 0;
+  _scrollbarPresenceChanged = false;
+
+  _columnWidthGetter: CellSizeGetter;
+  _rowHeightGetter: CellSizeGetter;
+
+  _columnSizeAndPositionManager: ScalingCellSizeAndPositionManager;
+  _rowSizeAndPositionManager: ScalingCellSizeAndPositionManager;
+
+  // See defaultCellRangeRenderer() for more information on the usage of these caches
+  _cellCache = {};
+  _styleCache = {};
+
+  _scrollbarSize: number;
+  _scrollbarSizeMeasured = false;
+  _scrollingContainer: Element;
+
+  _childrenToDisplay: React.Element<*>[];
+
+  _renderedColumnStartIndex = 0;
+  _renderedColumnStopIndex = 0;
+  _renderedRowStartIndex = 0;
+  _renderedRowStopIndex = 0;
+
+  _columnStartIndex: number;
+  _columnStopIndex: number;
+  _rowStartIndex: number;
+  _rowStopIndex: number;
+
+  _disablePointerEventsTimeoutId: ?number;
+  _scrollDebounceStart: number;
+
+  constructor(props: Props) {
+    super(props);
 
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth);
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight);
 
-    this._deferredInvalidateColumnIndex = null;
-    this._deferredInvalidateRowIndex = null;
-    this._recomputeScrollLeftFlag = false;
-    this._recomputeScrollTopFlag = false;
-
-    this._horizontalScrollBarSize = 0;
-    this._verticalScrollBarSize = 0;
-    this._scrollbarPresenceChanged = false;
-
     const deferredMeasurementCache = props.deferredMeasurementCache;
-    const deferredMode = typeof deferredMeasurementCache !== "undefined";
 
     this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
-      batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedHeight(),
+      batchAllCells:
+        deferredMeasurementCache !== undefined &&
+        !deferredMeasurementCache.hasFixedHeight(),
       cellCount: props.columnCount,
       cellSizeGetter: params => this._columnWidthGetter(params),
       estimatedCellSize: this._getEstimatedColumnSize(props)
     });
     this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
-      batchAllCells: deferredMode && !deferredMeasurementCache.hasFixedWidth(),
+      batchAllCells:
+        deferredMeasurementCache !== undefined &&
+        !deferredMeasurementCache.hasFixedWidth(),
       cellCount: props.rowCount,
       cellSizeGetter: params => this._rowHeightGetter(params),
       estimatedCellSize: this._getEstimatedRowSize(props)
     });
-
-    // See defaultCellRangeRenderer() for more information on the usage of these caches
-    this._cellCache = {};
-    this._styleCache = {};
   }
 
   /**
@@ -332,6 +385,10 @@ export default class Grid extends PureComponent {
       alignment = this.props.scrollToAlignment,
       columnIndex = this.props.scrollToColumn,
       rowIndex = this.props.scrollToRow
+    }: {
+      alignment: Alignment,
+      columnIndex: number,
+      rowIndex: number
     } = {}
   ) {
     const offsetProps = {
@@ -354,7 +411,7 @@ export default class Grid extends PureComponent {
   handleScrollEvent({
     scrollLeft: scrollLeftParam = 0,
     scrollTop: scrollTopParam = 0
-  }) {
+  }: ScrollPosition) {
     // On iOS, we can arrive at negative offsets by swiping past the start.
     // To prevent flicker here, we make playing in the negative offset zone cause nothing to happen.
     if (scrollTopParam < 0) {
@@ -405,7 +462,7 @@ export default class Grid extends PureComponent {
             : SCROLL_DIRECTION_BACKWARD
           : this.state.scrollDirectionVertical;
 
-      const newState = {
+      const newState: Object = {
         isScrolling: true,
         scrollDirectionHorizontal,
         scrollDirectionVertical,
@@ -438,7 +495,7 @@ export default class Grid extends PureComponent {
    * This method is intended for advanced use-cases like CellMeasurer.
    */
   // @TODO (bvaughn) Add automated test coverage for this.
-  invalidateCellSizeAfterRender({ columnIndex, rowIndex }) {
+  invalidateCellSizeAfterRender({ columnIndex, rowIndex }: CellPosition) {
     this._deferredInvalidateColumnIndex =
       typeof this._deferredInvalidateColumnIndex === "number"
         ? Math.min(this._deferredInvalidateColumnIndex, columnIndex)
@@ -468,7 +525,7 @@ export default class Grid extends PureComponent {
    * This function should be called if dynamic column or row sizes have changed but nothing else has.
    * Since Grid only receives :columnCount and :rowCount it has no way of detecting when the underlying data changes.
    */
-  recomputeGridSize({ columnIndex = 0, rowIndex = 0 } = {}) {
+  recomputeGridSize({ columnIndex = 0, rowIndex = 0 }: CellPosition = {}) {
     const { scrollToColumn, scrollToRow } = this.props;
 
     this._columnSizeAndPositionManager.resetCell(columnIndex);
@@ -492,7 +549,7 @@ export default class Grid extends PureComponent {
   /**
    * Ensure column and row are visible.
    */
-  scrollToCell({ columnIndex, rowIndex }) {
+  scrollToCell({ columnIndex, rowIndex }: CellPosition) {
     const { columnCount } = this.props;
 
     const props = this.props;
@@ -516,7 +573,7 @@ export default class Grid extends PureComponent {
    * Scroll to the specified offset(s).
    * Useful for animating position changes.
    */
-  scrollToPosition({ scrollLeft, scrollTop } = {}) {
+  scrollToPosition({ scrollLeft, scrollTop }: ScrollPosition = {}) {
     this._setScrollPosition({ scrollLeft, scrollTop });
   }
 
@@ -576,7 +633,7 @@ export default class Grid extends PureComponent {
    * This method updates scrollLeft/scrollTop in state for the following conditions:
    * 1) New scroll-to-cell props have been set
    */
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     const {
       autoHeight,
       autoWidth,
@@ -647,7 +704,10 @@ export default class Grid extends PureComponent {
       updateScrollIndexHelper({
         cellSizeAndPositionManager: this._columnSizeAndPositionManager,
         previousCellsCount: prevProps.columnCount,
-        previousCellSize: prevProps.columnWidth,
+        previousCellSize:
+          typeof prevProps.columnWidth === "number"
+            ? prevProps.columnWidth
+            : null,
         previousScrollToAlignment: prevProps.scrollToAlignment,
         previousScrollToIndex: prevProps.scrollToColumn,
         previousSize: prevProps.width,
@@ -668,7 +728,8 @@ export default class Grid extends PureComponent {
       updateScrollIndexHelper({
         cellSizeAndPositionManager: this._rowSizeAndPositionManager,
         previousCellsCount: prevProps.rowCount,
-        previousCellSize: prevProps.rowHeight,
+        previousCellSize:
+          typeof prevProps.rowHeight === "number" ? prevProps.rowHeight : null,
         previousScrollToAlignment: prevProps.scrollToAlignment,
         previousScrollToIndex: prevProps.scrollToRow,
         previousSize: prevProps.height,
@@ -733,7 +794,7 @@ export default class Grid extends PureComponent {
    * 2) New scroll props overriding the current state
    * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
    */
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     const { scrollLeft, scrollTop } = this.state;
 
     if (
@@ -801,12 +862,18 @@ export default class Grid extends PureComponent {
     // Update scroll offsets if the size or number of cells have changed, invalidating the previous value
     calculateSizeAndPositionDataAndUpdateScrollOffset({
       cellCount: columnCount,
-      cellSize: this.props.columnWidth,
+      cellSize:
+        typeof this.props.columnWidth === "number"
+          ? this.props.columnWidth
+          : null,
       computeMetadataCallback: () =>
         this._columnSizeAndPositionManager.resetCell(0),
       computeMetadataCallbackProps: nextProps,
       nextCellsCount: nextProps.columnCount,
-      nextCellSize: nextProps.columnWidth,
+      nextCellSize:
+        typeof nextProps.columnWidth === "number"
+          ? nextProps.columnWidth
+          : null,
       nextScrollToIndex: nextProps.scrollToColumn,
       scrollToIndex: this.props.scrollToColumn,
       updateScrollOffsetForScrollToIndex: () =>
@@ -814,12 +881,14 @@ export default class Grid extends PureComponent {
     });
     calculateSizeAndPositionDataAndUpdateScrollOffset({
       cellCount: rowCount,
-      cellSize: this.props.rowHeight,
+      cellSize:
+        typeof this.props.rowHeight === "number" ? this.props.rowHeight : null,
       computeMetadataCallback: () =>
         this._rowSizeAndPositionManager.resetCell(0),
       computeMetadataCallbackProps: nextProps,
       nextCellsCount: nextProps.rowCount,
-      nextCellSize: nextProps.rowHeight,
+      nextCellSize:
+        typeof nextProps.rowHeight === "number" ? nextProps.rowHeight : null,
       nextScrollToIndex: nextProps.scrollToRow,
       scrollToIndex: this.props.scrollToRow,
       updateScrollOffsetForScrollToIndex: () =>
@@ -827,7 +896,7 @@ export default class Grid extends PureComponent {
     });
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  componentWillUpdate(nextProps: Props, nextState: State) {
     this._calculateChildrenToRender(nextProps, nextState);
   }
 
@@ -837,6 +906,7 @@ export default class Grid extends PureComponent {
       autoHeight,
       autoWidth,
       className,
+      containerRole,
       containerStyle,
       height,
       id,
@@ -849,7 +919,7 @@ export default class Grid extends PureComponent {
 
     const isScrolling = this._isScrolling();
 
-    const gridStyle = {
+    const gridStyle: Object = {
       boxSizing: "border-box",
       direction: "ltr",
       height: autoHeight ? "auto" : height,
@@ -898,6 +968,7 @@ export default class Grid extends PureComponent {
       <div
         ref={this._setScrollingContainerRef}
         aria-label={this.props["aria-label"]}
+        aria-readonly={this.props["aria-readonly"]}
         className={cn("ReactVirtualized__Grid", className)}
         id={id}
         onScroll={this._onScroll}
@@ -911,6 +982,7 @@ export default class Grid extends PureComponent {
         {childrenToDisplay.length > 0 &&
           <div
             className="ReactVirtualized__Grid__innerScrollContainer"
+            role={containerRole}
             style={{
               width: autoContainerWidth ? "auto" : totalColumnsWidth,
               height: totalRowsHeight,
@@ -931,7 +1003,10 @@ export default class Grid extends PureComponent {
 
   /* ---------------------------- Helper methods ---------------------------- */
 
-  _calculateChildrenToRender(props = this.props, state = this.state) {
+  _calculateChildrenToRender(
+    props: Props = this.props,
+    state: State = this.state
+  ) {
     const {
       cellRenderer,
       cellRangeRenderer,
@@ -995,8 +1070,14 @@ export default class Grid extends PureComponent {
         cellCount: columnCount,
         overscanCellsCount: overscanColumnCount,
         scrollDirection: scrollDirectionHorizontal,
-        startIndex: this._renderedColumnStartIndex,
-        stopIndex: this._renderedColumnStopIndex
+        startIndex:
+          typeof this._renderedColumnStartIndex === "number"
+            ? this._renderedColumnStartIndex
+            : 0,
+        stopIndex:
+          typeof this._renderedColumnStopIndex === "number"
+            ? this._renderedColumnStopIndex
+            : -1
       });
 
       const overscanRowIndices = overscanIndicesGetter({
@@ -1004,8 +1085,15 @@ export default class Grid extends PureComponent {
         cellCount: rowCount,
         overscanCellsCount: overscanRowCount,
         scrollDirection: scrollDirectionVertical,
-        startIndex: this._renderedRowStartIndex,
-        stopIndex: this._renderedRowStopIndex
+        startIndex:
+          typeof this._renderedRowStartIndex === "number"
+            ? this._renderedRowStartIndex
+            : 0,
+        stopIndex:
+          typeof this._renderedRowStopIndex === "number"
+            ? this._renderedRowStopIndex
+            : -1
+        // stopIndex: this._renderedRowStopIndex
       });
 
       // Store for _invokeOnGridRenderedHelper()
@@ -1041,7 +1129,7 @@ export default class Grid extends PureComponent {
    * Check if the difference between current time and the last scroll ended event is greater.
    * than the scrollingResetTimeInterval prop, else schedule this function to execute again.
    */
-  _delayScrollEnded() {
+  _delayScrollEnded = () => {
     const { scrollingResetTimeInterval } = this.props;
     if (Date.now() - this._scrollDebounceStart >= scrollingResetTimeInterval) {
       this._debounceScrollEndedCallback();
@@ -1050,7 +1138,7 @@ export default class Grid extends PureComponent {
         this._delayScrollEnded
       );
     }
-  }
+  };
 
   /**
    * Sets an :isScrolling flag for a small window of time.
@@ -1067,18 +1155,18 @@ export default class Grid extends PureComponent {
     );
   }
 
-  _debounceScrollEndedCallback() {
+  _debounceScrollEndedCallback = () => {
     this._disablePointerEventsTimeoutId = null;
     this._resetStyleCache();
-  }
+  };
 
-  _getEstimatedColumnSize(props) {
+  _getEstimatedColumnSize(props: Props) {
     return typeof props.columnWidth === "number"
       ? props.columnWidth
       : props.estimatedColumnSize;
   }
 
-  _getEstimatedRowSize(props) {
+  _getEstimatedRowSize(props: Props) {
     return typeof props.rowHeight === "number"
       ? props.rowHeight
       : props.estimatedRowSize;
@@ -1089,7 +1177,10 @@ export default class Grid extends PureComponent {
    * This will occur the first time one or more previously unmeasured cells are rendered.
    */
   _handleInvalidatedGridSize() {
-    if (typeof this._deferredInvalidateColumnIndex === "number") {
+    if (
+      typeof this._deferredInvalidateColumnIndex === "number" &&
+      typeof this._deferredInvalidateRowIndex === "number"
+    ) {
       const columnIndex = this._deferredInvalidateColumnIndex;
       const rowIndex = this._deferredInvalidateRowIndex;
 
@@ -1100,7 +1191,7 @@ export default class Grid extends PureComponent {
     }
   }
 
-  _invokeOnGridRenderedHelper() {
+  _invokeOnGridRenderedHelper = () => {
     const { onSectionRendered } = this.props;
 
     this._onGridRenderedMemoizer({
@@ -1116,13 +1207,18 @@ export default class Grid extends PureComponent {
         rowStopIndex: this._renderedRowStopIndex
       }
     });
-  }
+  };
 
   _invokeOnScrollMemoizer({
     scrollLeft,
     scrollTop,
     totalColumnsWidth,
     totalRowsHeight
+  }: {
+    scrollLeft: number,
+    scrollTop: number,
+    totalColumnsWidth: number,
+    totalRowsHeight: number
   }) {
     this._onScrollMemoizer({
       callback: ({ scrollLeft, scrollTop }) => {
@@ -1144,12 +1240,12 @@ export default class Grid extends PureComponent {
     });
   }
 
-  _isScrolling(props = this.props, state = this.state) {
+  _isScrolling(props: Props = this.props, state: State = this.state): boolean {
     // If isScrolling is defined in props, use it to override the value in state
     // This is a performance optimization for WindowScroller + Grid
     return Object.hasOwnProperty.call(props, "isScrolling")
-      ? props.isScrolling
-      : state.isScrolling;
+      ? Boolean(props.isScrolling)
+      : Boolean(state.isScrolling);
   }
 
   _maybeCallOnScrollbarPresenceChange() {
@@ -1166,12 +1262,12 @@ export default class Grid extends PureComponent {
     }
   }
 
-  _setScrollingContainerRef(ref) {
+  _setScrollingContainerRef = (ref: Element) => {
     this._scrollingContainer = ref;
-  }
+  };
 
-  _setScrollPosition({ scrollLeft, scrollTop }) {
-    const newState = {
+  _setScrollPosition({ scrollLeft, scrollTop }: ScrollPosition) {
+    const newState: Object = {
       scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
     };
 
@@ -1199,15 +1295,14 @@ export default class Grid extends PureComponent {
     }
   }
 
-  _wrapPropertyGetter(value) {
-    return typeof value === "function" ? value : () => value;
+  _wrapSizeGetter(value: CellSizeGetter | number): CellSizeGetter {
+    return typeof value === "function" ? value : () => (value: any);
   }
 
-  _wrapSizeGetter(size) {
-    return this._wrapPropertyGetter(size);
-  }
-
-  _getCalculatedScrollLeft(props = this.props, state = this.state) {
+  _getCalculatedScrollLeft(
+    props: Props = this.props,
+    state: State = this.state
+  ) {
     const {
       columnCount,
       height,
@@ -1234,18 +1329,29 @@ export default class Grid extends PureComponent {
     }
   }
 
-  _updateScrollLeftForScrollToColumn(props = this.props, state = this.state) {
+  _updateScrollLeftForScrollToColumn(
+    props: Props = this.props,
+    state: State = this.state
+  ) {
     const { scrollLeft } = state;
     const calculatedScrollLeft = this._getCalculatedScrollLeft(props, state);
 
-    if (calculatedScrollLeft >= 0 && scrollLeft !== calculatedScrollLeft) {
+    if (
+      typeof calculatedScrollLeft === "number" &&
+      calculatedScrollLeft >= 0 &&
+      scrollLeft !== calculatedScrollLeft
+    ) {
       this._setScrollPosition({
-        scrollLeft: calculatedScrollLeft
+        scrollLeft: calculatedScrollLeft,
+        scrollTop: -1
       });
     }
   }
 
-  _getCalculatedScrollTop(props = this.props, state = this.state) {
+  _getCalculatedScrollTop(
+    props: Props = this.props,
+    state: State = this.state
+  ) {
     const { height, rowCount, scrollToAlignment, scrollToRow, width } = props;
     const { scrollTop } = state;
 
@@ -1294,25 +1400,31 @@ export default class Grid extends PureComponent {
     });
   }
 
-  _updateScrollTopForScrollToRow(props = this.props, state = this.state) {
+  _updateScrollTopForScrollToRow(
+    props: Props = this.props,
+    state: State = this.state
+  ) {
     const { scrollTop } = state;
     const calculatedScrollTop = this._getCalculatedScrollTop(props, state);
 
-    if (calculatedScrollTop >= 0 && scrollTop !== calculatedScrollTop) {
+    if (
+      typeof calculatedScrollTop === "number" &&
+      calculatedScrollTop >= 0 &&
+      scrollTop !== calculatedScrollTop
+    ) {
       this._setScrollPosition({
+        scrollLeft: -1,
         scrollTop: calculatedScrollTop
       });
     }
   }
 
-  _onScroll(event) {
+  _onScroll = (event: Event) => {
     // In certain edge-cases React dispatches an onScroll event with an invalid target.scrollLeft / target.scrollTop.
     // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
     // See issue #404 for more information.
-    if (event.target !== this._scrollingContainer) {
-      return;
+    if (event.target === this._scrollingContainer) {
+      this.handleScrollEvent((event.target: any));
     }
-
-    this.handleScrollEvent(event.target);
-  }
+  };
 }

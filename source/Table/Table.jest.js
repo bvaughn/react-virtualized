@@ -103,6 +103,18 @@ describe("Table", () => {
       expect(result instanceof Error).toEqual(false);
     });
 
+    it("should accept subclasses of Column as children", () => {
+      class AnotherColumn extends Column {}
+
+      const children = [<AnotherColumn dataKey="foo" width={100} />];
+      const result = Table.propTypes.children(
+        { children },
+        "children",
+        "Table"
+      );
+      expect(result instanceof Error).toEqual(false);
+    });
+
     it("should not accept non-Column children", () => {
       const children = [<div />];
       const result = Table.propTypes.children(

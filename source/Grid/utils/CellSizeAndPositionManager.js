@@ -1,36 +1,73 @@
 /** @flow */
 
+import type { CellSizeGetter, Alignment, VisibleCellRange } from "../types.js";
+
+type CellSizeAndPositionManagerParams = {
+  batchAllCells: boolean,
+  cellCount: number,
+  cellSizeGetter: CellSizeGetter,
+  estimatedCellSize: number
+};
+
+type ConfigureParams = {
+  cellCount: number,
+  estimatedCellSize: number
+};
+
+type GetUpdatedOffsetForIndex = {
+  align: Alignment,
+  containerSize: number,
+  currentOffset: number,
+  targetIndex: number
+};
+
+type GetVisibleCellRangeParams = {
+  containerSize: number,
+  offset: number
+};
+
+type SizeAndPositionData = {
+  offset: number,
+  size: number
+};
+
 /**
  * Just-in-time calculates and caches size and position information for a collection of cells.
  */
+
 export default class CellSizeAndPositionManager {
+  // Cache of size and position data for cells, mapped by cell index.
+  // Note that invalid values may exist in this map so only rely on cells up to this._lastMeasuredIndex
+  _cellSizeAndPositionData = {};
+
+  // Measurements for cells up to this index can be trusted; cells afterward should be estimated.
+  _lastMeasuredIndex = -1;
+
+  // Used in deferred mode to track which cells have been queued for measurement.
+  _lastBatchedIndex = -1;
+
+  _batchAllCells: boolean;
+  _cellCount: number;
+  _cellSizeGetter: CellSizeGetter;
+  _estimatedCellSize: number;
+
   constructor({
     batchAllCells = false,
     cellCount,
     cellSizeGetter,
     estimatedCellSize
-  }: CellSizeAndPositionManagerConstructorParams) {
+  }: CellSizeAndPositionManagerParams) {
     this._batchAllCells = batchAllCells;
     this._cellSizeGetter = cellSizeGetter;
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
-
-    // Cache of size and position data for cells, mapped by cell index.
-    // Note that invalid values may exist in this map so only rely on cells up to this._lastMeasuredIndex
-    this._cellSizeAndPositionData = {};
-
-    // Measurements for cells up to this index can be trusted; cells afterward should be estimated.
-    this._lastMeasuredIndex = -1;
-
-    // Used in deferred mode to track which cells have been queued for measurement.
-    this._lastBatchedIndex = -1;
   }
 
-  areOffsetsAdjusted(): boolean {
+  areOffsetsAdjusted() {
     return false;
   }
 
-  configure({ cellCount, estimatedCellSize }: ConfigureParams): void {
+  configure({ cellCount, estimatedCellSize }: ConfigureParams) {
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
   }
@@ -47,7 +84,7 @@ export default class CellSizeAndPositionManager {
     return this._lastMeasuredIndex;
   }
 
-  getOffsetAdjustment(): number {
+  getOffsetAdjustment() {
     return 0;
   }
 
@@ -138,7 +175,7 @@ export default class CellSizeAndPositionManager {
     containerSize,
     currentOffset,
     targetIndex
-  }) {
+  }: GetUpdatedOffsetForIndex): number {
     if (containerSize <= 0) {
       return 0;
     }
@@ -216,13 +253,10 @@ export default class CellSizeAndPositionManager {
     this._lastMeasuredIndex = Math.min(this._lastMeasuredIndex, index - 1);
   }
 
-  _binarySearch({ high, low, offset }): number {
-    let middle;
-    let currentOffset;
-
+  _binarySearch(high: number, low: number, offset: number): number {
     while (low <= high) {
-      middle = low + Math.floor((high - low) / 2);
-      currentOffset = this.getSizeAndPositionOfCell(middle).offset;
+      const middle = low + Math.floor((high - low) / 2);
+      const currentOffset = this.getSizeAndPositionOfCell(middle).offset;
 
       if (currentOffset === offset) {
         return middle;
@@ -235,10 +269,12 @@ export default class CellSizeAndPositionManager {
 
     if (low > 0) {
       return low - 1;
+    } else {
+      return 0;
     }
   }
 
-  _exponentialSearch({ index, offset }): number {
+  _exponentialSearch(index: number, offset: number): number {
     let interval = 1;
 
     while (
@@ -249,11 +285,11 @@ export default class CellSizeAndPositionManager {
       interval *= 2;
     }
 
-    return this._binarySearch({
-      high: Math.min(index, this._cellCount - 1),
-      low: Math.floor(index / 2),
+    return this._binarySearch(
+      Math.min(index, this._cellCount - 1),
+      Math.floor(index / 2),
       offset
-    });
+    );
   }
 
   /**
@@ -276,46 +312,12 @@ export default class CellSizeAndPositionManager {
 
     if (lastMeasuredCellSizeAndPosition.offset >= offset) {
       // If we've already measured cells within this range just use a binary search as it's faster.
-      return this._binarySearch({
-        high: lastMeasuredIndex,
-        low: 0,
-        offset
-      });
+      return this._binarySearch(lastMeasuredIndex, 0, offset);
     } else {
       // If we haven't yet measured this high, fallback to an exponential search with an inner binary search.
       // The exponential search avoids pre-computing sizes for the full set of cells as a binary search would.
       // The overall complexity for this approach is O(log n).
-      return this._exponentialSearch({
-        index: lastMeasuredIndex,
-        offset
-      });
+      return this._exponentialSearch(lastMeasuredIndex, offset);
     }
   }
 }
-
-type CellSizeAndPositionManagerConstructorParams = {
-  batchAllCells?: boolean,
-  cellCount: number,
-  cellSizeGetter: Function,
-  estimatedCellSize: number
-};
-
-type ConfigureParams = {
-  cellCount: number,
-  estimatedCellSize: number
-};
-
-type GetVisibleCellRangeParams = {
-  containerSize: number,
-  offset: number
-};
-
-type SizeAndPositionData = {
-  offset: number,
-  size: number
-};
-
-type VisibleCellRange = {
-  start: ?number,
-  stop: ?number
-};

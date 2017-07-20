@@ -1,4 +1,3 @@
-/** @flow */
 import ScalingCellSizeAndPositionManager from "./ScalingCellSizeAndPositionManager";
 
 describe("ScalingCellSizeAndPositionManager", () => {
