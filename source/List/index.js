@@ -1,3 +1,4 @@
 /** @flow */
-export default from "./List";
-export List from "./List";
+
+export { default } from "./List";
+export { default as List } from "./List";

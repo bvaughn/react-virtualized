@@ -1,5 +1,7 @@
 // @flow
 
+import type { OverscanIndices } from "../types";
+
 export const SCROLL_DIRECTION_BACKWARD = -1;
 export const SCROLL_DIRECTION_FORWARD = 1;
 
@@ -31,18 +33,13 @@ type Params = {
   stopIndex: number
 };
 
-type Returns = {
-  overscanStartIndex: number,
-  overscanStopIndex: number
-};
-
 export default function defaultOverscanIndicesGetter({
   cellCount,
   overscanCellsCount,
   scrollDirection,
   startIndex,
   stopIndex
-}: Params): Returns {
+}: Params): OverscanIndices {
   // Make sure we render at least 1 cell extra before and after (except near boundaries)
   // This is necessary in order to support keyboard navigation (TAB/SHIFT+TAB) in some cases
   // For more info see issues #625

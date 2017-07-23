@@ -1,23 +1,26 @@
 /** @flow */
 
-import CellSizeAndPositionManager from "./utils/CellSizeAndPositionManager.js";
+import type { CellRendererParams } from "../types";
+
+import React from "react";
+import ScalingCellSizeAndPositionManager from "./utils/ScalingCellSizeAndPositionManager.js";
 
 /**
  * Default implementation of cellRangeRenderer used by Grid.
  * This renderer supports cell-caching while the user is scrolling.
  */
 
-type DefaultCellRangeRendererParams = {
+export type CellRangeRendererParams = {
   cellCache: Object,
-  cellRenderer: Function,
-  columnSizeAndPositionManager: CellSizeAndPositionManager,
+  cellRenderer: (params: CellRendererParams) => React.Element<*>,
+  columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
   columnStartIndex: number,
   columnStopIndex: number,
-  deferredMeasurementCache: Object,
+  deferredMeasurementCache?: Object,
   horizontalOffsetAdjustment: number,
   isScrolling: boolean,
-  parent: any,
-  rowSizeAndPositionManager: CellSizeAndPositionManager,
+  parent: Object,
+  rowSizeAndPositionManager: ScalingCellSizeAndPositionManager,
   rowStartIndex: number,
   rowStopIndex: number,
   scrollLeft: number,
@@ -45,9 +48,7 @@ export default function defaultCellRangeRenderer({
   verticalOffsetAdjustment,
   visibleColumnIndices,
   visibleRowIndices
-}: DefaultCellRangeRendererParams) {
-  const deferredMode = typeof deferredMeasurementCache !== "undefined";
-
+}: CellRangeRendererParams) {
   const renderedCells = [];
 
   // Browsers have native size limits for elements (eg Chrome 33M pixels, IE 1.5M pixes).
@@ -87,7 +88,7 @@ export default function defaultCellRangeRenderer({
         // In deferred mode, cells will be initially rendered before we know their size.
         // Don't interfere with CellMeasurer's measurements by setting an invalid size.
         if (
-          deferredMode &&
+          deferredMeasurementCache &&
           !deferredMeasurementCache.has(rowIndex, columnIndex)
         ) {
           // Position not-yet-measured cells at top/left 0,0,

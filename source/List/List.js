@@ -1,7 +1,18 @@
 /** @flow */
+
+import type {
+  Alignment,
+  CellSizeGetter,
+  OverscanIndicesGetterParams,
+  OverscanIndices,
+  RenderedSection,
+  CellRendererParams,
+  RowRendererParams,
+  Scroll as GridScroll
+} from "../types";
+
 import Grid, { accessibilityOverscanIndicesGetter } from "../Grid";
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import React from "react";
 import cn from "classnames";
 
 /**
@@ -12,91 +23,121 @@ import cn from "classnames";
  *
  * This component renders a virtualized list of elements with either fixed or dynamic heights.
  */
-export default class List extends PureComponent {
-  static propTypes = {
-    "aria-label": PropTypes.string,
 
-    /**
+type RenderedRows = {
+  overscanStartIndex: number,
+  overscanStopIndex: number,
+  startIndex: number,
+  stopIndex: number
+};
+
+type Scroll = {
+  clientHeight: number,
+  scrollHeight: number,
+  scrollTop: number
+};
+
+
+
+
+
+
+
+<div
+/>
+
+
+
+
+
+
+
+
+
+type Props = {
+  "aria-label"?: string,
+
+  /**
      * Removes fixed height from the scrollingContainer so that the total height
      * of rows can stretch the window. Intended for use with WindowScroller
      */
-    autoHeight: PropTypes.bool,
+  autoHeight?: boolean,
 
-    /** Optional CSS class name */
-    className: PropTypes.string,
+  /** Optional CSS class name */
+  className?: string,
 
-    /**
+  /**
      * Used to estimate the total height of a List before all of its rows have actually been measured.
      * The estimated total height is adjusted as rows are rendered.
      */
-    estimatedRowSize: PropTypes.number.isRequired,
+  estimatedRowSize: number,
 
-    /** Height constraint for list (determines how many actual rows are rendered) */
-    height: PropTypes.number.isRequired,
+  /** Height constraint for list (determines how many actual rows are rendered) */
+  height: number,
 
-    /** Optional renderer to be used in place of rows when rowCount is 0 */
-    noRowsRenderer: PropTypes.func.isRequired,
+  /** Optional renderer to be used in place of rows when rowCount is 0 */
+  noRowsRenderer: () => React.Element<*> | null,
 
-    /**
+  /**
      * Callback invoked with information about the slice of rows that were just rendered.
-     * ({ startIndex, stopIndex }): void
      */
-    onRowsRendered: PropTypes.func.isRequired,
 
-    /**
+  onRowsRendered: (params: RenderedRows) => void,
+
+  /**
      * Callback invoked whenever the scroll offset changes within the inner scrollable region.
      * This callback can be used to sync scrolling between lists, tables, or grids.
-     * ({ clientHeight, scrollHeight, scrollTop }): void
      */
-    onScroll: PropTypes.func.isRequired,
+  onScroll: (params: Scroll) => void,
 
-    /** See Grid#overscanIndicesGetter */
-    overscanIndicesGetter: PropTypes.func.isRequired,
+  /** See Grid#overscanIndicesGetter */
+  overscanIndicesGetter: (
+    params: OverscanIndicesGetterParams
+  ) => OverscanIndices,
 
-    /**
+  /**
      * Number of rows to render above/below the visible bounds of the list.
      * These rows can help for smoother scrolling on touch devices.
      */
-    overscanRowCount: PropTypes.number.isRequired,
+  overscanRowCount: number,
 
-    /**
+  /**
      * Either a fixed row height (number) or a function that returns the height of a row given its index.
      * ({ index: number }): number
      */
-    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func])
-      .isRequired,
+  rowHeight: CellSizeGetter | number,
 
-    /** Responsible for rendering a row given an index; ({ index: number }): node */
-    rowRenderer: PropTypes.func.isRequired,
+  /** Responsible for rendering a row given an index; ({ index: number }): node */
+  rowRenderer: (params: RowRendererParams) => React.Element<*>,
 
-    /** Number of rows in list. */
-    rowCount: PropTypes.number.isRequired,
+  /** Number of rows in list. */
+  rowCount: number,
 
-    /** See Grid#scrollToAlignment */
-    scrollToAlignment: PropTypes.oneOf(["auto", "end", "start", "center"])
-      .isRequired,
+  /** See Grid#scrollToAlignment */
+  scrollToAlignment: "auto" | "end" | "start" | "center",
 
-    /** Row index to ensure visible (by forcefully scrolling if necessary) */
-    scrollToIndex: PropTypes.number.isRequired,
+  /** Row index to ensure visible (by forcefully scrolling if necessary) */
+  scrollToIndex: number,
 
-    /** Vertical offset. */
-    scrollTop: PropTypes.number,
+  /** Vertical offset. */
+  scrollTop?: number,
 
-    /** Optional inline style */
-    style: PropTypes.object,
+  /** Optional inline style */
+  style: Object,
 
-    /** Tab index for focus */
-    tabIndex: PropTypes.number,
+  /** Tab index for focus */
+  tabIndex?: number,
 
-    /** Width of list */
-    width: PropTypes.number.isRequired
-  };
+  /** Width of list */
+  width: number
+};
 
+export default class List extends React.PureComponent {
   static defaultProps = {
     estimatedRowSize: 30,
+    onScroll: () => {},
     noRowsRenderer: () => null,
-    onRowsRendered: () => null,
-    onScroll: () => null,
+    onRowsRendered: () => {},
     overscanIndicesGetter: accessibilityOverscanIndicesGetter,
     overscanRowCount: 10,
     scrollToAlignment: "auto",
@@ -104,24 +145,26 @@ export default class List extends PureComponent {
     style: {}
   };
 
-  constructor(props, context) {
-    super(props, context);
+  props: Props;
 
-    this._cellRenderer = this._cellRenderer.bind(this);
-    this._onScroll = this._onScroll.bind(this);
-    this._onSectionRendered = this._onSectionRendered.bind(this);
-    this._setRef = this._setRef.bind(this);
-  }
+  Grid: Grid;
 
   forceUpdateGrid() {
     this.Grid.forceUpdate();
   }
 
   /** See Grid#getOffsetForCell */
-  getOffsetForRow({ alignment, index }) {
+  getOffsetForRow({
+    alignment,
+    index
+  }: {
+    alignment: Alignment,
+    index: number
+  }) {
     const { scrollTop } = this.Grid.getOffsetForCell({
       alignment,
-      rowIndex: index
+      rowIndex: index,
+      columnIndex: 0
     });
 
     return scrollTop;
@@ -133,19 +176,20 @@ export default class List extends PureComponent {
   }
 
   /** See Grid#recomputeGridSize */
-  recomputeRowHeights(index = 0) {
+  recomputeRowHeights(index: number = 0) {
     this.Grid.recomputeGridSize({
-      rowIndex: index
+      rowIndex: index,
+      columnIndex: 0
     });
   }
 
   /** See Grid#scrollToPosition */
-  scrollToPosition(scrollTop = 0) {
+  scrollToPosition(scrollTop: number = 0) {
     this.Grid.scrollToPosition({ scrollTop });
   }
 
   /** See Grid#scrollToCell */
-  scrollToRow(index = 0) {
+  scrollToRow(index: number = 0) {
     this.Grid.scrollToCell({
       columnIndex: 0,
       rowIndex: index
@@ -174,7 +218,7 @@ export default class List extends PureComponent {
     );
   }
 
-  _cellRenderer({ rowIndex, style, ...rest }) {
+  _cellRenderer = ({ rowIndex, style, isScrolling, isVisible, key }: CellRendererParams) => {
     const { rowRenderer } = this.props;
 
     // TRICKY The style object is sometimes cached by Grid.
@@ -192,26 +236,29 @@ export default class List extends PureComponent {
     return rowRenderer({
       index: rowIndex,
       style,
-      ...rest
+      isScrolling,
+      isVisible,
+      key,
+      parent: this
     });
-  }
+  };
 
-  _setRef(ref) {
+  _setRef = (ref: Grid) => {
     this.Grid = ref;
-  }
+  };
 
-  _onScroll({ clientHeight, scrollHeight, scrollTop }) {
+  _onScroll = ({ clientHeight, scrollHeight, scrollTop }: GridScroll) => {
     const { onScroll } = this.props;
 
     onScroll({ clientHeight, scrollHeight, scrollTop });
-  }
+  };
 
-  _onSectionRendered({
+  _onSectionRendered = ({
     rowOverscanStartIndex,
     rowOverscanStopIndex,
     rowStartIndex,
     rowStopIndex
-  }) {
+  }: RenderedSection) => {
     const { onRowsRendered } = this.props;
 
     onRowsRendered({
@@ -220,5 +267,5 @@ export default class List extends PureComponent {
       startIndex: rowStartIndex,
       stopIndex: rowStopIndex
     });
-  }
+  };
 }
