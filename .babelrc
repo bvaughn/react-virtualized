@@ -17,7 +17,6 @@
     },
     "development": {
       "plugins": [
-        "typecheck",
         [
           "react-transform",
           {
