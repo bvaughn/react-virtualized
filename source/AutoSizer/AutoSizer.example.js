@@ -1,6 +1,6 @@
 /** @flow */
 
-import type { RowRendererParams } from '../types';
+import type { RowRendererParams } from "../types";
 
 import { List as ImmutableList } from "immutable";
 import PropTypes from "prop-types";
@@ -96,5 +96,5 @@ export default class AutoSizerExample extends PureComponent {
         {row.name}
       </div>
     );
-  }
+  };
 }

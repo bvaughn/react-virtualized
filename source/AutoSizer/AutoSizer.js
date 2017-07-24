@@ -36,7 +36,7 @@ type ResizeHandler = (element: HTMLElement, onResize: () => void) => void;
 type DetectElementResize = {
   addResizeListener: ResizeHandler,
   removeResizeListener: ResizeHandler
-}
+};
 
 export default class AutoSizer extends React.PureComponent {
   static defaultProps = {
@@ -125,7 +125,6 @@ export default class AutoSizer extends React.PureComponent {
     const { disableHeight, disableWidth, onResize } = this.props;
 
     if (this._parentNode) {
-
       // Guard against AutoSizer component being removed from the DOM immediately after being added.
       // This can result in invalid style values which can result in NaN values if we don't handle them.
       // See issue #150 for more context.
@@ -143,8 +142,8 @@ export default class AutoSizer extends React.PureComponent {
       const newWidth = width - paddingLeft - paddingRight;
 
       if (
-        !disableHeight && this.state.height !== newHeight ||
-        !disableWidth && this.state.width !== newWidth
+        (!disableHeight && this.state.height !== newHeight) ||
+        (!disableWidth && this.state.width !== newWidth)
       ) {
         this.setState({
           height: height - paddingTop - paddingBottom,
@@ -154,9 +153,9 @@ export default class AutoSizer extends React.PureComponent {
         onResize({ height, width });
       }
     }
-  }
+  };
 
   _setRef = (autoSizer: HTMLElement | null) => {
     this._autoSizer = autoSizer;
-  }
+  };
 }

@@ -26,9 +26,10 @@
     "typecheck": "flow check",
     "prebuild": "npm run typecheck && npm run lint",
     "predeploy": "cp ./circle.yml ./build/",
-    "prettier": "prettier --write 'source/**/*.js'",
+    "print": "prettier --parser flow --write 'source/**/*.js'",
     "postpublish": "npm run deploy",
     "posttest": "[ -z \"$CI\" ] || codecov",
+    "precommit": "flow check && lint-staged",
     "prepublish": "npm run build",
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --config webpack.config.dev.js",
     "test": "npm run test:jest",
@@ -36,11 +37,13 @@
     "watch": "watch 'clear && npm run test -s' source",
     "watch:jest": "jest --no-watchman --watch"
   },
-  "pre-commit": [
-    "typecheck",
-    "prettier",
-    "lint"
-  ],
+  "lint-staged": {
+    "*.js": [
+      "prettier --parser flow --write",
+      "eslint",
+      "git add"
+    ]
+  },
   "files": [
     "dist",
     "styles.css"
@@ -68,29 +71,6 @@
   ],
   "bugs": {
     "url": "https://github.com/bvaughn/react-virtualized/issues"
-  },
-  "standard": {
-    "parser": "babel-eslint",
-    "ignore": [
-      "dist",
-      "playground",
-      "source/vendor"
-    ],
-    "global": [
-      "afterAll",
-      "afterEach",
-      "beforeAll",
-      "beforeEach",
-      "describe",
-      "expect",
-      "fdescribe",
-      "fit",
-      "getComputedStyle",
-      "HTMLElement",
-      "it",
-      "jest",
-      "spyOn"
-    ]
   },
   "jest": {
     "setupFiles": [
@@ -137,12 +117,13 @@
     "fs-extra": "^4.0.0",
     "gh-pages": "^1.0.0",
     "html-webpack-plugin": "^2.16.1",
+    "husky": "^0.14.3",
     "immutable": "^3.7.5",
     "jest": "^18.1.0",
+    "lint-staged": "^4.0.2",
     "postcss": "^5.0.14",
     "postcss-cli": "^2.3.3",
     "postcss-loader": "^0.9.1",
-    "pre-commit": "^1.2.2",
     "prettier": "^1.5.3",
     "raf": "^3.3.0",
     "react": "next",
