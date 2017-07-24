@@ -574,7 +574,10 @@ export default class Grid extends PureComponent {
       this.setState({});
     }
 
-    if (typeof scrollLeft === 'number' && scrollLeft >= 0 || typeof scrollTop === 'number' && scrollTop >= 0) {
+    if (
+      (typeof scrollLeft === "number" && scrollLeft >= 0) ||
+      (typeof scrollTop === "number" && scrollTop >= 0)
+    ) {
       this.scrollToPosition({ scrollLeft, scrollTop });
     }
 

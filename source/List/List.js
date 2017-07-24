@@ -37,23 +37,6 @@ type Scroll = {
   scrollTop: number
 };
 
-
-
-
-
-
-
-<div
-/>
-
-
-
-
-
-
-
-
-
 type Props = {
   "aria-label"?: string,
 
@@ -218,7 +201,13 @@ export default class List extends React.PureComponent {
     );
   }
 
-  _cellRenderer = ({ rowIndex, style, isScrolling, isVisible, key }: CellRendererParams) => {
+  _cellRenderer = ({
+    rowIndex,
+    style,
+    isScrolling,
+    isVisible,
+    key
+  }: CellRendererParams) => {
     const { rowRenderer } = this.props;
 
     // TRICKY The style object is sometimes cached by Grid.
