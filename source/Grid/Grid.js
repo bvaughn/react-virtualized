@@ -39,6 +39,8 @@ const SCROLL_POSITION_CHANGE_REASONS = {
   REQUESTED: "requested"
 };
 
+const renderNull: () => React.Element<*> | null = () => null;
+
 type ScrollPosition = {
   scrollTop?: number,
   scrollLeft?: number
@@ -264,7 +266,7 @@ export default class Grid extends PureComponent {
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
     getScrollbarSize: scrollbarSize,
-    noContentRenderer: () => null,
+    noContentRenderer: renderNull,
     onScroll: ({}) => {},
     onScrollbarPresenceChange: () => {},
     onSectionRendered: ({}) => {},
