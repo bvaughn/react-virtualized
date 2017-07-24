@@ -1,6 +1,15 @@
 /** @flow */
 
-import type { CellSizeGetter, Alignment } from "./types.js";
+import type {
+  Alignment,
+  CellSizeGetter,
+  OverscanIndicesGetterParams,
+  OverscanIndices,
+  RenderedSection,
+  CellRendererParams,
+  Scroll
+} from "../types";
+import type { CellRangeRendererParams } from "./defaultCellRangeRenderer";
 
 import React, { PureComponent } from "react";
 import cn from "classnames";
@@ -30,33 +39,38 @@ const SCROLL_POSITION_CHANGE_REASONS = {
   REQUESTED: "requested"
 };
 
-type ScrollPosition = { scrollTop: number, scrollLeft: number };
+const renderNull: () => React.Element<*> | null = () => null;
+
+type ScrollPosition = {
+  scrollTop?: number,
+  scrollLeft?: number
+};
 
 type CellPosition = { columnIndex: number, rowIndex: number };
 
-type CellRenderer = (props: CellPosition) => React.Element<*>;
+type CellRenderer = (props: CellRendererParams) => React.Element<*>;
 
 type Props = {
   "aria-label": string,
-  "aria-readonly": boolean,
+  "aria-readonly"?: boolean,
 
   /**
    * Set the width of the inner scrollable container to 'auto'.
    * This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar.
    */
-  autoContainerWidth: boolean,
+  autoContainerWidth?: boolean,
 
   /**
    * Removes fixed height from the scrollingContainer so that the total height of rows can stretch the window.
    * Intended for use with WindowScroller
    */
-  autoHeight: boolean,
+  autoHeight?: boolean,
 
   /**
    * Removes fixed width from the scrollingContainer so that the total width of rows can stretch the window.
    * Intended for use with WindowScroller
    */
-  autoWidth: boolean,
+  autoWidth?: boolean,
 
   /**
    * Responsible for rendering a cell given an row and column index.
@@ -66,19 +80,7 @@ type Props = {
   /**
    * Responsible for rendering a group of cells given their index ranges.
    */
-  cellRangeRenderer: (params: {
-    cellCache: Object,
-    cellRenderer: CellRenderer,
-    columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
-    columnStartIndex: number,
-    columnStopIndex: number,
-    isScrolling: boolean,
-    rowSizeAndPositionManager: ScalingCellSizeAndPositionManager,
-    rowStartIndex: number,
-    rowStopIndex: number,
-    scrollLeft: number,
-    scrollTop: number
-  }) => React.Element<*>[],
+  cellRangeRenderer: (params: CellRangeRendererParams) => React.Element<*>[],
   /**
    * Optional custom CSS class name to attach to root Grid element.
    */
@@ -150,14 +152,7 @@ type Props = {
    * Callback invoked whenever the scroll offset changes within the inner scrollable region.
    * This callback can be used to sync scrolling between lists, tables, or grids.
    */
-  onScroll: (params: {
-    clientHeight: number,
-    clientWidth: number,
-    scrollHeight: number,
-    scrollLeft: number,
-    scrollTop: number,
-    scrollWidth: number
-  }) => void,
+  onScroll: (params: Scroll) => void,
 
   /**
    * Called whenever a horizontal or vertical scrollbar is added or removed.
@@ -173,12 +168,7 @@ type Props = {
   /**
    * Callback invoked with information about the section of the Grid that was just rendered.
    */
-  onSectionRendered: (params: {
-    columnStartIndex: number,
-    columnStopIndex: number,
-    rowStartIndex: number,
-    rowStopIndex: number
-  }) => void,
+  onSectionRendered: (params: RenderedSection) => void,
 
   /**
    * Number of columns to render before/after the visible section of the grid.
@@ -190,16 +180,9 @@ type Props = {
    * Calculates the number of cells to overscan before and after a specified range.
    * This function ensures that overscanning doesn't exceed the available cells.
    */
-  overscanIndicesGetter: (params: {
-    cellCount: number,
-    overscanCellsCount: number,
-    scrollDirection: number,
-    startIndex: number,
-    stopIndex: number
-  }) => {
-    overscanStartIndex: number,
-    overscanStopIndex: number
-  },
+  overscanIndicesGetter: (
+    params: OverscanIndicesGetterParams
+  ) => OverscanIndices,
 
   /**
    * Number of rows to render above/below the visible section of the grid.
@@ -227,7 +210,7 @@ type Props = {
   scrollingResetTimeInterval: number,
 
   /** Horizontal offset. */
-  scrollLeft: number,
+  scrollLeft?: number,
 
   /**
    * Controls scroll-to-cell behavior of the Grid.
@@ -242,7 +225,7 @@ type Props = {
   scrollToColumn: number,
 
   /** Vertical offset. */
-  scrollTop: number,
+  scrollTop?: number,
 
   /**
    * Row index to ensure visible (by forcefully scrolling if necessary)
@@ -283,10 +266,10 @@ export default class Grid extends PureComponent {
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
     getScrollbarSize: scrollbarSize,
-    noContentRenderer: () => null,
-    onScroll: () => null,
-    onScrollbarPresenceChange: () => null,
-    onSectionRendered: () => null,
+    noContentRenderer: renderNull,
+    onScroll: ({}) => {},
+    onScrollbarPresenceChange: () => {},
+    onSectionRendered: ({}) => {},
     overscanColumnCount: 0,
     overscanIndicesGetter: defaultOverscanIndicesGetter,
     overscanRowCount: 10,
@@ -568,14 +551,6 @@ export default class Grid extends PureComponent {
     });
   }
 
-  /**
-   * Scroll to the specified offset(s).
-   * Useful for animating position changes.
-   */
-  scrollToPosition({ scrollLeft, scrollTop }: ScrollPosition = {}) {
-    this._setScrollPosition({ scrollLeft, scrollTop });
-  }
-
   componentDidMount() {
     const {
       getScrollbarSize,
@@ -599,8 +574,11 @@ export default class Grid extends PureComponent {
       this.setState({});
     }
 
-    if (scrollLeft >= 0 || scrollTop >= 0) {
-      this._setScrollPosition({ scrollLeft, scrollTop });
+    if (
+      (typeof scrollLeft === "number" && scrollLeft >= 0) ||
+      (typeof scrollTop === "number" && scrollTop >= 0)
+    ) {
+      this.scrollToPosition({ scrollLeft, scrollTop });
     }
 
     // Don't update scroll offset if the size is 0; we don't render any cells in this case.
@@ -800,7 +778,7 @@ export default class Grid extends PureComponent {
       (nextProps.columnCount === 0 && scrollLeft !== 0) ||
       (nextProps.rowCount === 0 && scrollTop !== 0)
     ) {
-      this._setScrollPosition({
+      this.scrollToPosition({
         scrollLeft: 0,
         scrollTop: 0
       });
@@ -817,7 +795,7 @@ export default class Grid extends PureComponent {
         newState.scrollTop = nextProps.scrollTop;
       }
 
-      this._setScrollPosition(newState);
+      this.scrollToPosition(newState);
     }
 
     if (
@@ -1253,12 +1231,16 @@ export default class Grid extends PureComponent {
     this._scrollingContainer = ref;
   };
 
-  _setScrollPosition({ scrollLeft, scrollTop }: ScrollPosition) {
+  /**
+   * Scroll to the specified offset(s).
+   * Useful for animating position changes.
+   */
+  scrollToPosition({ scrollLeft, scrollTop }: ScrollPosition) {
     const newState: Object = {
       scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
     };
 
-    if (scrollLeft >= 0) {
+    if (typeof scrollLeft === "number" && scrollLeft >= 0) {
       newState.scrollDirectionHorizontal =
         scrollLeft > this.state.scrollLeft
           ? SCROLL_DIRECTION_FORWARD
@@ -1266,7 +1248,7 @@ export default class Grid extends PureComponent {
       newState.scrollLeft = scrollLeft;
     }
 
-    if (scrollTop >= 0) {
+    if (typeof scrollTop === "number" && scrollTop >= 0) {
       newState.scrollDirectionVertical =
         scrollTop > this.state.scrollTop
           ? SCROLL_DIRECTION_FORWARD
@@ -1275,8 +1257,12 @@ export default class Grid extends PureComponent {
     }
 
     if (
-      (scrollLeft >= 0 && scrollLeft !== this.state.scrollLeft) ||
-      (scrollTop >= 0 && scrollTop !== this.state.scrollTop)
+      (typeof scrollLeft === "number" &&
+        scrollLeft >= 0 &&
+        scrollLeft !== this.state.scrollLeft) ||
+      (typeof scrollTop === "number" &&
+        scrollTop >= 0 &&
+        scrollTop !== this.state.scrollTop)
     ) {
       this.setState(newState);
     }
@@ -1328,7 +1314,7 @@ export default class Grid extends PureComponent {
       calculatedScrollLeft >= 0 &&
       scrollLeft !== calculatedScrollLeft
     ) {
-      this._setScrollPosition({
+      this.scrollToPosition({
         scrollLeft: calculatedScrollLeft,
         scrollTop: -1
       });
@@ -1399,7 +1385,7 @@ export default class Grid extends PureComponent {
       calculatedScrollTop >= 0 &&
       scrollTop !== calculatedScrollTop
     ) {
-      this._setScrollPosition({
+      this.scrollToPosition({
         scrollLeft: -1,
         scrollTop: calculatedScrollTop
       });

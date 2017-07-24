@@ -4,7 +4,6 @@
 .*/Collection/.*
 .*/ColumnSizer/.*
 .*/InfiniteLoader/.*
-.*/List/.*
 .*/Masonry/.*
 .*/MultiGrid/.*
 .*/ScrollSync/.*
