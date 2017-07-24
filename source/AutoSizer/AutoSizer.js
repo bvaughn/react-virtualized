@@ -1,6 +1,6 @@
 /** @flow */
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+
+import React from "react";
 import createDetectElementResize from "../vendor/detectElementResize";
 
 /**
@@ -8,65 +8,76 @@ import createDetectElementResize from "../vendor/detectElementResize";
  * Child component should not be declared as a child but should rather be specified by a `ChildComponent` property.
  * All other properties will be passed through to the child component.
  */
-export default class AutoSizer extends PureComponent {
-  static propTypes = {
-    /**
-    * Function responsible for rendering children.
-    * This function should implement the following signature:
-    * ({ height, width }) => PropTypes.element
-    */
-    children: PropTypes.func.isRequired,
 
-    /** Disable dynamic :height property */
-    disableHeight: PropTypes.bool,
+type Size = {
+  height: number,
+  width: number
+};
 
-    /** Disable dynamic :width property */
-    disableWidth: PropTypes.bool,
+type Props = {
+  /** Function responsible for rendering children.*/
+  children: (warams: Size) => React.Element<*>,
 
-    /** Nonce of the inlined stylesheet for Content Security Policy */
-    nonce: PropTypes.string,
+  /** Disable dynamic :height property */
+  disableHeight: boolean,
 
-    /** Callback to be invoked on-resize: ({ height, width }) */
-    onResize: PropTypes.func.isRequired
-  };
+  /** Disable dynamic :width property */
+  disableWidth: boolean,
 
+  /** Nonce of the inlined stylesheet for Content Security Policy */
+  nonce?: string,
+
+  /** Callback to be invoked on-resize */
+  onResize: (params: Size) => void
+};
+
+type ResizeHandler = (element: HTMLElement, onResize: () => void) => void;
+
+type DetectElementResize = {
+  addResizeListener: ResizeHandler,
+  removeResizeListener: ResizeHandler
+}
+
+export default class AutoSizer extends React.PureComponent {
   static defaultProps = {
-    onResize: () => {}
+    onResize: () => {},
+    disableHeight: false,
+    disableWidth: false
   };
 
-  constructor(props) {
-    super(props);
+  props: Props;
 
-    this.state = {
-      height: 0,
-      width: 0
-    };
+  state = {
+    height: 0,
+    width: 0
+  };
 
-    this._onResize = this._onResize.bind(this);
-    this._setRef = this._setRef.bind(this);
-  }
+  _parentNode: ?HTMLElement;
+  _autoSizer: ?HTMLElement;
+  _detectElementResize: DetectElementResize;
 
   componentDidMount() {
     const { nonce } = this.props;
+    if (this._autoSizer && this._autoSizer.parentNode instanceof HTMLElement) {
+      // Delay access of parentNode until mount.
+      // This handles edge-cases where the component has already been unmounted before its ref has been set,
+      // As well as libraries like react-lite which have a slightly different lifecycle.
+      this._parentNode = this._autoSizer.parentNode;
 
-    // Delay access of parentNode until mount.
-    // This handles edge-cases where the component has already been unmounted before its ref has been set,
-    // As well as libraries like react-lite which have a slightly different lifecycle.
-    this._parentNode = this._autoSizer.parentNode;
+      // Defer requiring resize handler in order to support server-side rendering.
+      // See issue #41
+      this._detectElementResize = createDetectElementResize(nonce);
+      this._detectElementResize.addResizeListener(
+        this._parentNode,
+        this._onResize
+      );
 
-    // Defer requiring resize handler in order to support server-side rendering.
-    // See issue #41
-    this._detectElementResize = createDetectElementResize(nonce);
-    this._detectElementResize.addResizeListener(
-      this._parentNode,
-      this._onResize
-    );
-
-    this._onResize();
+      this._onResize();
+    }
   }
 
   componentWillUnmount() {
-    if (this._detectElementResize) {
+    if (this._detectElementResize && this._parentNode) {
       this._detectElementResize.removeResizeListener(
         this._parentNode,
         this._onResize
@@ -81,7 +92,7 @@ export default class AutoSizer extends PureComponent {
     // Outer div should not force width/height since that may prevent containers from shrinking.
     // Inner component should overflow and use calculated width/height.
     // See issue #68 for more information.
-    const outerStyle = { overflow: "visible" };
+    const outerStyle: Object = { overflow: "visible" };
 
     if (!disableHeight) {
       outerStyle.height = 0;
@@ -110,39 +121,42 @@ export default class AutoSizer extends PureComponent {
     );
   }
 
-  _onResize() {
+  _onResize = () => {
     const { disableHeight, disableWidth, onResize } = this.props;
 
-    // Guard against AutoSizer component being removed from the DOM immediately after being added.
-    // This can result in invalid style values which can result in NaN values if we don't handle them.
-    // See issue #150 for more context.
+    if (this._parentNode) {
 
-    const height = this._parentNode.offsetHeight || 0;
-    const width = this._parentNode.offsetWidth || 0;
+      // Guard against AutoSizer component being removed from the DOM immediately after being added.
+      // This can result in invalid style values which can result in NaN values if we don't handle them.
+      // See issue #150 for more context.
 
-    const style = window.getComputedStyle(this._parentNode) || {};
-    const paddingLeft = parseInt(style.paddingLeft, 10) || 0;
-    const paddingRight = parseInt(style.paddingRight, 10) || 0;
-    const paddingTop = parseInt(style.paddingTop, 10) || 0;
-    const paddingBottom = parseInt(style.paddingBottom, 10) || 0;
+      const height = this._parentNode.offsetHeight || 0;
+      const width = this._parentNode.offsetWidth || 0;
 
-    const newHeight = height - paddingTop - paddingBottom;
-    const newWidth = width - paddingLeft - paddingRight;
+      const style = window.getComputedStyle(this._parentNode) || {};
+      const paddingLeft = parseInt(style.paddingLeft, 10) || 0;
+      const paddingRight = parseInt(style.paddingRight, 10) || 0;
+      const paddingTop = parseInt(style.paddingTop, 10) || 0;
+      const paddingBottom = parseInt(style.paddingBottom, 10) || 0;
 
-    if (
-      (!disableHeight && this.state.height !== newHeight) ||
-      (!disableWidth && this.state.width !== newWidth)
-    ) {
-      this.setState({
-        height: height - paddingTop - paddingBottom,
-        width: width - paddingLeft - paddingRight
-      });
+      const newHeight = height - paddingTop - paddingBottom;
+      const newWidth = width - paddingLeft - paddingRight;
 
-      onResize({ height, width });
+      if (
+        !disableHeight && this.state.height !== newHeight ||
+        !disableWidth && this.state.width !== newWidth
+      ) {
+        this.setState({
+          height: height - paddingTop - paddingBottom,
+          width: width - paddingLeft - paddingRight
+        });
+
+        onResize({ height, width });
+      }
     }
   }
 
-  _setRef(autoSizer) {
+  _setRef = (autoSizer: HTMLElement | null) => {
     this._autoSizer = autoSizer;
   }
 }
