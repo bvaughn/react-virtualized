@@ -1,5 +1,4 @@
 [ignore]
-.*/ArrowKeyStepper/.*
 .*/Collection/.*
 .*/ColumnSizer/.*
 .*/InfiniteLoader/.*
