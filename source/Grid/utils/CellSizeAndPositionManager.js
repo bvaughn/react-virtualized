@@ -1,7 +1,6 @@
 /** @flow */
 
-import type { Alignment, CellSizeGetter } from "../../types";
-import type { VisibleCellRange } from "../types.js";
+import type { Alignment, CellSizeGetter, VisibleCellRange } from "../types";
 
 type CellSizeAndPositionManagerParams = {
   batchAllCells: boolean,

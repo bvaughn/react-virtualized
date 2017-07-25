@@ -1,7 +1,5 @@
 /** @flow */
 
-import type { RowRendererParams } from "../types";
-
 import { List as ImmutableList } from "immutable";
 import PropTypes from "prop-types";
 import React, { PureComponent } from "react";
@@ -11,7 +9,7 @@ import {
   ContentBoxParagraph
 } from "../demo/ContentBox";
 import AutoSizer from "./AutoSizer";
-import List from "../List";
+import List, { type RowRendererParams } from "../List";
 import styles from "./AutoSizer.example.css";
 
 export default class AutoSizerExample extends PureComponent {

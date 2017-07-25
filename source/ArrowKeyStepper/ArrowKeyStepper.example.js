@@ -1,18 +1,18 @@
 /** @flow */
 
-import React, { PureComponent } from "react";
+import React from "react";
 import {
   ContentBox,
   ContentBoxHeader,
   ContentBoxParagraph
 } from "../demo/ContentBox";
-import ArrowKeyStepper, { type ScrollIndices } from "./ArrowKeyStepper";
+import ArrowKeyStepper, { type ScrollIndices } from "./";
 import AutoSizer from "../AutoSizer";
 import Grid from "../Grid";
 import cn from "classnames";
 import styles from "./ArrowKeyStepper.example.css";
 
-export default class ArrowKeyStepperExample extends PureComponent {
+export default class ArrowKeyStepperExample extends React.PureComponent {
   state = {
     mode: "edges",
     isClickable: true,
