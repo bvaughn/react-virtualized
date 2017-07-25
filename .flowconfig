@@ -1,6 +1,5 @@
 [ignore]
 .*/ArrowKeyStepper/.*
-.*/AutoSizer/.*
 .*/Collection/.*
 .*/ColumnSizer/.*
 .*/InfiniteLoader/.*
@@ -9,7 +8,6 @@
 .*/ScrollSync/.*
 .*/Table/.*
 .*/WindowScroller/.*
-.*/demo/.*
 
 .*/node_modules/babel-plugin-transform-react-remove-prop-types/.*
 

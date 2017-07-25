@@ -1,4 +1,3 @@
-/** @flow */
 import React from "react";
 import { NavLink as RRNavLink } from "react-router-dom";
 import Icon from "./Icon";

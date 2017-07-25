@@ -16,10 +16,22 @@ export type Scroll = {
 };
 
 export type OverscanIndicesGetterParams = {
+  // One of SCROLL_DIRECTION_HORIZONTAL or SCROLL_DIRECTION_VERTICAL
+  direction: "horizontal" | "vertical",
+
+  // One of SCROLL_DIRECTION_BACKWARD or SCROLL_DIRECTION_FORWARD
   scrollDirection: ScrollDirection,
+
+  // Number of rows or columns in the current axis
   cellCount: number,
+
+  // Maximum number of cells to over-render in either direction
   overscanCellsCount: number,
+
+  // Begin of range of visible cells
   startIndex: number,
+
+  // End of range of visible cells
   stopIndex: number
 };
 

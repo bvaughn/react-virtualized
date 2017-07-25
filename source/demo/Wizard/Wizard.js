@@ -1,4 +1,3 @@
-/* @flow */
 import cn from "classnames";
 import CodeMirror from "react-codemirror";
 import React, { Component } from "react";
