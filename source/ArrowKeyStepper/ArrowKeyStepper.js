@@ -1,17 +1,13 @@
 /** @flow */
 
-import type { RenderedSection } from "../types";
+import type { RenderedSection } from "../Grid";
+import type { ScrollIndices } from "./types";
 
 import React from "react";
 
 /**
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
  */
-
-export type ScrollIndices = {
-  scrollToColumn: number,
-  scrollToRow: number
-};
 
 type ChildrenParams = {
   onSectionRendered: (params: RenderedSection) => void,

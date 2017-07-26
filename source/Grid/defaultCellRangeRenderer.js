@@ -1,35 +1,11 @@
 /** @flow */
 
-import type { CellRendererParams } from "../types";
-
-import React from "react";
-import ScalingCellSizeAndPositionManager from "./utils/ScalingCellSizeAndPositionManager.js";
+import type { CellRangeRendererParams } from "./types";
 
 /**
  * Default implementation of cellRangeRenderer used by Grid.
  * This renderer supports cell-caching while the user is scrolling.
  */
-
-export type CellRangeRendererParams = {
-  cellCache: Object,
-  cellRenderer: (params: CellRendererParams) => React.Element<*>,
-  columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
-  columnStartIndex: number,
-  columnStopIndex: number,
-  deferredMeasurementCache?: Object,
-  horizontalOffsetAdjustment: number,
-  isScrolling: boolean,
-  parent: Object,
-  rowSizeAndPositionManager: ScalingCellSizeAndPositionManager,
-  rowStartIndex: number,
-  rowStopIndex: number,
-  scrollLeft: number,
-  scrollTop: number,
-  styleCache: Object,
-  verticalOffsetAdjustment: number,
-  visibleColumnIndices: Object,
-  visibleRowIndices: Object
-};
 
 export default function defaultCellRangeRenderer({
   cellCache,

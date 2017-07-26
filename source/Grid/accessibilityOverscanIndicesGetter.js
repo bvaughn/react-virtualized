@@ -1,6 +1,6 @@
 // @flow
 
-import type { OverscanIndicesGetterParams, OverscanIndices } from "../types";
+import type { OverscanIndicesGetterParams, OverscanIndices } from "./types";
 
 export const SCROLL_DIRECTION_BACKWARD = -1;
 export const SCROLL_DIRECTION_FORWARD = 1;
