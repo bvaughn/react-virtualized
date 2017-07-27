@@ -4,6 +4,7 @@ import type {
   NoContentRenderer,
   Alignment,
   CellSize,
+  CellPosition,
   OverscanIndicesGetter,
   RenderedSection,
   CellRendererParams,
@@ -111,10 +112,12 @@ export default class List extends React.PureComponent {
 
   props: Props;
 
-  Grid: Grid;
+  Grid: ?Grid;
 
   forceUpdateGrid() {
-    this.Grid.forceUpdate();
+    if (this.Grid) {
+      this.Grid.forceUpdate();
+    }
   }
 
   /** See Grid#getOffsetForCell */
@@ -125,39 +128,70 @@ export default class List extends React.PureComponent {
     alignment: Alignment,
     index: number
   }) {
-    const { scrollTop } = this.Grid.getOffsetForCell({
-      alignment,
-      rowIndex: index,
-      columnIndex: 0
-    });
+    if (this.Grid) {
+      const { scrollTop } = this.Grid.getOffsetForCell({
+        alignment,
+        rowIndex: index,
+        columnIndex: 0
+      });
 
-    return scrollTop;
+      return scrollTop;
+    }
+    return 0;
+  }
+
+  /** CellMeasurer compatibility */
+  invalidateCellSizeAfterRender({ columnIndex, rowIndex }: CellPosition) {
+    if (this.Grid) {
+      this.Grid.invalidateCellSizeAfterRender({
+        rowIndex,
+        columnIndex
+      });
+    }
   }
 
   /** See Grid#measureAllCells */
   measureAllRows() {
-    this.Grid.measureAllCells();
+    if (this.Grid) {
+      this.Grid.measureAllCells();
+    }
+  }
+
+  /** CellMeasurer compatibility */
+  recomputeGridSize({ columnIndex = 0, rowIndex = 0 }: CellPosition = {}) {
+    if (this.Grid) {
+      this.Grid.recomputeGridSize({
+        rowIndex,
+        columnIndex
+      });
+    }
   }
 
   /** See Grid#recomputeGridSize */
   recomputeRowHeights(index: number = 0) {
-    this.Grid.recomputeGridSize({
-      rowIndex: index,
-      columnIndex: 0
-    });
+    if (this.Grid) {
+      this.Grid.recomputeGridSize({
+        rowIndex: index,
+        columnIndex: 0
+      });
+    }
   }
 
   /** See Grid#scrollToPosition */
   scrollToPosition(scrollTop: number = 0) {
-    this.Grid.scrollToPosition({ scrollTop });
+    if (this.Grid) {
+      this.Grid.scrollToPosition({ scrollTop });
+    }
   }
 
   /** See Grid#scrollToCell */
   scrollToRow(index: number = 0) {
-    this.Grid.scrollToCell({
-      columnIndex: 0,
-      rowIndex: index
-    });
+    if (this.Grid) {
+      this.Grid.scrollToCell({
+        columnIndex: 0,
+        rowIndex: index
+      });
+    }
   }
 
   render() {

@@ -1,4 +1,7 @@
 /** @flow */
+
+import type { CellPosition } from "../Grid";
+
 import cn from "classnames";
 import Column from "./Column";
 import PropTypes from "prop-types";
@@ -247,42 +250,75 @@ export default class Table extends PureComponent {
   }
 
   forceUpdateGrid() {
-    this.Grid.forceUpdate();
+    if (this.Grid) {
+      this.Grid.forceUpdate();
+    }
   }
 
   /** See Grid#getOffsetForCell */
   getOffsetForRow({ alignment, index }) {
-    const { scrollTop } = this.Grid.getOffsetForCell({
-      alignment,
-      rowIndex: index
-    });
+    if (this.Grid) {
+      const { scrollTop } = this.Grid.getOffsetForCell({
+        alignment,
+        rowIndex: index
+      });
 
-    return scrollTop;
+      return scrollTop;
+    }
+    return 0;
+  }
+
+  /** CellMeasurer compatibility */
+  invalidateCellSizeAfterRender({ columnIndex, rowIndex }: CellPosition) {
+    if (this.Grid) {
+      this.Grid.invalidateCellSizeAfterRender({
+        rowIndex,
+        columnIndex
+      });
+    }
   }
 
   /** See Grid#measureAllCells */
   measureAllRows() {
-    this.Grid.measureAllCells();
+    if (this.Grid) {
+      this.Grid.measureAllCells();
+    }
+  }
+
+  /** CellMeasurer compatibility */
+  recomputeGridSize({ columnIndex = 0, rowIndex = 0 }: CellPosition = {}) {
+    if (this.Grid) {
+      this.Grid.recomputeGridSize({
+        rowIndex,
+        columnIndex
+      });
+    }
   }
 
   /** See Grid#recomputeGridSize */
   recomputeRowHeights(index = 0) {
-    this.Grid.recomputeGridSize({
-      rowIndex: index
-    });
+    if (this.Grid) {
+      this.Grid.recomputeGridSize({
+        rowIndex: index
+      });
+    }
   }
 
   /** See Grid#scrollToPosition */
   scrollToPosition(scrollTop = 0) {
-    this.Grid.scrollToPosition({ scrollTop });
+    if (this.Grid) {
+      this.Grid.scrollToPosition({ scrollTop });
+    }
   }
 
   /** See Grid#scrollToCell */
   scrollToRow(index = 0) {
-    this.Grid.scrollToCell({
-      columnIndex: 0,
-      rowIndex: index
-    });
+    if (this.Grid) {
+      this.Grid.scrollToCell({
+        columnIndex: 0,
+        rowIndex: index
+      });
+    }
   }
 
   componentDidMount() {
@@ -659,11 +695,13 @@ export default class Table extends PureComponent {
   }
 
   _setScrollbarWidth() {
-    const Grid = findDOMNode(this.Grid);
-    const clientWidth = Grid.clientWidth || 0;
-    const offsetWidth = Grid.offsetWidth || 0;
-    const scrollbarWidth = offsetWidth - clientWidth;
+    if (this.Grid) {
+      const Grid = findDOMNode(this.Grid);
+      const clientWidth = Grid.clientWidth || 0;
+      const offsetWidth = Grid.offsetWidth || 0;
+      const scrollbarWidth = offsetWidth - clientWidth;
 
-    this.setState({ scrollbarWidth });
+      this.setState({ scrollbarWidth });
+    }
   }
 }

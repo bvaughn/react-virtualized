@@ -3,6 +3,7 @@
 export type {
   NoContentRenderer,
   Alignment,
+  CellPosition,
   CellSize,
   OverscanIndicesGetter,
   RenderedSection,

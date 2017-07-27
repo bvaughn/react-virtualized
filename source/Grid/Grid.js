@@ -3,6 +3,7 @@
 import type {
   CellRenderer,
   CellRangeRenderer,
+  CellPosition,
   CellSize,
   CellSizeGetter,
   NoContentRenderer,
@@ -47,8 +48,6 @@ type ScrollPosition = {
   scrollTop?: number,
   scrollLeft?: number
 };
-
-type CellPosition = { columnIndex: number, rowIndex: number };
 
 type Props = {
   "aria-label": string,
