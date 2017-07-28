@@ -3,6 +3,8 @@
 import React from "react";
 import ScalingCellSizeAndPositionManager from "./utils/ScalingCellSizeAndPositionManager";
 
+export type CellPosition = { columnIndex: number, rowIndex: number };
+
 export type CellRendererParams = {
   columnIndex: number,
   isScrolling: boolean,
