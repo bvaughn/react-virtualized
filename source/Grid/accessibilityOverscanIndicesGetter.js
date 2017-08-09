@@ -1,5 +1,7 @@
 // @flow
 
+import type { OverscanIndicesGetterParams, OverscanIndices } from "./types";
+
 export const SCROLL_DIRECTION_BACKWARD = -1;
 export const SCROLL_DIRECTION_FORWARD = 1;
 
@@ -11,38 +13,13 @@ export const SCROLL_DIRECTION_VERTICAL = "vertical";
  * This function ensures that overscanning doesn't exceed the available cells.
  */
 
-type Params = {
-  // One of SCROLL_DIRECTION_HORIZONTAL or SCROLL_DIRECTION_VERTICAL
-  direction: "horizontal" | "vertical",
-
-  // Number of rows or columns in the current axis
-  cellCount: number,
-
-  // One of SCROLL_DIRECTION_BACKWARD or SCROLL_DIRECTION_FORWARD
-  scrollDirection: -1 | 1,
-
-  // Maximum number of cells to over-render in either direction
-  overscanCellsCount: number,
-
-  // Begin of range of visible cells
-  startIndex: number,
-
-  // End of range of visible cells
-  stopIndex: number
-};
-
-type Returns = {
-  overscanStartIndex: number,
-  overscanStopIndex: number
-};
-
 export default function defaultOverscanIndicesGetter({
   cellCount,
   overscanCellsCount,
   scrollDirection,
   startIndex,
   stopIndex
-}: Params): Returns {
+}: OverscanIndicesGetterParams): OverscanIndices {
   // Make sure we render at least 1 cell extra before and after (except near boundaries)
   // This is necessary in order to support keyboard navigation (TAB/SHIFT+TAB) in some cases
   // For more info see issues #625

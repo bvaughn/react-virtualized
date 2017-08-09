@@ -1,6 +1,3 @@
-/**
- * @flow
- */
 import cn from "classnames";
 import Immutable from "immutable";
 import PropTypes from "prop-types";

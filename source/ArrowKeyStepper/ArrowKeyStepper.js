@@ -1,11 +1,34 @@
 /** @flow */
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+
+import type { RenderedSection } from "../Grid";
+import type { ScrollIndices } from "./types";
+
+import React from "react";
 
 /**
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
  */
-export default class ArrowKeyStepper extends PureComponent {
+
+type ChildrenParams = {
+  onSectionRendered: (params: RenderedSection) => void,
+  scrollToColumn: number,
+  scrollToRow: number
+};
+
+type Props = {
+  children: (params: ChildrenParams) => React.Element<*>,
+  className?: string,
+  columnCount: number,
+  disabled: boolean,
+  isControlled: boolean,
+  mode: "cells" | "edges",
+  onScrollToChange?: (params: ScrollIndices) => void,
+  rowCount: number,
+  scrollToColumn: number,
+  scrollToRow: number
+};
+
+export default class ArrowKeyStepper extends React.PureComponent {
   static defaultProps = {
     disabled: false,
     isControlled: false,
@@ -14,37 +37,25 @@ export default class ArrowKeyStepper extends PureComponent {
     scrollToRow: 0
   };
 
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    className: PropTypes.string,
-    columnCount: PropTypes.number.isRequired,
-    disabled: PropTypes.bool.isRequired,
-    isControlled: PropTypes.bool.isRequired,
-    mode: PropTypes.oneOf(["cells", "edges"]),
-    onScrollToChange: PropTypes.func,
-    rowCount: PropTypes.number.isRequired,
-    scrollToColumn: PropTypes.number.isRequired,
-    scrollToRow: PropTypes.number.isRequired
-  };
+  props: Props;
 
-  constructor(props, context) {
-    super(props, context);
+  state: ScrollIndices;
+
+  _columnStartIndex = 0;
+  _columnStopIndex = 0;
+  _rowStartIndex = 0;
+  _rowStopIndex = 0;
+
+  constructor(props: Props) {
+    super(props);
 
     this.state = {
       scrollToColumn: props.scrollToColumn,
       scrollToRow: props.scrollToRow
     };
-
-    this._columnStartIndex = 0;
-    this._columnStopIndex = 0;
-    this._rowStartIndex = 0;
-    this._rowStopIndex = 0;
-
-    this._onKeyDown = this._onKeyDown.bind(this);
-    this._onSectionRendered = this._onSectionRendered.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (this.props.isControlled) {
       return;
     }
@@ -71,7 +82,7 @@ export default class ArrowKeyStepper extends PureComponent {
     }
   }
 
-  setScrollIndexes({ scrollToColumn, scrollToRow }) {
+  setScrollIndexes({ scrollToColumn, scrollToRow }: ScrollIndices) {
     this.setState({
       scrollToRow,
       scrollToColumn
@@ -93,7 +104,7 @@ export default class ArrowKeyStepper extends PureComponent {
     );
   }
 
-  _onKeyDown(event) {
+  _onKeyDown = (event: KeyboardEvent) => {
     const { columnCount, disabled, mode, rowCount } = this.props;
 
     if (disabled) {
@@ -144,25 +155,25 @@ export default class ArrowKeyStepper extends PureComponent {
 
       this._updateScrollState({ scrollToColumn, scrollToRow });
     }
-  }
+  };
 
-  _onSectionRendered({
+  _onSectionRendered = ({
     columnStartIndex,
     columnStopIndex,
     rowStartIndex,
     rowStopIndex
-  }) {
+  }: RenderedSection) => {
     this._columnStartIndex = columnStartIndex;
     this._columnStopIndex = columnStopIndex;
     this._rowStartIndex = rowStartIndex;
     this._rowStopIndex = rowStopIndex;
-  }
+  };
 
   _getScrollState() {
     return this.props.isControlled ? this.props : this.state;
   }
 
-  _updateScrollState({ scrollToColumn, scrollToRow }) {
+  _updateScrollState({ scrollToColumn, scrollToRow }: ScrollIndices) {
     const { isControlled, onScrollToChange } = this.props;
 
     if (typeof onScrollToChange === "function") {

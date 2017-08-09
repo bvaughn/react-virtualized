@@ -26,9 +26,10 @@
     "typecheck": "flow check",
     "prebuild": "npm run typecheck && npm run lint",
     "predeploy": "cp ./circle.yml ./build/",
-    "prettier": "prettier --write 'source/**/*.js'",
+    "print": "prettier --parser flow --write 'source/**/*.js'",
     "postpublish": "npm run deploy",
     "posttest": "[ -z \"$CI\" ] || codecov",
+    "precommit": "flow check && lint-staged",
     "prepublish": "npm run build",
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --config webpack.config.dev.js",
     "test": "npm run test:jest",
@@ -36,11 +37,13 @@
     "watch": "watch 'clear && npm run test -s' source",
     "watch:jest": "jest --no-watchman --watch"
   },
-  "pre-commit": [
-    "typecheck",
-    "prettier",
-    "lint"
-  ],
+  "lint-staged": {
+    "*.js": [
+      "prettier --parser flow --write",
+      "eslint",
+      "git add"
+    ]
+  },
   "files": [
     "dist",
     "styles.css"
@@ -69,29 +72,6 @@
   "bugs": {
     "url": "https://github.com/bvaughn/react-virtualized/issues"
   },
-  "standard": {
-    "parser": "babel-eslint",
-    "ignore": [
-      "dist",
-      "playground",
-      "source/vendor"
-    ],
-    "global": [
-      "afterAll",
-      "afterEach",
-      "beforeAll",
-      "beforeEach",
-      "describe",
-      "expect",
-      "fdescribe",
-      "fit",
-      "getComputedStyle",
-      "HTMLElement",
-      "it",
-      "jest",
-      "spyOn"
-    ]
-  },
   "jest": {
     "setupFiles": [
       "./source/jest-setup.js"
@@ -105,22 +85,21 @@
   "devDependencies": {
     "autoprefixer": "^6.2.3",
     "babel-cli": "^6.24.1",
-    "babel-core": "^6.5.1",
+    "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.3",
-    "babel-loader": "^6.2.3",
+    "babel-loader": "6",
     "babel-plugin-__coverage__": "^11.0.0",
-    "babel-plugin-flow-react-proptypes": "^3.4.1",
+    "babel-plugin-flow-react-proptypes": "^3.4.3",
     "babel-plugin-react-transform": "^2.0.0",
-    "babel-plugin-transform-react-inline-elements": "^6.6.5",
-    "babel-plugin-transform-react-remove-prop-types": "^0.2.10",
-    "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-plugin-typecheck": "^3.9.0",
-    "babel-polyfill": "^6.5.0",
+    "babel-plugin-transform-react-inline-elements": "^6.22.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.6",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2015-rollup": "3.0.0",
-    "babel-preset-react": "^6.5.0",
-    "babel-preset-stage-1": "^6.5.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
     "bluebird": "^3.0.5",
     "codecov": "^2.2.0",
     "codemirror": "^5.18.0",
@@ -138,22 +117,24 @@
     "fs-extra": "^4.0.0",
     "gh-pages": "^1.0.0",
     "html-webpack-plugin": "^2.16.1",
+    "husky": "^0.14.3",
     "immutable": "^3.7.5",
     "jest": "^18.1.0",
+    "lint-staged": "^4.0.2",
     "postcss": "^5.0.14",
     "postcss-cli": "^2.3.3",
     "postcss-loader": "^0.9.1",
     "pre-commit": "^1.2.2",
     "prettier": "^1.5.3",
     "raf": "^3.3.0",
-    "react": "next",
+    "react": "^16.0.0-beta.1",
     "react-codemirror": "^1.0.0",
-    "react-dom": "next",
+    "react-dom": "^16.0.0-beta.1",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.2",
-    "redbox-react": "^1.0.1",
+    "redbox-react": "^1.4.3",
     "rimraf": "^2.4.3",
     "style-loader": "^0.13.0",
     "watch": "^1.0.2",
@@ -162,7 +143,7 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
-    "babel-runtime": "^6.11.6",
+    "babel-runtime": "^6.23.0",
     "classnames": "^2.2.3",
     "dom-helpers": "^2.4.0 || ^3.0.0",
     "loose-envify": "^1.3.0",

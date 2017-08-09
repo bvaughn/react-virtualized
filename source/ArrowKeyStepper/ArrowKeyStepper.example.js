@@ -1,33 +1,24 @@
 /** @flow */
-import React, { PureComponent } from "react";
+
+import React from "react";
 import {
   ContentBox,
   ContentBoxHeader,
   ContentBoxParagraph
 } from "../demo/ContentBox";
-import ArrowKeyStepper from "./ArrowKeyStepper";
+import ArrowKeyStepper, { type ScrollIndices } from "./";
 import AutoSizer from "../AutoSizer";
 import Grid from "../Grid";
 import cn from "classnames";
 import styles from "./ArrowKeyStepper.example.css";
 
-export default class ArrowKeyStepperExample extends PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      mode: "edges",
-      isClickable: true,
-      scrollToColumn: 0,
-      scrollToRow: 0
-    };
-
-    this._getColumnWidth = this._getColumnWidth.bind(this);
-    this._getRowHeight = this._getRowHeight.bind(this);
-    this._cellRenderer = this._cellRenderer.bind(this);
-    this._selectCell = this._selectCell.bind(this);
-    this._onClickableChange = this._onClickableChange.bind(this);
-  }
+export default class ArrowKeyStepperExample extends React.PureComponent {
+  state = {
+    mode: "edges",
+    isClickable: true,
+    scrollToColumn: 0,
+    scrollToRow: 0
+  };
 
   render() {
     const { mode, isClickable, scrollToColumn, scrollToRow } = this.state;
@@ -141,22 +132,29 @@ export default class ArrowKeyStepperExample extends PureComponent {
     );
   }
 
-  _getColumnWidth({ index }) {
+  _getColumnWidth = ({ index }: { index: number }) => {
     return (1 + index % 3) * 60;
-  }
+  };
 
-  _getRowHeight({ index }) {
+  _getRowHeight = ({ index }: { index: number }) => {
     return (1 + index % 3) * 30;
-  }
+  };
 
-  _cellRenderer({
+  _cellRenderer = ({
     columnIndex,
     key,
     rowIndex,
     scrollToColumn,
     scrollToRow,
     style
-  }) {
+  }: {
+    columnIndex: number,
+    key: string,
+    rowIndex: number,
+    scrollToColumn: number,
+    scrollToRow: number,
+    style: Object
+  }) => {
     const className = cn(styles.Cell, {
       [styles.FocusedCell]:
         columnIndex === scrollToColumn && rowIndex === scrollToRow
@@ -179,17 +177,19 @@ export default class ArrowKeyStepperExample extends PureComponent {
         {`r:${rowIndex}, c:${columnIndex}`}
       </div>
     );
-  }
+  };
 
-  _selectCell({ scrollToColumn, scrollToRow }) {
+  _selectCell = ({ scrollToColumn, scrollToRow }: ScrollIndices) => {
     this.setState({ scrollToColumn, scrollToRow });
-  }
+  };
 
-  _onClickableChange(event) {
-    this.setState({
-      isClickable: event.target.checked,
-      scrollToColumn: 0,
-      scrollToRow: 0
-    });
-  }
+  _onClickableChange = (event: Event) => {
+    if (event.target instanceof HTMLInputElement) {
+      this.setState({
+        isClickable: event.target.checked,
+        scrollToColumn: 0,
+        scrollToRow: 0
+      });
+    }
+  };
 }

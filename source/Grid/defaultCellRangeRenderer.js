@@ -1,32 +1,11 @@
 /** @flow */
 
-import CellSizeAndPositionManager from "./utils/CellSizeAndPositionManager.js";
+import type { CellRangeRendererParams } from "./types";
 
 /**
  * Default implementation of cellRangeRenderer used by Grid.
  * This renderer supports cell-caching while the user is scrolling.
  */
-
-type DefaultCellRangeRendererParams = {
-  cellCache: Object,
-  cellRenderer: Function,
-  columnSizeAndPositionManager: CellSizeAndPositionManager,
-  columnStartIndex: number,
-  columnStopIndex: number,
-  deferredMeasurementCache: Object,
-  horizontalOffsetAdjustment: number,
-  isScrolling: boolean,
-  parent: any,
-  rowSizeAndPositionManager: CellSizeAndPositionManager,
-  rowStartIndex: number,
-  rowStopIndex: number,
-  scrollLeft: number,
-  scrollTop: number,
-  styleCache: Object,
-  verticalOffsetAdjustment: number,
-  visibleColumnIndices: Object,
-  visibleRowIndices: Object
-};
 
 export default function defaultCellRangeRenderer({
   cellCache,
@@ -45,9 +24,7 @@ export default function defaultCellRangeRenderer({
   verticalOffsetAdjustment,
   visibleColumnIndices,
   visibleRowIndices
-}: DefaultCellRangeRendererParams) {
-  const deferredMode = typeof deferredMeasurementCache !== "undefined";
-
+}: CellRangeRendererParams) {
   const renderedCells = [];
 
   // Browsers have native size limits for elements (eg Chrome 33M pixels, IE 1.5M pixes).
@@ -87,7 +64,7 @@ export default function defaultCellRangeRenderer({
         // In deferred mode, cells will be initially rendered before we know their size.
         // Don't interfere with CellMeasurer's measurements by setting an invalid size.
         if (
-          deferredMode &&
+          deferredMeasurementCache &&
           !deferredMeasurementCache.has(rowIndex, columnIndex)
         ) {
           // Position not-yet-measured cells at top/left 0,0,
