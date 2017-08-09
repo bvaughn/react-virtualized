@@ -783,7 +783,7 @@ export default class Grid extends PureComponent {
 
   componentWillUnmount() {
     if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId);
+      window.cancelAnimationFrame(this._disablePointerEventsTimeoutId);
     }
   }
 

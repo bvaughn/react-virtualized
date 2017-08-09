@@ -123,7 +123,7 @@ export default class Masonry extends PureComponent {
 
   componentWillUnmount() {
     if (this._debounceResetIsScrollingId) {
-      clearTimeout(this._debounceResetIsScrollingId);
+      window.cancelAnimationFrame(this._debounceResetIsScrollingId);
     }
   }
 
