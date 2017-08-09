@@ -2,6 +2,9 @@
 import React, { PureComponent } from "react";
 import cn from "classnames";
 import PositionCache from "./PositionCache";
+import requestAnimationTimeout, {
+  cancelAnimationTimeout
+} from '../utils/requestAnimationTimeout'
 
 const emptyObject = {};
 
@@ -75,7 +78,6 @@ export default class Masonry extends PureComponent {
     );
     this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this);
     this._onScroll = this._onScroll.bind(this);
-    this._delayScrollEnded = this._delayScrollEnded.bind(this);
   }
 
   clearCellPositions() {
@@ -123,7 +125,7 @@ export default class Masonry extends PureComponent {
 
   componentWillUnmount() {
     if (this._debounceResetIsScrollingId) {
-      window.cancelAnimationFrame(this._debounceResetIsScrollingId);
+      cancelAnimationTimeout(this._debounceResetIsScrollingId);
     }
   }
 
@@ -291,28 +293,16 @@ export default class Masonry extends PureComponent {
     }
   }
 
-  /**
-   * Check if the difference between current time and the last scroll ended event is greater.
-   * than the scrollingResetTimeInterval prop, else schedule this function to execute again.
-   */
-  _delayScrollEnded() {
-    const { scrollingResetTimeInterval } = this.props;
-    if (Date.now() - this._scrollDebounceStart >= scrollingResetTimeInterval) {
-      this._debounceScrollEndedCallback();
-    } else {
-      this._disablePointerEventsTimeoutId = window.requestAnimationFrame(
-        this._delayScrollEnded
-      );
-    }
-  }
-
   _debounceResetIsScrolling() {
+    const { scrollingResetTimeInterval } = this.props;
+
     if (this._debounceResetIsScrollingId) {
-      window.cancelAnimationFrame(this._debounceResetIsScrollingId);
+      cancelAnimationTimeout(this._debounceResetIsScrollingId);
     }
-    this._scrollDebounceStart = Date.now();
-    this._debounceResetIsScrollingId = window.requestAnimationFrame(
-      this._delayScrollEnded
+
+    this._debounceResetIsScrollingId = requestAnimationTimeout(
+      this._debounceResetIsScrollingCallback,
+      scrollingResetTimeInterval
     );
   }
 

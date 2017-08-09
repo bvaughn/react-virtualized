@@ -26,6 +26,10 @@ import defaultOverscanIndicesGetter, {
 import updateScrollIndexHelper from "./utils/updateScrollIndexHelper";
 import defaultCellRangeRenderer from "./defaultCellRangeRenderer";
 import scrollbarSize from "dom-helpers/util/scrollbarSize";
+import requestAnimationTimeout, {
+  cancelAnimationTimeout
+} from '../utils/requestAnimationTimeout'
+
 
 /**
  * Specifies the number of milliseconds during which to disable pointer events while a scroll is in progress.
@@ -298,7 +302,6 @@ export default class Grid extends React.PureComponent {
   _rowStopIndex: number;
 
   _disablePointerEventsTimeoutId: ?number;
-  _scrollDebounceStart: number;
 
   constructor(props: Props) {
     super(props);
@@ -727,7 +730,7 @@ export default class Grid extends React.PureComponent {
 
   componentWillUnmount() {
     if (this._disablePointerEventsTimeoutId) {
-      window.cancelAnimationFrame(this._disablePointerEventsTimeoutId);
+      cancelAnimationTimeout(this._disablePointerEventsTimeoutId);
     }
   }
 
@@ -1070,33 +1073,21 @@ export default class Grid extends React.PureComponent {
   }
 
   /**
-   * Check if the difference between current time and the last scroll ended event is greater.
-   * than the scrollingResetTimeInterval prop, else schedule this function to execute again.
-   */
-  _delayScrollEnded = () => {
-    const { scrollingResetTimeInterval } = this.props;
-    if (Date.now() - this._scrollDebounceStart >= scrollingResetTimeInterval) {
-      this._debounceScrollEndedCallback();
-    } else {
-      this._disablePointerEventsTimeoutId = window.requestAnimationFrame(
-        this._delayScrollEnded
-      );
-    }
-  };
-
-  /**
    * Sets an :isScrolling flag for a small window of time.
    * This flag is used to disable pointer events on the scrollable portion of the Grid.
    * This prevents jerky/stuttery mouse-wheel scrolling.
    */
   _debounceScrollEnded() {
+    const { scrollingResetTimeInterval } = this.props;
+
     if (this._disablePointerEventsTimeoutId) {
-      window.cancelAnimationFrame(this._disablePointerEventsTimeoutId);
+      cancelAnimationTimeout(this._disablePointerEventsTimeoutId);
     }
-    this._scrollDebounceStart = Date.now();
-    this._disablePointerEventsTimeoutId = window.requestAnimationFrame(
-      this._delayScrollEnded
-    );
+
+    this._disablePointerEventsTimeoutId = requestAnimationTimeout(
+      this._debounceScrollEndedCallback,
+      scrollingResetTimeInterval
+    )
   }
 
   _debounceScrollEndedCallback = () => {
