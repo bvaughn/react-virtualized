@@ -23,6 +23,10 @@ export default class TableExample extends PureComponent {
   constructor(props, context) {
     super(props, context);
 
+    const sortBy = "index";
+    const sortDirection = SortDirection.ASC;
+    const sortedList = this._sortList({ sortBy, sortDirection });
+
     this.state = {
       disableHeader: false,
       headerHeight: 30,
@@ -32,8 +36,9 @@ export default class TableExample extends PureComponent {
       rowHeight: 40,
       rowCount: 1000,
       scrollToIndex: undefined,
-      sortBy: "index",
-      sortDirection: SortDirection.ASC,
+      sortBy,
+      sortDirection,
+      sortedList,
       useDynamicRowHeight: false
     };
 
@@ -58,18 +63,9 @@ export default class TableExample extends PureComponent {
       scrollToIndex,
       sortBy,
       sortDirection,
+      sortedList,
       useDynamicRowHeight
     } = this.state;
-
-    const { list } = this.context;
-    const sortedList = this._isSortEnabled()
-      ? list
-          .sortBy(item => item[sortBy])
-          .update(
-            list =>
-              sortDirection === SortDirection.DESC ? list.reverse() : list
-          )
-      : list;
 
     const rowGetter = ({ index }) => this._getDatum(sortedList, index);
 
@@ -288,7 +284,19 @@ export default class TableExample extends PureComponent {
   }
 
   _sort({ sortBy, sortDirection }) {
-    this.setState({ sortBy, sortDirection });
+    const sortedList = this._sortList({ sortBy, sortDirection });
+
+    this.setState({ sortBy, sortDirection, sortedList });
+  }
+
+  _sortList({ sortBy, sortDirection }) {
+    const { list } = this.context;
+
+    return list
+      .sortBy(item => item[sortBy])
+      .update(
+        list => (sortDirection === SortDirection.DESC ? list.reverse() : list)
+      );
   }
 
   _updateUseDynamicRowHeight(value) {
