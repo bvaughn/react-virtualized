@@ -2,9 +2,10 @@
 import React, { PureComponent } from "react";
 import cn from "classnames";
 import PositionCache from "./PositionCache";
-import requestAnimationTimeout, {
+import {
+  requestAnimationTimeout,
   cancelAnimationTimeout
-} from '../utils/requestAnimationTimeout'
+} from "../utils/requestAnimationTimeout";
 
 const emptyObject = {};
 

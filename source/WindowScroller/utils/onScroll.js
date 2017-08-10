@@ -1,8 +1,7 @@
-import requestAnimationTimeout, {
+import {
+  requestAnimationTimeout,
   cancelAnimationTimeout
-} from '../../utils/requestAnimationTimeout'
-
-
+} from "../../utils/requestAnimationTimeout";
 
 let mountedInstances = [];
 let originalBodyPointerEvents = null;

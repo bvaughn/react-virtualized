@@ -9,7 +9,7 @@ export function cancelAnimationTimeout(frame) {
  *
  * Credit: Joe Lambert (https://gist.github.com/joelambert/1002116#file-requesttimeout-js)
  */
-export default function requestAnimationTimeout(func, delay) {
+export function requestAnimationTimeout(func, delay) {
   const start = Date.now();
   const frame = new Object();
 
