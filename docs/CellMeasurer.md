@@ -38,6 +38,14 @@ Note that while all of the individual parameters above are optional, you must su
 It would be inefficient to do so since the size of a row (or column) is equal to the largest cell within that row.
 See [below](#limitations-and-performance-considerations) for more information.
 
+### Public Methods
+
+##### clear (rowIndex: number, columnIndex: number)
+Reset cached data about a specific cell. This should be called when a cell needs to be re-measured to handle dynamic content. (eg. Rendering a loading indicator at the end of a series will cache its `rowIndex` and `columnIndex` to the height of the loading indicator. Once your actual data loads and replaces the loading indicator, you may need to use `clear()` to re-measure the cell that was previously occupied by the loading indicator.)
+
+##### clearAll ()
+Reset any cached data about already-loaded cells. This can be used in situations where your `Grid`, `List` or `Table` needs to reflow its content due to a resizing scenario. (eg. Window resizes and re-renders a responsive layout that may affect all cells.)
+
 ### Examples
 
 ###### Grid
