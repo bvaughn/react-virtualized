@@ -38,6 +38,18 @@ Note that while all of the individual parameters above are optional, you must su
 It would be inefficient to do so since the size of a row (or column) is equal to the largest cell within that row.
 See [below](#limitations-and-performance-considerations) for more information.
 
+### `CellMeasurerCache` Public Methods
+
+##### clear (rowIndex: number, columnIndex: number)
+Reset cached measurements for a specific cell.
+
+This should be called when a cell needs to be re-measured to handle dynamic content (eg. replacing a loading indicator with loaded content or reacting to state-changes for stateful cells).
+
+##### clearAll ()
+Reset cached measurements for all cells.
+
+This method should be called when a `Grid`, `List` or `Table` needs to reflow content due to a resizing event for a responsive layout (eg. a window width resize may have an impact on the height of cells).
+
 ### Examples
 
 ###### Grid
