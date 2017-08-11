@@ -12,7 +12,7 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index. [Learn more](#cellrenderer) |
 | className | String |  | Optional custom CSS class name to attach to root `Grid` element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
-| columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number` |
+| columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number`. If function is used, specify `estimatedColumnSize` for more consistent scrolling behavior. |
 | containerRole | string |  | ARIA role for the cell-container; defaults to "rowgroup" |
 | containerStyle | Object |  | Optional custom inline style to attach to inner cell-container element. |
 | deferredMeasurementCache | `CellMeasurer` |  | If CellMeasurer is used to measure this Grid's children, this should be a pointer to its CellMeasurerCache. A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data. |
@@ -30,7 +30,7 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | overscanRowCount | Number |  | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important note about this property. |
 | role | String |  | Optional override of ARIA role default; defaults to `grid`. |
 | rowCount | Number | ✓ | Number of rows in grid. |
-| rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
+| rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number`. If function is used, specify `estimatedRowSize` for more consistent scrolling behavior. |
 | scrollingResetTimeInterval | Number |  | Wait this amount of time after the last scroll event before resetting Grid `pointer-events`; defaults to 150ms. |
 | scrollLeft | Number |  | Horizontal offset |
 | scrollToAlignment | String |  | Controls the alignment of scrolled-to-cells. The default ("_auto_") scrolls the least amount possible to ensure that the specified cell is fully visible. Use "_start_" to always align cells to the top/left of the `Grid` and "_end_" to align them bottom/right. Use "_center_" to align specified cell in the middle of container. |
