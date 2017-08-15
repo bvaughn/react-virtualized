@@ -15,6 +15,10 @@ const SCROLLBAR_SIZE_BUFFER = 20;
  */
 export default class MultiGrid extends PureComponent {
   static propTypes = {
+    classNameBottomLeftGrid: PropTypes.string.isRequired,
+    classNameBottomRightGrid: PropTypes.string.isRequired,
+    classNameTopLeftGrid: PropTypes.string.isRequired,
+    classNameTopRightGrid: PropTypes.string.isRequired,
     enableFixedColumnScroll: PropTypes.bool.isRequired,
     enableFixedRowScroll: PropTypes.bool.isRequired,
     fixedColumnCount: PropTypes.number.isRequired,
@@ -27,6 +31,10 @@ export default class MultiGrid extends PureComponent {
   };
 
   static defaultProps = {
+    classNameBottomLeftGrid: "",
+    classNameBottomRightGrid: "",
+    classNameTopLeftGrid: "",
+    classNameTopRightGrid: "",
     enableFixedColumnScroll: false,
     enableFixedRowScroll: false,
     fixedColumnCount: 0,
@@ -615,6 +623,7 @@ export default class MultiGrid extends PureComponent {
       <Grid
         {...props}
         cellRenderer={this._cellRendererBottomLeftGrid}
+        className={this.props.classNameBottomLeftGrid}
         columnCount={fixedColumnCount}
         deferredMeasurementCache={this._deferredMeasurementCacheBottomLeftGrid}
         height={this._getBottomGridHeight(props)}
@@ -644,6 +653,7 @@ export default class MultiGrid extends PureComponent {
       <Grid
         {...props}
         cellRenderer={this._cellRendererBottomRightGrid}
+        className={this.props.classNameBottomRightGrid}
         columnCount={Math.max(0, columnCount - fixedColumnCount)}
         columnWidth={this._columnWidthRightGrid}
         deferredMeasurementCache={this._deferredMeasurementCacheBottomRightGrid}
@@ -671,6 +681,7 @@ export default class MultiGrid extends PureComponent {
     return (
       <Grid
         {...props}
+        className={this.props.classNameTopLeftGrid}
         columnCount={fixedColumnCount}
         height={this._getTopGridHeight(props)}
         ref={this._topLeftGridRef}
@@ -702,6 +713,7 @@ export default class MultiGrid extends PureComponent {
       <Grid
         {...props}
         cellRenderer={this._cellRendererTopRightGrid}
+        className={this.props.classNameTopRightGrid}
         columnCount={
           Math.max(0, columnCount - fixedColumnCount) + additionalColumnCount
         }

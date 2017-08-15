@@ -10,6 +10,10 @@ Some properties (eg `columnCount`, `rowCount`) are adjusted slightly to supporte
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
+| classNameBottomLeftGrid | string |  | Optional custom className to attach to bottom-left `Grid` element. |
+| classNameBottomRightGrid | string |  | Optional custom className to attach to bottom-right `Grid` element. |
+| classNameTopLeftGrid | string |  | Optional custom className to attach to top-left `Grid` element. |
+| classNameTopRightGrid | string |  | Optional custom className to attach to top-right `Grid` element. |
 | enableFixedColumnScroll | boolean |  | Fixed column can be actively scrolled; disabled by default |
 | enableFixedRowScroll | boolean |  | Fixed row can be actively scrolled; disabled by default |
 | fixedColumnCount | number |  | Number of fixed columns; defaults to `0` |
