@@ -86,6 +86,9 @@ type Props = {
   /** Either a fixed column width (number) or a function that returns the width of a column given its index.  */
   columnWidth: CellSize,
 
+  /** Unfiltered props for the Grid container. */
+  containerProps?: Object,
+
   /** ARIA role for the cell-container.  */
   containerRole: string,
 
@@ -143,11 +146,6 @@ type Props = {
 
   /** Callback invoked with information about the section of the Grid that was just rendered.  */
   onSectionRendered: (params: RenderedSection) => void,
-
-  /**
-   * Optional callback invoked whenever onWheel is called.
-   */
-  onWheel?: (params: WheelEvent) => void,
 
   /**
    * Number of columns to render before/after the visible section of the grid.
@@ -854,12 +852,12 @@ export default class Grid extends React.PureComponent {
       autoHeight,
       autoWidth,
       className,
+      containerProps,
       containerRole,
       containerStyle,
       height,
       id,
       noContentRenderer,
-      onWheel,
       role,
       style,
       tabIndex,
@@ -916,12 +914,12 @@ export default class Grid extends React.PureComponent {
     return (
       <div
         ref={this._setScrollingContainerRef}
+        {...containerProps}
         aria-label={this.props["aria-label"]}
         aria-readonly={this.props["aria-readonly"]}
         className={cn("ReactVirtualized__Grid", className)}
         id={id}
         onScroll={this._onScroll}
-        onWheel={onWheel}
         role={role}
         style={{
           ...gridStyle,
