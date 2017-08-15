@@ -145,6 +145,11 @@ type Props = {
   onSectionRendered: (params: RenderedSection) => void,
 
   /**
+   * Optional callback invoked whenever onWheel is called.
+   */
+  onWheel?: (params: WheelEvent) => void,
+
+  /**
    * Number of columns to render before/after the visible section of the grid.
    * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
    */
@@ -854,6 +859,7 @@ export default class Grid extends React.PureComponent {
       height,
       id,
       noContentRenderer,
+      onWheel,
       role,
       style,
       tabIndex,
@@ -915,6 +921,7 @@ export default class Grid extends React.PureComponent {
         className={cn("ReactVirtualized__Grid", className)}
         id={id}
         onScroll={this._onScroll}
+        onWheel={onWheel}
         role={role}
         style={{
           ...gridStyle,
