@@ -26,6 +26,10 @@ import defaultOverscanIndicesGetter, {
 import updateScrollIndexHelper from "./utils/updateScrollIndexHelper";
 import defaultCellRangeRenderer from "./defaultCellRangeRenderer";
 import scrollbarSize from "dom-helpers/util/scrollbarSize";
+import {
+  requestAnimationTimeout,
+  cancelAnimationTimeout
+} from "../utils/requestAnimationTimeout";
 
 /**
  * Specifies the number of milliseconds during which to disable pointer events while a scroll is in progress.
@@ -726,7 +730,7 @@ export default class Grid extends React.PureComponent {
 
   componentWillUnmount() {
     if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId);
+      cancelAnimationTimeout(this._disablePointerEventsTimeoutId);
     }
   }
 
@@ -1077,10 +1081,10 @@ export default class Grid extends React.PureComponent {
     const { scrollingResetTimeInterval } = this.props;
 
     if (this._disablePointerEventsTimeoutId) {
-      clearTimeout(this._disablePointerEventsTimeoutId);
+      cancelAnimationTimeout(this._disablePointerEventsTimeoutId);
     }
 
-    this._disablePointerEventsTimeoutId = setTimeout(
+    this._disablePointerEventsTimeoutId = requestAnimationTimeout(
       this._debounceScrollEndedCallback,
       scrollingResetTimeInterval
     );

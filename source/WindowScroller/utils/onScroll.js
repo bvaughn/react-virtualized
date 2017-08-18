@@ -1,3 +1,8 @@
+import {
+  requestAnimationTimeout,
+  cancelAnimationTimeout
+} from "../../utils/requestAnimationTimeout";
+
 let mountedInstances = [];
 let originalBodyPointerEvents = null;
 let disablePointerEventsTimeoutId = null;
@@ -19,7 +24,7 @@ function enablePointerEventsAfterDelayCallback() {
 
 function enablePointerEventsAfterDelay() {
   if (disablePointerEventsTimeoutId) {
-    clearTimeout(disablePointerEventsTimeoutId);
+    cancelAnimationTimeout(disablePointerEventsTimeoutId);
   }
 
   var maximumTimeout = 0;
@@ -30,7 +35,7 @@ function enablePointerEventsAfterDelay() {
     );
   });
 
-  disablePointerEventsTimeoutId = setTimeout(
+  disablePointerEventsTimeoutId = requestAnimationTimeout(
     enablePointerEventsAfterDelayCallback,
     maximumTimeout
   );
@@ -64,7 +69,7 @@ export function unregisterScrollListener(component, element) {
   if (!mountedInstances.length) {
     element.removeEventListener("scroll", onScrollWindow);
     if (disablePointerEventsTimeoutId) {
-      clearTimeout(disablePointerEventsTimeoutId);
+      cancelAnimationTimeout(disablePointerEventsTimeoutId);
       enablePointerEventsIfDisabled();
     }
   }

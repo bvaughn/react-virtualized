@@ -2,6 +2,10 @@
 import React, { PureComponent } from "react";
 import cn from "classnames";
 import PositionCache from "./PositionCache";
+import {
+  requestAnimationTimeout,
+  cancelAnimationTimeout
+} from "../utils/requestAnimationTimeout";
 
 const emptyObject = {};
 
@@ -122,7 +126,7 @@ export default class Masonry extends PureComponent {
 
   componentWillUnmount() {
     if (this._debounceResetIsScrollingId) {
-      clearTimeout(this._debounceResetIsScrollingId);
+      cancelAnimationTimeout(this._debounceResetIsScrollingId);
     }
   }
 
@@ -294,10 +298,10 @@ export default class Masonry extends PureComponent {
     const { scrollingResetTimeInterval } = this.props;
 
     if (this._debounceResetIsScrollingId) {
-      clearTimeout(this._debounceResetIsScrollingId);
+      cancelAnimationTimeout(this._debounceResetIsScrollingId);
     }
 
-    this._debounceResetIsScrollingId = setTimeout(
+    this._debounceResetIsScrollingId = requestAnimationTimeout(
       this._debounceResetIsScrollingCallback,
       scrollingResetTimeInterval
     );
