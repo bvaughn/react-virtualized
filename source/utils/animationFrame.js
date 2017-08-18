@@ -2,7 +2,6 @@
 
 type Callback = (timestamp: number) => void;
 type CancelAnimationFrame = (requestId: number) => void;
-type ClearTimeout = (timeoutId?: any) => void;
 type RequestAnimationFrame = (callback: Callback) => number;
 
 // Properly handle server-side rendering.
