@@ -91,6 +91,9 @@ type Props = {
   /** Either a fixed column width (number) or a function that returns the width of a column given its index.  */
   columnWidth: CellSize,
 
+  /** Unfiltered props for the Grid container. */
+  containerProps?: Object,
+
   /** ARIA role for the cell-container.  */
   containerRole: string,
 
@@ -854,6 +857,7 @@ export default class Grid extends React.PureComponent {
       autoHeight,
       autoWidth,
       className,
+      containerProps,
       containerRole,
       containerStyle,
       height,
@@ -915,6 +919,7 @@ export default class Grid extends React.PureComponent {
     return (
       <div
         ref={this._setScrollingContainerRef}
+        {...containerProps}
         aria-label={this.props["aria-label"]}
         aria-readonly={this.props["aria-readonly"]}
         className={cn("ReactVirtualized__Grid", className)}
