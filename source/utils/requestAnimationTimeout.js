@@ -1,26 +1,37 @@
-export function cancelAnimationTimeout(frame) {
-  window.cancelAnimationFrame(frame.id);
-}
+/** @flow */
+
+import { caf, raf } from "./animationFrame";
+
+export type AnimationTimeoutId = {
+  id: number
+};
+
+export const cancelAnimationTimeout = (frame: AnimationTimeoutId) =>
+  caf(frame.id);
 
 /**
- * Recursively calls requestAnimationFrame until a specified delay has been met
- * or exceeded. When the delay time has been reached the function you're timing
- * out will be called.
+ * Recursively calls requestAnimationFrame until a specified delay has been met or exceeded.
+ * When the delay time has been reached the function you're timing out will be called.
  *
  * Credit: Joe Lambert (https://gist.github.com/joelambert/1002116#file-requesttimeout-js)
  */
-export function requestAnimationTimeout(func, delay) {
+export const requestAnimationTimeout = (
+  callback: Function,
+  delay: number
+): AnimationTimeoutId => {
   const start = Date.now();
-  const frame = new Object();
 
-  function timeout() {
+  const timeout = () => {
     if (Date.now() - start >= delay) {
-      func.call();
+      callback.call();
     } else {
-      frame.id = window.requestAnimationFrame(timeout);
+      frame.id = raf(timeout);
     }
-  }
+  };
 
-  frame.id = window.requestAnimationFrame(timeout);
+  const frame: AnimationTimeoutId = {
+    id: raf(timeout)
+  };
+
   return frame;
-}
+};

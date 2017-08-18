@@ -13,6 +13,7 @@ import type {
   OverscanIndicesGetter,
   Alignment
 } from "./types";
+import type { AnimationTimeoutId } from "../utils/requestAnimationTimeout";
 
 import React from "react";
 import cn from "classnames";
@@ -301,7 +302,7 @@ export default class Grid extends React.PureComponent {
   _rowStartIndex: number;
   _rowStopIndex: number;
 
-  _disablePointerEventsTimeoutId: ?number;
+  _disablePointerEventsTimeoutId: ?AnimationTimeoutId;
 
   constructor(props: Props) {
     super(props);

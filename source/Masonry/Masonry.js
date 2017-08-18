@@ -7,6 +7,8 @@ import {
   cancelAnimationTimeout
 } from "../utils/requestAnimationTimeout";
 
+import type { AnimationTimeoutId } from "../utils/requestAnimationTimeout";
+
 const emptyObject = {};
 
 /**
@@ -58,6 +60,7 @@ export default class Masonry extends PureComponent {
     tabIndex: 0
   };
 
+  _debounceResetIsScrollingId: AnimationTimeoutId;
   _invalidateOnUpdateStartIndex: ?number = null;
   _invalidateOnUpdateStopIndex: ?number = null;
   _positionCache: PositionCache = new PositionCache();
