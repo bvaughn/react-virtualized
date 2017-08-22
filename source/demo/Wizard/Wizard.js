@@ -32,8 +32,7 @@ export default class Wizard extends Component {
     };
   }
 
-  updateState = obj =>
-    this.setState(state => ({ ...state, ...obj, key: state.key + 1 }));
+  updateState = obj => this.setState(state => ({ ...obj, key: state.key + 1 }));
 
   render() {
     const state = this._sanitizeState();
