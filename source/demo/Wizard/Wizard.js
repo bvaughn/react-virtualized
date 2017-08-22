@@ -18,6 +18,7 @@ export default class Wizard extends Component {
     super(props);
 
     this.state = {
+      key: 0,
       cellsHaveKnownHeight: true,
       cellsHaveKnownWidth: true,
       cellsHaveUniformHeight: true,
@@ -30,6 +31,9 @@ export default class Wizard extends Component {
       nonCheckerboardPattern: false
     };
   }
+
+  updateState = obj =>
+    this.setState(state => ({ ...state, ...obj, key: state.key + 1 }));
 
   render() {
     const state = this._sanitizeState();
@@ -55,41 +59,41 @@ export default class Wizard extends Component {
           <Option
             checked={hasMultipleRows}
             label="Will your collection have more than 1 row of data?"
-            onChange={hasMultipleRows => this.setState({ hasMultipleRows })}
+            onChange={hasMultipleRows => this.updateState({ hasMultipleRows })}
           />
           <Option
             checked={hasMultipleColumns}
             label="Will your collection have more than 1 column of data?"
             onChange={hasMultipleColumns =>
-              this.setState({ hasMultipleColumns })}
+              this.updateState({ hasMultipleColumns })}
           />
           <Option
             checked={doNotVirtualizeColumns}
             disabled={!hasMultipleColumns}
             label="Should all your columns be visible at once?"
             onChange={doNotVirtualizeColumns =>
-              this.setState({ doNotVirtualizeColumns })}
+              this.updateState({ doNotVirtualizeColumns })}
           />
           <Option
             checked={nonCheckerboardPattern}
             disabled={!hasMultipleColumns || !hasMultipleRows}
             label="Is your data scattered (not in a checkerboard pattern)?"
             onChange={nonCheckerboardPattern =>
-              this.setState({ nonCheckerboardPattern })}
+              this.updateState({ nonCheckerboardPattern })}
           />
           <Option
             disabled={!hasMultipleRows && !hasMultipleColumns}
             checked={collectionHasFixedHeight}
             label="Does your collection have a fixed height?"
             onChange={collectionHasFixedHeight =>
-              this.setState({ collectionHasFixedHeight })}
+              this.updateState({ collectionHasFixedHeight })}
           />
           <Option
             disabled={!hasMultipleRows && !hasMultipleColumns}
             checked={collectionHasFixedWidth}
             label="Does your collection have a fixed width?"
             onChange={collectionHasFixedWidth =>
-              this.setState({ collectionHasFixedWidth })}
+              this.updateState({ collectionHasFixedWidth })}
           />
         </ContentBox>
         <ContentBox>
@@ -108,7 +112,7 @@ export default class Wizard extends Component {
             }
             label="Do you know the height of your rows ahead of time?"
             onChange={cellsHaveKnownHeight =>
-              this.setState({ cellsHaveKnownHeight })}
+              this.updateState({ cellsHaveKnownHeight })}
           />
           <Option
             disabled={
@@ -124,7 +128,7 @@ export default class Wizard extends Component {
             }
             label="Do you know the width of your columns ahead of time?"
             onChange={cellsHaveKnownWidth =>
-              this.setState({ cellsHaveKnownWidth })}
+              this.updateState({ cellsHaveKnownWidth })}
           />
           <Option
             checked={cellsHaveUniformHeight}
@@ -135,7 +139,7 @@ export default class Wizard extends Component {
             }
             label="Are all of your rows the same height?"
             onChange={cellsHaveUniformHeight =>
-              this.setState({ cellsHaveUniformHeight })}
+              this.updateState({ cellsHaveUniformHeight })}
           />
           <Option
             checked={cellsHaveUniformWidth}
@@ -146,12 +150,16 @@ export default class Wizard extends Component {
             }
             label="Are all of your columns the same width?"
             onChange={cellsHaveUniformWidth =>
-              this.setState({ cellsHaveUniformWidth })}
+              this.updateState({ cellsHaveUniformWidth })}
           />
         </ContentBox>
         <ContentBox>
           <ContentBoxHeader text="Suggested Starting Point" />
-          <CodeMirror options={codeMirrorOptions} value={markup} />
+          <CodeMirror
+            options={codeMirrorOptions}
+            value={markup}
+            key={this.state.key}
+          />
         </ContentBox>
       </div>
     );
