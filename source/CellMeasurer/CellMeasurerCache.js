@@ -94,7 +94,7 @@ export default class CellMeasurerCache {
     }
   }
 
-  clear(rowIndex: number, columnIndex: number) {
+  clear(rowIndex: number, columnIndex: number = 0) {
     const key = this._keyMapper(rowIndex, columnIndex);
 
     delete this._cellHeightCache[key];
