@@ -8,9 +8,10 @@ import type {
   OverscanIndicesGetter,
   RenderedSection,
   CellRendererParams,
+  CellKeyGetterParams,
   Scroll as GridScroll
 } from "../Grid";
-import type { RowRenderer, RenderedRows, Scroll } from "./types";
+import type { KeyGetter, RowRenderer, RenderedRows, Scroll } from "./types";
 
 import Grid, { accessibilityOverscanIndicesGetter } from "../Grid";
 import React from "react";
@@ -45,6 +46,8 @@ type Props = {
 
   /** Height constraint for list (determines how many actual rows are rendered) */
   height: number,
+
+  keyGetter: KeyGetter,
 
   /** Optional renderer to be used in place of rows when rowCount is 0 */
   noRowsRenderer: NoContentRenderer,
@@ -100,6 +103,7 @@ export default class List extends React.PureComponent {
   static defaultProps = {
     autoHeight: false,
     estimatedRowSize: 30,
+    keyGetter: ({index}) => `${index}`,
     onScroll: () => {},
     noRowsRenderer: () => null,
     onRowsRendered: () => {},
@@ -195,7 +199,7 @@ export default class List extends React.PureComponent {
   }
 
   render() {
-    const { className, noRowsRenderer, scrollToIndex, width } = this.props;
+    const { className, keyGetter, noRowsRenderer, scrollToIndex, width } = this.props;
 
     const classNames = cn("ReactVirtualized__List", className);
 
@@ -207,6 +211,7 @@ export default class List extends React.PureComponent {
         className={classNames}
         columnWidth={width}
         columnCount={1}
+        cellKeyGetter={this._keyGetter}
         noContentRenderer={noRowsRenderer}
         onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}
@@ -256,6 +261,23 @@ export default class List extends React.PureComponent {
 
     onScroll({ clientHeight, scrollHeight, scrollTop });
   };
+
+  _keyGetter = ({
+    rowStartIndex,
+    rowStopIndex,
+    rowIndex,
+    columnStartIndex,
+    columnStopIndex,
+    columnIndex
+  }: CellKeyGetterParams) => {
+    const {keyGetter} = this.props
+
+    return keyGetter({
+      startIndex: rowStartIndex,
+      stopIndex: rowStopIndex,
+      index: rowIndex
+    })
+  }
 
   _onSectionRendered = ({
     rowOverscanStartIndex,

@@ -7,6 +7,7 @@ export type {
   CellSize,
   OverscanIndicesGetter,
   RenderedSection,
+  CellKeyGetterParams,
   CellRendererParams,
   Scroll
 } from "./types";

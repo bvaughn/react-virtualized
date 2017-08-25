@@ -1,6 +1,7 @@
 /** @flow */
 
 import type {
+  CellKeyGetter,
   CellRenderer,
   CellRangeRenderer,
   CellPosition,
@@ -25,6 +26,7 @@ import defaultOverscanIndicesGetter, {
   SCROLL_DIRECTION_FORWARD
 } from "./defaultOverscanIndicesGetter";
 import updateScrollIndexHelper from "./utils/updateScrollIndexHelper";
+import defaultCellKeyGetter from "./defaultCellKeyGetter";
 import defaultCellRangeRenderer from "./defaultCellRangeRenderer";
 import scrollbarSize from "dom-helpers/util/scrollbarSize";
 import {
@@ -75,6 +77,8 @@ type Props = {
    * Intended for use with WindowScroller
    */
   autoWidth: boolean,
+
+  cellKeyGetter: CellKeyGetter,
 
   /** Responsible for rendering a cell given an row and column index.  */
   cellRenderer: CellRenderer,
@@ -234,6 +238,7 @@ export default class Grid extends React.PureComponent {
     autoContainerWidth: false,
     autoHeight: false,
     autoWidth: false,
+    cellKeyGetter: defaultCellKeyGetter,
     cellRangeRenderer: defaultCellRangeRenderer,
     containerRole: "rowgroup",
     containerStyle: Object,
@@ -961,6 +966,7 @@ export default class Grid extends React.PureComponent {
     state: State = this.state
   ) {
     const {
+      cellKeyGetter,
       cellRenderer,
       cellRangeRenderer,
       columnCount,
@@ -1057,6 +1063,7 @@ export default class Grid extends React.PureComponent {
 
       this._childrenToDisplay = cellRangeRenderer({
         cellCache: this._cellCache,
+        cellKeyGetter,
         cellRenderer,
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,

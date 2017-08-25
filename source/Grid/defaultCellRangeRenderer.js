@@ -16,6 +16,7 @@ export default function defaultCellRangeRenderer({
   deferredMeasurementCache,
   horizontalOffsetAdjustment,
   isScrolling,
+  cellKeyGetter,
   parent, // Grid (or List or Table)
   rowSizeAndPositionManager,
   rowStartIndex,
@@ -54,7 +55,14 @@ export default function defaultCellRangeRenderer({
         columnIndex <= visibleColumnIndices.stop &&
         rowIndex >= visibleRowIndices.start &&
         rowIndex <= visibleRowIndices.stop;
-      let key = `${rowIndex}-${columnIndex}`;
+      let key = cellKeyGetter({
+        rowStartIndex,
+        rowStopIndex,
+        rowIndex,
+        columnStartIndex,
+        columnStopIndex,
+        columnIndex
+      });
       let style;
 
       // Cache style objects so shallow-compare doesn't re-render unnecessarily.
