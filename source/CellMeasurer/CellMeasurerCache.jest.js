@@ -67,6 +67,20 @@ describe("CellMeasurerCache", () => {
     expect(cache.has(1, 0)).toBe(true);
   });
 
+  it("should clear a single cached row cell in column 0 when columnIndex param is absent", () => {
+    const cache = new CellMeasurerCache({
+      fixedHeight: true,
+      fixedWidth: true
+    });
+    cache.set(0, 0, 100, 20);
+    cache.set(1, 0, 100, 20);
+    expect(cache.has(0, 0)).toBe(true);
+    expect(cache.has(1, 0)).toBe(true);
+    cache.clear(0);
+    expect(cache.has(0, 0)).toBe(false);
+    expect(cache.has(1, 0)).toBe(true);
+  })
+
   it("should clear all cached cells", () => {
     const cache = new CellMeasurerCache({
       fixedHeight: true,
