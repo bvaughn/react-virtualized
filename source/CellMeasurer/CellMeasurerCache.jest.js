@@ -79,7 +79,7 @@ describe("CellMeasurerCache", () => {
     cache.clear(0);
     expect(cache.has(0, 0)).toBe(false);
     expect(cache.has(1, 0)).toBe(true);
-  })
+  });
 
   it("should clear all cached cells", () => {
     const cache = new CellMeasurerCache({
