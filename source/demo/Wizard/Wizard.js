@@ -32,6 +32,7 @@ export default class Wizard extends Component {
     };
   }
 
+  // TODO Remove this key hack once JedWatson/react-codemirror/issues/106 is fixed
   updateState = obj => this.setState(state => ({ ...obj, key: state.key + 1 }));
 
   render() {
