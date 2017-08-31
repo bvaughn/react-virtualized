@@ -95,6 +95,20 @@ describe("CellMeasurerCache", () => {
     expect(cache.has(1, 0)).toBe(false);
   });
 
+  it("should clear row and column counts when clearing all cells", () => {
+    const cache = new CellMeasurerCache({
+      fixedHeight: true,
+      fixedWidth: true
+    });
+    cache.set(0, 0, 100, 20);
+    cache.set(1, 0, 100, 20);
+    expect(cache._rowCount).toBe(2);
+    expect(cache._columnCount).toBe(1);
+    cache.clearAll();
+    expect(cache._rowCount).toBe(0);
+    expect(cache._columnCount).toBe(0);
+  });
+
   it("should support a custom :keyMapper", () => {
     const keyMapper = jest.fn();
     keyMapper.mockReturnValue("a");

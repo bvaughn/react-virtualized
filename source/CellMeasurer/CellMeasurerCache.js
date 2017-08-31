@@ -108,6 +108,8 @@ export default class CellMeasurerCache {
     this._cellWidthCache = {};
     this._columnWidthCache = {};
     this._rowHeightCache = {};
+    this._rowCount = 0;
+    this._columnCount = 0;
   }
 
   columnWidth = ({ index }: IndexParam) => {
