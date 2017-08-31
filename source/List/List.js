@@ -103,7 +103,7 @@ export default class List extends React.PureComponent {
   static defaultProps = {
     autoHeight: false,
     estimatedRowSize: 30,
-    keyGetter: ({index}) => `${index}`,
+    keyGetter: ({ index }) => `${index}`,
     onScroll: () => {},
     noRowsRenderer: () => null,
     onRowsRendered: () => {},
@@ -199,7 +199,7 @@ export default class List extends React.PureComponent {
   }
 
   render() {
-    const { className, keyGetter, noRowsRenderer, scrollToIndex, width } = this.props;
+    const { className, noRowsRenderer, scrollToIndex, width } = this.props;
 
     const classNames = cn("ReactVirtualized__List", className);
 
@@ -265,19 +265,16 @@ export default class List extends React.PureComponent {
   _keyGetter = ({
     rowStartIndex,
     rowStopIndex,
-    rowIndex,
-    columnStartIndex,
-    columnStopIndex,
-    columnIndex
+    rowIndex
   }: CellKeyGetterParams) => {
-    const {keyGetter} = this.props
+    const { keyGetter } = this.props;
 
     return keyGetter({
       startIndex: rowStartIndex,
       stopIndex: rowStopIndex,
       index: rowIndex
-    })
-  }
+    });
+  };
 
   _onSectionRendered = ({
     rowOverscanStartIndex,
