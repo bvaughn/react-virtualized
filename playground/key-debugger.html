@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>foo</title>
+  <style type="text/css">
+    * {
+      box-sizing: border-box;
+    }
+    body, html, #mount {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-size: 10px;
+      font-family: sans-serif;
+    }
+    .cell {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .inUseKeysDebugger,
+    .availableKeysDebugger {
+      position: absolute;
+      max-width: 33%;
+      max-height: 100%;
+      overflow: auto;
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    }
+    .inUseKeysDebugger {
+      top: 0;
+      left: 0;
+      border-bottom-right-radius: 0.5rem;
+    }
+    .availableKeysDebugger {
+      top: 0;
+      right: 0;
+      border-bottom-left-radius: 0.5rem;
+    }
+
+    table {
+      border-spacing: 0;
+      font-size: 8px;
+      margin-top: 1rem;
+    }
+    td {
+      min-width: 10px;
+      max-width: 10px;
+      height: 10px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="mount"></div>
+  <div class="inUseKeysDebugger">
+    <strong>in use</strong>: <span id="inUseKeysCount">0</span>
+    <div id="inUseKeysTable"></div>
+  </div>
+
+  <div class="availableKeysDebugger">
+    <strong>available</strong>: <span id="availableKeysCount">0</span>
+    <div id="availableKeysTable"></div>
+  </div>
+
+  <script src="utils.js"></script>
+  <script src="helper.js"></script>
+  <script>
+    loadReact();
+    loadScriptsAndStyles('key-debugger.js');
+  </script>
+</body>
+</html>
