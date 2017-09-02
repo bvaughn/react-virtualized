@@ -28,8 +28,8 @@
       overflow: auto;
       text-align: center;
       padding: 1rem;
-      background: rgba(0,0,0,0.5);
-      color: #fff;
+      background: rgba(235,235,235,0.9);
+      color: #222;
       box-shadow: 0 0 2px rgba(0,0,0,0.5);
     }
     .inUseKeysDebugger {
@@ -41,6 +41,15 @@
       top: 0;
       right: 0;
       border-bottom-left-radius: 0.5rem;
+    }
+    td.active {
+      background-color: rgba(60, 255, 150, 0.75);
+    }
+    td.inactive {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    td.missing {
+      background-color: rgba(255, 50, 100, 0.75);
     }
 
     table {
@@ -62,12 +71,12 @@
 <body>
   <div id="mount"></div>
   <div class="inUseKeysDebugger">
-    <strong>in use</strong>: <span id="inUseKeysCount">0</span>
+    <strong><span id="inUseKeysCount">0</span> keys in use</strong>
     <div id="inUseKeysTable"></div>
   </div>
 
   <div class="availableKeysDebugger">
-    <strong>available</strong>: <span id="availableKeysCount">0</span>
+    <strong><span id="availableKeysCount">0</span> keys available</strong>
     <div id="availableKeysTable"></div>
   </div>
 

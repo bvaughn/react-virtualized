@@ -97,24 +97,28 @@ function createTable(keys, globalKeyMap) {
   let maxCol = 0;
   let maxRow = 0;
 
-  keys.forEach(key => {
-    keyMap[key] = key;
-
-    const [row, col] = key.split('-');
-
-    if (!rows[row]) rows[row] = {};
-    rows[row][col] = col;
+  Object.keys(globalKeyMap).forEach(key => {
+    const [row, col] = key.split("-");
 
     maxCol = Math.max(maxCol, col);
     maxRow = Math.max(maxRow, row);
   });
 
-  const table = document.createElement('table');
+  keys.forEach(key => {
+    keyMap[key] = key;
 
-  const tr = document.createElement('tr');
+    const [row, col] = key.split("-");
+
+    if (!rows[row]) rows[row] = {};
+    rows[row][col] = col;
+  });
+
+  const table = document.createElement("table");
+
+  const tr = document.createElement("tr");
   table.appendChild(tr);
   for (let col = -1; col <= maxCol; col++) {
-    const td = document.createElement('td');
+    const td = document.createElement("td");
     tr.appendChild(td);
     if (col >= 0) {
       td.innerText = col;
@@ -122,25 +126,25 @@ function createTable(keys, globalKeyMap) {
   }
 
   for (let row = 0; row <= maxRow; row++) {
-    const tr = document.createElement('tr');
+    const tr = document.createElement("tr");
     table.appendChild(tr);
 
-    const td = document.createElement('td');
+    const td = document.createElement("td");
     td.innerText = row;
     tr.appendChild(td);
 
     for (let col = 0; col <= maxCol; col++) {
       const key = `${row}-${col}`;
-      const td = document.createElement('td');
+      const td = document.createElement("td");
       td.title = key;
       tr.appendChild(td);
 
       if (keyMap[key] !== undefined) {
-        td.style.backgroundColor = 'rgba(102, 255, 170, 0.5)';
+        td.className = "active";
       } else if (globalKeyMap[key] !== undefined) {
-        //td.style.backgroundColor = 'rgba(0, 0, 0, 0.25)';
+        td.className = "inactive";
       } else {
-        td.style.backgroundColor = 'rgba(255, 50, 100, 0.75)';
+        td.className = "missing";
       }
     }
   }
@@ -162,13 +166,17 @@ const printDebugInfo = (() => {
 
     inUseKeysArray = Object.keys(inUseKeys);
 
-    document.getElementById('inUseKeysCount').innerText = inUseKeysArray.length;
-    document.getElementById('inUseKeysTable').innerHTML = '';
-    document.getElementById('inUseKeysTable').appendChild(createTable(inUseKeysArray, keyMap));
+    document.getElementById("inUseKeysCount").innerText = inUseKeysArray.length;
+    document.getElementById("inUseKeysTable").innerHTML = "";
+    document
+      .getElementById("inUseKeysTable")
+      .appendChild(createTable(inUseKeysArray, keyMap));
 
-    document.getElementById('availableKeysCount').innerText = keyCount;
-    document.getElementById('availableKeysTable').innerHTML = '';
-    document.getElementById('availableKeysTable').appendChild(createTable(availableKeys, keyMap));
+    document.getElementById("availableKeysCount").innerText = keyCount;
+    document.getElementById("availableKeysTable").innerHTML = "";
+    document
+      .getElementById("availableKeysTable")
+      .appendChild(createTable(availableKeys, keyMap));
   }
 
   function debouncedPrintDebugInfo() {
@@ -177,7 +185,7 @@ const printDebugInfo = (() => {
     }
 
     timeoutId = setTimeout(printDebugInfo, 1000);
-  };
+  }
 
   return debouncedPrintDebugInfo;
 })();
@@ -186,7 +194,8 @@ const printDebugInfo = (() => {
 // RV Rendering
 ////////////////////////////////////////////////////////////
 
-var REACT_VIRTUALIZED_BANNER = 'https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png'
+var REACT_VIRTUALIZED_BANNER =
+  "https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png";
 
 var inUseKeys = {};
 var keyMap = {};
@@ -203,16 +212,20 @@ class CellRenderer extends React.PureComponent {
     const props = this.props;
 
     return React.createElement(
-      'div',
+      "div",
       {
-        className: 'cell',
+        className: "cell",
         key: props.key,
-        style: props.style,
+        style: props.style
       },
       [
-        React.createElement('div', { key: 0 }, `indices: ${props.rowIndex}, ${props.columnIndex}`),
-        React.createElement('div', { key: 1 }, `key: ${props.dataKey}`),
-        React.createElement('div', { key: 2 }, `render: ${++this._renderCount}`)
+        React.createElement(
+          "div",
+          { key: 0 },
+          `indices: ${props.rowIndex}, ${props.columnIndex}`
+        ),
+        React.createElement("div", { key: 1 }, `key: ${props.dataKey}`),
+        React.createElement("div", { key: 2 }, `render: ${++this._renderCount}`)
       ]
     );
   }
@@ -251,32 +264,24 @@ function onSectionRenderedWrapper(params) {
 }
 
 var App = function() {
-  return React.createElement(
-    ReactVirtualized.AutoSizer,
-    null,
-    function (params) {
-      return React.createElement(
-        ReactVirtualized.Grid,
-        {
-          columnCount: 1000,
-          columnWidth: 100,
-          height: params.height,
-          overscanRowCount: 0,
-          cellRenderer: cellRenderer,
-          cellKeyGetter: cellKeyGetter,
-          onSectionRendered: onSectionRenderedWrapper,
-          overscanColumnCount: 0,
-          overscanRowCount: 0,
-          rowHeight: 40,
-          rowCount: 1000,
-          width: params.width,
-        }
-      )
-    }
-  )
+  return React.createElement(ReactVirtualized.AutoSizer, null, function(
+    params
+  ) {
+    return React.createElement(ReactVirtualized.Grid, {
+      columnCount: 1000,
+      columnWidth: 100,
+      height: params.height,
+      overscanRowCount: 0,
+      cellRenderer: cellRenderer,
+      cellKeyGetter: cellKeyGetter,
+      onSectionRendered: onSectionRenderedWrapper,
+      overscanColumnCount: 0,
+      overscanRowCount: 0,
+      rowHeight: 40,
+      rowCount: 1000,
+      width: params.width
+    });
+  });
 };
 
-ReactDOM.render(
-  React.createElement(App),
-  document.getElementById('mount')
-);
+ReactDOM.render(React.createElement(App), document.getElementById("mount"));
