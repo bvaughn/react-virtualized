@@ -1,7 +1,6 @@
 /** @flow */
 
 import type {
-  CellKeyGetter,
   CellRenderer,
   CellRangeRenderer,
   CellPosition,
@@ -26,7 +25,6 @@ import defaultOverscanIndicesGetter, {
   SCROLL_DIRECTION_FORWARD
 } from "./defaultOverscanIndicesGetter";
 import updateScrollIndexHelper from "./utils/updateScrollIndexHelper";
-import defaultCellKeyGetter from "./defaultCellKeyGetter";
 import defaultCellRangeRenderer from "./defaultCellRangeRenderer";
 import scrollbarSize from "dom-helpers/util/scrollbarSize";
 import {
@@ -77,8 +75,6 @@ type Props = {
    * Intended for use with WindowScroller
    */
   autoWidth: boolean,
-
-  cellKeyGetter: CellKeyGetter,
 
   /** Responsible for rendering a cell given an row and column index.  */
   cellRenderer: CellRenderer,
@@ -238,7 +234,6 @@ export default class Grid extends React.PureComponent {
     autoContainerWidth: false,
     autoHeight: false,
     autoWidth: false,
-    cellKeyGetter: defaultCellKeyGetter,
     cellRangeRenderer: defaultCellRangeRenderer,
     containerRole: "rowgroup",
     containerStyle: {},
@@ -290,7 +285,8 @@ export default class Grid extends React.PureComponent {
   _columnSizeAndPositionManager: ScalingCellSizeAndPositionManager;
   _rowSizeAndPositionManager: ScalingCellSizeAndPositionManager;
 
-  // See defaultCellRangeRenderer() for more information on the usage of this cache
+  // See defaultCellRangeRenderer() for more information on the usage of these caches
+  _cellCache = {};
   _styleCache = {};
 
   _scrollbarSize: number;
@@ -498,8 +494,9 @@ export default class Grid extends React.PureComponent {
       scrollToColumn >= 0 && columnIndex <= scrollToColumn;
     this._recomputeScrollTopFlag = scrollToRow >= 0 && rowIndex <= scrollToRow;
 
-    // Clear style cache in case we are scrolling;
+    // Clear cell cache in case we are scrolling;
     // Invalid row heights likely mean invalid cached content as well.
+    this._cellCache = {};
     this._styleCache = {};
 
     this.forceUpdate();
@@ -964,7 +961,6 @@ export default class Grid extends React.PureComponent {
     state: State = this.state
   ) {
     const {
-      cellKeyGetter,
       cellRenderer,
       cellRangeRenderer,
       columnCount,
@@ -1060,7 +1056,7 @@ export default class Grid extends React.PureComponent {
       this._rowStopIndex = overscanRowIndices.overscanStopIndex;
 
       this._childrenToDisplay = cellRangeRenderer({
-        cellKeyGetter,
+        cellCache: this._cellCache,
         cellRenderer,
         columnSizeAndPositionManager: this._columnSizeAndPositionManager,
         columnStartIndex: this._columnStartIndex,
@@ -1325,10 +1321,11 @@ export default class Grid extends React.PureComponent {
   _resetStyleCache() {
     const styleCache = this._styleCache;
 
-    // Reset style cache once scrolling stops.
+    // Reset cell and style caches once scrolling stops.
     // This makes Grid simpler to use (since cells commonly change).
     // And it keeps the caches from growing too large.
     // Performance is most sensitive when a user is scrolling.
+    this._cellCache = {};
     this._styleCache = {};
 
     // Copy over the visible cell styles so avoid unnecessary re-render.

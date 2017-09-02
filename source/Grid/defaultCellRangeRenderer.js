@@ -8,6 +8,7 @@ import type { CellRangeRendererParams } from "./types";
  */
 
 export default function defaultCellRangeRenderer({
+  cellCache,
   cellRenderer,
   columnSizeAndPositionManager,
   columnStartIndex,
@@ -15,7 +16,6 @@ export default function defaultCellRangeRenderer({
   deferredMeasurementCache,
   horizontalOffsetAdjustment,
   isScrolling,
-  cellKeyGetter,
   parent, // Grid (or List or Table)
   rowSizeAndPositionManager,
   rowStartIndex,
@@ -54,14 +54,7 @@ export default function defaultCellRangeRenderer({
         columnIndex <= visibleColumnIndices.stop &&
         rowIndex >= visibleRowIndices.start &&
         rowIndex <= visibleRowIndices.stop;
-      let key = cellKeyGetter({
-        rowStartIndex,
-        rowStopIndex,
-        rowIndex,
-        columnStartIndex,
-        columnStopIndex,
-        columnIndex
-      });
+      let key = `${rowIndex}-${columnIndex}`;
       let style;
 
       // Cache style objects so shallow-compare doesn't re-render unnecessarily.
@@ -107,7 +100,31 @@ export default function defaultCellRangeRenderer({
         style
       };
 
-      let renderedCell = cellRenderer(cellRendererParams);
+      let renderedCell;
+
+      // Avoid re-creating cells while scrolling.
+      // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
+      // If a scroll is in progress- cache and reuse cells.
+      // This cache will be thrown away once scrolling completes.
+      // However if we are scaling scroll positions and sizes, we should also avoid caching.
+      // This is because the offset changes slightly as scroll position changes and caching leads to stale values.
+      // For more info refer to issue #395
+      if (
+        isScrolling &&
+        !horizontalOffsetAdjustment &&
+        !verticalOffsetAdjustment
+      ) {
+        if (!cellCache[key]) {
+          cellCache[key] = cellRenderer(cellRendererParams);
+        }
+
+        renderedCell = cellCache[key];
+
+        // If the user is no longer scrolling, don't cache cells.
+        // This makes dynamic cell content difficult for users and would also lead to a heavier memory footprint.
+      } else {
+        renderedCell = cellRenderer(cellRendererParams);
+      }
 
       if (renderedCell == null || renderedCell === false) {
         continue;
