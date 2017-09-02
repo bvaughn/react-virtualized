@@ -29,3 +29,4 @@ export {
   SortIndicator
 } from "./Table";
 export { WindowScroller } from "./WindowScroller";
+export { createCellKeyPool, createKeyPool } from "./utils/createKeyPool";

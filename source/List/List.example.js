@@ -11,6 +11,9 @@ import {
   ContentBoxParagraph
 } from "../demo/ContentBox";
 import { LabeledInput, InputRow } from "../demo/LabeledInput";
+import { createKeyPool } from "../index";
+
+const { keyGetter, onRowsRendered } = createKeyPool();
 
 export default class ListExample extends PureComponent {
   static contextTypes = {
@@ -141,8 +144,10 @@ export default class ListExample extends PureComponent {
                 ref="List"
                 className={styles.List}
                 height={listHeight}
+                keyGetter={keyGetter}
                 overscanRowCount={overscanRowCount}
                 noRowsRenderer={this._noRowsRenderer}
+                onRowsRendered={onRowsRendered}
                 rowCount={rowCount}
                 rowHeight={
                   useDynamicRowHeight ? this._getRowHeight : listRowHeight

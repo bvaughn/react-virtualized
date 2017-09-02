@@ -10,7 +10,10 @@ import { LabeledInput, InputRow } from "../demo/LabeledInput";
 import AutoSizer from "../AutoSizer";
 import Grid from "./Grid";
 import cn from "classnames";
+import { createCellKeyPool } from "../index";
 import styles from "./Grid.example.css";
+
+const { cellKeyGetter, onSectionRendered } = createCellKeyPool();
 
 export default class GridExample extends PureComponent {
   static contextTypes = {
@@ -154,12 +157,14 @@ export default class GridExample extends PureComponent {
         <AutoSizer disableHeight>
           {({ width }) =>
             <Grid
+              cellKeyGetter={cellKeyGetter}
               cellRenderer={this._cellRenderer}
               className={styles.BodyGrid}
               columnWidth={this._getColumnWidth}
               columnCount={columnCount}
               height={height}
               noContentRenderer={this._noContentRenderer}
+              onSectionRendered={onSectionRendered}
               overscanColumnCount={overscanColumnCount}
               overscanRowCount={overscanRowCount}
               rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}

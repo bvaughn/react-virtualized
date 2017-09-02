@@ -29,7 +29,6 @@ export type CellRendererParams = {
 export type CellRenderer = (props: CellRendererParams) => React.Element<*>;
 
 export type CellRangeRendererParams = {
-  cellCache: Object,
   cellKeyGetter: CellKeyGetter,
   cellRenderer: CellRenderer,
   columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
