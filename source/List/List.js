@@ -37,6 +37,9 @@ type Props = {
   /** Optional CSS class name */
   className?: string,
 
+  /** Optional inner children Grid CSS class name */
+  childrenClassName?: string,
+
   /**
    * Used to estimate the total height of a List before all of its rows have actually been measured.
    * The estimated total height is adjusted as rows are rendered.
@@ -195,7 +198,13 @@ export default class List extends React.PureComponent {
   }
 
   render() {
-    const { className, noRowsRenderer, scrollToIndex, width } = this.props;
+    const {
+      className,
+      childrenClassName,
+      noRowsRenderer,
+      scrollToIndex,
+      width
+    } = this.props;
 
     const classNames = cn("ReactVirtualized__List", className);
 
@@ -205,6 +214,7 @@ export default class List extends React.PureComponent {
         autoContainerWidth
         cellRenderer={this._cellRenderer}
         className={classNames}
+        childrenClassName={childrenClassName}
         columnWidth={width}
         columnCount={1}
         noContentRenderer={noRowsRenderer}
