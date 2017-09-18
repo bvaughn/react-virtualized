@@ -236,7 +236,7 @@ export default class Grid extends React.PureComponent {
     autoWidth: false,
     cellRangeRenderer: defaultCellRangeRenderer,
     containerRole: "rowgroup",
-    containerStyle: Object,
+    containerStyle: {},
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
     getScrollbarSize: scrollbarSize,
