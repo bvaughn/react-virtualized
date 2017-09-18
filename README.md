@@ -2,8 +2,8 @@
 
 ![NPM version](https://img.shields.io/npm/v/react-virtualized.svg?style=flat)
 ![NPM license](https://img.shields.io/npm/l/react-virtualized.svg?style=flat)
-![NPM total downloads](https://img.shields.io/npm/dt/react-virtualized.svg?style=flat)
-![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat)
+[![NPM total downloads](https://img.shields.io/npm/dt/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
+[![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
 [![Circle CI badge](https://img.shields.io/circleci/project/bvaughn/react-virtualized/master.svg?style=flat)](https://circleci.com/gh/bvaughn/react-virtualized)
 [![Codecov badge](https://img.shields.io/codecov/c/github/bvaughn/react-virtualized/master.svg)](https://codecov.io/github/bvaughn/react-virtualized)
 [![Slack chat](https://slackin-ucxxtydvmw.now.sh/badge.svg)](https://react-virtualized.now.sh)
