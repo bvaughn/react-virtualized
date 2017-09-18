@@ -105,6 +105,78 @@ describe("Grid", () => {
       expect(rendered.textContent).not.toContain("column:0");
       expect(rendered.textContent).not.toContain("row:0");
     });
+
+    it("should scroll to the last existing point when rows are removed", () => {
+      const grid = render(
+        getMarkup({
+          rowCount: 15
+        })
+      );
+
+      simulateScroll({
+        grid,
+        scrollTop: 200
+      });
+
+      const updatedGrid = render(
+        getMarkup({
+          rowCount: 10
+        })
+      );
+
+      expect(updatedGrid.state.scrollTop).toEqual(100);
+    });
+
+    it("should scroll to the last existing point when columns are removed", () => {
+      const grid = render(
+        getMarkup({
+          columnCount: 12
+        })
+      );
+
+      simulateScroll({
+        grid,
+        scrollLeft: 400
+      });
+
+      const updatedGrid = render(
+        getMarkup({
+          columnCount: 8
+        })
+      );
+
+      expect(updatedGrid.state.scrollLeft).toEqual(200);
+    });
+
+    it("should not scroll unseen rows are removed", () => {
+      render(
+        getMarkup({
+          rowCount: 15
+        })
+      );
+      const updatedGrid = render(
+        getMarkup({
+          rowCount: 10
+        })
+      );
+
+      expect(updatedGrid.state.scrollTop).toEqual(0);
+    });
+
+    it("should not scroll when unseen columns are removed", () => {
+      render(
+        getMarkup({
+          columnCount: 12
+        })
+      );
+      const updatedGrid = render(
+        getMarkup({
+          columnCount: 8
+        })
+      );
+
+      expect(updatedGrid.state.scrollLeft).toEqual(0);
+    });
   });
 
   describe("shows and hides scrollbars based on rendered content", () => {

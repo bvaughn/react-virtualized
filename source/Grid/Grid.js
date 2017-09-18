@@ -512,17 +512,19 @@ export default class Grid extends React.PureComponent {
 
     // Don't adjust scroll offset for single-column grids (eg List, Table).
     // This can cause a funky scroll offset because of the vertical scrollbar width.
-    if (columnCount > 1) {
+    if (columnCount > 1 && columnIndex !== undefined) {
       this._updateScrollLeftForScrollToColumn({
         ...props,
         scrollToColumn: columnIndex
       });
     }
 
-    this._updateScrollTopForScrollToRow({
-      ...props,
-      scrollToRow: rowIndex
-    });
+    if (rowIndex !== undefined) {
+      this._updateScrollTopForScrollToRow({
+        ...props,
+        scrollToRow: rowIndex
+      });
+    }
   }
 
   componentDidMount() {
@@ -1261,11 +1263,12 @@ export default class Grid extends React.PureComponent {
     } = props;
     const { scrollLeft } = state;
 
-    if (scrollToColumn >= 0 && columnCount > 0) {
-      const targetIndex = Math.max(
-        0,
-        Math.min(columnCount - 1, scrollToColumn)
-      );
+    if (columnCount > 0) {
+      const finalColumn = columnCount - 1;
+      const targetIndex =
+        scrollToColumn < 0
+          ? finalColumn
+          : Math.min(finalColumn, scrollToColumn);
       const totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize();
       const scrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0;
 
@@ -1304,8 +1307,10 @@ export default class Grid extends React.PureComponent {
     const { height, rowCount, scrollToAlignment, scrollToRow, width } = props;
     const { scrollTop } = state;
 
-    if (scrollToRow >= 0 && rowCount > 0) {
-      const targetIndex = Math.max(0, Math.min(rowCount - 1, scrollToRow));
+    if (rowCount > 0) {
+      const finalRow = rowCount - 1;
+      const targetIndex =
+        scrollToRow < 0 ? finalRow : Math.min(finalRow, scrollToRow);
       const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize();
       const scrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0;
 
