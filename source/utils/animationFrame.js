@@ -11,7 +11,7 @@ if (typeof window !== "undefined") {
 } else if (typeof self !== "undefined") {
   win = self;
 } else {
-  win = this;
+  win = {};
 }
 
 // requestAnimationFrame() shim by Paul Irish
