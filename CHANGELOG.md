@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 9.10.1
+* 🐛 Server-side rendering `window` reference bugfix
+* 🐛 `Grid.defaultProps` bugfix
+
 ##### 9.10.0
 * ✨ `Grid` uses `requestAnimationFrame` instead of `setTimeout` for improved scroll-ended debounce timing ([@guilhermefloriani](https://github.com/guilhermefloriani) - [#742](https://github.com/bvaughn/react-virtualized/pull/742))
 * 🎉 `onRowRightClick` prop added to `Table` ([@damian-codilime](https://github.com/damian-codilime) - [#741](https://github.com/bvaughn/react-virtualized/pull/741))
