@@ -208,7 +208,7 @@ type Props = {
   style: Object,
 
   /** Tab index for focus */
-  tabIndex: number,
+  tabIndex: ?number,
 
   /** Width of Grid; this property determines the number of visible (vs virtualized) columns.  */
   width: number
