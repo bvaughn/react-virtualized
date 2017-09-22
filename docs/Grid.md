@@ -13,6 +13,7 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | className | String |  | Optional custom CSS class name to attach to root `Grid` element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
 | columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number`. If function is used, specify `estimatedColumnSize` for more consistent scrolling behavior. |
+| containerProps | Object |  | Responsible for adding props to the cell-container, i.e. `onWheel`.
 | containerRole | string |  | ARIA role for the cell-container; defaults to "rowgroup" |
 | containerStyle | Object |  | Optional custom inline style to attach to inner cell-container element. |
 | deferredMeasurementCache | `CellMeasurer` |  | If CellMeasurer is used to measure this Grid's children, this should be a pointer to its CellMeasurerCache. A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data. |
