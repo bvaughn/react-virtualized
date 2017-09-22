@@ -10,7 +10,7 @@ Changelog
 * 🎉 `onRowRightClick` prop added to `Table` ([@damian-codilime](https://github.com/damian-codilime) - [#741](https://github.com/bvaughn/react-virtualized/pull/741))
 * 🎉 `Table` component now allow children that extend `Column` ([@CptLemming](https://github.com/CptLemming) - [#748](https://github.com/bvaughn/react-virtualized/pull/748))
 * 🐛 Firefox edge-case bugfix ([@ReinAkane](https://github.com/ReinAkane) - [#798](https://github.com/bvaughn/react-virtualized/pull/798))
-* 🎉 `onWheel` prop added to `Grid` ([@implausible](https://github.com/implausible) - [#778](https://github.com/bvaughn/react-virtualized/pull/778))
+* 🎉 `containerProps` prop added to `Grid` ([@implausible](https://github.com/implausible) - [#778](https://github.com/bvaughn/react-virtualized/pull/778))
 * ✨ `Grid` accessibility improved via better aria attributes ([@smockle](https://github.com/smockle) - [#744](https://github.com/bvaughn/react-virtualized/pull/744))
 * ✨ `CellMeasurererCache.clearAll` also sets row and column counts ([@tcosentino](https://github.com/tcosentino) - [#796](https://github.com/bvaughn/react-virtualized/pull/796))
 
