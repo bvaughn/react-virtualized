@@ -39,6 +39,8 @@ export default class MultiGrid extends PureComponent {
     enableFixedRowScroll: false,
     fixedColumnCount: 0,
     fixedRowCount: 0,
+    scrollToColumn: -1,
+    scrollToRow: -1,
     style: {},
     styleBottomLeftGrid: {},
     styleBottomRightGrid: {},
