@@ -13,6 +13,15 @@ export type CellRendererParams = {
   rowIndex: number
 };
 
+export type ColumnHeaderRendererParams = {
+  a11yProps: ?any,
+  className: string,
+  columnData: ?any,
+  headerContent: any,
+  key: string,
+  style: any
+};
+
 export type HeaderRowRendererParams = {
   className: string,
   columns: Array<any>,
