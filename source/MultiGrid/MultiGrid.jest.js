@@ -459,8 +459,8 @@ describe("MultiGrid", () => {
         getMarkup({
           rowCount: 2
         })
-      )
-      expect(updated.props.rowCount).toEqual(2)
+      );
+      expect(updated.props.rowCount).toEqual(2);
     });
 
     it("should not crash when decreasing :columnCount", () => {
@@ -469,8 +469,8 @@ describe("MultiGrid", () => {
         getMarkup({
           columnCount: 3
         })
-      )
-      expect(updated.props.columnCount).toEqual(3)
+      );
+      expect(updated.props.columnCount).toEqual(3);
     });
   });
 
