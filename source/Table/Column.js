@@ -4,6 +4,7 @@ import { Component } from "react";
 import defaultHeaderRenderer from "./defaultHeaderRenderer";
 import defaultCellRenderer from "./defaultCellRenderer";
 import defaultCellDataGetter from "./defaultCellDataGetter";
+import SortDirection from "./SortDirection";
 
 /**
  * Describes the header and cell contents of a table column.
@@ -33,6 +34,9 @@ export default class Column extends Component {
 
     /** Uniquely identifies the row-data attribute corresponding to this cell */
     dataKey: PropTypes.any.isRequired,
+
+    /** Optional direction to be used when clicked the first time */
+    defaultSortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
 
     /** If sort is enabled for the table at large, disable it for this column */
     disableSort: PropTypes.bool,

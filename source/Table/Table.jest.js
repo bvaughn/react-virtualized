@@ -48,6 +48,7 @@ describe("Table", () => {
       headerRenderer,
       maxWidth,
       minWidth,
+      defaultSortOrder,
       ...flexTableProps
     } = {}
   ) {
@@ -72,6 +73,7 @@ describe("Table", () => {
           cellDataGetter={cellDataGetter}
           headerRenderer={headerRenderer}
           disableSort={disableSort}
+          defaultSortOrder={defaultSortOrder}
           style={columnStyle}
           id={columnID}
         />
@@ -560,6 +562,32 @@ describe("Table", () => {
       expect(sortCalls.length).toEqual(2);
       Simulate.keyDown(nameColumn, { key: "F" });
       expect(sortCalls.length).toEqual(2);
+    });
+
+    it("should honor the default sort order on first click of the column", () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              sort: ({ sortBy, sortDirection }) =>
+                sortCalls.push({ sortBy, sortDirection }),
+              defaultSortOrder: sortDirection
+            })
+          )
+        );
+        const nameColumn = rendered.querySelector(
+          ".ReactVirtualized__Table__headerColumn:first-of-type"
+        );
+
+        Simulate.click(nameColumn);
+        expect(sortCalls.length).toEqual(1);
+
+        const { sortBy, sortDirection: newSortDirection } = sortCalls[0];
+        expect(sortBy).toEqual("name");
+        expect(newSortDirection).toEqual(sortDirection);
+      });
     });
   });
 

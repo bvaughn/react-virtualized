@@ -11,6 +11,7 @@ Describes the header and cell contents of a table column.
 | className | String |  | CSS class to apply to rendered cell container |
 | columnData | Object |  | Additional data passed to this column's `cellDataGetter`. Use this object to relay action-creators or relational data. |
 | dataKey | any | ✓ | Uniquely identifies the row-data attribute corresponding to this cell (eg this might be "name" in an array of user objects). |
+| defaultSortOrder| [SortDirection](SortDirection.md) |  | Default sort order when clicked for the first time. Defaults to Asc |
 | disableSort | Boolean |  | If sort is enabled for the table at large, disable it for this column |
 | flexGrow | Number |  | Flex grow style; defaults to 0 |
 | flexShrink | Number |  | Flex shrink style; defaults to 1 |
