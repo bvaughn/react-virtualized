@@ -44,6 +44,8 @@ export type CellRangeRenderer = (
 
 export type CellSizeGetter = (params: { index: number }) => number;
 
+export type RangeSizeGetter = (params: { startIndex: number, endIndex: number}) => number;
+
 export type CellSize = CellSizeGetter | number;
 
 export type NoContentRenderer = () => React.Element<*> | null;
