@@ -452,6 +452,26 @@ describe("MultiGrid", () => {
       expect(bottomLeftGrid.scrollTop).toEqual(750);
       expect(bottomRightGrid.scrollTop).toEqual(750);
     });
+
+    it("should not crash when decreasing :rowCount", () => {
+      const rendered = render(getMarkup());
+      const updated = render(
+        getMarkup({
+          rowCount: 2
+        })
+      );
+      expect(updated.props.rowCount).toEqual(2);
+    });
+
+    it("should not crash when decreasing :columnCount", () => {
+      const rendered = render(getMarkup());
+      const updated = render(
+        getMarkup({
+          columnCount: 3
+        })
+      );
+      expect(updated.props.columnCount).toEqual(3);
+    });
   });
 
   describe("deferredMeasurementCache", () => {
