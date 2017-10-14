@@ -454,7 +454,7 @@ describe("MultiGrid", () => {
     });
 
     it("should not crash when decreasing :rowCount", () => {
-      const rendered = render(getMarkup());
+      render(getMarkup());
       const updated = render(
         getMarkup({
           rowCount: 2
@@ -464,7 +464,7 @@ describe("MultiGrid", () => {
     });
 
     it("should not crash when decreasing :columnCount", () => {
-      const rendered = render(getMarkup());
+      render(getMarkup());
       const updated = render(
         getMarkup({
           columnCount: 3
