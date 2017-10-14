@@ -36,7 +36,10 @@ export default class Column extends Component {
     dataKey: PropTypes.any.isRequired,
 
     /** Optional direction to be used when clicked the first time */
-    defaultSortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
+    defaultSortDirection: PropTypes.oneOf([
+      SortDirection.ASC,
+      SortDirection.DESC
+    ]),
 
     /** If sort is enabled for the table at large, disable it for this column */
     disableSort: PropTypes.bool,
@@ -78,6 +81,7 @@ export default class Column extends Component {
   static defaultProps = {
     cellDataGetter: defaultCellDataGetter,
     cellRenderer: defaultCellRenderer,
+    defaultSortDirection: SortDirection.ASC,
     flexGrow: 0,
     flexShrink: 1,
     headerRenderer: defaultHeaderRenderer,

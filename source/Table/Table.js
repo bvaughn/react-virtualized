@@ -490,7 +490,7 @@ export default class Table extends PureComponent {
       id,
       label,
       columnData,
-      defaultSortOrder
+      defaultSortDirection
     } = column.props;
     const sortEnabled = !disableSort && sort;
 
@@ -521,11 +521,13 @@ export default class Table extends PureComponent {
       // If this is a sortable header, clicking it should update the table data's sorting.
       const isFirstTimeSort = sortBy !== dataKey;
 
-      // If this is the firstTime sort of this column, use the column default sort order OR the default, asc.
+      // If this is the firstTime sort of this column, use the column default sort order.
       // Otherwise, invert the direction of the sort.
-      const newSortDirection = (isFirstTimeSort ?
-      				(defaultSortOrder || SortDirection.ASC) :
-      				(sortDirection === SortDirection.DESC ? SortDirection.ASC : SortDirection.DESC))
+      const newSortDirection = isFirstTimeSort
+        ? defaultSortDirection
+        : sortDirection === SortDirection.DESC
+          ? SortDirection.ASC
+          : SortDirection.DESC;
 
       const onClick = event => {
         sortEnabled &&

@@ -48,7 +48,7 @@ describe("Table", () => {
       headerRenderer,
       maxWidth,
       minWidth,
-      defaultSortOrder,
+      defaultSortDirection,
       ...flexTableProps
     } = {}
   ) {
@@ -73,7 +73,7 @@ describe("Table", () => {
           cellDataGetter={cellDataGetter}
           headerRenderer={headerRenderer}
           disableSort={disableSort}
-          defaultSortOrder={defaultSortOrder}
+          defaultSortDirection={defaultSortDirection}
           style={columnStyle}
           id={columnID}
         />
@@ -573,7 +573,7 @@ describe("Table", () => {
             getMarkup({
               sort: ({ sortBy, sortDirection }) =>
                 sortCalls.push({ sortBy, sortDirection }),
-              defaultSortOrder: sortDirection
+              defaultSortDirection: sortDirection
             })
           )
         );
