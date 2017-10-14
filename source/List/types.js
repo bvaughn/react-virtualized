@@ -2,6 +2,14 @@
 
 import React from "react";
 
+export type KeyGetterParams = {
+  startIndex: number,
+  stopIndex: number,
+  index: number
+};
+
+export type KeyGetter = (params: KeyGetterParams) => string;
+
 export type RowRendererParams = {
   index: number,
   isScrolling: boolean,
