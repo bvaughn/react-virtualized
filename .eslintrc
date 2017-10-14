@@ -15,6 +15,7 @@
     "no-unused-vars": [ERROR, {"args": "all", "argsIgnorePattern": "^_"}],
     "react/jsx-uses-react": ERROR,
     "react/jsx-uses-vars": ERROR,
-    "prettier/prettier": ERROR
+    "prettier/prettier": ERROR,
+    "indent":[ERROR, 2]
   }
 }

@@ -11,6 +11,7 @@ This component expects explicit `width` and `height` parameters.
 | autoHeight | Boolean |  | Outer `height` of `Table` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
 | children | [Column](Column.md) | ✓ | One or more Columns describing the data displayed in this table |
 | className | String |  | Optional custom CSS class name to attach to root `Table` element. |
+| columnHeaderRenderer | Function |   | Responsible for rendering a column header given a header content element. [Learn more](#columnheaderrenderer) |
 | disableHeader | Boolean |  | Do not render the table header (only the rows) |
 | estimatedRowSize | Number |  | Used to estimate the total height of a `Table` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | gridClassName | String |  | Optional custom CSS class name to attach to inner Grid element |
@@ -98,6 +99,23 @@ The Table component supports the following static class names
 | ReactVirtualized__Table__rowColumn | Table column (akin to `tbody > tr > td`) |
 | ReactVirtualized__Table__sortableHeaderColumn | Applied to header columns that are sortable |
 | ReactVirtualized__Table__sortableHeaderIcon | SVG sort indicator |
+
+### columnHeaderRenderer
+
+This is an advanced property.
+It is useful for situations where you require additional hooks into `Table` (eg customizing the output tag name for each column header).
+You may want to start by forking the [`defaultTableColumnHeaderRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultColumnHeaderRenderer.js) function.
+
+This function accepts the following named parameters:
+
+| Property | Description |
+|:---|:---|
+| a11Props | A11y related properties |
+| className | ColumnHeader class name |
+| columData | Additional column data |
+| headerContent | React node |
+| key | Iterator key |
+| style | Header style object |
 
 ### headerRowRenderer
 

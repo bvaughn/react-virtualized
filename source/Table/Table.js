@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import React, { PureComponent } from "react";
 import { findDOMNode } from "react-dom";
 import Grid, { accessibilityOverscanIndicesGetter } from "../Grid";
+import defaultColumnHeaderRenderer from "./defaultColumnHeaderRenderer";
 import defaultRowRenderer from "./defaultRowRenderer";
 import defaultHeaderRowRenderer from "./defaultHeaderRowRenderer";
 import SortDirection from "./SortDirection";
@@ -39,6 +40,19 @@ export default class Table extends PureComponent {
 
     /** Optional CSS class name */
     className: PropTypes.string,
+
+    /**
+     * Responsible for rendering a column header given a header content element:
+     * Should implement the following interface: ({
+     *   a11yProps: any,
+     *   className: string,
+     *   columnData: any,
+     *   headerContent: any,
+     *   key: string,
+     *   style: any
+     * }): PropTypes.node
+     */
+    columnHeaderRenderer: PropTypes.func,
 
     /** Disable rendering the header at all */
     disableHeader: PropTypes.bool,
@@ -218,6 +232,7 @@ export default class Table extends PureComponent {
   };
 
   static defaultProps = {
+    columnHeaderRenderer: defaultColumnHeaderRenderer,
     disableHeader: false,
     estimatedRowSize: 30,
     headerHeight: 0,
@@ -474,8 +489,9 @@ export default class Table extends PureComponent {
     );
   }
 
-  _createHeader({ column, index }) {
+  _createColumnHeader({ column, index }) {
     const {
+      columnHeaderRenderer,
       headerClassName,
       headerStyle,
       onHeaderClick,
@@ -493,8 +509,9 @@ export default class Table extends PureComponent {
       defaultSortDirection
     } = column.props;
     const sortEnabled = !disableSort && sort;
+    const key = `Header-Col${index}`;
 
-    const classNames = cn(
+    const className = cn(
       "ReactVirtualized__Table__headerColumn",
       headerClassName,
       column.props.headerClassName,
@@ -504,7 +521,7 @@ export default class Table extends PureComponent {
     );
     const style = this._getFlexStyleForColumn(column, headerStyle);
 
-    const renderedHeader = headerRenderer({
+    const headerContent = headerRenderer({
       columnData,
       dataKey,
       disableSort,
@@ -559,16 +576,14 @@ export default class Table extends PureComponent {
       a11yProps.id = id;
     }
 
-    return (
-      <div
-        {...a11yProps}
-        key={`Header-Col${index}`}
-        className={classNames}
-        style={style}
-      >
-        {renderedHeader}
-      </div>
-    );
+    return columnHeaderRenderer({
+      a11yProps,
+      className,
+      columnData,
+      headerContent,
+      key,
+      style
+    });
   }
 
   _createRow({ rowIndex: index, isScrolling, key, parent, style }) {
@@ -663,7 +678,9 @@ export default class Table extends PureComponent {
     const { children, disableHeader } = this.props;
     const items = disableHeader ? [] : React.Children.toArray(children);
 
-    return items.map((column, index) => this._createHeader({ column, index }));
+    return items.map((column, index) =>
+      this._createColumnHeader({ column, index })
+    );
   }
 
   _getRowHeight(rowIndex) {
