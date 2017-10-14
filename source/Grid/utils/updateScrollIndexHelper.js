@@ -1,6 +1,6 @@
 // @flow
 
-import type { Alignment } from "../types";
+import type { Alignment, CellSize } from "../types";
 
 import ScalingCellSizeAndPositionManager from "./ScalingCellSizeAndPositionManager.js";
 
@@ -11,7 +11,7 @@ import ScalingCellSizeAndPositionManager from "./ScalingCellSizeAndPositionManag
 
 type Params = {
   // Width or height of cells for the current axis
-  cellSize?: number,
+  cellSize?: CellSize,
 
   // Manages size and position metadata of cells
   cellSizeAndPositionManager: ScalingCellSizeAndPositionManager,
@@ -20,7 +20,7 @@ type Params = {
   previousCellsCount: number,
 
   // Previous width or height of cells
-  previousCellSize: ?number,
+  previousCellSize: CellSize,
 
   previousScrollToAlignment: Alignment,
 

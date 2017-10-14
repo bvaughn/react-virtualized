@@ -657,10 +657,7 @@ export default class Grid extends React.PureComponent {
       updateScrollIndexHelper({
         cellSizeAndPositionManager: this._columnSizeAndPositionManager,
         previousCellsCount: prevProps.columnCount,
-        previousCellSize:
-          typeof prevProps.columnWidth === "number"
-            ? prevProps.columnWidth
-            : null,
+        previousCellSize: prevProps.columnWidth,
         previousScrollToAlignment: prevProps.scrollToAlignment,
         previousScrollToIndex: prevProps.scrollToColumn,
         previousSize: prevProps.width,
@@ -681,8 +678,7 @@ export default class Grid extends React.PureComponent {
       updateScrollIndexHelper({
         cellSizeAndPositionManager: this._rowSizeAndPositionManager,
         previousCellsCount: prevProps.rowCount,
-        previousCellSize:
-          typeof prevProps.rowHeight === "number" ? prevProps.rowHeight : null,
+        previousCellSize: prevProps.rowHeight,
         previousScrollToAlignment: prevProps.scrollToAlignment,
         previousScrollToIndex: prevProps.scrollToRow,
         previousSize: prevProps.height,
