@@ -27,7 +27,6 @@
     "lint": "eslint 'source/**/*.js'",
     "typecheck": "flow check",
     "prebuild": "npm run typecheck && npm run lint",
-    "predeploy": "cp ./circle.yml ./build/",
     "prettier": "prettier --config .prettierrc --write '{playground,source}/**/*.js'",
     "prettier:diff": "prettier --config .prettierrc --list-different '{playground,source}/**/*.js'",
     "postpublish": "npm run deploy",
