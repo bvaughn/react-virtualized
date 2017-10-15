@@ -79,7 +79,9 @@ export default function createDetectElementResize(nonce) {
 
       var element = this;
       resetTriggers(this);
-      if (this.__resizeRAF__) cancelFrame(this.__resizeRAF__);
+      if (this.__resizeRAF__) {
+        cancelFrame(this.__resizeRAF__);
+      }
       this.__resizeRAF__ = requestFrame(function() {
         if (checkTriggers(element)) {
           element.__resizeLast__.width = element.offsetWidth;
@@ -160,8 +162,9 @@ export default function createDetectElementResize(nonce) {
   };
 
   var addResizeListener = function(element, fn) {
-    if (attachEvent) element.attachEvent('onresize', fn);
-    else {
+    if (attachEvent) {
+      element.attachEvent('onresize', fn);
+    } else {
       if (!element.__resizeTriggers__) {
         var elementStyle = _window.getComputedStyle(element);
         if (elementStyle && elementStyle.position == 'static') {
@@ -184,7 +187,9 @@ export default function createDetectElementResize(nonce) {
           element.__resizeTriggers__.__animationListener__ = function animationListener(
             e,
           ) {
-            if (e.animationName == animationName) resetTriggers(element);
+            if (e.animationName == animationName) {
+              resetTriggers(element);
+            }
           };
           element.__resizeTriggers__.addEventListener(
             animationstartevent,
@@ -197,8 +202,9 @@ export default function createDetectElementResize(nonce) {
   };
 
   var removeResizeListener = function(element, fn) {
-    if (attachEvent) element.detachEvent('onresize', fn);
-    else {
+    if (attachEvent) {
+      element.detachEvent('onresize', fn);
+    } else {
       element.__resizeListeners__.splice(
         element.__resizeListeners__.indexOf(fn),
         1,

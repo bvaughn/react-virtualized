@@ -23,7 +23,7 @@ describe('Collection', () => {
     const {cellCount = CELLS.length} = props;
 
     function defaultCellSizeAndPositionGetter({index}) {
-      index = index % cellCount;
+      index %= cellCount;
 
       return CELLS[index];
     }
