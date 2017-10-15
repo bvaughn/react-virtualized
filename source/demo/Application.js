@@ -1,44 +1,44 @@
-import Immutable from "immutable";
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import { Redirect } from "react-router";
-import { HashRouter, Route } from "react-router-dom";
+import Immutable from 'immutable';
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
+import {Redirect} from 'react-router';
+import {HashRouter, Route} from 'react-router-dom';
 
-import ComponentLink from "./ComponentLink";
-import styles from "./Application.css";
-import NavLink from "./NavLink";
-import Wizard from "./Wizard";
-import { TYPES } from "./Icon";
-import { generateRandomList } from "./utils";
+import ComponentLink from './ComponentLink';
+import styles from './Application.css';
+import NavLink from './NavLink';
+import Wizard from './Wizard';
+import {TYPES} from './Icon';
+import {generateRandomList} from './utils';
 
-import ArrowKeyStepperExample from "../ArrowKeyStepper/ArrowKeyStepper.example";
-import AutoSizerExample from "../AutoSizer/AutoSizer.example";
-import CellMeasurerExample from "../CellMeasurer/CellMeasurer.example";
-import CollectionExample from "../Collection/Collection.example";
-import ColumnSizerExample from "../ColumnSizer/ColumnSizer.example";
-import GridExample from "../Grid/Grid.example";
-import InfiniteLoaderExample from "../InfiniteLoader/InfiniteLoader.example";
-import ListExample from "../List/List.example";
-import MasonryExample from "../Masonry/Masonry.example";
-import MultiGridExample from "../MultiGrid/MultiGrid.example";
-import ScrollSyncExample from "../ScrollSync/ScrollSync.example";
-import TableExample from "../Table/Table.example";
-import WindowScrollerExample from "../WindowScroller/WindowScroller.example";
+import ArrowKeyStepperExample from '../ArrowKeyStepper/ArrowKeyStepper.example';
+import AutoSizerExample from '../AutoSizer/AutoSizer.example';
+import CellMeasurerExample from '../CellMeasurer/CellMeasurer.example';
+import CollectionExample from '../Collection/Collection.example';
+import ColumnSizerExample from '../ColumnSizer/ColumnSizer.example';
+import GridExample from '../Grid/Grid.example';
+import InfiniteLoaderExample from '../InfiniteLoader/InfiniteLoader.example';
+import ListExample from '../List/List.example';
+import MasonryExample from '../Masonry/Masonry.example';
+import MultiGridExample from '../MultiGrid/MultiGrid.example';
+import ScrollSyncExample from '../ScrollSync/ScrollSync.example';
+import TableExample from '../Table/Table.example';
+import WindowScrollerExample from '../WindowScroller/WindowScroller.example';
 
 const COMPONENT_EXAMPLES_MAP = {
-  "/components/ArrowKeyStepper": ArrowKeyStepperExample,
-  "/components/AutoSizer": AutoSizerExample,
-  "/components/CellMeasurer": CellMeasurerExample,
-  "/components/Collection": CollectionExample,
-  "/components/ColumnSizer": ColumnSizerExample,
-  "/components/Grid": GridExample,
-  "/components/Masonry": MasonryExample,
-  "/components/InfiniteLoader": InfiniteLoaderExample,
-  "/components/List": ListExample,
-  "/components/MultiGrid": MultiGridExample,
-  "/components/ScrollSync": ScrollSyncExample,
-  "/components/Table": TableExample,
-  "/components/WindowScroller": WindowScrollerExample
+  '/components/ArrowKeyStepper': ArrowKeyStepperExample,
+  '/components/AutoSizer': AutoSizerExample,
+  '/components/CellMeasurer': CellMeasurerExample,
+  '/components/Collection': CollectionExample,
+  '/components/ColumnSizer': ColumnSizerExample,
+  '/components/Grid': GridExample,
+  '/components/Masonry': MasonryExample,
+  '/components/InfiniteLoader': InfiniteLoaderExample,
+  '/components/List': ListExample,
+  '/components/MultiGrid': MultiGridExample,
+  '/components/ScrollSync': ScrollSyncExample,
+  '/components/Table': TableExample,
+  '/components/WindowScroller': WindowScrollerExample,
 };
 
 // HACK Generate arbitrary data for use in example components :)
@@ -49,11 +49,11 @@ export default class Application extends PureComponent {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
     customElement: PropTypes.any,
     isScrollingCustomElement: PropTypes.bool.isRequired,
-    setScrollingCustomElement: PropTypes.func
+    setScrollingCustomElement: PropTypes.func,
   };
 
   state = {
-    isScrollingCustomElement: false
+    isScrollingCustomElement: false,
   };
 
   constructor(props) {
@@ -62,21 +62,21 @@ export default class Application extends PureComponent {
   }
 
   setScrollingCustomElement(custom) {
-    this.setState({ isScrollingCustomElement: custom });
+    this.setState({isScrollingCustomElement: custom});
   }
 
   getChildContext() {
-    const { customElement, isScrollingCustomElement } = this.state;
+    const {customElement, isScrollingCustomElement} = this.state;
     return {
       list,
       customElement,
       isScrollingCustomElement,
-      setScrollingCustomElement: this.setScrollingCustomElement
+      setScrollingCustomElement: this.setScrollingCustomElement,
     };
   }
 
   render() {
-    const { isScrollingCustomElement } = this.state;
+    const {isScrollingCustomElement} = this.state;
     const bodyStyle = isScrollingCustomElement
       ? styles.ScrollingBody
       : styles.Body;
@@ -104,20 +104,17 @@ export default class Application extends PureComponent {
                 </NavLink>
                 <NavLink
                   href="https://github.com/bvaughn/react-virtualized"
-                  iconType={TYPES.SOURCE}
-                >
+                  iconType={TYPES.SOURCE}>
                   Source
                 </NavLink>
                 <NavLink
                   href="https://github.com/bvaughn/react-virtualized/tree/master/docs#documentation"
-                  iconType={TYPES.DOCUMENTATION}
-                >
+                  iconType={TYPES.DOCUMENTATION}>
                   Documentation
                 </NavLink>
                 <NavLink
                   href="https://github.com/bvaughn/react-virtualized/issues"
-                  iconType={TYPES.ISSUES}
-                >
+                  iconType={TYPES.ISSUES}>
                   Issues
                 </NavLink>
               </ul>
@@ -163,17 +160,16 @@ export default class Application extends PureComponent {
 
           <div
             className={bodyStyle}
-            ref={e => this.setState({ customElement: e })}
-          >
+            ref={e => this.setState({customElement: e})}>
             <div className={styles.column}>
               <Route path="/wizard" component={Wizard} />
-              {Object.keys(COMPONENT_EXAMPLES_MAP).map(route =>
+              {Object.keys(COMPONENT_EXAMPLES_MAP).map(route => (
                 <Route
                   key={route}
                   path={route}
                   component={COMPONENT_EXAMPLES_MAP[route]}
                 />
-              )}
+              ))}
               <Route
                 exact
                 path="/"

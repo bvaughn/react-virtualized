@@ -1,7 +1,7 @@
 /** @flow */
-import { PureComponent } from "react";
-import PropTypes from "prop-types";
-import createCallbackMemoizer from "../utils/createCallbackMemoizer";
+import {PureComponent} from 'react';
+import PropTypes from 'prop-types';
+import createCallbackMemoizer from '../utils/createCallbackMemoizer';
 
 /**
  * Higher-order component that manages lazy-loading for "infinite" data.
@@ -51,13 +51,13 @@ export default class InfiniteLoader extends PureComponent {
      * A threshold X means that data will start loading when a user scrolls within X rows.
      * This value defaults to 15.
      */
-    threshold: PropTypes.number.isRequired
+    threshold: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
     minimumBatchSize: 10,
     rowCount: 0,
-    threshold: 15
+    threshold: 15,
   };
 
   constructor(props, context) {
@@ -78,16 +78,16 @@ export default class InfiniteLoader extends PureComponent {
   }
 
   render() {
-    const { children } = this.props;
+    const {children} = this.props;
 
     return children({
       onRowsRendered: this._onRowsRendered,
-      registerChild: this._registerChild
+      registerChild: this._registerChild,
     });
   }
 
   _loadUnloadedRanges(unloadedRanges) {
-    const { loadMoreRows } = this.props;
+    const {loadMoreRows} = this.props;
 
     unloadedRanges.forEach(unloadedRange => {
       let promise = loadMoreRows(unloadedRange);
@@ -100,13 +100,13 @@ export default class InfiniteLoader extends PureComponent {
               lastRenderedStartIndex: this._lastRenderedStartIndex,
               lastRenderedStopIndex: this._lastRenderedStopIndex,
               startIndex: unloadedRange.startIndex,
-              stopIndex: unloadedRange.stopIndex
+              stopIndex: unloadedRange.stopIndex,
             })
           ) {
             if (this._registeredChild) {
               forceUpdateReactVirtualizedComponent(
                 this._registeredChild,
-                this._lastRenderedStartIndex
+                this._lastRenderedStartIndex,
               );
             }
           }
@@ -115,7 +115,7 @@ export default class InfiniteLoader extends PureComponent {
     });
   }
 
-  _onRowsRendered({ startIndex, stopIndex }) {
+  _onRowsRendered({startIndex, stopIndex}) {
     this._lastRenderedStartIndex = startIndex;
     this._lastRenderedStopIndex = stopIndex;
 
@@ -123,28 +123,28 @@ export default class InfiniteLoader extends PureComponent {
   }
 
   _doStuff(startIndex, stopIndex) {
-    const { isRowLoaded, minimumBatchSize, rowCount, threshold } = this.props;
+    const {isRowLoaded, minimumBatchSize, rowCount, threshold} = this.props;
 
     const unloadedRanges = scanForUnloadedRanges({
       isRowLoaded,
       minimumBatchSize,
       rowCount,
       startIndex: Math.max(0, startIndex - threshold),
-      stopIndex: Math.min(rowCount - 1, stopIndex + threshold)
+      stopIndex: Math.min(rowCount - 1, stopIndex + threshold),
     });
 
     // For memoize comparison
     const squashedUnloadedRanges = unloadedRanges.reduce(
       (reduced, unloadedRange) =>
         reduced.concat([unloadedRange.startIndex, unloadedRange.stopIndex]),
-      []
+      [],
     );
 
     this._loadMoreRowsMemoizer({
       callback: () => {
         this._loadUnloadedRanges(unloadedRanges);
       },
-      indices: { squashedUnloadedRanges }
+      indices: {squashedUnloadedRanges},
     });
   }
 
@@ -160,7 +160,7 @@ export function isRangeVisible({
   lastRenderedStartIndex,
   lastRenderedStopIndex,
   startIndex,
-  stopIndex
+  stopIndex,
 }) {
   return !(
     startIndex > lastRenderedStopIndex || stopIndex < lastRenderedStartIndex
@@ -175,7 +175,7 @@ export function scanForUnloadedRanges({
   minimumBatchSize,
   rowCount,
   startIndex,
-  stopIndex
+  stopIndex,
 }) {
   const unloadedRanges = [];
 
@@ -183,7 +183,7 @@ export function scanForUnloadedRanges({
   let rangeStopIndex = null;
 
   for (let index = startIndex; index <= stopIndex; index++) {
-    let loaded = isRowLoaded({ index });
+    let loaded = isRowLoaded({index});
 
     if (!loaded) {
       rangeStopIndex = index;
@@ -193,7 +193,7 @@ export function scanForUnloadedRanges({
     } else if (rangeStopIndex !== null) {
       unloadedRanges.push({
         startIndex: rangeStartIndex,
-        stopIndex: rangeStopIndex
+        stopIndex: rangeStopIndex,
       });
 
       rangeStartIndex = rangeStopIndex = null;
@@ -205,11 +205,11 @@ export function scanForUnloadedRanges({
   if (rangeStopIndex !== null) {
     const potentialStopIndex = Math.min(
       Math.max(rangeStopIndex, rangeStartIndex + minimumBatchSize - 1),
-      rowCount - 1
+      rowCount - 1,
     );
 
     for (let index = rangeStopIndex + 1; index <= potentialStopIndex; index++) {
-      if (!isRowLoaded({ index })) {
+      if (!isRowLoaded({index})) {
         rangeStopIndex = index;
       } else {
         break;
@@ -218,7 +218,7 @@ export function scanForUnloadedRanges({
 
     unloadedRanges.push({
       startIndex: rangeStartIndex,
-      stopIndex: rangeStopIndex
+      stopIndex: rangeStopIndex,
     });
   }
 
@@ -234,7 +234,7 @@ export function scanForUnloadedRanges({
     ) {
       let index = firstUnloadedRange.startIndex - 1;
 
-      if (!isRowLoaded({ index })) {
+      if (!isRowLoaded({index})) {
         firstUnloadedRange.startIndex = index;
       } else {
         break;
@@ -258,10 +258,10 @@ export function scanForUnloadedRanges({
  */
 export function forceUpdateReactVirtualizedComponent(
   component,
-  currentIndex = 0
+  currentIndex = 0,
 ) {
   const recomputeSize =
-    typeof component.recomputeGridSize === "function"
+    typeof component.recomputeGridSize === 'function'
       ? component.recomputeGridSize
       : component.recomputeRowHeights;
 

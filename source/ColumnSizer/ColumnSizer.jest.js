@@ -1,19 +1,19 @@
-import React from "react";
-import { findDOMNode } from "react-dom";
-import { render } from "../TestUtils";
-import ColumnSizer from "./ColumnSizer";
-import Grid from "../Grid";
+import React from 'react';
+import {findDOMNode} from 'react-dom';
+import {render} from '../TestUtils';
+import ColumnSizer from './ColumnSizer';
+import Grid from '../Grid';
 
-describe("ColumnSizer", () => {
+describe('ColumnSizer', () => {
   function getMarkup(
     {
       columnMinWidth = undefined,
       columnMaxWidth = undefined,
       columnCount = 10,
-      width = 200
-    } = {}
+      width = 200,
+    } = {},
   ) {
-    function cellRenderer({ columnIndex, key, rowIndex, style }) {
+    function cellRenderer({columnIndex, key, rowIndex, style}) {
       return (
         <div className="gridItem" key={key} style={style}>
           {`row:${rowIndex}, column:${columnIndex}`}
@@ -26,9 +26,8 @@ describe("ColumnSizer", () => {
         columnMinWidth={columnMinWidth}
         columnMaxWidth={columnMaxWidth}
         columnCount={columnCount}
-        width={width}
-      >
-        {({ adjustedWidth, columnWidth, registerChild }) =>
+        width={width}>
+        {({adjustedWidth, columnWidth, registerChild}) => (
           <div>
             <Grid
               columnCount={columnCount}
@@ -43,102 +42,103 @@ describe("ColumnSizer", () => {
             <div className="debug">
               {`adjustedWidth:${adjustedWidth} columnWidth:${columnWidth}`}
             </div>
-          </div>}
+          </div>
+        )}
       </ColumnSizer>
     );
   }
 
-  it("should distribute column widths evenly if no min/max boundaries have been set", () => {
+  it('should distribute column widths evenly if no min/max boundaries have been set', () => {
     const rendered = findDOMNode(render(getMarkup()));
-    expect(rendered.querySelector(".debug").textContent).toContain(
-      "columnWidth:20"
+    expect(rendered.querySelector('.debug').textContent).toContain(
+      'columnWidth:20',
     );
   });
 
-  it("should respect :columnMaxWidth if specified", () => {
+  it('should respect :columnMaxWidth if specified', () => {
     const rendered = findDOMNode(
       render(
         getMarkup({
-          columnMaxWidth: 10
-        })
-      )
+          columnMaxWidth: 10,
+        }),
+      ),
     );
-    expect(rendered.querySelector(".debug").textContent).toContain(
-      "columnWidth:10"
+    expect(rendered.querySelector('.debug').textContent).toContain(
+      'columnWidth:10',
     );
   });
 
-  it("should respect :columnMinWidth if specified", () => {
+  it('should respect :columnMinWidth if specified', () => {
     const rendered = findDOMNode(
       render(
         getMarkup({
-          columnMinWidth: 30
-        })
-      )
+          columnMinWidth: 30,
+        }),
+      ),
     );
-    expect(rendered.querySelector(".debug").textContent).toContain(
-      "columnWidth:30"
+    expect(rendered.querySelector('.debug').textContent).toContain(
+      'columnWidth:30',
     );
   });
 
-  describe("recomputeGridSize", () => {
+  describe('recomputeGridSize', () => {
     function helper(updatedProps, expectedTextContent) {
       const renderedA = findDOMNode(render(getMarkup()));
-      expect(renderedA.querySelector(".debug").textContent).toContain(
-        "columnWidth:20"
+      expect(renderedA.querySelector('.debug').textContent).toContain(
+        'columnWidth:20',
       );
 
       const renderedB = findDOMNode(render(getMarkup(updatedProps)));
-      expect(renderedB.querySelector(".debug").textContent).toContain(
-        expectedTextContent
+      expect(renderedB.querySelector('.debug').textContent).toContain(
+        expectedTextContent,
       );
     }
 
-    it("should recompute metadata sizes if :columnMinWidth changes", () => {
-      helper({ columnMinWidth: 30 }, "columnWidth:30");
+    it('should recompute metadata sizes if :columnMinWidth changes', () => {
+      helper({columnMinWidth: 30}, 'columnWidth:30');
     });
 
-    it("should recompute metadata sizes if :columnMaxWidth changes", () => {
-      helper({ columnMaxWidth: 15 }, "columnWidth:15");
+    it('should recompute metadata sizes if :columnMaxWidth changes', () => {
+      helper({columnMaxWidth: 15}, 'columnWidth:15');
     });
 
-    it("should recompute metadata sizes if :width changes", () => {
-      helper({ width: 300 }, "columnWidth:30");
+    it('should recompute metadata sizes if :width changes', () => {
+      helper({width: 300}, 'columnWidth:30');
     });
 
-    it("should recompute metadata sizes if :columnCount changes", () => {
-      helper({ columnCount: 2 }, "columnWidth:100");
+    it('should recompute metadata sizes if :columnCount changes', () => {
+      helper({columnCount: 2}, 'columnWidth:100');
     });
   });
 
-  it("should pass the :width as :adjustedWidth if columns require more than the :width to be displayed", () => {
+  it('should pass the :width as :adjustedWidth if columns require more than the :width to be displayed', () => {
     const rendered = findDOMNode(
       render(
         getMarkup({
-          columnMinWidth: 30
-        })
-      )
+          columnMinWidth: 30,
+        }),
+      ),
     );
-    expect(rendered.querySelector(".debug").textContent).toContain(
-      "adjustedWidth:200"
+    expect(rendered.querySelector('.debug').textContent).toContain(
+      'adjustedWidth:200',
     );
   });
 
-  it("should pass an :adjustedWidth if columns require less than the :width to be displayed", () => {
+  it('should pass an :adjustedWidth if columns require less than the :width to be displayed', () => {
     const rendered = findDOMNode(
       render(
         getMarkup({
-          columnMaxWidth: 10
-        })
-      )
+          columnMaxWidth: 10,
+        }),
+      ),
     );
-    expect(rendered.querySelector(".debug").textContent).toContain(
-      "adjustedWidth:100"
+    expect(rendered.querySelector('.debug').textContent).toContain(
+      'adjustedWidth:100',
     );
   });
 
-  it("should error if the registered child is not a Grid or a MultiGrid", () => {
-    spyOn(console, "error");
+  it('should error if the registered child is not a Grid or a MultiGrid', () => {
+    spyOn(console, 'error');
 
     expect(() => {
       render(
@@ -146,10 +146,9 @@ describe("ColumnSizer", () => {
           columnMinWidth={100}
           columnMaxWidth={100}
           columnCount={100}
-          width={100}
-        >
-          {({ registerChild }) => <div ref={registerChild} />}
-        </ColumnSizer>
+          width={100}>
+          {({registerChild}) => <div ref={registerChild} />}
+        </ColumnSizer>,
       );
     }).toThrow();
   });

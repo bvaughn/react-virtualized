@@ -1,16 +1,16 @@
 /** @flow */
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import Immutable from "immutable";
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
+import Immutable from 'immutable';
 import {
   ContentBox,
   ContentBoxHeader,
-  ContentBoxParagraph
-} from "../demo/ContentBox";
-import { LabeledInput, InputRow } from "../demo/LabeledInput";
-import AutoSizer from "../AutoSizer";
-import Collection from "./Collection";
-import styles from "./Collection.example.css";
+  ContentBoxParagraph,
+} from '../demo/ContentBox';
+import {LabeledInput, InputRow} from '../demo/LabeledInput';
+import AutoSizer from '../AutoSizer';
+import Collection from './Collection';
+import styles from './Collection.example.css';
 
 // Defines a pattern of sizes and positions for a range of 10 rotating cells
 // These cells cover an area of 600 (wide) x 400 (tall)
@@ -19,7 +19,7 @@ const CELL_WIDTH = 75;
 
 export default class CollectionExample extends PureComponent {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(Immutable.List).isRequired,
   };
 
   constructor(props, context) {
@@ -32,24 +32,24 @@ export default class CollectionExample extends PureComponent {
       horizontalOverscanSize: 0,
       scrollToCell: undefined,
       showScrollingPlaceholder: false,
-      verticalOverscanSize: 0
+      verticalOverscanSize: 0,
     };
 
     this._columnYMap = [];
 
     this._cellRenderer = this._cellRenderer.bind(this);
     this._cellSizeAndPositionGetter = this._cellSizeAndPositionGetter.bind(
-      this
+      this,
     );
     this._noContentRenderer = this._noContentRenderer.bind(this);
     this._onCellCountChange = this._onCellCountChange.bind(this);
     this._onHeightChange = this._onHeightChange.bind(this);
     this._onHorizontalOverscanSizeChange = this._onHorizontalOverscanSizeChange.bind(
-      this
+      this,
     );
     this._onScrollToCellChange = this._onScrollToCellChange.bind(this);
     this._onVerticalOverscanSizeChange = this._onVerticalOverscanSizeChange.bind(
-      this
+      this,
     );
   }
 
@@ -60,7 +60,7 @@ export default class CollectionExample extends PureComponent {
       horizontalOverscanSize,
       scrollToCell,
       showScrollingPlaceholder,
-      verticalOverscanSize
+      verticalOverscanSize,
     } = this.state;
 
     return (
@@ -86,7 +86,7 @@ export default class CollectionExample extends PureComponent {
               type="checkbox"
               onChange={event =>
                 this.setState({
-                  showScrollingPlaceholder: event.target.checked
+                  showScrollingPlaceholder: event.target.checked,
                 })}
             />
             Show placeholder while scrolling?
@@ -105,7 +105,7 @@ export default class CollectionExample extends PureComponent {
             name="onScrollToCell"
             placeholder="Index..."
             onChange={this._onScrollToCellChange}
-            value={scrollToCell || ""}
+            value={scrollToCell || ''}
           />
           <LabeledInput
             label="Height"
@@ -128,7 +128,7 @@ export default class CollectionExample extends PureComponent {
         </InputRow>
 
         <AutoSizer disableHeight>
-          {({ width }) =>
+          {({width}) => (
             <Collection
               cellCount={cellCount}
               cellRenderer={this._cellRenderer}
@@ -140,15 +140,16 @@ export default class CollectionExample extends PureComponent {
               scrollToCell={scrollToCell}
               verticalOverscanSize={verticalOverscanSize}
               width={width}
-            />}
+            />
+          )}
         </AutoSizer>
       </ContentBox>
     );
   }
 
-  _cellRenderer({ index, isScrolling, key, style }) {
-    const { list } = this.context;
-    const { showScrollingPlaceholder } = this.state;
+  _cellRenderer({index, isScrolling, key, style}) {
+    const {list} = this.context;
+    const {showScrollingPlaceholder} = this.state;
 
     const datum = list.get(index % list.size);
 
@@ -157,14 +158,14 @@ export default class CollectionExample extends PureComponent {
 
     return (
       <div className={styles.cell} key={key} style={style}>
-        {showScrollingPlaceholder && isScrolling ? "..." : index}
+        {showScrollingPlaceholder && isScrolling ? '...' : index}
       </div>
     );
   }
 
-  _cellSizeAndPositionGetter({ index }) {
-    const { list } = this.context;
-    const { columnCount } = this.state;
+  _cellSizeAndPositionGetter({index}) {
+    const {list} = this.context;
+    const {columnCount} = this.state;
 
     const columnPosition = index % (columnCount || 1);
     const datum = list.get(index % list.size);
@@ -181,7 +182,7 @@ export default class CollectionExample extends PureComponent {
       height,
       width,
       x,
-      y
+      y,
     };
   }
 
@@ -192,7 +193,7 @@ export default class CollectionExample extends PureComponent {
   _onHorizontalOverscanSizeChange(event) {
     const horizontalOverscanSize = parseInt(event.target.value, 10) || 0;
 
-    this.setState({ horizontalOverscanSize });
+    this.setState({horizontalOverscanSize});
   }
 
   _noContentRenderer() {
@@ -206,34 +207,34 @@ export default class CollectionExample extends PureComponent {
 
     this.setState({
       cellCount,
-      columnCount: this._getColumnCount(cellCount)
+      columnCount: this._getColumnCount(cellCount),
     });
   }
 
   _onHeightChange(event) {
     const height = parseInt(event.target.value, 10) || 0;
 
-    this.setState({ height });
+    this.setState({height});
   }
 
   _onScrollToCellChange(event) {
-    const { cellCount } = this.state;
+    const {cellCount} = this.state;
 
     let scrollToCell = Math.min(
       cellCount - 1,
-      parseInt(event.target.value, 10)
+      parseInt(event.target.value, 10),
     );
 
     if (isNaN(scrollToCell)) {
       scrollToCell = undefined;
     }
 
-    this.setState({ scrollToCell });
+    this.setState({scrollToCell});
   }
 
   _onVerticalOverscanSizeChange(event) {
     const verticalOverscanSize = parseInt(event.target.value, 10) || 0;
 
-    this.setState({ verticalOverscanSize });
+    this.setState({verticalOverscanSize});
   }
 }

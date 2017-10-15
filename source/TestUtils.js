@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom";
+import ReactDOM from 'react-dom';
 
 /**
  * Helper method for testing components that may use Portal and thus require cleanup.
@@ -7,7 +7,7 @@ import ReactDOM from "react-dom";
  */
 export function render(markup) {
   if (!render._mountNode) {
-    render._mountNode = document.createElement("div");
+    render._mountNode = document.createElement('div');
 
     // Unless we attach the mount-node to body, getBoundingClientRect() won't work
     document.body.appendChild(render._mountNode);

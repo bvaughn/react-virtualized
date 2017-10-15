@@ -1,33 +1,32 @@
-import cn from "classnames";
-import PropTypes from "prop-types";
-import React from "react";
-import styles from "./Icon.css";
+import cn from 'classnames';
+import PropTypes from 'prop-types';
+import React from 'react';
+import styles from './Icon.css';
 
 // TODO: Remove unused BURGER and ARROW_LEFT?
 // TODO: Rotate ARROW_UP to create ARROW_DOWN
 export const TYPES = {
-  COMPONENTS: "COMPONENTS",
-  DOCUMENTATION: "DOCUMENTATION",
-  ISSUES: "ISSUES",
-  SOURCE: "SOURCE",
-  WIZARD: "WIZARD"
+  COMPONENTS: 'COMPONENTS',
+  DOCUMENTATION: 'DOCUMENTATION',
+  ISSUES: 'ISSUES',
+  SOURCE: 'SOURCE',
+  WIZARD: 'WIZARD',
 };
 
 Icon.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
-  type: PropTypes.oneOf(Object.keys(TYPES)).isRequired
+  type: PropTypes.oneOf(Object.keys(TYPES)).isRequired,
 };
 
-export default function Icon({ className, title, type }) {
+export default function Icon({className, title, type}) {
   return (
     <svg
       className={cn(styles.Icon, className)}
       height={12}
       title={title}
       viewBox="0 0 24 24"
-      width={12}
-    >
+      width={12}>
       <path d="M0 0h24v24H0V0z" fill="none" />
 
       {getIconData(type)}

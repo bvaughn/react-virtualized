@@ -1,23 +1,23 @@
 /** @flow */
-import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import {
   ContentBox,
   ContentBoxHeader,
-  ContentBoxParagraph
-} from "../demo/ContentBox";
-import Immutable from "immutable";
-import AutoSizer from "../AutoSizer";
-import InfiniteLoader from "./InfiniteLoader";
-import List from "../List";
-import styles from "./InfiniteLoader.example.css";
+  ContentBoxParagraph,
+} from '../demo/ContentBox';
+import Immutable from 'immutable';
+import AutoSizer from '../AutoSizer';
+import InfiniteLoader from './InfiniteLoader';
+import List from '../List';
+import styles from './InfiniteLoader.example.css';
 
 const STATUS_LOADING = 1;
 const STATUS_LOADED = 2;
 
 export default class InfiniteLoaderExample extends PureComponent {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(Immutable.List).isRequired,
   };
 
   constructor(props) {
@@ -26,7 +26,7 @@ export default class InfiniteLoaderExample extends PureComponent {
     this.state = {
       loadedRowCount: 0,
       loadedRowsMap: {},
-      loadingRowCount: 0
+      loadingRowCount: 0,
     };
 
     this._timeoutIdMap = {};
@@ -44,8 +44,8 @@ export default class InfiniteLoaderExample extends PureComponent {
   }
 
   render() {
-    const { list } = this.context;
-    const { loadedRowCount, loadingRowCount } = this.state;
+    const {list} = this.context;
+    const {loadedRowCount, loadingRowCount} = this.state;
 
     return (
       <ContentBox>
@@ -76,11 +76,10 @@ export default class InfiniteLoaderExample extends PureComponent {
         <InfiniteLoader
           isRowLoaded={this._isRowLoaded}
           loadMoreRows={this._loadMoreRows}
-          rowCount={list.size}
-        >
-          {({ onRowsRendered, registerChild }) =>
+          rowCount={list.size}>
+          {({onRowsRendered, registerChild}) => (
             <AutoSizer disableHeight>
-              {({ width }) =>
+              {({width}) => (
                 <List
                   ref={registerChild}
                   className={styles.List}
@@ -90,8 +89,10 @@ export default class InfiniteLoaderExample extends PureComponent {
                   rowHeight={30}
                   rowRenderer={this._rowRenderer}
                   width={width}
-                />}
-            </AutoSizer>}
+                />
+              )}
+            </AutoSizer>
+          )}
         </InfiniteLoader>
       </ContentBox>
     );
@@ -101,17 +102,17 @@ export default class InfiniteLoaderExample extends PureComponent {
     this.setState({
       loadedRowCount: 0,
       loadedRowsMap: {},
-      loadingRowCount: 0
+      loadingRowCount: 0,
     });
   }
 
-  _isRowLoaded({ index }) {
-    const { loadedRowsMap } = this.state;
+  _isRowLoaded({index}) {
+    const {loadedRowsMap} = this.state;
     return !!loadedRowsMap[index]; // STATUS_LOADING or STATUS_LOADED
   }
 
-  _loadMoreRows({ startIndex, stopIndex }) {
-    const { loadedRowsMap, loadingRowCount } = this.state;
+  _loadMoreRows({startIndex, stopIndex}) {
+    const {loadedRowsMap, loadingRowCount} = this.state;
     const increment = stopIndex - startIndex + 1;
 
     for (var i = startIndex; i <= stopIndex; i++) {
@@ -119,11 +120,11 @@ export default class InfiniteLoaderExample extends PureComponent {
     }
 
     this.setState({
-      loadingRowCount: loadingRowCount + increment
+      loadingRowCount: loadingRowCount + increment,
     });
 
     const timeoutId = setTimeout(() => {
-      const { loadedRowCount, loadingRowCount } = this.state;
+      const {loadedRowCount, loadingRowCount} = this.state;
 
       delete this._timeoutIdMap[timeoutId];
 
@@ -133,7 +134,7 @@ export default class InfiniteLoaderExample extends PureComponent {
 
       this.setState({
         loadingRowCount: loadingRowCount - increment,
-        loadedRowCount: loadedRowCount + increment
+        loadedRowCount: loadedRowCount + increment,
       });
 
       promiseResolver();
@@ -148,9 +149,9 @@ export default class InfiniteLoaderExample extends PureComponent {
     });
   }
 
-  _rowRenderer({ index, key, style }) {
-    const { list } = this.context;
-    const { loadedRowsMap } = this.state;
+  _rowRenderer({index, key, style}) {
+    const {list} = this.context;
+    const {loadedRowsMap} = this.state;
 
     const row = list.get(index);
     let content;
@@ -159,7 +160,7 @@ export default class InfiniteLoaderExample extends PureComponent {
       content = row.name;
     } else {
       content = (
-        <div className={styles.placeholder} style={{ width: row.size }} />
+        <div className={styles.placeholder} style={{width: row.size}} />
       );
     }
 

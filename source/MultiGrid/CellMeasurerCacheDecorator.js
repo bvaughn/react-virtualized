@@ -1,14 +1,14 @@
 /** @flow */
-import { CellMeasurerCache } from "../CellMeasurer";
+import {CellMeasurerCache} from '../CellMeasurer';
 
 type CellMeasurerCacheDecoratorParams = {
   cellMeasurerCache: CellMeasurerCache,
   columnIndexOffset: number,
-  rowIndexOffset: number
+  rowIndexOffset: number,
 };
 
 type IndexParam = {
-  index: number
+  index: number,
 };
 
 /**
@@ -23,7 +23,7 @@ export default class CellMeasurerCacheDecorator {
     const {
       cellMeasurerCache,
       columnIndexOffset = 0,
-      rowIndexOffset = 0
+      rowIndexOffset = 0,
     } = params;
 
     this._cellMeasurerCache = cellMeasurerCache;
@@ -34,7 +34,7 @@ export default class CellMeasurerCacheDecorator {
   clear(rowIndex: number, columnIndex: number): void {
     this._cellMeasurerCache.clear(
       rowIndex + this._rowIndexOffset,
-      columnIndex + this._columnIndexOffset
+      columnIndex + this._columnIndexOffset,
     );
   }
 
@@ -42,9 +42,9 @@ export default class CellMeasurerCacheDecorator {
     this._cellMeasurerCache.clearAll();
   }
 
-  columnWidth = ({ index }: IndexParam) => {
+  columnWidth = ({index}: IndexParam) => {
     this._cellMeasurerCache.columnWidth({
-      index: index + this._columnIndexOffset
+      index: index + this._columnIndexOffset,
     });
   };
 
@@ -67,27 +67,27 @@ export default class CellMeasurerCacheDecorator {
   getHeight(rowIndex: number, columnIndex: ?number = 0): ?number {
     return this._cellMeasurerCache.getHeight(
       rowIndex + this._rowIndexOffset,
-      columnIndex + this._columnIndexOffset
+      columnIndex + this._columnIndexOffset,
     );
   }
 
   getWidth(rowIndex: number, columnIndex: ?number = 0): ?number {
     return this._cellMeasurerCache.getWidth(
       rowIndex + this._rowIndexOffset,
-      columnIndex + this._columnIndexOffset
+      columnIndex + this._columnIndexOffset,
     );
   }
 
   has(rowIndex: number, columnIndex: ?number = 0): boolean {
     return this._cellMeasurerCache.has(
       rowIndex + this._rowIndexOffset,
-      columnIndex + this._columnIndexOffset
+      columnIndex + this._columnIndexOffset,
     );
   }
 
-  rowHeight = ({ index }: IndexParam) => {
+  rowHeight = ({index}: IndexParam) => {
     this._cellMeasurerCache.rowHeight({
-      index: index + this._rowIndexOffset
+      index: index + this._rowIndexOffset,
     });
   };
 
@@ -95,13 +95,13 @@ export default class CellMeasurerCacheDecorator {
     rowIndex: number,
     columnIndex: number,
     width: number,
-    height: number
+    height: number,
   ): void {
     this._cellMeasurerCache.set(
       rowIndex + this._rowIndexOffset,
       columnIndex + this._columnIndexOffset,
       (width: number),
-      (height: number)
+      (height: number),
     );
   }
 }

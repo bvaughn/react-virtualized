@@ -3,14 +3,14 @@
  * This enables us to more quickly determine which cells to display in a given region of the Window.
  * @flow
  */
-import Section from "./Section";
-import type { Index, SizeAndPositionInfo } from "./types";
+import Section from './Section';
+import type {Index, SizeAndPositionInfo} from './types';
 
 const SECTION_SIZE = 100;
 
 type RegisterCellParams = {
   cellMetadatum: SizeAndPositionInfo,
-  index: number
+  index: number,
 };
 
 /**
@@ -30,13 +30,13 @@ export default class SectionManager {
    * Gets all cell indices contained in the specified region.
    * A region may encompass 1 or more Sections.
    */
-  getCellIndices({ height, width, x, y }: SizeAndPositionInfo): Array<number> {
+  getCellIndices({height, width, x, y}: SizeAndPositionInfo): Array<number> {
     const indices = {};
 
-    this.getSections({ height, width, x, y }).forEach(section =>
+    this.getSections({height, width, x, y}).forEach(section =>
       section.getCellIndices().forEach(index => {
         indices[index] = index;
-      })
+      }),
     );
 
     // Object keys are strings; this function returns numbers
@@ -44,12 +44,12 @@ export default class SectionManager {
   }
 
   /** Get size and position information for the cell specified. */
-  getCellMetadata({ index }: Index): SizeAndPositionInfo {
+  getCellMetadata({index}: Index): SizeAndPositionInfo {
     return this._cellMetadata[index];
   }
 
   /** Get all Sections overlapping the specified region. */
-  getSections({ height, width, x, y }: SizeAndPositionInfo): Array<Section> {
+  getSections({height, width, x, y}: SizeAndPositionInfo): Array<Section> {
     const sectionXStart = Math.floor(x / this._sectionSize);
     const sectionXStop = Math.floor((x + width - 1) / this._sectionSize);
     const sectionYStart = Math.floor(y / this._sectionSize);
@@ -66,7 +66,7 @@ export default class SectionManager {
             height: this._sectionSize,
             width: this._sectionSize,
             x: sectionX * this._sectionSize,
-            y: sectionY * this._sectionSize
+            y: sectionY * this._sectionSize,
           });
         }
 
@@ -85,16 +85,16 @@ export default class SectionManager {
   /** Intended for debugger/test purposes only */
   toString() {
     return Object.keys(this._sections).map(index =>
-      this._sections[index].toString()
+      this._sections[index].toString(),
     );
   }
 
   /** Adds a cell to the appropriate Sections and registers it metadata for later retrievable. */
-  registerCell({ cellMetadatum, index }: RegisterCellParams) {
+  registerCell({cellMetadatum, index}: RegisterCellParams) {
     this._cellMetadata[index] = cellMetadatum;
 
     this.getSections(cellMetadatum).forEach(section =>
-      section.addCellIndex({ index })
+      section.addCellIndex({index}),
     );
   }
 }

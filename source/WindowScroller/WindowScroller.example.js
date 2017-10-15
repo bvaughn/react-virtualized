@@ -1,25 +1,25 @@
 /** @flow */
-import cn from "classnames";
-import Immutable from "immutable";
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import cn from 'classnames';
+import Immutable from 'immutable';
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
-  ContentBoxParagraph
-} from "../demo/ContentBox";
-import { LabeledInput, InputRow } from "../demo/LabeledInput";
-import WindowScroller from "./WindowScroller";
-import List from "../List";
-import AutoSizer from "../AutoSizer";
-import styles from "./WindowScroller.example.css";
+  ContentBoxParagraph,
+} from '../demo/ContentBox';
+import {LabeledInput, InputRow} from '../demo/LabeledInput';
+import WindowScroller from './WindowScroller';
+import List from '../List';
+import AutoSizer from '../AutoSizer';
+import styles from './WindowScroller.example.css';
 
 export default class WindowScrollerExample extends PureComponent {
   static contextTypes = {
     customElement: PropTypes.any,
     isScrollingCustomElement: PropTypes.bool.isRequired,
     list: PropTypes.instanceOf(Immutable.List).isRequired,
-    setScrollingCustomElement: PropTypes.func
+    setScrollingCustomElement: PropTypes.func,
   };
 
   constructor(props) {
@@ -27,7 +27,7 @@ export default class WindowScrollerExample extends PureComponent {
 
     this.state = {
       scrollToIndex: undefined,
-      showHeaderText: true
+      showHeaderText: true,
     };
 
     this._hideHeader = this._hideHeader.bind(this);
@@ -38,8 +38,8 @@ export default class WindowScrollerExample extends PureComponent {
   }
 
   render() {
-    const { customElement, isScrollingCustomElement, list } = this.context;
-    const { scrollToIndex, showHeaderText } = this.state;
+    const {customElement, isScrollingCustomElement, list} = this.context;
+    const {scrollToIndex, showHeaderText} = this.state;
 
     return (
       <ContentBox>
@@ -49,17 +49,19 @@ export default class WindowScrollerExample extends PureComponent {
           docsLink="https://github.com/bvaughn/react-virtualized/blob/master/docs/WindowScroller.md"
         />
 
-        {showHeaderText &&
+        {showHeaderText && (
           <ContentBoxParagraph>
             This component decorates <code>List</code>, <code>Table</code>, or
             any other component and manages the window scroll to scroll through
             the list
-          </ContentBoxParagraph>}
+          </ContentBoxParagraph>
+        )}
 
-        {showHeaderText &&
+        {showHeaderText && (
           <ContentBoxParagraph>
             <button onClick={this._hideHeader}>Hide header text</button>
-          </ContentBoxParagraph>}
+          </ContentBoxParagraph>
+        )}
 
         <ContentBoxParagraph>
           <label className={styles.checkboxLabel}>
@@ -79,17 +81,16 @@ export default class WindowScrollerExample extends PureComponent {
             name="onScrollToRow"
             placeholder="Index..."
             onChange={this._onScrollToRowChange}
-            value={scrollToIndex || ""}
+            value={scrollToIndex || ''}
           />
         </InputRow>
         <div className={styles.WindowScrollerWrapper}>
           <WindowScroller
             ref={this._setRef}
-            scrollElement={isScrollingCustomElement ? customElement : null}
-          >
-            {({ height, isScrolling, onChildScroll, scrollTop }) =>
+            scrollElement={isScrollingCustomElement ? customElement : null}>
+            {({height, isScrolling, onChildScroll, scrollTop}) => (
               <AutoSizer disableHeight>
-                {({ width }) =>
+                {({width}) => (
                   <List
                     ref={el => {
                       window.listEl = el;
@@ -106,8 +107,10 @@ export default class WindowScrollerExample extends PureComponent {
                     scrollToIndex={scrollToIndex}
                     scrollTop={scrollTop}
                     width={width}
-                  />}
-              </AutoSizer>}
+                  />
+                )}
+              </AutoSizer>
+            )}
           </WindowScroller>
         </div>
       </ContentBox>
@@ -115,24 +118,24 @@ export default class WindowScrollerExample extends PureComponent {
   }
 
   _hideHeader() {
-    const { showHeaderText } = this.state;
+    const {showHeaderText} = this.state;
 
     this.setState(
       {
-        showHeaderText: !showHeaderText
+        showHeaderText: !showHeaderText,
       },
       () => {
         this._windowScroller.updatePosition();
-      }
+      },
     );
   }
 
-  _rowRenderer({ index, isScrolling, isVisible, key, style }) {
-    const { list } = this.context;
+  _rowRenderer({index, isScrolling, isVisible, key, style}) {
+    const {list} = this.context;
     const row = list.get(index);
     const className = cn(styles.row, {
       [styles.rowScrolling]: isScrolling,
-      isVisible: isVisible
+      isVisible: isVisible,
     });
 
     return (
@@ -151,10 +154,10 @@ export default class WindowScrollerExample extends PureComponent {
   }
 
   _onScrollToRowChange(event) {
-    const { list } = this.context;
+    const {list} = this.context;
     let scrollToIndex = Math.min(
       list.size - 1,
-      parseInt(event.target.value, 10)
+      parseInt(event.target.value, 10),
     );
 
     if (isNaN(scrollToIndex)) {
@@ -162,7 +165,7 @@ export default class WindowScrollerExample extends PureComponent {
     }
 
     setTimeout(() => {
-      this.setState({ scrollToIndex });
+      this.setState({scrollToIndex});
     }, 0);
   }
 }

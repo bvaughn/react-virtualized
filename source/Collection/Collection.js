@@ -1,10 +1,10 @@
 /** @flow */
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import CollectionView from "./CollectionView";
-import calculateSizeAndPositionData from "./utils/calculateSizeAndPositionData";
-import getUpdatedOffsetForIndex from "../utils/getUpdatedOffsetForIndex";
-import type { ScrollPosition, SizeInfo } from "./types";
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
+import CollectionView from './CollectionView';
+import calculateSizeAndPositionData from './utils/calculateSizeAndPositionData';
+import getUpdatedOffsetForIndex from '../utils/getUpdatedOffsetForIndex';
+import type {ScrollPosition, SizeInfo} from './types';
 
 /**
  * Renders scattered or non-linear data.
@@ -12,7 +12,7 @@ import type { ScrollPosition, SizeInfo } from "./types";
  */
 export default class Collection extends PureComponent {
   static propTypes = {
-    "aria-label": PropTypes.string,
+    'aria-label': PropTypes.string,
 
     /**
      * Number of cells in Collection.
@@ -44,12 +44,12 @@ export default class Collection extends PureComponent {
     /**
      * Optionally override the size of the sections a Collection's cells are split into.
      */
-    sectionSize: PropTypes.number
+    sectionSize: PropTypes.number,
   };
 
   static defaultProps = {
-    "aria-label": "grid",
-    cellGroupRenderer: defaultCellGroupRenderer
+    'aria-label': 'grid',
+    cellGroupRenderer: defaultCellGroupRenderer,
   };
 
   constructor(props, context) {
@@ -80,7 +80,7 @@ export default class Collection extends PureComponent {
   /** React lifecycle methods */
 
   render() {
-    const { ...props } = this.props;
+    const {...props} = this.props;
 
     return (
       <CollectionView
@@ -95,12 +95,12 @@ export default class Collection extends PureComponent {
   /** CellLayoutManager interface */
 
   calculateSizeAndPositionData() {
-    const { cellCount, cellSizeAndPositionGetter, sectionSize } = this.props;
+    const {cellCount, cellSizeAndPositionGetter, sectionSize} = this.props;
 
     const data = calculateSizeAndPositionData({
       cellCount,
       cellSizeAndPositionGetter,
-      sectionSize
+      sectionSize,
     });
 
     this._cellMetadata = data.cellMetadata;
@@ -125,9 +125,9 @@ export default class Collection extends PureComponent {
     height,
     scrollLeft,
     scrollTop,
-    width
+    width,
   }): ScrollPosition {
-    const { cellCount } = this.props;
+    const {cellCount} = this.props;
 
     if (cellIndex >= 0 && cellIndex < cellCount) {
       const cellMetadata = this._cellMetadata[cellIndex];
@@ -138,7 +138,7 @@ export default class Collection extends PureComponent {
         cellSize: cellMetadata.width,
         containerSize: width,
         currentOffset: scrollLeft,
-        targetIndex: cellIndex
+        targetIndex: cellIndex,
       });
 
       scrollTop = getUpdatedOffsetForIndex({
@@ -147,41 +147,41 @@ export default class Collection extends PureComponent {
         cellSize: cellMetadata.height,
         containerSize: height,
         currentOffset: scrollTop,
-        targetIndex: cellIndex
+        targetIndex: cellIndex,
       });
     }
 
     return {
       scrollLeft,
-      scrollTop
+      scrollTop,
     };
   }
 
   getTotalSize(): SizeInfo {
     return {
       height: this._height,
-      width: this._width
+      width: this._width,
     };
   }
 
-  cellRenderers({ height, isScrolling, width, x, y }) {
-    const { cellGroupRenderer, cellRenderer } = this.props;
+  cellRenderers({height, isScrolling, width, x, y}) {
+    const {cellGroupRenderer, cellRenderer} = this.props;
 
     // Store for later calls to getLastRenderedIndices()
     this._lastRenderedCellIndices = this._sectionManager.getCellIndices({
       height,
       width,
       x,
-      y
+      y,
     });
 
     return cellGroupRenderer({
       cellCache: this._cellCache,
       cellRenderer,
-      cellSizeAndPositionGetter: ({ index }) =>
-        this._sectionManager.getCellMetadata({ index }),
+      cellSizeAndPositionGetter: ({index}) =>
+        this._sectionManager.getCellMetadata({index}),
       indices: this._lastRenderedCellIndices,
-      isScrolling
+      isScrolling,
     });
   }
 
@@ -201,11 +201,11 @@ function defaultCellGroupRenderer({
   cellRenderer,
   cellSizeAndPositionGetter,
   indices,
-  isScrolling
+  isScrolling,
 }) {
   return indices
     .map(index => {
-      const cellMetadata = cellSizeAndPositionGetter({ index });
+      const cellMetadata = cellSizeAndPositionGetter({index});
 
       let cellRendererProps = {
         index,
@@ -214,10 +214,10 @@ function defaultCellGroupRenderer({
         style: {
           height: cellMetadata.height,
           left: cellMetadata.x,
-          position: "absolute",
+          position: 'absolute',
           top: cellMetadata.y,
-          width: cellMetadata.width
-        }
+          width: cellMetadata.width,
+        },
       };
 
       // Avoid re-creating cells while scrolling.

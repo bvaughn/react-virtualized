@@ -8,13 +8,13 @@ import type {
   OverscanIndicesGetter,
   RenderedSection,
   CellRendererParams,
-  Scroll as GridScroll
-} from "../Grid";
-import type { RowRenderer, RenderedRows, Scroll } from "./types";
+  Scroll as GridScroll,
+} from '../Grid';
+import type {RowRenderer, RenderedRows, Scroll} from './types';
 
-import Grid, { accessibilityOverscanIndicesGetter } from "../Grid";
-import React from "react";
-import cn from "classnames";
+import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
+import React from 'react';
+import cn from 'classnames';
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -26,7 +26,7 @@ import cn from "classnames";
  */
 
 type Props = {
-  "aria-label"?: string,
+  'aria-label'?: string,
 
   /**
    * Removes fixed height from the scrollingContainer so that the total height
@@ -93,7 +93,7 @@ type Props = {
   tabIndex?: number,
 
   /** Width of list */
-  width: number
+  width: number,
 };
 
 export default class List extends React.PureComponent {
@@ -105,9 +105,9 @@ export default class List extends React.PureComponent {
     onRowsRendered: () => {},
     overscanIndicesGetter: accessibilityOverscanIndicesGetter,
     overscanRowCount: 10,
-    scrollToAlignment: "auto",
+    scrollToAlignment: 'auto',
     scrollToIndex: -1,
-    style: {}
+    style: {},
   };
 
   props: Props;
@@ -121,18 +121,12 @@ export default class List extends React.PureComponent {
   }
 
   /** See Grid#getOffsetForCell */
-  getOffsetForRow({
-    alignment,
-    index
-  }: {
-    alignment: Alignment,
-    index: number
-  }) {
+  getOffsetForRow({alignment, index}: {alignment: Alignment, index: number}) {
     if (this.Grid) {
-      const { scrollTop } = this.Grid.getOffsetForCell({
+      const {scrollTop} = this.Grid.getOffsetForCell({
         alignment,
         rowIndex: index,
-        columnIndex: 0
+        columnIndex: 0,
       });
 
       return scrollTop;
@@ -141,11 +135,11 @@ export default class List extends React.PureComponent {
   }
 
   /** CellMeasurer compatibility */
-  invalidateCellSizeAfterRender({ columnIndex, rowIndex }: CellPosition) {
+  invalidateCellSizeAfterRender({columnIndex, rowIndex}: CellPosition) {
     if (this.Grid) {
       this.Grid.invalidateCellSizeAfterRender({
         rowIndex,
-        columnIndex
+        columnIndex,
       });
     }
   }
@@ -158,11 +152,11 @@ export default class List extends React.PureComponent {
   }
 
   /** CellMeasurer compatibility */
-  recomputeGridSize({ columnIndex = 0, rowIndex = 0 }: CellPosition = {}) {
+  recomputeGridSize({columnIndex = 0, rowIndex = 0}: CellPosition = {}) {
     if (this.Grid) {
       this.Grid.recomputeGridSize({
         rowIndex,
-        columnIndex
+        columnIndex,
       });
     }
   }
@@ -172,7 +166,7 @@ export default class List extends React.PureComponent {
     if (this.Grid) {
       this.Grid.recomputeGridSize({
         rowIndex: index,
-        columnIndex: 0
+        columnIndex: 0,
       });
     }
   }
@@ -180,7 +174,7 @@ export default class List extends React.PureComponent {
   /** See Grid#scrollToPosition */
   scrollToPosition(scrollTop: number = 0) {
     if (this.Grid) {
-      this.Grid.scrollToPosition({ scrollTop });
+      this.Grid.scrollToPosition({scrollTop});
     }
   }
 
@@ -189,15 +183,15 @@ export default class List extends React.PureComponent {
     if (this.Grid) {
       this.Grid.scrollToCell({
         columnIndex: 0,
-        rowIndex: index
+        rowIndex: index,
       });
     }
   }
 
   render() {
-    const { className, noRowsRenderer, scrollToIndex, width } = this.props;
+    const {className, noRowsRenderer, scrollToIndex, width} = this.props;
 
-    const classNames = cn("ReactVirtualized__List", className);
+    const classNames = cn('ReactVirtualized__List', className);
 
     return (
       <Grid
@@ -221,20 +215,20 @@ export default class List extends React.PureComponent {
     style,
     isScrolling,
     isVisible,
-    key
+    key,
   }: CellRendererParams) => {
-    const { rowRenderer } = this.props;
+    const {rowRenderer} = this.props;
 
     // TRICKY The style object is sometimes cached by Grid.
     // This prevents new style objects from bypassing shallowCompare().
     // However as of React 16, style props are auto-frozen (at least in dev mode)
     // Check to make sure we can still modify the style before proceeding.
     // https://github.com/facebook/react/commit/977357765b44af8ff0cfea327866861073095c12#commitcomment-20648713
-    const { writable } = Object.getOwnPropertyDescriptor(style, "width");
+    const {writable} = Object.getOwnPropertyDescriptor(style, 'width');
     if (writable) {
       // By default, List cells should be 100% width.
       // This prevents them from flowing under a scrollbar (if present).
-      style.width = "100%";
+      style.width = '100%';
     }
 
     return rowRenderer({
@@ -243,7 +237,7 @@ export default class List extends React.PureComponent {
       isScrolling,
       isVisible,
       key,
-      parent: this
+      parent: this,
     });
   };
 
@@ -251,25 +245,25 @@ export default class List extends React.PureComponent {
     this.Grid = ref;
   };
 
-  _onScroll = ({ clientHeight, scrollHeight, scrollTop }: GridScroll) => {
-    const { onScroll } = this.props;
+  _onScroll = ({clientHeight, scrollHeight, scrollTop}: GridScroll) => {
+    const {onScroll} = this.props;
 
-    onScroll({ clientHeight, scrollHeight, scrollTop });
+    onScroll({clientHeight, scrollHeight, scrollTop});
   };
 
   _onSectionRendered = ({
     rowOverscanStartIndex,
     rowOverscanStopIndex,
     rowStartIndex,
-    rowStopIndex
+    rowStopIndex,
   }: RenderedSection) => {
-    const { onRowsRendered } = this.props;
+    const {onRowsRendered} = this.props;
 
     onRowsRendered({
       overscanStartIndex: rowOverscanStartIndex,
       overscanStopIndex: rowOverscanStopIndex,
       startIndex: rowStartIndex,
-      stopIndex: rowStopIndex
+      stopIndex: rowStopIndex,
     });
   };
 }

@@ -1,4 +1,4 @@
-import initCellMetadata from "./initCellMetadata";
+import initCellMetadata from './initCellMetadata';
 
 // Default cell sizes and offsets for use in below tests
 export function getCellMetadata() {
@@ -11,10 +11,10 @@ export function getCellMetadata() {
     30, // 5: 50..70
     20, // 6: 70..100
     10, // 7: 80..110
-    30 //  8: 110..110 (max)
+    30, //  8: 110..110 (max)
   ];
   return initCellMetadata({
     cellCount: cellSizes.length,
-    size: ({ index }) => cellSizes[index]
+    size: ({index}) => cellSizes[index],
   });
 }

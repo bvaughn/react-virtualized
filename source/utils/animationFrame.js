@@ -6,9 +6,9 @@ type RequestAnimationFrame = (callback: Callback) => number;
 
 // Properly handle server-side rendering.
 let win;
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   win = window;
-} else if (typeof self !== "undefined") {
+} else if (typeof self !== 'undefined') {
   win = self;
 } else {
   win = {};

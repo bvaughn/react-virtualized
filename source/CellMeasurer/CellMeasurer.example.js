@@ -1,50 +1,50 @@
-import Immutable from "immutable";
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import Immutable from 'immutable';
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
-  ContentBoxParagraph
-} from "../demo/ContentBox";
-import AutoSizer from "../AutoSizer";
-import cn from "classnames";
-import styles from "./CellMeasurer.example.css";
-import DynamicWidthGrid from "./CellMeasurer.DynamicWidthGrid.example.js";
-import DynamiHeightGrid from "./CellMeasurer.DynamiHeightGrid.example.js";
-import DynamiWidthMultiGrid from "./CellMeasurer.DynamiWidthMultiGrid.example.js";
-import DynamicHeightList from "./CellMeasurer.DynamicHeightList.example.js";
-import DynamicHeightTableColumn from "./CellMeasurer.DynamicHeightTableColumn.example.js";
+  ContentBoxParagraph,
+} from '../demo/ContentBox';
+import AutoSizer from '../AutoSizer';
+import cn from 'classnames';
+import styles from './CellMeasurer.example.css';
+import DynamicWidthGrid from './CellMeasurer.DynamicWidthGrid.example.js';
+import DynamiHeightGrid from './CellMeasurer.DynamiHeightGrid.example.js';
+import DynamiWidthMultiGrid from './CellMeasurer.DynamiWidthMultiGrid.example.js';
+import DynamicHeightList from './CellMeasurer.DynamicHeightList.example.js';
+import DynamicHeightTableColumn from './CellMeasurer.DynamicHeightTableColumn.example.js';
 
 const demoComponents = [
   DynamicWidthGrid,
   DynamiHeightGrid,
   DynamiWidthMultiGrid,
   DynamicHeightList,
-  DynamicHeightTableColumn
+  DynamicHeightTableColumn,
 ];
 
 export default class CellMeasurerExample extends PureComponent {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(Immutable.List).isRequired,
   };
 
   constructor(props, context) {
     super(props, context);
 
     this.state = {
-      currentTab: 0
+      currentTab: 0,
     };
 
     this._onClick = this._onClick.bind(this);
   }
 
   render() {
-    const { list } = this.context;
-    const { currentTab } = this.state;
+    const {list} = this.context;
+    const {currentTab} = this.state;
 
     const buttonProps = {
       currentTab,
-      onClick: this._onClick
+      onClick: this._onClick,
     };
 
     const DemoComponent = demoComponents[currentTab];
@@ -63,8 +63,8 @@ export default class CellMeasurerExample extends PureComponent {
         </ContentBoxParagraph>
 
         <AutoSizer disableHeight>
-          {({ width }) =>
-            <div style={{ width }}>
+          {({width}) => (
+            <div style={{width}}>
               <div>
                 <strong>Grid</strong>:
                 <Tab id={0} {...buttonProps}>
@@ -93,7 +93,8 @@ export default class CellMeasurerExample extends PureComponent {
                 list={list}
                 width={width}
               />
-            </div>}
+            </div>
+          )}
         </AutoSizer>
       </ContentBox>
     );
@@ -101,20 +102,20 @@ export default class CellMeasurerExample extends PureComponent {
 
   _onClick(id) {
     this.setState({
-      currentTab: id
+      currentTab: id,
     });
   }
 }
 
-function getClassName({ columnIndex, rowIndex }) {
+function getClassName({columnIndex, rowIndex}) {
   const rowClass = rowIndex % 2 === 0 ? styles.evenRow : styles.oddRow;
 
   return cn(rowClass, styles.cell, {
-    [styles.centeredCell]: columnIndex > 2
+    [styles.centeredCell]: columnIndex > 2,
   });
 }
 
-function getContent({ index, datum, long = true }) {
+function getContent({index, datum, long = true}) {
   switch (index % 3) {
     case 0:
       return datum.color;
@@ -125,9 +126,9 @@ function getContent({ index, datum, long = true }) {
   }
 }
 
-function Tab({ children, currentTab, id, onClick }) {
+function Tab({children, currentTab, id, onClick}) {
   const classNames = cn(styles.Tab, {
-    [styles.ActiveTab]: currentTab === id
+    [styles.ActiveTab]: currentTab === id,
   });
 
   return (

@@ -1,12 +1,12 @@
 /** @flow */
 
-import type { Alignment, CellSizeGetter, VisibleCellRange } from "../types";
+import type {Alignment, CellSizeGetter, VisibleCellRange} from '../types';
 
-import CellSizeAndPositionManager from "./CellSizeAndPositionManager";
+import CellSizeAndPositionManager from './CellSizeAndPositionManager';
 
 type ContainerSizeAndOffset = {
   containerSize: number,
-  offset: number
+  offset: number,
 };
 
 /**
@@ -21,7 +21,7 @@ type Params = {
   batchAllCells: boolean,
   cellCount: number,
   cellSizeGetter: CellSizeGetter,
-  estimatedCellSize: number
+  estimatedCellSize: number,
 };
 
 /**
@@ -31,7 +31,7 @@ export default class ScalingCellSizeAndPositionManager {
   _cellSizeAndPositionManager: CellSizeAndPositionManager;
   _maxScrollSize: number;
 
-  constructor({ maxScrollSize = DEFAULT_MAX_SCROLL_SIZE, ...params }: Params) {
+  constructor({maxScrollSize = DEFAULT_MAX_SCROLL_SIZE, ...params}: Params) {
     // Favor composition over inheritance to simplify IE10 support
     this._cellSizeAndPositionManager = new CellSizeAndPositionManager(params);
     this._maxScrollSize = maxScrollSize;
@@ -43,7 +43,7 @@ export default class ScalingCellSizeAndPositionManager {
     );
   }
 
-  configure(params: { cellCount: number, estimatedCellSize: number }) {
+  configure(params: {cellCount: number, estimatedCellSize: number}) {
     this._cellSizeAndPositionManager.configure(params);
   }
 
@@ -65,14 +65,14 @@ export default class ScalingCellSizeAndPositionManager {
    */
   getOffsetAdjustment({
     containerSize,
-    offset // safe
+    offset, // safe
   }: ContainerSizeAndOffset): number {
     const totalSize = this._cellSizeAndPositionManager.getTotalSize();
     const safeTotalSize = this.getTotalSize();
     const offsetPercentage = this._getOffsetPercentage({
       containerSize,
       offset,
-      totalSize: safeTotalSize
+      totalSize: safeTotalSize,
     });
 
     return Math.round(offsetPercentage * (safeTotalSize - totalSize));
@@ -90,53 +90,53 @@ export default class ScalingCellSizeAndPositionManager {
   getTotalSize(): number {
     return Math.min(
       this._maxScrollSize,
-      this._cellSizeAndPositionManager.getTotalSize()
+      this._cellSizeAndPositionManager.getTotalSize(),
     );
   }
 
   /** See CellSizeAndPositionManager#getUpdatedOffsetForIndex */
   getUpdatedOffsetForIndex({
-    align = "auto",
+    align = 'auto',
     containerSize,
     currentOffset, // safe
-    targetIndex
+    targetIndex,
   }: {
     align: Alignment,
     containerSize: number,
     currentOffset: number,
-    targetIndex: number
+    targetIndex: number,
   }) {
     currentOffset = this._safeOffsetToOffset({
       containerSize,
-      offset: currentOffset
+      offset: currentOffset,
     });
 
     const offset = this._cellSizeAndPositionManager.getUpdatedOffsetForIndex({
       align,
       containerSize,
       currentOffset,
-      targetIndex
+      targetIndex,
     });
 
     return this._offsetToSafeOffset({
       containerSize,
-      offset
+      offset,
     });
   }
 
   /** See CellSizeAndPositionManager#getVisibleCellRange */
   getVisibleCellRange({
     containerSize,
-    offset // safe
+    offset, // safe
   }: ContainerSizeAndOffset): VisibleCellRange {
     offset = this._safeOffsetToOffset({
       containerSize,
-      offset
+      offset,
     });
 
     return this._cellSizeAndPositionManager.getVisibleCellRange({
       containerSize,
-      offset
+      offset,
     });
   }
 
@@ -147,11 +147,11 @@ export default class ScalingCellSizeAndPositionManager {
   _getOffsetPercentage({
     containerSize,
     offset, // safe
-    totalSize
+    totalSize,
   }: {
     containerSize: number,
     offset: number,
-    totalSize: number
+    totalSize: number,
   }) {
     return totalSize <= containerSize
       ? 0
@@ -160,7 +160,7 @@ export default class ScalingCellSizeAndPositionManager {
 
   _offsetToSafeOffset({
     containerSize,
-    offset // unsafe
+    offset, // unsafe
   }: ContainerSizeAndOffset): number {
     const totalSize = this._cellSizeAndPositionManager.getTotalSize();
     const safeTotalSize = this.getTotalSize();
@@ -171,7 +171,7 @@ export default class ScalingCellSizeAndPositionManager {
       const offsetPercentage = this._getOffsetPercentage({
         containerSize,
         offset,
-        totalSize
+        totalSize,
       });
 
       return Math.round(offsetPercentage * (safeTotalSize - containerSize));
@@ -180,7 +180,7 @@ export default class ScalingCellSizeAndPositionManager {
 
   _safeOffsetToOffset({
     containerSize,
-    offset // safe
+    offset, // safe
   }: ContainerSizeAndOffset): number {
     const totalSize = this._cellSizeAndPositionManager.getTotalSize();
     const safeTotalSize = this.getTotalSize();
@@ -191,7 +191,7 @@ export default class ScalingCellSizeAndPositionManager {
       const offsetPercentage = this._getOffsetPercentage({
         containerSize,
         offset,
-        totalSize: safeTotalSize
+        totalSize: safeTotalSize,
       });
 
       return Math.round(offsetPercentage * (totalSize - containerSize));

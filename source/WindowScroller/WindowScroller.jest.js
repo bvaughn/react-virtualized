@@ -1,17 +1,16 @@
 /* global Element */
 
-import React from "react";
-import { findDOMNode } from "react-dom";
-import { render } from "../TestUtils";
-import WindowScroller, { IS_SCROLLING_TIMEOUT } from "./WindowScroller";
+import React from 'react';
+import {findDOMNode} from 'react-dom';
+import {render} from '../TestUtils';
+import WindowScroller, {IS_SCROLLING_TIMEOUT} from './WindowScroller';
 
 class ChildComponent extends React.Component {
   render() {
-    const { scrollTop, isScrolling, height } = this.props;
+    const {scrollTop, isScrolling, height} = this.props;
 
     return (
-      <div
-      >{`scrollTop:${scrollTop}, isScrolling:${isScrolling}, height:${height}`}</div>
+      <div>{`scrollTop:${scrollTop}, isScrolling:${isScrolling}, height:${height}`}</div>
     );
   }
 }
@@ -19,33 +18,32 @@ class ChildComponent extends React.Component {
 function mockGetBoundingClientRectForHeader({
   documentOffset = 0,
   height,
-  width
+  width,
 }) {
   // Mock the WindowScroller element and window separately
   // The only way to mock the former (before its created) is globally
   Element.prototype.getBoundingClientRect = jest.fn(() => ({
     top: height,
-    left: width
+    left: width,
   }));
   document.documentElement.getBoundingClientRect = jest.fn(() => ({
     top: documentOffset,
-    left: documentOffset
+    left: documentOffset,
   }));
 }
 
-function getMarkup(
-  { headerElements, documentOffset, childRef, ...props } = {}
-) {
+function getMarkup({headerElements, documentOffset, childRef, ...props} = {}) {
   const windowScroller = (
     <WindowScroller {...props}>
-      {({ height, isScrolling, onChildScroll, scrollTop }) =>
+      {({height, isScrolling, onChildScroll, scrollTop}) => (
         <ChildComponent
           ref={childRef}
           height={height}
           isScrolling={isScrolling}
           onScroll={onChildScroll}
           scrollTop={scrollTop}
-        />}
+        />
+      )}
     </WindowScroller>
   );
 
@@ -54,7 +52,7 @@ function getMarkup(
   mockGetBoundingClientRectForHeader({
     documentOffset,
     height: headerElements ? headerElements.props.style.height : 0,
-    width: headerElements ? headerElements.props.style.width : 0
+    width: headerElements ? headerElements.props.style.width : 0,
   });
 
   if (headerElements) {
@@ -69,21 +67,21 @@ function getMarkup(
   }
 }
 
-function simulateWindowScroll({ scrollX = 0, scrollY = 0 }) {
-  document.body.style.height = "10000px";
+function simulateWindowScroll({scrollX = 0, scrollY = 0}) {
+  document.body.style.height = '10000px';
   window.scrollX = scrollX;
   window.scrollY = scrollY;
-  document.dispatchEvent(new window.Event("scroll", { bubbles: true }));
-  document.body.style.height = "";
+  document.dispatchEvent(new window.Event('scroll', {bubbles: true}));
+  document.body.style.height = '';
 }
 
-function simulateWindowResize({ height = 0, width = 0 }) {
+function simulateWindowResize({height = 0, width = 0}) {
   window.innerHeight = height;
   window.innerWidth = width;
-  document.dispatchEvent(new window.Event("resize", { bubbles: true }));
+  document.dispatchEvent(new window.Event('resize', {bubbles: true}));
 }
 
-describe("WindowScroller", () => {
+describe('WindowScroller', () => {
   // Set default window height and scroll position between tests
   beforeEach(() => {
     window.scrollY = 0;
@@ -93,78 +91,78 @@ describe("WindowScroller", () => {
   });
 
   // Starts updating scrollTop only when the top position is reached
-  it("should have correct top and left properties to be defined on :_positionFromTop and :_positionFromLeft", () => {
+  it('should have correct top and left properties to be defined on :_positionFromTop and :_positionFromLeft', () => {
     const component = render(getMarkup());
     const rendered = findDOMNode(component);
-    const { top, left } = rendered.getBoundingClientRect();
+    const {top, left} = rendered.getBoundingClientRect();
     expect(component._positionFromTop).toEqual(top);
     expect(component._positionFromLeft).toEqual(left);
   });
 
   // Test edge-case reported in bvaughn/react-virtualized/pull/346
-  it("should have correct top and left properties to be defined on :_positionFromTop and :_positionFromLeft if documentElement is scrolled", () => {
+  it('should have correct top and left properties to be defined on :_positionFromTop and :_positionFromLeft if documentElement is scrolled', () => {
     render.unmount();
 
     // Simulate scrolled documentElement
     const component = render(
       getMarkup({
-        documentOffset: -100
-      })
+        documentOffset: -100,
+      }),
     );
     const rendered = findDOMNode(component);
-    const { top, left } = rendered.getBoundingClientRect();
+    const {top, left} = rendered.getBoundingClientRect();
     expect(component._positionFromTop).toEqual(top + 100);
     expect(component._positionFromLeft).toEqual(left + 100);
     // Reset override
     delete document.documentElement.getBoundingClientRect;
   });
 
-  it("inherits the window height and passes it to child component", () => {
+  it('inherits the window height and passes it to child component', () => {
     const component = render(getMarkup());
     const rendered = findDOMNode(component);
 
     expect(component.state.height).toEqual(window.innerHeight);
     expect(component.state.height).toEqual(500);
-    expect(rendered.textContent).toContain("height:500");
+    expect(rendered.textContent).toContain('height:500');
   });
 
-  it("should restore pointerEvents on body after IS_SCROLLING_TIMEOUT", async done => {
+  it('should restore pointerEvents on body after IS_SCROLLING_TIMEOUT', async done => {
     render(getMarkup());
-    document.body.style.pointerEvents = "all";
-    simulateWindowScroll({ scrollY: 5000 });
-    expect(document.body.style.pointerEvents).toEqual("none");
+    document.body.style.pointerEvents = 'all';
+    simulateWindowScroll({scrollY: 5000});
+    expect(document.body.style.pointerEvents).toEqual('none');
     await new Promise(resolve => setTimeout(resolve, IS_SCROLLING_TIMEOUT));
-    expect(document.body.style.pointerEvents).toEqual("all");
+    expect(document.body.style.pointerEvents).toEqual('all');
     done();
   });
 
-  it("should restore pointerEvents on body after unmount", () => {
+  it('should restore pointerEvents on body after unmount', () => {
     render(getMarkup());
-    document.body.style.pointerEvents = "all";
-    simulateWindowScroll({ scrollY: 5000 });
-    expect(document.body.style.pointerEvents).toEqual("none");
+    document.body.style.pointerEvents = 'all';
+    simulateWindowScroll({scrollY: 5000});
+    expect(document.body.style.pointerEvents).toEqual('none');
     render.unmount();
-    expect(document.body.style.pointerEvents).toEqual("all");
+    expect(document.body.style.pointerEvents).toEqual('all');
   });
 
-  describe("onScroll", () => {
-    it("should trigger callback when window scrolls", async done => {
+  describe('onScroll', () => {
+    it('should trigger callback when window scrolls', async done => {
       const onScroll = jest.fn();
-      render(getMarkup({ onScroll }));
+      render(getMarkup({onScroll}));
 
-      simulateWindowScroll({ scrollY: 5000 });
+      simulateWindowScroll({scrollY: 5000});
 
       // Allow scrolling timeout to complete so that the component computes state
       await new Promise(resolve => setTimeout(resolve, 150));
 
       expect(onScroll).toHaveBeenCalledWith({
         scrollLeft: 0,
-        scrollTop: 5000
+        scrollTop: 5000,
       });
 
       simulateWindowScroll({
         scrollX: 2500,
-        scrollY: 5000
+        scrollY: 5000,
       });
 
       // Allow scrolling timeout to complete so that the component computes state
@@ -172,20 +170,20 @@ describe("WindowScroller", () => {
 
       expect(onScroll).toHaveBeenCalledWith({
         scrollLeft: 2500,
-        scrollTop: 5000
+        scrollTop: 5000,
       });
 
       done();
     });
 
-    it("should update :scrollTop when window is scrolled", async done => {
+    it('should update :scrollTop when window is scrolled', async done => {
       const component = render(getMarkup());
       const rendered = findDOMNode(component);
 
       // Initial load of the component should have 0 scrollTop
-      expect(rendered.textContent).toContain("scrollTop:0");
+      expect(rendered.textContent).toContain('scrollTop:0');
 
-      simulateWindowScroll({ scrollY: 5000 });
+      simulateWindowScroll({scrollY: 5000});
 
       // Allow scrolling timeout to complete so that the component computes state
       await new Promise(resolve => setTimeout(resolve, 150));
@@ -197,115 +195,113 @@ describe("WindowScroller", () => {
       done();
     });
 
-    it("should specify :isScrolling when scrolling and reset after scrolling", async done => {
+    it('should specify :isScrolling when scrolling and reset after scrolling', async done => {
       const component = render(getMarkup());
       const rendered = findDOMNode(component);
 
-      simulateWindowScroll({ scrollY: 5000 });
+      simulateWindowScroll({scrollY: 5000});
 
-      expect(rendered.textContent).toContain("isScrolling:true");
+      expect(rendered.textContent).toContain('isScrolling:true');
 
       await new Promise(resolve => setTimeout(resolve, 250));
 
-      expect(rendered.textContent).toContain("isScrolling:false");
+      expect(rendered.textContent).toContain('isScrolling:false');
 
       done();
     });
 
-    it("should support a custom :scrollingResetTimeInterval prop", async done => {
+    it('should support a custom :scrollingResetTimeInterval prop', async done => {
       const component = render(
         getMarkup({
-          scrollingResetTimeInterval: 500
-        })
+          scrollingResetTimeInterval: 500,
+        }),
       );
 
       const rendered = findDOMNode(component);
 
-      expect(rendered.textContent).toContain("isScrolling:false");
+      expect(rendered.textContent).toContain('isScrolling:false');
 
-      simulateWindowScroll({ scrollY: 5000 });
+      simulateWindowScroll({scrollY: 5000});
 
-      expect(rendered.textContent).toContain("isScrolling:true");
-
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      expect(rendered.textContent).toContain("isScrolling:true");
+      expect(rendered.textContent).toContain('isScrolling:true');
 
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      expect(rendered.textContent).toContain("isScrolling:true");
+      expect(rendered.textContent).toContain('isScrolling:true');
+
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      expect(rendered.textContent).toContain('isScrolling:true');
 
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      expect(rendered.textContent).toContain("isScrolling:false");
+      expect(rendered.textContent).toContain('isScrolling:false');
 
       done();
     });
   });
 
-  describe("onResize", () => {
-    it("should trigger callback when window resizes", () => {
+  describe('onResize', () => {
+    it('should trigger callback when window resizes', () => {
       const onResizeCalls = [];
       render(
         getMarkup({
-          onResize: params => onResizeCalls.push(params)
-        })
+          onResize: params => onResizeCalls.push(params),
+        }),
       );
 
-      simulateWindowResize({ height: 1000, width: 1024 });
+      simulateWindowResize({height: 1000, width: 1024});
 
       expect(onResizeCalls.length).toEqual(1);
       expect(onResizeCalls[0]).toEqual({
         height: 1000,
-        width: 1024
+        width: 1024,
       });
     });
 
-    it("should update height when window resizes", () => {
+    it('should update height when window resizes', () => {
       const component = render(getMarkup());
       const rendered = findDOMNode(component);
 
       // Initial load of the component should have the same window height = 500
       expect(component.state.height).toEqual(window.innerHeight);
       expect(component.state.height).toEqual(500);
-      expect(rendered.textContent).toContain("height:500");
+      expect(rendered.textContent).toContain('height:500');
 
-      simulateWindowResize({ height: 1000 });
+      simulateWindowResize({height: 1000});
 
       expect(component.state.height).toEqual(window.innerHeight);
       expect(component.state.height).toEqual(1000);
-      expect(rendered.textContent).toContain("height:1000");
+      expect(rendered.textContent).toContain('height:1000');
     });
   });
 
-  describe("updatePosition", () => {
-    it("should calculate the initial offset from the top of the page when mounted", () => {
+  describe('updatePosition', () => {
+    it('should calculate the initial offset from the top of the page when mounted', () => {
       let windowScroller;
 
       render(
         getMarkup({
-          headerElements: <div style={{ height: 100 }} />,
+          headerElements: <div style={{height: 100}} />,
           ref: ref => {
             windowScroller = ref;
-          }
-        })
+          },
+        }),
       );
 
       expect(windowScroller._positionFromTop).toBe(100);
     });
 
-    it("should recalculate the offset from the top when the window resizes", () => {
+    it('should recalculate the offset from the top when the window resizes', () => {
       let windowScroller;
 
       render(
         getMarkup({
-          headerElements: (
-            <div id="header" style={{ height: 100, width: 150 }} />
-          ),
+          headerElements: <div id="header" style={{height: 100, width: 150}} />,
           ref: ref => {
             windowScroller = ref;
-          }
-        })
+          },
+        }),
       );
 
       expect(windowScroller._positionFromTop).toBe(100);
@@ -313,30 +309,28 @@ describe("WindowScroller", () => {
 
       mockGetBoundingClientRectForHeader({
         height: 200,
-        width: 300
+        width: 300,
       });
 
       expect(windowScroller._positionFromTop).toBe(100);
       expect(windowScroller._positionFromLeft).toBe(150);
 
-      simulateWindowResize({ height: 1000, width: 1000 });
+      simulateWindowResize({height: 1000, width: 1000});
 
       expect(windowScroller._positionFromTop).toBe(200);
       expect(windowScroller._positionFromLeft).toBe(300);
     });
 
-    it("should recalculate the offset from the top if called externally", () => {
+    it('should recalculate the offset from the top if called externally', () => {
       let windowScroller;
 
       render(
         getMarkup({
-          headerElements: (
-            <div id="header" style={{ height: 100, width: 150 }} />
-          ),
+          headerElements: <div id="header" style={{height: 100, width: 150}} />,
           ref: ref => {
             windowScroller = ref;
-          }
-        })
+          },
+        }),
       );
 
       expect(windowScroller._positionFromTop).toBe(100);
@@ -344,7 +338,7 @@ describe("WindowScroller", () => {
 
       mockGetBoundingClientRectForHeader({
         height: 200,
-        width: 300
+        width: 300,
       });
 
       windowScroller.updatePosition();
@@ -354,12 +348,12 @@ describe("WindowScroller", () => {
     });
   });
 
-  describe("when child scrolls", () => {
+  describe('when child scrolls', () => {
     let originalScrollTo;
     beforeEach(() => {
       originalScrollTo = window.scrollTo;
       window.scrollTo = (scrollX, scrollY) =>
-        simulateWindowScroll({ scrollX, scrollY });
+        simulateWindowScroll({scrollX, scrollY});
     });
 
     afterEach(() => {
@@ -367,7 +361,7 @@ describe("WindowScroller", () => {
       render.unmount();
     });
 
-    it("should scroll the scrollElement (when it is window) the desired amount", () => {
+    it('should scroll the scrollElement (when it is window) the desired amount', () => {
       let windowScroller, childComponent;
 
       render(
@@ -377,38 +371,38 @@ describe("WindowScroller", () => {
           },
           childRef: ref => {
             childComponent = ref;
-          }
-        })
+          },
+        }),
       );
 
-      childComponent.props.onScroll({ scrollTop: 200 });
+      childComponent.props.onScroll({scrollTop: 200});
 
       expect(window.scrollY).toEqual(200 + windowScroller._positionFromTop);
     });
 
-    it("should not scroll the scrollElement if trying to scroll to where we already are", () => {
+    it('should not scroll the scrollElement if trying to scroll to where we already are', () => {
       let childComponent;
 
       render(
         getMarkup({
           childRef: ref => {
             childComponent = ref;
-          }
-        })
+          },
+        }),
       );
 
-      simulateWindowScroll({ scrollY: 200 });
+      simulateWindowScroll({scrollY: 200});
 
       window.scrollTo = jest.fn();
 
-      childComponent.props.onScroll({ scrollTop: 200 });
+      childComponent.props.onScroll({scrollTop: 200});
 
       expect(window.scrollTo).not.toHaveBeenCalled();
     });
 
-    it("should scroll the scrollElement (when it is an element) the desired amount", () => {
+    it('should scroll the scrollElement (when it is an element) the desired amount', () => {
       let windowScroller, childComponent;
-      const divEl = document.createElement("div");
+      const divEl = document.createElement('div');
 
       render(
         getMarkup({
@@ -418,16 +412,16 @@ describe("WindowScroller", () => {
           scrollElement: divEl,
           childRef: ref => {
             childComponent = ref;
-          }
-        })
+          },
+        }),
       );
 
-      childComponent.props.onScroll({ scrollTop: 200 });
+      childComponent.props.onScroll({scrollTop: 200});
 
       expect(divEl.scrollTop).toEqual(200 + windowScroller._positionFromTop);
     });
 
-    it("should update own scrollTop", () => {
+    it('should update own scrollTop', () => {
       let windowScroller, childComponent;
 
       render(
@@ -437,11 +431,11 @@ describe("WindowScroller", () => {
           },
           childRef: ref => {
             childComponent = ref;
-          }
-        })
+          },
+        }),
       );
 
-      childComponent.props.onScroll({ scrollTop: 200 });
+      childComponent.props.onScroll({scrollTop: 200});
 
       expect(windowScroller.state.scrollTop).toEqual(200);
     });
