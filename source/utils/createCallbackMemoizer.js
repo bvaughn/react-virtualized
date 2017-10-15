@@ -4,7 +4,7 @@
 export default function createCallbackMemoizer(requireAllKeys = true) {
   let cachedIndices = {};
 
-  return ({ callback, indices }) => {
+  return ({callback, indices}) => {
     const keys = Object.keys(indices);
     const allInitialized =
       !requireAllKeys ||
@@ -19,7 +19,7 @@ export default function createCallbackMemoizer(requireAllKeys = true) {
         const value = indices[key];
 
         return Array.isArray(value)
-          ? cachedValue.join(",") !== value.join(",")
+          ? cachedValue.join(',') !== value.join(',')
           : cachedValue !== value;
       });
 

@@ -1,31 +1,31 @@
 /** @flow */
-import Immutable from "immutable";
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import Immutable from 'immutable';
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
-  ContentBoxParagraph
-} from "../demo/ContentBox";
-import { LabeledInput, InputRow } from "../demo/LabeledInput";
-import AutoSizer from "../AutoSizer";
-import Column from "./Column";
-import Table from "./Table";
-import SortDirection from "./SortDirection";
-import SortIndicator from "./SortIndicator";
-import styles from "./Table.example.css";
+  ContentBoxParagraph,
+} from '../demo/ContentBox';
+import {LabeledInput, InputRow} from '../demo/LabeledInput';
+import AutoSizer from '../AutoSizer';
+import Column from './Column';
+import Table from './Table';
+import SortDirection from './SortDirection';
+import SortIndicator from './SortIndicator';
+import styles from './Table.example.css';
 
 export default class TableExample extends PureComponent {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(Immutable.List).isRequired,
   };
 
   constructor(props, context) {
     super(props, context);
 
-    const sortBy = "index";
+    const sortBy = 'index';
     const sortDirection = SortDirection.ASC;
-    const sortedList = this._sortList({ sortBy, sortDirection });
+    const sortedList = this._sortList({sortBy, sortDirection});
 
     this.state = {
       disableHeader: false,
@@ -39,7 +39,7 @@ export default class TableExample extends PureComponent {
       sortBy,
       sortDirection,
       sortedList,
-      useDynamicRowHeight: false
+      useDynamicRowHeight: false,
     };
 
     this._getRowHeight = this._getRowHeight.bind(this);
@@ -64,10 +64,10 @@ export default class TableExample extends PureComponent {
       sortBy,
       sortDirection,
       sortedList,
-      useDynamicRowHeight
+      useDynamicRowHeight,
     } = this.state;
 
-    const rowGetter = ({ index }) => this._getDatum(sortedList, index);
+    const rowGetter = ({index}) => this._getDatum(sortedList, index);
 
     return (
       <ContentBox>
@@ -79,7 +79,7 @@ export default class TableExample extends PureComponent {
 
         <ContentBoxParagraph>
           The table layout below is created with flexboxes. This allows it to
-          have a fixed header and scrollable body content. It also makes use of{" "}
+          have a fixed header and scrollable body content. It also makes use of{' '}
           <code>Grid</code> for windowing table content so that large lists are
           rendered efficiently. Adjust its configurable properties below to see
           how it reacts.
@@ -105,7 +105,7 @@ export default class TableExample extends PureComponent {
               className={styles.checkbox}
               type="checkbox"
               onChange={event =>
-                this.setState({ hideIndexRow: event.target.checked })}
+                this.setState({hideIndexRow: event.target.checked})}
             />
             Hide index?
           </label>
@@ -117,7 +117,7 @@ export default class TableExample extends PureComponent {
               className={styles.checkbox}
               type="checkbox"
               onChange={event =>
-                this.setState({ disableHeader: event.target.checked })}
+                this.setState({disableHeader: event.target.checked})}
             />
             Hide header?
           </label>
@@ -135,13 +135,13 @@ export default class TableExample extends PureComponent {
             name="onScrollToRow"
             placeholder="Index..."
             onChange={this._onScrollToRowChange}
-            value={scrollToIndex || ""}
+            value={scrollToIndex || ''}
           />
           <LabeledInput
             label="List height"
             name="height"
             onChange={event =>
-              this.setState({ height: parseInt(event.target.value, 10) || 1 })}
+              this.setState({height: parseInt(event.target.value, 10) || 1})}
             value={height}
           />
           <LabeledInput
@@ -150,7 +150,7 @@ export default class TableExample extends PureComponent {
             name="rowHeight"
             onChange={event =>
               this.setState({
-                rowHeight: parseInt(event.target.value, 10) || 1
+                rowHeight: parseInt(event.target.value, 10) || 1,
               })}
             value={rowHeight}
           />
@@ -159,7 +159,7 @@ export default class TableExample extends PureComponent {
             name="headerHeight"
             onChange={event =>
               this.setState({
-                headerHeight: parseInt(event.target.value, 10) || 1
+                headerHeight: parseInt(event.target.value, 10) || 1,
               })}
             value={headerHeight}
           />
@@ -168,7 +168,7 @@ export default class TableExample extends PureComponent {
             name="overscanRowCount"
             onChange={event =>
               this.setState({
-                overscanRowCount: parseInt(event.target.value, 10) || 0
+                overscanRowCount: parseInt(event.target.value, 10) || 0,
               })}
             value={overscanRowCount}
           />
@@ -176,7 +176,7 @@ export default class TableExample extends PureComponent {
 
         <div>
           <AutoSizer disableHeight>
-            {({ width }) =>
+            {({width}) => (
               <Table
                 ref="Table"
                 disableHeader={disableHeader}
@@ -193,16 +193,16 @@ export default class TableExample extends PureComponent {
                 sort={this._sort}
                 sortBy={sortBy}
                 sortDirection={sortDirection}
-                width={width}
-              >
-                {!hideIndexRow &&
+                width={width}>
+                {!hideIndexRow && (
                   <Column
                     label="Index"
-                    cellDataGetter={({ rowData }) => rowData.index}
+                    cellDataGetter={({rowData}) => rowData.index}
                     dataKey="index"
                     disableSort={!this._isSortEnabled()}
                     width={60}
-                  />}
+                  />
+                )}
                 <Column
                   dataKey="name"
                   disableSort={!this._isSortEnabled()}
@@ -215,10 +215,11 @@ export default class TableExample extends PureComponent {
                   label="The description label is really long so that it will be truncated"
                   dataKey="random"
                   className={styles.exampleColumn}
-                  cellRenderer={({ cellData }) => cellData}
+                  cellRenderer={({cellData}) => cellData}
                   flexGrow={1}
                 />
-              </Table>}
+              </Table>
+            )}
           </AutoSizer>
         </div>
       </ContentBox>
@@ -229,13 +230,13 @@ export default class TableExample extends PureComponent {
     return list.get(index % list.size);
   }
 
-  _getRowHeight({ index }) {
-    const { list } = this.context;
+  _getRowHeight({index}) {
+    const {list} = this.context;
 
     return this._getDatum(list, index).size;
   }
 
-  _headerRenderer({ dataKey, sortBy, sortDirection }) {
+  _headerRenderer({dataKey, sortBy, sortDirection}) {
     return (
       <div>
         Full Name
@@ -245,8 +246,8 @@ export default class TableExample extends PureComponent {
   }
 
   _isSortEnabled() {
-    const { list } = this.context;
-    const { rowCount } = this.state;
+    const {list} = this.context;
+    const {rowCount} = this.state;
 
     return rowCount <= list.size;
   }
@@ -258,24 +259,24 @@ export default class TableExample extends PureComponent {
   _onRowCountChange(event) {
     const rowCount = parseInt(event.target.value, 10) || 0;
 
-    this.setState({ rowCount });
+    this.setState({rowCount});
   }
 
   _onScrollToRowChange(event) {
-    const { rowCount } = this.state;
+    const {rowCount} = this.state;
     let scrollToIndex = Math.min(
       rowCount - 1,
-      parseInt(event.target.value, 10)
+      parseInt(event.target.value, 10),
     );
 
     if (isNaN(scrollToIndex)) {
       scrollToIndex = undefined;
     }
 
-    this.setState({ scrollToIndex });
+    this.setState({scrollToIndex});
   }
 
-  _rowClassName({ index }) {
+  _rowClassName({index}) {
     if (index < 0) {
       return styles.headerRow;
     } else {
@@ -283,25 +284,25 @@ export default class TableExample extends PureComponent {
     }
   }
 
-  _sort({ sortBy, sortDirection }) {
-    const sortedList = this._sortList({ sortBy, sortDirection });
+  _sort({sortBy, sortDirection}) {
+    const sortedList = this._sortList({sortBy, sortDirection});
 
-    this.setState({ sortBy, sortDirection, sortedList });
+    this.setState({sortBy, sortDirection, sortedList});
   }
 
-  _sortList({ sortBy, sortDirection }) {
-    const { list } = this.context;
+  _sortList({sortBy, sortDirection}) {
+    const {list} = this.context;
 
     return list
       .sortBy(item => item[sortBy])
       .update(
-        list => (sortDirection === SortDirection.DESC ? list.reverse() : list)
+        list => (sortDirection === SortDirection.DESC ? list.reverse() : list),
       );
   }
 
   _updateUseDynamicRowHeight(value) {
     this.setState({
-      useDynamicRowHeight: value
+      useDynamicRowHeight: value,
     });
   }
 }

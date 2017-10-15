@@ -7,7 +7,7 @@
  * Issue reported here: https://github.com/mikolalysenko/binary-search-bounds/issues/5
  **/
 
-import bounds from "./binarySearchBounds";
+import bounds from './binarySearchBounds';
 
 var NOT_FOUND = 0;
 var SUCCESS = 1;
@@ -334,7 +334,7 @@ function createIntervalTree(intervals) {
     createIntervalTree(leftIntervals),
     createIntervalTree(rightIntervals),
     leftPoints,
-    rightPoints
+    rightPoints,
   );
 }
 
@@ -354,7 +354,7 @@ tproto.insert = function(interval) {
       null,
       null,
       [interval],
-      [interval]
+      [interval],
     );
   }
 };
@@ -382,22 +382,22 @@ tproto.queryInterval = function(lo, hi, cb) {
   }
 };
 
-Object.defineProperty(tproto, "count", {
+Object.defineProperty(tproto, 'count', {
   get: function() {
     if (this.root) {
       return this.root.count;
     }
     return 0;
-  }
+  },
 });
 
-Object.defineProperty(tproto, "intervals", {
+Object.defineProperty(tproto, 'intervals', {
   get: function() {
     if (this.root) {
       return this.root.intervals([]);
     }
     return [];
-  }
+  },
 });
 
 export default function createWrapper(intervals) {

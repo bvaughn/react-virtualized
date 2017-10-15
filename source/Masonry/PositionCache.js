@@ -1,5 +1,5 @@
 /** @flow */
-import createIntervalTree from "../vendor/intervalTree";
+import createIntervalTree from '../vendor/intervalTree';
 
 type RenderCallback = (index: number, left: number, top: number) => void;
 
@@ -8,18 +8,18 @@ type RenderCallback = (index: number, left: number, top: number) => void;
 //   O(1) lookup of shortest measured column (so we know when to enter phase 1)
 export default class PositionCache {
   // Tracks the height of each column
-  _columnSizeMap: { [x: number]: number } = {};
+  _columnSizeMap: {[x: number]: number} = {};
 
   // Store tops and bottoms of each cell for fast intersection lookup.
   _intervalTree = createIntervalTree();
 
   // Maps cell index to x coordinates for quick lookup.
-  _leftMap: { [index: number]: number } = {};
+  _leftMap: {[index: number]: number} = {};
 
   estimateTotalHeight(
     cellCount: number,
     columnCount: number,
-    defaultCellHeight: number
+    defaultCellHeight: number,
   ): number {
     const unmeasuredCellCount = cellCount - this.count;
     return (
@@ -32,12 +32,12 @@ export default class PositionCache {
   range(
     scrollTop: number,
     clientHeight: number,
-    renderCallback: RenderCallback
+    renderCallback: RenderCallback,
   ): void {
     this._intervalTree.queryInterval(
       scrollTop,
       scrollTop + clientHeight,
-      ([top, _, index]) => renderCallback(index, this._leftMap[index], top)
+      ([top, _, index]) => renderCallback(index, this._leftMap[index], top),
     );
   }
 

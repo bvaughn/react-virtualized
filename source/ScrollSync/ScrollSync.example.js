@@ -1,21 +1,21 @@
 /** @flow */
-import React, { PureComponent } from "react";
+import React, {PureComponent} from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
-  ContentBoxParagraph
-} from "../demo/ContentBox";
-import AutoSizer from "../AutoSizer";
-import Grid from "../Grid";
-import ScrollSync from "./ScrollSync";
-import cn from "classnames";
-import styles from "./ScrollSync.example.css";
-import scrollbarSize from "dom-helpers/util/scrollbarSize";
+  ContentBoxParagraph,
+} from '../demo/ContentBox';
+import AutoSizer from '../AutoSizer';
+import Grid from '../Grid';
+import ScrollSync from './ScrollSync';
+import cn from 'classnames';
+import styles from './ScrollSync.example.css';
+import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 
-const LEFT_COLOR_FROM = hexToRgb("#471061");
-const LEFT_COLOR_TO = hexToRgb("#BC3959");
-const TOP_COLOR_FROM = hexToRgb("#000000");
-const TOP_COLOR_TO = hexToRgb("#333333");
+const LEFT_COLOR_FROM = hexToRgb('#471061');
+const LEFT_COLOR_TO = hexToRgb('#BC3959');
+const TOP_COLOR_FROM = hexToRgb('#000000');
+const TOP_COLOR_TO = hexToRgb('#333333');
 
 export default class GridExample extends PureComponent {
   constructor(props, context) {
@@ -28,7 +28,7 @@ export default class GridExample extends PureComponent {
       overscanColumnCount: 0,
       overscanRowCount: 5,
       rowHeight: 40,
-      rowCount: 100
+      rowCount: 100,
     };
 
     this._renderBodyCell = this._renderBodyCell.bind(this);
@@ -44,7 +44,7 @@ export default class GridExample extends PureComponent {
       overscanColumnCount,
       overscanRowCount,
       rowHeight,
-      rowCount
+      rowCount,
     } = this.state;
 
     return (
@@ -75,7 +75,7 @@ export default class GridExample extends PureComponent {
             scrollHeight,
             scrollLeft,
             scrollTop,
-            scrollWidth
+            scrollWidth,
           }) => {
             const x = scrollLeft / (scrollWidth - clientWidth);
             const y = scrollTop / (scrollHeight - clientHeight);
@@ -83,34 +83,33 @@ export default class GridExample extends PureComponent {
             const leftBackgroundColor = mixColors(
               LEFT_COLOR_FROM,
               LEFT_COLOR_TO,
-              y
+              y,
             );
-            const leftColor = "#ffffff";
+            const leftColor = '#ffffff';
             const topBackgroundColor = mixColors(
               TOP_COLOR_FROM,
               TOP_COLOR_TO,
-              x
+              x,
             );
-            const topColor = "#ffffff";
+            const topColor = '#ffffff';
             const middleBackgroundColor = mixColors(
               leftBackgroundColor,
               topBackgroundColor,
-              0.5
+              0.5,
             );
-            const middleColor = "#ffffff";
+            const middleColor = '#ffffff';
 
             return (
               <div className={styles.GridRow}>
                 <div
                   className={styles.LeftSideGridContainer}
                   style={{
-                    position: "absolute",
+                    position: 'absolute',
                     left: 0,
                     top: 0,
                     color: leftColor,
-                    backgroundColor: `rgb(${topBackgroundColor.r},${topBackgroundColor.g},${topBackgroundColor.b})`
-                  }}
-                >
+                    backgroundColor: `rgb(${topBackgroundColor.r},${topBackgroundColor.g},${topBackgroundColor.b})`,
+                  }}>
                   <Grid
                     cellRenderer={this._renderLeftHeaderCell}
                     className={styles.HeaderGrid}
@@ -125,13 +124,12 @@ export default class GridExample extends PureComponent {
                 <div
                   className={styles.LeftSideGridContainer}
                   style={{
-                    position: "absolute",
+                    position: 'absolute',
                     left: 0,
                     top: rowHeight,
                     color: leftColor,
-                    backgroundColor: `rgb(${leftBackgroundColor.r},${leftBackgroundColor.g},${leftBackgroundColor.b})`
-                  }}
-                >
+                    backgroundColor: `rgb(${leftBackgroundColor.r},${leftBackgroundColor.g},${leftBackgroundColor.b})`,
+                  }}>
                   <Grid
                     overscanColumnCount={overscanColumnCount}
                     overscanRowCount={overscanRowCount}
@@ -148,16 +146,15 @@ export default class GridExample extends PureComponent {
                 </div>
                 <div className={styles.GridColumn}>
                   <AutoSizer disableHeight>
-                    {({ width }) =>
+                    {({width}) => (
                       <div>
                         <div
                           style={{
                             backgroundColor: `rgb(${topBackgroundColor.r},${topBackgroundColor.g},${topBackgroundColor.b})`,
                             color: topColor,
                             height: rowHeight,
-                            width: width - scrollbarSize()
-                          }}
-                        >
+                            width: width - scrollbarSize(),
+                          }}>
                           <Grid
                             className={styles.HeaderGrid}
                             columnWidth={columnWidth}
@@ -176,9 +173,8 @@ export default class GridExample extends PureComponent {
                             backgroundColor: `rgb(${middleBackgroundColor.r},${middleBackgroundColor.g},${middleBackgroundColor.b})`,
                             color: middleColor,
                             height,
-                            width
-                          }}
-                        >
+                            width,
+                          }}>
                           <Grid
                             className={styles.BodyGrid}
                             columnWidth={columnWidth}
@@ -193,7 +189,8 @@ export default class GridExample extends PureComponent {
                             width={width}
                           />
                         </div>
-                      </div>}
+                      </div>
+                    )}
                   </AutoSizer>
                 </div>
               </div>
@@ -204,23 +201,23 @@ export default class GridExample extends PureComponent {
     );
   }
 
-  _renderBodyCell({ columnIndex, key, rowIndex, style }) {
+  _renderBodyCell({columnIndex, key, rowIndex, style}) {
     if (columnIndex < 1) {
       return;
     }
 
-    return this._renderLeftSideCell({ columnIndex, key, rowIndex, style });
+    return this._renderLeftSideCell({columnIndex, key, rowIndex, style});
   }
 
-  _renderHeaderCell({ columnIndex, key, rowIndex, style }) {
+  _renderHeaderCell({columnIndex, key, rowIndex, style}) {
     if (columnIndex < 1) {
       return;
     }
 
-    return this._renderLeftHeaderCell({ columnIndex, key, rowIndex, style });
+    return this._renderLeftHeaderCell({columnIndex, key, rowIndex, style});
   }
 
-  _renderLeftHeaderCell({ columnIndex, key, style }) {
+  _renderLeftHeaderCell({columnIndex, key, style}) {
     return (
       <div className={styles.headerCell} key={key} style={style}>
         {`C${columnIndex}`}
@@ -228,7 +225,7 @@ export default class GridExample extends PureComponent {
     );
   }
 
-  _renderLeftSideCell({ columnIndex, key, rowIndex, style }) {
+  _renderLeftSideCell({columnIndex, key, rowIndex, style}) {
     const rowClass =
       rowIndex % 2 === 0
         ? columnIndex % 2 === 0 ? styles.evenRow : styles.oddRow
@@ -249,7 +246,7 @@ function hexToRgb(hex) {
     ? {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
+        b: parseInt(result[3], 16),
       }
     : null;
 }
@@ -266,5 +263,5 @@ function mixColors(color1, color2, amount) {
   const g = Math.round(weight1 * color1.g + weight2 * color2.g);
   const b = Math.round(weight1 * color1.b + weight2 * color2.b);
 
-  return { r, g, b };
+  return {r, g, b};
 }

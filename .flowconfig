@@ -9,6 +9,7 @@
 .*/WindowScroller/.*
 
 .*/node_modules/babel-plugin-transform-react-remove-prop-types/.*
+.*/node_modules/graphql/.*
 
 [include]
 

@@ -1,9 +1,9 @@
 /** @flow */
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import cn from "classnames";
-import createCallbackMemoizer from "../utils/createCallbackMemoizer";
-import getScrollbarSize from "dom-helpers/util/scrollbarSize";
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
+import cn from 'classnames';
+import createCallbackMemoizer from '../utils/createCallbackMemoizer';
+import getScrollbarSize from 'dom-helpers/util/scrollbarSize';
 
 // @TODO Merge Collection and CollectionView
 
@@ -18,8 +18,8 @@ const IS_SCROLLING_TIMEOUT = 150;
  * This prevents Grid from interrupting mouse-wheel animations (see issue #2).
  */
 const SCROLL_POSITION_CHANGE_REASONS = {
-  OBSERVED: "observed",
-  REQUESTED: "requested"
+  OBSERVED: 'observed',
+  REQUESTED: 'requested',
 };
 
 /**
@@ -28,7 +28,7 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  */
 export default class CollectionView extends PureComponent {
   static propTypes = {
-    "aria-label": PropTypes.string,
+    'aria-label': PropTypes.string,
 
     /**
      * Removes fixed height from the scrollingContainer so that the total height
@@ -97,7 +97,7 @@ export default class CollectionView extends PureComponent {
      * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
      * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
      */
-    scrollToAlignment: PropTypes.oneOf(["auto", "end", "start", "center"])
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center'])
       .isRequired,
 
     /**
@@ -124,19 +124,19 @@ export default class CollectionView extends PureComponent {
     /**
      * Width of Collection; this property determines the number of visible (vs virtualized) columns.
      */
-    width: PropTypes.number.isRequired
+    width: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
-    "aria-label": "grid",
+    'aria-label': 'grid',
     horizontalOverscanSize: 0,
     noContentRenderer: () => null,
     onScroll: () => null,
     onSectionRendered: () => null,
-    scrollToAlignment: "auto",
+    scrollToAlignment: 'auto',
     scrollToCell: -1,
     style: {},
-    verticalOverscanSize: 0
+    verticalOverscanSize: 0,
   };
 
   constructor(props, context) {
@@ -145,7 +145,7 @@ export default class CollectionView extends PureComponent {
     this.state = {
       isScrolling: false,
       scrollLeft: 0,
-      scrollTop: 0
+      scrollTop: 0,
     };
 
     this._calculateSizeAndPositionDataOnNextUpdate = false;
@@ -156,12 +156,12 @@ export default class CollectionView extends PureComponent {
 
     // Bind functions to instance so they don't lose context when passed around.
     this._invokeOnSectionRenderedHelper = this._invokeOnSectionRenderedHelper.bind(
-      this
+      this,
     );
     this._onScroll = this._onScroll.bind(this);
     this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this);
     this._updateScrollPositionForScrollToCell = this._updateScrollPositionForScrollToCell.bind(
-      this
+      this,
     );
   }
 
@@ -178,12 +178,7 @@ export default class CollectionView extends PureComponent {
   /* ---------------------------- Component lifecycle methods ---------------------------- */
 
   componentDidMount() {
-    const {
-      cellLayoutManager,
-      scrollLeft,
-      scrollToCell,
-      scrollTop
-    } = this.props;
+    const {cellLayoutManager, scrollLeft, scrollToCell, scrollTop} = this.props;
 
     // If this component was first rendered server-side, scrollbar size will be undefined.
     // In that event we need to remeasure.
@@ -196,7 +191,7 @@ export default class CollectionView extends PureComponent {
     if (scrollToCell >= 0) {
       this._updateScrollPositionForScrollToCell();
     } else if (scrollLeft >= 0 || scrollTop >= 0) {
-      this._setScrollPosition({ scrollLeft, scrollTop });
+      this._setScrollPosition({scrollLeft, scrollTop});
     }
 
     // Update onSectionRendered callback.
@@ -204,7 +199,7 @@ export default class CollectionView extends PureComponent {
 
     const {
       height: totalHeight,
-      width: totalWidth
+      width: totalWidth,
     } = cellLayoutManager.getTotalSize();
 
     // Initialize onScroll callback.
@@ -212,13 +207,13 @@ export default class CollectionView extends PureComponent {
       scrollLeft: scrollLeft || 0,
       scrollTop: scrollTop || 0,
       totalHeight,
-      totalWidth
+      totalWidth,
     });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { height, scrollToAlignment, scrollToCell, width } = this.props;
-    const { scrollLeft, scrollPositionChangeReason, scrollTop } = this.state;
+    const {height, scrollToAlignment, scrollToCell, width} = this.props;
+    const {scrollLeft, scrollPositionChangeReason, scrollTop} = this.state;
 
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
     // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
@@ -259,7 +254,7 @@ export default class CollectionView extends PureComponent {
   }
 
   componentWillMount() {
-    const { cellLayoutManager } = this.props;
+    const {cellLayoutManager} = this.props;
 
     cellLayoutManager.calculateSizeAndPositionData();
 
@@ -288,12 +283,12 @@ export default class CollectionView extends PureComponent {
    * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
    */
   componentWillReceiveProps(nextProps) {
-    const { scrollLeft, scrollTop } = this.state;
+    const {scrollLeft, scrollTop} = this.state;
 
     if (nextProps.cellCount === 0 && (scrollLeft !== 0 || scrollTop !== 0)) {
       this._setScrollPosition({
         scrollLeft: 0,
-        scrollTop: 0
+        scrollTop: 0,
       });
     } else if (
       nextProps.scrollLeft !== this.props.scrollLeft ||
@@ -301,7 +296,7 @@ export default class CollectionView extends PureComponent {
     ) {
       this._setScrollPosition({
         scrollLeft: nextProps.scrollLeft,
-        scrollTop: nextProps.scrollTop
+        scrollTop: nextProps.scrollTop,
       });
     }
 
@@ -330,14 +325,14 @@ export default class CollectionView extends PureComponent {
       noContentRenderer,
       style,
       verticalOverscanSize,
-      width
+      width,
     } = this.props;
 
-    const { isScrolling, scrollLeft, scrollTop } = this.state;
+    const {isScrolling, scrollLeft, scrollTop} = this.state;
 
     const {
       height: totalHeight,
-      width: totalWidth
+      width: totalWidth,
     } = cellLayoutManager.getTotalSize();
 
     // Safely expand the rendered area by the specified overscan amount
@@ -345,11 +340,11 @@ export default class CollectionView extends PureComponent {
     const top = Math.max(0, scrollTop - verticalOverscanSize);
     const right = Math.min(
       totalWidth,
-      scrollLeft + width + horizontalOverscanSize
+      scrollLeft + width + horizontalOverscanSize,
     );
     const bottom = Math.min(
       totalHeight,
-      scrollTop + height + verticalOverscanSize
+      scrollTop + height + verticalOverscanSize,
     );
 
     const childrenToDisplay =
@@ -359,18 +354,18 @@ export default class CollectionView extends PureComponent {
             isScrolling,
             width: right - left,
             x: left,
-            y: top
+            y: top,
           })
         : [];
 
     const collectionStyle = {
-      boxSizing: "border-box",
-      direction: "ltr",
-      height: autoHeight ? "auto" : height,
-      position: "relative",
-      WebkitOverflowScrolling: "touch",
+      boxSizing: 'border-box',
+      direction: 'ltr',
+      height: autoHeight ? 'auto' : height,
+      position: 'relative',
+      WebkitOverflowScrolling: 'touch',
       width,
-      willChange: "transform"
+      willChange: 'transform',
     };
 
     // Force browser to hide scrollbars when we know they aren't necessary.
@@ -387,38 +382,37 @@ export default class CollectionView extends PureComponent {
     // Without this style, Grid would render the correct range of cells but would NOT update its internal offset.
     // This was originally reported via clauderic/react-infinite-calendar/issues/23
     collectionStyle.overflowX =
-      totalWidth + verticalScrollBarSize <= width ? "hidden" : "auto";
+      totalWidth + verticalScrollBarSize <= width ? 'hidden' : 'auto';
     collectionStyle.overflowY =
-      totalHeight + horizontalScrollBarSize <= height ? "hidden" : "auto";
+      totalHeight + horizontalScrollBarSize <= height ? 'hidden' : 'auto';
 
     return (
       <div
         ref={this._setScrollingContainerRef}
-        aria-label={this.props["aria-label"]}
-        className={cn("ReactVirtualized__Collection", className)}
+        aria-label={this.props['aria-label']}
+        className={cn('ReactVirtualized__Collection', className)}
         id={id}
         onScroll={this._onScroll}
         role="grid"
         style={{
           ...collectionStyle,
-          ...style
+          ...style,
         }}
-        tabIndex={0}
-      >
-        {cellCount > 0 &&
+        tabIndex={0}>
+        {cellCount > 0 && (
           <div
             className="ReactVirtualized__Collection__innerScrollContainer"
             style={{
               height: totalHeight,
               maxHeight: totalHeight,
               maxWidth: totalWidth,
-              overflow: "hidden",
-              pointerEvents: isScrolling ? "none" : "",
-              width: totalWidth
-            }}
-          >
+              overflow: 'hidden',
+              pointerEvents: isScrolling ? 'none' : '',
+              width: totalWidth,
+            }}>
             {childrenToDisplay}
-          </div>}
+          </div>
+        )}
         {cellCount === 0 && noContentRenderer()}
       </div>
     );
@@ -437,32 +431,32 @@ export default class CollectionView extends PureComponent {
     }
 
     this._disablePointerEventsTimeoutId = setTimeout(() => {
-      const { isScrollingChange } = this.props;
+      const {isScrollingChange} = this.props;
 
       isScrollingChange(false);
 
       this._disablePointerEventsTimeoutId = null;
       this.setState({
-        isScrolling: false
+        isScrolling: false,
       });
     }, IS_SCROLLING_TIMEOUT);
   }
 
   _invokeOnSectionRenderedHelper() {
-    const { cellLayoutManager, onSectionRendered } = this.props;
+    const {cellLayoutManager, onSectionRendered} = this.props;
 
     this._onSectionRenderedMemoizer({
       callback: onSectionRendered,
       indices: {
-        indices: cellLayoutManager.getLastRenderedIndices()
-      }
+        indices: cellLayoutManager.getLastRenderedIndices(),
+      },
     });
   }
 
-  _invokeOnScrollMemoizer({ scrollLeft, scrollTop, totalHeight, totalWidth }) {
+  _invokeOnScrollMemoizer({scrollLeft, scrollTop, totalHeight, totalWidth}) {
     this._onScrollMemoizer({
-      callback: ({ scrollLeft, scrollTop }) => {
-        const { height, onScroll, width } = this.props;
+      callback: ({scrollLeft, scrollTop}) => {
+        const {height, onScroll, width} = this.props;
 
         onScroll({
           clientHeight: height,
@@ -470,13 +464,13 @@ export default class CollectionView extends PureComponent {
           scrollHeight: totalHeight,
           scrollLeft,
           scrollTop,
-          scrollWidth: totalWidth
+          scrollWidth: totalWidth,
         });
       },
       indices: {
         scrollLeft,
-        scrollTop
-      }
+        scrollTop,
+      },
     });
   }
 
@@ -484,9 +478,9 @@ export default class CollectionView extends PureComponent {
     this._scrollingContainer = ref;
   }
 
-  _setScrollPosition({ scrollLeft, scrollTop }) {
+  _setScrollPosition({scrollLeft, scrollTop}) {
     const newState = {
-      scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+      scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED,
     };
 
     if (scrollLeft >= 0) {
@@ -511,9 +505,9 @@ export default class CollectionView extends PureComponent {
       height,
       scrollToAlignment,
       scrollToCell,
-      width
+      width,
     } = this.props;
-    const { scrollLeft, scrollTop } = this.state;
+    const {scrollLeft, scrollTop} = this.state;
 
     if (scrollToCell >= 0) {
       const scrollPosition = cellLayoutManager.getScrollPositionForCell({
@@ -522,7 +516,7 @@ export default class CollectionView extends PureComponent {
         height,
         scrollLeft,
         scrollTop,
-        width
+        width,
       });
 
       if (
@@ -549,19 +543,19 @@ export default class CollectionView extends PureComponent {
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
     // This causes a series of rapid renders that is slow for long lists.
     // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-    const { cellLayoutManager, height, isScrollingChange, width } = this.props;
+    const {cellLayoutManager, height, isScrollingChange, width} = this.props;
     const scrollbarSize = this._scrollbarSize;
     const {
       height: totalHeight,
-      width: totalWidth
+      width: totalWidth,
     } = cellLayoutManager.getTotalSize();
     const scrollLeft = Math.max(
       0,
-      Math.min(totalWidth - width + scrollbarSize, event.target.scrollLeft)
+      Math.min(totalWidth - width + scrollbarSize, event.target.scrollLeft),
     );
     const scrollTop = Math.max(
       0,
-      Math.min(totalHeight - height + scrollbarSize, event.target.scrollTop)
+      Math.min(totalHeight - height + scrollbarSize, event.target.scrollTop),
     );
 
     // Certain devices (like Apple touchpad) rapid-fire duplicate events.
@@ -589,7 +583,7 @@ export default class CollectionView extends PureComponent {
         isScrolling: true,
         scrollLeft,
         scrollPositionChangeReason,
-        scrollTop
+        scrollTop,
       });
     }
 
@@ -597,7 +591,7 @@ export default class CollectionView extends PureComponent {
       scrollLeft,
       scrollTop,
       totalWidth,
-      totalHeight
+      totalHeight,
     });
   }
 }

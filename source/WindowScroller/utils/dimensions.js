@@ -6,13 +6,13 @@
 export function getDimensions(element) {
   if (element === window) {
     return {
-      height: typeof window.innerHeight === "number" ? window.innerHeight : 0,
-      width: typeof window.innerWidth === "number" ? window.innerWidth : 0
+      height: typeof window.innerHeight === 'number' ? window.innerHeight : 0,
+      width: typeof window.innerWidth === 'number' ? window.innerWidth : 0,
     };
   }
 
-  const { width, height } = element.getBoundingClientRect();
-  return { width, height };
+  const {width, height} = element.getBoundingClientRect();
+  return {width, height};
 }
 
 /**
@@ -23,14 +23,14 @@ export function getDimensions(element) {
  */
 export function getPositionOffset(element, container) {
   const scrollOffset =
-    container === window ? { top: 0, left: 0 } : getScrollOffset(container);
+    container === window ? {top: 0, left: 0} : getScrollOffset(container);
   const containerElement =
     container === window ? document.documentElement : container;
   const elementRect = element.getBoundingClientRect();
   const containerRect = containerElement.getBoundingClientRect();
   return {
     top: elementRect.top + scrollOffset.top - containerRect.top,
-    left: elementRect.left + scrollOffset.left - containerRect.left
+    left: elementRect.left + scrollOffset.left - containerRect.left,
   };
 }
 
@@ -42,18 +42,18 @@ export function getScrollOffset(element) {
   if (element === window) {
     return {
       top:
-        "scrollY" in window
+        'scrollY' in window
           ? window.scrollY
           : document.documentElement.scrollTop,
       left:
-        "scrollX" in window
+        'scrollX' in window
           ? window.scrollX
-          : document.documentElement.scrollLeft
+          : document.documentElement.scrollLeft,
     };
   } else {
     return {
       top: element.scrollTop,
-      left: element.scrollLeft
+      left: element.scrollLeft,
     };
   }
 }

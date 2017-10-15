@@ -1,8 +1,8 @@
-import React from "react";
-import cn from "classnames";
-import styles from "./ContentBox.css";
+import React from 'react';
+import cn from 'classnames';
+import styles from './ContentBox.css';
 
-export function ContentBox({ className, children, style }) {
+export function ContentBox({className, children, style}) {
   return (
     <div className={cn(styles.ContentBox, className)} style={style}>
       {children}
@@ -10,14 +10,14 @@ export function ContentBox({ className, children, style }) {
   );
 }
 
-export function ContentBoxHeader({ text, sourceLink, docsLink }) {
+export function ContentBoxHeader({text, sourceLink, docsLink}) {
   const links = [];
 
   if (sourceLink) {
     links.push(
       <a className={styles.Link} href={sourceLink} key="sourceLink">
         Source
-      </a>
+      </a>,
     );
   }
 
@@ -29,7 +29,7 @@ export function ContentBoxHeader({ text, sourceLink, docsLink }) {
     links.push(
       <a className={styles.Link} href={docsLink} key="docsLink">
         Docs
-      </a>
+      </a>,
     );
   }
 
@@ -37,18 +37,11 @@ export function ContentBoxHeader({ text, sourceLink, docsLink }) {
     <h1 className={styles.Header}>
       {text}
 
-      {links.length > 0 &&
-        <small className={styles.Small}>
-          {links}
-        </small>}
+      {links.length > 0 && <small className={styles.Small}>{links}</small>}
     </h1>
   );
 }
 
-export function ContentBoxParagraph({ children }) {
-  return (
-    <div className={styles.Paragraph}>
-      {children}
-    </div>
-  );
+export function ContentBoxParagraph({children}) {
+  return <div className={styles.Paragraph}>{children}</div>;
 }

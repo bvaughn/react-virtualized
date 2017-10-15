@@ -1,12 +1,12 @@
 // @flow
 
-import type { OverscanIndicesGetterParams, OverscanIndices } from "./types";
+import type {OverscanIndicesGetterParams, OverscanIndices} from './types';
 
 export const SCROLL_DIRECTION_BACKWARD = -1;
 export const SCROLL_DIRECTION_FORWARD = 1;
 
-export const SCROLL_DIRECTION_HORIZONTAL = "horizontal";
-export const SCROLL_DIRECTION_VERTICAL = "vertical";
+export const SCROLL_DIRECTION_HORIZONTAL = 'horizontal';
+export const SCROLL_DIRECTION_VERTICAL = 'vertical';
 
 /**
  * Calculates the number of cells to overscan before and after a specified range.
@@ -18,7 +18,7 @@ export default function defaultOverscanIndicesGetter({
   overscanCellsCount,
   scrollDirection,
   startIndex,
-  stopIndex
+  stopIndex,
 }: OverscanIndicesGetterParams): OverscanIndices {
   // Make sure we render at least 1 cell extra before and after (except near boundaries)
   // This is necessary in order to support keyboard navigation (TAB/SHIFT+TAB) in some cases
@@ -28,12 +28,15 @@ export default function defaultOverscanIndicesGetter({
   if (scrollDirection === SCROLL_DIRECTION_FORWARD) {
     return {
       overscanStartIndex: Math.max(0, startIndex - 1),
-      overscanStopIndex: Math.min(cellCount - 1, stopIndex + overscanCellsCount)
+      overscanStopIndex: Math.min(
+        cellCount - 1,
+        stopIndex + overscanCellsCount,
+      ),
     };
   } else {
     return {
       overscanStartIndex: Math.max(0, startIndex - overscanCellsCount),
-      overscanStopIndex: Math.min(cellCount - 1, stopIndex + 1)
+      overscanStopIndex: Math.min(cellCount - 1, stopIndex + 1),
     };
   }
 }

@@ -1,7 +1,7 @@
 import {
   requestAnimationTimeout,
-  cancelAnimationTimeout
-} from "../../utils/requestAnimationTimeout";
+  cancelAnimationTimeout,
+} from '../../utils/requestAnimationTimeout';
 
 let mountedInstances = [];
 let originalBodyPointerEvents = null;
@@ -31,13 +31,13 @@ function enablePointerEventsAfterDelay() {
   mountedInstances.forEach(instance => {
     maximumTimeout = Math.max(
       maximumTimeout,
-      instance.props.scrollingResetTimeInterval
+      instance.props.scrollingResetTimeInterval,
     );
   });
 
   disablePointerEventsTimeoutId = requestAnimationTimeout(
     enablePointerEventsAfterDelayCallback,
-    maximumTimeout
+    maximumTimeout,
   );
 }
 
@@ -45,7 +45,7 @@ function onScrollWindow(event) {
   if (event.currentTarget === window && originalBodyPointerEvents == null) {
     originalBodyPointerEvents = document.body.style.pointerEvents;
 
-    document.body.style.pointerEvents = "none";
+    document.body.style.pointerEvents = 'none';
   }
   enablePointerEventsAfterDelay();
   mountedInstances.forEach(instance => {
@@ -57,17 +57,17 @@ function onScrollWindow(event) {
 
 export function registerScrollListener(component, element) {
   if (!mountedInstances.some(instance => instance.scrollElement === element)) {
-    element.addEventListener("scroll", onScrollWindow);
+    element.addEventListener('scroll', onScrollWindow);
   }
   mountedInstances.push(component);
 }
 
 export function unregisterScrollListener(component, element) {
   mountedInstances = mountedInstances.filter(
-    instance => instance !== component
+    instance => instance !== component,
   );
   if (!mountedInstances.length) {
-    element.removeEventListener("scroll", onScrollWindow);
+    element.removeEventListener('scroll', onScrollWindow);
     if (disablePointerEventsTimeoutId) {
       cancelAnimationTimeout(disablePointerEventsTimeoutId);
       enablePointerEventsIfDisabled();

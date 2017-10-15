@@ -1,37 +1,37 @@
 /** @flow */
-import Immutable from "immutable";
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import Immutable from 'immutable';
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
-  ContentBoxParagraph
-} from "../demo/ContentBox";
-import { LabeledInput, InputRow } from "../demo/LabeledInput";
-import AutoSizer from "../AutoSizer";
-import MultiGrid from "./MultiGrid";
-import styles from "./MultiGrid.example.css";
+  ContentBoxParagraph,
+} from '../demo/ContentBox';
+import {LabeledInput, InputRow} from '../demo/LabeledInput';
+import AutoSizer from '../AutoSizer';
+import MultiGrid from './MultiGrid';
+import styles from './MultiGrid.example.css';
 
 const STYLE = {
-  border: "1px solid #ddd"
+  border: '1px solid #ddd',
 };
 const STYLE_BOTTOM_LEFT_GRID = {
-  borderRight: "2px solid #aaa",
-  backgroundColor: "#f7f7f7"
+  borderRight: '2px solid #aaa',
+  backgroundColor: '#f7f7f7',
 };
 const STYLE_TOP_LEFT_GRID = {
-  borderBottom: "2px solid #aaa",
-  borderRight: "2px solid #aaa",
-  fontWeight: "bold"
+  borderBottom: '2px solid #aaa',
+  borderRight: '2px solid #aaa',
+  fontWeight: 'bold',
 };
 const STYLE_TOP_RIGHT_GRID = {
-  borderBottom: "2px solid #aaa",
-  fontWeight: "bold"
+  borderBottom: '2px solid #aaa',
+  fontWeight: 'bold',
 };
 
 export default class MultiGridExample extends PureComponent {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(Immutable.List).isRequired,
   };
 
   constructor(props, context) {
@@ -41,16 +41,16 @@ export default class MultiGridExample extends PureComponent {
       fixedColumnCount: 2,
       fixedRowCount: 1,
       scrollToColumn: 0,
-      scrollToRow: 0
+      scrollToRow: 0,
     };
 
     this._cellRenderer = this._cellRenderer.bind(this);
     this._onFixedColumnCountChange = this._createEventHandler(
-      "fixedColumnCount"
+      'fixedColumnCount',
     );
-    this._onFixedRowCountChange = this._createEventHandler("fixedRowCount");
-    this._onScrollToColumnChange = this._createEventHandler("scrollToColumn");
-    this._onScrollToRowChange = this._createEventHandler("scrollToRow");
+    this._onFixedRowCountChange = this._createEventHandler('fixedRowCount');
+    this._onScrollToColumnChange = this._createEventHandler('scrollToColumn');
+    this._onScrollToRowChange = this._createEventHandler('scrollToRow');
   }
 
   render() {
@@ -69,22 +69,22 @@ export default class MultiGridExample extends PureComponent {
 
         <InputRow>
           {this._createLabeledInput(
-            "fixedColumnCount",
-            this._onFixedColumnCountChange
+            'fixedColumnCount',
+            this._onFixedColumnCountChange,
           )}
           {this._createLabeledInput(
-            "fixedRowCount",
-            this._onFixedRowCountChange
+            'fixedRowCount',
+            this._onFixedRowCountChange,
           )}
           {this._createLabeledInput(
-            "scrollToColumn",
-            this._onScrollToColumnChange
+            'scrollToColumn',
+            this._onScrollToColumnChange,
           )}
-          {this._createLabeledInput("scrollToRow", this._onScrollToRowChange)}
+          {this._createLabeledInput('scrollToRow', this._onScrollToRowChange)}
         </InputRow>
 
         <AutoSizer disableHeight>
-          {({ width }) =>
+          {({width}) => (
             <MultiGrid
               {...this.state}
               cellRenderer={this._cellRenderer}
@@ -100,13 +100,14 @@ export default class MultiGridExample extends PureComponent {
               styleTopLeftGrid={STYLE_TOP_LEFT_GRID}
               styleTopRightGrid={STYLE_TOP_RIGHT_GRID}
               width={width}
-            />}
+            />
+          )}
         </AutoSizer>
       </ContentBox>
     );
   }
 
-  _cellRenderer({ columnIndex, key, rowIndex, style }) {
+  _cellRenderer({columnIndex, key, rowIndex, style}) {
     return (
       <div className={styles.Cell} key={key} style={style}>
         {columnIndex}, {rowIndex}
@@ -119,7 +120,7 @@ export default class MultiGridExample extends PureComponent {
       const value = parseInt(event.target.value, 10) || 0;
 
       this.setState({
-        [property]: value
+        [property]: value,
       });
     };
   }

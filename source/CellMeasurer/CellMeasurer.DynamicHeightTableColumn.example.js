@@ -1,15 +1,15 @@
-import Immutable from "immutable";
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import CellMeasurer from "./CellMeasurer";
-import CellMeasurerCache from "./CellMeasurerCache";
-import { Column, Table } from "../Table";
-import styles from "./CellMeasurer.example.css";
+import Immutable from 'immutable';
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
+import CellMeasurer from './CellMeasurer';
+import CellMeasurerCache from './CellMeasurerCache';
+import {Column, Table} from '../Table';
+import styles from './CellMeasurer.example.css';
 
 export default class DynamicHeightTableColumn extends PureComponent {
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
-    width: PropTypes.number.isRequired
+    width: PropTypes.number.isRequired,
   };
 
   constructor(props, context) {
@@ -17,7 +17,7 @@ export default class DynamicHeightTableColumn extends PureComponent {
 
     this._cache = new CellMeasurerCache({
       fixedWidth: true,
-      minHeight: 25
+      minHeight: 25,
     });
 
     this._columnCellRenderer = this._columnCellRenderer.bind(this);
@@ -31,7 +31,7 @@ export default class DynamicHeightTableColumn extends PureComponent {
   }
 
   render() {
-    const { width } = this.props;
+    const {width} = this.props;
 
     return (
       <Table
@@ -43,8 +43,7 @@ export default class DynamicHeightTableColumn extends PureComponent {
         rowHeight={this._cache.rowHeight}
         rowGetter={this._rowGetter}
         rowCount={1000}
-        width={width}
-      >
+        width={width}>
         <Column
           className={styles.tableColumn}
           dataKey="name"
@@ -67,11 +66,11 @@ export default class DynamicHeightTableColumn extends PureComponent {
     );
   }
 
-  _columnCellRenderer({ dataKey, parent, rowIndex }) {
-    const { list } = this.props;
+  _columnCellRenderer({dataKey, parent, rowIndex}) {
+    const {list} = this.props;
 
     const datum = list.get(rowIndex % list.size);
-    const content = rowIndex % 5 === 0 ? "" : datum.randomLong;
+    const content = rowIndex % 5 === 0 ? '' : datum.randomLong;
 
     return (
       <CellMeasurer
@@ -79,22 +78,20 @@ export default class DynamicHeightTableColumn extends PureComponent {
         columnIndex={0}
         key={dataKey}
         parent={parent}
-        rowIndex={rowIndex}
-      >
+        rowIndex={rowIndex}>
         <div
           className={styles.tableColumn}
           style={{
-            whiteSpace: "normal"
-          }}
-        >
+            whiteSpace: 'normal',
+          }}>
           {content}
         </div>
       </CellMeasurer>
     );
   }
 
-  _rowGetter({ index }) {
-    const { list } = this.props;
+  _rowGetter({index}) {
+    const {list} = this.props;
 
     return list.get(index % list.size);
   }

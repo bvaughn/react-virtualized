@@ -1,5 +1,5 @@
 /** @flow */
-import type { CellDataGetterParams } from "./types";
+import type {CellDataGetterParams} from './types';
 
 /**
  * Default accessor for returning a cell value for a given attribute.
@@ -8,9 +8,9 @@ import type { CellDataGetterParams } from "./types";
  */
 export default function defaultCellDataGetter({
   dataKey,
-  rowData
+  rowData,
 }: CellDataGetterParams) {
-  if (typeof rowData.get === "function") {
+  if (typeof rowData.get === 'function') {
     return rowData.get(dataKey);
   } else {
     return rowData[dataKey];

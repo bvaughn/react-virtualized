@@ -1,3 +1,5 @@
 /** @flow */
-export default from "./Collection";
-export Collection from "./Collection";
+import Collection from './Collection';
+
+export default Collection;
+export {Collection};

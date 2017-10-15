@@ -1,17 +1,17 @@
 /**
  * @flow
  */
-import React, { PureComponent } from "react";
-import styles from "./ColumnSizer.example.css";
-import AutoSizer from "../AutoSizer";
-import ColumnSizer from "./ColumnSizer";
-import Grid from "../Grid";
+import React, {PureComponent} from 'react';
+import styles from './ColumnSizer.example.css';
+import AutoSizer from '../AutoSizer';
+import ColumnSizer from './ColumnSizer';
+import Grid from '../Grid';
 import {
   ContentBox,
   ContentBoxHeader,
-  ContentBoxParagraph
-} from "../demo/ContentBox";
-import { LabeledInput, InputRow } from "../demo/LabeledInput";
+  ContentBoxParagraph,
+} from '../demo/ContentBox';
+import {LabeledInput, InputRow} from '../demo/LabeledInput';
 
 export default class ColumnSizerExample extends PureComponent {
   constructor(props) {
@@ -20,7 +20,7 @@ export default class ColumnSizerExample extends PureComponent {
     this.state = {
       columnMaxWidth: 100,
       columnMinWidth: 75,
-      columnCount: 10
+      columnCount: 10,
     };
 
     this._noColumnMaxWidthChange = this._noColumnMaxWidthChange.bind(this);
@@ -31,7 +31,7 @@ export default class ColumnSizerExample extends PureComponent {
   }
 
   render() {
-    const { columnMaxWidth, columnMinWidth, columnCount } = this.state;
+    const {columnMaxWidth, columnMinWidth, columnCount} = this.state;
 
     return (
       <ContentBox>
@@ -69,22 +69,20 @@ export default class ColumnSizerExample extends PureComponent {
 
         <div>
           <AutoSizer disableHeight>
-            {({ width }) =>
+            {({width}) => (
               <ColumnSizer
                 columnMaxWidth={columnMaxWidth}
                 columnMinWidth={columnMinWidth}
                 columnCount={columnCount}
                 key="GridColumnSizer"
-                width={width}
-              >
-                {({ adjustedWidth, columnWidth, registerChild }) =>
+                width={width}>
+                {({adjustedWidth, columnWidth, registerChild}) => (
                   <div
                     className={styles.GridContainer}
                     style={{
                       height: 50,
-                      width: adjustedWidth
-                    }}
-                  >
+                      width: adjustedWidth,
+                    }}>
                     <Grid
                       ref={registerChild}
                       columnWidth={columnWidth}
@@ -96,8 +94,10 @@ export default class ColumnSizerExample extends PureComponent {
                       rowCount={1}
                       width={adjustedWidth}
                     />
-                  </div>}
-              </ColumnSizer>}
+                  </div>
+                )}
+              </ColumnSizer>
+            )}
           </AutoSizer>
         </div>
       </ContentBox>
@@ -113,7 +113,7 @@ export default class ColumnSizerExample extends PureComponent {
       columnMaxWidth = Math.min(1000, columnMaxWidth);
     }
 
-    this.setState({ columnMaxWidth });
+    this.setState({columnMaxWidth});
   }
 
   _noColumnMinWidthChange(event) {
@@ -125,18 +125,18 @@ export default class ColumnSizerExample extends PureComponent {
       columnMinWidth = Math.max(1, columnMinWidth);
     }
 
-    this.setState({ columnMinWidth });
+    this.setState({columnMinWidth});
   }
 
   _onColumnCountChange(event) {
-    this.setState({ columnCount: parseInt(event.target.value, 10) || 0 });
+    this.setState({columnCount: parseInt(event.target.value, 10) || 0});
   }
 
   _noContentRenderer() {
     return <div className={styles.noCells}>No cells</div>;
   }
 
-  _cellRenderer({ columnIndex, key, rowIndex, style }) {
+  _cellRenderer({columnIndex, key, rowIndex, style}) {
     const className = columnIndex === 0 ? styles.firstCell : styles.cell;
 
     return (

@@ -30,7 +30,7 @@ type Params<T> = {
   scrollToIndex: number,
 
   // Callback to invoke if the scroll position should be recalculated
-  updateScrollOffsetForScrollToIndex: () => void
+  updateScrollOffsetForScrollToIndex: () => void,
 };
 
 export default function calculateSizeAndPositionDataAndUpdateScrollOffset({
@@ -42,13 +42,13 @@ export default function calculateSizeAndPositionDataAndUpdateScrollOffset({
   nextCellSize,
   nextScrollToIndex,
   scrollToIndex,
-  updateScrollOffsetForScrollToIndex
+  updateScrollOffsetForScrollToIndex,
 }: Params<*>) {
   // Don't compare cell sizes if they are functions because inline functions would cause infinite loops.
   // In that event users should use the manual recompute methods to inform of changes.
   if (
     cellCount !== nextCellsCount ||
-    ((typeof cellSize === "number" || typeof nextCellSize === "number") &&
+    ((typeof cellSize === 'number' || typeof nextCellSize === 'number') &&
       cellSize !== nextCellSize)
   ) {
     computeMetadataCallback(computeMetadataCallbackProps);

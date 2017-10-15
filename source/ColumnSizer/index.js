@@ -1,3 +1,5 @@
 /** @flow */
-export default from "./ColumnSizer";
-export ColumnSizer from "./ColumnSizer";
+import ColumnSizer from './ColumnSizer';
+
+export default ColumnSizer;
+export {ColumnSizer};

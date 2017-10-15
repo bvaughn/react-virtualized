@@ -1,3 +1,5 @@
 /** @flow */
-export default from "./InfiniteLoader";
-export InfiniteLoader from "./InfiniteLoader";
+import InfiniteLoader from './InfiniteLoader';
+
+export default InfiniteLoader;
+export {InfiniteLoader};

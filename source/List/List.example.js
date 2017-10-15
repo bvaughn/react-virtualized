@@ -1,20 +1,20 @@
-import cn from "classnames";
-import Immutable from "immutable";
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import styles from "./List.example.css";
-import AutoSizer from "../AutoSizer";
-import List from "./List";
+import cn from 'classnames';
+import Immutable from 'immutable';
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
+import styles from './List.example.css';
+import AutoSizer from '../AutoSizer';
+import List from './List';
 import {
   ContentBox,
   ContentBoxHeader,
-  ContentBoxParagraph
-} from "../demo/ContentBox";
-import { LabeledInput, InputRow } from "../demo/LabeledInput";
+  ContentBoxParagraph,
+} from '../demo/ContentBox';
+import {LabeledInput, InputRow} from '../demo/LabeledInput';
 
 export default class ListExample extends PureComponent {
   static contextTypes = {
-    list: PropTypes.instanceOf(Immutable.List).isRequired
+    list: PropTypes.instanceOf(Immutable.List).isRequired,
   };
 
   constructor(props, context) {
@@ -27,7 +27,7 @@ export default class ListExample extends PureComponent {
       rowCount: context.list.size,
       scrollToIndex: undefined,
       showScrollingPlaceholder: false,
-      useDynamicRowHeight: false
+      useDynamicRowHeight: false,
     };
 
     this._getRowHeight = this._getRowHeight.bind(this);
@@ -45,7 +45,7 @@ export default class ListExample extends PureComponent {
       rowCount,
       scrollToIndex,
       showScrollingPlaceholder,
-      useDynamicRowHeight
+      useDynamicRowHeight,
     } = this.state;
 
     return (
@@ -70,7 +70,7 @@ export default class ListExample extends PureComponent {
               className={styles.checkbox}
               type="checkbox"
               onChange={event =>
-                this.setState({ useDynamicRowHeight: event.target.checked })}
+                this.setState({useDynamicRowHeight: event.target.checked})}
             />
             Use dynamic row heights?
           </label>
@@ -83,7 +83,7 @@ export default class ListExample extends PureComponent {
               type="checkbox"
               onChange={event =>
                 this.setState({
-                  showScrollingPlaceholder: event.target.checked
+                  showScrollingPlaceholder: event.target.checked,
                 })}
             />
             Show scrolling placeholder?
@@ -102,14 +102,14 @@ export default class ListExample extends PureComponent {
             name="onScrollToRow"
             placeholder="Index..."
             onChange={this._onScrollToRowChange}
-            value={scrollToIndex || ""}
+            value={scrollToIndex || ''}
           />
           <LabeledInput
             label="List height"
             name="listHeight"
             onChange={event =>
               this.setState({
-                listHeight: parseInt(event.target.value, 10) || 1
+                listHeight: parseInt(event.target.value, 10) || 1,
               })}
             value={listHeight}
           />
@@ -119,7 +119,7 @@ export default class ListExample extends PureComponent {
             name="listRowHeight"
             onChange={event =>
               this.setState({
-                listRowHeight: parseInt(event.target.value, 10) || 1
+                listRowHeight: parseInt(event.target.value, 10) || 1,
               })}
             value={listRowHeight}
           />
@@ -128,7 +128,7 @@ export default class ListExample extends PureComponent {
             name="overscanRowCount"
             onChange={event =>
               this.setState({
-                overscanRowCount: parseInt(event.target.value, 10) || 0
+                overscanRowCount: parseInt(event.target.value, 10) || 0,
               })}
             value={overscanRowCount}
           />
@@ -136,7 +136,7 @@ export default class ListExample extends PureComponent {
 
         <div>
           <AutoSizer disableHeight>
-            {({ width }) =>
+            {({width}) => (
               <List
                 ref="List"
                 className={styles.List}
@@ -150,7 +150,8 @@ export default class ListExample extends PureComponent {
                 rowRenderer={this._rowRenderer}
                 scrollToIndex={scrollToIndex}
                 width={width}
-              />}
+              />
+            )}
           </AutoSizer>
         </div>
       </ContentBox>
@@ -158,12 +159,12 @@ export default class ListExample extends PureComponent {
   }
 
   _getDatum(index) {
-    const { list } = this.context;
+    const {list} = this.context;
 
     return list.get(index % list.size);
   }
 
-  _getRowHeight({ index }) {
+  _getRowHeight({index}) {
     return this._getDatum(index).size;
   }
 
@@ -174,33 +175,32 @@ export default class ListExample extends PureComponent {
   _onRowCountChange(event) {
     const rowCount = parseInt(event.target.value, 10) || 0;
 
-    this.setState({ rowCount });
+    this.setState({rowCount});
   }
 
   _onScrollToRowChange(event) {
-    const { rowCount } = this.state;
+    const {rowCount} = this.state;
     let scrollToIndex = Math.min(
       rowCount - 1,
-      parseInt(event.target.value, 10)
+      parseInt(event.target.value, 10),
     );
 
     if (isNaN(scrollToIndex)) {
       scrollToIndex = undefined;
     }
 
-    this.setState({ scrollToIndex });
+    this.setState({scrollToIndex});
   }
 
-  _rowRenderer({ index, isScrolling, key, style }) {
-    const { showScrollingPlaceholder, useDynamicRowHeight } = this.state;
+  _rowRenderer({index, isScrolling, key, style}) {
+    const {showScrollingPlaceholder, useDynamicRowHeight} = this.state;
 
     if (showScrollingPlaceholder && isScrolling) {
       return (
         <div
           className={cn(styles.row, styles.isScrollingPlaceholder)}
           key={key}
-          style={style}
-        >
+          style={style}>
           Scrolling...
         </div>
       );
@@ -230,24 +230,18 @@ export default class ListExample extends PureComponent {
         <div
           className={styles.letter}
           style={{
-            backgroundColor: datum.color
-          }}
-        >
+            backgroundColor: datum.color,
+          }}>
           {datum.name.charAt(0)}
         </div>
         <div>
-          <div className={styles.name}>
-            {datum.name}
-          </div>
-          <div className={styles.index}>
-            This is row {index}
-          </div>
+          <div className={styles.name}>{datum.name}</div>
+          <div className={styles.index}>This is row {index}</div>
           {additionalContent}
         </div>
-        {useDynamicRowHeight &&
-          <span className={styles.height}>
-            {datum.size}px
-          </span>}
+        {useDynamicRowHeight && (
+          <span className={styles.height}>{datum.size}px</span>
+        )}
       </div>
     );
   }

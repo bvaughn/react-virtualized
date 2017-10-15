@@ -1,17 +1,17 @@
-import Immutable from "immutable";
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import CellMeasurer from "./CellMeasurer";
-import CellMeasurerCache from "./CellMeasurerCache";
-import Grid from "../Grid";
-import styles from "./CellMeasurer.example.css";
+import Immutable from 'immutable';
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
+import CellMeasurer from './CellMeasurer';
+import CellMeasurerCache from './CellMeasurerCache';
+import Grid from '../Grid';
+import styles from './CellMeasurer.example.css';
 
 export default class DynamicWidthGrid extends PureComponent {
   static propTypes = {
     getClassName: PropTypes.func.isRequired,
     getContent: PropTypes.func.isRequired,
     list: PropTypes.instanceOf(Immutable.List).isRequired,
-    width: PropTypes.number.isRequired
+    width: PropTypes.number.isRequired,
   };
 
   constructor(props, context) {
@@ -19,14 +19,14 @@ export default class DynamicWidthGrid extends PureComponent {
 
     this._cache = new CellMeasurerCache({
       defaultWidth: 100,
-      fixedHeight: true
+      fixedHeight: true,
     });
 
     this._cellRenderer = this._cellRenderer.bind(this);
   }
 
   render() {
-    const { width } = this.props;
+    const {width} = this.props;
 
     return (
       <Grid
@@ -45,12 +45,12 @@ export default class DynamicWidthGrid extends PureComponent {
     );
   }
 
-  _cellRenderer({ columnIndex, key, parent, rowIndex, style }) {
-    const { getClassName, getContent, list } = this.props;
+  _cellRenderer({columnIndex, key, parent, rowIndex, style}) {
+    const {getClassName, getContent, list} = this.props;
 
     const datum = list.get((rowIndex + columnIndex) % list.size);
-    const classNames = getClassName({ columnIndex, rowIndex });
-    const content = getContent({ index: columnIndex, datum, long: false });
+    const classNames = getClassName({columnIndex, rowIndex});
+    const content = getContent({index: columnIndex, datum, long: false});
 
     return (
       <CellMeasurer
@@ -58,16 +58,14 @@ export default class DynamicWidthGrid extends PureComponent {
         columnIndex={columnIndex}
         key={key}
         parent={parent}
-        rowIndex={rowIndex}
-      >
+        rowIndex={rowIndex}>
         <div
           className={classNames}
           style={{
             ...style,
             height: 35,
-            whiteSpace: "nowrap"
-          }}
-        >
+            whiteSpace: 'nowrap',
+          }}>
           {content}
         </div>
       </CellMeasurer>

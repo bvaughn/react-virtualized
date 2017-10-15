@@ -14,15 +14,15 @@ type CellMeasurerCacheParams = {
   fixedWidth?: boolean,
   minHeight?: number,
   minWidth?: number,
-  keyMapper?: KeyMapper
+  keyMapper?: KeyMapper,
 };
 
 type Cache = {
-  [key: any]: number
+  [key: any]: number,
 };
 
 type IndexParam = {
-  index: number
+  index: number,
 };
 
 /**
@@ -51,7 +51,7 @@ export default class CellMeasurerCache {
       fixedWidth,
       keyMapper,
       minHeight,
-      minWidth
+      minWidth,
     } = params;
 
     this._hasFixedHeight = fixedHeight === true;
@@ -62,33 +62,33 @@ export default class CellMeasurerCache {
 
     this._defaultHeight = Math.max(
       this._minHeight,
-      typeof defaultHeight === "number" ? defaultHeight : DEFAULT_HEIGHT
+      typeof defaultHeight === 'number' ? defaultHeight : DEFAULT_HEIGHT,
     );
     this._defaultWidth = Math.max(
       this._minWidth,
-      typeof defaultWidth === "number" ? defaultWidth : DEFAULT_WIDTH
+      typeof defaultWidth === 'number' ? defaultWidth : DEFAULT_WIDTH,
     );
 
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV !== 'production') {
       if (this._hasFixedHeight === false && this._hasFixedWidth === false) {
         console.warn(
           "CellMeasurerCache should only measure a cell's width or height. " +
-            "You have configured CellMeasurerCache to measure both. " +
-            "This will result in poor performance."
+            'You have configured CellMeasurerCache to measure both. ' +
+            'This will result in poor performance.',
         );
       }
 
       if (this._hasFixedHeight === false && this._defaultHeight === 0) {
         console.warn(
-          "Fixed height CellMeasurerCache should specify a :defaultHeight greater than 0. " +
-            "Failing to do so will lead to unnecessary layout and poor performance."
+          'Fixed height CellMeasurerCache should specify a :defaultHeight greater than 0. ' +
+            'Failing to do so will lead to unnecessary layout and poor performance.',
         );
       }
 
       if (this._hasFixedWidth === false && this._defaultWidth === 0) {
         console.warn(
-          "Fixed width CellMeasurerCache should specify a :defaultWidth greater than 0. " +
-            "Failing to do so will lead to unnecessary layout and poor performance."
+          'Fixed width CellMeasurerCache should specify a :defaultWidth greater than 0. ' +
+            'Failing to do so will lead to unnecessary layout and poor performance.',
         );
       }
     }
@@ -112,7 +112,7 @@ export default class CellMeasurerCache {
     this._columnCount = 0;
   }
 
-  columnWidth = ({ index }: IndexParam) => {
+  columnWidth = ({index}: IndexParam) => {
     const key = this._keyMapper(0, index);
 
     return this._columnWidthCache.hasOwnProperty(key)
@@ -166,7 +166,7 @@ export default class CellMeasurerCache {
     return this._cellHeightCache.hasOwnProperty(key);
   }
 
-  rowHeight = ({ index }: IndexParam) => {
+  rowHeight = ({index}: IndexParam) => {
     const key = this._keyMapper(index, 0);
 
     return this._rowHeightCache.hasOwnProperty(key)
