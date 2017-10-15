@@ -37,6 +37,7 @@ export default class GridExample extends PureComponent {
       columnWidth: 200,
       height: 300,
       gutterSize: 10,
+      overscanByPixels: 0,
       windowScrollerEnabled: false,
     };
 
@@ -48,12 +49,22 @@ export default class GridExample extends PureComponent {
   }
 
   render() {
-    const {columnWidth, height, gutterSize, windowScrollerEnabled} = this.state;
+    const {
+      columnWidth,
+      height,
+      gutterSize,
+      overscanByPixels,
+      windowScrollerEnabled,
+    } = this.state;
 
     let child;
 
     if (windowScrollerEnabled) {
-      child = <WindowScroller>{this._renderAutoSizer}</WindowScroller>;
+      child = (
+        <WindowScroller overscanByPixels={overscanByPixels}>
+          {this._renderAutoSizer}
+        </WindowScroller>
+      );
     } else {
       child = this._renderAutoSizer({height});
     }
@@ -140,6 +151,16 @@ export default class GridExample extends PureComponent {
             }}
             value={gutterSize}
           />
+          <LabeledInput
+            label="Overscan (px)"
+            name="overscanByPixels"
+            onChange={event => {
+              this.setState({
+                overscanByPixels: parseInt(event.target.value, 10) || 0,
+              });
+            }}
+            value={overscanByPixels}
+          />
         </InputRow>
 
         {child}
@@ -208,10 +229,14 @@ export default class GridExample extends PureComponent {
     this._height = height;
     this._scrollTop = scrollTop;
 
+    const {overscanByPixels} = this.state;
+
     return (
       <AutoSizer
         disableHeight
+        height={height}
         onResize={this._onResize}
+        overscanByPixels={overscanByPixels}
         scrollTop={this._scrollTop}>
         {this._renderMasonry}
       </AutoSizer>
@@ -224,7 +249,7 @@ export default class GridExample extends PureComponent {
     this._calculateColumnCount();
     this._initCellPositioner();
 
-    const {height, windowScrollerEnabled} = this.state;
+    const {height, overscanByPixels, windowScrollerEnabled} = this.state;
 
     return (
       <Masonry
@@ -234,6 +259,7 @@ export default class GridExample extends PureComponent {
         cellPositioner={this._cellPositioner}
         cellRenderer={this._cellRenderer}
         height={windowScrollerEnabled ? this._height : height}
+        overscanByPixels={overscanByPixels}
         ref={this._setMasonryRef}
         scrollTop={this._scrollTop}
         width={width}

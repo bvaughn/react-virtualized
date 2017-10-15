@@ -133,7 +133,7 @@ describe('Masonry', () => {
       // Scroll a little bit, but not so much to require re-measuring
       simulateScroll(rendered, 51);
       // Verify that render was only called enough times to fill view port (no extra for measuring)
-      expect(renderCallback).toHaveBeenCalledTimes(7);
+      expect(renderCallback).toHaveBeenCalledTimes(9);
     });
 
     it('should measure additional cells on scroll when it runs out of measured cells', () => {
@@ -159,15 +159,38 @@ describe('Masonry', () => {
       expect(renderCallback.mock.calls[0][0]).toBe(9);
     });
 
-    it('should only render enough cells to fill the viewport plus overscanByPixels', () => {
-      const rendered = findDOMNode(render(getMarkup()));
+    it('should only render enough cells to fill the viewport', () => {
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            overscanByPixels: 0,
+          }),
+        ),
+      );
       assertVisibleCells(rendered, '0,1,2,3,4,5');
       simulateScroll(rendered, 51);
-      assertVisibleCells(rendered, '0,1,2,3,4,5,6');
+      assertVisibleCells(rendered, '0,2,3,4,5,6');
       simulateScroll(rendered, 101);
-      assertVisibleCells(rendered, '0,2,3,4,5,6,7,8');
+      assertVisibleCells(rendered, '3,4,5,6,7,8');
       simulateScroll(rendered, 1001);
-      assertVisibleCells(rendered, '27,29,30,31,32,33,34,35');
+      assertVisibleCells(rendered, '30,31,32,33,34,35');
+    });
+
+    it('should only render enough cells to fill the viewport plus overscanByPixels', () => {
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            overscanByPixels: 100,
+          }),
+        ),
+      );
+      assertVisibleCells(rendered, '0,1,10,11,2,3,4,5,6,7,8,9');
+      simulateScroll(rendered, 51);
+      assertVisibleCells(rendered, '0,1,10,11,2,3,4,5,6,7,8,9');
+      simulateScroll(rendered, 101);
+      assertVisibleCells(rendered, '0,1,10,11,2,3,4,5,6,7,8,9');
+      simulateScroll(rendered, 1001);
+      assertVisibleCells(rendered, '26,27,28,29,30,31,32,33,34,35,36,37');
     });
 
     it('should still render correctly when autoHeight is true (eg WindowScroller)', () => {
@@ -184,7 +207,7 @@ describe('Masonry', () => {
           }),
         ),
       );
-      assertVisibleCells(rendered, '0,1,2,3,4,5');
+      assertVisibleCells(rendered, '0,1,2,3,4,5,6,7,8');
       rendered = findDOMNode(
         render(
           getMarkup({
@@ -195,7 +218,7 @@ describe('Masonry', () => {
           }),
         ),
       );
-      assertVisibleCells(rendered, '0,1,2,3,4,5,6');
+      assertVisibleCells(rendered, '0,1,2,3,4,5,6,7,8');
       rendered = findDOMNode(
         render(
           getMarkup({
@@ -206,7 +229,7 @@ describe('Masonry', () => {
           }),
         ),
       );
-      assertVisibleCells(rendered, '0,2,3,4,5,6,7,8');
+      assertVisibleCells(rendered, '0,2,3,4,5,6,7,8,9');
       rendered = findDOMNode(
         render(
           getMarkup({
@@ -217,7 +240,7 @@ describe('Masonry', () => {
           }),
         ),
       );
-      assertVisibleCells(rendered, '27,29,30,31,32,33,34,35');
+      assertVisibleCells(rendered, '27,29,30,31,32,33,34,35,36');
     });
   });
 
@@ -237,7 +260,7 @@ describe('Masonry', () => {
           }),
         ),
       );
-      assertVisibleCells(rendered, '0,1,2,3,4,5');
+      assertVisibleCells(rendered, '0,1,2,3,4,5,6,7,8');
 
       cellPositioner.mockImplementation(index => ({
         left: 0,
@@ -251,9 +274,9 @@ describe('Masonry', () => {
         }),
       );
       rendered = findDOMNode(component);
-      assertVisibleCells(rendered, '0,1,2,3,4,5');
+      assertVisibleCells(rendered, '0,1,2,3,4,5,6,7,8');
       component.recomputeCellPositions();
-      assertVisibleCells(rendered, '0,1,2');
+      assertVisibleCells(rendered, '0,1,2,3,4');
     });
 
     it('should not reset measurement cache', () => {
@@ -309,17 +332,16 @@ describe('Masonry', () => {
       const onCellsRendered = jest.fn();
       const rendered = findDOMNode(render(getMarkup({onCellsRendered})));
       expect(onCellsRendered.mock.calls).toEqual([
-        [{startIndex: 0, stopIndex: 5}],
+        [{startIndex: 0, stopIndex: 8}],
       ]);
       simulateScroll(rendered, 51);
       expect(onCellsRendered.mock.calls).toEqual([
-        [{startIndex: 0, stopIndex: 5}],
-        [{startIndex: 0, stopIndex: 6}],
+        [{startIndex: 0, stopIndex: 8}],
       ]);
-      simulateScroll(rendered, 52);
+      simulateScroll(rendered, 101);
       expect(onCellsRendered.mock.calls).toEqual([
-        [{startIndex: 0, stopIndex: 5}],
-        [{startIndex: 0, stopIndex: 6}],
+        [{startIndex: 0, stopIndex: 8}],
+        [{startIndex: 0, stopIndex: 9}],
       ]);
     });
 

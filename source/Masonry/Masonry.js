@@ -209,8 +209,8 @@ export default class Masonry extends PureComponent {
       let startIndex;
 
       this._positionCache.range(
-        scrollTop - overscanByPixels,
-        height + overscanByPixels,
+        Math.max(0, scrollTop - overscanByPixels),
+        height + overscanByPixels * 2,
         (index: number, left: number, top: number) => {
           if (typeof startIndex === 'undefined') {
             startIndex = index;
