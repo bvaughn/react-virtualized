@@ -1,3 +1,5 @@
 /** @flow */
-export default from "./ScrollSync";
-export ScrollSync from "./ScrollSync";
+import ScrollSync from './ScrollSync';
+
+export default ScrollSync;
+export {ScrollSync};

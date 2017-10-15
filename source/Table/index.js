@@ -1,11 +1,23 @@
 /* @flow */
-export default from "./Table";
-export defaultCellDataGetter from "./defaultCellDataGetter";
-export defaultCellRenderer from "./defaultCellRenderer";
-export defaultHeaderRowRenderer from "./defaultHeaderRowRenderer.js";
-export defaultHeaderRenderer from "./defaultHeaderRenderer";
-export defaultRowRenderer from "./defaultRowRenderer";
-export Table from "./Table";
-export Column from "./Column";
-export SortDirection from "./SortDirection";
-export SortIndicator from "./SortIndicator";
+import defaultCellDataGetter from './defaultCellDataGetter';
+import defaultCellRenderer from './defaultCellRenderer';
+import defaultHeaderRowRenderer from './defaultHeaderRowRenderer.js';
+import defaultHeaderRenderer from './defaultHeaderRenderer';
+import defaultRowRenderer from './defaultRowRenderer';
+import Column from './Column';
+import SortDirection from './SortDirection';
+import SortIndicator from './SortIndicator';
+import Table from './Table';
+
+export default Table;
+export {
+  defaultCellDataGetter,
+  defaultCellRenderer,
+  defaultHeaderRowRenderer,
+  defaultHeaderRenderer,
+  defaultRowRenderer,
+  Column,
+  SortDirection,
+  SortIndicator,
+  Table,
+};
