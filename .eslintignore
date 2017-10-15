@@ -1,0 +1,10 @@
+node_modules/*
+
+# Website dist
+build/*
+
+# NPM dist
+dist/*
+
+# Vendor files
+source/vendor/*
