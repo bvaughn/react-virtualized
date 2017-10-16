@@ -5,7 +5,7 @@ Changelog
 * 🐛 `Masonry` component now properly pre-renders as specified by `overscanByPixels`
 
 ##### 9.11.0
-* 🐛 `List` and `Grid` scroll snapping / resetting bugfix #823 by @TrySound
+* 🐛 `List` and `Grid` scroll snapping / resetting bugfix #825 by @TrySound
 * 🐛 `MultiGrid` crash due to `scrollTo*` prop being `NaN` #829 by @mcordova47
 * 🐛 `MultiGrid` invalid `tabIndex` prop type #818 by @kalley
 * 🎉 Columnd default sort direction #833 by @mbseid
