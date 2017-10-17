@@ -62,17 +62,17 @@ export default class CellMeasurer extends React.PureComponent {
       // If we are re-measuring a cell that has already been measured,
       // It will have a hard-coded width/height from the previous measurement.
       // The fact that we are measuring indicates this measurement is probably stale,
-      // So explicitly clear it out (eg set to "auto") so we can recalculate.
+      // So explicitly clear it out (eg set to null) so we can recalculate.
       // See issue #593 for more info.
       // Even if we are measuring initially- if we're inside of a MultiGrid component,
       // Explicitly clear width/height before measuring to avoid being tainted by another Grid.
       // eg top/left Grid renders before bottom/right Grid
       // Since the CellMeasurerCache is shared between them this taints derived cell size values.
       if (!cache.hasFixedWidth()) {
-        node.style.width = 'auto';
+        node.style.width = null;
       }
       if (!cache.hasFixedHeight()) {
-        node.style.height = 'auto';
+        node.style.height = null;
       }
 
       const height = Math.ceil(node.offsetHeight);
