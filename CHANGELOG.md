@@ -8,7 +8,7 @@ Changelog
 * 🐛 `List` and `Grid` scroll snapping / resetting bugfix #825 by @TrySound
 * 🐛 `MultiGrid` crash due to `scrollTo*` prop being `NaN` #829 by @mcordova47
 * 🐛 `MultiGrid` invalid `tabIndex` prop type #818 by @kalley
-* 🎉 Columnd default sort direction #833 by @mbseid
+* 🎉 Column default sort direction #833 by @mbseid
 
 ##### 9.10.1
 * 🐛 Server-side rendering `window` reference bugfix
