@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.12.0
+* 🎉 Added `defaultWidth` and `defaultHeight` props to `AutoSizer` to better support server-side rendering.
+
 ##### 9.11.1
 * 🐛 `Masonry` component now properly pre-renders as specified by `overscanByPixels`
 

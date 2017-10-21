@@ -15,6 +15,12 @@ type Props = {
   /** Function responsible for rendering children.*/
   children: (warams: Size) => React.Element<*>,
 
+  /** Default height to use for initial render; useful for SSR */
+  defaultHeight?: number,
+
+  /** Default width to use for initial render; useful for SSR */
+  defaultWidth?: number,
+
   /** Disable dynamic :height property */
   disableHeight: boolean,
 
@@ -45,8 +51,8 @@ export default class AutoSizer extends React.PureComponent {
   props: Props;
 
   state = {
-    height: 0,
-    width: 0,
+    height: this.props.defaultHeight || 0,
+    width: this.props.defaultWidth || 0,
   };
 
   _parentNode: ?HTMLElement;
@@ -89,20 +95,24 @@ export default class AutoSizer extends React.PureComponent {
     // Outer div should not force width/height since that may prevent containers from shrinking.
     // Inner component should overflow and use calculated width/height.
     // See issue #68 for more information.
-    const outerStyle: Object = {overflow: 'visible'};
+    const outerStyle: any = {overflow: 'visible'};
+    const childParams: any = {};
 
     if (!disableHeight) {
       outerStyle.height = 0;
+      childParams.height = height;
     }
 
     if (!disableWidth) {
       outerStyle.width = 0;
+      childParams.width = width;
     }
 
     /**
      * TODO: Avoid rendering children before the initial measurements have been collected.
      * At best this would just be wasting cycles.
      * Add this check into version 10 though as it could break too many ref callbacks in version 9.
+     * Note that if default width/height props were provided this would still work with SSR.
     if (
       height !== 0 &&
       width !== 0
@@ -113,7 +123,7 @@ export default class AutoSizer extends React.PureComponent {
 
     return (
       <div ref={this._setRef} style={outerStyle}>
-        {children({height, width})}
+        {children(childParams)}
       </div>
     );
   }
