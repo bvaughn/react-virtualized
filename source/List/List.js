@@ -90,7 +90,7 @@ type Props = {
   style: Object,
 
   /** Tab index for focus */
-  tabIndex?: number,
+  tabIndex?: ?number,
 
   /** Width of list */
   width: number,
