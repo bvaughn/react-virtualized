@@ -23,6 +23,7 @@ import MasonryExample from '../Masonry/Masonry.example';
 import MultiGridExample from '../MultiGrid/MultiGrid.example';
 import ScrollSyncExample from '../ScrollSync/ScrollSync.example';
 import TableExample from '../Table/Table.example';
+import TreeExample from '../Tree/Tree.example';
 import WindowScrollerExample from '../WindowScroller/WindowScroller.example';
 
 const COMPONENT_EXAMPLES_MAP = {
@@ -38,6 +39,7 @@ const COMPONENT_EXAMPLES_MAP = {
   '/components/MultiGrid': MultiGridExample,
   '/components/ScrollSync': ScrollSyncExample,
   '/components/Table': TableExample,
+  '/components/Tree': TreeExample,
   '/components/WindowScroller': WindowScrollerExample,
 };
 
@@ -128,6 +130,7 @@ export default class Application extends PureComponent {
               <ComponentLink to="/components/List">List</ComponentLink>
               <ComponentLink to="/components/Masonry">Masonry</ComponentLink>
               <ComponentLink to="/components/Table">Table</ComponentLink>
+              <ComponentLink to="/components/Tree">Tree</ComponentLink>
             </div>
 
             <div className={styles.HighOrderComponentList}>
