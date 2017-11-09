@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
 import CellMeasurer from './CellMeasurer';
 import CellMeasurerCache from './CellMeasurerCache';
-import MultiGrid from '../MultiGrid';
+import Grid from '../Grid';
 import styles from './CellMeasurer.example.css';
 
-export default class DynamiHeightMultiGrid extends PureComponent {
+export default class DynamicHeightGrid extends PureComponent {
   static propTypes = {
     getClassName: PropTypes.func.isRequired,
     getContent: PropTypes.func.isRequired,
@@ -18,9 +18,8 @@ export default class DynamiHeightMultiGrid extends PureComponent {
     super(props, context);
 
     this._cache = new CellMeasurerCache({
-      defaultHeight: 30,
       defaultWidth: 150,
-      fixedHeight: true,
+      fixedWidth: true,
     });
 
     this._cellRenderer = this._cellRenderer.bind(this);
@@ -30,19 +29,17 @@ export default class DynamiHeightMultiGrid extends PureComponent {
     const {width} = this.props;
 
     return (
-      <MultiGrid
+      <Grid
         className={styles.BodyGrid}
         columnCount={50}
-        columnWidth={this._cache.columnWidth}
+        columnWidth={150}
         deferredMeasurementCache={this._cache}
-        fixedColumnCount={1}
-        fixedRowCount={0}
         height={400}
         overscanColumnCount={0}
-        overscanRowCount={0}
+        overscanRowCount={2}
         cellRenderer={this._cellRenderer}
-        rowCount={50}
-        rowHeight={30}
+        rowCount={1000}
+        rowHeight={this._cache.rowHeight}
         width={width}
       />
     );
@@ -53,11 +50,7 @@ export default class DynamiHeightMultiGrid extends PureComponent {
 
     const datum = list.get((rowIndex + columnIndex) % list.size);
     const classNames = getClassName({columnIndex, rowIndex});
-    let content = getContent({index: rowIndex, datum, long: false});
-
-    if (columnIndex === 0) {
-      content = content.substr(0, 50);
-    }
+    const content = getContent({index: rowIndex, datum});
 
     return (
       <CellMeasurer
@@ -70,7 +63,7 @@ export default class DynamiHeightMultiGrid extends PureComponent {
           className={classNames}
           style={{
             ...style,
-            whiteSpace: 'nowrap',
+            width: 150,
           }}>
           {content}
         </div>

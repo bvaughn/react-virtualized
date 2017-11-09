@@ -10,15 +10,15 @@ import AutoSizer from '../AutoSizer';
 import cn from 'classnames';
 import styles from './CellMeasurer.example.css';
 import DynamicWidthGrid from './CellMeasurer.DynamicWidthGrid.example.js';
-import DynamiHeightGrid from './CellMeasurer.DynamiHeightGrid.example.js';
-import DynamiWidthMultiGrid from './CellMeasurer.DynamiWidthMultiGrid.example.js';
+import DynamicHeightGrid from './CellMeasurer.DynamicHeightGrid.example.js';
+import DynamicWidthMultiGrid from './CellMeasurer.DynamicWidthMultiGrid.example.js';
 import DynamicHeightList from './CellMeasurer.DynamicHeightList.example.js';
 import DynamicHeightTableColumn from './CellMeasurer.DynamicHeightTableColumn.example.js';
 
 const demoComponents = [
   DynamicWidthGrid,
-  DynamiHeightGrid,
-  DynamiWidthMultiGrid,
+  DynamicHeightGrid,
+  DynamicWidthMultiGrid,
   DynamicHeightList,
   DynamicHeightTableColumn,
 ];
