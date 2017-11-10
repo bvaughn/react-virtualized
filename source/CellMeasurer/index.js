@@ -1,3 +1,6 @@
-export default from "./CellMeasurer";
-export CellMeasurer from "./CellMeasurer";
-export CellMeasurerCache from "./CellMeasurerCache";
+/** @flow */
+import CellMeasurer from './CellMeasurer';
+import CellMeasurerCache from './CellMeasurerCache';
+
+export default CellMeasurer;
+export {CellMeasurer, CellMeasurerCache};

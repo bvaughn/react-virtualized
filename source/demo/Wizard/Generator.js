@@ -8,7 +8,7 @@ export default function Generator({
   doNotVirtualizeColumns,
   hasMultipleColumns,
   hasMultipleRows,
-  nonCheckerboardPattern
+  nonCheckerboardPattern,
 }) {
   if (!hasMultipleColumns && !hasMultipleRows) {
     return "<div>Looks like you don't need react-virtualized.</div>";
@@ -17,7 +17,7 @@ export default function Generator({
   const baseComponent = getBaseComponent({
     doNotVirtualizeColumns,
     hasMultipleColumns,
-    nonCheckerboardPattern
+    nonCheckerboardPattern,
   });
   const useAutoSizer = !collectionHasFixedHeight || !collectionHasFixedWidth;
   const useCellMeasurer =
@@ -26,8 +26,8 @@ export default function Generator({
     (!cellsHaveKnownHeight || !cellsHaveKnownWidth);
 
   // TODO Share these with CellMeasurer?
-  const heightValue = collectionHasFixedHeight ? 600 : "height";
-  const widthValue = collectionHasFixedWidth ? 800 : "width";
+  const heightValue = collectionHasFixedHeight ? 600 : 'height';
+  const widthValue = collectionHasFixedWidth ? 800 : 'width';
 
   baseComponent.props.height = heightValue;
   baseComponent.props.width = widthValue;
@@ -35,27 +35,27 @@ export default function Generator({
   if (baseComponent.columnWidthProp) {
     baseComponent.props[baseComponent.columnWidthProp] = hasMultipleColumns
       ? cellsHaveKnownWidth
-        ? cellsHaveUniformWidth ? 100 : "({ index }) => 100"
-        : "getColumnWidth"
+        ? cellsHaveUniformWidth ? 100 : '({ index }) => 100'
+        : 'getColumnWidth'
       : widthValue;
   }
   if (baseComponent.rowHeightProp) {
     baseComponent.props[baseComponent.rowHeightProp] = hasMultipleRows
       ? cellsHaveKnownHeight
-        ? cellsHaveUniformHeight ? 50 : "({ index }) => 50"
-        : "getRowHeight"
+        ? cellsHaveUniformHeight ? 50 : '({ index }) => 50'
+        : 'getRowHeight'
       : heightValue;
   }
 
   if (baseComponent.columnCountProp) {
     baseComponent.props[baseComponent.columnCountProp] = hasMultipleColumns
-      ? "numColumns"
-      : "1";
+      ? 'numColumns'
+      : '1';
   }
   if (baseComponent.rowCountProp) {
     baseComponent.props[baseComponent.rowCountProp] = hasMultipleRows
-      ? hasMultipleColumns ? "numRows" : "collection.size"
-      : "1";
+      ? hasMultipleColumns ? 'numRows' : 'collection.size'
+      : '1';
   }
 
   let component = baseComponent;
@@ -66,20 +66,20 @@ export default function Generator({
       collectionHasFixedHeight,
       collectionHasFixedWidth,
       child: component,
-      indentation: useAutoSizer ? 4 : 0
+      indentation: useAutoSizer ? 4 : 0,
     });
   }
 
   if (useAutoSizer) {
     component = getAutoSizer({
-      child: component
+      child: component,
     });
   }
 
-  return componentToString({ component });
+  return componentToString({component});
 }
 
-function componentToString({ component, indentation = 0 }) {
+function componentToString({component, indentation = 0}) {
   const spaces = indentationToSpaces(indentation);
   const hasProps = Object.keys(component.props).length > 0;
   const markup = [];
@@ -95,7 +95,7 @@ function componentToString({ component, indentation = 0 }) {
       Object.keys(component.props)
         .sort()
         .map(key => `${spaces}  ${key}={${component.props[key]}}`)
-        .join(`\n`)
+        .join(`\n`),
     );
   }
 
@@ -119,7 +119,7 @@ function componentToString({ component, indentation = 0 }) {
 function getAutoSizer({
   child,
   collectionHasFixedHeight,
-  collectionHasFixedWidth
+  collectionHasFixedWidth,
 }) {
   const props = {};
 
@@ -130,11 +130,11 @@ function getAutoSizer({
     props.disableWidth = true;
   }
 
-  let methodSignature = "{({ height, width })";
+  let methodSignature = '{({ height, width })';
   if (collectionHasFixedWidth) {
-    methodSignature = "{({ height })";
+    methodSignature = '{({ height })';
   } else if (collectionHasFixedHeight) {
-    methodSignature = "{({ width })";
+    methodSignature = '{({ width })';
   }
 
   const children = [];
@@ -142,22 +142,22 @@ function getAutoSizer({
   children.push(
     componentToString({
       component: child,
-      indentation: 4
-    })
+      indentation: 4,
+    }),
   );
-  children.push("  )}");
+  children.push('  )}');
 
   return {
-    name: "AutoSizer",
+    name: 'AutoSizer',
     props,
-    children: children.join(`\n`)
+    children: children.join(`\n`),
   };
 }
 
 function getBaseComponent({
   doNotVirtualizeColumns,
   hasMultipleColumns,
-  nonCheckerboardPattern
+  nonCheckerboardPattern,
 }) {
   if (nonCheckerboardPattern) {
     return getCollectionMarkup();
@@ -175,28 +175,28 @@ function getCellMeasurer({
   collectionHasFixedHeight,
   collectionHasFixedWidth,
   child,
-  indentation
+  indentation,
 }) {
   const spaces = indentationToSpaces(indentation);
 
   // TODO Share these with render()?
-  const heightValue = collectionHasFixedHeight ? 600 : "height";
-  const widthValue = collectionHasFixedWidth ? 800 : "width";
+  const heightValue = collectionHasFixedHeight ? 600 : 'height';
+  const widthValue = collectionHasFixedWidth ? 800 : 'width';
 
   const props = {
-    cellRenderer: "yourCellRenderer", // @TODO pass down?
-    columnCount: "numColumns",
-    rowCount: "numRows"
+    cellRenderer: 'yourCellRenderer', // @TODO pass down?
+    columnCount: 'numColumns',
+    rowCount: 'numRows',
   };
   let methodSignature;
 
   // @TODO CellMeasurer doesn't support both dynamic widths and heights. Warn about this.
   if (cellsHaveKnownHeight) {
     props.height = heightValue;
-    methodSignature = "{({ getColumnWidth })";
+    methodSignature = '{({ getColumnWidth })';
   } else {
     props.width = widthValue;
-    methodSignature = "{({ getRowHeight })";
+    methodSignature = '{({ getRowHeight })';
   }
 
   const children = [];
@@ -204,67 +204,69 @@ function getCellMeasurer({
   children.push(
     componentToString({
       component: child,
-      indentation: indentation + 4
-    })
+      indentation: indentation + 4,
+    }),
   );
   children.push(`${spaces}  )}`);
 
   return {
-    name: "CellMeasurer",
+    name: 'CellMeasurer',
     props,
-    children: children.join(`\n`)
+    children: children.join(`\n`),
   };
 }
 
 function getCollectionMarkup() {
   return {
-    name: "Collection",
+    name: 'Collection',
     props: {
-      cellCount: "collection.size",
+      cellCount: 'collection.size',
       cellRenderer: '({ index }) => collection.getIn([index, "name"])',
       cellSizeAndPositionGetter:
-        "({ index, isScrolling  }) => ({ height, width, x, y })"
-    }
+        '({ index, isScrolling  }) => ({ height, width, x, y })',
+    },
   };
 }
 
 function getTableMarkup() {
   return {
-    name: "Table",
+    name: 'Table',
     props: {
       headerHeight: 30,
-      rowGetter: "({ index }) => collection.get(index)"
+      rowGetter: '({ index }) => collection.get(index)',
     },
-    rowCountProp: "rowCount",
-    rowHeightProp: "rowHeight",
-    children: "<!-- Insert Column children here -->" // @TODO
+    rowCountProp: 'rowCount',
+    rowHeightProp: 'rowHeight',
+    children: '<!-- Insert Column children here -->', // @TODO
   };
 }
 
 function getGridMarkup() {
   return {
-    name: "Grid",
+    name: 'Grid',
     props: {
-      cellRenderer: "({ columnIndex, isScrolling, rowIndex }) => <div/>"
+      cellRenderer: '({ columnIndex, isScrolling, rowIndex }) => <div/>',
     },
-    columnCountProp: "columnCount",
-    columnWidthProp: "columnWidth",
-    rowCountProp: "rowCount",
-    rowHeightProp: "rowHeight"
+    columnCountProp: 'columnCount',
+    columnWidthProp: 'columnWidth',
+    rowCountProp: 'rowCount',
+    rowHeightProp: 'rowHeight',
   };
 }
 
 function getListMarkup() {
   return {
-    name: "List",
+    name: 'List',
     props: {
       rowRenderer:
-        '({ index, isScrolling  }) => collection.getIn([index, "name"])'
+        '({ index, isScrolling  }) => collection.getIn([index, "name"])',
     },
-    rowHeightProp: "rowHeight"
+    rowHeightProp: 'rowHeight',
   };
 }
 
 function indentationToSpaces(indentation) {
-  return Array.from(Array(indentation)).map(() => " ").join("");
+  return Array.from(Array(indentation))
+    .map(() => ' ')
+    .join('');
 }

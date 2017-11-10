@@ -1,13 +1,13 @@
 /** @flow */
-import React from "react";
-import { findDOMNode } from "react-dom";
-import CellMeasurerCache from "./CellMeasurerCache.js";
+import React from 'react';
+import {findDOMNode} from 'react-dom';
+import CellMeasurerCache from './CellMeasurerCache.js';
 
-type Children = (params: { measure: () => void }) => React.Element<*>;
+type Children = (params: {measure: () => void}) => React.Element<*>;
 
 type Cell = {
   columnIndex: number,
-  rowIndex: number
+  rowIndex: number,
 };
 
 type Props = {
@@ -17,9 +17,9 @@ type Props = {
   index?: number,
   parent: {
     invalidateCellSizeAfterRender?: (cell: Cell) => void,
-    recomputeGridSize?: (cell: Cell) => void
+    recomputeGridSize?: (cell: Cell) => void,
   },
-  rowIndex?: number
+  rowIndex?: number,
 };
 
 /**
@@ -41,15 +41,15 @@ export default class CellMeasurer extends React.PureComponent {
   }
 
   render() {
-    const { children } = this.props;
+    const {children} = this.props;
 
-    return typeof children === "function"
-      ? children({ measure: this._measure })
+    return typeof children === 'function'
+      ? children({measure: this._measure})
       : children;
   }
 
   _getCellMeasurements() {
-    const { cache } = this.props;
+    const {cache} = this.props;
 
     const node = findDOMNode(this);
 
@@ -69,10 +69,10 @@ export default class CellMeasurer extends React.PureComponent {
       // eg top/left Grid renders before bottom/right Grid
       // Since the CellMeasurerCache is shared between them this taints derived cell size values.
       if (!cache.hasFixedWidth()) {
-        node.style.width = "auto";
+        node.style.width = 'auto';
       }
       if (!cache.hasFixedHeight()) {
-        node.style.height = "auto";
+        node.style.height = 'auto';
       }
 
       const height = Math.ceil(node.offsetHeight);
@@ -86,9 +86,9 @@ export default class CellMeasurer extends React.PureComponent {
         node.style.height = styleHeight;
       }
 
-      return { height, width };
+      return {height, width};
     } else {
-      return { height: 0, width: 0 };
+      return {height: 0, width: 0};
     }
   }
 
@@ -97,22 +97,22 @@ export default class CellMeasurer extends React.PureComponent {
       cache,
       columnIndex = 0,
       parent,
-      rowIndex = this.props.index || 0
+      rowIndex = this.props.index || 0,
     } = this.props;
 
     if (!cache.has(rowIndex, columnIndex)) {
-      const { height, width } = this._getCellMeasurements();
+      const {height, width} = this._getCellMeasurements();
 
       cache.set(rowIndex, columnIndex, width, height);
 
       // If size has changed, let Grid know to re-render.
       if (
         parent &&
-        typeof parent.invalidateCellSizeAfterRender === "function"
+        typeof parent.invalidateCellSizeAfterRender === 'function'
       ) {
         parent.invalidateCellSizeAfterRender({
           columnIndex,
-          rowIndex
+          rowIndex,
         });
       }
     }
@@ -123,10 +123,10 @@ export default class CellMeasurer extends React.PureComponent {
       cache,
       columnIndex = 0,
       parent,
-      rowIndex = this.props.index || 0
+      rowIndex = this.props.index || 0,
     } = this.props;
 
-    const { height, width } = this._getCellMeasurements();
+    const {height, width} = this._getCellMeasurements();
 
     if (
       height !== cache.getHeight(rowIndex, columnIndex) ||
@@ -134,10 +134,10 @@ export default class CellMeasurer extends React.PureComponent {
     ) {
       cache.set(rowIndex, columnIndex, width, height);
 
-      if (parent && typeof parent.recomputeGridSize === "function") {
+      if (parent && typeof parent.recomputeGridSize === 'function') {
         parent.recomputeGridSize({
           columnIndex,
-          rowIndex
+          rowIndex,
         });
       }
     }
@@ -145,6 +145,6 @@ export default class CellMeasurer extends React.PureComponent {
 }
 
 // Used for DEV mode warning check
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== 'production') {
   CellMeasurer.__internalCellMeasurerFlag = true;
 }

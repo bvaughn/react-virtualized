@@ -1,8 +1,8 @@
 /** @flow */
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import CellMeasurerCacheDecorator from "./CellMeasurerCacheDecorator";
-import Grid from "../Grid";
+import PropTypes from 'prop-types';
+import React, {PureComponent} from 'react';
+import CellMeasurerCacheDecorator from './CellMeasurerCacheDecorator';
+import Grid from '../Grid';
 
 const SCROLLBAR_SIZE_BUFFER = 20;
 
@@ -27,23 +27,25 @@ export default class MultiGrid extends PureComponent {
     styleBottomLeftGrid: PropTypes.object.isRequired,
     styleBottomRightGrid: PropTypes.object.isRequired,
     styleTopLeftGrid: PropTypes.object.isRequired,
-    styleTopRightGrid: PropTypes.object.isRequired
+    styleTopRightGrid: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
-    classNameBottomLeftGrid: "",
-    classNameBottomRightGrid: "",
-    classNameTopLeftGrid: "",
-    classNameTopRightGrid: "",
+    classNameBottomLeftGrid: '',
+    classNameBottomRightGrid: '',
+    classNameTopLeftGrid: '',
+    classNameTopRightGrid: '',
     enableFixedColumnScroll: false,
     enableFixedRowScroll: false,
     fixedColumnCount: 0,
     fixedRowCount: 0,
+    scrollToColumn: -1,
+    scrollToRow: -1,
     style: {},
     styleBottomLeftGrid: {},
     styleBottomRightGrid: {},
     styleTopLeftGrid: {},
-    styleTopRightGrid: {}
+    styleTopRightGrid: {},
   };
 
   constructor(props, context) {
@@ -54,7 +56,7 @@ export default class MultiGrid extends PureComponent {
       scrollTop: 0,
       scrollbarSize: 0,
       showHorizontalScrollbar: false,
-      showVerticalScrollbar: false
+      showVerticalScrollbar: false,
     };
 
     this._deferredInvalidateColumnIndex = null;
@@ -63,16 +65,16 @@ export default class MultiGrid extends PureComponent {
     this._bottomLeftGridRef = this._bottomLeftGridRef.bind(this);
     this._bottomRightGridRef = this._bottomRightGridRef.bind(this);
     this._cellRendererBottomLeftGrid = this._cellRendererBottomLeftGrid.bind(
-      this
+      this,
     );
     this._cellRendererBottomRightGrid = this._cellRendererBottomRightGrid.bind(
-      this
+      this,
     );
     this._cellRendererTopRightGrid = this._cellRendererTopRightGrid.bind(this);
     this._columnWidthRightGrid = this._columnWidthRightGrid.bind(this);
     this._onScroll = this._onScroll.bind(this);
     this._onScrollbarPresenceChange = this._onScrollbarPresenceChange.bind(
-      this
+      this,
     );
     this._onScrollLeft = this._onScrollLeft.bind(this);
     this._onScrollTop = this._onScrollTop.bind(this);
@@ -89,13 +91,13 @@ export default class MultiGrid extends PureComponent {
   }
 
   /** See Grid#invalidateCellSizeAfterRender */
-  invalidateCellSizeAfterRender({ columnIndex = 0, rowIndex = 0 } = {}) {
+  invalidateCellSizeAfterRender({columnIndex = 0, rowIndex = 0} = {}) {
     this._deferredInvalidateColumnIndex =
-      typeof this._deferredInvalidateColumnIndex === "number"
+      typeof this._deferredInvalidateColumnIndex === 'number'
         ? Math.min(this._deferredInvalidateColumnIndex, columnIndex)
         : columnIndex;
     this._deferredInvalidateRowIndex =
-      typeof this._deferredInvalidateRowIndex === "number"
+      typeof this._deferredInvalidateRowIndex === 'number'
         ? Math.min(this._deferredInvalidateRowIndex, rowIndex)
         : rowIndex;
   }
@@ -109,8 +111,8 @@ export default class MultiGrid extends PureComponent {
   }
 
   /** See Grid#recomputeGridSize */
-  recomputeGridSize({ columnIndex = 0, rowIndex = 0 } = {}) {
-    const { fixedColumnCount, fixedRowCount } = this.props;
+  recomputeGridSize({columnIndex = 0, rowIndex = 0} = {}) {
+    const {fixedColumnCount, fixedRowCount} = this.props;
 
     const adjustedColumnIndex = Math.max(0, columnIndex - fixedColumnCount);
     const adjustedRowIndex = Math.max(0, rowIndex - fixedRowCount);
@@ -118,22 +120,22 @@ export default class MultiGrid extends PureComponent {
     this._bottomLeftGrid &&
       this._bottomLeftGrid.recomputeGridSize({
         columnIndex,
-        rowIndex: adjustedRowIndex
+        rowIndex: adjustedRowIndex,
       });
     this._bottomRightGrid &&
       this._bottomRightGrid.recomputeGridSize({
         columnIndex: adjustedColumnIndex,
-        rowIndex: adjustedRowIndex
+        rowIndex: adjustedRowIndex,
       });
     this._topLeftGrid &&
       this._topLeftGrid.recomputeGridSize({
         columnIndex,
-        rowIndex
+        rowIndex,
       });
     this._topRightGrid &&
       this._topRightGrid.recomputeGridSize({
         columnIndex: adjustedColumnIndex,
-        rowIndex
+        rowIndex,
       });
 
     this._leftGridWidth = null;
@@ -142,7 +144,7 @@ export default class MultiGrid extends PureComponent {
   }
 
   componentDidMount() {
-    const { scrollLeft, scrollTop } = this.props;
+    const {scrollLeft, scrollTop} = this.props;
 
     if (scrollLeft > 0 || scrollTop > 0) {
       const newState = {};
@@ -168,7 +170,7 @@ export default class MultiGrid extends PureComponent {
     const {
       deferredMeasurementCache,
       fixedColumnCount,
-      fixedRowCount
+      fixedRowCount,
     } = this.props;
 
     this._maybeCalculateCachedStyles(null, this.props, null, this.state);
@@ -179,7 +181,7 @@ export default class MultiGrid extends PureComponent {
           ? new CellMeasurerCacheDecorator({
               cellMeasurerCache: deferredMeasurementCache,
               columnIndexOffset: 0,
-              rowIndexOffset: fixedRowCount
+              rowIndexOffset: fixedRowCount,
             })
           : deferredMeasurementCache;
 
@@ -188,7 +190,7 @@ export default class MultiGrid extends PureComponent {
           ? new CellMeasurerCacheDecorator({
               cellMeasurerCache: deferredMeasurementCache,
               columnIndexOffset: fixedColumnCount,
-              rowIndexOffset: fixedRowCount
+              rowIndexOffset: fixedRowCount,
             })
           : deferredMeasurementCache;
 
@@ -197,7 +199,7 @@ export default class MultiGrid extends PureComponent {
           ? new CellMeasurerCacheDecorator({
               cellMeasurerCache: deferredMeasurementCache,
               columnIndexOffset: fixedColumnCount,
-              rowIndexOffset: 0
+              rowIndexOffset: 0,
             })
           : deferredMeasurementCache;
     }
@@ -208,7 +210,7 @@ export default class MultiGrid extends PureComponent {
       columnWidth,
       fixedColumnCount,
       fixedRowCount,
-      rowHeight
+      rowHeight,
     } = this.props;
 
     if (
@@ -246,7 +248,7 @@ export default class MultiGrid extends PureComponent {
       this.props,
       nextProps,
       this.state,
-      nextState
+      nextState,
     );
   }
 
@@ -270,7 +272,7 @@ export default class MultiGrid extends PureComponent {
 
     // scrollTop and scrollLeft props are explicitly filtered out and ignored
 
-    const { scrollLeft, scrollTop } = this.state;
+    const {scrollLeft, scrollTop} = this.state;
 
     return (
       <div style={this._containerOuterStyle}>
@@ -279,14 +281,14 @@ export default class MultiGrid extends PureComponent {
           {this._renderTopRightGrid({
             ...rest,
             onScroll,
-            scrollLeft
+            scrollLeft,
           })}
         </div>
         <div style={this._containerBottomStyle}>
           {this._renderBottomLeftGrid({
             ...rest,
             onScroll,
-            scrollTop
+            scrollTop,
           })}
           {this._renderBottomRightGrid({
             ...rest,
@@ -295,7 +297,7 @@ export default class MultiGrid extends PureComponent {
             scrollLeft,
             scrollToColumn,
             scrollToRow,
-            scrollTop
+            scrollTop,
           })}
         </div>
       </div>
@@ -310,8 +312,8 @@ export default class MultiGrid extends PureComponent {
     this._bottomRightGrid = ref;
   }
 
-  _cellRendererBottomLeftGrid({ rowIndex, ...rest }) {
-    const { cellRenderer, fixedRowCount, rowCount } = this.props;
+  _cellRendererBottomLeftGrid({rowIndex, ...rest}) {
+    const {cellRenderer, fixedRowCount, rowCount} = this.props;
 
     if (rowIndex === rowCount - fixedRowCount) {
       return (
@@ -319,7 +321,7 @@ export default class MultiGrid extends PureComponent {
           key={rest.key}
           style={{
             ...rest.style,
-            height: SCROLLBAR_SIZE_BUFFER
+            height: SCROLLBAR_SIZE_BUFFER,
           }}
         />
       );
@@ -327,24 +329,24 @@ export default class MultiGrid extends PureComponent {
       return cellRenderer({
         ...rest,
         parent: this,
-        rowIndex: rowIndex + fixedRowCount
+        rowIndex: rowIndex + fixedRowCount,
       });
     }
   }
 
-  _cellRendererBottomRightGrid({ columnIndex, rowIndex, ...rest }) {
-    const { cellRenderer, fixedColumnCount, fixedRowCount } = this.props;
+  _cellRendererBottomRightGrid({columnIndex, rowIndex, ...rest}) {
+    const {cellRenderer, fixedColumnCount, fixedRowCount} = this.props;
 
     return cellRenderer({
       ...rest,
       columnIndex: columnIndex + fixedColumnCount,
       parent: this,
-      rowIndex: rowIndex + fixedRowCount
+      rowIndex: rowIndex + fixedRowCount,
     });
   }
 
-  _cellRendererTopRightGrid({ columnIndex, ...rest }) {
-    const { cellRenderer, columnCount, fixedColumnCount } = this.props;
+  _cellRendererTopRightGrid({columnIndex, ...rest}) {
+    const {cellRenderer, columnCount, fixedColumnCount} = this.props;
 
     if (columnIndex === columnCount - fixedColumnCount) {
       return (
@@ -352,7 +354,7 @@ export default class MultiGrid extends PureComponent {
           key={rest.key}
           style={{
             ...rest.style,
-            width: SCROLLBAR_SIZE_BUFFER
+            width: SCROLLBAR_SIZE_BUFFER,
           }}
         />
       );
@@ -360,14 +362,14 @@ export default class MultiGrid extends PureComponent {
       return cellRenderer({
         ...rest,
         columnIndex: columnIndex + fixedColumnCount,
-        parent: this
+        parent: this,
       });
     }
   }
 
-  _columnWidthRightGrid({ index }) {
-    const { columnCount, fixedColumnCount, columnWidth } = this.props;
-    const { scrollbarSize, showHorizontalScrollbar } = this.state;
+  _columnWidthRightGrid({index}) {
+    const {columnCount, fixedColumnCount, columnWidth} = this.props;
+    const {scrollbarSize, showHorizontalScrollbar} = this.state;
 
     // An extra cell is added to the count
     // This gives the smaller Grid extra room for offset,
@@ -377,13 +379,13 @@ export default class MultiGrid extends PureComponent {
       return scrollbarSize;
     }
 
-    return typeof columnWidth === "function"
-      ? columnWidth({ index: index + fixedColumnCount })
+    return typeof columnWidth === 'function'
+      ? columnWidth({index: index + fixedColumnCount})
       : columnWidth;
   }
 
   _getBottomGridHeight(props) {
-    const { height } = props;
+    const {height} = props;
 
     let topGridHeight = this._getTopGridHeight(props);
 
@@ -391,14 +393,14 @@ export default class MultiGrid extends PureComponent {
   }
 
   _getLeftGridWidth(props) {
-    const { fixedColumnCount, columnWidth } = props;
+    const {fixedColumnCount, columnWidth} = props;
 
     if (this._leftGridWidth == null) {
-      if (typeof columnWidth === "function") {
+      if (typeof columnWidth === 'function') {
         let leftGridWidth = 0;
 
         for (let index = 0; index < fixedColumnCount; index++) {
-          leftGridWidth += columnWidth({ index });
+          leftGridWidth += columnWidth({index});
         }
 
         this._leftGridWidth = leftGridWidth;
@@ -411,7 +413,7 @@ export default class MultiGrid extends PureComponent {
   }
 
   _getRightGridWidth(props) {
-    const { width } = props;
+    const {width} = props;
 
     let leftGridWidth = this._getLeftGridWidth(props);
 
@@ -419,14 +421,14 @@ export default class MultiGrid extends PureComponent {
   }
 
   _getTopGridHeight(props) {
-    const { fixedRowCount, rowHeight } = props;
+    const {fixedRowCount, rowHeight} = props;
 
     if (this._topGridHeight == null) {
-      if (typeof rowHeight === "function") {
+      if (typeof rowHeight === 'function') {
         let topGridHeight = 0;
 
         for (let index = 0; index < fixedRowCount; index++) {
-          topGridHeight += rowHeight({ index });
+          topGridHeight += rowHeight({index});
         }
 
         this._topGridHeight = topGridHeight;
@@ -439,7 +441,7 @@ export default class MultiGrid extends PureComponent {
   }
 
   _handleInvalidatedGridSize() {
-    if (typeof this._deferredInvalidateColumnIndex === "number") {
+    if (typeof this._deferredInvalidateColumnIndex === 'number') {
       const columnIndex = this._deferredInvalidateColumnIndex;
       const rowIndex = this._deferredInvalidateRowIndex;
 
@@ -448,7 +450,7 @@ export default class MultiGrid extends PureComponent {
 
       this.recomputeGridSize({
         columnIndex,
-        rowIndex
+        rowIndex,
       });
       this.forceUpdate();
     }
@@ -472,7 +474,7 @@ export default class MultiGrid extends PureComponent {
       styleBottomRightGrid,
       styleTopLeftGrid,
       styleTopRightGrid,
-      width
+      width,
     } = props;
 
     const firstRender = !prevProps;
@@ -490,34 +492,34 @@ export default class MultiGrid extends PureComponent {
     if (firstRender || sizeChange || style !== prevProps.style) {
       this._containerOuterStyle = {
         height,
-        overflow: "visible", // Let :focus outline show through
+        overflow: 'visible', // Let :focus outline show through
         width,
-        ...style
+        ...style,
       };
     }
 
     if (firstRender || sizeChange || topSizeChange) {
       this._containerTopStyle = {
         height: this._getTopGridHeight(props),
-        position: "relative",
-        width
+        position: 'relative',
+        width,
       };
 
       this._containerBottomStyle = {
         height: height - this._getTopGridHeight(props),
-        overflow: "visible", // Let :focus outline show through
-        position: "relative",
-        width
+        overflow: 'visible', // Let :focus outline show through
+        position: 'relative',
+        width,
       };
     }
 
     if (firstRender || styleBottomLeftGrid !== prevProps.styleBottomLeftGrid) {
       this._bottomLeftGridStyle = {
         left: 0,
-        overflowX: "hidden",
-        overflowY: enableFixedColumnScroll ? "auto" : "hidden",
-        position: "absolute",
-        ...styleBottomLeftGrid
+        overflowX: 'hidden',
+        overflowY: enableFixedColumnScroll ? 'auto' : 'hidden',
+        position: 'absolute',
+        ...styleBottomLeftGrid,
       };
     }
 
@@ -528,19 +530,19 @@ export default class MultiGrid extends PureComponent {
     ) {
       this._bottomRightGridStyle = {
         left: this._getLeftGridWidth(props),
-        position: "absolute",
-        ...styleBottomRightGrid
+        position: 'absolute',
+        ...styleBottomRightGrid,
       };
     }
 
     if (firstRender || styleTopLeftGrid !== prevProps.styleTopLeftGrid) {
       this._topLeftGridStyle = {
         left: 0,
-        overflowX: "hidden",
-        overflowY: "hidden",
-        position: "absolute",
+        overflowX: 'hidden',
+        overflowY: 'hidden',
+        position: 'absolute',
         top: 0,
-        ...styleTopLeftGrid
+        ...styleTopLeftGrid,
       };
     }
 
@@ -551,20 +553,20 @@ export default class MultiGrid extends PureComponent {
     ) {
       this._topRightGridStyle = {
         left: this._getLeftGridWidth(props),
-        overflowX: enableFixedRowScroll ? "auto" : "hidden",
-        overflowY: "hidden",
-        position: "absolute",
+        overflowX: enableFixedRowScroll ? 'auto' : 'hidden',
+        overflowY: 'hidden',
+        position: 'absolute',
         top: 0,
-        ...styleTopRightGrid
+        ...styleTopRightGrid,
       };
     }
   }
 
   _onScroll(scrollInfo) {
-    const { scrollLeft, scrollTop } = scrollInfo;
+    const {scrollLeft, scrollTop} = scrollInfo;
     this.setState({
       scrollLeft,
-      scrollTop
+      scrollTop,
     });
     const onScroll = this.props.onScroll;
     if (onScroll) {
@@ -572,8 +574,8 @@ export default class MultiGrid extends PureComponent {
     }
   }
 
-  _onScrollbarPresenceChange({ horizontal, size, vertical }) {
-    const { showHorizontalScrollbar, showVerticalScrollbar } = this.state;
+  _onScrollbarPresenceChange({horizontal, size, vertical}) {
+    const {showHorizontalScrollbar, showVerticalScrollbar} = this.state;
 
     if (
       horizontal !== showHorizontalScrollbar ||
@@ -582,24 +584,24 @@ export default class MultiGrid extends PureComponent {
       this.setState({
         scrollbarSize: size,
         showHorizontalScrollbar: horizontal,
-        showVerticalScrollbar: vertical
+        showVerticalScrollbar: vertical,
       });
     }
   }
 
   _onScrollLeft(scrollInfo) {
-    const { scrollLeft } = scrollInfo;
+    const {scrollLeft} = scrollInfo;
     this._onScroll({
       scrollLeft,
-      scrollTop: this.state.scrollTop
+      scrollTop: this.state.scrollTop,
     });
   }
 
   _onScrollTop(scrollInfo) {
-    const { scrollTop } = scrollInfo;
+    const {scrollTop} = scrollInfo;
     this._onScroll({
       scrollTop,
-      scrollLeft: this.state.scrollLeft
+      scrollLeft: this.state.scrollLeft,
     });
   }
 
@@ -609,9 +611,9 @@ export default class MultiGrid extends PureComponent {
       fixedColumnCount,
       fixedRowCount,
       rowCount,
-      scrollTop
+      scrollTop,
     } = props;
-    const { showVerticalScrollbar } = this.state;
+    const {showVerticalScrollbar} = this.state;
 
     if (!fixedColumnCount) {
       return null;
@@ -646,7 +648,7 @@ export default class MultiGrid extends PureComponent {
       fixedRowCount,
       rowCount,
       scrollToColumn,
-      scrollToRow
+      scrollToRow,
     } = props;
 
     return (
@@ -672,7 +674,7 @@ export default class MultiGrid extends PureComponent {
   }
 
   _renderTopLeftGrid(props) {
-    const { fixedColumnCount, fixedRowCount } = props;
+    const {fixedColumnCount, fixedRowCount} = props;
 
     if (!fixedColumnCount || !fixedRowCount) {
       return null;
@@ -699,9 +701,9 @@ export default class MultiGrid extends PureComponent {
       enableFixedRowScroll,
       fixedColumnCount,
       fixedRowCount,
-      scrollLeft
+      scrollLeft,
     } = props;
-    const { showHorizontalScrollbar } = this.state;
+    const {showHorizontalScrollbar} = this.state;
 
     if (!fixedRowCount) {
       return null;
@@ -731,9 +733,9 @@ export default class MultiGrid extends PureComponent {
     );
   }
 
-  _rowHeightBottomGrid({ index }) {
-    const { fixedRowCount, rowCount, rowHeight } = this.props;
-    const { scrollbarSize, showVerticalScrollbar } = this.state;
+  _rowHeightBottomGrid({index}) {
+    const {fixedRowCount, rowCount, rowHeight} = this.props;
+    const {scrollbarSize, showVerticalScrollbar} = this.state;
 
     // An extra cell is added to the count
     // This gives the smaller Grid extra room for offset,
@@ -743,8 +745,8 @@ export default class MultiGrid extends PureComponent {
       return scrollbarSize;
     }
 
-    return typeof rowHeight === "function"
-      ? rowHeight({ index: index + fixedRowCount })
+    return typeof rowHeight === 'function'
+      ? rowHeight({index: index + fixedRowCount})
       : rowHeight;
   }
 

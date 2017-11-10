@@ -1,35 +1,35 @@
 /** @flow */
 
-import type { Alignment, CellSizeGetter, VisibleCellRange, RangeSizeGetter } from "../types";
+import type { Alignment, CellSizeGetter, VisibleCellRange, RangeSizeGetter } from '../types';
 
 type CellSizeAndPositionManagerParams = {
   batchAllCells: boolean,
   cellCount: number,
   cellSizeGetter: CellSizeGetter,
   rangeSizeGetter: ?RangeSizeGetter,
-  estimatedCellSize: number
+  estimatedCellSize: number,
 };
 
 type ConfigureParams = {
   cellCount: number,
-  estimatedCellSize: number
+  estimatedCellSize: number,
 };
 
 type GetUpdatedOffsetForIndex = {
   align: Alignment,
   containerSize: number,
   currentOffset: number,
-  targetIndex: number
+  targetIndex: number,
 };
 
 type GetVisibleCellRangeParams = {
   containerSize: number,
-  offset: number
+  offset: number,
 };
 
 type SizeAndPositionData = {
   offset: number,
-  size: number
+  size: number,
 };
 
 /**
@@ -58,7 +58,7 @@ export default class CellSizeAndPositionManager {
     cellCount,
     cellSizeGetter,
     rangeSizeGetter,
-    estimatedCellSize
+    estimatedCellSize,
   }: CellSizeAndPositionManagerParams) {
     this._batchAllCells = batchAllCells;
     this._cellSizeGetter = cellSizeGetter;
@@ -71,7 +71,7 @@ export default class CellSizeAndPositionManager {
     return false;
   }
 
-  configure({ cellCount, estimatedCellSize }: ConfigureParams) {
+  configure({cellCount, estimatedCellSize}: ConfigureParams) {
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
   }
@@ -99,7 +99,7 @@ export default class CellSizeAndPositionManager {
   getSizeAndPositionOfCell(index: number): SizeAndPositionData {
     if (index < 0 || index >= this._cellCount) {
       throw Error(
-        `Requested index ${index} is outside of range 0..${this._cellCount}`
+        `Requested index ${index} is outside of range 0..${this._cellCount}`,
       );
     }
 
@@ -154,7 +154,7 @@ export default class CellSizeAndPositionManager {
       ? this._cellSizeAndPositionData[this._lastMeasuredIndex]
       : {
           offset: 0,
-          size: 0
+          size: 0,
         };
   }
 
@@ -186,10 +186,10 @@ export default class CellSizeAndPositionManager {
    * @return Offset to use to ensure the specified cell is visible
    */
   getUpdatedOffsetForIndex({
-    align = "auto",
+    align = 'auto',
     containerSize,
     currentOffset,
-    targetIndex
+    targetIndex,
   }: GetUpdatedOffsetForIndex): number {
     if (containerSize <= 0) {
       return 0;
@@ -202,13 +202,13 @@ export default class CellSizeAndPositionManager {
     let idealOffset;
 
     switch (align) {
-      case "start":
+      case 'start':
         idealOffset = maxOffset;
         break;
-      case "end":
+      case 'end':
         idealOffset = minOffset;
         break;
-      case "center":
+      case 'center':
         idealOffset = maxOffset - (containerSize - datum.size) / 2;
         break;
       default:
@@ -227,11 +227,11 @@ export default class CellSizeAndPositionManager {
     if (this._batchAllCells) {
       return {
         start: 0,
-        stop: this._cellCount - 1
+        stop: this._cellCount - 1,
       };
     }
 
-    let { containerSize, offset } = params;
+    let {containerSize, offset} = params;
 
     const totalSize = this.getTotalSize();
 
@@ -255,7 +255,7 @@ export default class CellSizeAndPositionManager {
 
     return {
       start,
-      stop
+      stop,
     };
   }
 
@@ -303,7 +303,7 @@ export default class CellSizeAndPositionManager {
     return this._binarySearch(
       Math.min(index, this._cellCount - 1),
       Math.floor(index / 2),
-      offset
+      offset,
     );
   }
 

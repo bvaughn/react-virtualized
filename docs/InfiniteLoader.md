@@ -1,11 +1,11 @@
 InfiniteLoader
 ---------------
 
-Higher-order component that manages just-in-time fetching of data as a user scrolls up or down in a list.
+A component that manages just-in-time fetching of data as a user scrolls up or down in a list.
 
 Note that this component is intended to assist with row-loading.
 As such it is best suited for use with `Table` and `List` (although it can also be used with `Grid`).
-This HOC is not compatible with the `Collection` component.
+This component is not compatible with the `Collection` component.
 
 This is an advanced component and can be confusing in certain situations.
 [See below for more information](#edge-cases-and-considerations).

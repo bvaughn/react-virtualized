@@ -1,27 +1,27 @@
 /** @flow */
 
-import React from "react";
+import React from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
-  ContentBoxParagraph
-} from "../demo/ContentBox";
-import ArrowKeyStepper, { type ScrollIndices } from "./";
-import AutoSizer from "../AutoSizer";
-import Grid from "../Grid";
-import cn from "classnames";
-import styles from "./ArrowKeyStepper.example.css";
+  ContentBoxParagraph,
+} from '../demo/ContentBox';
+import ArrowKeyStepper, {type ScrollIndices} from './';
+import AutoSizer from '../AutoSizer';
+import Grid from '../Grid';
+import cn from 'classnames';
+import styles from './ArrowKeyStepper.example.css';
 
 export default class ArrowKeyStepperExample extends React.PureComponent {
   state = {
-    mode: "edges",
+    mode: 'edges',
     isClickable: true,
     scrollToColumn: 0,
-    scrollToRow: 0
+    scrollToRow: 0,
   };
 
   render() {
-    const { mode, isClickable, scrollToColumn, scrollToRow } = this.state;
+    const {mode, isClickable, scrollToColumn, scrollToRow} = this.state;
 
     return (
       <ContentBox>
@@ -32,7 +32,7 @@ export default class ArrowKeyStepperExample extends React.PureComponent {
         />
 
         <ContentBoxParagraph>
-          This high-order component decorates a <code>List</code>,{" "}
+          This high-order component decorates a <code>List</code>,{' '}
           <code>Table</code>, or <code>Grid</code> and responds to arrow-key
           events by scrolling one row or column at a time. Focus in the `Grid`
           below and use the left, right, up, or down arrow keys to move around
@@ -40,7 +40,7 @@ export default class ArrowKeyStepperExample extends React.PureComponent {
         </ContentBoxParagraph>
 
         <ContentBoxParagraph>
-          Note that unlike the other HOCs in react-virtualized, the{" "}
+          Note that unlike the other HOCs in react-virtualized, the{' '}
           <code>ArrowKeyStepper</code> adds a <code>&lt;div&gt;</code> element
           around its children in order to attach a key-down event handler.
         </ContentBoxParagraph>
@@ -50,11 +50,11 @@ export default class ArrowKeyStepperExample extends React.PureComponent {
           <label>
             <input
               aria-label="Set mode equal to &quot;cells&quot;"
-              checked={mode === "cells"}
+              checked={mode === 'cells'}
               className={styles.Radio}
               type="radio"
               onChange={event =>
-                event.target.checked && this.setState({ mode: "cells" })}
+                event.target.checked && this.setState({mode: 'cells'})}
               value="cells"
             />
             cells
@@ -62,11 +62,11 @@ export default class ArrowKeyStepperExample extends React.PureComponent {
           <label>
             <input
               aria-label="Set mode equal to &quot;edges&quot;"
-              checked={mode === "edges"}
+              checked={mode === 'edges'}
               className={styles.Radio}
               type="radio"
               onChange={event =>
-                event.target.checked && this.setState({ mode: "edges" })}
+                event.target.checked && this.setState({mode: 'edges'})}
               value="edges"
             />
             edges (default)
@@ -94,49 +94,50 @@ export default class ArrowKeyStepperExample extends React.PureComponent {
           mode={mode}
           rowCount={100}
           scrollToColumn={scrollToColumn}
-          scrollToRow={scrollToRow}
-        >
-          {({ onSectionRendered, scrollToColumn, scrollToRow }) =>
+          scrollToRow={scrollToRow}>
+          {({onSectionRendered, scrollToColumn, scrollToRow}) => (
             <div>
               <ContentBoxParagraph>
                 {`Most-recently-stepped column: ${scrollToColumn}, row: ${scrollToRow}`}
               </ContentBoxParagraph>
 
               <AutoSizer disableHeight>
-                {({ width }) =>
+                {({width}) => (
                   <Grid
                     className={styles.Grid}
                     columnWidth={this._getColumnWidth}
                     columnCount={100}
                     height={200}
                     onSectionRendered={onSectionRendered}
-                    cellRenderer={({ columnIndex, key, rowIndex, style }) =>
+                    cellRenderer={({columnIndex, key, rowIndex, style}) =>
                       this._cellRenderer({
                         columnIndex,
                         key,
                         rowIndex,
                         scrollToColumn,
                         scrollToRow,
-                        style
+                        style,
                       })}
                     rowHeight={this._getRowHeight}
                     rowCount={100}
                     scrollToColumn={scrollToColumn}
                     scrollToRow={scrollToRow}
                     width={width}
-                  />}
+                  />
+                )}
               </AutoSizer>
-            </div>}
+            </div>
+          )}
         </ArrowKeyStepper>
       </ContentBox>
     );
   }
 
-  _getColumnWidth = ({ index }: { index: number }) => {
+  _getColumnWidth = ({index}: {index: number}) => {
     return (1 + index % 3) * 60;
   };
 
-  _getRowHeight = ({ index }: { index: number }) => {
+  _getRowHeight = ({index}: {index: number}) => {
     return (1 + index % 3) * 30;
   };
 
@@ -146,18 +147,18 @@ export default class ArrowKeyStepperExample extends React.PureComponent {
     rowIndex,
     scrollToColumn,
     scrollToRow,
-    style
+    style,
   }: {
     columnIndex: number,
     key: string,
     rowIndex: number,
     scrollToColumn: number,
     scrollToRow: number,
-    style: Object
+    style: Object,
   }) => {
     const className = cn(styles.Cell, {
       [styles.FocusedCell]:
-        columnIndex === scrollToColumn && rowIndex === scrollToRow
+        columnIndex === scrollToColumn && rowIndex === scrollToRow,
     });
 
     return (
@@ -169,18 +170,17 @@ export default class ArrowKeyStepperExample extends React.PureComponent {
           (() =>
             this._selectCell({
               scrollToColumn: columnIndex,
-              scrollToRow: rowIndex
+              scrollToRow: rowIndex,
             }))
         }
-        style={style}
-      >
+        style={style}>
         {`r:${rowIndex}, c:${columnIndex}`}
       </div>
     );
   };
 
-  _selectCell = ({ scrollToColumn, scrollToRow }: ScrollIndices) => {
-    this.setState({ scrollToColumn, scrollToRow });
+  _selectCell = ({scrollToColumn, scrollToRow}: ScrollIndices) => {
+    this.setState({scrollToColumn, scrollToRow});
   };
 
   _onClickableChange = (event: Event) => {
@@ -188,7 +188,7 @@ export default class ArrowKeyStepperExample extends React.PureComponent {
       this.setState({
         isClickable: event.target.checked,
         scrollToColumn: 0,
-        scrollToRow: 0
+        scrollToRow: 0,
       });
     }
   };

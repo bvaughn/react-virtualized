@@ -1,8 +1,8 @@
 // @flow
 
-import type { Alignment } from "../types";
+import type {Alignment, CellSize} from '../types';
 
-import ScalingCellSizeAndPositionManager from "./ScalingCellSizeAndPositionManager.js";
+import ScalingCellSizeAndPositionManager from './ScalingCellSizeAndPositionManager.js';
 
 /**
  * Helper function that determines when to update scroll offsets to ensure that a scroll-to-index remains visible.
@@ -11,7 +11,7 @@ import ScalingCellSizeAndPositionManager from "./ScalingCellSizeAndPositionManag
 
 type Params = {
   // Width or height of cells for the current axis
-  cellSize?: number,
+  cellSize?: CellSize,
 
   // Manages size and position metadata of cells
   cellSizeAndPositionManager: ScalingCellSizeAndPositionManager,
@@ -20,7 +20,7 @@ type Params = {
   previousCellsCount: number,
 
   // Previous width or height of cells
-  previousCellSize: ?number,
+  previousCellSize: CellSize,
 
   previousScrollToAlignment: Alignment,
 
@@ -44,7 +44,7 @@ type Params = {
   sizeJustIncreasedFromZero: boolean,
 
   // Callback to invoke with an scroll-to-index value
-  updateScrollIndexCallback: (index: number) => void
+  updateScrollIndexCallback: (index: number) => void,
 };
 
 export default function updateScrollIndexHelper({
@@ -60,7 +60,7 @@ export default function updateScrollIndexHelper({
   scrollToIndex,
   size,
   sizeJustIncreasedFromZero,
-  updateScrollIndexCallback
+  updateScrollIndexCallback,
 }: Params) {
   const cellCount = cellSizeAndPositionManager.getCellCount();
   const hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < cellCount;
@@ -68,7 +68,7 @@ export default function updateScrollIndexHelper({
     size !== previousSize ||
     sizeJustIncreasedFromZero ||
     !previousCellSize ||
-    (typeof cellSize === "number" && cellSize !== previousCellSize);
+    (typeof cellSize === 'number' && cellSize !== previousCellSize);
 
   // If we have a new scroll target OR if height/row-height has changed,
   // We should ensure that the scroll target is visible.

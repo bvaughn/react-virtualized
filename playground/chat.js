@@ -1,12 +1,12 @@
 var cache = new ReactVirtualized.CellMeasurerCache({
-  fixedWidth: true
-})
+  fixedWidth: true,
+});
 
-var list
-var mostRecentWidth
+var list;
+var mostRecentWidth;
 
-function rowRenderer (params) {
-  var datum = chatHistory[params.index]
+function rowRenderer(params) {
+  var datum = chatHistory[params.index];
 
   return React.createElement(
     ReactVirtualized.CellMeasurer,
@@ -16,70 +16,61 @@ function rowRenderer (params) {
       key: params.key,
       parent: params.parent,
       rowIndex: params.index,
-      width: mostRecentWidth
+      width: mostRecentWidth,
     },
     React.createElement(
       'div',
       {
         className: 'item',
         key: params.key,
-        style: params.style
+        style: params.style,
       },
-      React.createElement(
-        'strong',
-        null,
-        datum.name
-      ),
+      React.createElement('strong', null, datum.name),
       ':',
-      datum.text
-    )
-  )
+      datum.text,
+    ),
+  );
 }
 
-function cellRenderer (params) {
-  params.index = params.rowIndex
+function cellRenderer(params) {
+  params.index = params.rowIndex;
 
-  return rowRenderer(params)
+  return rowRenderer(params);
 }
 
 var App = React.createClass({
-  render: function () {
+  render: function() {
     return React.createElement(
       'div',
       {
-        className: 'container'
+        className: 'container',
       },
-      React.createElement(
-        ReactVirtualized.AutoSizer,
-        {},
-        function (autoSizerParams) {
-          if (mostRecentWidth && mostRecentWidth !== autoSizerParams.width) {
-            cache.clearAll()
-            list.recomputeRowHeights()
-          }
-
-          mostRecentWidth = autoSizerParams.width
-
-          return React.createElement(
-            ReactVirtualized.List,
-            {
-              className: 'chat',
-              deferredMeasurementCache: cache,
-              height: autoSizerParams.height,
-              ref: function (ref) {
-                list = ref
-              },
-              rowCount: chatHistory.length,
-              rowHeight: cache.rowHeight,
-              rowRenderer: rowRenderer,
-              width: autoSizerParams.width
-            }
-          )
+      React.createElement(ReactVirtualized.AutoSizer, {}, function(
+        autoSizerParams,
+      ) {
+        if (mostRecentWidth && mostRecentWidth !== autoSizerParams.width) {
+          cache.clearAll();
+          list.recomputeRowHeights();
         }
-      )
-    )
-  }
-})
+
+        mostRecentWidth = autoSizerParams.width;
+
+        return React.createElement(ReactVirtualized.List, {
+          className: 'chat',
+          deferredMeasurementCache: cache,
+          height: autoSizerParams.height,
+          ref: function(ref) {
+            list = ref;
+          },
+          rowCount: chatHistory.length,
+          rowHeight: cache.rowHeight,
+          rowRenderer: rowRenderer,
+          width: autoSizerParams.width,
+        });
+      }),
+    );
+  },
+});
 
 var NAMES = [
   'Peter Brimer',
@@ -181,8 +172,8 @@ var NAMES = [
   'Allene Seto',
   'Margery Caves',
   'Nelly Moudy',
-  'Felix Sailer'
-]
+  'Felix Sailer',
+];
 var SENTENCES = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Phasellus vulputate odio commodo tortor sodales, et vehicula ipsum viverra.',
@@ -259,36 +250,34 @@ var SENTENCES = [
   'Nullam a sapien leo.',
   'Praesent cursus semper purus, vitae gravida risus dapibus mattis.',
   'Sed pellentesque nulla lorem, in commodo arcu feugiat sed.',
-  'Phasellus blandit arcu non diam varius ornare.'
-]
-var chatHistory = []
+  'Phasellus blandit arcu non diam varius ornare.',
+];
+var chatHistory = [];
 
 for (var i = 0; i < 1000; i++) {
-  var name = NAMES[Math.floor(Math.random() * NAMES.length)]
-  var sentences = Math.ceil(Math.random() * 5)
-  var texts = []
+  var name = NAMES[Math.floor(Math.random() * NAMES.length)];
+  var sentences = Math.ceil(Math.random() * 5);
+  var texts = [];
 
   for (var x = 0; x < sentences; x++) {
-    texts.push(SENTENCES[Math.floor(Math.random() * SENTENCES.length)])
+    texts.push(SENTENCES[Math.floor(Math.random() * SENTENCES.length)]);
   }
 
   chatHistory.push({
     name,
-    text: texts.join(' ')
-  })
+    text: texts.join(' '),
+  });
 }
 
-const container = document.getElementById('mount')
+const container = document.getElementById('mount');
 
-ReactDOM.render(
-  React.createElement(App),
-  container
-)
+ReactDOM.render(React.createElement(App), container);
 
-document.body.addEventListener('click', function () {
-  const bodyWidth = document.body.getBoundingClientRect().width
-  const minWidth = 300
+document.body.addEventListener('click', function() {
+  const bodyWidth = document.body.getBoundingClientRect().width;
+  const minWidth = 300;
 
-  container.style.display = 'inline-block'
-  container.style.maxWidth = `${minWidth + Math.round(Math.random() * (bodyWidth - minWidth))}px`
-})
+  container.style.display = 'inline-block';
+  container.style.maxWidth = `${minWidth +
+    Math.round(Math.random() * (bodyWidth - minWidth))}px`;
+});

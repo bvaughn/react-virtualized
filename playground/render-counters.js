@@ -1,27 +1,25 @@
-const { PureComponent } = React
-const { AutoSizer, List } = ReactVirtualized
+const {PureComponent} = React;
+const {AutoSizer, List} = ReactVirtualized;
 
 class ListExample extends PureComponent {
   render() {
-    return React.createElement(
-      AutoSizer,
-      null,
-      ({ height, width }) => React.createElement(List, {
+    return React.createElement(AutoSizer, null, ({height, width}) =>
+      React.createElement(List, {
         height: height,
         overscanRowCount: 0,
         rowCount: 1000,
         rowHeight: 30,
         rowRenderer: this._rowRenderer,
-        width: width
-      })
+        width: width,
+      }),
     );
   }
 
-  _rowRenderer({ index, isScrolling, key, style }) {
+  _rowRenderer({index, isScrolling, key, style}) {
     return React.createElement(Row, {
       index: index,
       key: key,
-      style: style
+      style: style,
     });
   }
 }
@@ -31,7 +29,7 @@ class Row extends PureComponent {
     super(props, context);
 
     this.state = {
-      counter: 0
+      counter: 0,
     };
 
     this._renderCount = 0;
@@ -40,8 +38,8 @@ class Row extends PureComponent {
   render() {
     this._renderCount++;
 
-    const { counter } = this.state;
-    const { index, style } = this.props;
+    const {counter} = this.state;
+    const {index, style} = this.props;
 
     return React.createElement(
       'div',
@@ -51,17 +49,17 @@ class Row extends PureComponent {
             counter: state.counter++;
           });
         },
-        style: style
+        style: style,
       },
       'Row ',
       index,
       ', ',
-      this._renderCount
+      this._renderCount,
     );
   }
 }
 
 ReactDOM.render(
   React.createElement(ListExample),
-  document.querySelector('#mount')
-)
+  document.querySelector('#mount'),
+);

@@ -1,4 +1,6 @@
 /** @flow */
-export default from "./Masonry";
-export Masonry from "./Masonry";
-export createCellPositioner from "./createCellPositioner";
+import createCellPositioner from './createCellPositioner';
+import Masonry from './Masonry';
+
+export default Masonry;
+export {createCellPositioner, Masonry};

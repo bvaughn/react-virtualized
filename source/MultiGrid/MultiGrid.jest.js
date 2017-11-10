@@ -1,13 +1,13 @@
-import React from "react";
-import { findDOMNode } from "react-dom";
-import { render } from "../TestUtils";
-import MultiGrid from "./MultiGrid";
-import { CellMeasurerCache } from "../CellMeasurer";
+import React from 'react';
+import {findDOMNode} from 'react-dom';
+import {render} from '../TestUtils';
+import MultiGrid from './MultiGrid';
+import {CellMeasurerCache} from '../CellMeasurer';
 
 // These tests only focus on what MultiGrid does specifically.
 // The inner Grid component is tested in depth elsewhere.
-describe("MultiGrid", () => {
-  function defaultCellRenderer({ columnIndex, key, rowIndex, style }) {
+describe('MultiGrid', () => {
+  function defaultCellRenderer({columnIndex, key, rowIndex, style}) {
     return (
       <div className="gridItem" key={key} style={style}>
         {`row:${rowIndex}, column:${columnIndex}`}
@@ -35,154 +35,154 @@ describe("MultiGrid", () => {
     );
   }
 
-  describe("fixed columns and rows", () => {
-    it("should render 4 Grids when configured for fixed columns and rows", () => {
+  describe('fixed columns and rows', () => {
+    it('should render 4 Grids when configured for fixed columns and rows', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
             fixedColumnCount: 1,
-            fixedRowCount: 1
-          })
-        )
+            fixedRowCount: 1,
+          }),
+        ),
       );
-      const grids = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
       expect(grids.length).toEqual(4);
       const [topLeft, topRight, bottomLeft, bottomRight] = grids;
-      expect(topLeft.style.getPropertyValue("overflow-x")).toEqual("hidden");
-      expect(topLeft.style.getPropertyValue("overflow-y")).toEqual("hidden");
-      expect(topRight.style.getPropertyValue("overflow-x")).toEqual("hidden");
-      expect(topRight.style.getPropertyValue("overflow-y")).toEqual("hidden");
-      expect(bottomLeft.style.getPropertyValue("overflow-x")).toEqual("hidden");
-      expect(bottomLeft.style.getPropertyValue("overflow-y")).toEqual("hidden");
-      expect(bottomRight.style.getPropertyValue("overflow-x")).toEqual("auto");
-      expect(bottomRight.style.getPropertyValue("overflow-y")).toEqual("auto");
+      expect(topLeft.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(topLeft.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(topRight.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto');
+      expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto');
     });
 
-    it("should render 2 Grids when configured for fixed columns only", () => {
+    it('should render 2 Grids when configured for fixed columns only', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
             fixedColumnCount: 1,
-            fixedRowCount: 0
-          })
-        )
+            fixedRowCount: 0,
+          }),
+        ),
       );
-      const grids = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
       expect(grids.length).toEqual(2);
       const [bottomLeft, bottomRight] = grids;
-      expect(bottomLeft.style.getPropertyValue("overflow-x")).toEqual("hidden");
-      expect(bottomLeft.style.getPropertyValue("overflow-y")).toEqual("hidden");
-      expect(bottomRight.style.getPropertyValue("overflow-x")).toEqual("auto");
-      expect(bottomRight.style.getPropertyValue("overflow-y")).toEqual("auto");
+      expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto');
+      expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto');
     });
 
-    it("should render 2 Grids when configured for fixed rows only", () => {
+    it('should render 2 Grids when configured for fixed rows only', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
             fixedColumnCount: 0,
-            fixedRowCount: 1
-          })
-        )
+            fixedRowCount: 1,
+          }),
+        ),
       );
-      const grids = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
       expect(grids.length).toEqual(2);
       const [topRight, bottomRight] = grids;
-      expect(topRight.style.getPropertyValue("overflow-x")).toEqual("hidden");
-      expect(topRight.style.getPropertyValue("overflow-y")).toEqual("hidden");
-      expect(bottomRight.style.getPropertyValue("overflow-x")).toEqual("auto");
-      expect(bottomRight.style.getPropertyValue("overflow-y")).toEqual("auto");
+      expect(topRight.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto');
+      expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto');
     });
 
-    it("should render 1 Grid when configured for neither fixed columns and rows", () => {
+    it('should render 1 Grid when configured for neither fixed columns and rows', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
             fixedColumnCount: 0,
-            fixedRowCount: 0
-          })
-        )
+            fixedRowCount: 0,
+          }),
+        ),
       );
-      const grids = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
       expect(grids.length).toEqual(1);
       const [bottomRight] = grids;
-      expect(bottomRight.style.getPropertyValue("overflow-x")).toEqual("auto");
-      expect(bottomRight.style.getPropertyValue("overflow-y")).toEqual("auto");
+      expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto');
+      expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto');
     });
 
-    it("should adjust the number of Grids when fixed column or row counts change", () => {
+    it('should adjust the number of Grids when fixed column or row counts change', () => {
       let rendered = findDOMNode(
         render(
           getMarkup({
             fixedColumnCount: 2,
-            fixedRowCount: 1
-          })
-        )
+            fixedRowCount: 1,
+          }),
+        ),
       );
       expect(
-        rendered.querySelectorAll(".ReactVirtualized__Grid").length
+        rendered.querySelectorAll('.ReactVirtualized__Grid').length,
       ).toEqual(4);
       rendered = findDOMNode(
         render(
           getMarkup({
             fixedColumnCount: 0,
-            fixedRowCount: 0
-          })
-        )
+            fixedRowCount: 0,
+          }),
+        ),
       );
       expect(
-        rendered.querySelectorAll(".ReactVirtualized__Grid").length
+        rendered.querySelectorAll('.ReactVirtualized__Grid').length,
       ).toEqual(1);
       rendered = findDOMNode(
         render(
           getMarkup({
             fixedColumnCount: 0,
-            fixedRowCount: 2
-          })
-        )
+            fixedRowCount: 2,
+          }),
+        ),
       );
       expect(
-        rendered.querySelectorAll(".ReactVirtualized__Grid").length
+        rendered.querySelectorAll('.ReactVirtualized__Grid').length,
       ).toEqual(2);
     });
 
-    it("should allow scrolling of fixed Grids when configured for fixed columns and rows with scroll interaction", () => {
+    it('should allow scrolling of fixed Grids when configured for fixed columns and rows with scroll interaction', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
             enableFixedColumnScroll: true,
             enableFixedRowScroll: true,
             fixedColumnCount: 1,
-            fixedRowCount: 1
-          })
-        )
+            fixedRowCount: 1,
+          }),
+        ),
       );
-      const grids = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
       expect(grids.length).toEqual(4);
       const [topLeft, topRight, bottomLeft, bottomRight] = grids;
-      expect(topLeft.style.getPropertyValue("overflow-x")).toEqual("hidden");
-      expect(topLeft.style.getPropertyValue("overflow-y")).toEqual("hidden");
-      expect(topRight.style.getPropertyValue("overflow-x")).toEqual("auto");
-      expect(topRight.style.getPropertyValue("overflow-y")).toEqual("hidden");
-      expect(bottomLeft.style.getPropertyValue("overflow-x")).toEqual("hidden");
-      expect(bottomLeft.style.getPropertyValue("overflow-y")).toEqual("auto");
-      expect(bottomRight.style.getPropertyValue("overflow-x")).toEqual("auto");
-      expect(bottomRight.style.getPropertyValue("overflow-y")).toEqual("auto");
+      expect(topLeft.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(topLeft.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(topRight.style.getPropertyValue('overflow-x')).toEqual('auto');
+      expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('auto');
+      expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto');
+      expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto');
     });
   });
 
-  describe("#recomputeGridSize", () => {
-    it("should clear calculated cached styles in recomputeGridSize", () => {
+  describe('#recomputeGridSize', () => {
+    it('should clear calculated cached styles in recomputeGridSize', () => {
       let fixedRowHeight = 75;
       let fixedColumnWidth = 100;
 
-      function variableRowHeight({ index }) {
+      function variableRowHeight({index}) {
         if (index === 0) {
           return fixedRowHeight;
         }
         return 20;
       }
-      function variableColumnWidth({ index }) {
+      function variableColumnWidth({index}) {
         if (index === 0) {
           return fixedColumnWidth;
         }
@@ -199,23 +199,23 @@ describe("MultiGrid", () => {
             columnWidth: variableColumnWidth,
             ref: ref => {
               multiGrid = ref;
-            }
-          })
-        )
+            },
+          }),
+        ),
       );
 
-      let grids = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      let grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
       expect(grids.length).toEqual(4);
       let [topLeft, topRight, bottomLeft, bottomRight] = grids;
-      expect(topLeft.style.getPropertyValue("height")).toEqual("75px");
-      expect(topRight.style.getPropertyValue("height")).toEqual("75px");
-      expect(bottomLeft.style.getPropertyValue("height")).toEqual("225px");
-      expect(bottomRight.style.getPropertyValue("height")).toEqual("225px");
+      expect(topLeft.style.getPropertyValue('height')).toEqual('75px');
+      expect(topRight.style.getPropertyValue('height')).toEqual('75px');
+      expect(bottomLeft.style.getPropertyValue('height')).toEqual('225px');
+      expect(bottomRight.style.getPropertyValue('height')).toEqual('225px');
 
-      expect(topLeft.style.getPropertyValue("width")).toEqual("100px");
-      expect(topRight.style.getPropertyValue("width")).toEqual("300px");
-      expect(bottomLeft.style.getPropertyValue("width")).toEqual("100px");
-      expect(bottomRight.style.getPropertyValue("width")).toEqual("300px");
+      expect(topLeft.style.getPropertyValue('width')).toEqual('100px');
+      expect(topRight.style.getPropertyValue('width')).toEqual('300px');
+      expect(bottomLeft.style.getPropertyValue('width')).toEqual('100px');
+      expect(bottomRight.style.getPropertyValue('width')).toEqual('300px');
 
       expect(multiGrid._topGridHeight).toEqual(75);
       expect(multiGrid._leftGridWidth).toEqual(100);
@@ -228,70 +228,68 @@ describe("MultiGrid", () => {
 
       multiGrid.forceUpdate();
 
-      let gridsAfter = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      let gridsAfter = rendered.querySelectorAll('.ReactVirtualized__Grid');
       expect(gridsAfter.length).toEqual(4);
       let [
         topLeftAfter,
         topRightAfter,
         bottomLeftAfter,
-        bottomRightAfter
+        bottomRightAfter,
       ] = gridsAfter;
-      expect(topLeftAfter.style.getPropertyValue("height")).toEqual("125px");
-      expect(topRightAfter.style.getPropertyValue("height")).toEqual("125px");
-      expect(bottomLeftAfter.style.getPropertyValue("height")).toEqual("175px");
-      expect(bottomRightAfter.style.getPropertyValue("height")).toEqual(
-        "175px"
+      expect(topLeftAfter.style.getPropertyValue('height')).toEqual('125px');
+      expect(topRightAfter.style.getPropertyValue('height')).toEqual('125px');
+      expect(bottomLeftAfter.style.getPropertyValue('height')).toEqual('175px');
+      expect(bottomRightAfter.style.getPropertyValue('height')).toEqual(
+        '175px',
       );
 
-      expect(topLeftAfter.style.getPropertyValue("width")).toEqual("75px");
-      expect(topRightAfter.style.getPropertyValue("width")).toEqual("325px");
-      expect(bottomLeftAfter.style.getPropertyValue("width")).toEqual("75px");
-      expect(bottomRightAfter.style.getPropertyValue("width")).toEqual("325px");
+      expect(topLeftAfter.style.getPropertyValue('width')).toEqual('75px');
+      expect(topRightAfter.style.getPropertyValue('width')).toEqual('325px');
+      expect(bottomLeftAfter.style.getPropertyValue('width')).toEqual('75px');
+      expect(bottomRightAfter.style.getPropertyValue('width')).toEqual('325px');
     });
   });
 
-  describe("scrollToColumn and scrollToRow", () => {
-    it("should adjust :scrollLeft for the main Grid when scrollToColumn is used", () => {
+  describe('scrollToColumn and scrollToRow', () => {
+    it('should adjust :scrollLeft for the main Grid when scrollToColumn is used', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
             columnWidth: 50,
             fixedColumnCount: 2,
-            scrollToAlignment: "start",
-            scrollToColumn: 19
-          })
-        )
+            scrollToAlignment: 'start',
+            scrollToColumn: 19,
+          }),
+        ),
       );
       // Bottom-right Grid is the last Grid
-      const grid = rendered.querySelectorAll(".ReactVirtualized__Grid")[3];
+      const grid = rendered.querySelectorAll('.ReactVirtualized__Grid')[3];
       // 20th column, less 2 for the fixed-column Grid, 50px column width
       expect(grid.scrollLeft).toEqual(850);
     });
 
-    it("should adjust :scrollTop for the main Grid when scrollToRow is used", () => {
+    it('should adjust :scrollTop for the main Grid when scrollToRow is used', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
             fixedRowCount: 1,
             rowHeight: 50,
-            scrollToAlignment: "start",
-            scrollToRow: 19
-          })
-        )
+            scrollToAlignment: 'start',
+            scrollToRow: 19,
+          }),
+        ),
       );
       // Bottom-right Grid is the last Grid
-      const grid = rendered.querySelectorAll(".ReactVirtualized__Grid")[3];
+      const grid = rendered.querySelectorAll('.ReactVirtualized__Grid')[3];
       // 20th row, less 1 for the fixed-row Grid, 50px row width
       expect(grid.scrollTop).toEqual(900);
     });
   });
 
-  describe("#forceUpdateGrids", () => {
-    it("should call forceUpdate() on inner Grids", () => {
+  describe('#forceUpdateGrids', () => {
+    it('should call forceUpdate() on inner Grids', () => {
       const cellRenderer = jest.fn();
-      cellRenderer.mockImplementation(({ key }) =>
-        <div key={key} style={{}} />
-      );
+      cellRenderer.mockImplementation(({key}) => <div key={key} style={{}} />);
 
       const rendered = render(
         getMarkup({
@@ -299,8 +297,8 @@ describe("MultiGrid", () => {
           columnCount: 2,
           fixedColumnCount: 1,
           fixedRowCount: 1,
-          rowCount: 2
-        })
+          rowCount: 2,
+        }),
       );
 
       expect(cellRenderer.mock.calls).toHaveLength(4);
@@ -312,12 +310,10 @@ describe("MultiGrid", () => {
     });
   });
 
-  describe("#invalidateCellSizeAfterRender", () => {
-    it("should call invalidateCellSizeAfterRender() on inner Grids", () => {
+  describe('#invalidateCellSizeAfterRender', () => {
+    it('should call invalidateCellSizeAfterRender() on inner Grids', () => {
       const cellRenderer = jest.fn();
-      cellRenderer.mockImplementation(({ key }) =>
-        <div key={key} style={{}} />
-      );
+      cellRenderer.mockImplementation(({key}) => <div key={key} style={{}} />);
 
       const rendered = render(
         getMarkup({
@@ -325,14 +321,14 @@ describe("MultiGrid", () => {
           columnCount: 2,
           fixedColumnCount: 1,
           fixedRowCount: 1,
-          rowCount: 2
-        })
+          rowCount: 2,
+        }),
       );
 
       cellRenderer.mockReset();
       rendered.invalidateCellSizeAfterRender({
         columnIndex: 0,
-        rowIndex: 0
+        rowIndex: 0,
       });
 
       rendered.forceUpdate();
@@ -340,10 +336,10 @@ describe("MultiGrid", () => {
       expect(cellRenderer.mock.calls).toHaveLength(4);
     });
 
-    it("should specify itself as the :parent for CellMeasurer rendered cells", () => {
+    it('should specify itself as the :parent for CellMeasurer rendered cells', () => {
       // HACK For some reason, using Jest mock broke here
       let savedParent;
-      function cellRenderer({ key, parent }) {
+      function cellRenderer({key, parent}) {
         savedParent = parent;
         return <div key={key} style={{}} />;
       }
@@ -354,96 +350,96 @@ describe("MultiGrid", () => {
           columnCount: 2,
           fixedColumnCount: 1,
           fixedRowCount: 1,
-          rowCount: 2
-        })
+          rowCount: 2,
+        }),
       );
 
       expect(savedParent).toBe(rendered);
     });
   });
 
-  describe("styles", () => {
-    it("should support custom style for the outer MultiGrid wrapper element", () => {
+  describe('styles', () => {
+    it('should support custom style for the outer MultiGrid wrapper element', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
-            style: { backgroundColor: "black" }
-          })
-        )
+            style: {backgroundColor: 'black'},
+          }),
+        ),
       );
-      expect(rendered.style.backgroundColor).toEqual("black");
+      expect(rendered.style.backgroundColor).toEqual('black');
     });
 
-    it("should support custom styles for each Grid", () => {
+    it('should support custom styles for each Grid', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
             fixedColumnCount: 2,
             fixedRowCount: 1,
-            styleBottomLeftGrid: { backgroundColor: "green" },
-            styleBottomRightGrid: { backgroundColor: "red" },
-            styleTopLeftGrid: { backgroundColor: "blue" },
-            styleTopRightGrid: { backgroundColor: "purple" }
-          })
-        )
+            styleBottomLeftGrid: {backgroundColor: 'green'},
+            styleBottomRightGrid: {backgroundColor: 'red'},
+            styleTopLeftGrid: {backgroundColor: 'blue'},
+            styleTopRightGrid: {backgroundColor: 'purple'},
+          }),
+        ),
       );
-      const grids = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
       const topLeftGrid = grids[0];
       const topRightGrid = grids[1];
       const bottomLeftGrid = grids[2];
       const bottomRightGrid = grids[3];
-      expect(topLeftGrid.style.backgroundColor).toEqual("blue");
-      expect(topRightGrid.style.backgroundColor).toEqual("purple");
-      expect(bottomLeftGrid.style.backgroundColor).toEqual("green");
-      expect(bottomRightGrid.style.backgroundColor).toEqual("red");
+      expect(topLeftGrid.style.backgroundColor).toEqual('blue');
+      expect(topRightGrid.style.backgroundColor).toEqual('purple');
+      expect(bottomLeftGrid.style.backgroundColor).toEqual('green');
+      expect(bottomRightGrid.style.backgroundColor).toEqual('red');
     });
   });
-  describe("scrollTop and scrollLeft", () => {
-    it("should adjust :scrollLeft for top-right and main grids when scrollLeft is used", () => {
+  describe('scrollTop and scrollLeft', () => {
+    it('should adjust :scrollLeft for top-right and main grids when scrollLeft is used', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
             columnWidth: 50,
             fixedColumnCount: 2,
-            scrollLeft: 850
-          })
-        )
+            scrollLeft: 850,
+          }),
+        ),
       );
-      const grids = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
       const topRightGrid = grids[1];
       const bottomRightGrid = grids[3];
       expect(topRightGrid.scrollLeft).toEqual(850);
       expect(bottomRightGrid.scrollLeft).toEqual(850);
     });
 
-    it("should adjust :scrollTop for bottom-left and main grids when scrollTop is used", () => {
+    it('should adjust :scrollTop for bottom-left and main grids when scrollTop is used', () => {
       const rendered = findDOMNode(
         render(
           getMarkup({
             columnWidth: 50,
             fixedColumnCount: 2,
-            scrollTop: 500
-          })
-        )
+            scrollTop: 500,
+          }),
+        ),
       );
-      const grids = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
       const bottomLeftGrid = grids[2];
       const bottomRightGrid = grids[3];
       expect(bottomLeftGrid.scrollTop).toEqual(500);
       expect(bottomRightGrid.scrollTop).toEqual(500);
     });
 
-    it("should adjust :scrollTop and :scrollLeft when scrollTop and scrollLeft change", () => {
+    it('should adjust :scrollTop and :scrollLeft when scrollTop and scrollLeft change', () => {
       render(getMarkup());
       const rendered = findDOMNode(
         render(
           getMarkup({
             scrollTop: 750,
-            scrollLeft: 900
-          })
-        )
+            scrollLeft: 900,
+          }),
+        ),
       );
-      const grids = rendered.querySelectorAll(".ReactVirtualized__Grid");
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
       const topRightGrid = grids[1];
       const bottomLeftGrid = grids[2];
       const bottomRightGrid = grids[3];
@@ -452,13 +448,33 @@ describe("MultiGrid", () => {
       expect(bottomLeftGrid.scrollTop).toEqual(750);
       expect(bottomRightGrid.scrollTop).toEqual(750);
     });
+
+    it('should not crash when decreasing :rowCount', () => {
+      render(getMarkup());
+      const updated = render(
+        getMarkup({
+          rowCount: 2,
+        }),
+      );
+      expect(updated.props.rowCount).toEqual(2);
+    });
+
+    it('should not crash when decreasing :columnCount', () => {
+      render(getMarkup());
+      const updated = render(
+        getMarkup({
+          columnCount: 3,
+        }),
+      );
+      expect(updated.props.columnCount).toEqual(3);
+    });
   });
 
-  describe("deferredMeasurementCache", () => {
+  describe('deferredMeasurementCache', () => {
     function getDeferredMeasurementCache() {
       const deferredMeasurementCache = new CellMeasurerCache({
         fixedHeight: true,
-        fixedWidth: true
+        fixedWidth: true,
       });
 
       deferredMeasurementCache._columnIndices = {};
@@ -472,7 +488,7 @@ describe("MultiGrid", () => {
       return deferredMeasurementCache;
     }
 
-    it("should wrap top-right and bottom-right deferredMeasurementCache if fixedColumnCount is > 0", () => {
+    it('should wrap top-right and bottom-right deferredMeasurementCache if fixedColumnCount is > 0', () => {
       const deferredMeasurementCache = getDeferredMeasurementCache();
       render(
         getMarkup({
@@ -480,18 +496,18 @@ describe("MultiGrid", () => {
           columnCount: 3,
           fixedColumnCount: 1,
           fixedRowCount: 0,
-          rowCount: 1
-        })
+          rowCount: 1,
+        }),
       );
 
       expect(Object.keys(deferredMeasurementCache._columnIndices)).toEqual([
-        "0",
-        "1",
-        "2"
+        '0',
+        '1',
+        '2',
       ]);
     });
 
-    it("should not wrap top-right and bottom-right deferredMeasurementCache if fixedColumnCount is 0", () => {
+    it('should not wrap top-right and bottom-right deferredMeasurementCache if fixedColumnCount is 0', () => {
       const deferredMeasurementCache = getDeferredMeasurementCache();
       render(
         getMarkup({
@@ -499,17 +515,17 @@ describe("MultiGrid", () => {
           columnCount: 2,
           fixedColumnCount: 0,
           fixedRowCount: 0,
-          rowCount: 1
-        })
+          rowCount: 1,
+        }),
       );
 
       expect(Object.keys(deferredMeasurementCache._columnIndices)).toEqual([
-        "0",
-        "1"
+        '0',
+        '1',
       ]);
     });
 
-    it("should wrap bottom-left and bottom-right deferredMeasurementCache if fixedRowCount is > 0", () => {
+    it('should wrap bottom-left and bottom-right deferredMeasurementCache if fixedRowCount is > 0', () => {
       const deferredMeasurementCache = getDeferredMeasurementCache();
       render(
         getMarkup({
@@ -517,18 +533,18 @@ describe("MultiGrid", () => {
           columnCount: 1,
           fixedColumnCount: 0,
           fixedRowCount: 1,
-          rowCount: 3
-        })
+          rowCount: 3,
+        }),
       );
 
       expect(Object.keys(deferredMeasurementCache._rowIndices)).toEqual([
-        "0",
-        "1",
-        "2"
+        '0',
+        '1',
+        '2',
       ]);
     });
 
-    it("should not wrap bottom-left and bottom-right deferredMeasurementCache if fixedRowCount is 0", () => {
+    it('should not wrap bottom-left and bottom-right deferredMeasurementCache if fixedRowCount is 0', () => {
       const deferredMeasurementCache = getDeferredMeasurementCache();
       render(
         getMarkup({
@@ -536,13 +552,13 @@ describe("MultiGrid", () => {
           columnCount: 1,
           fixedColumnCount: 0,
           fixedRowCount: 0,
-          rowCount: 2
-        })
+          rowCount: 2,
+        }),
       );
 
       expect(Object.keys(deferredMeasurementCache._rowIndices)).toEqual([
-        "0",
-        "1"
+        '0',
+        '1',
       ]);
     });
   });

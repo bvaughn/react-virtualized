@@ -1,6 +1,6 @@
 /** @flow */
 
-import type { CellRangeRendererParams } from "./types";
+import type {CellRangeRendererParams} from './types';
 
 /**
  * Default implementation of cellRangeRenderer used by Grid.
@@ -23,7 +23,7 @@ export default function defaultCellRangeRenderer({
   styleCache,
   verticalOffsetAdjustment,
   visibleColumnIndices,
-  visibleRowIndices
+  visibleRowIndices,
 }: CellRangeRendererParams) {
   const renderedCells = [];
 
@@ -47,7 +47,7 @@ export default function defaultCellRangeRenderer({
       columnIndex++
     ) {
       let columnDatum = columnSizeAndPositionManager.getSizeAndPositionOfCell(
-        columnIndex
+        columnIndex,
       );
       let isVisible =
         columnIndex >= visibleColumnIndices.start &&
@@ -71,19 +71,19 @@ export default function defaultCellRangeRenderer({
           // And give them width/height of 'auto' so they can grow larger than the parent Grid if necessary.
           // Positioning them further to the right/bottom influences their measured size.
           style = {
-            height: "auto",
+            height: 'auto',
             left: 0,
-            position: "absolute",
+            position: 'absolute',
             top: 0,
-            width: "auto"
+            width: 'auto',
           };
         } else {
           style = {
             height: rowDatum.size,
             left: columnDatum.offset + horizontalOffsetAdjustment,
-            position: "absolute",
+            position: 'absolute',
             top: rowDatum.offset + verticalOffsetAdjustment,
-            width: columnDatum.size
+            width: columnDatum.size,
           };
 
           styleCache[key] = style;
@@ -97,7 +97,7 @@ export default function defaultCellRangeRenderer({
         key,
         parent,
         rowIndex,
-        style
+        style,
       };
 
       let renderedCell;
@@ -130,7 +130,7 @@ export default function defaultCellRangeRenderer({
         continue;
       }
 
-      if (process.env.NODE_ENV !== "production") {
+      if (process.env.NODE_ENV !== 'production') {
         warnAboutMissingStyle(parent, renderedCell);
       }
 
@@ -142,7 +142,7 @@ export default function defaultCellRangeRenderer({
 }
 
 function warnAboutMissingStyle(parent, renderedCell) {
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV !== 'production') {
     if (renderedCell) {
       // If the direct child is a CellMeasurer, then we should check its child
       // See issue #611
@@ -159,7 +159,7 @@ function warnAboutMissingStyle(parent, renderedCell) {
         parent.__warnedAboutMissingStyle = true;
 
         console.warn(
-          "Rendered cell should include style property for positioning."
+          'Rendered cell should include style property for positioning.',
         );
       }
     }

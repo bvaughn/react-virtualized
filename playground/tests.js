@@ -1,54 +1,52 @@
-function createScrollingTestCase (component) {
-  var scrollDown = getUrlParam('direction') !== 'up'
+function createScrollingTestCase(component) {
+  var scrollDown = getUrlParam('direction') !== 'up';
 
-  return function testCase (completedCallback) {
-    component.scrollTop = scrollDown
-      ? 0
-      : component.scrollHeight
+  return function testCase(completedCallback) {
+    component.scrollTop = scrollDown ? 0 : component.scrollHeight;
 
-    var maxScrollTop = component.scrollHeight
+    var maxScrollTop = component.scrollHeight;
 
-    var interval = 1
-    var scrollTop = component.scrollTop
+    var interval = 1;
+    var scrollTop = component.scrollTop;
 
-    function incrementScrollDown () {
+    function incrementScrollDown() {
       if (!testRunner.isRunning()) {
-        return
+        return;
       }
 
-      interval *= 1.05
-      scrollTop = Math.min(scrollTop + interval, maxScrollTop)
+      interval *= 1.05;
+      scrollTop = Math.min(scrollTop + interval, maxScrollTop);
 
-      component.scrollTop = scrollTop
+      component.scrollTop = scrollTop;
 
       if (scrollTop < maxScrollTop) {
-        requestAnimationFrame(incrementScrollDown)
+        requestAnimationFrame(incrementScrollDown);
       } else {
-        completedCallback()
+        completedCallback();
       }
     }
 
-    function incrementScrollUp () {
+    function incrementScrollUp() {
       if (!testRunner.isRunning()) {
-        return
+        return;
       }
 
-      interval *= 1.05
-      scrollTop = Math.max(scrollTop - interval, 0)
+      interval *= 1.05;
+      scrollTop = Math.max(scrollTop - interval, 0);
 
-      component.scrollTop = scrollTop
+      component.scrollTop = scrollTop;
 
       if (scrollTop > 0) {
-        requestAnimationFrame(incrementScrollUp)
+        requestAnimationFrame(incrementScrollUp);
       } else {
-        completedCallback()
+        completedCallback();
       }
     }
 
     if (scrollDown) {
-      incrementScrollDown()
+      incrementScrollDown();
     } else {
-      incrementScrollUp()
+      incrementScrollUp();
     }
-  }
+  };
 }
