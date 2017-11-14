@@ -1,8 +1,8 @@
 .DS_Store
 build
 coverage
-#dist
+dist
 node_modules
 npm-debug.log
-#styles.css
+styles.css
 .vscode
