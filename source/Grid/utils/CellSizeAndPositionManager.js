@@ -225,8 +225,6 @@ export default class CellSizeAndPositionManager {
       return {};
     }
 
-    console.log("totalSize: ", totalSize)
-    console.log("containerSize: ", containerSize);
     let start;
     if (totalSize < containerSize) {
       start = 0;

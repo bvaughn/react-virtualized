@@ -223,8 +223,6 @@ var CellSizeAndPositionManager = function () {
         return {};
       }
 
-      console.log("totalSize: ", totalSize);
-      console.log("containerSize: ", containerSize);
       var start = void 0;
       if (totalSize < containerSize) {
         start = 0;

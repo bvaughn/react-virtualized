@@ -4104,7 +4104,6 @@
                     };
                     var containerSize = params.containerSize, offset = params.offset, totalSize = this.getTotalSize();
                     if (0 === totalSize) return {};
-                    console.log("totalSize: ", totalSize), console.log("containerSize: ", containerSize);
                     var start = void 0;
                     start = totalSize < containerSize ? 0 : this._findNearestCell(offset);
                     var maxOffset = offset + containerSize, datum = this.getSizeAndPositionOfCell(start);
