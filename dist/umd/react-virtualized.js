@@ -4104,7 +4104,10 @@
                     };
                     var containerSize = params.containerSize, offset = params.offset, totalSize = this.getTotalSize();
                     if (0 === totalSize) return {};
-                    var maxOffset = offset + containerSize, start = this._findNearestCell(offset), datum = this.getSizeAndPositionOfCell(start);
+                    console.log("totalSize: ", totalSize), console.log("containerSize: ", containerSize);
+                    var start = void 0;
+                    start = totalSize < containerSize ? 0 : this._findNearestCell(offset);
+                    var maxOffset = offset + containerSize, datum = this.getSizeAndPositionOfCell(start);
                     offset = datum.offset + datum.size;
                     for (var stop = start; offset < maxOffset && stop < this._cellCount - 1; ) stop++, 
                     offset += this.getSizeAndPositionOfCell(stop).size;
