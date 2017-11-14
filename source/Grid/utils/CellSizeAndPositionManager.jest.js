@@ -360,6 +360,18 @@ describe('CellSizeAndPositionManager', () => {
       expect(stop).toEqual(4);
     });
 
+    it('should return a visible range of cells for the beginning of the list if all cells fit in container', () => {
+      const {cellSizeAndPositionManager} = getCellSizeAndPositionManager({
+        cellCount: 10, estimatedCellSize: 15,
+      });
+      const {start, stop} = cellSizeAndPositionManager.getVisibleCellRange({
+        containerSize: 200,
+        offset: 1000,
+      });
+      expect(start).toEqual(0);
+      expect(stop).toEqual(9);
+    });
+
     it('should return a visible range of cells for the middle of the list where some are partially visible', () => {
       const {cellSizeAndPositionManager} = getCellSizeAndPositionManager();
       const {start, stop} = cellSizeAndPositionManager.getVisibleCellRange({
