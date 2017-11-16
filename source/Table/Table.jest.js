@@ -44,6 +44,7 @@ describe('Table', () => {
       columnData = {data: 123},
       columnID,
       columnStyle,
+      columnHeaderStyle,
       disableSort = false,
       headerRenderer,
       maxWidth,
@@ -74,6 +75,7 @@ describe('Table', () => {
           disableSort={disableSort}
           defaultSortDirection={defaultSortDirection}
           style={columnStyle}
+          headerStyle={columnHeaderStyle}
           id={columnID}
         />
         <Column
@@ -1048,6 +1050,7 @@ describe('Table', () => {
     it('should use custom :styles if specified', () => {
       const columnStyle = {backgroundColor: 'red'};
       const headerStyle = {backgroundColor: 'blue'};
+      const columnHeaderStyle = {color: 'yellow'};
       const rowStyle = {backgroundColor: 'green'};
       const style = {backgroundColor: 'orange'};
       const node = findDOMNode(
@@ -1055,6 +1058,7 @@ describe('Table', () => {
           getMarkup({
             columnStyle,
             headerStyle,
+            columnHeaderStyle,
             rowStyle,
             style,
           }),
@@ -1068,6 +1072,10 @@ describe('Table', () => {
         node.querySelector('.ReactVirtualized__Table__headerColumn').style
           .backgroundColor,
       ).toEqual('blue');
+      expect(
+        node.querySelector('.ReactVirtualized__Table__headerColumn').style
+          .color,
+      ).toEqual('yellow');
       expect(
         node.querySelector('.ReactVirtualized__Table__row').style
           .backgroundColor,

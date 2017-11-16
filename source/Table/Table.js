@@ -493,7 +493,10 @@ export default class Table extends PureComponent {
         ReactVirtualized__Table__sortableHeaderColumn: sortEnabled,
       },
     );
-    const style = this._getFlexStyleForColumn(column, headerStyle);
+    const style = this._getFlexStyleForColumn(column, {
+      ...headerStyle,
+      ...column.props.headerStyle,
+    });
 
     const renderedHeader = headerRenderer({
       columnData,

@@ -59,6 +59,9 @@ export default class Column extends Component {
      */
     headerRenderer: PropTypes.func.isRequired,
 
+    /** Optional inline style to apply to this column's header */
+    headerStyle: PropTypes.object,
+
     /** Optional id to set on the column header */
     id: PropTypes.string,
 
