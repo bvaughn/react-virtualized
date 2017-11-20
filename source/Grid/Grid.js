@@ -318,7 +318,7 @@ export default class Grid extends React.PureComponent {
     this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       batchAllCells:
         deferredMeasurementCache !== undefined &&
-        !deferredMeasurementCache.hasFixedHeight(),
+        !deferredMeasurementCache.hasFixedWidth(),
       cellCount: props.columnCount,
       cellSizeGetter: params => this._columnWidthGetter(params),
       estimatedCellSize: this._getEstimatedColumnSize(props),
@@ -326,7 +326,7 @@ export default class Grid extends React.PureComponent {
     this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       batchAllCells:
         deferredMeasurementCache !== undefined &&
-        !deferredMeasurementCache.hasFixedWidth(),
+        !deferredMeasurementCache.hasFixedHeight(),
       cellCount: props.rowCount,
       cellSizeGetter: params => this._rowHeightGetter(params),
       estimatedCellSize: this._getEstimatedRowSize(props),

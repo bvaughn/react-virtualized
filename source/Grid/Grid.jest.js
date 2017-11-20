@@ -2328,6 +2328,62 @@ describe('Grid', () => {
     expect(keys).toEqual(['0-0', '1-1']);
   });
 
+  describe('getVisibleCellRange', () => {
+    it('should return all cell-range of row when a :deferredMeasurementCache is provided without fixedHeight', () => {
+      const cache = new CellMeasurerCache({
+        fixedWidth: true,
+      });
+      const grid = render(
+        getMarkup({
+          deferredMeasurementCache: cache,
+        }),
+      );
+
+      expect(grid._columnSizeAndPositionManager.batchAllCells).not.toBe(true);
+      const columnRange = grid._columnSizeAndPositionManager.getVisibleCellRange({
+        containerSize: DEFAULT_WIDTH,
+        offset: 500,
+      });
+      expect(columnRange.start).not.toEqual(0);
+      expect(columnRange.stop).not.toEqual(NUM_COLUMNS - 1);
+
+      expect(grid._rowSizeAndPositionManager.batchAllCells).not.toBe(false);
+      const rowRange = grid._rowSizeAndPositionManager.getVisibleCellRange({
+        containerSize: DEFAULT_HEIGHT,
+        offset: 1000,
+      });
+      expect(rowRange.start).toEqual(0);
+      expect(rowRange.stop).toEqual(NUM_ROWS - 1);
+    });
+
+    it('should return all cell-range of column when a :deferredMeasurementCache is provided without fixedWidth', () => {
+      const cache = new CellMeasurerCache({
+        fixedHeight: true,
+      });
+      const grid = render(
+        getMarkup({
+          deferredMeasurementCache: cache,
+        }),
+      );
+
+      expect(grid._columnSizeAndPositionManager.batchAllCells).not.toBe(false);
+      const columnRange = grid._columnSizeAndPositionManager.getVisibleCellRange({
+        containerSize: DEFAULT_WIDTH,
+        offset: 500,
+      });
+      expect(columnRange.start).toEqual(0);
+      expect(columnRange.stop).toEqual(NUM_COLUMNS - 1);
+
+      expect(grid._rowSizeAndPositionManager.batchAllCells).not.toBe(true);
+      const rowRange = grid._rowSizeAndPositionManager.getVisibleCellRange({
+        containerSize: DEFAULT_HEIGHT,
+        offset: 1000,
+      });
+      expect(rowRange.start).not.toEqual(0);
+      expect(rowRange.stop).not.toEqual(NUM_ROWS - 1);
+    });
+  });
+
   describe('DEV warnings', () => {
     it('should warn about cells that forget to include the :style property', () => {
       spyOn(console, 'warn');
