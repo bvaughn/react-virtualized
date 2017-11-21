@@ -20,7 +20,7 @@ import type {RenderedRows, Scroll} from '../List/types';
 
 import cn from 'classnames';
 import React from 'react';
-import memoizee from 'memoizee';
+import memoize from 'sb-memoize';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 import defaultRowRenderer from './defaultRowRenderer';
 
@@ -175,8 +175,10 @@ export default class Tree extends React.PureComponent {
     estimatedRowSize: 30,
     nodeNestingMultiplier: 10,
     noRowsRenderer: () => null,
-    onRowsRendered: () => {},
-    onScroll: () => {},
+    onRowsRendered: () => {
+    },
+    onScroll: () => {
+    },
     overscanIndicesGetter: accessibilityOverscanIndicesGetter,
     overscanRowCount: 10,
     rowRenderer: defaultRowRenderer,
@@ -188,7 +190,7 @@ export default class Tree extends React.PureComponent {
   props: Props;
   Grid: ?Grid;
   _nodes: Node[] = [];
-  _nodesStates: {[id: string]: boolean} = {};
+  _nodesStates: { [id: string]: boolean } = {};
 
   forceUpdateGrid() {
     if (this.Grid) {
@@ -200,13 +202,13 @@ export default class Tree extends React.PureComponent {
    * Sets nodes states (opened/closed) to a states defined in `states` parameter.
    * @param states Object that contains nodes' ids as keys and their states as boolean values.
    */
-  setNodesStates(states: {[id: string]: boolean}) {
+  setNodesStates(states: { [id: string]: boolean }) {
     this._nodesStates = {...this._nodesStates, ...states};
     this.forceUpdate();
   }
 
   /** See Grid#getOffsetForCell */
-  getOffsetForRow({alignment, index}: {alignment: Alignment, index: number}) {
+  getOffsetForRow({alignment, index}: { alignment: Alignment, index: number }) {
     if (this.Grid) {
       const {scrollTop} = this.Grid.getOffsetForCell({
         alignment,
@@ -351,12 +353,10 @@ export default class Tree extends React.PureComponent {
     });
   };
 
-  _createOnNodeToggleCallback(id: string): () => void {
-    return () => {
-      this._nodesStates[id] = !this._nodesStates[id];
-      this.forceUpdate();
-    };
-  }
+  _createOnNodeToggleCallback = memoize((id: string) => () => {
+    this._nodesStates[id] = !this._nodesStates[id];
+    this.forceUpdate();
+  });
 
   _onScroll = ({clientHeight, scrollHeight, scrollTop}: GridScroll) => {
     const {onScroll} = this.props;
@@ -417,5 +417,3 @@ export default class Tree extends React.PureComponent {
     this.Grid = grid;
   };
 }
-
-Tree.prototype._createOnNodeToggleCallback = memoizee(Tree.prototype._createOnNodeToggleCallback);
