@@ -18,8 +18,9 @@ import type {
 } from './types';
 import type {RenderedRows, Scroll} from '../List/types';
 
-import React from 'react';
 import cn from 'classnames';
+import React from 'react';
+import memoizee from 'memoizee';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 import defaultRowRenderer from './defaultRowRenderer';
 
@@ -416,3 +417,5 @@ export default class Tree extends React.PureComponent {
     this.Grid = grid;
   };
 }
+
+Tree.prototype._createOnNodeToggleCallback = memoizee(Tree.prototype._createOnNodeToggleCallback);

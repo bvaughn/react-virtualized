@@ -144,6 +144,7 @@
     "classnames": "^2.2.3",
     "dom-helpers": "^2.4.0 || ^3.0.0",
     "loose-envify": "^1.3.0",
+    "memoizee": "^0.4.11",
     "prop-types": "^15.5.4"
   },
   "peerDependencies": {
