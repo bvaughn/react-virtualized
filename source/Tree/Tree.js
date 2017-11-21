@@ -13,15 +13,15 @@ import type {
 import type {
   Node,
   NodeGetter,
-  NodeMouseEventHandler,
-  NodeRenderer,
+  RowMouseEventHandler,
+  RowRenderer,
 } from './types';
 import type {RenderedRows, Scroll} from '../List/types';
 
 import React from 'react';
 import cn from 'classnames';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
-import defaultNodeRenderer from './defaultNodeRenderer';
+import defaultRowRenderer from './defaultRowRenderer';
 
 type Props = {
   'aria-label'?: string,
@@ -30,7 +30,7 @@ type Props = {
    * Removes fixed height from the scrollingContainer so that the total height
    * of rows can stretch the window. Intended for use with WindowScroller
    */
-  autoHeight: boolean,
+  autoHeight?: boolean,
 
   /** Optional CSS class name */
   className?: string,
@@ -39,7 +39,7 @@ type Props = {
    * Used to estimate the total height of a List before all of its rows have actually been measured.
    * The estimated total height is adjusted as rows are rendered.
    */
-  estimatedRowSize: number,
+  estimatedRowSize?: number,
 
   /** Height constraint for list (determines how many actual rows are rendered) */
   height: number,
@@ -69,8 +69,44 @@ type Props = {
    */
   nodeNestingMultiplier?: number,
 
+  /** Optional renderer to be used in place of rows when tree is empty */
+  noRowsRenderer?: NoContentRenderer,
+
   /**
-   * Responsible for rendering a node given node data received from NodeGetter:
+   * Callback invoked when a user clicks on a node.
+   * ({event: Event, nodeData: any}): void
+   */
+  onRowClick?: RowMouseEventHandler,
+
+  /**
+   * Callback invoked when a user double-clicks on a node.
+   * ({event: Event, nodeData: any}): void
+   */
+  onRowDoubleClick?: RowMouseEventHandler,
+
+  /**
+   * Callback invoked when the mouse leaves a node.
+   * ({event: Event, nodeData: any}): void
+   */
+  onRowMouseOut?: RowMouseEventHandler,
+
+  /**
+   * Callback invoked when a user moves the mouse over a node.
+   * ({event: Event, nodeData: any}): void
+   */
+  onRowMouseOver?: RowMouseEventHandler,
+
+  /**
+   * Callback invoked when a user right-clicks on a node.
+   * ({event: Event, nodeData: any}): void
+   */
+  onRowRightClick?: RowMouseEventHandler,
+
+  /** Callback invoked with information about the slice of rows that were just rendered. */
+  onRowsRendered?: (params: RenderedRows) => void,
+
+  /**
+   * Responsible for rendering a data received from NodeGetter:
    * Should implement the following interface: ({
    *   className?: string,
    *   deepLevel: number,
@@ -80,82 +116,46 @@ type Props = {
    *   isScrolling: boolean,
    *   key: string,
    *   nodeData: any,
-   *   onNodeClick?: NodeMouseEventHandler,
-   *   onNodeDoubleClick?: NodeMouseEventHandler,
-   *   onNodeMouseOut?: NodeMouseEventHandler,
-   *   onNodeMouseOver?: NodeMouseEventHandler,
-   *   onNodeRightClick?: NodeMouseEventHandler,
+   *   onRowClick?: RowMouseEventHandler,
+   *   onRowDoubleClick?: RowMouseEventHandler,
+   *   onRowMouseOut?: RowMouseEventHandler,
+   *   onRowMouseOver?: RowMouseEventHandler,
+   *   onRowRightClick?: RowMouseEventHandler,
    *   onNodeToggle: () => void,
    *   style: $Shape<CSSStyleDeclaration>,
    * }): ReactElement<*>
    */
-  nodeRenderer?: NodeRenderer,
-
-  /** Optional renderer to be used in place of rows when rowCount is 0 */
-  noRowsRenderer: NoContentRenderer,
-
-  /**
-   * Callback invoked when a user clicks on a node.
-   * ({event: Event, nodeData: any}): void
-   */
-  onNodeClick?: NodeMouseEventHandler,
-
-  /**
-   * Callback invoked when a user double-clicks on a node.
-   * ({event: Event, nodeData: any}): void
-   */
-  onNodeDoubleClick?: NodeMouseEventHandler,
-
-  /**
-   * Callback invoked when the mouse leaves a node.
-   * ({event: Event, nodeData: any}): void
-   */
-  onNodeMouseOut?: NodeMouseEventHandler,
-
-  /**
-   * Callback invoked when a user moves the mouse over a node.
-   * ({event: Event, nodeData: any}): void
-   */
-  onNodeMouseOver?: NodeMouseEventHandler,
-
-  /**
-   * Callback invoked when a user right-clicks on a node.
-   * ({event: Event, nodeData: any}): void
-   */
-  onNodeRightClick?: NodeMouseEventHandler,
-
-  /** Callback invoked with information about the slice of rows that were just rendered. */
-  onRowsRendered: (params: RenderedRows) => void,
+  rowRenderer?: RowRenderer,
 
   /**
    * Callback invoked whenever the scroll offset changes within the inner scrollable region.
    * This callback can be used to sync scrolling between lists, tables, or grids.
    */
-  onScroll: (params: Scroll) => void,
+  onScroll?: (params: Scroll) => void,
 
   /** See Grid#overscanIndicesGetter */
-  overscanIndicesGetter: OverscanIndicesGetter,
+  overscanIndicesGetter?: OverscanIndicesGetter,
 
   /**
    * Number of rows to render above/below the visible bounds of the list.
    * These rows can help for smoother scrolling on touch devices.
    */
-  overscanRowCount: number,
+  overscanRowCount?: number,
 
   /** Either a fixed row height (number) or a function that returns the height of a row given its index. */
   rowHeight: CellSize,
 
   /** See Grid#scrollToAlignment */
-  scrollToAlignment: Alignment,
+  scrollToAlignment?: Alignment,
 
   /** Row index to ensure visible (by forcefully scrolling if necessary) */
-  scrollToIndex: number,
+  scrollToIndex?: number,
 
   /** Vertical offset. */
   scrollTop?: number,
 
   /** Optional inline style */
-  style: Object,
+  style?: Object,
 
   /** Tab index for focus */
   tabIndex?: number,
@@ -173,12 +173,12 @@ export default class Tree extends React.PureComponent {
     autoHeight: false,
     estimatedRowSize: 30,
     nodeNestingMultiplier: 10,
-    nodeRenderer: defaultNodeRenderer,
-    onScroll: () => {},
     noRowsRenderer: () => null,
     onRowsRendered: () => {},
+    onScroll: () => {},
     overscanIndicesGetter: accessibilityOverscanIndicesGetter,
     overscanRowCount: 10,
+    rowRenderer: defaultRowRenderer,
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
     style: {},
@@ -301,12 +301,12 @@ export default class Tree extends React.PureComponent {
     const {
       nodeClassName,
       nodeNestingMultiplier,
-      nodeRenderer,
-      onNodeClick,
-      onNodeDoubleClick,
-      onNodeMouseOver,
-      onNodeMouseOut,
-      onNodeRightClick,
+      rowRenderer,
+      onRowClick,
+      onRowDoubleClick,
+      onRowMouseOver,
+      onRowMouseOut,
+      onRowRightClick,
     } = this.props;
 
     // TRICKY The style object is sometimes cached by Grid.
@@ -328,9 +328,9 @@ export default class Tree extends React.PureComponent {
 
     const onNodeToggle = this._createOnNodeToggleCallback(id);
 
-    // disable flow check because nodeRenderer is set by default
+    // disable flow check because rowRenderer is set by default
     // $FlowFixMe
-    return nodeRenderer({
+    return rowRenderer({
       childrenCount,
       className: nodeClassName,
       index: rowIndex,
@@ -340,12 +340,12 @@ export default class Tree extends React.PureComponent {
       nestingLevel,
       nodeData,
       nodeNestingMultiplier,
-      onNodeClick,
-      onNodeDoubleClick,
-      onNodeMouseOut,
-      onNodeMouseOver,
-      onNodeRightClick,
       onNodeToggle,
+      onRowClick,
+      onRowDoubleClick,
+      onRowMouseOut,
+      onRowMouseOver,
+      onRowRightClick,
       style,
     });
   };

@@ -10,14 +10,12 @@ export type Node = {
 
 export type NodeGetter = () => Generator<Node>;
 
-export type NodeMouseEventHandler = (params: {
+export type RowMouseEventHandler = (params: {
   event: Event,
   nodeData: any,
 }) => void;
 
-export type NodeRenderer = (params: NodeRendererParams) => React.Element<*>;
-
-export type NodeRendererParams = {
+export type RowRendererParams = {
   childrenCount: string,
   className?: string,
   index: number,
@@ -27,11 +25,13 @@ export type NodeRendererParams = {
   nestingLevel: number,
   nodeData: any,
   nodeNestingMultiplier: number,
-  onNodeClick?: NodeMouseEventHandler,
-  onNodeDoubleClick?: NodeMouseEventHandler,
-  onNodeMouseOut?: NodeMouseEventHandler,
-  onNodeMouseOver?: NodeMouseEventHandler,
-  onNodeRightClick?: NodeMouseEventHandler,
   onNodeToggle: () => void,
+  onRowClick?: RowMouseEventHandler,
+  onRowDoubleClick?: RowMouseEventHandler,
+  onRowMouseOut?: RowMouseEventHandler,
+  onRowMouseOver?: RowMouseEventHandler,
+  onRowRightClick?: RowMouseEventHandler,
   style: $Shape<CSSStyleDeclaration>,
 };
+
+export type RowRenderer = (params: RowRendererParams) => React.Element<*>;

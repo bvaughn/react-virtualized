@@ -73,7 +73,7 @@ describe('Tree', () => {
       }
     }
 
-    function nodeRenderer({key, isOpened, nodeData, onNodeToggle, style}) {
+    function rowRenderer({key, isOpened, nodeData, onNodeToggle, style}) {
       return (
         <div className="treeNode" key={key} style={style}>
           <button onClick={onNodeToggle}>{isOpened ? '[-]' : '[+]'}</button>
@@ -88,7 +88,7 @@ describe('Tree', () => {
         overscanIndicesGetter={overscanIndicesGetter}
         overscanRowCount={0}
         nodeGetter={nodeGetter}
-        nodeRenderer={nodeRenderer}
+        rowRenderer={rowRenderer}
         rowHeight={10}
         width={100}
         {...props}
@@ -253,10 +253,10 @@ describe('Tree', () => {
       let rendered = findDOMNode(
         render(
           getMarkup({
-            noRowsRenderer: () => <div>No rows!</div>,
             nodeGetter: function*() {
               return null;
             },
+            noRowsRenderer: () => <div>No rows!</div>,
           }),
         ),
       );
@@ -530,7 +530,7 @@ describe('Tree', () => {
   describe('forceUpdateGrid', () => {
     it('should refresh inner Grid content when called', () => {
       let marker = 'a';
-      function nodeRenderer({index, key, style}) {
+      function rowRenderer({index, key, style}) {
         return (
           <div key={key} style={style}>
             {index}
@@ -538,7 +538,7 @@ describe('Tree', () => {
           </div>
         );
       }
-      const component = render(getMarkup({nodeRenderer}));
+      const component = render(getMarkup({rowRenderer}));
       const node = findDOMNode(component);
       expect(node.textContent).toContain('1a');
       marker = 'b';
@@ -568,7 +568,7 @@ describe('Tree', () => {
   describe('pure', () => {
     it('should not re-render unless props have changed', () => {
       let rowRendererCalled = false;
-      function nodeRenderer({index, key, style}) {
+      function rowRenderer({index, key, style}) {
         rowRendererCalled = true;
         return (
           <div key={key} style={style}>
@@ -576,7 +576,7 @@ describe('Tree', () => {
           </div>
         );
       }
-      const markup = getMarkup({nodeRenderer});
+      const markup = getMarkup({rowRenderer});
 
       render(markup);
       expect(rowRendererCalled).toEqual(true);

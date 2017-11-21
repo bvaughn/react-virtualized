@@ -2,7 +2,7 @@
 
 import cn from 'classnames';
 import React from 'react';
-import type {NodeRendererParams} from './types';
+import type {RowRendererParams} from './types';
 
 export default function defaultNodeRenderer({
   childrenCount,
@@ -12,44 +12,44 @@ export default function defaultNodeRenderer({
   nestingLevel,
   nodeData,
   nodeNestingMultiplier,
-  onNodeClick,
-  onNodeDoubleClick,
-  onNodeMouseOut,
-  onNodeMouseOver,
-  onNodeRightClick,
   onNodeToggle,
+  onRowClick,
+  onRowDoubleClick,
+  onRowMouseOut,
+  onRowMouseOver,
+  onRowRightClick,
   style,
-}: NodeRendererParams): React.Element<*> {
+}: RowRendererParams): React.Element<*> {
   const a11yProps = {};
 
   if (
-    onNodeClick ||
-    onNodeDoubleClick ||
-    onNodeMouseOver ||
-    onNodeMouseOut ||
-    onNodeRightClick
+    onRowClick ||
+    onRowDoubleClick ||
+    onRowMouseOver ||
+    onRowMouseOut ||
+    onRowRightClick
   ) {
     a11yProps['aria-label'] = 'tree-node';
     a11yProps.tabIndex = 0;
 
-    if (onNodeClick) {
-      a11yProps.onClick = event => onNodeClick({event, nodeData});
+    if (onRowClick) {
+      a11yProps.onClick = event => onRowClick({event, nodeData});
     }
 
-    if (onNodeDoubleClick) {
-      a11yProps.onDoubleClick = event => onNodeDoubleClick({event, nodeData});
+    if (onRowDoubleClick) {
+      a11yProps.onDoubleClick = event => onRowDoubleClick({event, nodeData});
     }
 
-    if (onNodeMouseOver) {
-      a11yProps.onMouseOut = event => onNodeMouseOver({event, nodeData});
+    if (onRowMouseOver) {
+      a11yProps.onMouseOut = event => onRowMouseOver({event, nodeData});
     }
 
-    if (onNodeMouseOut) {
-      a11yProps.onMouseOver = event => onNodeMouseOut({event, nodeData});
+    if (onRowMouseOut) {
+      a11yProps.onMouseOver = event => onRowMouseOut({event, nodeData});
     }
 
-    if (onNodeRightClick) {
-      a11yProps.onContextMenu = event => onNodeRightClick({event, nodeData});
+    if (onRowRightClick) {
+      a11yProps.onContextMenu = event => onRowRightClick({event, nodeData});
     }
   }
 
