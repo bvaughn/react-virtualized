@@ -101,6 +101,9 @@ export default class GridExample extends PureComponent {
             />
             Use <code>WindowScroller</code>?
           </label>
+          <label className={styles.checkboxLabel}>
+            <button onClick={this._resetList}>Reset List Data</button>
+          </label>
         </ContentBoxParagraph>
 
         <InputRow>
@@ -195,8 +198,14 @@ export default class GridExample extends PureComponent {
               height: datum.size * 3,
               marginBottom: '0.5rem',
               width: '100%',
-            }}
-          />
+              fontSize: 20,
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            {index}
+          </div>
           {datum.random}
         </div>
       </CellMeasurer>
@@ -266,6 +275,20 @@ export default class GridExample extends PureComponent {
       />
     );
   }
+
+  // This is a bit of a hack to simulate newly loaded cells
+  _resetList = () => {
+    const ROW_HEIGHTS = [25, 50, 75, 100];
+
+    const {list} = this.context;
+    list.forEach(datum => {
+      datum.size = ROW_HEIGHTS[Math.floor(Math.random() * ROW_HEIGHTS.length)];
+    });
+
+    this._cache.clearAll();
+    this._resetCellPositioner();
+    this._masonry.clearCellPositions();
+  };
 
   _resetCellPositioner() {
     const {columnWidth, gutterSize} = this.state;
