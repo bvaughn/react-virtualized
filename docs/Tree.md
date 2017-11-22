@@ -187,11 +187,21 @@ function * nodeGetter() {
     // Here generator provides information about current node
     // and indicates if node is opened. 
     const isOpened = yield {
+      // Number of current node's children.
       childrenCount: node.children.length,
+      // Custom row's height. Optional.
+      height: 20,
+      // Current node's id. This id will be used to control node's openness.
       id: node.id,
+      // If this is true, node will be opened by default, and all its children will be rendered.
+      // Important: this property can be used only on the first component render. Then control will be taken by 
+      // component. You can make further changes with Tree#setNodesStates method.
       isOpenedByDefault: false,
       nestingLevel,
+      // Node data that will be sent to the "rowRenderer" callback.
       nodeData: `${node.name} (${node.born} - ${node.dead})`,
+      // Custom row's style. Optional.
+      style: undefined,
     };
   
     // Here function decides should it render node's children basing on children quantity and

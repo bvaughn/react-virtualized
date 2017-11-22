@@ -3,9 +3,11 @@ import React from 'react';
 export type Node = {
   childrenCount: number,
   id: string,
+  height?: number,
   isOpenedByDefault: boolean,
   nestingLevel: number,
   nodeData: any,
+  style?: $Shape<CSSStyleDeclaration>,
 };
 
 export type NodeGetter = () => Generator<Node>;
@@ -24,7 +26,6 @@ export type RowRendererParams = {
   key: string,
   nestingLevel: number,
   nodeData: any,
-  nodeNestingMultiplier: number,
   onNodeToggle: () => void,
   onRowClick?: RowMouseEventHandler,
   onRowDoubleClick?: RowMouseEventHandler,

@@ -143,8 +143,8 @@ type Props = {
    */
   overscanRowCount?: number,
 
-  /** Either a fixed row height (number) or a function that returns the height of a row given its index. */
-  rowHeight: CellSize,
+  /** Fixed row height */
+  rowHeight: number,
 
   /** See Grid#scrollToAlignment */
   scrollToAlignment?: Alignment,
@@ -199,8 +199,8 @@ export default class Tree extends React.PureComponent {
   }
 
   /**
-   * Sets nodes states (opened/closed) to a states defined in `states` parameter.
-   * @param states Object that contains nodes' ids as keys and their states as boolean values.
+   * Sets nodes states (opened/closed) to a states defined in `boolOrObject` parameter.
+   * @param states object that contains nodes' ids as keys and boolean states as values.
    */
   setNodesStates(states: { [id: string]: boolean }) {
     this._nodesStates = {...this._nodesStates, ...states};
@@ -276,7 +276,12 @@ export default class Tree extends React.PureComponent {
   }
 
   render() {
-    const {className, noRowsRenderer, scrollToIndex, width} = this.props;
+    const {
+      className,
+      noRowsRenderer,
+      scrollToIndex,
+      width,
+    } = this.props;
 
     const classNames = cn('ReactVirtualized__Tree', className);
 
@@ -304,12 +309,13 @@ export default class Tree extends React.PureComponent {
     const {
       nodeClassName,
       nodeNestingMultiplier,
-      rowRenderer,
       onRowClick,
       onRowDoubleClick,
       onRowMouseOver,
       onRowMouseOut,
       onRowRightClick,
+      rowHeight,
+      rowRenderer,
     } = this.props;
 
     // TRICKY The style object is sometimes cached by Grid.
@@ -325,7 +331,14 @@ export default class Tree extends React.PureComponent {
       style.width = '100%';
     }
 
-    const {childrenCount, id, nestingLevel, nodeData} = this._nodes[rowIndex];
+    const {
+      childrenCount,
+      id,
+      nestingLevel,
+      nodeData,
+      height,
+      style: rowStyle,
+    } = this._nodes[rowIndex];
 
     const isOpened = this._nodesStates[id];
 
@@ -342,14 +355,19 @@ export default class Tree extends React.PureComponent {
       key,
       nestingLevel,
       nodeData,
-      nodeNestingMultiplier,
       onNodeToggle,
       onRowClick,
       onRowDoubleClick,
       onRowMouseOut,
       onRowMouseOver,
       onRowRightClick,
-      style,
+      style: {
+        ...style,
+        ...rowStyle,
+        height: height || rowHeight,
+        overflow: 'hidden',
+        marginLeft: nestingLevel * nodeNestingMultiplier,
+      },
     });
   };
 
@@ -381,7 +399,7 @@ export default class Tree extends React.PureComponent {
   };
 
   /*
-   * Converts complex tree to a flat array to display it with Grid using a `nodeGetter` generator function.
+   * Converts complex tree to a flat array to display it with Grid using a `_nodeGetter` generator function.
    * Generator provides ability to inform user's algorithm about current node state: is it opened or closed.
    * Basing on this information generator can decide whether it is necessary to render children.
    */

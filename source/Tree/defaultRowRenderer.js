@@ -9,9 +9,7 @@ export default function defaultNodeRenderer({
   className,
   isOpened,
   key,
-  nestingLevel,
   nodeData,
-  nodeNestingMultiplier,
   onNodeToggle,
   onRowClick,
   onRowDoubleClick,
@@ -53,11 +51,6 @@ export default function defaultNodeRenderer({
     }
   }
 
-  const s = {
-    ...style,
-    marginLeft: nestingLevel * nodeNestingMultiplier,
-  };
-
   const isLeaf = childrenCount === 0;
 
   return (
@@ -65,7 +58,7 @@ export default function defaultNodeRenderer({
       {...a11yProps}
       className={cn('ReactVirtualized__Tree__node', className)}
       key={key}
-      style={s}>
+      style={style}>
       <div>
         {!isLeaf && (
           <button type="button" onClick={onNodeToggle}>
