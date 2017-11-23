@@ -3,12 +3,10 @@
 import type {
   NoContentRenderer,
   Alignment,
-  CellSize,
   CellPosition,
   OverscanIndicesGetter,
   RenderedSection,
   CellRendererParams,
-  Scroll as GridScroll,
 } from '../Grid';
 import type {
   Node,
@@ -175,10 +173,8 @@ export default class Tree extends React.PureComponent {
     estimatedRowSize: 30,
     nodeNestingMultiplier: 10,
     noRowsRenderer: () => null,
-    onRowsRendered: () => {
-    },
-    onScroll: () => {
-    },
+    onRowsRendered: () => {},
+    onScroll: () => {},
     overscanIndicesGetter: accessibilityOverscanIndicesGetter,
     overscanRowCount: 10,
     rowRenderer: defaultRowRenderer,
@@ -188,13 +184,13 @@ export default class Tree extends React.PureComponent {
   };
 
   props: Props;
-  Grid: ?Grid;
+  _grid: ?Grid;
   _nodes: Node[] = [];
   _nodesStates: { [id: string]: boolean } = {};
 
   forceUpdateGrid() {
-    if (this.Grid) {
-      this.Grid.forceUpdate();
+    if (this._grid) {
+      this._grid.forceUpdate();
     }
   }
 
@@ -209,8 +205,8 @@ export default class Tree extends React.PureComponent {
 
   /** See Grid#getOffsetForCell */
   getOffsetForRow({alignment, index}: { alignment: Alignment, index: number }) {
-    if (this.Grid) {
-      const {scrollTop} = this.Grid.getOffsetForCell({
+    if (this._grid) {
+      const {scrollTop} = this._grid.getOffsetForCell({
         alignment,
         rowIndex: index,
         columnIndex: 0,
@@ -223,8 +219,8 @@ export default class Tree extends React.PureComponent {
 
   /** CellMeasurer compatibility */
   invalidateCellSizeAfterRender({columnIndex, rowIndex}: CellPosition) {
-    if (this.Grid) {
-      this.Grid.invalidateCellSizeAfterRender({
+    if (this._grid) {
+      this._grid.invalidateCellSizeAfterRender({
         rowIndex,
         columnIndex,
       });
@@ -233,15 +229,15 @@ export default class Tree extends React.PureComponent {
 
   /** See Grid#measureAllCells */
   measureAllRows() {
-    if (this.Grid) {
-      this.Grid.measureAllCells();
+    if (this._grid) {
+      this._grid.measureAllCells();
     }
   }
 
   /** CellMeasurer compatibility */
   recomputeGridSize({columnIndex = 0, rowIndex = 0}: CellPosition = {}) {
-    if (this.Grid) {
-      this.Grid.recomputeGridSize({
+    if (this._grid) {
+      this._grid.recomputeGridSize({
         rowIndex,
         columnIndex,
       });
@@ -250,8 +246,8 @@ export default class Tree extends React.PureComponent {
 
   /** See Grid#recomputeGridSize */
   recomputeRowHeights(index: number = 0) {
-    if (this.Grid) {
-      this.Grid.recomputeGridSize({
+    if (this._grid) {
+      this._grid.recomputeGridSize({
         rowIndex: index,
         columnIndex: 0,
       });
@@ -260,15 +256,15 @@ export default class Tree extends React.PureComponent {
 
   /** See Grid#scrollToPosition */
   scrollToPosition(scrollTop: number = 0) {
-    if (this.Grid) {
-      this.Grid.scrollToPosition({scrollTop});
+    if (this._grid) {
+      this._grid.scrollToPosition({scrollTop});
     }
   }
 
   /** See Grid#scrollToCell */
   scrollToRow(index: number = 0) {
-    if (this.Grid) {
-      this.Grid.scrollToCell({
+    if (this._grid) {
+      this._grid.scrollToCell({
         columnIndex: 0,
         rowIndex: index,
       });
@@ -296,7 +292,6 @@ export default class Tree extends React.PureComponent {
         columnWidth={width}
         columnCount={1}
         noContentRenderer={noRowsRenderer}
-        onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}
         ref={this._setRef}
         rowCount={rowCount}
@@ -376,12 +371,6 @@ export default class Tree extends React.PureComponent {
     this.forceUpdate();
   });
 
-  _onScroll = ({clientHeight, scrollHeight, scrollTop}: GridScroll) => {
-    const {onScroll} = this.props;
-
-    onScroll({clientHeight, scrollHeight, scrollTop});
-  };
-
   _onSectionRendered = ({
     rowOverscanStartIndex,
     rowOverscanStopIndex,
@@ -432,6 +421,6 @@ export default class Tree extends React.PureComponent {
   }
 
   _setRef = (grid: Grid) => {
-    this.Grid = grid;
+    this._grid = grid;
   };
 }
