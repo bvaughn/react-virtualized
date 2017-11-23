@@ -208,8 +208,8 @@ export default class Tree extends React.PureComponent {
     if (this._grid) {
       const {scrollTop} = this._grid.getOffsetForCell({
         alignment,
-        rowIndex: index,
         columnIndex: 0,
+        rowIndex: index,
       });
 
       return scrollTop;
@@ -221,8 +221,8 @@ export default class Tree extends React.PureComponent {
   invalidateCellSizeAfterRender({columnIndex, rowIndex}: CellPosition) {
     if (this._grid) {
       this._grid.invalidateCellSizeAfterRender({
-        rowIndex,
         columnIndex,
+        rowIndex,
       });
     }
   }
@@ -238,8 +238,8 @@ export default class Tree extends React.PureComponent {
   recomputeGridSize({columnIndex = 0, rowIndex = 0}: CellPosition = {}) {
     if (this._grid) {
       this._grid.recomputeGridSize({
-        rowIndex,
         columnIndex,
+        rowIndex,
       });
     }
   }
@@ -248,8 +248,8 @@ export default class Tree extends React.PureComponent {
   recomputeRowHeights(index: number = 0) {
     if (this._grid) {
       this._grid.recomputeGridSize({
-        rowIndex: index,
         columnIndex: 0,
+        rowIndex: index,
       });
     }
   }
@@ -300,7 +300,7 @@ export default class Tree extends React.PureComponent {
     );
   }
 
-  _cellRenderer = ({rowIndex, style, isScrolling, key}: CellRendererParams) => {
+  _cellRenderer = ({key, isScrolling, rowIndex, style}: CellRendererParams) => {
     const {
       nodeClassName,
       nodeNestingMultiplier,
@@ -339,8 +339,7 @@ export default class Tree extends React.PureComponent {
 
     const onNodeToggle = this._createOnNodeToggleCallback(id);
 
-    // disable flow check because rowRenderer is set by default
-    // $FlowFixMe
+    // $FlowFixMe - disable flow check because "rowRenderer" is set by default
     return rowRenderer({
       childrenCount,
       className: nodeClassName,
@@ -360,8 +359,9 @@ export default class Tree extends React.PureComponent {
         ...style,
         ...rowStyle,
         height: height || rowHeight,
-        overflow: 'hidden',
+        // $FlowFixMe - disable flow check because "nodeNestingMultiplier" is set by default
         marginLeft: nestingLevel * nodeNestingMultiplier,
+        overflow: 'hidden',
       },
     });
   };
@@ -379,6 +379,7 @@ export default class Tree extends React.PureComponent {
   }: RenderedSection) => {
     const {onRowsRendered} = this.props;
 
+    // $FlowFixMe - disable flow check because "onRowsRendered" is set by default
     onRowsRendered({
       overscanStartIndex: rowOverscanStartIndex,
       overscanStopIndex: rowOverscanStopIndex,
