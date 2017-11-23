@@ -17,7 +17,7 @@ export default function defaultNodeRenderer({
   onRowMouseOver,
   onRowRightClick,
   style,
-}: RowRendererParams): React.Element<*> {
+}: RowRendererParams<string>): React.Element<*> {
   const a11yProps = {};
 
   if (

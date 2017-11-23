@@ -18,7 +18,7 @@ export type RowMouseEventHandler = (params: {
   nodeData: any,
 }) => void;
 
-export type RowRendererParams = {
+export type RowRendererParams<T = any> = {
   childrenCount: number,
   className?: string,
   index: number,
@@ -26,7 +26,7 @@ export type RowRendererParams = {
   isScrolling: boolean,
   key: string,
   nestingLevel: number,
-  nodeData: any,
+  nodeData: T,
   onNodeToggle: () => void,
   onRowClick?: RowMouseEventHandler,
   onRowDoubleClick?: RowMouseEventHandler,
