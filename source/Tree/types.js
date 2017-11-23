@@ -2,6 +2,7 @@ import React from 'react';
 
 export type Node = {
   childrenCount: number,
+  className?: string,
   id: string,
   height?: number,
   isOpenedByDefault: boolean,

@@ -3,7 +3,6 @@
 import type {
   NoContentRenderer,
   Alignment,
-  CellSize,
   CellPosition,
   OverscanIndicesGetter,
   RenderedSection,
@@ -331,6 +330,7 @@ export default class Tree extends React.PureComponent {
 
     const {
       childrenCount,
+      className,
       id,
       nestingLevel,
       nodeData,
@@ -345,7 +345,7 @@ export default class Tree extends React.PureComponent {
     // $FlowFixMe - disable flow check because "rowRenderer" is set by default
     return rowRenderer({
       childrenCount,
-      className: nodeClassName,
+      className: cn(nodeClassName, className),
       index: rowIndex,
       isOpened,
       isScrolling,
