@@ -376,6 +376,8 @@ export default class Tree extends React.PureComponent {
 
   _onScroll = ({clientHeight, scrollHeight, scrollTop}: GridScroll) => {
     const {onScroll} = this.props;
+
+    // $FlowFixMe - disable flow check because "onScroll" is set by default
     onScroll({clientHeight, scrollHeight, scrollTop});
   };
 
