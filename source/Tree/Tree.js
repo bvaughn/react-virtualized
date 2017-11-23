@@ -3,10 +3,12 @@
 import type {
   NoContentRenderer,
   Alignment,
+  CellSize,
   CellPosition,
   OverscanIndicesGetter,
   RenderedSection,
   CellRendererParams,
+  Scroll as GridScroll,
 } from '../Grid';
 import type {
   Node,
@@ -292,6 +294,7 @@ export default class Tree extends React.PureComponent {
         columnWidth={width}
         columnCount={1}
         noContentRenderer={noRowsRenderer}
+        onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}
         ref={this._setRef}
         rowCount={rowCount}
@@ -370,6 +373,11 @@ export default class Tree extends React.PureComponent {
     this._nodesStates[id] = !this._nodesStates[id];
     this.forceUpdate();
   });
+
+  _onScroll = ({clientHeight, scrollHeight, scrollTop}: GridScroll) => {
+    const {onScroll} = this.props;
+    onScroll({clientHeight, scrollHeight, scrollTop});
+  };
 
   _onSectionRendered = ({
     rowOverscanStartIndex,

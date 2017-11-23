@@ -469,7 +469,7 @@ describe('Tree', () => {
         scrollLeft: 0,
         scrollTop: 100,
       };
-      instance.Grid._scrollingContainer = target; // HACK to work around _onScroll target check
+      instance._grid._scrollingContainer = target; // HACK to work around _onScroll target check
       Simulate.scroll(findDOMNode(instance), {target});
       expect(onScrollCalls[onScrollCalls.length - 1]).toEqual({
         clientHeight: 100,
@@ -489,11 +489,11 @@ describe('Tree', () => {
           width: 0,
         }),
       );
-      expect(rendered.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(
+      expect(rendered._grid._rowSizeAndPositionManager.getTotalSize()).toEqual(
         NODE_COUNT * 15,
       );
       rendered.measureAllRows();
-      expect(rendered.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(
+      expect(rendered._grid._rowSizeAndPositionManager.getTotalSize()).toEqual(
         NODE_COUNT * 20,
       );
     });
