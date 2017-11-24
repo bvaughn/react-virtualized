@@ -19,7 +19,6 @@ import type {RenderedRows, Scroll} from '../List/types';
 
 import cn from 'classnames';
 import React from 'react';
-import memoize from 'sb-memoize';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 import defaultRowRenderer from './defaultRowRenderer';
 
@@ -370,10 +369,12 @@ export default class Tree extends React.PureComponent {
     });
   };
 
-  _createOnNodeToggleCallback = memoize((id: string) => () => {
-    this._nodesStates[id] = !this._nodesStates[id];
-    this.forceUpdate();
-  });
+  _createOnNodeToggleCallback(id: string): () => void {
+    return () => {
+      this._nodesStates[id] = !this._nodesStates[id];
+      this.forceUpdate();
+    };
+  }
 
   _onScroll = ({clientHeight, scrollHeight, scrollTop}: GridScroll) => {
     const {onScroll} = this.props;
