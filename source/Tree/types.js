@@ -21,6 +21,7 @@ export type RowMouseEventHandler = (params: {
 export type RowRendererParams<T = any> = {
   childrenCount: number,
   className?: string,
+  id,
   index: number,
   isOpened: boolean,
   isScrolling: boolean,

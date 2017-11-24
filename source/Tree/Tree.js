@@ -346,6 +346,7 @@ export default class Tree extends React.PureComponent {
     return rowRenderer({
       childrenCount,
       className: cn(nodeClassName, className),
+      id,
       index: rowIndex,
       isOpened,
       isScrolling,
