@@ -76,3 +76,26 @@
 
 .ReactVirtualized__List {
 }
+
+/* Tree default theme */
+.ReactVirtualized__Tree__node {
+  display: flex;
+  align-items: center;
+}
+
+.ReactVirtualized__Tree__node > :first-child {
+  margin-right: 10px;
+  width: 10px;
+}
+
+.ReactVirtualized__Tree__node button {
+  background: none;
+  padding: 0;
+  border: 1px solid #777;
+  line-height: 10px;
+  height: 12px;
+  font-size: 12px;
+  width: 12px;
+  font-family: monospace;
+  cursor: pointer;
+}
