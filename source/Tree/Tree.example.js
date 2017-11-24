@@ -54,6 +54,7 @@ export default class TreeExample extends React.PureComponent {
 
     if (dynamicRowsHeights !== prevDynamicRowsHeight) {
       this.tree.forceUpdate();
+      this.tree.forceUpdateGrid();
     }
   }
 
