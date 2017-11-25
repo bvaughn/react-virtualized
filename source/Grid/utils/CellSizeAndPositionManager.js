@@ -225,8 +225,13 @@ export default class CellSizeAndPositionManager {
       return {};
     }
 
+    let start;
+    if (totalSize < containerSize) {
+      start = 0;
+    } else {
+      start = this._findNearestCell(offset);
+    }
     const maxOffset = offset + containerSize;
-    const start = this._findNearestCell(offset);
 
     const datum = this.getSizeAndPositionOfCell(start);
     offset = datum.offset + datum.size;
