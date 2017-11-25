@@ -5,12 +5,6 @@ import type {Size} from './types';
 import React from 'react';
 import createDetectElementResize from '../vendor/detectElementResize';
 
-/**
- * Decorator component that automatically adjusts the width and height of a single child.
- * Child component should not be declared as a child but should rather be specified by a `ChildComponent` property.
- * All other properties will be passed through to the child component.
- */
-
 type Props = {
   /** Function responsible for rendering children.*/
   children: (warams: Size) => React.Element<*>,
