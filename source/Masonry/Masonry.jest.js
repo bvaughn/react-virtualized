@@ -153,10 +153,47 @@ describe('Masonry', () => {
       simulateScroll(rendered, 101);
       expect(cellMeasurerCache.has(9)).toBe(true);
       expect(cellMeasurerCache.has(10)).toBe(false);
+    });
 
-      // The first batch-measured cell in the new block should be the 10th one
-      // Verify that we measured the correct cell...
-      expect(renderCallback.mock.calls[0][0]).toBe(9);
+    // Masonry used to do a render pass for only unmeasured cells,
+    // But this resulting in removing (and later re-adding) measured cells from the DOM,
+    // Which was bad for performance. See GitHub issue #875
+    it('should not remove previously-measured cells when measuring new ones', () => {
+      const log = [];
+
+      const cellMeasurerCache = createCellMeasurerCache();
+      const renderCallback = index => {
+        log.push(index);
+      };
+      const cellRenderer = createCellRenderer(
+        cellMeasurerCache,
+        renderCallback,
+      );
+
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            cellMeasurerCache,
+            cellRenderer,
+          }),
+        ),
+      );
+
+      // Expected to have rendered twice:
+      // 1st time to measure 9 cells (b'c of esimated size)
+      // 2nd time to render and position 9 cells (b'c of actual size)
+      expect(log).toHaveLength(18);
+
+      log.splice(0);
+
+      simulateScroll(rendered, 101);
+
+      // Expected to have rendered twice:
+      // 1st time to measure additional cells (based on estimated size)
+      // 2nd time to render and position with new cells
+      // The 1st render should also have included the pre-measured cells,
+      // To prevent them from being removed, recreated, and re-added to the DOM.
+      expect(log).toHaveLength(18);
     });
 
     it('should only render enough cells to fill the viewport', () => {
