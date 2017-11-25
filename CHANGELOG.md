@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 9.13.0
+* 🎉 Added `headerStyle` support for `Table` columns ([@mucsi96](https://github.com/mucsi96) - [#877](https://github.com/bvaughn/react-virtualized/pull/877))
+* 🐛 Fixed `Masonry` bug that caused cells to be unnecessarily destroyed and then recreated when new cells were measured - d561d9c
+
 ##### 9.12.0
 * 🎉 Added `defaultWidth` and `defaultHeight` props to `AutoSizer` to better support server-side rendering.
 
