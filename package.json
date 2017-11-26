@@ -35,7 +35,7 @@
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --config webpack.config.dev.js",
     "test": "npm run test:jest",
     "test:jest": "jest --no-watchman --runInBand",
-    "test:ci": "jest --no-watchman --runInBand --coverage",
+    "test:ci": "jest --no-watchman --maxWorkers 2 --coverage",
     "watch": "watch 'clear && npm run test -s' source",
     "watch:jest": "jest --no-watchman --watch"
   },
