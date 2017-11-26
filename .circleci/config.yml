@@ -39,7 +39,7 @@ jobs:
           key: dependencies-{{ checksum "yarn.lock" }}
       - run:
           name: Test
-          command: yarn test
+          command: yarn run test:ci
       - store_artifacts:
           path: coverage
           prefix: coverage
