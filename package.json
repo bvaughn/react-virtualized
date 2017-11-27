@@ -30,12 +30,11 @@
     "prettier": "prettier --config .prettierrc --write '{playground,source}/**/*.js'",
     "prettier:diff": "prettier --config .prettierrc --list-different '{playground,source}/**/*.js'",
     "postpublish": "npm run deploy",
-    "posttest": "[ -z \"$CI\" ] || codecov",
     "prepublish": "npm run build",
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --inline --config webpack.config.dev.js",
     "test": "npm run test:jest",
     "test:jest": "jest --no-watchman --runInBand",
-    "test:ci": "jest --no-watchman --maxWorkers 2 --coverage",
+    "test:ci": "jest --no-watchman --maxWorkers 2 --coverage && codecov",
     "watch": "watch 'clear && npm run test -s' source",
     "watch:jest": "jest --no-watchman --watch"
   },
