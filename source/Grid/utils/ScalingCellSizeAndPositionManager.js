@@ -1,6 +1,6 @@
 /** @flow */
 
-import type {Alignment, CellSizeGetter, VisibleCellRange} from '../types';
+import type { Alignment, CellSizeGetter, RangeSizeGetter, VisibleCellRange } from '../types';
 
 import CellSizeAndPositionManager from './CellSizeAndPositionManager';
 
@@ -21,6 +21,7 @@ type Params = {
   batchAllCells: boolean,
   cellCount: number,
   cellSizeGetter: CellSizeGetter,
+  rangeSizeGetter: ?RangeSizeGetter,
   estimatedCellSize: number,
 };
 

@@ -1,11 +1,12 @@
 /** @flow */
 
-import type {Alignment, CellSizeGetter, VisibleCellRange} from '../types';
+import type { Alignment, CellSizeGetter, VisibleCellRange, RangeSizeGetter } from '../types';
 
 type CellSizeAndPositionManagerParams = {
   batchAllCells: boolean,
   cellCount: number,
   cellSizeGetter: CellSizeGetter,
+  rangeSizeGetter: ?RangeSizeGetter,
   estimatedCellSize: number,
 };
 
@@ -50,15 +51,18 @@ export default class CellSizeAndPositionManager {
   _cellCount: number;
   _cellSizeGetter: CellSizeGetter;
   _estimatedCellSize: number;
+  _rangeSizeGetter: ?RangeSizeGetter
 
   constructor({
     batchAllCells = false,
     cellCount,
     cellSizeGetter,
+    rangeSizeGetter,
     estimatedCellSize,
   }: CellSizeAndPositionManagerParams) {
     this._batchAllCells = batchAllCells;
     this._cellSizeGetter = cellSizeGetter;
+    this._rangeSizeGetter = rangeSizeGetter;
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
   }
@@ -100,34 +104,44 @@ export default class CellSizeAndPositionManager {
     }
 
     if (index > this._lastMeasuredIndex) {
-      let lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
-      let offset =
-        lastMeasuredCellSizeAndPosition.offset +
-        lastMeasuredCellSizeAndPosition.size;
+      let rangeSizeGetter = this._rangeSizeGetter;
+      if(rangeSizeGetter) {
+        let size = this._cellSizeGetter({index});
+        this._cellSizeAndPositionData[index] = {
+          offset: rangeSizeGetter({startIndex: this._lastMeasuredIndex, endIndex: index}) - size,
+          size: size
+        }
+      }
+      else {
+        let lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
+        let offset =
+          lastMeasuredCellSizeAndPosition.offset +
+          lastMeasuredCellSizeAndPosition.size;
 
-      for (var i = this._lastMeasuredIndex + 1; i <= index; i++) {
-        let size = this._cellSizeGetter({index: i});
+        for (var i = this._lastMeasuredIndex + 1; i <= index; i++) {
+          let size = this._cellSizeGetter({ index: i });
 
-        // undefined or NaN probably means a logic error in the size getter.
-        // null means we're using CellMeasurer and haven't yet measured a given index.
-        if (size === undefined || isNaN(size)) {
-          throw Error(`Invalid size returned for cell ${i} of value ${size}`);
-        } else if (size === null) {
-          this._cellSizeAndPositionData[i] = {
-            offset,
-            size: 0,
-          };
+          // undefined or NaN probably means a logic error in the size getter.
+          // null means we're using CellMeasurer and haven't yet measured a given index.
+          if (size === undefined || isNaN(size)) {
+            throw Error(`Invalid size returned for cell ${i} of value ${size}`);
+          } else if (size === null) {
+            this._cellSizeAndPositionData[i] = {
+              offset,
+              size: 0
+            };
 
-          this._lastBatchedIndex = index;
-        } else {
-          this._cellSizeAndPositionData[i] = {
-            offset,
-            size,
-          };
+            this._lastBatchedIndex = index;
+          } else {
+            this._cellSizeAndPositionData[i] = {
+              offset,
+              size
+            };
 
-          offset += size;
+            offset += size;
 
-          this._lastMeasuredIndex = index;
+            this._lastMeasuredIndex = index;
+          }
         }
       }
     }

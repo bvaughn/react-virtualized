@@ -9,6 +9,7 @@ import type {
   NoContentRenderer,
   Scroll,
   ScrollbarPresenceChange,
+  RangeSizeGetter,
   RenderedSection,
   OverscanIndicesGetter,
   Alignment,
@@ -90,6 +91,11 @@ type Props = {
 
   /** Either a fixed column width (number) or a function that returns the width of a column given its index.  */
   columnWidth: CellSize,
+
+  /** 
+   * Optional function that returns the width between two given indexes.
+  */
+  columnWidthRangeGetter?: RangeSizeGetter,
 
   /** Unfiltered props for the Grid container. */
   containerProps?: Object,
@@ -178,6 +184,11 @@ type Props = {
    * Should implement the following interface: ({ index: number }): number
    */
   rowHeight: CellSize,
+
+  /** 
+   * Optional function that returns the height between two given indexes.
+  */
+  rowHeightRangeGetter?: RangeSizeGetter,
 
   /** Number of rows in grid.  */
   rowCount: number,
@@ -321,6 +332,7 @@ export default class Grid extends React.PureComponent {
         !deferredMeasurementCache.hasFixedHeight(),
       cellCount: props.columnCount,
       cellSizeGetter: params => this._columnWidthGetter(params),
+      rangeSizeGetter: props.columnWidthRangeGetter,
       estimatedCellSize: this._getEstimatedColumnSize(props),
     });
     this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
@@ -329,6 +341,7 @@ export default class Grid extends React.PureComponent {
         !deferredMeasurementCache.hasFixedWidth(),
       cellCount: props.rowCount,
       cellSizeGetter: params => this._rowHeightGetter(params),
+      rangeSizeGetter: props.rowHeightRangeGetter,
       estimatedCellSize: this._getEstimatedRowSize(props),
     });
   }
