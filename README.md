@@ -112,6 +112,25 @@ import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
 import List from 'react-virtualized/dist/commonjs/List'
 ```
 
+If the above syntax looks too cumbersome, or you import react-virtualized components from a lot of places, you can also configure a Webpack alias. For example:
+
+```js
+// Partial webpack.config.js
+{
+  alias: {
+    'react-virtualized/List': 'react-virtualized/dist/es/List',
+  },
+  ...rest
+}
+```
+
+Then you can just import like so:
+```
+import List from 'react-virtualized/List';
+
+// Now you can use <List {...props} />
+```
+
 You can also use a global-friendly UMD build:
 
 ```html
