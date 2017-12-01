@@ -125,7 +125,7 @@ If the above syntax looks too cumbersome, or you import react-virtualized compon
 ```
 
 Then you can just import like so:
-```
+```js
 import List from 'react-virtualized/List';
 
 // Now you can use <List {...props} />
