@@ -40,6 +40,12 @@ export default class WindowScroller extends PureComponent {
      * Wait this amount of time after the last scroll event before resetting child `pointer-events`.
      */
     scrollingResetTimeInterval: PropTypes.number.isRequired,
+
+    /** Default height to use for initial render; useful for SSR */
+    defaultHeight: PropTypes.number,
+
+    /** Default width to use for initial render; useful for SSR */
+    defaultWidth: PropTypes.number,
   };
 
   static defaultProps = {
@@ -51,11 +57,10 @@ export default class WindowScroller extends PureComponent {
   constructor(props) {
     super(props);
 
-    // Handle server-side rendering case
     const {width, height} =
-      typeof window !== 'undefined'
-        ? getDimensions(props.scrollElement || window)
-        : {width: 0, height: 0};
+      props.defaultWidth || props.defaultHeight
+        ? {width: props.defaultWidth, height: props.defaultHeight}
+        : getDimensions(props.scrollElement || window);
 
     this.state = {
       height,
