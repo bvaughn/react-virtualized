@@ -26,16 +26,10 @@ export default class Table extends PureComponent {
      */
     autoHeight: PropTypes.bool,
 
-    /** One or more Columns describing the data displayed in this row */
-    children: props => {
-      const children = React.Children.toArray(props.children);
-      for (let i = 0; i < children.length; i++) {
-        const childType = children[i].type;
-        if (childType !== Column && !(childType.prototype instanceof Column)) {
-          return new Error('Table only accepts children of type Column');
-        }
-      }
-    },
+    /** One or more Columns describing the data displayed in this row
+     * Reason for PropTypes.any vs PropTypes.node, is to support falsy columns 
+     */
+    children: PropTypes.any,
 
     /** Optional CSS class name */
     className: PropTypes.string,

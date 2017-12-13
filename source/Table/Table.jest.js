@@ -95,34 +95,6 @@ describe('Table', () => {
 
   beforeEach(() => jest.resetModules());
 
-  describe('children', () => {
-    it('should accept Column children', () => {
-      const children = [<Column dataKey="foo" width={100} />];
-      const result = Table.propTypes.children({children}, 'children', 'Table');
-      expect(result instanceof Error).toEqual(false);
-    });
-
-    it('should accept subclasses of Column as children', () => {
-      class AnotherColumn extends Column {}
-
-      const children = [<AnotherColumn dataKey="foo" width={100} />];
-      const result = Table.propTypes.children({children}, 'children', 'Table');
-      expect(result instanceof Error).toEqual(false);
-    });
-
-    it('should not accept non-Column children', () => {
-      const children = [<div />];
-      const result = Table.propTypes.children({children}, 'children', 'Table');
-      expect(result instanceof Error).toEqual(true);
-    });
-
-    it('should accept falsy children to allow easier dynamic showing/hiding of columns', () => {
-      const children = [false, <Column dataKey="foo" width={100} />, null];
-      const result = Table.propTypes.children({children}, 'children', 'Table');
-      expect(result instanceof Error).toEqual(false);
-    });
-  });
-
   describe('height', () => {
     it('should subtract header row height from the inner Grid height if headers are enabled', () => {
       const rendered = findDOMNode(
