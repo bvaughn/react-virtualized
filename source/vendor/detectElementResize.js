@@ -132,8 +132,8 @@ export default function createDetectElementResize(nonce) {
       keyframeprefix + 'animation: 1ms ' + animationName + '; ';
   }
 
-  var createStyles = function() {
-    if (!document.getElementById('detectElementResize')) {
+  var createStyles = function(doc) {
+    if (!doc.getElementById('detectElementResize')) {
       //opacity:0 works around a chrome bug https://code.google.com/p/chromium/issues/detail?id=286360
       var css =
           (animationKeyframes ? animationKeyframes : '') +
@@ -141,8 +141,8 @@ export default function createDetectElementResize(nonce) {
           (animationStyle ? animationStyle : '') +
           'visibility: hidden; opacity: 0; } ' +
           '.resize-triggers, .resize-triggers > div, .contract-trigger:before { content: " "; display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; z-index: -1; } .resize-triggers > div { background: #eee; overflow: auto; } .contract-trigger:before { width: 200%; height: 200%; }',
-        head = document.head || document.getElementsByTagName('head')[0],
-        style = document.createElement('style');
+        head = doc.head || doc.getElementsByTagName('head')[0],
+        style = doc.createElement('style');
 
       style.id = 'detectElementResize';
       style.type = 'text/css';
@@ -154,7 +154,7 @@ export default function createDetectElementResize(nonce) {
       if (style.styleSheet) {
         style.styleSheet.cssText = css;
       } else {
-        style.appendChild(document.createTextNode(css));
+        style.appendChild(doc.createTextNode(css));
       }
 
       head.appendChild(style);
@@ -166,14 +166,15 @@ export default function createDetectElementResize(nonce) {
       element.attachEvent('onresize', fn);
     } else {
       if (!element.__resizeTriggers__) {
+        var doc = element.ownerDocument;
         var elementStyle = _window.getComputedStyle(element);
         if (elementStyle && elementStyle.position == 'static') {
           element.style.position = 'relative';
         }
-        createStyles();
+        createStyles(doc);
         element.__resizeLast__ = {};
         element.__resizeListeners__ = [];
-        (element.__resizeTriggers__ = document.createElement('div')).className =
+        (element.__resizeTriggers__ = doc.createElement('div')).className =
           'resize-triggers';
         element.__resizeTriggers__.innerHTML =
           '<div class="expand-trigger"><div></div></div>' +
