@@ -11,12 +11,12 @@ This may change with a future release but for the time being this HOC is should 
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
 | children | Function | ✓ | Function responsible for rendering children. This function should implement the following signature: `({ height: number, width: number, isScrolling: boolean, scrollTop: number, onChildScroll: function }) => PropTypes.element` |
-| defaultHeight | Number |  | Height passed to child for initial render; useful for server-side rendering. This value will be overridden with an accurate height after mounting. |
-| defaultWidth | Number |  | Width passed to child for initial render; useful for server-side rendering. This value will be overridden with an accurate width after mounting. |
 | onResize | Function |  | Callback to be invoked on-resize; it is passed the following named parameters: `({ height: number, width: number })`. |
 | onScroll | Function |  | Callback to be invoked on-scroll; it is passed the following named parameters: `({ scrollTop: number, scrollLeft: number })`. |
 | scrollElement | any |  | Element to attach scroll event listeners. Defaults to `window`. |
 | scrollingResetTimeInterval | Number |  | Wait this amount of time after the last scroll event before resetting WindowScroller `pointer-events`; defaults to 150ms. |
+| serverHeight | Number |  | Height used for server-side rendering. |
+| serverWidth | Number |  | Width used for server-side rendering. |
 
 ### Public Methods
 

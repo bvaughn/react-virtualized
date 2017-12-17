@@ -447,8 +447,9 @@ describe('WindowScroller', () => {
     it('should render content with default widths and heights initially', () => {
       const rendered = ReactDOMServer.renderToString(
         getMarkup({
-          defaultHeight: 100,
-          defaultWidth: 200,
+          scrollElement: null,
+          serverHeight: 100,
+          serverWidth: 200,
         }),
       );
       expect(rendered).toContain('height:100');

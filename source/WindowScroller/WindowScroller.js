@@ -41,29 +41,26 @@ export default class WindowScroller extends PureComponent {
      */
     scrollingResetTimeInterval: PropTypes.number.isRequired,
 
-    /** Default height to use for initial render; useful for SSR */
-    defaultHeight: PropTypes.number,
+    /** Height used for server-side rendering */
+    serverHeight: PropTypes.number.isRequired,
 
-    /** Default width to use for initial render; useful for SSR */
-    defaultWidth: PropTypes.number,
+    /** Width used for server-side rendering */
+    serverWidth: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
     onResize: () => {},
     onScroll: () => {},
+    scrollElement: window,
     scrollingResetTimeInterval: IS_SCROLLING_TIMEOUT,
+    serverHeight: 0,
+    serverWidth: 0,
   };
 
   constructor(props) {
     super(props);
 
-    const {width, height} =
-      typeof window !== 'undefined'
-        ? getDimensions(props.scrollElement || window)
-        : {
-            width: props.defaultWidth || 0,
-            height: props.defaultHeight || 0
-          };
+    const {width, height} = getDimensions(props.scrollElement, props);
 
     this.state = {
       height,
@@ -81,19 +78,20 @@ export default class WindowScroller extends PureComponent {
 
   // Can’t use defaultProps for scrollElement without breaking server-side rendering
   get scrollElement() {
-    return this.props.scrollElement || window;
+    return this.props.scrollElement;
   }
 
-  updatePosition(scrollElement) {
+  updatePosition(scrollElement, props = this.props) {
     const {onResize} = this.props;
     const {height, width} = this.state;
 
-    scrollElement = scrollElement || this.props.scrollElement || window;
+    scrollElement = scrollElement || this.props.scrollElement;
+
     const offset = getPositionOffset(ReactDOM.findDOMNode(this), scrollElement);
     this._positionFromTop = offset.top;
     this._positionFromLeft = offset.left;
 
-    const dimensions = getDimensions(scrollElement);
+    const dimensions = getDimensions(scrollElement, props);
     if (height !== dimensions.height || width !== dimensions.width) {
       this.setState({
         height: dimensions.height,
@@ -107,7 +105,7 @@ export default class WindowScroller extends PureComponent {
   }
 
   componentDidMount() {
-    const scrollElement = this.props.scrollElement || window;
+    const scrollElement = this.props.scrollElement;
 
     this.updatePosition(scrollElement);
 
@@ -119,11 +117,11 @@ export default class WindowScroller extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const scrollElement = this.props.scrollElement || window;
-    const nextScrollElement = nextProps.scrollElement || window;
+    const scrollElement = this.props.scrollElement;
+    const nextScrollElement = nextProps.scrollElement;
 
     if (scrollElement !== nextScrollElement) {
-      this.updatePosition(nextScrollElement);
+      this.updatePosition(nextScrollElement, nextProps);
 
       unregisterScrollListener(this, scrollElement);
       registerScrollListener(this, nextScrollElement);
@@ -131,7 +129,7 @@ export default class WindowScroller extends PureComponent {
   }
 
   componentWillUnmount() {
-    unregisterScrollListener(this, this.props.scrollElement || window);
+    unregisterScrollListener(this, this.props.scrollElement);
     window.removeEventListener('resize', this._onResize, false);
 
     this._isMounted = false;
@@ -177,7 +175,7 @@ export default class WindowScroller extends PureComponent {
 
     const {onScroll} = this.props;
 
-    const scrollElement = this.props.scrollElement || window;
+    const scrollElement = this.props.scrollElement;
     const scrollOffset = getScrollOffset(scrollElement);
     const scrollLeft = Math.max(0, scrollOffset.left - this._positionFromLeft);
     const scrollTop = Math.max(0, scrollOffset.top - this._positionFromTop);
