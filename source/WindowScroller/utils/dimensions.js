@@ -1,18 +1,38 @@
+/** @flow */
+
 /**
  * Gets the dimensions of the element, accounting for API differences between
  * `window` and other DOM elements.
  */
 
-export function getDimensions(element) {
-  if (element === window) {
+type Dimensions = {
+  height: number,
+  width: number,
+};
+
+// TODO Move this into WindowScroller and import from there
+type WindowScrollerProps = {
+  serverHeight: number,
+  serverWidth: number,
+};
+
+export function getDimensions(
+  scrollElement: ?HTMLElement,
+  props: WindowScrollerProps,
+): Dimensions {
+  if (!scrollElement) {
+    return {
+      height: props.serverHeight || 0,
+      width: props.serverWidth || 0,
+    };
+  } else if (scrollElement === window) {
     return {
       height: typeof window.innerHeight === 'number' ? window.innerHeight : 0,
       width: typeof window.innerWidth === 'number' ? window.innerWidth : 0,
     };
+  } else {
+    return scrollElement.getBoundingClientRect();
   }
-
-  const {width, height} = element.getBoundingClientRect();
-  return {width, height};
 }
 
 /**

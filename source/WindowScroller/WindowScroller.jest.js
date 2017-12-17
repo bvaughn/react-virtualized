@@ -2,15 +2,16 @@
 
 import React from 'react';
 import {findDOMNode} from 'react-dom';
+import ReactDOMServer from 'react-dom/server';
 import {render} from '../TestUtils';
 import WindowScroller, {IS_SCROLLING_TIMEOUT} from './WindowScroller';
 
 class ChildComponent extends React.Component {
   render() {
-    const {scrollTop, isScrolling, height} = this.props;
+    const {scrollTop, isScrolling, height, width} = this.props;
 
     return (
-      <div>{`scrollTop:${scrollTop}, isScrolling:${isScrolling}, height:${height}`}</div>
+      <div>{`scrollTop:${scrollTop}, isScrolling:${isScrolling}, height:${height}, width:${width}`}</div>
     );
   }
 }
@@ -35,10 +36,11 @@ function mockGetBoundingClientRectForHeader({
 function getMarkup({headerElements, documentOffset, childRef, ...props} = {}) {
   const windowScroller = (
     <WindowScroller {...props}>
-      {({height, isScrolling, onChildScroll, scrollTop}) => (
+      {({width, height, isScrolling, onChildScroll, scrollTop}) => (
         <ChildComponent
           ref={childRef}
           height={height}
+          width={width}
           isScrolling={isScrolling}
           onScroll={onChildScroll}
           scrollTop={scrollTop}
@@ -438,6 +440,20 @@ describe('WindowScroller', () => {
       childComponent.props.onScroll({scrollTop: 200});
 
       expect(windowScroller.state.scrollTop).toEqual(200);
+    });
+  });
+
+  describe('server-side rendering', () => {
+    it('should render content with default widths and heights initially', () => {
+      const rendered = ReactDOMServer.renderToString(
+        getMarkup({
+          scrollElement: null,
+          serverHeight: 100,
+          serverWidth: 200,
+        }),
+      );
+      expect(rendered).toContain('height:100');
+      expect(rendered).toContain('width:200');
     });
   });
 });

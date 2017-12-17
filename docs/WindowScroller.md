@@ -15,6 +15,8 @@ This may change with a future release but for the time being this HOC is should 
 | onScroll | Function |  | Callback to be invoked on-scroll; it is passed the following named parameters: `({ scrollTop: number, scrollLeft: number })`. |
 | scrollElement | any |  | Element to attach scroll event listeners. Defaults to `window`. |
 | scrollingResetTimeInterval | Number |  | Wait this amount of time after the last scroll event before resetting WindowScroller `pointer-events`; defaults to 150ms. |
+| serverHeight | Number |  | Height used for server-side rendering. |
+| serverWidth | Number |  | Width used for server-side rendering. |
 
 ### Public Methods
 
