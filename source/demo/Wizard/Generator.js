@@ -245,7 +245,8 @@ function getGridMarkup() {
   return {
     name: 'Grid',
     props: {
-      cellRenderer: '({ columnIndex, isScrolling, rowIndex }) => <div/>',
+      cellRenderer:
+        '({ columnIndex, key, rowIndex, style }) => <div key={key} style={style}>...</div>',
     },
     columnCountProp: 'columnCount',
     columnWidthProp: 'columnWidth',
@@ -259,7 +260,7 @@ function getListMarkup() {
     name: 'List',
     props: {
       rowRenderer:
-        '({ index, isScrolling  }) => collection.getIn([index, "name"])',
+        '({ index, key, style }) => <div key={key} style={style}>...</div>',
     },
     rowHeightProp: 'rowHeight',
   };
