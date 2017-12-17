@@ -58,9 +58,12 @@ export default class WindowScroller extends PureComponent {
     super(props);
 
     const {width, height} =
-      props.defaultWidth || props.defaultHeight
-        ? {width: props.defaultWidth, height: props.defaultHeight}
-        : getDimensions(props.scrollElement || window);
+      typeof window !== "undefined"
+        ? getDimensions(props.scrollElement || window)
+        : {
+            width: props.defaultWidth || 0,
+            height: props.defaultHeight || 0
+          };
 
     this.state = {
       height,
