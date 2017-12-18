@@ -2,7 +2,7 @@
 
 import type {Size} from './types';
 
-import React from 'react';
+import * as React from 'react';
 import createDetectElementResize from '../vendor/detectElementResize';
 
 type Props = {
@@ -28,6 +28,11 @@ type Props = {
   onResize: (params: Size) => void,
 };
 
+type State = {
+  height: number,
+  width: number
+};
+
 type ResizeHandler = (element: HTMLElement, onResize: () => void) => void;
 
 type DetectElementResize = {
@@ -35,14 +40,12 @@ type DetectElementResize = {
   removeResizeListener: ResizeHandler,
 };
 
-export default class AutoSizer extends React.PureComponent {
+export default class AutoSizer extends React.PureComponent<Props, State> {
   static defaultProps = {
     onResize: () => {},
     disableHeight: false,
     disableWidth: false,
   };
-
-  props: Props;
 
   state = {
     height: this.props.defaultHeight || 0,

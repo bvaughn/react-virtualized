@@ -15,7 +15,7 @@ import type {
 } from './types';
 import type {AnimationTimeoutId} from '../utils/requestAnimationTimeout';
 
-import React from 'react';
+import * as React from 'react';
 import cn from 'classnames';
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset';
 import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager';
@@ -220,14 +220,14 @@ type State = {
   scrollDirectionVertical: -1 | 1,
   scrollLeft: number,
   scrollTop: number,
-  scrollPositionChangeReason?: 'observed' | 'requested',
+  scrollPositionChangeReason: 'observed' | 'requested' | null,
 };
 
 /**
  * Renders tabular data with virtualization along the vertical and horizontal axes.
  * Row heights and column widths must be known ahead of time and specified as properties.
  */
-export default class Grid extends React.PureComponent {
+export default class Grid extends React.PureComponent<Props, State> {
   static defaultProps = {
     'aria-label': 'grid',
     'aria-readonly': true,
@@ -241,9 +241,9 @@ export default class Grid extends React.PureComponent {
     estimatedRowSize: 30,
     getScrollbarSize: scrollbarSize,
     noContentRenderer: renderNull,
-    onScroll: ({}) => {},
+    onScroll: () => {},
     onScrollbarPresenceChange: () => {},
-    onSectionRendered: ({}) => {},
+    onSectionRendered: () => {},
     overscanColumnCount: 0,
     overscanIndicesGetter: defaultOverscanIndicesGetter,
     overscanRowCount: 10,
@@ -256,14 +256,13 @@ export default class Grid extends React.PureComponent {
     tabIndex: 0,
   };
 
-  props: Props;
-
-  state: State = {
+  state = {
     isScrolling: false,
     scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
     scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
     scrollLeft: 0,
     scrollTop: 0,
+    scrollPositionChangeReason: null,
   };
 
   // Invokes onSectionRendered callback only when start/stop row or column indices change
