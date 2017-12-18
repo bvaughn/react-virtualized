@@ -28,7 +28,10 @@ type Props = {
   scrollToRow: number,
 };
 
-export default class ArrowKeyStepper extends React.PureComponent<Props, ScrollIndices> {
+export default class ArrowKeyStepper extends React.PureComponent<
+  Props,
+  ScrollIndices,
+> {
   static defaultProps = {
     disabled: false,
     isControlled: false,

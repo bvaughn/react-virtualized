@@ -14,7 +14,7 @@ import List, {type RowRendererParams} from '../List';
 import styles from './AutoSizer.example.css';
 
 type State = {
-  hideDescription: boolean
+  hideDescription: boolean,
 };
 
 export default class AutoSizerExample extends PureComponent<{}, State> {

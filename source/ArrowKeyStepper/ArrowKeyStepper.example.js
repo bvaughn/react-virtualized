@@ -16,10 +16,13 @@ type State = {
   mode: 'edges' | 'cells',
   isClickable: boolean,
   scrollToColumn: number,
-  scrollToRow: number
+  scrollToRow: number,
 };
 
-export default class ArrowKeyStepperExample extends React.PureComponent<{}, State> {
+export default class ArrowKeyStepperExample extends React.PureComponent<
+  {},
+  State,
+> {
   state = {
     mode: 'edges',
     isClickable: true,

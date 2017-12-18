@@ -30,7 +30,7 @@ type Props = {
 
 type State = {
   height: number,
-  width: number
+  width: number,
 };
 
 type ResizeHandler = (element: HTMLElement, onResize: () => void) => void;
