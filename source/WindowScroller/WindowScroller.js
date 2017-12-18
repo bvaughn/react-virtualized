@@ -51,7 +51,7 @@ export default class WindowScroller extends PureComponent {
   static defaultProps = {
     onResize: () => {},
     onScroll: () => {},
-    scrollElement: window,
+    scrollElement: typeof window !== 'undefined' ? window : undefined,
     scrollingResetTimeInterval: IS_SCROLLING_TIMEOUT,
     serverHeight: 0,
     serverWidth: 0,

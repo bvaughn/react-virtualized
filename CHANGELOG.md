@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.14.1
+* 🐛 Fixed server-side rendering bug in `WindowScroller` with undefined `window` variable.
+
 ##### 9.14.0
 * 🎉 Added `serverHeight` and `serverWidth` props to `WindowScroller` for better server-side rendering support.
 
