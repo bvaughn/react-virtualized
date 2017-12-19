@@ -1,6 +1,5 @@
 /** @flow */
 
-// $FlowFixMe
 import {List as ImmutableList} from 'immutable';
 import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
