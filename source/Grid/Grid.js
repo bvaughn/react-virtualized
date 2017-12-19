@@ -303,6 +303,7 @@ export default class Grid extends React.PureComponent<Props, State> {
   _columnStopIndex: number;
   _rowStartIndex: number;
   _rowStopIndex: number;
+  _previousTargetIndex = -1;
 
   _disablePointerEventsTimeoutId: ?AnimationTimeoutId;
 
@@ -1303,15 +1304,20 @@ export default class Grid extends React.PureComponent<Props, State> {
       const finalRow = rowCount - 1;
       const targetIndex =
         scrollToRow < 0 ? finalRow : Math.min(finalRow, scrollToRow);
-      const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize();
-      const scrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0;
 
-      return this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
-        align: scrollToAlignment,
-        containerSize: height - scrollBarSize,
-        currentOffset: scrollTop,
-        targetIndex,
-      });
+      // fix https://github.com/bvaughn/react-virtualized/issues/907
+      if (this._previousTargetIndex !== targetIndex) {
+        const totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize();
+        const scrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0;
+        this._previousTargetIndex = targetIndex;
+
+        return this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
+          align: scrollToAlignment,
+          containerSize: height - scrollBarSize,
+          currentOffset: scrollTop,
+          targetIndex,
+        });
+      }
     }
   }
 
