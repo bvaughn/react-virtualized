@@ -55,7 +55,12 @@ export default class AutoSizer extends React.PureComponent {
 
   componentDidMount() {
     const {nonce} = this.props;
-    if (this._autoSizer && this._autoSizer.parentNode instanceof HTMLElement) {
+    if (
+      this._autoSizer &&
+      this._autoSizer.parentNode &&
+      this._autoSizer.parentNode instanceof
+        this._autoSizer.parentNode.ownerDocument.defaultView.HTMLElement
+    ) {
       // Delay access of parentNode until mount.
       // This handles edge-cases where the component has already been unmounted before its ref has been set,
       // As well as libraries like react-lite which have a slightly different lifecycle.
