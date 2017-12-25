@@ -11,10 +11,10 @@
   "license": "MIT",
   "scripts": {
     "build": "npm run build:commonjs && npm run build:css && npm run build:es && npm run build:demo && npm run build:umd",
-    "build:commonjs": "npm run clean:commonjs && cross-env NODE_ENV=production cross-env BABEL_ENV=commonjs babel source --out-dir dist/commonjs --ignore *.example.js,*.test.js,source/demo/,source/tests.js",
+    "build:commonjs": "npm run clean:commonjs && cross-env NODE_ENV=production cross-env BABEL_ENV=commonjs babel source --out-dir dist/commonjs --ignore *.example.js,*.jest.js,source/demo/",
     "build:css": "postcss --config postcss.config.js --use autoprefixer source/styles.css > styles.css",
     "build:demo": "npm run clean:demo && cross-env NODE_ENV=production webpack --config webpack.config.demo.js -p --bail",
-    "build:es": "npm run clean:es && cross-env NODE_ENV=production cross-env BABEL_ENV=es babel source --out-dir dist/es --ignore *.example.js,*.test.js,source/demo/,source/tests.js",
+    "build:es": "npm run clean:es && cross-env NODE_ENV=production cross-env BABEL_ENV=es babel source --out-dir dist/es --ignore *.example.js,*.jest.js,source/demo/",
     "build:umd": "npm run clean:umd && cross-env NODE_ENV=production webpack --config webpack.config.umd.js --bail",
     "check-all": "yarn prettier && yarn lint && yarn flow",
     "ci-check": "yarn prettier:diff && yarn lint && yarn flow",
