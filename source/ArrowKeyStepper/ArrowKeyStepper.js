@@ -3,7 +3,7 @@
 import type {RenderedSection} from '../Grid';
 import type {ScrollIndices} from './types';
 
-import React from 'react';
+import * as React from 'react';
 
 /**
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
@@ -28,7 +28,10 @@ type Props = {
   scrollToRow: number,
 };
 
-export default class ArrowKeyStepper extends React.PureComponent {
+export default class ArrowKeyStepper extends React.PureComponent<
+  Props,
+  ScrollIndices,
+> {
   static defaultProps = {
     disabled: false,
     isControlled: false,
@@ -36,10 +39,6 @@ export default class ArrowKeyStepper extends React.PureComponent {
     scrollToColumn: 0,
     scrollToRow: 0,
   };
-
-  props: Props;
-
-  state: ScrollIndices;
 
   _columnStartIndex = 0;
   _columnStopIndex = 0;

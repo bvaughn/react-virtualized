@@ -1,5 +1,5 @@
 /** @flow */
-import React from 'react';
+import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import CellMeasurerCache from './CellMeasurerCache.js';
 
@@ -27,10 +27,8 @@ type Props = {
  * Measurements are stored in a per-cell cache.
  * Cached-content is not be re-measured.
  */
-export default class CellMeasurer extends React.PureComponent {
+export default class CellMeasurer extends React.PureComponent<Props> {
   static __internalCellMeasurerFlag = false;
-
-  props: Props;
 
   componentDidMount() {
     this._maybeMeasureCell();

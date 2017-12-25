@@ -685,9 +685,9 @@ babel-plugin-external-helpers@^6.18.0:
   dependencies:
     babel-runtime "^6.22.0"
 
-babel-plugin-flow-react-proptypes@^3.4.3:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/babel-plugin-flow-react-proptypes/-/babel-plugin-flow-react-proptypes-3.4.3.tgz#4555b6ef1bafe4854548b4e9bf56871b765b8e35"
+babel-plugin-flow-react-proptypes@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-flow-react-proptypes/-/babel-plugin-flow-react-proptypes-12.1.0.tgz#cfa5d93b954a22783e8d6fc4553307b2b02ac3c8"
   dependencies:
     babel-core "^6.25.0"
     babel-template "^6.25.0"
@@ -1167,11 +1167,9 @@ babel-plugin-transform-react-jsx@^6.24.1:
     babel-plugin-syntax-jsx "^6.8.0"
     babel-runtime "^6.22.0"
 
-babel-plugin-transform-react-remove-prop-types@^0.4.6:
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/babel-plugin-transform-react-remove-prop-types/-/babel-plugin-transform-react-remove-prop-types-0.4.6.tgz#c3d20ff4e97fb08fa63e86a97b2daab6ad365a19"
-  dependencies:
-    babel-traverse "^6.24.1"
+babel-plugin-transform-react-remove-prop-types@^0.4.12:
+  version "0.4.12"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-react-remove-prop-types/-/babel-plugin-transform-react-remove-prop-types-0.4.12.tgz#a382c27c42d6580748c80caf8c3d5091edbb60b8"
 
 babel-plugin-transform-regenerator@^6.22.0:
   version "6.22.0"
@@ -2887,9 +2885,9 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-flow-bin@^0.50.0:
-  version "0.50.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.50.0.tgz#d4cdb2430dee1a3599f0eb6fe551146e3027256a"
+flow-bin@^0.61.0:
+  version "0.61.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.61.0.tgz#d0473a8c35dbbf4de573823f4932124397d32d35"
 
 for-in@^0.1.5:
   version "0.1.6"

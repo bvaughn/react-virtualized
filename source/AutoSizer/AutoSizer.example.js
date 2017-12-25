@@ -12,7 +12,11 @@ import AutoSizer from './AutoSizer';
 import List, {type RowRendererParams} from '../List';
 import styles from './AutoSizer.example.css';
 
-export default class AutoSizerExample extends PureComponent {
+type State = {
+  hideDescription: boolean,
+};
+
+export default class AutoSizerExample extends PureComponent<{}, State> {
   static contextTypes = {
     list: PropTypes.instanceOf(ImmutableList).isRequired,
   };

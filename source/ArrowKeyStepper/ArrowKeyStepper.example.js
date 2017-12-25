@@ -12,7 +12,17 @@ import Grid from '../Grid';
 import cn from 'classnames';
 import styles from './ArrowKeyStepper.example.css';
 
-export default class ArrowKeyStepperExample extends React.PureComponent {
+type State = {
+  mode: 'edges' | 'cells',
+  isClickable: boolean,
+  scrollToColumn: number,
+  scrollToRow: number,
+};
+
+export default class ArrowKeyStepperExample extends React.PureComponent<
+  {},
+  State,
+> {
   state = {
     mode: 'edges',
     isClickable: true,
@@ -88,7 +98,6 @@ export default class ArrowKeyStepperExample extends React.PureComponent {
 
         <ArrowKeyStepper
           columnCount={100}
-          key={isClickable}
           isControlled={isClickable}
           onScrollToChange={isClickable ? this._selectCell : undefined}
           mode={mode}

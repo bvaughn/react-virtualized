@@ -8,8 +8,10 @@
 .*/Table/.*
 .*/WindowScroller/.*
 
+[untyped]
 .*/node_modules/babel-plugin-transform-react-remove-prop-types/.*
 .*/node_modules/graphql/.*
+.*/node_modules/immutable/.*
 
 [include]
 
