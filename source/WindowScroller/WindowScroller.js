@@ -12,6 +12,7 @@ import {
   getPositionOffset,
   getScrollOffset,
 } from './utils/dimensions';
+import createDetectElementResize from '../vendor/detectElementResize';
 
 type Props = {
   /**
@@ -57,6 +58,13 @@ type State = {
   scrollTop: number,
 };
 
+type ResizeHandler = (element: Element, onResize: () => void) => void;
+
+type DetectElementResize = {
+  addResizeListener: ResizeHandler,
+  removeResizeListener: ResizeHandler,
+};
+
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
@@ -79,6 +87,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _isMounted = false;
   _positionFromTop = 0;
   _positionFromLeft = 0;
+  _detectElementResize: ?DetectElementResize;
 
   state = {
     ...getDimensions(this.props.scrollElement, this.props),
@@ -123,7 +132,15 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
       registerScrollListener(this, scrollElement);
     }
 
-    window.addEventListener('resize', this._onResize, false);
+    if (scrollElement === window) {
+      window.addEventListener('resize', this._onResize, false);
+    } else {
+      this._detectElementResize = createDetectElementResize();
+      this._detectElementResize.addResizeListener(
+        scrollElement,
+        this._onResize,
+      );
+    }
 
     this._isMounted = true;
   }
@@ -145,10 +162,19 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   }
 
   componentWillUnmount() {
-    if (this.props.scrollElement) {
-      unregisterScrollListener(this, this.props.scrollElement);
+    const scrollElement = this.props.scrollElement;
+    if (scrollElement) {
+      unregisterScrollListener(this, scrollElement);
     }
-    window.removeEventListener('resize', this._onResize, false);
+    if (scrollElement === window) {
+      window.removeEventListener('resize', this._onResize, false);
+    } else if (this._detectElementResize && scrollElement) {
+      this._detectElementResize.removeResizeListener(
+        scrollElement,
+        this._onResize,
+      );
+    }
+
 
     this._isMounted = false;
   }
