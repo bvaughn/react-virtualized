@@ -251,7 +251,7 @@ describe('WindowScroller', () => {
   });
 
   describe('onResize', () => {
-    it.only('should trigger callback on init and when window resizes', () => {
+    it('should trigger callback on init and when window resizes', () => {
       const resizeFn = jest.fn();
       render(getMarkup({ onResize: resizeFn }));
 

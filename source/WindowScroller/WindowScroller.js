@@ -77,19 +77,12 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _positionFromTop = 0;
   _positionFromLeft = 0;
 
-  constructor(props: Props) {
-    super(props);
-
-    const {width, height} = getDimensions(props.scrollElement, props);
-
-    this.state = {
-      height,
-      width,
-      isScrolling: false,
-      scrollLeft: 0,
-      scrollTop: 0,
-    };
-  }
+  state = {
+    ...getDimensions(this.props.scrollElement, this.props),
+    isScrolling: false,
+    scrollLeft: 0,
+    scrollTop: 0,
+  };
 
   // Can’t use defaultProps for scrollElement without breaking server-side rendering
   get scrollElement(): ?Element {
