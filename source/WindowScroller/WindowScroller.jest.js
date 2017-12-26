@@ -92,13 +92,6 @@ describe('WindowScroller', () => {
     window.innerWidth = 500;
   });
 
-  it('should prefer window on nullable scrollElement', () => {
-    const component = render(
-      <WindowScroller scrollElement={null}>{() => null}</WindowScroller>
-    );
-    expect(component.scrollElement).toBe(window);
-  });
-
   // Starts updating scrollTop only when the top position is reached
   it('should have correct top and left properties to be defined on :_positionFromTop and :_positionFromLeft', () => {
     const component = render(getMarkup());
@@ -257,8 +250,7 @@ describe('WindowScroller', () => {
 
       simulateWindowResize({height: 1000, width: 1024});
 
-      expect(resizeFn).toHaveBeenCalledTimes(2);
-      expect(resizeFn).toBeCalledWith({ height: 500, width: 500, });
+      expect(resizeFn).toHaveBeenCalledTimes(1);
       expect(resizeFn).lastCalledWith({ height: 1000, width: 1024, });
     });
 

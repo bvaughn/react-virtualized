@@ -58,7 +58,7 @@ function onScrollWindow(event) {
   }
   enablePointerEventsAfterDelay();
   mountedInstances.forEach(instance => {
-    if (instance.scrollElement === event.currentTarget) {
+    if (instance.props.scrollElement === event.currentTarget) {
       instance.__handleWindowScrollEvent();
     }
   });
@@ -68,7 +68,7 @@ export function registerScrollListener(
   component: WindowScroller,
   element: Element,
 ) {
-  if (!mountedInstances.some(instance => instance.scrollElement === element)) {
+  if (!mountedInstances.some(instance => instance.props.scrollElement === element)) {
     element.addEventListener('scroll', onScrollWindow);
   }
   mountedInstances.push(component);

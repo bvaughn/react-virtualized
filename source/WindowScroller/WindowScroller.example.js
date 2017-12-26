@@ -85,7 +85,7 @@ export default class WindowScrollerExample extends PureComponent<{}, State> {
         <div className={styles.WindowScrollerWrapper}>
           <WindowScroller
             ref={this._setRef}
-            scrollElement={isScrollingCustomElement ? customElement : null}>
+            scrollElement={isScrollingCustomElement ? customElement : window}>
             {({height, isScrolling, onChildScroll, scrollTop}) => (
               <AutoSizer disableHeight>
                 {({width}) => (
