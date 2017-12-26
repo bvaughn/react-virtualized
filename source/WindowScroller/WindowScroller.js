@@ -175,7 +175,6 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
       );
     }
 
-
     this._isMounted = false;
   }
 
