@@ -92,6 +92,13 @@ describe('WindowScroller', () => {
     window.innerWidth = 500;
   });
 
+  it('should prefer window on nullable scrollElement', () => {
+    const component = render(
+      <WindowScroller scrollElement={null}>{() => null}</WindowScroller>
+    );
+    expect(component.scrollElement).toBe(window);
+  });
+
   // Starts updating scrollTop only when the top position is reached
   it('should have correct top and left properties to be defined on :_positionFromTop and :_positionFromLeft', () => {
     const component = render(getMarkup());
@@ -244,21 +251,15 @@ describe('WindowScroller', () => {
   });
 
   describe('onResize', () => {
-    it('should trigger callback when window resizes', () => {
-      const onResizeCalls = [];
-      render(
-        getMarkup({
-          onResize: params => onResizeCalls.push(params),
-        }),
-      );
+    it.only('should trigger callback on init and when window resizes', () => {
+      const resizeFn = jest.fn();
+      render(getMarkup({ onResize: resizeFn }));
 
       simulateWindowResize({height: 1000, width: 1024});
 
-      expect(onResizeCalls.length).toEqual(1);
-      expect(onResizeCalls[0]).toEqual({
-        height: 1000,
-        width: 1024,
-      });
+      expect(resizeFn).toHaveBeenCalledTimes(2);
+      expect(resizeFn).toBeCalledWith({ height: 500, width: 500, });
+      expect(resizeFn).lastCalledWith({ height: 1000, width: 1024, });
     });
 
     it('should update height when window resizes', () => {

@@ -1,4 +1,5 @@
-/** @flow */
+// @flow
+
 import cn from 'classnames';
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
@@ -14,7 +15,12 @@ import List from '../List';
 import AutoSizer from '../AutoSizer';
 import styles from './WindowScroller.example.css';
 
-export default class WindowScrollerExample extends PureComponent {
+type State = {
+  scrollToIndex: number,
+  showHeaderText: boolean,
+};
+
+export default class WindowScrollerExample extends PureComponent<{}, State> {
   static contextTypes = {
     customElement: PropTypes.any,
     isScrollingCustomElement: PropTypes.bool.isRequired,
@@ -22,20 +28,12 @@ export default class WindowScrollerExample extends PureComponent {
     setScrollingCustomElement: PropTypes.func,
   };
 
-  constructor(props) {
-    super(props);
+  state = {
+    scrollToIndex: -1,
+    showHeaderText: true,
+  };
 
-    this.state = {
-      scrollToIndex: undefined,
-      showHeaderText: true,
-    };
-
-    this._hideHeader = this._hideHeader.bind(this);
-    this._onCheckboxChange = this._onCheckboxChange.bind(this);
-    this._onScrollToRowChange = this._onScrollToRowChange.bind(this);
-    this._rowRenderer = this._rowRenderer.bind(this);
-    this._setRef = this._setRef.bind(this);
-  }
+  _windowScroller: ?WindowScroller;
 
   render() {
     const {customElement, isScrollingCustomElement, list} = this.context;
@@ -117,7 +115,7 @@ export default class WindowScrollerExample extends PureComponent {
     );
   }
 
-  _hideHeader() {
+  _hideHeader = () => {
     const {showHeaderText} = this.state;
 
     this.setState(
@@ -125,12 +123,14 @@ export default class WindowScrollerExample extends PureComponent {
         showHeaderText: !showHeaderText,
       },
       () => {
-        this._windowScroller.updatePosition();
+        if (this._windowScroller) {
+          this._windowScroller.updatePosition();
+        }
       },
     );
-  }
+  };
 
-  _rowRenderer({index, isScrolling, isVisible, key, style}) {
+  _rowRenderer = ({index, isScrolling, isVisible, key, style}) => {
     const {list} = this.context;
     const row = list.get(index);
     const className = cn(styles.row, {
@@ -143,17 +143,17 @@ export default class WindowScrollerExample extends PureComponent {
         {row.name}
       </div>
     );
-  }
+  };
 
-  _setRef(windowScroller) {
+  _setRef = windowScroller => {
     this._windowScroller = windowScroller;
-  }
+  };
 
-  _onCheckboxChange(event) {
+  _onCheckboxChange = event => {
     this.context.setScrollingCustomElement(event.target.checked);
-  }
+  };
 
-  _onScrollToRowChange(event) {
+  _onScrollToRowChange = event => {
     const {list} = this.context;
     let scrollToIndex = Math.min(
       list.size - 1,
@@ -167,5 +167,5 @@ export default class WindowScrollerExample extends PureComponent {
     setTimeout(() => {
       this.setState({scrollToIndex});
     }, 0);
-  }
+  };
 }

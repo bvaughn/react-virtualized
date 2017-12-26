@@ -6,7 +6,6 @@
 .*/MultiGrid/.*
 .*/ScrollSync/.*
 .*/Table/.*
-.*/WindowScroller/.*
 
 [untyped]
 .*/node_modules/babel-plugin-transform-react-remove-prop-types/.*
@@ -19,3 +18,4 @@
 
 [options]
 unsafe.enable_getters_and_setters=true
+munge_underscores=true
