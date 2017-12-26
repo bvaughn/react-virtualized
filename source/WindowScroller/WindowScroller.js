@@ -63,8 +63,7 @@ type State = {
  */
 export const IS_SCROLLING_TIMEOUT = 150;
 
-const getWindow = () =>
-  typeof window !== 'undefined' ? window : undefined;
+const getWindow = () => (typeof window !== 'undefined' ? window : undefined);
 
 export default class WindowScroller extends React.PureComponent<Props, State> {
   static defaultProps = {
@@ -124,7 +123,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
       registerScrollListener(this, scrollElement);
     }
 
-     window.addEventListener('resize', this._onResize, false);
+    window.addEventListener('resize', this._onResize, false);
 
     this._isMounted = true;
   }
@@ -168,7 +167,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     });
   }
 
-  _onChildScroll = ({scrollTop}: {scrollTop: number}) => {
+  _onChildScroll = ({scrollTop}) => {
     if (this.state.scrollTop === scrollTop) {
       return;
     }

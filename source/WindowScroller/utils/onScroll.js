@@ -68,7 +68,9 @@ export function registerScrollListener(
   component: WindowScroller,
   element: Element,
 ) {
-  if (!mountedInstances.some(instance => instance.props.scrollElement === element)) {
+  if (
+    !mountedInstances.some(instance => instance.props.scrollElement === element)
+  ) {
     element.addEventListener('scroll', onScrollWindow);
   }
   mountedInstances.push(component);
