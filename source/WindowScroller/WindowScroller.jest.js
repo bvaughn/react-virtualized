@@ -244,21 +244,14 @@ describe('WindowScroller', () => {
   });
 
   describe('onResize', () => {
-    it('should trigger callback when window resizes', () => {
-      const onResizeCalls = [];
-      render(
-        getMarkup({
-          onResize: params => onResizeCalls.push(params),
-        }),
-      );
+    it('should trigger callback on init and when window resizes', () => {
+      const resizeFn = jest.fn();
+      render(getMarkup({onResize: resizeFn}));
 
       simulateWindowResize({height: 1000, width: 1024});
 
-      expect(onResizeCalls.length).toEqual(1);
-      expect(onResizeCalls[0]).toEqual({
-        height: 1000,
-        width: 1024,
-      });
+      expect(resizeFn).toHaveBeenCalledTimes(1);
+      expect(resizeFn).lastCalledWith({height: 1000, width: 1024});
     });
 
     it('should update height when window resizes', () => {

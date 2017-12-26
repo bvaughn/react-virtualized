@@ -1,7 +1,10 @@
+// @flow
+
 import {
   requestAnimationTimeout,
   cancelAnimationTimeout,
 } from '../../utils/requestAnimationTimeout';
+import WindowScroller from '../WindowScroller.js';
 
 let mountedInstances = [];
 let originalBodyPointerEvents = null;
@@ -11,7 +14,9 @@ function enablePointerEventsIfDisabled() {
   if (disablePointerEventsTimeoutId) {
     disablePointerEventsTimeoutId = null;
 
-    document.body.style.pointerEvents = originalBodyPointerEvents;
+    if (document.body && originalBodyPointerEvents != null) {
+      document.body.style.pointerEvents = originalBodyPointerEvents;
+    }
 
     originalBodyPointerEvents = null;
   }
@@ -42,27 +47,39 @@ function enablePointerEventsAfterDelay() {
 }
 
 function onScrollWindow(event) {
-  if (event.currentTarget === window && originalBodyPointerEvents == null) {
+  if (
+    event.currentTarget === window &&
+    originalBodyPointerEvents == null &&
+    document.body
+  ) {
     originalBodyPointerEvents = document.body.style.pointerEvents;
 
     document.body.style.pointerEvents = 'none';
   }
   enablePointerEventsAfterDelay();
   mountedInstances.forEach(instance => {
-    if (instance.scrollElement === event.currentTarget) {
-      instance.__handleWindowScrollEvent(event);
+    if (instance.props.scrollElement === event.currentTarget) {
+      instance.__handleWindowScrollEvent();
     }
   });
 }
 
-export function registerScrollListener(component, element) {
-  if (!mountedInstances.some(instance => instance.scrollElement === element)) {
+export function registerScrollListener(
+  component: WindowScroller,
+  element: Element,
+) {
+  if (
+    !mountedInstances.some(instance => instance.props.scrollElement === element)
+  ) {
     element.addEventListener('scroll', onScrollWindow);
   }
   mountedInstances.push(component);
 }
 
-export function unregisterScrollListener(component, element) {
+export function unregisterScrollListener(
+  component: WindowScroller,
+  element: Element,
+) {
   mountedInstances = mountedInstances.filter(
     instance => instance !== component,
   );
