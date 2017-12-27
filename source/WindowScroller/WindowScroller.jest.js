@@ -133,7 +133,9 @@ describe('WindowScroller', () => {
     document.body.style.pointerEvents = 'all';
     simulateWindowScroll({scrollY: 5000});
     expect(document.body.style.pointerEvents).toEqual('none');
-    await new Promise(resolve => setTimeout(resolve, IS_SCROLLING_TIMEOUT + 100));
+    await new Promise(resolve =>
+      setTimeout(resolve, IS_SCROLLING_TIMEOUT + 100),
+    );
     expect(document.body.style.pointerEvents).toEqual('all');
   });
 
