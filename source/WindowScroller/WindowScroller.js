@@ -194,19 +194,19 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   };
 
   _registerResizeListener = element => {
-      if (element === window) {
-        window.addEventListener('resize', this._onResize, false);
-      } else {
-        this._detectElementResize.addResizeListener(element, this._onResize);
-      }
+    if (element === window) {
+      window.addEventListener('resize', this._onResize, false);
+    } else {
+      this._detectElementResize.addResizeListener(element, this._onResize);
+    }
   };
 
   _unregisterResizeListener = element => {
-      if (element === window) {
-        window.removeEventListener('resize', this._onResize, false);
-      } else if (element) {
-        this._detectElementResize.removeResizeListener(element, this._onResize);
-      }
+    if (element === window) {
+      window.removeEventListener('resize', this._onResize, false);
+    } else if (element) {
+      this._detectElementResize.removeResizeListener(element, this._onResize);
+    }
   };
 
   _onResize = () => {
