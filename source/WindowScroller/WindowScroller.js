@@ -87,7 +87,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _isMounted = false;
   _positionFromTop = 0;
   _positionFromLeft = 0;
-  _detectElementResize: ?DetectElementResize;
+  _detectElementResize: DetectElementResize = createDetectElementResize();
 
   state = {
     ...getDimensions(this.props.scrollElement, this.props),
@@ -130,16 +130,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
 
     if (scrollElement) {
       registerScrollListener(this, scrollElement);
-    }
-
-    if (scrollElement === window) {
-      window.addEventListener('resize', this._onResize, false);
-    } else {
-      this._detectElementResize = createDetectElementResize();
-      this._detectElementResize.addResizeListener(
-        scrollElement,
-        this._onResize,
-      );
+      this._registerResizeListener(scrollElement);
     }
 
     this._isMounted = true;
@@ -158,21 +149,16 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
 
       unregisterScrollListener(this, scrollElement);
       registerScrollListener(this, nextScrollElement);
+
+      this._unregisterResizeListener(scrollElement);
+      this._registerResizeListener(nextScrollElement);
     }
   }
 
   componentWillUnmount() {
     const scrollElement = this.props.scrollElement;
     if (scrollElement) {
-      unregisterScrollListener(this, scrollElement);
-    }
-    if (scrollElement === window) {
-      window.removeEventListener('resize', this._onResize, false);
-    } else if (this._detectElementResize && scrollElement) {
-      this._detectElementResize.removeResizeListener(
-        scrollElement,
-        this._onResize,
-      );
+      this._unregisterResizeListener(scrollElement);
     }
 
     this._isMounted = false;
@@ -205,6 +191,22 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
         scrollElement.scrollTop = scrollTop + this._positionFromTop;
       }
     }
+  };
+
+  _registerResizeListener = element => {
+      if (element === window) {
+        window.addEventListener('resize', this._onResize, false);
+      } else {
+        this._detectElementResize.addResizeListener(element, this._onResize);
+      }
+  };
+
+  _unregisterResizeListener = element => {
+      if (element === window) {
+        window.removeEventListener('resize', this._onResize, false);
+      } else if (element) {
+        this._detectElementResize.removeResizeListener(element, this._onResize);
+      }
   };
 
   _onResize = () => {
