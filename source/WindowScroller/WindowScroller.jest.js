@@ -128,14 +128,13 @@ describe('WindowScroller', () => {
     expect(rendered.textContent).toContain('height:500');
   });
 
-  it('should restore pointerEvents on body after IS_SCROLLING_TIMEOUT', async done => {
+  it('should restore pointerEvents on body after IS_SCROLLING_TIMEOUT', async () => {
     render(getMarkup());
     document.body.style.pointerEvents = 'all';
     simulateWindowScroll({scrollY: 5000});
     expect(document.body.style.pointerEvents).toEqual('none');
-    await new Promise(resolve => setTimeout(resolve, IS_SCROLLING_TIMEOUT));
+    await new Promise(resolve => setTimeout(resolve, IS_SCROLLING_TIMEOUT + 100));
     expect(document.body.style.pointerEvents).toEqual('all');
-    done();
   });
 
   it('should restore pointerEvents on body after unmount', () => {
@@ -212,7 +211,7 @@ describe('WindowScroller', () => {
       done();
     });
 
-    it('should support a custom :scrollingResetTimeInterval prop', async done => {
+    it('should support a custom :scrollingResetTimeInterval prop', async () => {
       const component = render(
         getMarkup({
           scrollingResetTimeInterval: 500,
@@ -235,11 +234,9 @@ describe('WindowScroller', () => {
 
       expect(rendered.textContent).toContain('isScrolling:true');
 
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await new Promise(resolve => setTimeout(resolve, 400));
 
       expect(rendered.textContent).toContain('isScrolling:false');
-
-      done();
     });
   });
 
