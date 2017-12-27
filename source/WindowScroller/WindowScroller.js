@@ -158,6 +158,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   componentWillUnmount() {
     const scrollElement = this.props.scrollElement;
     if (scrollElement) {
+      unregisterScrollListener(this, scrollElement);
       this._unregisterResizeListener(scrollElement);
     }
 
