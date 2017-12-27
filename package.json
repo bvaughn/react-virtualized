@@ -71,7 +71,7 @@
     "setupFiles": [
       "./source/jest-setup.js"
     ],
-    "testPathDirs": [
+    "roots": [
       "./source"
     ],
     "coverageReporters": [
@@ -93,7 +93,7 @@
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
-    "babel-jest": "^20.0.3",
+    "babel-jest": "^22.0.4",
     "babel-loader": "6",
     "babel-plugin-__coverage__": "^11.0.0",
     "babel-plugin-flow-react-proptypes": "^12.1.0",
@@ -131,12 +131,11 @@
     "html-webpack-plugin": "^2.16.1",
     "husky": "^0.14.3",
     "immutable": "^3.7.5",
-    "jest": "^18.1.0",
+    "jest": "^22.0.4",
     "postcss": "^5.0.14",
     "postcss-cli": "^2.3.3",
     "postcss-loader": "^0.9.1",
     "prettier": "^1.5.3",
-    "raf": "^3.3.0",
     "react": "^16.0.0",
     "react-codemirror": "^1.0.0",
     "react-dom": "^16.0.0",

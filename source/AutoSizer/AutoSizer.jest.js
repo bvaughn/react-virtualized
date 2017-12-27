@@ -67,11 +67,11 @@ describe('AutoSizer', () => {
   // AutoSizer uses offsetWidth and offsetHeight.
   // Jest runs in JSDom which doesn't support measurements APIs.
   function mockOffsetSize(width, height) {
-    Object.defineProperty(Element.prototype, 'offsetHeight', {
+    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
       configurable: true,
       value: height,
     });
-    Object.defineProperty(Element.prototype, 'offsetWidth', {
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
       configurable: true,
       value: width,
     });
