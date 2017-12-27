@@ -14,4 +14,4 @@ render(<Application />, document.getElementById('root'));
 // Import and attach the favicon
 document.querySelector(
   '[rel="shortcut icon"]',
-).href = require('file!./favicon.png');
+).href = require('file-loader!./favicon.png');
