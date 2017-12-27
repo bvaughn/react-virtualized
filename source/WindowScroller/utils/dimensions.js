@@ -45,17 +45,23 @@ export function getDimensions(
  * In this case the body’s top or left position will be a negative number and this element’s top or left will be increased (by that amount).
  */
 export function getPositionOffset(element: Element, container: Element) {
-  const scrollOffset = getScrollOffset(container);
-  const containerElement =
-    isWindow(container) && document.documentElement
-      ? document.documentElement
-      : container;
-  const elementRect = element.getBoundingClientRect();
-  const containerRect = containerElement.getBoundingClientRect();
-  return {
-    top: elementRect.top + scrollOffset.top - containerRect.top,
-    left: elementRect.left + scrollOffset.left - containerRect.left,
-  };
+  if (isWindow(container) && document.documentElement) {
+    const containerElement = document.documentElement;
+    const elementRect = element.getBoundingClientRect();
+    const containerRect = containerElement.getBoundingClientRect();
+    return {
+      top: elementRect.top - containerRect.top,
+      left: elementRect.left - containerRect.left,
+    };
+  } else {
+    const scrollOffset = getScrollOffset(container);
+    const elementRect = element.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    return {
+      top: elementRect.top + scrollOffset.top - containerRect.top,
+      left: elementRect.left + scrollOffset.left - containerRect.left,
+    };
+  }
 }
 
 /**
