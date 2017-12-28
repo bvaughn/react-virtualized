@@ -7,13 +7,13 @@
 
 type Dimensions = {
   height: number,
-  width: number
+  width: number,
 };
 
 // TODO Move this into WindowScroller and import from there
 type WindowScrollerProps = {
   serverHeight: number,
-  serverWidth: number
+  serverWidth: number,
 };
 
 const isWindow = element => element === window;
@@ -22,18 +22,18 @@ const getBoundingBox = element => element.getBoundingClientRect();
 
 export function getDimensions(
   scrollElement: ?Element,
-  props: WindowScrollerProps
+  props: WindowScrollerProps,
 ): Dimensions {
   if (!scrollElement) {
     return {
       height: props.serverHeight,
-      width: props.serverWidth
+      width: props.serverWidth,
     };
   } else if (isWindow(scrollElement)) {
-    const { innerHeight, innerWidth } = window;
+    const {innerHeight, innerWidth} = window;
     return {
-      height: typeof innerHeight === "number" ? innerHeight : 0,
-      width: typeof innerWidth === "number" ? innerWidth : 0
+      height: typeof innerHeight === 'number' ? innerHeight : 0,
+      width: typeof innerWidth === 'number' ? innerWidth : 0,
     };
   } else {
     return getBoundingBox(scrollElement);
@@ -53,7 +53,7 @@ export function getPositionOffset(element: Element, container: Element) {
     const containerRect = getBoundingBox(containerElement);
     return {
       top: elementRect.top - containerRect.top,
-      left: elementRect.left - containerRect.left
+      left: elementRect.left - containerRect.left,
     };
   } else {
     const scrollOffset = getScrollOffset(container);
@@ -61,7 +61,7 @@ export function getPositionOffset(element: Element, container: Element) {
     const containerRect = getBoundingBox(container);
     return {
       top: elementRect.top + scrollOffset.top - containerRect.top,
-      left: elementRect.left + scrollOffset.left - containerRect.left
+      left: elementRect.left + scrollOffset.left - containerRect.left,
     };
   }
 }
@@ -74,18 +74,18 @@ export function getScrollOffset(element: Element) {
   if (isWindow(element) && document.documentElement) {
     return {
       top:
-        "scrollY" in window
+        'scrollY' in window
           ? window.scrollY
           : document.documentElement.scrollTop,
       left:
-        "scrollX" in window
+        'scrollX' in window
           ? window.scrollX
-          : document.documentElement.scrollLeft
+          : document.documentElement.scrollLeft,
     };
   } else {
     return {
       top: element.scrollTop,
-      left: element.scrollLeft
+      left: element.scrollLeft,
     };
   }
 }
