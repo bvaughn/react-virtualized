@@ -8,7 +8,7 @@ module.exports = {
     demo: './source/demo/index'
   },
   output: {
-    path: 'build',
+    path: path.join(__dirname, 'build'),
     filename: 'static/[name].js'
   },
   plugins: [
@@ -24,20 +24,20 @@ module.exports = {
     })
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        loaders: ['babel'],
+        use: ['babel-loader'],
         include: path.join(__dirname, 'source')
       },
       {
         test: /\.css$/,
-        loaders: ['style', 'css?modules&importLoaders=1', 'postcss'],
+        use: ['style-loader', 'css-loader?modules', 'postcss-loader'],
         include: path.join(__dirname, 'source')
       },
       {
         test: /\.css$/,
-        loaders: ['style', 'css?importLoaders=1&minimize=false'],
+        use: ['style-loader', 'css-loader?&minimize=false'],
         include: path.join(__dirname, 'styles.css')
       }
     ]
