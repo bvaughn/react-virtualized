@@ -38,24 +38,12 @@ const renderWindowScroller = ({scrollElement}) => {
   render(
     createElement(
       WindowScroller,
-      {scrollElement: scrollElement === 'container' ? container : window},
-      ({height, scrollLeft, scrollTop, width}) =>
-        createElement(
-          'div',
-          {
-            id: 'box',
-            style: {
-              width: 2000,
-              height: 3000,
-            },
-          },
-          JSON.stringify({
-            height,
-            scrollLeft,
-            scrollTop,
-            width,
-          }),
-        ),
+      {
+        scrollElement: scrollElement === 'container' ? container : window,
+        onScroll: window.scrollFn,
+        onResize: window.resizeFn,
+      },
+      () => createElement('div', {style: {width: 2000, height: 3000}}),
     ),
     container,
   );
@@ -65,68 +53,61 @@ const delay = time => new Promise(resolve => setTimeout(resolve, time));
 
 test('save position after resize and then scroll in window', async () => {
   const page = await bootstrap();
+  const scrollFn = jest.fn();
+  const resizeFn = jest.fn();
+  await page.exposeFunction('scrollFn', scrollFn);
+  await page.exposeFunction('resizeFn', resizeFn);
 
+  await page.setViewport({width: 400, height: 600});
   await page.evaluate(renderWindowScroller, {scrollElement: 'window'});
 
   // scroll more than viewport
-  await page.setViewport({width: 400, height: 600});
-  await delay(100);
   await page.evaluate(() => window.scrollTo(610, 830));
   await delay(100);
-  const result1 = await page.$eval('#box', el => JSON.parse(el.textContent));
-  expect(result1).toEqual({
-    width: 400,
-    scrollLeft: 460,
-    scrollTop: 680,
-    height: 600,
-  });
-
-  // resize a bit container/window and then scroll
+  // resize a bit container/window
   await page.setViewport({width: 300, height: 500});
   await delay(100);
+  // scroll again
   await page.evaluate(() => window.scrollTo(620, 840));
   await delay(100);
-  const result2 = await page.$eval('#box', el => JSON.parse(el.textContent));
-  expect(result2).toEqual({
-    width: 300,
-    scrollLeft: 470,
-    scrollTop: 690,
-    height: 500,
-  });
 
   await page.close();
+
+  expect(scrollFn.mock.calls).toEqual([
+    [{scrollLeft: 610 - 150, scrollTop: 830 - 150}],
+    [{scrollLeft: 620 - 150, scrollTop: 840 - 150}],
+  ]);
+  expect(resizeFn.mock.calls).toEqual([[{width: 300, height: 500}]]);
 });
 
 test('save position after resize and then scroll in container', async () => {
   const page = await bootstrap();
+  const scrollFn = jest.fn();
+  const resizeFn = jest.fn();
+  await page.exposeFunction('scrollFn', scrollFn);
+  await page.exposeFunction('resizeFn', resizeFn);
 
+  await page.setViewport({width: 400, height: 600});
   await page.evaluate(renderWindowScroller, {scrollElement: 'container'});
 
   // scroll more than viewport
-  await page.setViewport({width: 400, height: 600});
-  await delay(100);
   await page.$eval('#container', el => el.scrollTo(610, 830));
   await delay(100);
-  const result1 = await page.$eval('#box', el => JSON.parse(el.textContent));
-  expect(result1).toEqual({
-    width: 500,
-    scrollLeft: 560,
-    scrollTop: 780,
-    height: 700,
-  });
-
-  // resize a bit container/window and the scroll
+  // resize a bit container/window
   await page.setViewport({width: 300, height: 500});
   await delay(100);
+  // scroll again
   await page.$eval('#container', el => el.scrollTo(620, 840));
   await delay(100);
-  const result2 = await page.$eval('#box', el => JSON.parse(el.textContent));
-  expect(result2).toEqual({
-    width: 400,
-    scrollLeft: 570,
-    scrollTop: 790,
-    height: 600,
-  });
 
   await page.close();
+
+  expect(scrollFn.mock.calls).toEqual([
+    [{scrollLeft: 610 - 50, scrollTop: 830 - 50}],
+    [{scrollLeft: 620 - 50, scrollTop: 840 - 50}],
+  ]);
+  expect(resizeFn.mock.calls).toEqual([
+    [{width: 500, height: 700}],
+    [{width: 400, height: 600}],
+  ]);
 });
