@@ -39,15 +39,13 @@ function createParent({cache, invalidateCellSizeAfterRender = jest.fn()} = {}) {
   };
 }
 
-function renderHelper(
-  {
-    cache = new CellMeasurerCache({
-      fixedWidth: true,
-    }),
-    children = <div />,
-    parent,
-  } = {},
-) {
+function renderHelper({
+  cache = new CellMeasurerCache({
+    fixedWidth: true,
+  }),
+  children = <div />,
+  parent,
+} = {}) {
   render(
     <CellMeasurer
       cache={cache}

@@ -335,17 +335,15 @@ export default class Grid extends React.PureComponent<Props, State> {
   /**
    * Gets offsets for a given cell and alignment.
    */
-  getOffsetForCell(
-    {
-      alignment = this.props.scrollToAlignment,
-      columnIndex = this.props.scrollToColumn,
-      rowIndex = this.props.scrollToRow,
-    }: {
-      alignment?: Alignment,
-      columnIndex?: number,
-      rowIndex?: number,
-    } = {},
-  ) {
+  getOffsetForCell({
+    alignment = this.props.scrollToAlignment,
+    columnIndex = this.props.scrollToColumn,
+    rowIndex = this.props.scrollToRow,
+  }: {
+    alignment?: Alignment,
+    columnIndex?: number,
+    rowIndex?: number,
+  } = {}) {
     const offsetProps = {
       ...this.props,
       scrollToAlignment: alignment,

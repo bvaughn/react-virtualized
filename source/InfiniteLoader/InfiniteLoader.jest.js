@@ -35,19 +35,17 @@ describe('InfiniteLoader', () => {
     return <div key={key} style={style} />;
   }
 
-  function getMarkup(
-    {
-      height = 100,
-      isRowLoaded = defaultIsRowLoaded,
-      loadMoreRows = defaultLoadMoreRows,
-      minimumBatchSize = 1,
-      rowHeight = 20,
-      rowCount = 100,
-      scrollToIndex,
-      threshold = 10,
-      width = 200,
-    } = {},
-  ) {
+  function getMarkup({
+    height = 100,
+    isRowLoaded = defaultIsRowLoaded,
+    loadMoreRows = defaultLoadMoreRows,
+    minimumBatchSize = 1,
+    rowHeight = 20,
+    rowCount = 100,
+    scrollToIndex,
+    threshold = 10,
+    width = 200,
+  } = {}) {
     return (
       <InfiniteLoader
         isRowLoaded={isRowLoaded}

@@ -1,14 +1,12 @@
 import ScalingCellSizeAndPositionManager from './ScalingCellSizeAndPositionManager';
 
 describe('ScalingCellSizeAndPositionManager', () => {
-  function init(
-    {
-      cellCount = 10,
-      cellSize = 10,
-      estimatedCellSize = 10,
-      maxScrollSize = 50,
-    } = {},
-  ) {
+  function init({
+    cellCount = 10,
+    cellSize = 10,
+    estimatedCellSize = 10,
+    maxScrollSize = 50,
+  } = {}) {
     const cellSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount,
       cellSizeGetter: () => cellSize,

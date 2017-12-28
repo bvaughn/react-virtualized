@@ -1,17 +1,15 @@
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './calculateSizeAndPositionDataAndUpdateScrollOffset';
 
 describe('calculateSizeAndPositionDataAndUpdateScrollOffset', () => {
-  function helper(
-    {
-      cellCount = 100,
-      cellSize = 10,
-      computeMetadataCallbackProps = {},
-      nextCellsCount = 100,
-      nextCellSize = 10,
-      nextScrollToIndex,
-      scrollToIndex,
-    } = {},
-  ) {
+  function helper({
+    cellCount = 100,
+    cellSize = 10,
+    computeMetadataCallbackProps = {},
+    nextCellsCount = 100,
+    nextCellSize = 10,
+    nextScrollToIndex,
+    scrollToIndex,
+  } = {}) {
     const computeMetadataCallbackCalls = [];
     const updateScrollOffsetForScrollToIndexCalls = [];
 

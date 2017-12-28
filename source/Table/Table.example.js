@@ -93,7 +93,8 @@ export default class TableExample extends PureComponent {
               className={styles.checkbox}
               type="checkbox"
               onChange={event =>
-                this._updateUseDynamicRowHeight(event.target.checked)}
+                this._updateUseDynamicRowHeight(event.target.checked)
+              }
             />
             Use dynamic row heights?
           </label>
@@ -105,7 +106,8 @@ export default class TableExample extends PureComponent {
               className={styles.checkbox}
               type="checkbox"
               onChange={event =>
-                this.setState({hideIndexRow: event.target.checked})}
+                this.setState({hideIndexRow: event.target.checked})
+              }
             />
             Hide index?
           </label>
@@ -117,7 +119,8 @@ export default class TableExample extends PureComponent {
               className={styles.checkbox}
               type="checkbox"
               onChange={event =>
-                this.setState({disableHeader: event.target.checked})}
+                this.setState({disableHeader: event.target.checked})
+              }
             />
             Hide header?
           </label>
@@ -141,7 +144,8 @@ export default class TableExample extends PureComponent {
             label="List height"
             name="height"
             onChange={event =>
-              this.setState({height: parseInt(event.target.value, 10) || 1})}
+              this.setState({height: parseInt(event.target.value, 10) || 1})
+            }
             value={height}
           />
           <LabeledInput
@@ -151,7 +155,8 @@ export default class TableExample extends PureComponent {
             onChange={event =>
               this.setState({
                 rowHeight: parseInt(event.target.value, 10) || 1,
-              })}
+              })
+            }
             value={rowHeight}
           />
           <LabeledInput
@@ -160,7 +165,8 @@ export default class TableExample extends PureComponent {
             onChange={event =>
               this.setState({
                 headerHeight: parseInt(event.target.value, 10) || 1,
-              })}
+              })
+            }
             value={headerHeight}
           />
           <LabeledInput
@@ -169,7 +175,8 @@ export default class TableExample extends PureComponent {
             onChange={event =>
               this.setState({
                 overscanRowCount: parseInt(event.target.value, 10) || 0,
-              })}
+              })
+            }
             value={overscanRowCount}
           />
         </InputRow>

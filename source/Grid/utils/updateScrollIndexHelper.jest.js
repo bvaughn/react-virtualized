@@ -26,22 +26,20 @@ const CELL_SIZES = [
 ];
 
 describe('updateScrollIndexHelper', () => {
-  function helper(
-    {
-      cellCount = undefined,
-      cellSizeAndPositionManager,
-      cellSize = 10,
-      previousCellsCount = undefined,
-      previousCellSize = 10,
-      previousScrollToAlignment = 'auto',
-      previousScrollToIndex,
-      previousSize = 50,
-      scrollOffset = 0,
-      scrollToAlignment = 'auto',
-      scrollToIndex,
-      size = 50,
-    } = {},
-  ) {
+  function helper({
+    cellCount = undefined,
+    cellSizeAndPositionManager,
+    cellSize = 10,
+    previousCellsCount = undefined,
+    previousCellSize = 10,
+    previousScrollToAlignment = 'auto',
+    previousScrollToIndex,
+    previousSize = 50,
+    scrollOffset = 0,
+    scrollToAlignment = 'auto',
+    scrollToIndex,
+    size = 50,
+  } = {}) {
     cellSizeAndPositionManager =
       cellSizeAndPositionManager || getCellSizeAndPositionManager({cellCount});
     cellCount =

@@ -108,7 +108,9 @@ export default class GridExample extends PureComponent {
                     left: 0,
                     top: 0,
                     color: leftColor,
-                    backgroundColor: `rgb(${topBackgroundColor.r},${topBackgroundColor.g},${topBackgroundColor.b})`,
+                    backgroundColor: `rgb(${topBackgroundColor.r},${
+                      topBackgroundColor.g
+                    },${topBackgroundColor.b})`,
                   }}>
                   <Grid
                     cellRenderer={this._renderLeftHeaderCell}
@@ -128,7 +130,9 @@ export default class GridExample extends PureComponent {
                     left: 0,
                     top: rowHeight,
                     color: leftColor,
-                    backgroundColor: `rgb(${leftBackgroundColor.r},${leftBackgroundColor.g},${leftBackgroundColor.b})`,
+                    backgroundColor: `rgb(${leftBackgroundColor.r},${
+                      leftBackgroundColor.g
+                    },${leftBackgroundColor.b})`,
                   }}>
                   <Grid
                     overscanColumnCount={overscanColumnCount}
@@ -150,7 +154,9 @@ export default class GridExample extends PureComponent {
                       <div>
                         <div
                           style={{
-                            backgroundColor: `rgb(${topBackgroundColor.r},${topBackgroundColor.g},${topBackgroundColor.b})`,
+                            backgroundColor: `rgb(${topBackgroundColor.r},${
+                              topBackgroundColor.g
+                            },${topBackgroundColor.b})`,
                             color: topColor,
                             height: rowHeight,
                             width: width - scrollbarSize(),
@@ -170,7 +176,9 @@ export default class GridExample extends PureComponent {
                         </div>
                         <div
                           style={{
-                            backgroundColor: `rgb(${middleBackgroundColor.r},${middleBackgroundColor.g},${middleBackgroundColor.b})`,
+                            backgroundColor: `rgb(${middleBackgroundColor.r},${
+                              middleBackgroundColor.g
+                            },${middleBackgroundColor.b})`,
                             color: middleColor,
                             height,
                             width,

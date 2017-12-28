@@ -25,7 +25,9 @@ export default function calculateSizeAndPositionData({
     ) {
       throw Error(
         `Invalid metadata returned for cell ${index}:
-        x:${cellMetadatum.x}, y:${cellMetadatum.y}, width:${cellMetadatum.width}, height:${cellMetadatum.height}`,
+        x:${cellMetadatum.x}, y:${cellMetadatum.y}, width:${
+          cellMetadatum.width
+        }, height:${cellMetadatum.height}`,
       );
     }
 

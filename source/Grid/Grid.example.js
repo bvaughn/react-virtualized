@@ -81,7 +81,8 @@ export default class GridExample extends PureComponent {
               type="checkbox"
               value={useDynamicRowHeight}
               onChange={event =>
-                this._updateUseDynamicRowHeights(event.target.checked)}
+                this._updateUseDynamicRowHeights(event.target.checked)
+              }
             />
             Use dynamic row height?
           </label>
@@ -118,7 +119,8 @@ export default class GridExample extends PureComponent {
             label="List height"
             name="height"
             onChange={event =>
-              this.setState({height: parseInt(event.target.value, 10) || 1})}
+              this.setState({height: parseInt(event.target.value, 10) || 1})
+            }
             value={height}
           />
           <LabeledInput
@@ -128,7 +130,8 @@ export default class GridExample extends PureComponent {
             onChange={event =>
               this.setState({
                 rowHeight: parseInt(event.target.value, 10) || 1,
-              })}
+              })
+            }
             value={rowHeight}
           />
           <LabeledInput
@@ -137,7 +140,8 @@ export default class GridExample extends PureComponent {
             onChange={event =>
               this.setState({
                 overscanColumnCount: parseInt(event.target.value, 10) || 0,
-              })}
+              })
+            }
             value={overscanColumnCount}
           />
           <LabeledInput
@@ -146,7 +150,8 @@ export default class GridExample extends PureComponent {
             onChange={event =>
               this.setState({
                 overscanRowCount: parseInt(event.target.value, 10) || 0,
-              })}
+              })
+            }
             value={overscanRowCount}
           />
         </InputRow>

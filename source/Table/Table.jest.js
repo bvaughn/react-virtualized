@@ -37,22 +37,20 @@ describe('Table', () => {
     };
   }
 
-  function getMarkup(
-    {
-      cellDataGetter,
-      cellRenderer,
-      columnData = {data: 123},
-      columnID,
-      columnStyle,
-      columnHeaderStyle,
-      disableSort = false,
-      headerRenderer,
-      maxWidth,
-      minWidth,
-      defaultSortDirection,
-      ...flexTableProps
-    } = {},
-  ) {
+  function getMarkup({
+    cellDataGetter,
+    cellRenderer,
+    columnData = {data: 123},
+    columnID,
+    columnStyle,
+    columnHeaderStyle,
+    disableSort = false,
+    headerRenderer,
+    maxWidth,
+    minWidth,
+    defaultSortDirection,
+    ...flexTableProps
+  } = {}) {
     return (
       <Table
         headerHeight={20}
