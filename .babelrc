@@ -13,6 +13,7 @@
       "presets": [
         "env",
         "react",
+        "flow",
         "stage-1"
       ]
     },
@@ -45,6 +46,7 @@
       "presets": [
         "env",
         "react",
+        "flow",
         "stage-1"
       ]
     },
@@ -61,6 +63,7 @@
       "presets": [
         ["env", { "modules": false }],
         "react",
+        "flow",
         "stage-1"
       ]
     },
@@ -72,6 +75,7 @@
       "presets": [
         "env",
         "react",
+        "flow",
         "stage-1"
       ]
     },
@@ -80,6 +84,7 @@
       "presets": [
         "env",
         "react",
+        "flow",
         "stage-1"
       ]
     }
