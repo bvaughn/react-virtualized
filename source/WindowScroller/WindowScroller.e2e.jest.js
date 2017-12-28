@@ -15,8 +15,9 @@ const addScripts = async page => {
 };
 
 const renderWindowScroller = ({scrollElement}) => {
-  const {createElement} = React;
-  const {WindowScroller} = ReactVirtualized;
+  const {render} = window.ReactDOM;
+  const {createElement} = window.React;
+  const {WindowScroller} = window.ReactVirtualized;
 
   const container = document.createElement('div');
   container.style.margin = '100px';
@@ -31,7 +32,7 @@ const renderWindowScroller = ({scrollElement}) => {
     window.container = container;
   }
 
-  ReactDOM.render(
+  render(
     createElement(
       WindowScroller,
       {scrollElement: scrollElement === 'container' ? container : window},
