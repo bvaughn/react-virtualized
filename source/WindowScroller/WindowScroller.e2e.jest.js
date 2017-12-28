@@ -97,6 +97,8 @@ test('save position after resize and then scroll in window', async () => {
     scrollTop: 690,
     height: 500,
   });
+
+  await page.close();
 });
 
 test('save position after resize and then scroll in container', async () => {
@@ -133,4 +135,6 @@ test('save position after resize and then scroll in container', async () => {
     scrollTop: 790,
     height: 600,
   });
+
+  await page.close();
 });
