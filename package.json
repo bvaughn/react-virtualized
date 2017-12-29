@@ -83,7 +83,7 @@
       "source/**/*.js",
       "!source/vendor/**",
       "!source/demo/**",
-      "!source/jest-setup.js",
+      "!source/jest-*.js",
       "!source/TestUtils.js",
       "!**/*.example.js"
     ],
