@@ -111,3 +111,55 @@ test('save position after resize and then scroll in container', async () => {
     [{width: 400, height: 600}],
   ]);
 });
+
+test('react on container resize without window changing', async () => {
+  const page = await bootstrap();
+  const resizeFn = jest.fn();
+  await page.exposeFunction('resizeFn', resizeFn);
+
+  await page.evaluate(() => {
+    const {render} = window.ReactDOM;
+    const {createElement} = window.React;
+    const {WindowScroller} = window.ReactVirtualized;
+
+    const wrapper = document.createElement('div');
+    wrapper.id = 'wrapper';
+    Object.assign(wrapper.style, {
+      width: '1000px',
+      height: '800px',
+      display: 'flex',
+    });
+    const container = document.createElement('div');
+    Object.assign(container.style, {
+      flex: '1',
+    });
+    wrapper.appendChild(container);
+    document.body.style.margin = 0;
+    document.body.appendChild(wrapper);
+
+    render(
+      createElement(
+        WindowScroller,
+        {scrollElement: container, onResize: window.resizeFn},
+        () => null,
+      ),
+      container,
+    );
+  });
+
+  await delay(100);
+
+  await page.$eval('#wrapper', el => {
+    el.style.width = '500px';
+    el.style.height = '700px';
+  });
+
+  await delay(100);
+
+  await page.close();
+
+  expect(resizeFn.mock.calls).toEqual([
+    [{width: 1000, height: 800}],
+    [{width: 500, height: 700}],
+  ]);
+});
