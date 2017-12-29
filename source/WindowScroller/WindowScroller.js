@@ -12,6 +12,7 @@ import {
   getPositionOffset,
   getScrollOffset,
 } from './utils/dimensions';
+import createDetectElementResize from '../vendor/detectElementResize';
 
 type Props = {
   /**
@@ -57,6 +58,13 @@ type State = {
   scrollTop: number,
 };
 
+type ResizeHandler = (element: Element, onResize: () => void) => void;
+
+type DetectElementResize = {
+  addResizeListener: ResizeHandler,
+  removeResizeListener: ResizeHandler,
+};
+
 /**
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
@@ -79,6 +87,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _isMounted = false;
   _positionFromTop = 0;
   _positionFromLeft = 0;
+  _detectElementResize: DetectElementResize = createDetectElementResize();
 
   state = {
     ...getDimensions(this.props.scrollElement, this.props),
@@ -121,9 +130,8 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
 
     if (scrollElement) {
       registerScrollListener(this, scrollElement);
+      this._registerResizeListener(scrollElement);
     }
-
-    window.addEventListener('resize', this._onResize, false);
 
     this._isMounted = true;
   }
@@ -141,14 +149,18 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
 
       unregisterScrollListener(this, scrollElement);
       registerScrollListener(this, nextScrollElement);
+
+      this._unregisterResizeListener(scrollElement);
+      this._registerResizeListener(nextScrollElement);
     }
   }
 
   componentWillUnmount() {
-    if (this.props.scrollElement) {
-      unregisterScrollListener(this, this.props.scrollElement);
+    const scrollElement = this.props.scrollElement;
+    if (scrollElement) {
+      unregisterScrollListener(this, scrollElement);
+      this._unregisterResizeListener(scrollElement);
     }
-    window.removeEventListener('resize', this._onResize, false);
 
     this._isMounted = false;
   }
@@ -179,6 +191,22 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
       } else {
         scrollElement.scrollTop = scrollTop + this._positionFromTop;
       }
+    }
+  };
+
+  _registerResizeListener = element => {
+    if (element === window) {
+      window.addEventListener('resize', this._onResize, false);
+    } else {
+      this._detectElementResize.addResizeListener(element, this._onResize);
+    }
+  };
+
+  _unregisterResizeListener = element => {
+    if (element === window) {
+      window.removeEventListener('resize', this._onResize, false);
+    } else if (element) {
+      this._detectElementResize.removeResizeListener(element, this._onResize);
     }
   };
 

@@ -1,6 +1,14 @@
 {
   "env": {
     "commonjs": {
+      "ignore": [
+        "*.jest.js",
+        "*.e2e.js",
+        "*.example.js",
+        "source/demo",
+        "source/jest-*.js",
+        "source/TestUtils.js"
+      ],
       "plugins": [
         "transform-runtime",
         "flow-react-proptypes",
@@ -51,6 +59,14 @@
       ]
     },
     "es": {
+      "ignore": [
+        "*.jest.js",
+        "*.e2e.js",
+        "*.example.js",
+        "source/demo",
+        "source/jest-*.js",
+        "source/TestUtils.js"
+      ],
       "plugins": [
         "transform-runtime",
         "flow-react-proptypes",
