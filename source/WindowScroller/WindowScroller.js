@@ -1,17 +1,19 @@
 // @flow
 
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
+'no babel-plugin-flow-react-proptypes';
+
+import * as React from "react";
+import PropTypes from "prop-types";
+import ReactDOM from "react-dom";
 import {
   registerScrollListener,
-  unregisterScrollListener,
-} from './utils/onScroll';
+  unregisterScrollListener
+} from "./utils/onScroll";
 import {
   getDimensions,
   getPositionOffset,
-  getScrollOffset,
-} from './utils/dimensions';
+  getScrollOffset
+} from "./utils/dimensions";
 
 type Props = {
   /**
@@ -20,19 +22,19 @@ type Props = {
    * ({ height, isScrolling, scrollLeft, scrollTop, width }) => PropTypes.element
    */
   children: (params: {
-    onChildScroll: (params: {scrollTop: number}) => void,
+    onChildScroll: (params: { scrollTop: number }) => void,
     height: number,
     isScrolling: boolean,
     scrollLeft: number,
     scrollTop: number,
-    width: number,
+    width: number
   }) => React.Node,
 
   /** Callback to be invoked on-resize: ({ height, width }) */
-  onResize: (params: {height: number, width: number}) => void,
+  onResize: (params: { height: number, width: number }) => void,
 
   /** Callback to be invoked on-scroll: ({ scrollLeft, scrollTop }) */
-  onScroll: (params: {scrollLeft: number, scrollTop: number}) => void,
+  onScroll: (params: { scrollLeft: number, scrollTop: number }) => void,
 
   /** Element to attach scroll event listeners. Defaults to window. */
   scrollElement: ?Element,
@@ -46,7 +48,7 @@ type Props = {
   serverHeight: number,
 
   /** Width used for server-side rendering */
-  serverWidth: number,
+  serverWidth: number
 };
 
 type State = {
@@ -54,7 +56,7 @@ type State = {
   width: number,
   isScrolling: boolean,
   scrollLeft: number,
-  scrollTop: number,
+  scrollTop: number
 };
 
 /**
@@ -63,16 +65,26 @@ type State = {
  */
 export const IS_SCROLLING_TIMEOUT = 150;
 
-const getWindow = () => (typeof window !== 'undefined' ? window : undefined);
+const getWindow = () => (typeof window !== "undefined" ? window : undefined);
 
 export default class WindowScroller extends React.PureComponent<Props, State> {
+  static propTypes = {
+    children: PropTypes.func.isRequired,
+    onResize: PropTypes.func.isRequired,
+    onScroll: PropTypes.func.isRequired,
+    scrollElement: PropTypes.any,
+    scrollingResetTimeInterval: PropTypes.number.isRequired,
+    serverHeight: PropTypes.number.isRequired,
+    serverWidth: PropTypes.number.isRequired
+  };
+
   static defaultProps = {
     onResize: () => {},
     onScroll: () => {},
     scrollingResetTimeInterval: IS_SCROLLING_TIMEOUT,
     scrollElement: getWindow(),
     serverHeight: 0,
-    serverWidth: 0,
+    serverWidth: 0
   };
 
   _window = getWindow();
@@ -84,15 +96,15 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     ...getDimensions(this.props.scrollElement, this.props),
     isScrolling: false,
     scrollLeft: 0,
-    scrollTop: 0,
+    scrollTop: 0
   };
 
   updatePosition(
     scrollElement: ?Element = this.props.scrollElement,
-    props: Props = this.props,
+    props: Props = this.props
   ) {
-    const {onResize} = this.props;
-    const {height, width} = this.state;
+    const { onResize } = this.props;
+    const { height, width } = this.state;
 
     const thisNode = ReactDOM.findDOMNode(this);
     if (thisNode instanceof Element && scrollElement) {
@@ -105,11 +117,11 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     if (height !== dimensions.height || width !== dimensions.width) {
       this.setState({
         height: dimensions.height,
-        width: dimensions.width,
+        width: dimensions.width
       });
       onResize({
         height: dimensions.height,
-        width: dimensions.width,
+        width: dimensions.width
       });
     }
   }
@@ -123,7 +135,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
       registerScrollListener(this, scrollElement);
     }
 
-    window.addEventListener('resize', this._onResize, false);
+    window.addEventListener("resize", this._onResize, false);
 
     this._isMounted = true;
   }
@@ -148,14 +160,14 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     if (this.props.scrollElement) {
       unregisterScrollListener(this, this.props.scrollElement);
     }
-    window.removeEventListener('resize', this._onResize, false);
+    window.removeEventListener("resize", this._onResize, false);
 
     this._isMounted = false;
   }
 
   render() {
-    const {children} = this.props;
-    const {isScrolling, scrollTop, scrollLeft, height, width} = this.state;
+    const { children } = this.props;
+    const { isScrolling, scrollTop, scrollLeft, height, width } = this.state;
 
     return children({
       onChildScroll: this._onChildScroll,
@@ -163,18 +175,18 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
       isScrolling,
       scrollLeft,
       scrollTop,
-      width,
+      width
     });
   }
 
-  _onChildScroll = ({scrollTop}) => {
+  _onChildScroll = ({ scrollTop }) => {
     if (this.state.scrollTop === scrollTop) {
       return;
     }
 
     const scrollElement = this.props.scrollElement;
     if (scrollElement) {
-      if (typeof scrollElement.scrollTo === 'function') {
+      if (typeof scrollElement.scrollTo === "function") {
         scrollElement.scrollTo(0, scrollTop + this._positionFromTop);
       } else {
         scrollElement.scrollTop = scrollTop + this._positionFromTop;
@@ -192,26 +204,26 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
       return;
     }
 
-    const {onScroll} = this.props;
+    const { onScroll } = this.props;
 
     const scrollElement = this.props.scrollElement;
     if (scrollElement) {
       const scrollOffset = getScrollOffset(scrollElement);
       const scrollLeft = Math.max(
         0,
-        scrollOffset.left - this._positionFromLeft,
+        scrollOffset.left - this._positionFromLeft
       );
       const scrollTop = Math.max(0, scrollOffset.top - this._positionFromTop);
 
       this.setState({
         isScrolling: true,
         scrollLeft,
-        scrollTop,
+        scrollTop
       });
 
       onScroll({
         scrollLeft,
-        scrollTop,
+        scrollTop
       });
     }
   };
@@ -219,7 +231,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   // Referenced by utils/onScroll
   __resetIsScrolling = () => {
     this.setState({
-      isScrolling: false,
+      isScrolling: false
     });
   };
 }
