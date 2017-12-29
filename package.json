@@ -35,7 +35,7 @@
     "start": "webpack-dev-server --hot --config webpack.config.dev.js",
     "test": "npm run test:jest",
     "test:jest": "jest --no-watchman --runInBand",
-    "test:ci": "jest --testPathPattern=jest.js --no-watchman --maxWorkers 2 --coverage && codecov",
+    "test:ci": "cross-env JEST=ci jest --testPathPattern=jest.js --no-watchman --maxWorkers 2 --coverage && codecov",
     "watch": "watch 'clear && npm run test -s' source",
     "watch:jest": "jest --no-watchman --watch"
   },
