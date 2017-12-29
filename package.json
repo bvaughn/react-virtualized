@@ -35,7 +35,7 @@
     "start": "webpack-dev-server --hot --config webpack.config.dev.js",
     "test": "npm run test:jest",
     "test:jest": "jest --no-watchman --runInBand",
-    "test:ci": "jest --no-watchman --maxWorkers 2 --coverage && codecov",
+    "test:ci": "cross-env JEST=ci jest --testPathPattern=jest.js --no-watchman --maxWorkers 2 --coverage && codecov",
     "watch": "watch 'clear && npm run test -s' source",
     "watch:jest": "jest --no-watchman --watch"
   },
@@ -68,6 +68,8 @@
     "url": "https://github.com/bvaughn/react-virtualized/issues"
   },
   "jest": {
+    "globalSetup": "./source/jest-global-setup.js",
+    "globalTeardown": "./source/jest-global-teardown.js",
     "setupFiles": [
       "./source/jest-setup.js"
     ],
@@ -81,11 +83,11 @@
       "source/**/*.js",
       "!source/vendor/**",
       "!source/demo/**",
-      "!source/jest-setup.js",
+      "!source/jest-*.js",
       "!source/TestUtils.js",
       "!**/*.example.js"
     ],
-    "testRegex": ".jest.js",
+    "testRegex": ".(jest|e2e).js",
     "verbose": true
   },
   "devDependencies": {
@@ -130,10 +132,13 @@
     "husky": "^0.14.3",
     "immutable": "^3.7.5",
     "jest": "^22.0.4",
+    "jest-environment-node": "^22.0.4",
+    "make-dir": "^1.1.0",
     "postcss": "^6.0.14",
     "postcss-cli": "^4.1.1",
     "postcss-loader": "^2.0.9",
     "prettier": "^1.9.2",
+    "puppeteer": "^0.13.0",
     "react": "^16.0.0",
     "react-codemirror": "^1.0.0",
     "react-dom": "^16.0.0",
