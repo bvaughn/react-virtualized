@@ -84,9 +84,9 @@ export default class Table extends PureComponent {
     noRowsRenderer: PropTypes.func,
 
     /**
-    * Optional callback when a column's header is clicked.
-    * ({ columnData: any, dataKey: string }): void
-    */
+     * Optional callback when a column's header is clicked.
+     * ({ columnData: any, dataKey: string }): void
+     */
     onHeaderClick: PropTypes.func,
 
     /**
@@ -586,9 +586,8 @@ export default class Table extends PureComponent {
       typeof rowStyle === 'function' ? rowStyle({index}) : rowStyle;
     const rowData = rowGetter({index});
 
-    const columns = React.Children
-      .toArray(children)
-      .map((column, columnIndex) =>
+    const columns = React.Children.toArray(children).map(
+      (column, columnIndex) =>
         this._createColumn({
           column,
           columnIndex,
@@ -598,7 +597,7 @@ export default class Table extends PureComponent {
           rowIndex: index,
           scrollbarWidth,
         }),
-      );
+    );
 
     const className = cn('ReactVirtualized__Table__row', rowClass);
     const flattenedStyle = {
@@ -629,8 +628,9 @@ export default class Table extends PureComponent {
    * Determines the flex-shrink, flex-grow, and width values for a cell (header or column).
    */
   _getFlexStyleForColumn(column, customStyle = {}) {
-    const flexValue = `${column.props.flexGrow} ${column.props
-      .flexShrink} ${column.props.width}px`;
+    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${
+      column.props.width
+    }px`;
 
     const style = {
       ...customStyle,

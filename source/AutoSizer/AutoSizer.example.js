@@ -49,7 +49,8 @@ export default class AutoSizerExample extends PureComponent<{}, State> {
               type="checkbox"
               checked={hideDescription}
               onChange={event =>
-                this.setState({hideDescription: event.target.checked})}
+                this.setState({hideDescription: event.target.checked})
+              }
             />
             Hide description (to show resize)?
           </label>

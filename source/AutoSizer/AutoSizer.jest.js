@@ -13,24 +13,22 @@ function DefaultChildComponent({height, width, foo, bar}) {
 }
 
 describe('AutoSizer', () => {
-  function getMarkup(
-    {
-      bar = 123,
-      ChildComponent = DefaultChildComponent,
-      defaultHeight = undefined,
-      defaultWidth = undefined,
-      disableHeight = false,
-      disableWidth = false,
-      foo = 456,
-      height = 100,
-      onResize,
-      paddingBottom = 0,
-      paddingLeft = 0,
-      paddingRight = 0,
-      paddingTop = 0,
-      width = 200,
-    } = {},
-  ) {
+  function getMarkup({
+    bar = 123,
+    ChildComponent = DefaultChildComponent,
+    defaultHeight = undefined,
+    defaultWidth = undefined,
+    disableHeight = false,
+    disableWidth = false,
+    foo = 456,
+    height = 100,
+    onResize,
+    paddingBottom = 0,
+    paddingLeft = 0,
+    paddingRight = 0,
+    paddingTop = 0,
+    width = 200,
+  } = {}) {
     const style = {
       boxSizing: 'border-box',
       height,

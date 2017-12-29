@@ -87,7 +87,8 @@ export default class CollectionExample extends PureComponent {
               onChange={event =>
                 this.setState({
                   showScrollingPlaceholder: event.target.checked,
-                })}
+                })
+              }
             />
             Show placeholder while scrolling?
           </label>

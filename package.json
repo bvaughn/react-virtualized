@@ -133,7 +133,7 @@
     "postcss": "^6.0.14",
     "postcss-cli": "^4.1.1",
     "postcss-loader": "^2.0.9",
-    "prettier": "^1.5.3",
+    "prettier": "^1.9.2",
     "react": "^16.0.0",
     "react-codemirror": "^1.0.0",
     "react-dom": "^16.0.0",

@@ -5,14 +5,12 @@ import ColumnSizer from './ColumnSizer';
 import Grid from '../Grid';
 
 describe('ColumnSizer', () => {
-  function getMarkup(
-    {
-      columnMinWidth = undefined,
-      columnMaxWidth = undefined,
-      columnCount = 10,
-      width = 200,
-    } = {},
-  ) {
+  function getMarkup({
+    columnMinWidth = undefined,
+    columnMaxWidth = undefined,
+    columnCount = 10,
+    width = 200,
+  } = {}) {
     function cellRenderer({columnIndex, key, rowIndex, style}) {
       return (
         <div className="gridItem" key={key} style={style}>

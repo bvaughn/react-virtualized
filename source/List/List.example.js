@@ -70,7 +70,8 @@ export default class ListExample extends PureComponent {
               className={styles.checkbox}
               type="checkbox"
               onChange={event =>
-                this.setState({useDynamicRowHeight: event.target.checked})}
+                this.setState({useDynamicRowHeight: event.target.checked})
+              }
             />
             Use dynamic row heights?
           </label>
@@ -84,7 +85,8 @@ export default class ListExample extends PureComponent {
               onChange={event =>
                 this.setState({
                   showScrollingPlaceholder: event.target.checked,
-                })}
+                })
+              }
             />
             Show scrolling placeholder?
           </label>
@@ -110,7 +112,8 @@ export default class ListExample extends PureComponent {
             onChange={event =>
               this.setState({
                 listHeight: parseInt(event.target.value, 10) || 1,
-              })}
+              })
+            }
             value={listHeight}
           />
           <LabeledInput
@@ -120,7 +123,8 @@ export default class ListExample extends PureComponent {
             onChange={event =>
               this.setState({
                 listRowHeight: parseInt(event.target.value, 10) || 1,
-              })}
+              })
+            }
             value={listRowHeight}
           />
           <LabeledInput
@@ -129,7 +133,8 @@ export default class ListExample extends PureComponent {
             onChange={event =>
               this.setState({
                 overscanRowCount: parseInt(event.target.value, 10) || 0,
-              })}
+              })
+            }
             value={overscanRowCount}
           />
         </InputRow>

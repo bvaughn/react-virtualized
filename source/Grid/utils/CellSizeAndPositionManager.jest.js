@@ -1,9 +1,11 @@
 import CellSizeAndPositionManager from './CellSizeAndPositionManager';
 
 describe('CellSizeAndPositionManager', () => {
-  function getCellSizeAndPositionManager(
-    {batchAllCells, cellCount = 100, estimatedCellSize = 15} = {},
-  ) {
+  function getCellSizeAndPositionManager({
+    batchAllCells,
+    cellCount = 100,
+    estimatedCellSize = 15,
+  } = {}) {
     const cellSizeGetterCalls = [];
     const cellSizeAndPositionManager = new CellSizeAndPositionManager({
       batchAllCells,
