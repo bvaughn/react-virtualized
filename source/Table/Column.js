@@ -1,4 +1,7 @@
 /** @flow */
+
+'no babel-plugin-flow-react-proptypes';
+
 import PropTypes from 'prop-types';
 import {Component} from 'react';
 import defaultHeaderRenderer from './defaultHeaderRenderer';

@@ -1,4 +1,7 @@
 /** @flow */
+
+'no babel-plugin-flow-react-proptypes';
+
 import type {CellDataGetterParams} from './types';
 
 /**
