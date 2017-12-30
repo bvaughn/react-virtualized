@@ -1,13 +1,16 @@
 /** @flow */
 
-import type {Size} from './types';
-
 import * as React from 'react';
 import createDetectElementResize from '../vendor/detectElementResize';
 
+type Size = {
+  height: number,
+  width: number,
+};
+
 type Props = {
   /** Function responsible for rendering children.*/
-  children: (warams: Size) => React.Element<*>,
+  children: Size => React.Element<*>,
 
   /** Default height to use for initial render; useful for SSR */
   defaultHeight?: number,
@@ -25,7 +28,7 @@ type Props = {
   nonce?: string,
 
   /** Callback to be invoked on-resize */
-  onResize: (params: Size) => void,
+  onResize: Size => void,
 };
 
 type State = {
@@ -92,8 +95,8 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
     // Outer div should not force width/height since that may prevent containers from shrinking.
     // Inner component should overflow and use calculated width/height.
     // See issue #68 for more information.
-    const outerStyle: any = {overflow: 'visible'};
-    const childParams: any = {};
+    const outerStyle: Object = {overflow: 'visible'};
+    const childParams: Object = {};
 
     if (!disableHeight) {
       outerStyle.height = 0;
@@ -159,7 +162,7 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
     }
   };
 
-  _setRef = (autoSizer: HTMLElement | null) => {
+  _setRef = (autoSizer: ?HTMLElement) => {
     this._autoSizer = autoSizer;
   };
 }
