@@ -1,6 +1,13 @@
 Changelog
 ------------
 
+##### 9.15.0
+
+* 🎉 Detect WindowScroller container (not only window) resize similar to AutoSizer ([TrySound](https://github.com/TrySound) - [#918](https://github.com/bvaughn/react-virtualized/pull/918))
+* 🐛 Prevent position breaking on WindowScroller container resize ([TrySound](https://github.com/TrySound) - [#920](https://github.com/bvaughn/react-virtualized/pull/920))
+* 🎉 Published AutoSizer flow types ([TrySound](https://github.com/TrySound) - [#934](https://github.com/bvaughn/react-virtualized/pull/934))
+* 🎉 Published WindowScroller flow types ([TrySound](https://github.com/TrySound) - [#915](https://github.com/bvaughn/react-virtualized/pull/915))
+
 ##### 9.14.1
 * 🐛 Fixed server-side rendering bug in `WindowScroller` with undefined `window` variable.
 
