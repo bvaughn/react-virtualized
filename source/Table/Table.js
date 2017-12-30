@@ -1,5 +1,7 @@
 /** @flow */
 
+'no babel-plugin-flow-react-proptypes';
+
 import type {CellPosition} from '../Grid';
 
 import cn from 'classnames';

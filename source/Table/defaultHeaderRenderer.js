@@ -1,4 +1,7 @@
 /** @flow */
+
+'no babel-plugin-flow-react-proptypes';
+
 import React from 'react';
 import SortIndicator from './SortIndicator';
 import type {HeaderRendererParams} from './types';

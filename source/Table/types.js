@@ -1,4 +1,7 @@
 /** @flow */
+
+'no babel-plugin-flow-react-proptypes';
+
 export type CellDataGetterParams = {
   columnData: ?any,
   dataKey: string,

@@ -1,5 +1,7 @@
 /** @flow */
 
+'no babel-plugin-flow-react-proptypes';
+
 import type {
   NoContentRenderer,
   Alignment,
@@ -12,9 +14,10 @@ import type {
 } from '../Grid';
 import type {RowRenderer, RenderedRows, Scroll} from './types';
 
-import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import cn from 'classnames';
+import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -97,6 +100,30 @@ type Props = {
 };
 
 export default class List extends React.PureComponent<Props> {
+  static propTypes = {
+    'aria-label': PropTypes.string,
+    autoHeight: PropTypes.bool.isRequired,
+    className: PropTypes.string,
+    estimatedRowSize: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    noRowsRenderer: PropTypes.func.isRequired,
+    onRowsRendered: PropTypes.func.isRequired,
+    onScroll: PropTypes.func.isRequired,
+    overscanIndicesGetter: PropTypes.func.isRequired,
+    overscanRowCount: PropTypes.number.isRequired,
+    rowHeight: PropTypes.oneOfType([PropTypes.func, PropTypes.number])
+      .isRequired,
+    rowRenderer: PropTypes.func.isRequired,
+    rowCount: PropTypes.number.isRequired,
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center'])
+      .isRequired,
+    scrollToIndex: PropTypes.number.isRequired,
+    scrollTop: PropTypes.number,
+    style: PropTypes.object.isRequired,
+    tabIndex: PropTypes.number,
+    width: PropTypes.number.isRequired,
+  };
+
   static defaultProps = {
     autoHeight: false,
     estimatedRowSize: 30,
