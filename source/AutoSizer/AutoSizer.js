@@ -1,13 +1,19 @@
 /** @flow */
 
-import type {Size} from './types';
+'no babel-plugin-flow-react-proptypes';
 
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import createDetectElementResize from '../vendor/detectElementResize';
+
+export type Size = {
+  height: number,
+  width: number,
+};
 
 type Props = {
   /** Function responsible for rendering children.*/
-  children: (warams: Size) => React.Element<*>,
+  children: Size => React.Element<*>,
 
   /** Default height to use for initial render; useful for SSR */
   defaultHeight?: number,
@@ -25,12 +31,7 @@ type Props = {
   nonce?: string,
 
   /** Callback to be invoked on-resize */
-  onResize: (params: Size) => void,
-};
-
-type State = {
-  height: number,
-  width: number,
+  onResize: Size => void,
 };
 
 type ResizeHandler = (element: HTMLElement, onResize: () => void) => void;
@@ -40,7 +41,17 @@ type DetectElementResize = {
   removeResizeListener: ResizeHandler,
 };
 
-export default class AutoSizer extends React.PureComponent<Props, State> {
+export default class AutoSizer extends React.PureComponent<Props, Size> {
+  static propTypes = {
+    children: PropTypes.func.isRequired,
+    defaultHeight: PropTypes.number,
+    defaultWidth: PropTypes.number,
+    disableHeight: PropTypes.bool.isRequired,
+    disableWidth: PropTypes.bool.isRequired,
+    nonce: PropTypes.string,
+    onResize: PropTypes.func.isRequired,
+  };
+
   static defaultProps = {
     onResize: () => {},
     disableHeight: false,
@@ -92,8 +103,8 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
     // Outer div should not force width/height since that may prevent containers from shrinking.
     // Inner component should overflow and use calculated width/height.
     // See issue #68 for more information.
-    const outerStyle: any = {overflow: 'visible'};
-    const childParams: any = {};
+    const outerStyle: Object = {overflow: 'visible'};
+    const childParams = {};
 
     if (!disableHeight) {
       outerStyle.height = 0;
@@ -159,7 +170,7 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
     }
   };
 
-  _setRef = (autoSizer: HTMLElement | null) => {
+  _setRef = (autoSizer: ?HTMLElement) => {
     this._autoSizer = autoSizer;
   };
 }
