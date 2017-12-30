@@ -1,5 +1,7 @@
 // @flow
 
+'no babel-plugin-flow-react-proptypes';
+
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
@@ -74,6 +76,16 @@ export const IS_SCROLLING_TIMEOUT = 150;
 const getWindow = () => (typeof window !== 'undefined' ? window : undefined);
 
 export default class WindowScroller extends React.PureComponent<Props, State> {
+  static propTypes = {
+    children: PropTypes.func.isRequired,
+    onResize: PropTypes.func.isRequired,
+    onScroll: PropTypes.func.isRequired,
+    scrollElement: PropTypes.any,
+    scrollingResetTimeInterval: PropTypes.number.isRequired,
+    serverHeight: PropTypes.number.isRequired,
+    serverWidth: PropTypes.number.isRequired,
+  };
+
   static defaultProps = {
     onResize: () => {},
     onScroll: () => {},
