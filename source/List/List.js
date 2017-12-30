@@ -111,13 +111,12 @@ export default class List extends React.PureComponent<Props> {
     onScroll: PropTypes.func.isRequired,
     overscanIndicesGetter: PropTypes.func.isRequired,
     overscanRowCount: PropTypes.number.isRequired,
-    rowHeight: PropTypes.oneOfType([
-      PropTypes.func,
-      PropTypes.number
-    ]).isRequired,
+    rowHeight: PropTypes.oneOfType([PropTypes.func, PropTypes.number])
+      .isRequired,
     rowRenderer: PropTypes.func.isRequired,
     rowCount: PropTypes.number.isRequired,
-    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
+    scrollToAlignment: PropTypes.oneOf(['auto', 'end', 'start', 'center'])
+      .isRequired,
     scrollToIndex: PropTypes.number.isRequired,
     scrollTop: PropTypes.number,
     style: PropTypes.object.isRequired,
