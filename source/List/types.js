@@ -1,5 +1,7 @@
 // @flow
 
+'no babel-plugin-flow-react-proptypes';
+
 import * as React from 'react';
 
 export type RowRendererParams = {
