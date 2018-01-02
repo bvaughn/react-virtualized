@@ -1,6 +1,7 @@
-import getScrollbarSize from 'dom-helpers/util/scrollbarSize';
-import React, {PureComponent} from 'react';
-import {findDOMNode} from 'react-dom';
+// @flow
+
+import * as React from "react";
+import getScrollbarSize from "dom-helpers/util/scrollbarSize";
 
 // When a user scrolls slower than this we should smooth scroll.
 // When scrolling is faster, it's okay to adjust/reconsider our visible cells.
@@ -18,76 +19,86 @@ const ON_SCROLL_DEBOUNCE_INTERVAL = 150;
 //      Or should scrollTop always be purely controlled/uncontrolled
 //      If so this could be used to auto-disable overflow scrolling
 
-type PropTypes = {
-  cellRenderer: Function,
+type Props = {
+  cellRenderer: ({
+    columnIndex: number,
+    isScrolling: boolean,
+    key: mixed,
+    rowIndex: number,
+    style: Object
+  }) => React.Node,
   columnCount: number,
-  columnWidth: number | Function,
-  estimatedColumnWidth?: number,
-  estimatedRowHeight?: number,
+  columnWidth: number | (({ index: number }) => number),
+  containerStyle: Object,
+  estimatedColumnWidth: number,
+  estimatedRowHeight: number,
   height: number,
   rowCount: number,
-  rowHeight: number | Function,
+  rowHeight: number | (({ index: number }) => number),
   style?: Object,
-  width: number,
+  width: number
 };
 
-export default class Grid extends PureComponent {
-  prop: PropTypes;
+type State = {};
 
+export default class Grid extends React.PureComponent<Props, State> {
   static defaultProps = {
     estimatedColumnWidth: 100,
-    estimatedRowHeight: 30,
+    estimatedRowHeight: 30
   };
 
-  constructor(props, context) {
+  state = {};
+
+  // Cache estimated sizes for faster access.
+  _defaultColumnWidth = typeof this.props.columnWidth === "number"
+    ? this.props.columnWidth
+    : this.props.estimatedColumnWidth;
+  _defaultRowHeight = typeof this.props.rowHeight === "number"
+    ? this.props.rowHeight
+    : this.props.estimatedRowHeight;
+  _estimatedTotalWidth = this.props.columnCount *
+    this.props.estimatedColumnWidth;
+  _estimatedTotalHeight = this.props.rowCount * this.props.estimatedRowHeight;
+
+  // Cache measured sizes for reuse; (measuring is expensive)
+  // Cache is reset when props change or when cleared via API.
+  // Offsets are not cached because they are too easily bulk-invalidated,
+  // eg a change in a cell's size invalidates the offset of all cells after.
+  // Instead we store an anchor and position nearby cells relative to it.
+  _cachedColumnWidths = {};
+  _cachedRowHeights = {};
+
+  // Set/reset as the result of large scrolls.
+  _anchoredColumnStartIndex = 0;
+  _anchoredColumnStartPosition = 0;
+  _anchoredColumnStopIndex = 0;
+  _anchoredRowStartIndex = 0;
+  _anchoredRowStopIndex = 0;
+  _anchoredRowStartPosition = 0;
+  _lastScrollLeft = 0;
+  _lastScrollTime = 0;
+  _lastScrollTop = 0;
+
+  // Changes in scroll position will already trigger a re-render.
+  // Store this outside of state to avoid additional renders.
+  _isScrolling = false;
+
+  // Recalculate scrollbar size once we've mounted; assume 0 for initial render
+  _scrollbarSize = 0;
+  _scrollbarSizeMeasured = false;
+
+  _lastHeight = -1;
+  _lastWidth = -1;
+
+  _ignoreNextDebounce = false;
+  _ignoreNextOnScroll = false;
+  _scrollTarget: ?Element;
+  _onScrollDebounceTimeout: *;
+
+  constructor(props: Props, context: any) {
     super(props, context);
 
-    this.state = {};
-
-    // Cache estimated sizes for faster access.
-    this._defaultColumnWidth =
-      typeof props.columnWidth === 'number'
-        ? props.columnWidth
-        : props.estimatedColumnWidth;
-    this._defaultRowHeight =
-      typeof props.rowHeight === 'number'
-        ? props.rowHeight
-        : props.estimatedRowHeight;
-    this._estimatedTotalWidth = props.columnCount * props.estimatedColumnWidth;
-    this._estimatedTotalHeight = props.rowCount * props.estimatedRowHeight;
-
-    // Cache measured sizes for reuse; (measuring is expensive)
-    // Cache is reset when props change or when cleared via API.
-    // Offsets are not cached because they are too easily bulk-invalidated,
-    // eg a change in a cell's size invalidates the offset of all cells after.
-    // Instead we store an anchor and position nearby cells relative to it.
-    this._cachedColumnWidths = {};
-    this._cachedRowHeights = {};
-
-    // Set/reset as the result of large scrolls.
-    this._anchoredColumnStartIndex = 0;
-    this._anchoredColumnStartPosition = 0;
-    this._anchoredColumnStopIndex = 0;
-    this._anchoredRowStartIndex = 0;
-    this._anchoredRowStopIndex = 0;
-    this._anchoredRowStartPosition = 0;
-    this._lastScrollLeft = 0;
-    this._lastScrollTime = 0;
-    this._lastScrollTop = 0;
-
-    // Changes in scroll position will already trigger a re-render.
-    // Store this outside of state to avoid additional renders.
-    this._isScrolling = false;
-
-    // Recalculate scrollbar size once we've mounted; assume 0 for initial render
-    this._scrollbarSize = 0;
-    this._scrollbarSizeMeasured = false;
-
     this._calculateVisibleCells(0, 0, props);
-
-    this._onScroll = this._onScroll.bind(this);
-    this._onScrollDebounce = this._onScrollDebounce.bind(this);
-    this._scrollTargetRef = this._scrollTargetRef.bind(this);
   }
 
   componentDidMount() {
@@ -100,7 +111,7 @@ export default class Grid extends PureComponent {
     }
   }
 
-  componentWillReceiveProps(nextProps, nextState) {
+  componentWillReceiveProps(nextProps: Props, nextState: State) {
     const {
       columnCount,
       columnWidth,
@@ -110,16 +121,16 @@ export default class Grid extends PureComponent {
       rowCount,
       rowHeight,
       style,
-      width,
+      width
     } = this.props;
 
     const columnWidthHasChanged =
-      (typeof columnWidth === 'number' ||
-        typeof nextProps.columnWidth === 'number') &&
+      (typeof columnWidth === "number" ||
+        typeof nextProps.columnWidth === "number") &&
       columnWidth !== nextProps.columnWidth;
     const rowHeightHasChanged =
-      (typeof rowHeight === 'number' ||
-        typeof nextProps.rowHeight === 'number') &&
+      (typeof rowHeight === "number" ||
+        typeof nextProps.rowHeight === "number") &&
       rowHeight !== nextProps.rowHeight;
 
     let recalculateVisibleCells = false;
@@ -130,7 +141,7 @@ export default class Grid extends PureComponent {
       columnWidthHasChanged
     ) {
       const defaultColumnWidth =
-        typeof nextProps.columnWidth === 'number'
+        typeof nextProps.columnWidth === "number"
           ? nextProps.columnWidth
           : nextProps.estimatedColumnWidth;
 
@@ -150,7 +161,7 @@ export default class Grid extends PureComponent {
       rowHeightHasChanged
     ) {
       const defaultRowHeight =
-        typeof nextProps.rowHeight === 'number'
+        typeof nextProps.rowHeight === "number"
           ? nextProps.rowHeight
           : nextProps.estimatedRowHeight;
 
@@ -177,13 +188,13 @@ export default class Grid extends PureComponent {
       this._calculateVisibleCells(
         this._lastScrollLeft,
         this._lastScrollTop,
-        nextProps,
+        nextProps
       );
     }
   }
 
   render() {
-    const {cellRenderer} = this.props;
+    const { cellRenderer } = this.props;
 
     // TODO Cache cell renderers and style objects
     // TODO Support isVisible prop
@@ -225,9 +236,9 @@ export default class Grid extends PureComponent {
         let style = {
           height: rowSize,
           left: columnOffset,
-          position: 'absolute',
+          position: "absolute",
           top: rowOffset,
-          width: columnSize,
+          width: columnSize
         };
 
         rendereredCells.push(
@@ -236,8 +247,8 @@ export default class Grid extends PureComponent {
             isScrolling,
             key,
             rowIndex,
-            style,
-          }),
+            style
+          })
         );
 
         columnOffset += columnSize;
@@ -251,7 +262,8 @@ export default class Grid extends PureComponent {
         ref={this._scrollTargetRef}
         onScroll={this._onScroll}
         role="grid"
-        style={this._createOuterStyle()}>
+        style={this._createOuterStyle()}
+      >
         <div style={this._createInnerStyle()}>{rendereredCells}</div>
       </div>
     );
@@ -268,7 +280,7 @@ export default class Grid extends PureComponent {
   _calculateVisibleCells(
     scrollLeft: number,
     scrollTop: number,
-    props: PropTypes = this.props,
+    props: Props = this.props
   ) {
     const {
       columnCount,
@@ -278,7 +290,7 @@ export default class Grid extends PureComponent {
       height,
       rowCount,
       rowHeight,
-      width,
+      width
     } = props;
 
     // Local variables are faster access than instance properties.
@@ -311,7 +323,7 @@ export default class Grid extends PureComponent {
         scrollLeft,
         width,
         this._estimatedTotalWidth,
-        columnCount,
+        columnCount
       );
       anchoredColumnStartPosition = scrollLeft;
     } else {
@@ -319,7 +331,7 @@ export default class Grid extends PureComponent {
         estimatedColumnWidth,
         anchoredColumnStartIndex,
         columnWidth,
-        cachedColumnWidths,
+        cachedColumnWidths
       );
 
       if (isScrollingRight) {
@@ -334,7 +346,7 @@ export default class Grid extends PureComponent {
             estimatedColumnWidth,
             anchoredColumnStartIndex,
             columnWidth,
-            cachedColumnWidths,
+            cachedColumnWidths
           );
         }
       } else {
@@ -349,7 +361,7 @@ export default class Grid extends PureComponent {
             estimatedColumnWidth,
             anchoredColumnStartIndex,
             columnWidth,
-            cachedColumnWidths,
+            cachedColumnWidths
           );
           anchoredColumnStartPosition -= columnSize;
         }
@@ -364,7 +376,7 @@ export default class Grid extends PureComponent {
         scrollTop,
         height,
         this._estimatedTotalHeight,
-        rowCount,
+        rowCount
       );
       anchoredRowStartPosition = scrollTop;
     } else {
@@ -372,7 +384,7 @@ export default class Grid extends PureComponent {
         estimatedRowHeight,
         anchoredRowStartIndex,
         rowHeight,
-        cachedRowHeights,
+        cachedRowHeights
       );
 
       if (isScrollingDown) {
@@ -387,7 +399,7 @@ export default class Grid extends PureComponent {
             estimatedRowHeight,
             anchoredRowStartIndex,
             rowHeight,
-            cachedRowHeights,
+            cachedRowHeights
           );
         }
       } else {
@@ -402,7 +414,7 @@ export default class Grid extends PureComponent {
             estimatedRowHeight,
             anchoredRowStartIndex,
             rowHeight,
-            cachedRowHeights,
+            cachedRowHeights
           );
           anchoredRowStartPosition -= rowSize;
         }
@@ -429,7 +441,7 @@ export default class Grid extends PureComponent {
           estimatedColumnWidth,
           anchoredColumnStopIndex,
           columnWidth,
-          cachedColumnWidths,
+          cachedColumnWidths
         );
 
         // TODO Account for overscan (if scrolling right)
@@ -447,12 +459,12 @@ export default class Grid extends PureComponent {
       if (anchoredColumnStopIndex >= columnCount - 1) {
         anchoredColumnStopIndex = Math.min(
           anchoredColumnStopIndex,
-          columnCount - 1,
+          columnCount - 1
         );
 
         this._estimatedTotalWidth = Math.min(
           this._estimatedTotalWidth,
-          anchoredColumnStopPosition,
+          anchoredColumnStopPosition
         );
         this._ignoreNextDebounce = true;
       }
@@ -478,7 +490,7 @@ export default class Grid extends PureComponent {
           estimatedRowHeight,
           anchoredRowStopIndex,
           rowHeight,
-          cachedRowHeights,
+          cachedRowHeights
         );
 
         // TODO Account for overscan (if scrolling down)
@@ -498,7 +510,7 @@ export default class Grid extends PureComponent {
 
         this._estimatedTotalHeight = Math.min(
           this._estimatedTotalHeight,
-          anchoredRowStopPosition,
+          anchoredRowStopPosition
         );
         this._ignoreNextDebounce = true;
       }
@@ -524,7 +536,7 @@ export default class Grid extends PureComponent {
   }
 
   _createInnerStyle() {
-    const {containerStyle} = this.props;
+    const { containerStyle } = this.props;
 
     const estimatedTotalWidth = this._estimatedTotalWidth;
     const estimatedTotalHeight = this._estimatedTotalHeight;
@@ -535,14 +547,14 @@ export default class Grid extends PureComponent {
       height: estimatedTotalHeight,
       maxWidth: estimatedTotalWidth,
       maxHeight: estimatedTotalHeight,
-      overflow: 'hidden',
-      pointerEvents: isScrolling ? 'none' : '',
-      ...containerStyle,
+      overflow: "hidden",
+      pointerEvents: isScrolling ? "none" : "",
+      ...containerStyle
     };
   }
 
   _createOuterStyle() {
-    const {height, style, width} = this.props;
+    const { height, style, width } = this.props;
 
     const estimatedTotalWidth = this._estimatedTotalWidth;
     const estimatedTotalHeight = this._estimatedTotalHeight;
@@ -561,38 +573,38 @@ export default class Grid extends PureComponent {
     // Without this style, Grid would render the correct range of cells but would NOT update its internal offset.
     // This was originally reported via clauderic/react-infinite-calendar/issues/23
     const overflowX =
-      estimatedTotalWidth + verticalScrollBarSize <= width ? 'hidden' : 'auto';
+      estimatedTotalWidth + verticalScrollBarSize <= width ? "hidden" : "auto";
     const overflowY =
       estimatedTotalHeight + horizontalScrollBarSize <= height
-        ? 'hidden'
-        : 'auto';
+        ? "hidden"
+        : "auto";
 
     return {
-      boxSizing: 'border-box',
-      direction: 'ltr',
+      boxSizing: "border-box",
+      direction: "ltr",
       height,
       overflowX,
       overflowY,
-      position: 'relative',
+      position: "relative",
       width,
-      WebkitOverflowScrolling: 'touch',
-      willChange: 'transform',
-      ...style,
+      WebkitOverflowScrolling: "touch",
+      willChange: "transform",
+      ...style
     };
   }
 
   _measureAndCacheColumnWidth(
     estimatedColumnWidth: number,
     index: number,
-    columnWidth: number | Function,
-    cachedColumnWidths: Object,
+    columnWidth: number | (({ index: number }) => number),
+    cachedColumnWidths: Object
   ): number {
     if (cachedColumnWidths.hasOwnProperty(index)) {
       return cachedColumnWidths[index];
     }
 
     const columnSize =
-      columnWidth instanceof Function ? columnWidth({index}) : columnWidth;
+      typeof columnWidth === "function" ? columnWidth({ index }) : columnWidth;
 
     cachedColumnWidths[index] = columnSize;
 
@@ -605,15 +617,15 @@ export default class Grid extends PureComponent {
   _measureAndCacheRowHeight(
     estimatedRowHeight: number,
     index: number,
-    rowHeight: number | Function,
-    cachedRowHeights: Object,
+    rowHeight: number | (({ index: number }) => number),
+    cachedRowHeights: Object
   ): number {
     if (cachedRowHeights.hasOwnProperty(index)) {
       return cachedRowHeights[index];
     }
 
     const rowSize =
-      rowHeight instanceof Function ? rowHeight({index}) : rowHeight;
+      typeof rowHeight === "function" ? rowHeight({ index }) : rowHeight;
 
     cachedRowHeights[index] = rowSize;
 
@@ -623,11 +635,11 @@ export default class Grid extends PureComponent {
     return rowSize;
   }
 
-  _scrollTargetRef(scrollTarget) {
+  _scrollTargetRef = scrollTarget => {
     this._scrollTarget = scrollTarget;
-  }
+  };
 
-  _onScroll(event) {
+  _onScroll = event => {
     if (this._ignoreNextOnScroll) {
       this._ignoreNextOnScroll = false;
       return;
@@ -642,7 +654,7 @@ export default class Grid extends PureComponent {
       return;
     }
 
-    const {scrollLeft, scrollTop} = target;
+    const { scrollLeft, scrollTop } = target;
 
     this._isScrolling = true;
 
@@ -658,21 +670,21 @@ export default class Grid extends PureComponent {
     // This helps things from getting too far off track if a user slow-scrolls for a long time.
     this._onScrollDebounceTimeout = setTimeout(
       this._onScrollDebounce,
-      ON_SCROLL_DEBOUNCE_INTERVAL,
+      ON_SCROLL_DEBOUNCE_INTERVAL
     );
-  }
+  };
 
   /**
    * If the user slow-scrolls for a long time the estimated positions may become less accurate.
    * When the user stops scrolling, this method re-adjust offsets if necessary.
    * Doing so reduce the chance of a user scrolling to the edge of a grid and things being misaligned.
    */
-  _onScrollDebounce() {
+  _onScrollDebounce = () => {
     if (this._ignoreNextDebounce) {
       this._ignoreNextDebounce = false;
     }
 
-    const {columnCount, height, rowCount, width} = this.props;
+    const { columnCount, height, rowCount, width } = this.props;
 
     this._isScrolling = false;
 
@@ -680,13 +692,13 @@ export default class Grid extends PureComponent {
       this._anchoredColumnStartIndex,
       width,
       this._estimatedTotalWidth,
-      columnCount,
+      columnCount
     );
     const scrollTop = getOffsetForIndex(
       this._anchoredRowStartIndex,
       height,
       this._estimatedTotalHeight,
-      rowCount,
+      rowCount
     );
 
     this._anchoredColumnStartPosition -= this._lastScrollLeft - scrollLeft;
@@ -704,19 +716,21 @@ export default class Grid extends PureComponent {
     // Don't trigger an onScroll cycle.
     this._ignoreNextOnScroll = true;
 
-    const scrollTarget = findDOMNode(this._scrollTarget);
-    scrollTarget.scrollLeft = scrollLeft;
-    scrollTarget.scrollTop = scrollTop;
+    const scrollTarget = this._scrollTarget;
+    if (scrollTarget) {
+      scrollTarget.scrollLeft = scrollLeft;
+      scrollTarget.scrollTop = scrollTop;
+    }
 
     this.forceUpdate();
-  }
+  };
 }
 
 export function getIndexForOffset(
   scrollOffset: number,
   portalSize: number,
   totalSize: number,
-  cellCount: number,
+  cellCount: number
 ): number {
   // TODO Do we need to be more precise near boundaries?
   //      Set a threshold beyond which we won't estimate this way.
@@ -728,7 +742,7 @@ export function getOffsetForIndex(
   index: number,
   portalSize: number,
   totalSize: number,
-  cellCount: number,
+  cellCount: number
 ): number {
   return Math.floor(index / cellCount * (totalSize - portalSize));
 }
