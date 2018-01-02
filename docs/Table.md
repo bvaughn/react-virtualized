@@ -167,7 +167,7 @@ import ReactDOM from 'react-dom';
 import { Column, Table } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
-// Table data as a array of objects
+// Table data as an array of objects
 const list = [
   { name: 'Brian Vaughn', description: 'Software engineer' }
   // And so on...
