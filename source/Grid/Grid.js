@@ -1,4 +1,4 @@
-export default from './Grid.refactor'
+export {default} from './Grid.refactor';
 
 /** @flow */
 
