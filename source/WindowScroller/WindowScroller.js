@@ -36,8 +36,7 @@ type Props = {
   onScroll: (params: {scrollLeft: number, scrollTop: number}) => void,
 
   /** Element to attach scroll event listeners. Defaults to window. */
-  scrollElement: ?Element,
-
+  scrollElement: ?(typeof window | Element),
   /**
    * Wait this amount of time after the last scroll event before resetting child `pointer-events`.
    */
