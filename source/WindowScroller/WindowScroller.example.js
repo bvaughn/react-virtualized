@@ -82,35 +82,38 @@ export default class WindowScrollerExample extends PureComponent<{}, State> {
             value={scrollToIndex || ''}
           />
         </InputRow>
-        <div className={styles.WindowScrollerWrapper}>
-          <WindowScroller
-            ref={this._setRef}
-            scrollElement={isScrollingCustomElement ? customElement : window}>
-            {({height, isScrolling, onChildScroll, scrollTop}) => (
+
+        <WindowScroller
+          ref={this._setRef}
+          scrollElement={isScrollingCustomElement ? customElement : window}>
+          {({height, isScrolling, childRef, onChildScroll, scrollTop}) => (
+            <div className={styles.WindowScrollerWrapper}>
               <AutoSizer disableHeight>
                 {({width}) => (
-                  <List
-                    ref={el => {
-                      window.listEl = el;
-                    }}
-                    autoHeight
-                    className={styles.List}
-                    height={height}
-                    isScrolling={isScrolling}
-                    onScroll={onChildScroll}
-                    overscanRowCount={2}
-                    rowCount={list.size}
-                    rowHeight={30}
-                    rowRenderer={this._rowRenderer}
-                    scrollToIndex={scrollToIndex}
-                    scrollTop={scrollTop}
-                    width={width}
-                  />
+                  <div ref={childRef}>
+                    <List
+                      ref={el => {
+                        window.listEl = el;
+                      }}
+                      autoHeight
+                      className={styles.List}
+                      height={height}
+                      isScrolling={isScrolling}
+                      onScroll={onChildScroll}
+                      overscanRowCount={2}
+                      rowCount={list.size}
+                      rowHeight={30}
+                      rowRenderer={this._rowRenderer}
+                      scrollToIndex={scrollToIndex}
+                      scrollTop={scrollTop}
+                      width={width}
+                    />
+                  </div>
                 )}
               </AutoSizer>
-            )}
-          </WindowScroller>
-        </div>
+            </div>
+          )}
+        </WindowScroller>
       </ContentBox>
     );
   }
