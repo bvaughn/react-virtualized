@@ -2,6 +2,12 @@
 
 import * as React from "react";
 import getScrollbarSize from "dom-helpers/util/scrollbarSize";
+import {
+  type AnimationTimeoutId,
+  requestAnimationTimeout,
+  cancelAnimationTimeout,
+} from '../utils/requestAnimationTimeout';
+
 
 // When a user scrolls slower than this we should smooth scroll.
 // When scrolling is faster, it's okay to adjust/reconsider our visible cells.
@@ -93,7 +99,7 @@ export default class Grid extends React.PureComponent<Props, State> {
   _ignoreNextDebounce = false;
   _ignoreNextOnScroll = false;
   _scrollTarget: ?Element;
-  _onScrollDebounceTimeout: *;
+  _onScrollDebounceTimeout: ?AnimationTimeoutId;
 
   constructor(props: Props, context: any) {
     super(props, context);
@@ -663,12 +669,12 @@ export default class Grid extends React.PureComponent<Props, State> {
     }
 
     if (this._onScrollDebounceTimeout) {
-      clearTimeout(this._onScrollDebounceTimeout);
+      cancelAnimationTimeout(this._onScrollDebounceTimeout);
     }
 
     // Once scrolling stops, re-adjust scrollLeft/scrollTop for the rows remaining visible.
     // This helps things from getting too far off track if a user slow-scrolls for a long time.
-    this._onScrollDebounceTimeout = setTimeout(
+    this._onScrollDebounceTimeout = requestAnimationTimeout(
       this._onScrollDebounce,
       ON_SCROLL_DEBOUNCE_INTERVAL
     );
