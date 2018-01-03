@@ -453,13 +453,15 @@ export default class Table extends PureComponent {
       a11yProps['aria-describedby'] = id;
     }
 
+    a11yProps.key = "Row" + rowIndex + "-" + "Col" + columnIndex;
+    a11yProps.className = cn('ReactVirtualized__Table__rowColumn', className);
+    a11yProps.style = style;
+    a11yProps.title = title;
+    
     return (
       <div
         {...a11yProps}
-        key={`Row${rowIndex}-Col${columnIndex}`}
-        className={cn('ReactVirtualized__Table__rowColumn', className)}
-        style={style}
-        title={title}>
+       >
         {renderedCell}
       </div>
     );
@@ -523,7 +525,7 @@ export default class Table extends PureComponent {
           ? SortDirection.ASC
           : SortDirection.DESC;
 
-      const onClick = event => {
+      const onClick = event => { 
         sortEnabled &&
           sort({
             sortBy: dataKey,
@@ -553,12 +555,13 @@ export default class Table extends PureComponent {
       a11yProps.id = id;
     }
 
+    a11yProps.key = "Header-Col" + index;
+    a11yProps.className = classNames;
+    a11yProps.style = style;
+
     return (
       <div
-        {...a11yProps}
-        key={`Header-Col${index}`}
-        className={classNames}
-        style={style}>
+        {...a11yProps}>
         {renderedHeader}
       </div>
     );
