@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 9.16.0
+
+* 🎉 Allow custom `WindowScroller` child with `childRef` in children function ([TrySound](https://github.com/TrySound) - [#940](https://github.com/bvaughn/react-virtualized/pull/940))
+* 🐛 Fix `WindowScroller` scrollElement prop type ([TrySound](https://github.com/TrySound) - [#939](https://github.com/bvaughn/react-virtualized/pull/939))
+
 ##### 9.15.0
 
 * 🎉 Detect `WindowScroller` container (not only window) resize similar to `AutoSizer` ([TrySound](https://github.com/TrySound) - [#918](https://github.com/bvaughn/react-virtualized/pull/918))
