@@ -21,7 +21,8 @@ type Props = {
    * ({ height, isScrolling, scrollLeft, scrollTop, width }) => PropTypes.element
    */
   children: (params: {
-    onChildScroll: (params: {scrollTop: number}) => void,
+    onChildScroll: ({scrollTop: number}) => void,
+    childRef: (?Element) => void,
     height: number,
     isScrolling: boolean,
     scrollLeft: number,
@@ -36,7 +37,8 @@ type Props = {
   onScroll: (params: {scrollLeft: number, scrollTop: number}) => void,
 
   /** Element to attach scroll event listeners. Defaults to window. */
-  scrollElement: ?(typeof window | Element),
+  scrollElement: ?Element,
+
   /**
    * Wait this amount of time after the last scroll event before resetting child `pointer-events`.
    */
@@ -87,6 +89,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _positionFromTop = 0;
   _positionFromLeft = 0;
   _detectElementResize: DetectElementResize = createDetectElementResize();
+  _child: ?Element;
 
   state = {
     ...getDimensions(this.props.scrollElement, this.props),
@@ -102,7 +105,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     const {onResize} = this.props;
     const {height, width} = this.state;
 
-    const thisNode = ReactDOM.findDOMNode(this);
+    const thisNode = this._child || ReactDOM.findDOMNode(this);
     if (thisNode instanceof Element && scrollElement) {
       const offset = getPositionOffset(thisNode, scrollElement);
       this._positionFromTop = offset.top;
@@ -170,6 +173,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
 
     return children({
       onChildScroll: this._onChildScroll,
+      childRef: this._childRef,
       height,
       isScrolling,
       scrollLeft,
@@ -177,6 +181,11 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
       width,
     });
   }
+
+  _childRef = element => {
+    this._child = element;
+    this.updatePosition();
+  };
 
   _onChildScroll = ({scrollTop}) => {
     if (this.state.scrollTop === scrollTop) {
