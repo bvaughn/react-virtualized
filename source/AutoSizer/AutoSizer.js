@@ -122,7 +122,7 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
     */
 
     return (
-      <div ref={this._setRef} style={outerStyle}>
+      <div ref={this._setRef} style={outerStyle} className={'ReactVirtualized__AutoSizer'}>
         {children(childParams)}
       </div>
     );
