@@ -202,10 +202,16 @@ export default class Table extends PureComponent {
     sort: PropTypes.func,
 
     /** Table data is currently sorted by this :dataKey (if it is sorted at all) */
-    sortBy: PropTypes.string,
+    sortBy: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.arrayOf(PropTypes.string),
+    ]),
 
     /** Table data is currently sorted in this direction (if it is sorted at all) */
-    sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
+    sortDirection: PropTypes.oneOfType([
+      PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
+      PropTypes.arrayOf(PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])),
+    ]),
 
     /** Optional inline style */
     style: PropTypes.object,
@@ -485,6 +491,20 @@ export default class Table extends PureComponent {
     } = column.props;
     const sortEnabled = !disableSort && sort;
 
+    // resolve this column sort info
+    let columnSortBy = undefined;
+    let columnSortDirection = undefined;
+    if (Array.isArray(sortBy)) {
+      const index = sortBy.indexOf(dataKey);
+      if (index !== -1) {
+        columnSortBy = dataKey;
+        columnSortDirection = sortDirection[index];
+      }
+    } else {
+      columnSortBy = sortBy;
+      columnSortDirection = sortDirection;
+    }
+    
     const classNames = cn(
       'ReactVirtualized__Table__headerColumn',
       headerClassName,
@@ -503,8 +523,8 @@ export default class Table extends PureComponent {
       dataKey,
       disableSort,
       label,
-      sortBy,
-      sortDirection,
+      sortBy: columnSortBy,
+      sortDirection: columnSortDirection,
     });
 
     const a11yProps = {
@@ -512,23 +532,59 @@ export default class Table extends PureComponent {
     };
 
     if (sortEnabled || onHeaderClick) {
-      // If this is a sortable header, clicking it should update the table data's sorting.
-      const isFirstTimeSort = sortBy !== dataKey;
-
-      // If this is the firstTime sort of this column, use the column default sort order.
-      // Otherwise, invert the direction of the sort.
-      const newSortDirection = isFirstTimeSort
-        ? defaultSortDirection
-        : sortDirection === SortDirection.DESC
-          ? SortDirection.ASC
-          : SortDirection.DESC;
-
       const onClick = event => {
-        sortEnabled &&
+        if (sortEnabled) {
+          let newSortBy;
+          let newSortDirection;
+
+          // For shift+click merge sort with previous sort, ignore shift if clicked on column, 
+          // which was used for simple sort.
+          if (event.shiftKey) {
+            if (Array.isArray(sortBy)){
+              newSortBy = sortBy.slice();
+              newSortDirection = sortDirection.slice();
+
+              // If this is the firstTime sort of this column, add it to sort array.
+              // Otherwise, invert the direction of the sort.
+              const index = sortBy.indexOf(dataKey);
+              if (index === -1) {
+                newSortBy.push(dataKey);
+                newSortDirection.push(defaultSortDirection);
+              } else {                
+                newSortDirection[index] = columnSortDirection === SortDirection.DESC
+                  ? SortDirection.ASC
+                  : SortDirection.DESC
+              }
+            } else {
+              // If this is the firstTime sort of this column, add it to sort array.
+              // Otherwise, invert the direction of the sort.
+              if (sortBy !== dataKey) {
+                newSortBy = [sortBy, dataKey];
+                newSortDirection = [sortDirection, defaultSortDirection];
+              } else {                
+                newSortBy = dataKey;
+                newSortDirection = sortDirection === SortDirection.DESC
+                  ? SortDirection.ASC
+                  : SortDirection.DESC;
+              }
+            }
+          } else {
+            newSortBy = dataKey;
+
+            // If this is the firstTime sort of this column, use the column default sort order.
+            // Otherwise, invert the direction of the sort.
+            newSortDirection = columnSortBy !== dataKey
+              ? defaultSortDirection
+              : columnSortDirection === SortDirection.DESC
+                ? SortDirection.ASC
+                : SortDirection.DESC;
+          }
+
           sort({
-            sortBy: dataKey,
+            sortBy: newSortBy,
             sortDirection: newSortDirection,
-          });
+          })
+        }
         onHeaderClick && onHeaderClick({columnData, dataKey, event});
       };
 
@@ -544,9 +600,9 @@ export default class Table extends PureComponent {
       a11yProps.onKeyDown = onKeyDown;
     }
 
-    if (sortBy === dataKey) {
+    if (columnSortDirection !== undefined) {
       a11yProps['aria-sort'] =
-        sortDirection === SortDirection.ASC ? 'ascending' : 'descending';
+        columnSortDirection === SortDirection.ASC ? 'ascending' : 'descending';
     }
 
     if (id) {

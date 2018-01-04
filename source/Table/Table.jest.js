@@ -583,6 +583,185 @@ describe('Table', () => {
     });
   });
 
+  describe('multi-sorting', () => {
+    /*
+    this will write react error in console, but test will succeed:
+
+    console.error node_modules\react-dom\cjs\react-dom.development.js:9747
+    The above error occurred in the <Table> component:
+        in Table
+    
+    Consider adding an error boundary to your tree to customize error handling behavior.
+    Visit https://fb.me/react-error-boundaries to learn more about error boundaries.    
+    */ /*
+    it('should throw error for invalid sort-by and sort-direction props', () => {
+      expect(() => {
+        render(
+          getMarkup({
+            sort: () => {},
+            sortBy: ['name', 'email'],
+            sortDirection: SortDirection.ASC,
+          }),
+        );
+      }).toThrow('props sort-by and sort-direction cannot have different item count!');
+    });
+    */
+
+    it('should render the correct sort indicators by the current sort-by columns', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              sort: () => {},
+              sortBy: ['name', 'email'],
+              sortDirection: [sortDirection, sortDirection],
+            }),
+          ),
+        );
+
+        ['name', 'email'].forEach((name, index) => {
+          const nameColumn = rendered.querySelector(
+            '.ReactVirtualized__Table__headerColumn:nth-of-type(' +
+              (index + 1) +
+              ')',
+          );
+
+          expect(
+            nameColumn.querySelector(
+              '.ReactVirtualized__Table__sortableHeaderIcon',
+            ),
+          ).not.toEqual(null);
+          expect(
+            nameColumn.querySelector(
+              `.ReactVirtualized__Table__sortableHeaderIcon--${sortDirection}`,
+            ),
+          ).not.toEqual(null);
+        });
+      });
+    });
+
+    it('should call sort with the correct arguments when the current sort-by column header is clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              sort: ({sortBy, sortDirection}) =>
+                sortCalls.push({sortBy, sortDirection}),
+              sortBy: ['name', 'email'],
+              sortDirection: [sortDirection, sortDirection],
+            }),
+          ),
+        );
+        const nameColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:first-of-type',
+        );
+
+        Simulate.click(nameColumn);
+        expect(sortCalls.length).toEqual(1);
+
+        const {sortBy, sortDirection: newSortDirection} = sortCalls[0];
+        const expectedSortDirection =
+          sortDirection === SortDirection.ASC
+            ? SortDirection.DESC
+            : SortDirection.ASC;
+
+        expect(sortBy).toEqual('name');
+        expect(newSortDirection).toEqual(expectedSortDirection);
+      });
+    });
+
+    it('should call sort with the correct arguments when a new sort-by column header is clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              sort: ({sortBy, sortDirection}) =>
+                sortCalls.push({sortBy, sortDirection}),
+              sortBy: ['name', 'email'],
+              sortDirection: [sortDirection, sortDirection],
+            }),
+          ),
+        );
+        const idColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:nth-of-type(3)',
+        );
+
+        Simulate.click(idColumn);
+        expect(sortCalls.length).toEqual(1);
+
+        const {sortBy, sortDirection: newSortDirection} = sortCalls[0];
+        expect(sortBy).toEqual('id');
+        expect(newSortDirection).toEqual(SortDirection.ASC);
+      });
+    });
+
+   it('should call sort with the correct arguments when the current sort-by column header is shift-clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              sort: ({sortBy, sortDirection}) =>
+                sortCalls.push({sortBy, sortDirection}),
+              sortBy: ['name', 'email'],
+              sortDirection: [sortDirection, sortDirection],
+            }),
+          ),
+        );
+        const nameColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:first-of-type',
+        );
+
+        Simulate.click(nameColumn, {shiftKey: true});
+        expect(sortCalls.length).toEqual(1);
+
+        const {sortBy, sortDirection: newSortDirection} = sortCalls[0];
+        const expectedSortDirection = [
+          sortDirection === SortDirection.ASC
+            ? SortDirection.DESC
+            : SortDirection.ASC,
+          sortDirection,
+        ];
+
+        expect(sortBy).toEqual(['name', 'email']);
+        expect(newSortDirection).toEqual(expectedSortDirection);
+      });
+    });
+
+    it('should call sort with the correct arguments when a new sort-by column header is shift-clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              sort: ({sortBy, sortDirection}) =>
+                sortCalls.push({sortBy, sortDirection}),
+              sortBy: ['name', 'email'],
+              sortDirection: [sortDirection, sortDirection],
+            }),
+          ),
+        );
+        const idColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:nth-of-type(3)',
+        );
+
+        Simulate.click(idColumn, { shiftKey: true });
+        expect(sortCalls.length).toEqual(1);
+
+        const {sortBy, sortDirection: newSortDirection} = sortCalls[0];
+        expect(sortBy).toEqual(['name', 'email', 'id']);
+        expect(newSortDirection).toEqual([sortDirection, sortDirection, SortDirection.ASC]);
+      });
+    });
+  });
+
   describe('headerRowRenderer', () => {
     it('should render a custom header row if one is provided', () => {
       const headerRowRenderer = jest.fn().mockReturnValue(<div>foo bar</div>);
