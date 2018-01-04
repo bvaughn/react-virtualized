@@ -83,6 +83,13 @@ describe('Table', () => {
           minWidth={minWidth}
           width={50}
         />
+        <Column
+          label="Id"
+          dataKey="id"
+          maxWidth={maxWidth}
+          minWidth={minWidth}
+          width={50}
+        />
         {false}
         {true}
         {null}
@@ -187,9 +194,10 @@ describe('Table', () => {
         const columns = rendered.querySelectorAll(
           '.ReactVirtualized__Table__headerColumn',
         );
-        expect(columns.length).toEqual(2);
+        expect(columns.length).toEqual(3);
         expect(columns[0].textContent).toEqual('Name');
         expect(columns[1].textContent).toEqual('Email');
+        expect(columns[2].textContent).toEqual('Id');
       });
 
       it('should render the expected rows and columns', () => {
@@ -210,9 +218,10 @@ describe('Table', () => {
           let columns = row.querySelectorAll(
             '.ReactVirtualized__Table__rowColumn',
           );
-          expect(columns.length).toEqual(2);
+          expect(columns.length).toEqual(3);
           expect(columns[0].textContent).toEqual(rowData.get('name'));
           expect(columns[1].textContent).toEqual(rowData.get('email'));
+          expect(columns[2].textContent).toEqual(rowData.get('id').toString());
         });
       });
     });
@@ -415,7 +424,7 @@ describe('Table', () => {
         rendered.querySelectorAll(
           '.ReactVirtualized__Table__sortableHeaderColumn',
         ).length,
-      ).toEqual(1); // Email only
+      ).toEqual(2); // Email and Id
     });
 
     it('should render sortable column headers as sortable', () => {
@@ -437,7 +446,7 @@ describe('Table', () => {
         rendered.querySelectorAll(
           '.ReactVirtualized__Table__sortableHeaderColumn',
         ).length,
-      ).toEqual(2); // Email and Name
+      ).toEqual(3); // Email, Name and Id
     });
 
     it('should render the correct sort indicator by the current sort-by column', () => {
@@ -590,7 +599,7 @@ describe('Table', () => {
       expect(headerRowRenderer).toHaveBeenCalled();
       const params = headerRowRenderer.mock.calls[0][0];
       expect(params.className).toContain('someRowClass');
-      expect(params.columns).toHaveLength(2);
+      expect(params.columns).toHaveLength(3);
       expect(params.style.height).toBe(33);
     });
   });
@@ -1030,7 +1039,7 @@ describe('Table', () => {
         ),
       );
       expect(node.className).toContain('foo');
-      expect(node.querySelectorAll('.bar').length).toEqual(2);
+      expect(node.querySelectorAll('.bar').length).toEqual(3);
       expect(node.querySelectorAll('.baz').length).toEqual(9);
     });
 
