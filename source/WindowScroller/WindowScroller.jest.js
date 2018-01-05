@@ -102,6 +102,20 @@ describe('WindowScroller', () => {
     expect(component._positionFromLeft).toEqual(350 + 150 - 250);
   });
 
+  it('should warn on passing non-element or not null', () => {
+    const warnFn = jest.spyOn(console, 'warn');
+    const renderFn = jest.fn();
+
+    render(getMarkup({renderFn}));
+
+    renderFn.mock.calls[0][0].registerChild(1);
+    renderFn.mock.calls[0][0].registerChild(document.createElement('div'));
+    renderFn.mock.calls[0][0].registerChild(null);
+
+    expect(warnFn).toHaveBeenCalledTimes(1);
+    warnFn.mockRestore();
+  });
+
   // Test edge-case reported in bvaughn/react-virtualized/pull/346
   it('should have correct top and left properties to be defined on :_positionFromTop and :_positionFromLeft if documentElement is scrolled', () => {
     render.unmount();
