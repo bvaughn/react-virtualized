@@ -18,7 +18,7 @@ export default function createDetectElementResize(nonce) {
   } else if (typeof self !== 'undefined') {
     _window = self;
   } else {
-    _window = this;
+    _window = global;
   }
 
   var attachEvent = typeof document !== 'undefined' && document.attachEvent;
