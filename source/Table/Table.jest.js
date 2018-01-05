@@ -700,7 +700,7 @@ describe('Table', () => {
       });
     });
 
-   it('should call sort with the correct arguments when the current sort-by column header is shift-clicked', () => {
+    it('should call sort with the correct arguments when the current sort-by column header is shift-clicked', () => {
       const sortDirections = [SortDirection.ASC, SortDirection.DESC];
       sortDirections.forEach(sortDirection => {
         const sortCalls = [];
@@ -734,6 +734,33 @@ describe('Table', () => {
       });
     });
 
+    it('should call sort with the correct arguments when the current sort-by column header is ctrl-clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              sort: ({sortBy, sortDirection}) =>
+                sortCalls.push({sortBy, sortDirection}),
+              sortBy: ['name', 'email'],
+              sortDirection: [sortDirection, sortDirection],
+            }),
+          ),
+        );
+        const nameColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:first-of-type',
+        );
+
+        Simulate.click(nameColumn, {ctrlKey: true});
+        expect(sortCalls.length).toEqual(1);
+
+        const {sortBy, sortDirection: newSortDirection} = sortCalls[0];
+        expect(sortBy).toEqual('email');
+        expect(newSortDirection).toEqual(sortDirection);
+      });
+    });
+
     it('should call sort with the correct arguments when a new sort-by column header is shift-clicked', () => {
       const sortDirections = [SortDirection.ASC, SortDirection.DESC];
       sortDirections.forEach(sortDirection => {
@@ -752,12 +779,43 @@ describe('Table', () => {
           '.ReactVirtualized__Table__headerColumn:nth-of-type(3)',
         );
 
-        Simulate.click(idColumn, { shiftKey: true });
+        Simulate.click(idColumn, {shiftKey: true});
         expect(sortCalls.length).toEqual(1);
 
         const {sortBy, sortDirection: newSortDirection} = sortCalls[0];
         expect(sortBy).toEqual(['name', 'email', 'id']);
-        expect(newSortDirection).toEqual([sortDirection, sortDirection, SortDirection.ASC]);
+        expect(newSortDirection).toEqual([
+          sortDirection,
+          sortDirection,
+          SortDirection.ASC,
+        ]);
+      });
+    });
+
+    it('should call sort with the correct arguments when a new sort-by column header is ctrl-clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              sort: ({sortBy, sortDirection}) =>
+                sortCalls.push({sortBy, sortDirection}),
+              sortBy: ['name', 'email'],
+              sortDirection: [sortDirection, sortDirection],
+            }),
+          ),
+        );
+        const idColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:nth-of-type(3)',
+        );
+
+        Simulate.click(idColumn, {ctrlKey: true});
+        expect(sortCalls.length).toEqual(1);
+
+        const {sortBy, sortDirection: newSortDirection} = sortCalls[0];
+        expect(sortBy).toEqual(['name', 'email']);
+        expect(newSortDirection).toEqual([sortDirection, sortDirection]);
       });
     });
   });
