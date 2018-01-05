@@ -1,10 +1,16 @@
 Changelog
 ------------
 
+##### 9.16.0
+
+* 🐛 Fixed window check for SSR in `detectElementResize` ([eqyiel](https://github.com/eqyiel) - [#945](https://github.com/bvaughn/react-virtualized/pull/945))
+* 🎉 Allowed custom `WindowScroller` child with `registerChild` in children function ([TrySound](https://github.com/TrySound) - [#940](https://github.com/bvaughn/react-virtualized/pull/940) and [#947](https://github.com/bvaughn/react-virtualized/pull/947))
+* 🐛 Fixed `WindowScroller` scrollElement prop type ([TrySound](https://github.com/TrySound) - [#939](https://github.com/bvaughn/react-virtualized/pull/939))
+
 ##### 9.15.0
 
-* 🎉 Detect `WindowScroller` container (not only window) resize similar to `AutoSizer` ([TrySound](https://github.com/TrySound) - [#918](https://github.com/bvaughn/react-virtualized/pull/918))
-* 🐛 Prevent position breaking on `WindowScroller` container resize ([TrySound](https://github.com/TrySound) - [#920](https://github.com/bvaughn/react-virtualized/pull/920))
+* 🎉 Detected `WindowScroller` container (not only window) resize similar to `AutoSizer` ([TrySound](https://github.com/TrySound) - [#918](https://github.com/bvaughn/react-virtualized/pull/918))
+* 🐛 Prevented position breaking on `WindowScroller` container resize ([TrySound](https://github.com/TrySound) - [#920](https://github.com/bvaughn/react-virtualized/pull/920))
 * 🎉 Published `AutoSizer` Flow types ([TrySound](https://github.com/TrySound) - [#934](https://github.com/bvaughn/react-virtualized/pull/934))
 * 🎉 Published `WindowScroller` Flow types ([TrySound](https://github.com/TrySound) - [#915](https://github.com/bvaughn/react-virtualized/pull/915))
 
