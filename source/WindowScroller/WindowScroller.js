@@ -20,9 +20,9 @@ type Props = {
    * This function should implement the following signature:
    * ({ height, isScrolling, scrollLeft, scrollTop, width }) => PropTypes.element
    */
-  children: (params: {
+  children: ({
     onChildScroll: ({scrollTop: number}) => void,
-    childRef: (?Element) => void,
+    registerChild: (?Element) => void,
     height: number,
     isScrolling: boolean,
     scrollLeft: number,
@@ -31,10 +31,10 @@ type Props = {
   }) => React.Node,
 
   /** Callback to be invoked on-resize: ({ height, width }) */
-  onResize: (params: {height: number, width: number}) => void,
+  onResize: ({height: number, width: number}) => void,
 
   /** Callback to be invoked on-scroll: ({ scrollLeft, scrollTop }) */
-  onScroll: (params: {scrollLeft: number, scrollTop: number}) => void,
+  onScroll: ({scrollLeft: number, scrollTop: number}) => void,
 
   /** Element to attach scroll event listeners. Defaults to window. */
   scrollElement: ?Element,
@@ -173,7 +173,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
 
     return children({
       onChildScroll: this._onChildScroll,
-      childRef: this._childRef,
+      registerChild: this._registerChild,
       height,
       isScrolling,
       scrollLeft,
@@ -182,7 +182,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     });
   }
 
-  _childRef = element => {
+  _registerChild = element => {
     this._child = element;
     this.updatePosition();
   };

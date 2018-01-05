@@ -82,7 +82,7 @@ describe('WindowScroller', () => {
     expect(component._positionFromLeft).toEqual(left);
   });
 
-  it('should allow passing child element with childRef of children function param', () => {
+  it('should allow passing child element with registerChild of children function param', () => {
     const scrollElement = document.createElement('div');
     scrollElement.scrollTop = 100;
     scrollElement.scrollLeft = 150;
@@ -97,7 +97,7 @@ describe('WindowScroller', () => {
     });
     const renderFn = jest.fn();
     const component = render(getMarkup({scrollElement, renderFn}));
-    renderFn.mock.calls[0][0].childRef(child);
+    renderFn.mock.calls[0][0].registerChild(child);
     expect(component._positionFromTop).toEqual(300 + 100 - 200);
     expect(component._positionFromLeft).toEqual(350 + 150 - 250);
   });
