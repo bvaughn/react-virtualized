@@ -54,7 +54,7 @@ ReactDOM.render(
 );
 ```
 
-or
+or using `registerChild` you can specify grid container deeper in layout (by default `WindowScroller` uses `ReactDOM.findDOMNode` function)
 
 ```javascript
 import React from 'react';
@@ -65,17 +65,22 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 ReactDOM.render(
   <WindowScroller>
     {({ height, isScrolling, registerChild, scrollTop }) => (
-      <div ref={registerChild}>
-        <List
-          autoHeight
-          height={height}
-          isScrolling={isScrolling}
-          rowCount={...}
-          rowHeight={...}
-          rowRenderer={...}
-          scrollTop={scrollTop}
-          width={...}
-        />
+      <div>
+        <header>
+          Table header
+        </header>
+        <div ref={registerChild}>
+          <List
+            autoHeight
+            height={height}
+            isScrolling={isScrolling}
+            rowCount={...}
+            rowHeight={...}
+            rowRenderer={...}
+            scrollTop={scrollTop}
+            width={...}
+          />
+        </div>
       </div>
     )}
   </WindowScroller>,
