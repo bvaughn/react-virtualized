@@ -4,7 +4,7 @@ Changelog
 ##### 9.16.0
 
 * 🐛 Fixed window check for SSR in `detectElementResize` ([eqyiel](https://github.com/eqyiel) - [#945](https://github.com/bvaughn/react-virtualized/pull/945))
-* 🎉 Allowed custom `WindowScroller` child with `childRef` in children function ([TrySound](https://github.com/TrySound) - [#940](https://github.com/bvaughn/react-virtualized/pull/940))
+* 🎉 Allowed custom `WindowScroller` child with `registerChild` in children function ([TrySound](https://github.com/TrySound) - [#940](https://github.com/bvaughn/react-virtualized/pull/940) and [#947](https://github.com/bvaughn/react-virtualized/pull/947))
 * 🐛 Fixed `WindowScroller` scrollElement prop type ([TrySound](https://github.com/TrySound) - [#939](https://github.com/bvaughn/react-virtualized/pull/939))
 
 ##### 9.15.0
