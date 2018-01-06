@@ -221,19 +221,4 @@ describe('AutoSizer', () => {
       done();
     });
   });
-
-  describe('server-side rendering', () => {
-    it('should render content with default widths and heights initially', () => {
-      const rendered = ReactDOMServer.renderToString(
-        getMarkup({
-          defaultHeight: 100,
-          defaultWidth: 200,
-          height: 400,
-          width: 800,
-        }),
-      );
-      expect(rendered).toContain('height:100');
-      expect(rendered).toContain('width:200');
-    });
-  });
 });
