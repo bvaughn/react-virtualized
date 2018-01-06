@@ -1,7 +1,6 @@
 const os = require('os');
 const util = require('util');
 const path = require('path');
-const puppeteer = require('puppeteer');
 const rimraf = require('rimraf');
 
 const del = util.promisify(rimraf);
