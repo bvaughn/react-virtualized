@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {findDOMNode} from 'react-dom';
-import ReactDOMServer from 'react-dom/server';
 import {render} from '../TestUtils';
 import WindowScroller, {IS_SCROLLING_TIMEOUT} from './WindowScroller';
 
@@ -199,7 +198,6 @@ describe('WindowScroller', () => {
     it('should update :scrollTop when window is scrolled', async () => {
       const renderFn = jest.fn();
       const component = render(getMarkup({renderFn}));
-      const rendered = findDOMNode(component);
 
       // Initial load of the component should have 0 scrollTop
       expect(renderFn).lastCalledWith(

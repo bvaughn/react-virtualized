@@ -1,17 +1,14 @@
 {
-  "extends": [
-    "fbjs"
-  ],
+  "parser": "babel-eslint",
   "plugins": [
-    "prettier",
     "react"
   ],
-  "parser": "babel-eslint",
+  "extends": [
+    "fbjs",
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
-    "max-len": 0
-  },
-  "env": {
-    "node": true,
-    "browser": true
+    "no-console": 0
   }
 }
