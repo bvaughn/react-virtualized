@@ -1,6 +1,12 @@
 Changelog
 ------------
 
+##### 9.16.1
+
+* 🐛 Run server-side rendering tests under pure node environment and fix SSR in `WindowScroller` ([TrySound](https://github.com/TrySound) - [#953](https://github.com/bvaughn/react-virtualized/pull/953))
+* 🎉 Warn on passing wrong value to registerChild in `WindowScroller` ([TrySound](https://github.com/TrySound) - [#949](https://github.com/bvaughn/react-virtualized/pull/949))
+* 🐛 Fixed overrided merge `WindowScroller` scrollElement prop type ([TrySound](https://github.com/TrySound) - [#948](https://github.com/bvaughn/react-virtualized/pull/948))
+
 ##### 9.16.0
 
 * 🐛 Fixed window check for SSR in `detectElementResize` ([eqyiel](https://github.com/eqyiel) - [#945](https://github.com/bvaughn/react-virtualized/pull/945))
