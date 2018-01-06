@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {findDOMNode} from 'react-dom';
-import ReactDOMServer from 'react-dom/server';
 import {render} from '../TestUtils';
 import AutoSizer from './AutoSizer';
 
