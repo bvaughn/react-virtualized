@@ -477,26 +477,4 @@ describe('WindowScroller', () => {
       );
     });
   });
-
-  describe('server-side rendering', () => {
-    it('should render content with default widths and heights initially', () => {
-      const renderFn = jest.fn();
-
-      render(
-        getMarkup({
-          renderFn,
-          scrollElement: null,
-          serverHeight: 100,
-          serverWidth: 200,
-        }),
-      );
-
-      expect(renderFn).lastCalledWith(
-        expect.objectContaining({
-          height: 100,
-          width: 200,
-        }),
-      );
-    });
-  });
 });

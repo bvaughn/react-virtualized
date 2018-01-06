@@ -87,7 +87,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _isMounted = false;
   _positionFromTop = 0;
   _positionFromLeft = 0;
-  _detectElementResize: DetectElementResize = createDetectElementResize();
+  _detectElementResize: DetectElementResize;
   _child: ?Element;
 
   state = {
@@ -126,6 +126,8 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
 
   componentDidMount() {
     const scrollElement = this.props.scrollElement;
+
+    this._detectElementResize = createDetectElementResize();
 
     this.updatePosition(scrollElement);
 
