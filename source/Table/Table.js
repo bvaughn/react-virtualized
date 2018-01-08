@@ -43,6 +43,9 @@ export default class Table extends PureComponent {
     /** Disable rendering the header at all */
     disableHeader: PropTypes.bool,
 
+    /** Enable sorting by multiple columns */
+    enableMultiSort: PropTypes.bool,
+
     /**
      * Used to estimate the total height of a Table before all of its rows have actually been measured.
      * The estimated total height is adjusted as rows are rendered.
@@ -196,7 +199,8 @@ export default class Table extends PureComponent {
     scrollTop: PropTypes.number,
 
     /**
-     * Sort function to be called if a sortable header is clicked.
+     * Sort function to be called if a sortable header is clicked and enableMultiSort
+	 * is set to false.
      * ({ sortBy: string, sortDirection: SortDirection }): void
      */
     sort: PropTypes.func,
@@ -206,6 +210,22 @@ export default class Table extends PureComponent {
 
     /** Table data is currently sorted in this direction (if it is sorted at all) */
     sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
+
+    /**
+     * Sort function to be called if a sortable header is clicked and enableMultiSort
+	 * is set to true.
+     * ({ column: string, sortDirection: SortDirection }[]): void
+     */
+    multiSort: PropTypes.func,
+
+    /** Table data is currently sorted by these columns (if it is sorted at all) */
+    multiSortInfo: PropTypes.arrayOf(
+      PropTypes.shape({
+        column: PropTypes.string.isRequired,
+        sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
+          .isRequired,
+      }),
+    ),
 
     /** Optional inline style */
     style: PropTypes.object,
@@ -219,6 +239,7 @@ export default class Table extends PureComponent {
 
   static defaultProps = {
     disableHeader: false,
+    enableMultiSort: false,
     estimatedRowSize: 30,
     headerHeight: 0,
     headerStyle: {},
@@ -467,12 +488,13 @@ export default class Table extends PureComponent {
 
   _createHeader({column, index}) {
     const {
+      enableMultiSort,
       headerClassName,
       headerStyle,
       onHeaderClick,
       sort,
-      sortBy,
-      sortDirection,
+      multiSort,
+      multiSortInfo,
     } = this.props;
     const {
       dataKey,
@@ -483,7 +505,20 @@ export default class Table extends PureComponent {
       columnData,
       defaultSortDirection,
     } = column.props;
-    const sortEnabled = !disableSort && sort;
+	// multi-sort is not using sortBy and sortDirection props
+	let sortBy, sortDirection;	
+    if (enableMultiSort) {
+      const index = multiSortInfo.findIndex(o => o.column === dataKey);
+      if (index !== -1) {
+        sortBy = dataKey;
+        sortDirection = multiSortInfo[index].sortDirection;
+      }
+    } else {
+		sortBy = this.props.sortBy;
+		sortDirection = this.props.sortDirection;
+	}
+
+    const sortEnabled = !disableSort && (enableMultiSort ? multiSort : sort);
 
     const classNames = cn(
       'ReactVirtualized__Table__headerColumn',
@@ -512,23 +547,35 @@ export default class Table extends PureComponent {
     };
 
     if (sortEnabled || onHeaderClick) {
-      // If this is a sortable header, clicking it should update the table data's sorting.
-      const isFirstTimeSort = sortBy !== dataKey;
-
-      // If this is the firstTime sort of this column, use the column default sort order.
-      // Otherwise, invert the direction of the sort.
-      const newSortDirection = isFirstTimeSort
-        ? defaultSortDirection
-        : sortDirection === SortDirection.DESC
-          ? SortDirection.ASC
-          : SortDirection.DESC;
-
       const onClick = event => {
-        sortEnabled &&
-          sort({
-            sortBy: dataKey,
-            sortDirection: newSortDirection,
-          });
+        if (sortEnabled) {
+          if (enableMultiSort) {
+            const newMultiSortInfo = this._handleMultiSortColumnClick({
+              dataKey,
+              defaultSortDirection,
+              event,
+              multiSortInfo,
+            });
+            multiSort(newMultiSortInfo);
+          } else {
+            // If this is a sortable header, clicking it should update the table data's sorting.
+            const isFirstTimeSort = sortBy !== dataKey;
+
+            // If this is the firstTime sort of this column, use the column default sort order.
+            // Otherwise, invert the direction of the sort.
+            const newSortDirection = isFirstTimeSort
+              ? defaultSortDirection
+              : sortDirection === SortDirection.DESC
+                ? SortDirection.ASC
+                : SortDirection.DESC;
+
+            sort({
+              sortBy: dataKey,
+              sortDirection: newSortDirection,
+            });
+          }
+        }
+
         onHeaderClick && onHeaderClick({columnData, dataKey, event});
       };
 
@@ -562,6 +609,59 @@ export default class Table extends PureComponent {
         {renderedHeader}
       </div>
     );
+  }
+
+  _handleMultiSortColumnClick({
+    dataKey, 
+    defaultSortDirection, 
+    event, 
+    multiSortInfo
+  }) {
+    const index = multiSortInfo.findIndex(o => o.column === dataKey);
+
+    if (event.shiftKey) {
+      multiSortInfo = multiSortInfo.slice();
+
+      // If this is the firstTime sort of this column, add it to sort array.
+      // Otherwise, invert the direction of the sort.      
+      if (index === -1) {
+        multiSortInfo.push({
+          column: dataKey,
+          sortDirection: defaultSortDirection,
+        });
+      } else {
+        multiSortInfo[index].sortDirection =
+          multiSortInfo[index].sortDirection === SortDirection.DESC
+            ? SortDirection.ASC
+            : SortDirection.DESC;
+      }
+      
+      return multiSortInfo;
+    }
+
+    if (event.ctrlKey) {
+      // If this column is sorted by, removed it from sort.
+      if (index !== -1) {
+        multiSortInfo = multiSortInfo.slice();
+        multiSortInfo.splice(index, 1);
+      }
+
+      return multiSortInfo;
+    }
+
+    // If this is the firstTime sort of this column, use the column default sort order.
+    // Otherwise, invert the direction of the sort.
+    return [
+      {
+        column: dataKey,
+        sortDirection:
+          index === -1
+            ? defaultSortDirection
+            : multiSortInfo[index].sortDirection === SortDirection.DESC
+              ? SortDirection.ASC
+              : SortDirection.DESC,
+      },
+    ];
   }
 
   _createRow({rowIndex: index, isScrolling, key, parent, style}) {

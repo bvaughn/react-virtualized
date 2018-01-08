@@ -38,6 +38,7 @@ describe('Table', () => {
   }
 
   function getMarkup({
+    enableMultiSort,
     cellDataGetter,
     cellRenderer,
     columnData = {data: 123},
@@ -53,6 +54,7 @@ describe('Table', () => {
   } = {}) {
     return (
       <Table
+        enableMultiSort={enableMultiSort}
         headerHeight={20}
         height={100}
         overscanRowCount={0}
@@ -83,6 +85,7 @@ describe('Table', () => {
           minWidth={minWidth}
           width={50}
         />
+        {enableMultiSort && <Column label="Id" dataKey="id" width={50} />}
         {false}
         {true}
         {null}
@@ -570,6 +573,248 @@ describe('Table', () => {
         const {sortBy, sortDirection: newSortDirection} = sortCalls[0];
         expect(sortBy).toEqual('name');
         expect(newSortDirection).toEqual(sortDirection);
+      });
+    });
+  });
+
+  describe('multi-sort', () => {
+    it('should render the correct sort indicators', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              enableMultiSort: true,
+              multiSort: () => {},
+              multiSortInfo: [
+                {column: 'name', sortDirection},
+                {column: 'email', sortDirection},
+              ],
+            }),
+          ),
+        );
+
+        [1, 2].forEach(index => {
+          const column = rendered.querySelector(
+            '.ReactVirtualized__Table__headerColumn:nth-of-type(' + index + ')',
+          );
+
+          expect(
+            column.querySelector(
+              '.ReactVirtualized__Table__sortableHeaderIcon',
+            ),
+          ).not.toEqual(null);
+          expect(
+            column.querySelector(
+              `.ReactVirtualized__Table__sortableHeaderIcon--${sortDirection}`,
+            ),
+          ).not.toEqual(null);
+        });
+      });
+    });
+
+    it('should call multi-sort with the correct arguments when the current sort-by column header is clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              enableMultiSort: true,
+              multiSort: info => sortCalls.push(info),
+              multiSortInfo: [
+                {column: 'name', sortDirection},
+                {column: 'email', sortDirection},
+              ],
+            }),
+          ),
+        );
+        const nameColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:first-of-type',
+        );
+
+        Simulate.click(nameColumn);
+        expect(sortCalls.length).toEqual(1);
+        expect(sortCalls[0]).toEqual([
+          {
+            column: 'name',
+            sortDirection:
+              sortDirection === SortDirection.ASC
+                ? SortDirection.DESC
+                : SortDirection.ASC,
+          },
+        ]);
+      });
+    });
+
+    it('should call multi-sort with the correct arguments when the current sort-by column header is shift+clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              enableMultiSort: true,
+              multiSort: info => sortCalls.push(info),
+              multiSortInfo: [
+                {column: 'name', sortDirection},
+                {column: 'email', sortDirection},
+              ],
+            }),
+          ),
+        );
+        const nameColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:first-of-type',
+        );
+
+        Simulate.click(nameColumn, {shiftKey: true});
+        expect(sortCalls.length).toEqual(1);
+        expect(sortCalls[0]).toEqual([
+          {
+            column: 'name',
+            sortDirection:
+              sortDirection === SortDirection.ASC
+                ? SortDirection.DESC
+                : SortDirection.ASC,
+          },
+          {
+            column: 'email',
+            sortDirection,
+          },
+        ]);
+      });
+    });
+
+    it('should call multi-sort with the correct arguments when the current sort-by column header is ctrl+clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              enableMultiSort: true,
+              multiSort: info => sortCalls.push(info),
+              multiSortInfo: [
+                {column: 'name', sortDirection},
+                {column: 'email', sortDirection},
+              ],
+            }),
+          ),
+        );
+        const nameColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:first-of-type',
+        );
+
+        Simulate.click(nameColumn, {ctrlKey: true});
+        expect(sortCalls.length).toEqual(1);
+        expect(sortCalls[0]).toEqual([
+          {
+            column: 'email',
+            sortDirection,
+          },
+        ]);
+      });
+    });
+
+    it('should call multi-sort with the correct arguments when a new sort-by column header is clicked', () => {
+      const sortCalls = [];
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            enableMultiSort: true,
+            multiSort: info => sortCalls.push(info),
+            multiSortInfo: [
+              {column: 'name', sortDirection: SortDirection.ASC},
+              {column: 'email', sortDirection: SortDirection.ASC},
+            ],
+          }),
+        ),
+      );
+      const idColumn = rendered.querySelector(
+        '.ReactVirtualized__Table__headerColumn:nth-of-type(3)',
+      );
+
+      Simulate.click(idColumn);
+      expect(sortCalls.length).toEqual(1);
+      expect(sortCalls[0]).toEqual([
+        {
+          column: 'id',
+          sortDirection: SortDirection.ASC,
+        },
+      ]);
+    });
+
+    it('should call multi-sort with the correct arguments when a new sort-by column header is shift+clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              enableMultiSort: true,
+              multiSort: info => sortCalls.push(info),
+              multiSortInfo: [
+                {column: 'name', sortDirection},
+                {column: 'email', sortDirection},
+              ],
+            }),
+          ),
+        );
+        const idColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:nth-of-type(3)',
+        );
+
+        Simulate.click(idColumn, { shiftKey: true });
+        expect(sortCalls.length).toEqual(1);
+        expect(sortCalls[0]).toEqual([
+          {
+            column: 'name',
+            sortDirection,
+          },
+          {
+            column: 'email',
+            sortDirection,
+          },
+          {
+            column: 'id',
+            sortDirection: SortDirection.ASC,
+          },
+        ]);
+      });
+    });
+
+    it('should call multi-sort with the correct arguments when a new sort-by column header is ctrl+clicked', () => {
+      const sortDirections = [SortDirection.ASC, SortDirection.DESC];
+      sortDirections.forEach(sortDirection => {
+        const sortCalls = [];
+        const rendered = findDOMNode(
+          render(
+            getMarkup({
+              enableMultiSort: true,
+              multiSort: info => sortCalls.push(info),
+              multiSortInfo: [
+                {column: 'name', sortDirection},
+                {column: 'email', sortDirection},
+              ],
+            }),
+          ),
+        );
+        const idColumn = rendered.querySelector(
+          '.ReactVirtualized__Table__headerColumn:nth-of-type(3)',
+        );
+
+        Simulate.click(idColumn, { ctrlKey: true });
+        expect(sortCalls.length).toEqual(1);
+        expect(sortCalls[0]).toEqual([
+          {
+            column: 'name',
+            sortDirection,
+          },
+          {
+            column: 'email',
+            sortDirection,
+          }
+        ]);
       });
     });
   });
