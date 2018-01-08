@@ -111,79 +111,82 @@ export default class List extends React.PureComponent<Props> {
   };
 
   Grid: ?React.ElementRef<typeof Grid>;
+  deferredCallbacks: Array<() => void>;
+
+  constructor(props) {
+    super(props);
+
+    this.deferredCallbacks = [];
+  }
 
   forceUpdateGrid() {
-    if (this.Grid) {
-      this.Grid.forceUpdate();
-    }
+    this._maybeDeferGridRefCallback(() => this.Grid.forceUpdate());
   }
 
   /** See Grid#getOffsetForCell */
   getOffsetForRow({alignment, index}: {alignment: Alignment, index: number}) {
-    if (this.Grid) {
-      const {scrollTop} = this.Grid.getOffsetForCell({
+    let scrollTop = 0;
+    this._maybeDeferGridRefCallback(() => {
+      scrollTop = this.Grid.getOffsetForCell({
         alignment,
         rowIndex: index,
         columnIndex: 0,
-      });
+      }).scrollTop;
+    });
 
-      return scrollTop;
-    }
-    return 0;
+    return scrollTop;
   }
 
   /** CellMeasurer compatibility */
   invalidateCellSizeAfterRender({columnIndex, rowIndex}: CellPosition) {
-    if (this.Grid) {
+    this._maybeDeferGridRefCallback(() =>
       this.Grid.invalidateCellSizeAfterRender({
         rowIndex,
         columnIndex,
-      });
-    }
+      }),
+    );
   }
 
   /** See Grid#measureAllCells */
   measureAllRows() {
-    if (this.Grid) {
-      this.Grid.measureAllCells();
-    }
+    this._maybeDeferGridRefCallback(() => this.Grid.measureAllCells());
   }
 
   /** CellMeasurer compatibility */
   recomputeGridSize({columnIndex = 0, rowIndex = 0}: CellPosition = {}) {
-    if (this.Grid) {
+    this._maybeDeferGridRefCallback(() =>
       this.Grid.recomputeGridSize({
         rowIndex,
         columnIndex,
-      });
-    }
+      }),
+    );
   }
 
   /** See Grid#recomputeGridSize */
   recomputeRowHeights(index: number = 0) {
-    if (this.Grid) {
+    this._maybeDeferGridRefCallback(() =>
       this.Grid.recomputeGridSize({
         rowIndex: index,
         columnIndex: 0,
-      });
-    }
+      }),
+    );
   }
 
   /** See Grid#scrollToPosition */
   scrollToPosition(scrollTop: number = 0) {
-    if (this.Grid) {
-      this.Grid.scrollToPosition({scrollTop});
-    }
+    this._maybeDeferGridRefCallback(() =>
+      this.Grid.scrollToPosition({scrollTop}),
+    );
   }
 
   /** See Grid#scrollToCell */
   scrollToRow(index: number = 0) {
-    if (this.Grid) {
+    this._maybeDeferGridRefCallback(() =>
       this.Grid.scrollToCell({
         columnIndex: 0,
         rowIndex: index,
-      });
-    }
+      }),
+    );
   }
 
   render() {
@@ -214,7 +217,6 @@ export default class List extends React.PureComponent<Props> {
     isScrolling,
     isVisible,
     key,
-    parent,
   }: CellRendererParams) => {
     const {rowRenderer} = this.props;
 
@@ -230,8 +232,6 @@ export default class List extends React.PureComponent<Props> {
       style.width = '100%';
     }
 
-    this.Grid = this.Grid || parent;
-
     return rowRenderer({
       index: rowIndex,
       style,
@@ -242,8 +242,21 @@ export default class List extends React.PureComponent<Props> {
     });
   };
 
+  _maybeDeferGridRefCallback(callbackDependingOnGridRef: () => void) {
+    if (this.Grid) {
+      callbackDependingOnGridRef();
+    } else {
+      this.deferredCallbacks.push(callbackDependingOnGridRef);
+    }
+  }
+
   _setRef = (ref: ?React.ElementRef<typeof Grid>) => {
     this.Grid = ref;
+    if (this.Grid && this.deferredCallbacks.length > 0) {
+      this.deferredCallbacks.forEach((callback: () => void) => callback());
+      this.forceUpdateGrid();
+      this.deferredCallbacks.length = 0;
+    }
   };
 
   _onScroll = ({clientHeight, scrollHeight, scrollTop}: GridScroll) => {
