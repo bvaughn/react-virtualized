@@ -214,6 +214,7 @@ export default class List extends React.PureComponent<Props> {
     isScrolling,
     isVisible,
     key,
+    parent,
   }: CellRendererParams) => {
     const {rowRenderer} = this.props;
 
@@ -228,6 +229,8 @@ export default class List extends React.PureComponent<Props> {
       // This prevents them from flowing under a scrollbar (if present).
       style.width = '100%';
     }
+
+    this.Grid = this.Grid || parent;
 
     return rowRenderer({
       index: rowIndex,
