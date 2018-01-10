@@ -7,7 +7,7 @@ import React, {Component} from 'react';
 import List from '../List';
 import {render} from '../TestUtils';
 
-describe('InfiniteLoader', () => {
+describe.skip('InfiniteLoader', () => {
   let innerOnRowsRendered;
   let isRowLoadedCalls = [];
   let isRowLoadedMap = {};

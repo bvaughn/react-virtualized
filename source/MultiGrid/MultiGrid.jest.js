@@ -171,7 +171,7 @@ describe('MultiGrid', () => {
     });
   });
 
-  describe('#recomputeGridSize', () => {
+  describe.skip('#recomputeGridSize', () => {
     it('should clear calculated cached styles in recomputeGridSize', () => {
       let fixedRowHeight = 75;
       let fixedColumnWidth = 100;
@@ -250,7 +250,7 @@ describe('MultiGrid', () => {
     });
   });
 
-  describe('scrollToColumn and scrollToRow', () => {
+  describe.skip('scrollToColumn and scrollToRow', () => {
     it('should adjust :scrollLeft for the main Grid when scrollToColumn is used', () => {
       const rendered = findDOMNode(
         render(
@@ -310,7 +310,7 @@ describe('MultiGrid', () => {
     });
   });
 
-  describe('#invalidateCellSizeAfterRender', () => {
+  describe.skip('#invalidateCellSizeAfterRender', () => {
     it('should call invalidateCellSizeAfterRender() on inner Grids', () => {
       const cellRenderer = jest.fn();
       cellRenderer.mockImplementation(({key}) => <div key={key} style={{}} />);
@@ -394,7 +394,7 @@ describe('MultiGrid', () => {
       expect(bottomRightGrid.style.backgroundColor).toEqual('red');
     });
   });
-  describe('scrollTop and scrollLeft', () => {
+  describe.skip('scrollTop and scrollLeft', () => {
     it('should adjust :scrollLeft for top-right and main grids when scrollLeft is used', () => {
       const rendered = findDOMNode(
         render(
@@ -470,7 +470,7 @@ describe('MultiGrid', () => {
     });
   });
 
-  describe('deferredMeasurementCache', () => {
+  describe.skip('deferredMeasurementCache', () => {
     function getDeferredMeasurementCache() {
       const deferredMeasurementCache = new CellMeasurerCache({
         fixedHeight: true,
