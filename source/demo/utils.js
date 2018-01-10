@@ -4,7 +4,7 @@
 export function generateRandomList() {
   const list = [];
 
-  for (var i = 0; i < 1000; i++) {
+  for (var i = 0; i < 1000; i += 3) {
     const random = loremIpsum[i % loremIpsum.length];
     const randoms = [random];
 
@@ -12,14 +12,18 @@ export function generateRandomList() {
       randoms.push(loremIpsum[(i * j) % loremIpsum.length]);
     }
 
-    list.push({
-      color: BADGE_COLORS[i % BADGE_COLORS.length],
-      index: i,
-      name: NAMES[i % NAMES.length],
-      random,
-      randomLong: randoms.join(' '),
-      size: ROW_HEIGHTS[Math.floor(Math.random() * ROW_HEIGHTS.length)],
-    });
+    const name = NAMES[i % NAMES.length];
+
+    for (var j = 0; j < 3; ++j) {
+      list.push({
+        color: BADGE_COLORS[j % BADGE_COLORS.length],
+        index: i + j,
+        name,
+        random,
+        randomLong: randoms.join(' '),
+        size: ROW_HEIGHTS[Math.floor(Math.random() * ROW_HEIGHTS.length)],
+      });
+    }
   }
 
   return list;

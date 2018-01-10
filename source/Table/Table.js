@@ -26,6 +26,13 @@ export default class Table extends PureComponent {
      */
     autoHeight: PropTypes.bool,
 
+    /**
+     * Helper function for calculating new sort state
+     * ({ dataKey: string, defaultSortDirection: string, event: Event }):
+     * { sortBy: string | string[], sortDirection: string | string[] }
+     */
+    calcNewSort: PropTypes.func.isRequired,
+
     /** One or more Columns describing the data displayed in this row */
     children: props => {
       const children = React.Children.toArray(props.children);
@@ -201,11 +208,10 @@ export default class Table extends PureComponent {
      */
     sort: PropTypes.func,
 
-    /** Table data is currently sorted by this :dataKey (if it is sorted at all) */
-    sortBy: PropTypes.string,
-
-    /** Table data is currently sorted in this direction (if it is sorted at all) */
-    sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
+    /** Helper function to resolve column current sortDirection
+     * ({ dataKey }) : { sortDirection }
+     */
+    sortState: PropTypes.func.isRequired,
 
     /** Optional inline style */
     style: PropTypes.object,
@@ -467,12 +473,12 @@ export default class Table extends PureComponent {
 
   _createHeader({column, index}) {
     const {
+      calcNewSort,
       headerClassName,
       headerStyle,
       onHeaderClick,
       sort,
-      sortBy,
-      sortDirection,
+      sortState,
     } = this.props;
     const {
       dataKey,
@@ -498,6 +504,9 @@ export default class Table extends PureComponent {
       ...column.props.headerStyle,
     });
 
+    const {sortDirection} = sortState({dataKey});
+    const sortBy = sortDirection ? dataKey : undefined;
+
     const renderedHeader = headerRenderer({
       columnData,
       dataKey,
@@ -512,23 +521,21 @@ export default class Table extends PureComponent {
     };
 
     if (sortEnabled || onHeaderClick) {
-      // If this is a sortable header, clicking it should update the table data's sorting.
-      const isFirstTimeSort = sortBy !== dataKey;
-
-      // If this is the firstTime sort of this column, use the column default sort order.
-      // Otherwise, invert the direction of the sort.
-      const newSortDirection = isFirstTimeSort
-        ? defaultSortDirection
-        : sortDirection === SortDirection.DESC
-          ? SortDirection.ASC
-          : SortDirection.DESC;
-
       const onClick = event => {
-        sortEnabled &&
+        if (sortEnabled) {
+          const {
+            sortBy: newSortBy,
+            sortDirection: newSortDirection,
+          } = calcNewSort({
+            dataKey,
+            defaultSortDirection,
+            event,
+          });
           sort({
-            sortBy: dataKey,
+            sortBy: newSortBy,
             sortDirection: newSortDirection,
           });
+        }
         onHeaderClick && onHeaderClick({columnData, dataKey, event});
       };
 
