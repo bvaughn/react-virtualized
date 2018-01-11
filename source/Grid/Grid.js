@@ -212,6 +212,8 @@ type Props = {
 
   /** Width of Grid; this property determines the number of visible (vs virtualized) columns.  */
   width: number,
+
+  overflow: ?string,
 };
 
 type State = {
@@ -254,6 +256,7 @@ export default class Grid extends React.PureComponent<Props, State> {
     scrollToRow: -1,
     style: {},
     tabIndex: 0,
+    overflow: 'hidden',
   };
 
   state = {
@@ -935,7 +938,7 @@ export default class Grid extends React.PureComponent<Props, State> {
               height: totalRowsHeight,
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,
-              overflow: 'hidden',
+              overflow: this.props.overflow,
               pointerEvents: isScrolling ? 'none' : '',
               position: 'relative',
               ...containerStyle,
