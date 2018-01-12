@@ -552,7 +552,7 @@ export default class Table extends PureComponent {
       ariaSort = sortDirection === SortDirection.ASC ? 'ascending' : 'descending';
     }
 
-    const colHeaderProps = {
+    const headerProps = {
       id: id || undefined,
       role: 'columnheader',
       'aria-label': ariaLabel,
@@ -571,7 +571,7 @@ export default class Table extends PureComponent {
     // and slow down performances
     return (
       <div
-        {...colHeaderProps}>
+        {...headerProps}>
         {renderedHeader}
       </div>
     );
