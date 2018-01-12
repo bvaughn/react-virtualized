@@ -525,7 +525,7 @@ export default class Table extends PureComponent {
           ? SortDirection.ASC
           : SortDirection.DESC;
 
-      const onClick = event => { 
+      const onClick = event => {
         sortEnabled &&
           sort({
             sortBy: dataKey,
