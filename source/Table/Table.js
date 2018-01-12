@@ -445,7 +445,7 @@ export default class Table extends PureComponent {
 
     const style = this._cachedColumnStyles[columnIndex];
 
-    const colTitle = title ? title : (typeof renderedCell === 'string' ? renderedCell : null);
+    const columnTitle = title ? title : (typeof renderedCell === 'string' ? renderedCell : null);
 
     const columnProps = {
       role: 'gridcell',
@@ -453,7 +453,7 @@ export default class Table extends PureComponent {
       key: "Row" + rowIndex + "-" + "Col" + columnIndex,
       className: cn('ReactVirtualized__Table__rowColumn', className),
       style: style,
-      title: colTitle,
+      title: columnTitle,
     };
     
     // NOTE: is important to NOT mixin inline property and spread properties,
@@ -513,7 +513,7 @@ export default class Table extends PureComponent {
 
     
 
-    let chOnClick, cOnKeyDown, chTabIndex, ariaSort, ariaLabel;
+    let headerOnClick, headerOnKeyDown, headerTabIndex, headerAriaSort, headerAriaLabel;
     
     if (sortEnabled || onHeaderClick) {
       // If this is a sortable header, clicking it should update the table data's sorting.
@@ -542,24 +542,24 @@ export default class Table extends PureComponent {
         }
       };
 
-      ariaLabel = column.props['aria-label'] || label || dataKey;
-      chTabIndex = 0;
-      chOnClick = onClick;
-      chOnKeyDown = onKeyDown;
+      headerAriaLabel = column.props['aria-label'] || label || dataKey;
+      headerTabIndex = 0;
+      headerOnClick = onClick;
+      headerOnKeyDown = onKeyDown;
     }
 
     if (sortBy === dataKey) {
-      ariaSort = sortDirection === SortDirection.ASC ? 'ascending' : 'descending';
+      headerAriaSort = sortDirection === SortDirection.ASC ? 'ascending' : 'descending';
     }
 
     const headerProps = {
       id: id || undefined,
       role: 'columnheader',
-      'aria-label': ariaLabel,
-      'aria-sort': ariaSort,
-      tabIndex: chTabIndex,
-      onClick: chOnClick,
-      onKeyDown: chOnKeyDown,
+      'aria-label': headerAriaLabel,
+      'aria-sort': headerAriaSort,
+      tabIndex: headerTabIndex,
+      onClick: headerOnClick,
+      onKeyDown: headerOnKeyDown,
       key: "Header-Col" + index,
       className: classNames,
       style: style,
