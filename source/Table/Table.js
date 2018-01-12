@@ -456,6 +456,9 @@ export default class Table extends PureComponent {
       title: colTitle,
     };
     
+    // NOTE: is important to NOT mixin inline property and spread properties,
+    // since internally REACT clone property object to adds inline property
+    // and slow down performances
     return (
       <div
         {...columnProps}
@@ -563,6 +566,9 @@ export default class Table extends PureComponent {
       title: title || null
     };
 
+     // NOTE: is important to NOT mixin inline property and spread properties,
+    // since internally REACT clone property object to adds inline property
+    // and slow down performances
     return (
       <div
         {...colHeaderProps}>
