@@ -1,6 +1,6 @@
 /** @flow */
 
-import type {CellPosition} from '../Grid';
+// import type {CellPosition} from '../Grid';
 
 import cn from 'classnames';
 import Column from './Column';
@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
 import {findDOMNode} from 'react-dom';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
+import type {CellPosition} from '../Grid';
+
 import defaultRowRenderer from './defaultRowRenderer';
 import defaultHeaderRowRenderer from './defaultHeaderRowRenderer';
 import SortDirection from './SortDirection';
@@ -426,6 +428,7 @@ export default class Table extends PureComponent {
       className,
       columnData,
       dataKey,
+      title,
       id,
     } = column.props;
 
@@ -443,24 +446,20 @@ export default class Table extends PureComponent {
 
     const style = this._cachedColumnStyles[columnIndex];
 
-    const title = typeof renderedCell === 'string' ? renderedCell : null;
+    const colTitle = title ? title : (typeof renderedCell === 'string' ? renderedCell : null);
 
-    const a11yProps = {
+    const columnProps = {
       role: 'gridcell',
+      'aria-describedby': id || undefined,
+      key: "Row" + rowIndex + "-" + "Col" + columnIndex,
+      className: cn('ReactVirtualized__Table__rowColumn', className),
+      style: style,
+      title: colTitle,
     };
-
-    if (id) {
-      a11yProps['aria-describedby'] = id;
-    }
-
-    a11yProps.key = "Row" + rowIndex + "-" + "Col" + columnIndex;
-    a11yProps.className = cn('ReactVirtualized__Table__rowColumn', className);
-    a11yProps.style = style;
-    a11yProps.title = title;
     
     return (
       <div
-        {...a11yProps}
+        {...columnProps}
        >
         {renderedCell}
       </div>
@@ -482,6 +481,7 @@ export default class Table extends PureComponent {
       headerRenderer,
       id,
       label,
+      title,
       columnData,
       defaultSortDirection,
     } = column.props;
@@ -509,10 +509,10 @@ export default class Table extends PureComponent {
       sortDirection,
     });
 
-    const a11yProps = {
-      role: 'columnheader',
-    };
+    
 
+    let chOnClick, cOnKeyDown, chTabIndex, ariaSort, ariaLabel;
+    
     if (sortEnabled || onHeaderClick) {
       // If this is a sortable header, clicking it should update the table data's sorting.
       const isFirstTimeSort = sortBy !== dataKey;
@@ -540,28 +540,33 @@ export default class Table extends PureComponent {
         }
       };
 
-      a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey;
-      a11yProps.tabIndex = 0;
-      a11yProps.onClick = onClick;
-      a11yProps.onKeyDown = onKeyDown;
+      ariaLabel = column.props['aria-label'] || label || dataKey;
+      chTabIndex = 0;
+      chOnClick = onClick;
+      chOnKeyDown = onKeyDown;
     }
 
     if (sortBy === dataKey) {
-      a11yProps['aria-sort'] =
-        sortDirection === SortDirection.ASC ? 'ascending' : 'descending';
+      ariaSort = sortDirection === SortDirection.ASC ? 'ascending' : 'descending';
     }
 
-    if (id) {
-      a11yProps.id = id;
-    }
-
-    a11yProps.key = "Header-Col" + index;
-    a11yProps.className = classNames;
-    a11yProps.style = style;
+    const colHeaderProps = {
+      id: id || undefined,
+      role: 'columnheader',
+      'aria-label': ariaLabel,
+      'aria-sort': ariaSort,
+      tabIndex: chTabIndex,
+      onClick: chOnClick,
+      onKeyDown: chOnKeyDown,
+      key: "Header-Col" + index,
+      className: classNames,
+      style: style,
+      title: title || null
+    };
 
     return (
       <div
-        {...a11yProps}>
+        {...colHeaderProps}>
         {renderedHeader}
       </div>
     );
