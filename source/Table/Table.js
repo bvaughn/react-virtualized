@@ -1,6 +1,6 @@
 /** @flow */
 
-// import type {CellPosition} from '../Grid';
+import type {CellPosition} from '../Grid';
 
 import cn from 'classnames';
 import Column from './Column';
@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
 import {findDOMNode} from 'react-dom';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
-import type {CellPosition} from '../Grid';
 
 import defaultRowRenderer from './defaultRowRenderer';
 import defaultHeaderRowRenderer from './defaultHeaderRowRenderer';
