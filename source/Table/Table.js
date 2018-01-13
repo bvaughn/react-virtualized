@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
 import {findDOMNode} from 'react-dom';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
+
 import defaultRowRenderer from './defaultRowRenderer';
 import defaultHeaderRowRenderer from './defaultHeaderRowRenderer';
 import SortDirection from './SortDirection';
@@ -431,6 +432,7 @@ export default class Table extends PureComponent {
       className,
       columnData,
       dataKey,
+      title,
       id,
     } = column.props;
 
@@ -448,23 +450,24 @@ export default class Table extends PureComponent {
 
     const style = this._cachedColumnStyles[columnIndex];
 
-    const title = typeof renderedCell === 'string' ? renderedCell : null;
+    const columnTitle = title ? title : (typeof renderedCell === 'string' ? renderedCell : null);
 
-    const a11yProps = {
+    const columnProps = {
       role: 'gridcell',
+      'aria-describedby': id || undefined,
+      key: "Row" + rowIndex + "-" + "Col" + columnIndex,
+      className: cn('ReactVirtualized__Table__rowColumn', className),
+      style: style,
+      title: columnTitle,
     };
-
-    if (id) {
-      a11yProps['aria-describedby'] = id;
-    }
-
+    
+    // NOTE: is important to NOT mixin inline property and spread properties,
+    // since internally REACT clone property object to adds inline property
+    // and slow down performances
     return (
       <div
-        {...a11yProps}
-        key={`Row${rowIndex}-Col${columnIndex}`}
-        className={cn('ReactVirtualized__Table__rowColumn', className)}
-        style={style}
-        title={title}>
+        {...columnProps}
+       >
         {renderedCell}
       </div>
     );
@@ -485,6 +488,7 @@ export default class Table extends PureComponent {
       headerRenderer,
       id,
       label,
+      title,
       columnData,
       defaultSortDirection,
     } = column.props;
@@ -512,10 +516,10 @@ export default class Table extends PureComponent {
       sortDirection,
     });
 
-    const a11yProps = {
-      role: 'columnheader',
-    };
+    
 
+    let headerOnClick, headerOnKeyDown, headerTabIndex, headerAriaSort, headerAriaLabel;
+    
     if (sortEnabled || onHeaderClick) {
       // If this is a sortable header, clicking it should update the table data's sorting.
       const isFirstTimeSort = sortBy !== dataKey;
@@ -545,27 +549,36 @@ export default class Table extends PureComponent {
         }
       };
 
-      a11yProps['aria-label'] = column.props['aria-label'] || label || dataKey;
-      a11yProps.tabIndex = 0;
-      a11yProps.onClick = onClick;
-      a11yProps.onKeyDown = onKeyDown;
+      headerAriaLabel = column.props['aria-label'] || label || dataKey;
+      headerTabIndex = 0;
+      headerOnClick = onClick;
+      headerOnKeyDown = onKeyDown;
     }
 
     if (sortBy === dataKey) {
-      a11yProps['aria-sort'] =
-        sortDirection === SortDirection.ASC ? 'ascending' : 'descending';
+      headerAriaSort = sortDirection === SortDirection.ASC ? 'ascending' : 'descending';
     }
 
-    if (id) {
-      a11yProps.id = id;
-    }
+    const headerProps = {
+      id: id || undefined,
+      role: 'columnheader',
+      'aria-label': headerAriaLabel,
+      'aria-sort': headerAriaSort,
+      tabIndex: headerTabIndex,
+      onClick: headerOnClick,
+      onKeyDown: headerOnKeyDown,
+      key: "Header-Col" + index,
+      className: classNames,
+      style: style,
+      title: title || null
+    };
 
+     // NOTE: is important to NOT mixin inline property and spread properties,
+    // since internally REACT clone property object to adds inline property
+    // and slow down performances
     return (
       <div
-        {...a11yProps}
-        key={`Header-Col${index}`}
-        className={classNames}
-        style={style}>
+        {...headerProps}>
         {renderedHeader}
       </div>
     );
