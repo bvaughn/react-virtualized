@@ -11,6 +11,7 @@ describe('createMultiSort', () => {
       defaultSortDirection,
       event: {
         ctrlKey: eventModifier === 'control',
+        metaKey: eventModifier === 'meta',
         shiftKey: eventModifier === 'shift',
       },
       sortBy: dataKey,
@@ -110,28 +111,30 @@ describe('createMultiSort', () => {
     });
   });
 
-  describe('control click', () => {
-    it('removes a field from the sort by list', () => {
-      const multiSort = createMultiSort(jest.fn(), {
-        defaultSortBy: ['a', 'b'],
+  ['control', 'meta'].forEach(modifier => {
+    describe(`${modifier} click`, () => {
+      it('removes a field from the sort by list', () => {
+        const multiSort = createMultiSort(jest.fn(), {
+          defaultSortBy: ['a', 'b'],
+        });
+        expect(multiSort.sortBy).toEqual(['a', 'b']);
+
+        simulate(multiSort.sort, 'a', modifier);
+        expect(multiSort.sortBy).toEqual(['b']);
+
+        simulate(multiSort.sort, 'b', modifier);
+        expect(multiSort.sortBy).toEqual([]);
       });
-      expect(multiSort.sortBy).toEqual(['a', 'b']);
 
-      simulate(multiSort.sort, 'a', 'control');
-      expect(multiSort.sortBy).toEqual(['b']);
+      it('ignores fields not in the list on control click', () => {
+        const multiSort = createMultiSort(jest.fn(), {
+          defaultSortBy: ['a', 'b'],
+        });
+        expect(multiSort.sortBy).toEqual(['a', 'b']);
 
-      simulate(multiSort.sort, 'b', 'control');
-      expect(multiSort.sortBy).toEqual([]);
-    });
-
-    it('ignores fields not in the list on control click', () => {
-      const multiSort = createMultiSort(jest.fn(), {
-        defaultSortBy: ['a', 'b'],
+        simulate(multiSort.sort, 'c', modifier);
+        expect(multiSort.sortBy).toEqual(['a', 'b']);
       });
-      expect(multiSort.sortBy).toEqual(['a', 'b']);
-
-      simulate(multiSort.sort, 'c', 'control');
-      expect(multiSort.sortBy).toEqual(['a', 'b']);
     });
   });
 });

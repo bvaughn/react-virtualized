@@ -34,10 +34,10 @@ type MultiSortReturn = {
   sortDirection: SortDirectionMap,
 };
 
-export default function createMultiSort(sortCallback: Function, {
-  defaultSortBy,
-  defaultSortDirection = {},
-}: MultiSortOptions = {}): MultiSortReturn {
+export default function createMultiSort(
+  sortCallback: Function,
+  {defaultSortBy, defaultSortDirection = {}}: MultiSortOptions = {},
+): MultiSortReturn {
   if (!sortCallback) {
     throw Error(`Required parameter "sortCallback" not specified`);
   }
@@ -65,7 +65,7 @@ export default function createMultiSort(sortCallback: Function, {
         sortDirection[dataKey] = defaultSortDirection;
         sortBy.push(dataKey);
       }
-    } else if (event.ctrlKey) {
+    } else if (event.ctrlKey || event.metaKey) {
       // Control + click removes column from sort (if pressent)
       const index = sortBy.indexOf(dataKey);
       if (index >= 0) {
