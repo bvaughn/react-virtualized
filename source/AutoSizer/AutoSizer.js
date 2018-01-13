@@ -71,6 +71,8 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
     if (
       this._autoSizer &&
       this._autoSizer.parentNode &&
+      this._autoSizer.parentNode.ownerDocument &&
+      this._autoSizer.parentNode.ownerDocument.defaultView &&
       this._autoSizer.parentNode instanceof
         this._autoSizer.parentNode.ownerDocument.defaultView.HTMLElement
     ) {
