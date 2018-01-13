@@ -76,6 +76,16 @@ describe('createMultiSort', () => {
       expect(multiSort.sortBy).toEqual(['b']);
       expect(multiSort.sortDirection.b).toBe('ASC');
     });
+
+    it('resets sort-by fields', () => {
+      const multiSort = createMultiSort(jest.fn(), {
+        defaultSortBy: ['a', 'b'],
+      });
+      expect(multiSort.sortBy).toEqual(['a', 'b']);
+
+      simulate(multiSort.sort, 'a');
+      expect(multiSort.sortBy).toEqual(['a']);
+    });
   });
 
   describe('on shift click', () => {

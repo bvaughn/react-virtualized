@@ -73,13 +73,14 @@ export default function createMultiSort(
         delete sortDirection[dataKey];
       }
     } else {
+      sortBy.length = 0;
+      sortBy.push(dataKey);
+
       if (sortDirection.hasOwnProperty(dataKey)) {
         sortDirection[dataKey] =
           sortDirection[dataKey] === 'ASC' ? 'DESC' : 'ASC';
       } else {
         sortDirection[dataKey] = defaultSortDirection;
-        sortBy.length = 0;
-        sortBy.push(dataKey);
       }
     }
 
