@@ -29,3 +29,4 @@ Documentation
 * [Using AutoSizer](usingAutoSizer.md)
 * [Creating an infinite-loading list](creatingAnInfiniteLoadingList.md)
 * [Natural sort Table](tableWithNaturalSort.md)
+* [Sorting a Table by multiple columns](multiColumnSortTable.md)

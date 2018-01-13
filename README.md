@@ -190,6 +190,7 @@ There are also a couple of how-to guides:
 * [Using AutoSizer](docs/usingAutoSizer.md)
 * [Creating an infinite-loading list](docs/creatingAnInfiniteLoadingList.md)
 * [Natural sort Table](docs/tableWithNaturalSort.md)
+* [Sorting a Table by multiple columns](docs/multiColumnSortTable.md)
 
 
 Examples
