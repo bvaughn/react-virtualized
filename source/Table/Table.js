@@ -432,7 +432,6 @@ export default class Table extends PureComponent {
       className,
       columnData,
       dataKey,
-      title,
       id,
     } = column.props;
 
@@ -450,24 +449,19 @@ export default class Table extends PureComponent {
 
     const style = this._cachedColumnStyles[columnIndex];
 
-    const columnTitle = title ? title : (typeof renderedCell === 'string' ? renderedCell : null);
+    const title = typeof renderedCell === 'string' ? renderedCell : null;
 
-    const columnProps = {
-      role: 'gridcell',
-      'aria-describedby': id || undefined,
-      key: "Row" + rowIndex + "-" + "Col" + columnIndex,
-      className: cn('ReactVirtualized__Table__rowColumn', className),
-      style: style,
-      title: columnTitle,
-    };
-    
-    // NOTE: is important to NOT mixin inline property and spread properties,
-    // since internally REACT clone property object to adds inline property
-    // and slow down performances
+    // Avoid using object-spread syntax with multiple objects here,
+    // Since it results in an extra method call to 'babel-runtime/helpers/extends'
+    // See PR https://github.com/bvaughn/react-virtualized/pull/942
     return (
       <div
-        {...columnProps}
-       >
+        aria-describedby={id}
+        className={cn('ReactVirtualized__Table__rowColumn', className)}
+        key={'Row' + rowIndex + '-' + 'Col' + columnIndex}
+        role="gridcell"
+        style={style}
+        title={title}>
         {renderedCell}
       </div>
     );
@@ -483,14 +477,13 @@ export default class Table extends PureComponent {
       sortDirection,
     } = this.props;
     const {
+      columnData,
       dataKey,
+      defaultSortDirection,
       disableSort,
       headerRenderer,
       id,
       label,
-      title,
-      columnData,
-      defaultSortDirection,
     } = column.props;
     const sortEnabled = !disableSort && sort;
 
@@ -516,10 +509,12 @@ export default class Table extends PureComponent {
       sortDirection,
     });
 
-    
+    let headerOnClick,
+      headerOnKeyDown,
+      headerTabIndex,
+      headerAriaSort,
+      headerAriaLabel;
 
-    let headerOnClick, headerOnKeyDown, headerTabIndex, headerAriaSort, headerAriaLabel;
-    
     if (sortEnabled || onHeaderClick) {
       // If this is a sortable header, clicking it should update the table data's sorting.
       const isFirstTimeSort = sortBy !== dataKey;
@@ -556,29 +551,25 @@ export default class Table extends PureComponent {
     }
 
     if (sortBy === dataKey) {
-      headerAriaSort = sortDirection === SortDirection.ASC ? 'ascending' : 'descending';
+      headerAriaSort =
+        sortDirection === SortDirection.ASC ? 'ascending' : 'descending';
     }
 
-    const headerProps = {
-      id: id || undefined,
-      role: 'columnheader',
-      'aria-label': headerAriaLabel,
-      'aria-sort': headerAriaSort,
-      tabIndex: headerTabIndex,
-      onClick: headerOnClick,
-      onKeyDown: headerOnKeyDown,
-      key: "Header-Col" + index,
-      className: classNames,
-      style: style,
-      title: title || null
-    };
-
-     // NOTE: is important to NOT mixin inline property and spread properties,
-    // since internally REACT clone property object to adds inline property
-    // and slow down performances
+    // Avoid using object-spread syntax with multiple objects here,
+    // Since it results in an extra method call to 'babel-runtime/helpers/extends'
+    // See PR https://github.com/bvaughn/react-virtualized/pull/942
     return (
       <div
-        {...headerProps}>
+        aria-label={headerAriaLabel}
+        aria-sort={headerAriaSort}
+        className={classNames}
+        id={id}
+        key={'Header-Col' + index}
+        onClick={headerOnClick}
+        onKeyDown={headerOnKeyDown}
+        role="columnheader"
+        style={style}
+        tabIndex={headerTabIndex}>
         {renderedHeader}
       </div>
     );
