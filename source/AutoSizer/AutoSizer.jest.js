@@ -15,6 +15,7 @@ describe('AutoSizer', () => {
   function getMarkup({
     bar = 123,
     ChildComponent = DefaultChildComponent,
+    className = undefined,
     defaultHeight = undefined,
     defaultWidth = undefined,
     disableHeight = false,
@@ -26,9 +27,10 @@ describe('AutoSizer', () => {
     paddingLeft = 0,
     paddingRight = 0,
     paddingTop = 0,
+    style = undefined,
     width = 200,
   } = {}) {
-    const style = {
+    const wrapperStyle = {
       boxSizing: 'border-box',
       height,
       paddingBottom,
@@ -41,13 +43,15 @@ describe('AutoSizer', () => {
     mockOffsetSize(width, height);
 
     return (
-      <div style={style}>
+      <div style={wrapperStyle}>
         <AutoSizer
+          className={className}
           defaultHeight={defaultHeight}
           defaultWidth={defaultWidth}
           disableHeight={disableHeight}
           disableWidth={disableWidth}
-          onResize={onResize}>
+          onResize={onResize}
+          style={style}>
           {({height, width}) => (
             <ChildComponent
               width={disableWidth ? undefined : width}
@@ -218,6 +222,19 @@ describe('AutoSizer', () => {
       expect(ChildComponent).toHaveBeenCalledTimes(1);
       expect(onResize).toHaveBeenCalledTimes(2);
       done();
+    });
+  });
+
+  describe('className and style', () => {
+    it('should use a custom :className if specified', () => {
+      const rendered = findDOMNode(render(getMarkup({className: 'foo'})));
+      expect(rendered.firstChild.className).toContain('foo');
+    });
+
+    it('should use a custom :style if specified', () => {
+      const style = {backgroundColor: 'red'};
+      const rendered = findDOMNode(render(getMarkup({style})));
+      expect(rendered.firstChild.style.backgroundColor).toEqual('red');
     });
   });
 });

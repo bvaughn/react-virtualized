@@ -1,10 +1,11 @@
 Changelog
 ------------
 
-##### Unreleased
+##### 9.17.0 (Unreleased)
 
 * 🐛 Fixed potential initial render bug when using `CellMeasurer` with a `List`. ([OriR](https://github.com/OriR) - [#959](https://github.com/bvaughn/react-virtualized/pull/959))
 * 🐛 `Masonry` component now renders at least one column to avoid an invalid, Infinity height layout issue. ([djeeg](https://github.com/djeeg) - [#961](https://github.com/bvaughn/react-virtualized/pull/961))
+* 🎉 Optional `className` and `style` props added to `AutoSizer` component.
 
 ##### 9.16.1
 

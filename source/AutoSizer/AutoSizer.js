@@ -12,6 +12,9 @@ type Props = {
   /** Function responsible for rendering children.*/
   children: Size => React.Element<*>,
 
+  /** Optional custom CSS class name to attach to root AutoSizer element.  */
+  className?: string,
+
   /** Default height to use for initial render; useful for SSR */
   defaultHeight?: number,
 
@@ -29,6 +32,9 @@ type Props = {
 
   /** Callback to be invoked on-resize */
   onResize: Size => void,
+
+  /** Optional inline style */
+  style: Object,
 };
 
 type State = {
@@ -94,7 +100,13 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const {children, disableHeight, disableWidth} = this.props;
+    const {
+      children,
+      className,
+      disableHeight,
+      disableWidth,
+      style,
+    } = this.props;
     const {height, width} = this.state;
 
     // Outer div should not force width/height since that may prevent containers from shrinking.
@@ -127,7 +139,13 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
     */
 
     return (
-      <div ref={this._setRef} style={outerStyle}>
+      <div
+        className={className}
+        ref={this._setRef}
+        style={{
+          ...outerStyle,
+          ...style,
+        }}>
         {children(childParams)}
       </div>
     );
