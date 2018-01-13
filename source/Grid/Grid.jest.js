@@ -8,7 +8,7 @@ import {
   SCROLL_DIRECTION_BACKWARD,
   SCROLL_DIRECTION_FORWARD,
 } from './defaultOverscanIndicesGetter';
-import {DEFAULT_MAX_SCROLL_SIZE} from './utils/ScalingCellSizeAndPositionManager';
+import {getMaxElementSize} from './utils/maxElementSize.js';
 
 const DEFAULT_COLUMN_WIDTH = 50;
 const DEFAULT_HEIGHT = 100;
@@ -2290,7 +2290,7 @@ describe('Grid', () => {
         height: 100,
         rowHeight: 100,
         columnWidth: 100,
-        rowCount: DEFAULT_MAX_SCROLL_SIZE * 2 / 100, // lots of offset
+        rowCount: getMaxElementSize() * 2 / 100, // lots of offset
         scrollTop: 2000,
       }),
     );

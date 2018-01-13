@@ -3,6 +3,7 @@
 import type {Alignment, CellSizeGetter, VisibleCellRange} from '../types';
 
 import CellSizeAndPositionManager from './CellSizeAndPositionManager';
+import {getMaxElementSize} from './maxElementSize.js';
 
 type ContainerSizeAndOffset = {
   containerSize: number,
@@ -14,7 +15,6 @@ type ContainerSizeAndOffset = {
  * After a certain position, the browser won't allow the user to scroll further (even via JavaScript scroll offset adjustments).
  * This util picks a lower ceiling for max size and artificially adjusts positions within to make it transparent for users.
  */
-export const DEFAULT_MAX_SCROLL_SIZE = 1500000;
 
 type Params = {
   maxScrollSize?: number,
@@ -31,7 +31,7 @@ export default class ScalingCellSizeAndPositionManager {
   _cellSizeAndPositionManager: CellSizeAndPositionManager;
   _maxScrollSize: number;
 
-  constructor({maxScrollSize = DEFAULT_MAX_SCROLL_SIZE, ...params}: Params) {
+  constructor({maxScrollSize = getMaxElementSize(), ...params}: Params) {
     // Favor composition over inheritance to simplify IE10 support
     this._cellSizeAndPositionManager = new CellSizeAndPositionManager(params);
     this._maxScrollSize = maxScrollSize;
