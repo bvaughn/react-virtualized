@@ -34,7 +34,7 @@ type Props = {
   onResize: Size => void,
 
   /** Optional inline style */
-  style: Object,
+  style: ?Object,
 };
 
 type State = {
@@ -54,6 +54,7 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
     onResize: () => {},
     disableHeight: false,
     disableWidth: false,
+    style: {},
   };
 
   state = {
