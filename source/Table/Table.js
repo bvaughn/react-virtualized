@@ -197,7 +197,12 @@ export default class Table extends PureComponent {
 
     /**
      * Sort function to be called if a sortable header is clicked.
-     * ({ sortBy: string, sortDirection: SortDirection }): void
+     * Should implement the following interface: ({
+     *   defaultSortDirection: 'ASC' | 'DESC',
+     *   event: MouseEvent,
+     *   sortBy: string,
+     *   sortDirection: SortDirection
+     * }): void
      */
     sort: PropTypes.func,
 
@@ -526,6 +531,8 @@ export default class Table extends PureComponent {
       const onClick = event => {
         sortEnabled &&
           sort({
+            defaultSortDirection,
+            event,
             sortBy: dataKey,
             sortDirection: newSortDirection,
           });

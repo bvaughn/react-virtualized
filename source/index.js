@@ -18,6 +18,7 @@ export {
 export {MultiGrid} from './MultiGrid';
 export {ScrollSync} from './ScrollSync';
 export {
+  createMultiSort as createTableMultiSort,
   defaultCellDataGetter as defaultTableCellDataGetter,
   defaultCellRenderer as defaultTableCellRenderer,
   defaultHeaderRenderer as defaultTableHeaderRenderer,
