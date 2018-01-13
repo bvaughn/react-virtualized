@@ -118,6 +118,11 @@ describe('createMultiSort', () => {
       expect(multiSort.sortBy).toEqual(['a', 'b']);
       expect(multiSort.sortDirection.a).toBe('DESC');
       expect(multiSort.sortDirection.b).toBe('ASC');
+
+      simulate(multiSort.sort, 'a', 'shift');
+      expect(multiSort.sortBy).toEqual(['a', 'b']);
+      expect(multiSort.sortDirection.a).toBe('ASC');
+      expect(multiSort.sortDirection.b).toBe('ASC');
     });
   });
 
