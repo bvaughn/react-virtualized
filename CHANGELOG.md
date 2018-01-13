@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### Unreleased
+
+* 🐛 Fixed potential initial render bug when using `CellMeasurer` with a `List`. ([OriR](https://github.com/OriR) - [#959](https://github.com/bvaughn/react-virtualized/pull/959))
+* 🐛 `Masonry` component now renders at least one column to avoid an invalid, Infinity height layout issue. ([djeeg](https://github.com/djeeg) - [#961](https://github.com/bvaughn/react-virtualized/pull/961))
+
 ##### 9.16.1
 
 * 🐛 Run server-side rendering tests under pure node environment and fix SSR in `WindowScroller` ([TrySound](https://github.com/TrySound) - [#953](https://github.com/bvaughn/react-virtualized/pull/953))
