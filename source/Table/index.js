@@ -7,7 +7,8 @@ import defaultRowRenderer from './defaultRowRenderer';
 import Column from './Column';
 import SortDirection from './SortDirection';
 import SortIndicator from './SortIndicator';
-import Table from './Table';
+import Table from './SimpleTable';
+import MultiTable from './MultiTable';
 
 export default Table;
 export {
@@ -20,4 +21,5 @@ export {
   SortDirection,
   SortIndicator,
   Table,
+  MultiTable,
 };

@@ -10,7 +10,8 @@ import {
 import {LabeledInput, InputRow} from '../demo/LabeledInput';
 import AutoSizer from '../AutoSizer';
 import Column from './Column';
-import Table from './Table';
+import Table from './SimpleTable';
+import MultiTable from './MultiTable';
 import SortDirection from './SortDirection';
 import SortIndicator from './SortIndicator';
 import styles from './Table.example.css';
@@ -29,6 +30,7 @@ export default class TableExample extends PureComponent {
 
     this.state = {
       disableHeader: false,
+      enableExtendedSort: false,
       headerHeight: 30,
       height: 270,
       hideIndexRow: false,
@@ -42,6 +44,7 @@ export default class TableExample extends PureComponent {
       useDynamicRowHeight: false,
     };
 
+    this._correctSortState = this._correctSortState.bind(this);
     this._getRowHeight = this._getRowHeight.bind(this);
     this._headerRenderer = this._headerRenderer.bind(this);
     this._noRowsRenderer = this._noRowsRenderer.bind(this);
@@ -54,6 +57,7 @@ export default class TableExample extends PureComponent {
   render() {
     const {
       disableHeader,
+      enableExtendedSort,
       headerHeight,
       height,
       hideIndexRow,
@@ -68,6 +72,8 @@ export default class TableExample extends PureComponent {
     } = this.state;
 
     const rowGetter = ({index}) => this._getDatum(sortedList, index);
+
+    const TableComponent = enableExtendedSort ? MultiTable : Table;
 
     return (
       <ContentBox>
@@ -123,6 +129,17 @@ export default class TableExample extends PureComponent {
               }
             />
             Hide header?
+          </label>
+
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label="Use extended sorting?"
+              checked={enableExtendedSort}
+              className={styles.checkbox}
+              type="checkbox"
+              onChange={event => this._correctSortState(event.target.checked)}
+            />
+            Use extended sorting?
           </label>
         </ContentBoxParagraph>
 
@@ -184,7 +201,7 @@ export default class TableExample extends PureComponent {
         <div>
           <AutoSizer disableHeight>
             {({width}) => (
-              <Table
+              <TableComponent
                 ref="Table"
                 disableHeader={disableHeader}
                 headerClassName={styles.headerColumn}
@@ -212,8 +229,37 @@ export default class TableExample extends PureComponent {
                 )}
                 <Column
                   dataKey="name"
+                  label="Full name"
                   disableSort={!this._isSortEnabled()}
                   headerRenderer={this._headerRenderer}
+                  width={90}
+                />
+                <Column
+                  dataKey="color"
+                  label="Color"
+                  disableSort={!this._isSortEnabled()}
+                  headerRenderer={this._headerRenderer}
+                  cellRenderer={({cellData}) => {
+                    const hex = '0123456789abcdef';
+                    const color = cellData
+                      .substr(1)
+                      .split('')
+                      .map(o => hex[15 - hex.indexOf(o)])
+                      .join('');
+                    return (
+                      <div
+                        style={{
+                          color: '#' + color,
+                          background: cellData,
+                          textAlign: 'center',
+                          // this will not work correctly with useDynamicRowHeight :(
+                          height: rowHeight + 'px',
+                          lineHeight: rowHeight + 'px',
+                        }}>
+                        {cellData}
+                      </div>
+                    );
+                  }}
                   width={90}
                 />
                 <Column
@@ -225,12 +271,28 @@ export default class TableExample extends PureComponent {
                   cellRenderer={({cellData}) => cellData}
                   flexGrow={1}
                 />
-              </Table>
+              </TableComponent>
             )}
           </AutoSizer>
         </div>
       </ContentBox>
     );
+  }
+
+  _correctSortState(enableExtendedSort) {
+    let sortBy, sortDirection;
+    if (enableExtendedSort) {
+      sortBy = [this.state.sortBy];
+      sortDirection = [this.state.sortDirection];
+    } else {
+      sortBy = this.state.sortBy[0];
+      sortDirection = this.state.sortDirection[0];
+    }
+    this.setState({
+      enableExtendedSort,
+      sortBy,
+      sortDirection,
+    });
   }
 
   _getDatum(list, index) {
@@ -243,10 +305,10 @@ export default class TableExample extends PureComponent {
     return this._getDatum(list, index).size;
   }
 
-  _headerRenderer({dataKey, sortBy, sortDirection}) {
+  _headerRenderer({dataKey, label, sortBy, sortDirection}) {
     return (
       <div>
-        Full Name
+        {label || dataKey}
         {sortBy === dataKey && <SortIndicator sortDirection={sortDirection} />}
       </div>
     );
@@ -300,11 +362,45 @@ export default class TableExample extends PureComponent {
   _sortList({sortBy, sortDirection}) {
     const {list} = this.context;
 
+    if (Array.isArray(sortBy)) {
+      return list.sort((a, b) => {
+        // simplest multi-property sort
+        return sortBy.reduce((p, o, i) => {
+          if (p !== 0) {
+            return p;
+          }
+
+          const l = this._reduceProp(a, o);
+          const r = this._reduceProp(b, o);
+          const s = sortDirection[i];
+
+          if (l > r) {
+            return s == SortDirection.ASC ? 1 : -1;
+          }
+
+          if (l < r) {
+            return s == SortDirection.ASC ? -1 : 1;
+          }
+
+          return 0;
+        }, 0);
+      });
+    }
+
     return list
       .sortBy(item => item[sortBy])
       .update(
         list => (sortDirection === SortDirection.DESC ? list.reverse() : list),
       );
+  }
+
+  /**
+   * const root = { A: { B: { C: 42 } } };
+   * _reduceProp(obj, 'A.B.C') === 42
+   * _reduceProp(obj, 'A.D.E') === undefined
+   */
+  _reduceProp(obj, prop) {
+    return prop ? prop.split('.').reduce((p, o) => (p ? p[o] : p), obj) : obj;
   }
 
   _updateUseDynamicRowHeight(value) {
