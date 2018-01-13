@@ -1,8 +1,9 @@
 Changelog
 ------------
 
-##### 9.17.0 (Unreleased)
+##### 9.17.0
 
+* More natural scrolling speeds for large lists in Chrome. ([TrySound](https://github.com/TrySound) - [#936](https://github.com/bvaughn/react-virtualized/pull/936))
 * Support for multi-column sort added to `Table` component. Read more about this [here](https://github.com/bvaughn/react-virtualized/blob/master/docs/multiColumnSortTable.md). Special thanks to [CzBuCHi](https://github.com/CzBuCHi) for the initial proposal and iteration in PRs [#946](https://github.com/bvaughn/react-virtualized/pull/946) and [#957](https://github.com/bvaughn/react-virtualized/pull/957). ([bvaughn](https://github.com/bvaughn) - [#966](https://github.com/bvaughn/react-virtualized/pull/966))
 * ✨ Improved `Table` performance for cases with large numbers of columns. ([gannunziata](https://github.com/gannunziata) - [#942](https://github.com/bvaughn/react-virtualized/pull/942))
 * 🐛 Fixed potential initial render bug when using `CellMeasurer` with a `List`. ([OriR](https://github.com/OriR) - [#959](https://github.com/bvaughn/react-virtualized/pull/959))
