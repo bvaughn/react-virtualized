@@ -9,7 +9,16 @@ import {
   Table,
 } from 'react-virtualized';
 
-const sortState = createMultiSort();
+function sortCallback({
+  sortBy,
+  sortDirection,
+}) {
+  // Sort your collection however you'd like.
+  // 'sortBy' is an ordered Array of fields.
+  // 'sortDirection' is a map of field name to "ASC" or "DESC" directions.
+}
+
+const sortState = createMultiSort(sortCallback);
 
 // When rendering your header columns,
 // Use the sort state exposed by sortState:
@@ -29,15 +38,11 @@ const headerRenderer = ({ dataKey, label }) => {
 <Table {...tableProps} sort={sortState.sort}>
   <Column {...columnProps} headerRenderer={headerRenderer} />
 </Table>
-
-// Sort your collection however you'd like.
-// sortState.sortBy is an ordered Array of fields.
-// sortState.sortDirection is a map of field name to "ASC" or "DESC" directions.
 ```
 
 The `createMultiSort` utility also accepts default sort-by values:
 ```js
-const sortState = createMultiSort({
+const sortState = createMultiSort(sortCallback, {
   defaultSortBy: ['firstName', 'lastName'],
   defaultSortDirection: {
     firstName: 'ASC',

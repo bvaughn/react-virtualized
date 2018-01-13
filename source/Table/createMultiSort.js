@@ -10,7 +10,7 @@ type SortParams = {
 
 type SortDirectionMap = {[string]: SortDirection};
 
-type MultiSortParams = {
+type MultiSortOptions = {
   defaultSortBy: ?Array<string>,
   defaultSortDirection: ?SortDirectionMap,
 };
@@ -34,10 +34,14 @@ type MultiSortReturn = {
   sortDirection: SortDirectionMap,
 };
 
-export default function createMultiSort({
+export default function createMultiSort(sortCallback: Function, {
   defaultSortBy,
   defaultSortDirection = {},
-}: MultiSortParams = {}): MultiSortReturn {
+}: MultiSortOptions = {}): MultiSortReturn {
+  if (!sortCallback) {
+    throw Error(`Required parameter "sortCallback" not specified`);
+  }
+
   const sortBy = defaultSortBy || [];
   const sortDirection = {};
 
@@ -78,6 +82,12 @@ export default function createMultiSort({
         sortBy.push(dataKey);
       }
     }
+
+    // Notify application code
+    sortCallback({
+      sortBy,
+      sortDirection,
+    });
   }
 
   return {
