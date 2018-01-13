@@ -1,4 +1,5 @@
 /* @flow */
+import createMultiSort from './createMultiSort';
 import defaultCellDataGetter from './defaultCellDataGetter';
 import defaultCellRenderer from './defaultCellRenderer';
 import defaultHeaderRowRenderer from './defaultHeaderRowRenderer.js';
@@ -11,6 +12,7 @@ import Table from './Table';
 
 export default Table;
 export {
+  createMultiSort,
   defaultCellDataGetter,
   defaultCellRenderer,
   defaultHeaderRowRenderer,
