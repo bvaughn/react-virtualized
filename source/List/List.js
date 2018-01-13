@@ -203,13 +203,13 @@ export default class List extends React.PureComponent<Props> {
         onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}
         ref={this._setRef}
-        preMountRef={this._setRef}
         scrollToRow={scrollToIndex}
       />
     );
   }
 
   _cellRenderer = ({
+    parent,
     rowIndex,
     style,
     isScrolling,
@@ -236,7 +236,7 @@ export default class List extends React.PureComponent<Props> {
       isScrolling,
       isVisible,
       key,
-      parent: this,
+      parent,
     });
   };
 

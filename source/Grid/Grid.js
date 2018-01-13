@@ -212,9 +212,6 @@ type Props = {
 
   /** Width of Grid; this property determines the number of visible (vs virtualized) columns.  */
   width: number,
-
-  /** Callback that's called with a ref to the current instance of the Grid before the actual mount has happened */
-  preMountRef: Grid => void,
 };
 
 type State = {
@@ -257,7 +254,6 @@ export default class Grid extends React.PureComponent<Props, State> {
     scrollToRow: -1,
     style: {},
     tabIndex: 0,
-    preMountRef: () => {},
   };
 
   state = {
@@ -716,7 +712,7 @@ export default class Grid extends React.PureComponent<Props, State> {
   }
 
   componentWillMount() {
-    const {getScrollbarSize, preMountRef} = this.props;
+    const {getScrollbarSize} = this.props;
 
     // If this component is being rendered server-side, getScrollbarSize() will return undefined.
     // We handle this case in componentDidMount()
@@ -729,7 +725,6 @@ export default class Grid extends React.PureComponent<Props, State> {
     }
 
     this._calculateChildrenToRender();
-    preMountRef(this);
   }
 
   componentWillUnmount() {
