@@ -321,7 +321,7 @@ export default class Masonry extends PureComponent {
 
     const estimatedColumnCount = Math.max(
       1,
-      Math.floor(width / cellMeasurerCache.defaultWidth)
+      Math.floor(width / cellMeasurerCache.defaultWidth),
     );
 
     return this._positionCache.estimateTotalHeight(
