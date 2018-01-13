@@ -3,6 +3,7 @@ Changelog
 
 ##### 9.17.0 (Unreleased)
 
+* Support for multi-column sort added to `Table` component. Read more about this [here](https://github.com/bvaughn/react-virtualized/blob/master/docs/multiColumnSortTable.md). Special thanks to [CzBuCHi](https://github.com/CzBuCHi) for the initial proposal and iteration in PRs [#946](https://github.com/bvaughn/react-virtualized/pull/946) and [#957](https://github.com/bvaughn/react-virtualized/pull/957). ([bvaughn](https://github.com/bvaughn) - [#966](https://github.com/bvaughn/react-virtualized/pull/966))
 * 🐛 Fixed potential initial render bug when using `CellMeasurer` with a `List`. ([OriR](https://github.com/OriR) - [#959](https://github.com/bvaughn/react-virtualized/pull/959))
 * 🐛 `Masonry` component now renders at least one column to avoid an invalid, Infinity height layout issue. ([djeeg](https://github.com/djeeg) - [#961](https://github.com/bvaughn/react-virtualized/pull/961))
 * 🎉 Optional `className` and `style` props added to `AutoSizer` component.
