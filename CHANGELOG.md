@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.17.1 (unreleased)
+* 🐛 `CellMeasurer` works properly in iframs and popup windows. ([dfdeagle47](https://github.com/dfdeagle47) - [#968](https://github.com/bvaughn/react-virtualized/pull/968))
+
 ##### 9.17.0
 
 * More natural scrolling speeds for large lists in Chrome. ([TrySound](https://github.com/TrySound) - [#936](https://github.com/bvaughn/react-virtualized/pull/936))
