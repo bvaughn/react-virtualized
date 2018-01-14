@@ -53,7 +53,12 @@ export default class CellMeasurer extends React.PureComponent<Props> {
 
     // TODO Check for a bad combination of fixedWidth and missing numeric width or vice versa with height
 
-    if (node instanceof HTMLElement) {
+    if (
+      node &&
+      node.ownerDocument &&
+      node.ownerDocument.defaultView &&
+      node instanceof node.ownerDocument.defaultView.HTMLElement
+    ) {
       const styleWidth = node.style.width;
       const styleHeight = node.style.height;
 
