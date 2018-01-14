@@ -63,7 +63,7 @@ export default class Masonry extends PureComponent {
   _debounceResetIsScrollingId: AnimationTimeoutId;
   _invalidateOnUpdateStartIndex: ?number = null;
   _invalidateOnUpdateStopIndex: ?number = null;
-  _positionCache: PositionCache = new PositionCache();
+  _positionCache: PositionCache = null;
   _startIndex: ?number = null;
   _startIndexMemoized: ?number = null;
   _stopIndex: ?number = null;
@@ -76,6 +76,8 @@ export default class Masonry extends PureComponent {
       isScrolling: false,
       scrollTop: 0,
     };
+
+    this._positionCache = props.positionCache ? props.positionCache : new PositionCache();
 
     this._debounceResetIsScrollingCallback = this._debounceResetIsScrollingCallback.bind(
       this,
@@ -464,6 +466,7 @@ type Props = {
   cellCount: number,
   cellMeasurerCache: CellMeasurerCache,
   cellPositioner: Positioner,
+  positionCache: PositionCache,
   cellRenderer: CellRenderer,
   className: ?string,
   height: number,

@@ -28,6 +28,7 @@ Phase one is repeated if the user scrolls beyond the current layout's bounds. If
 | cellCount | number | ✓ | Total number of items |
 | cellMeasurerCache | mixed | ✓ | Caches item measurements. Default sizes help `Masonry` decide how many images to batch-measure. Learn more [here](CellMeasurer.md#cellmeasurercache). |
 | cellPositioner | function | ✓ | Positions a cell given an index: `(index: number) => ({ left: number, top: number })`. [Learn more](#createmasonrycellpositioner) |
+| positionCache | PositionCache |  | If rendering server-side, a PositionCache can be provided to assist with calculation of tile placements, eg when using client-hints to pass the client window dimensions to the server  |
 | cellRenderer | function | ✓ | Responsible for rendering a cell given an index. [Learn more](#cellrenderer) |
 | className | string |  | Optional custom CSS class name to attach to root `Masonry` element. |
 | height | number | ✓ | Height of the component; this value determines the number of visible items. |
