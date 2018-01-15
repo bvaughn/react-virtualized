@@ -1,9 +1,11 @@
 Changelog
 ------------
 
+##### 9.17.2
+* ✨ Eliminate unnecessary renders for `CellMeasurer` and `Grid`. ([bvaughn](https://github.com/bvaughn) - [#969](https://github.com/bvaughn/react-virtualized/pull/969))
+
 ##### 9.17.1
 * 🐛 `CellMeasurer` works properly in iframes and popup windows. ([dfdeagle47](https://github.com/dfdeagle47) - [#968](https://github.com/bvaughn/react-virtualized/pull/968))
-* ✨ Eliminate unnecessary renders for `CellMeasurer` and `Grid`. ([bvaughn](https://github.com/bvaughn) - [#969](https://github.com/bvaughn/react-virtualized/pull/969))
 
 ##### 9.17.0
 
