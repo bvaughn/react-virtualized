@@ -3,7 +3,6 @@
 import type {Alignment, CellSizeGetter, VisibleCellRange} from '../types';
 
 type CellSizeAndPositionManagerParams = {
-  batchAllCells: boolean,
   cellCount: number,
   cellSizeGetter: CellSizeGetter,
   estimatedCellSize: number,
@@ -46,18 +45,15 @@ export default class CellSizeAndPositionManager {
   // Used in deferred mode to track which cells have been queued for measurement.
   _lastBatchedIndex = -1;
 
-  _batchAllCells: boolean;
   _cellCount: number;
   _cellSizeGetter: CellSizeGetter;
   _estimatedCellSize: number;
 
   constructor({
-    batchAllCells = false,
     cellCount,
     cellSizeGetter,
     estimatedCellSize,
   }: CellSizeAndPositionManagerParams) {
-    this._batchAllCells = batchAllCells;
     this._cellSizeGetter = cellSizeGetter;
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
@@ -208,15 +204,6 @@ export default class CellSizeAndPositionManager {
   }
 
   getVisibleCellRange(params: GetVisibleCellRangeParams): VisibleCellRange {
-    // Advanced use-cases (eg CellMeasurer) require batched measurements to determine accurate sizes.
-    // eg we can't know a row's height without measuring the height of all columns within that row.
-    if (this._batchAllCells) {
-      return {
-        start: 0,
-        stop: this._cellCount - 1,
-      };
-    }
-
     let {containerSize, offset} = params;
 
     const totalSize = this.getTotalSize();

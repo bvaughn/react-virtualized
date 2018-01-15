@@ -312,20 +312,12 @@ export default class Grid extends React.PureComponent<Props, State> {
     this._columnWidthGetter = this._wrapSizeGetter(props.columnWidth);
     this._rowHeightGetter = this._wrapSizeGetter(props.rowHeight);
 
-    const deferredMeasurementCache = props.deferredMeasurementCache;
-
     this._columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
-      batchAllCells:
-        deferredMeasurementCache !== undefined &&
-        !deferredMeasurementCache.hasFixedHeight(),
       cellCount: props.columnCount,
       cellSizeGetter: params => this._columnWidthGetter(params),
       estimatedCellSize: this._getEstimatedColumnSize(props),
     });
     this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
-      batchAllCells:
-        deferredMeasurementCache !== undefined &&
-        !deferredMeasurementCache.hasFixedWidth(),
       cellCount: props.rowCount,
       cellSizeGetter: params => this._rowHeightGetter(params),
       estimatedCellSize: this._getEstimatedRowSize(props),
@@ -1018,12 +1010,12 @@ export default class Grid extends React.PureComponent<Props, State> {
         overscanCellsCount: overscanColumnCount,
         scrollDirection: scrollDirectionHorizontal,
         startIndex:
-          typeof this._renderedColumnStartIndex === 'number'
-            ? this._renderedColumnStartIndex
+          typeof visibleColumnIndices.start === 'number'
+            ? visibleColumnIndices.start
             : 0,
         stopIndex:
-          typeof this._renderedColumnStopIndex === 'number'
-            ? this._renderedColumnStopIndex
+          typeof visibleColumnIndices.stop === 'number'
+            ? visibleColumnIndices.stop
             : -1,
       });
 
@@ -1033,14 +1025,13 @@ export default class Grid extends React.PureComponent<Props, State> {
         overscanCellsCount: overscanRowCount,
         scrollDirection: scrollDirectionVertical,
         startIndex:
-          typeof this._renderedRowStartIndex === 'number'
-            ? this._renderedRowStartIndex
+          typeof visibleRowIndices.start === 'number'
+            ? visibleRowIndices.start
             : 0,
         stopIndex:
-          typeof this._renderedRowStopIndex === 'number'
-            ? this._renderedRowStopIndex
+          typeof visibleRowIndices.stop === 'number'
+            ? visibleRowIndices.stop
             : -1,
-        // stopIndex: this._renderedRowStopIndex
       });
 
       // Store for _invokeOnGridRenderedHelper()
@@ -1048,6 +1039,45 @@ export default class Grid extends React.PureComponent<Props, State> {
       this._columnStopIndex = overscanColumnIndices.overscanStopIndex;
       this._rowStartIndex = overscanRowIndices.overscanStartIndex;
       this._rowStopIndex = overscanRowIndices.overscanStopIndex;
+
+      // Advanced use-cases (eg CellMeasurer) require batched measurements to determine accurate sizes.
+      if (deferredMeasurementCache) {
+        // If rows have a dynamic height, scan the rows we are about to render.
+        // If any have not yet been measured, then we need to render all columns initially,
+        // Because the height of the row is equal to the tallest cell within that row,
+        // (And so we can't know the height without measuring all column-cells first).
+        if (!deferredMeasurementCache.hasFixedHeight()) {
+          for (
+            let rowIndex = this._rowStartIndex;
+            rowIndex <= this._rowStopIndex;
+            rowIndex++
+          ) {
+            if (!deferredMeasurementCache.has(rowIndex, 0)) {
+              this._columnStartIndex = 0;
+              this._columnStopIndex = columnCount - 1;
+              break;
+            }
+          }
+        }
+
+        // If columns have a dynamic width, scan the columns we are about to render.
+        // If any have not yet been measured, then we need to render all rows initially,
+        // Because the width of the column is equal to the widest cell within that column,
+        // (And so we can't know the width without measuring all row-cells first).
+        if (!deferredMeasurementCache.hasFixedWidth()) {
+          for (
+            let columnIndex = this._columnStartIndex;
+            columnIndex <= this._columnStopIndex;
+            columnIndex++
+          ) {
+            if (!deferredMeasurementCache.has(0, columnIndex)) {
+              this._rowStartIndex = 0;
+              this._rowStopIndex = rowCount - 1;
+              break;
+            }
+          }
+        }
+      }
 
       this._childrenToDisplay = cellRangeRenderer({
         cellCache: this._cellCache,

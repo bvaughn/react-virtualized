@@ -2,13 +2,11 @@ import CellSizeAndPositionManager from './CellSizeAndPositionManager';
 
 describe('CellSizeAndPositionManager', () => {
   function getCellSizeAndPositionManager({
-    batchAllCells,
     cellCount = 100,
     estimatedCellSize = 15,
   } = {}) {
     const cellSizeGetterCalls = [];
     const cellSizeAndPositionManager = new CellSizeAndPositionManager({
-      batchAllCells,
       cellCount,
       cellSizeGetter: ({index}) => {
         cellSizeGetterCalls.push(index);
@@ -380,19 +378,6 @@ describe('CellSizeAndPositionManager', () => {
         offset: 950,
       });
       expect(start).toEqual(95);
-      expect(stop).toEqual(99);
-    });
-
-    it('should return all cells if :batchAllCells param was used (for CellMeasurer support)', () => {
-      const {cellSizeAndPositionManager} = getCellSizeAndPositionManager({
-        batchAllCells: true,
-        cellCount: 100,
-      });
-      const {start, stop} = cellSizeAndPositionManager.getVisibleCellRange({
-        containerSize: 50,
-        offset: 950,
-      });
-      expect(start).toEqual(0);
       expect(stop).toEqual(99);
     });
   });

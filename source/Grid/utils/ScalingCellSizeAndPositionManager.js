@@ -18,7 +18,6 @@ type ContainerSizeAndOffset = {
 
 type Params = {
   maxScrollSize?: number,
-  batchAllCells: boolean,
   cellCount: number,
   cellSizeGetter: CellSizeGetter,
   estimatedCellSize: number,
