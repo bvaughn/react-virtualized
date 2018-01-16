@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.17.3
+* 🐛 Fix `Grid` server-side rendering which was broken after natural scrolling tweak in Chrome. ([TrySound](https://github.com/TrySound) - [#970](https://github.com/bvaughn/react-virtualized/pull/970))
+
 ##### 9.17.2
 * ✨ Eliminate unnecessary renders for `CellMeasurer` and `Grid`. ([bvaughn](https://github.com/bvaughn) - [#969](https://github.com/bvaughn/react-virtualized/pull/969))
 
