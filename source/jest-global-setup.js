@@ -12,7 +12,7 @@ const DIR = path.join(os.tmpdir(), 'jest_puppeteer_global_setup');
 module.exports = async function() {
   console.log('Setup Puppeteer Environment.');
   const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   global.__BROWSER__ = browser;
   await makeDir(DIR);
