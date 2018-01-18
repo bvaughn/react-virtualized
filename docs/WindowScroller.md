@@ -18,6 +18,15 @@ This may change with a future release but for the time being this component is s
 | serverHeight | Number |  | Height used for server-side rendering. |
 | serverWidth | Number |  | Width used for server-side rendering. |
 
+### Render Props  
+| Property | Type | Description |
+|:---|:---|:---|
+| height | Number | The hight of the viewport. |
+| isScrolling | Boolean | Indicates if the `Table` or `List` is scrolling |
+| onChildScroll | Function | Used by the `Table` or `List`'s `onScroll` prop to "scroll" the list |
+| registerChild | Function | specify grid container deeper in layout (by default `WindowScroller` uses `ReactDOM.findDOMNode` function) |
+| scrollTop | Number | Scroll distance from the page |
+
 ### Public Methods
 
 ##### updatePosition
@@ -54,7 +63,7 @@ ReactDOM.render(
 );
 ```
 
-or using `registerChild` you can specify grid container deeper in layout (by default `WindowScroller` uses `ReactDOM.findDOMNode` function)
+using `registerChild`
 
 ```javascript
 import React from 'react';
