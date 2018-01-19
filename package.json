@@ -35,7 +35,7 @@
     "start": "webpack-dev-server --hot --config webpack.config.dev.js",
     "test": "npm run test:jest",
     "test:jest": "jest --no-watchman --runInBand",
-    "test:ci": "cross-env JEST=ci jest --testPathPattern=\".(jest|ssr).js\" --no-watchman --maxWorkers 2 --coverage && codecov",
+    "test:ci": "jest --no-watchman --maxWorkers 2 --coverage && codecov",
     "watch": "watch 'clear && npm run test -s' source",
     "watch:jest": "jest --no-watchman --watch"
   },
@@ -138,7 +138,7 @@
     "postcss-cli": "^4.1.1",
     "postcss-loader": "^2.0.9",
     "prettier": "^1.9.2",
-    "puppeteer": "^0.13.0",
+    "puppeteer": "^1.0.0",
     "react": "^16.0.0",
     "react-codemirror": "^1.0.0",
     "react-dom": "^16.0.0",
