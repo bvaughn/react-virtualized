@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:8.9.1-stretch-browsers
+      - image: circleci/node:latest
     steps:
       - checkout
       - restore_cache:
@@ -22,7 +22,7 @@ jobs:
           command: yarn ci-check
   test:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:8.9.1-stretch-browsers
     steps:
       - checkout
       - restore_cache:
