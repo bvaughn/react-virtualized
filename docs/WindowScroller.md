@@ -21,7 +21,7 @@ This may change with a future release but for the time being this component is s
 ### Render Props  
 | Property | Type | Description |
 |:---|:---|:---|
-| height | Number | The hight of the viewport. |
+| height | Number | The height of the viewport. |
 | isScrolling | Boolean | Indicates if the `Table` or `List` is scrolling |
 | onChildScroll | Function | Used by the `Table` or `List`'s `onScroll` prop to "scroll" the list |
 | registerChild | Function | specify grid container deeper in layout (by default `WindowScroller` uses `ReactDOM.findDOMNode` function) |
