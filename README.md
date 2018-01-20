@@ -235,6 +235,7 @@ Here are some great components built on top of react-virtualized:
 * [react-virtualized-checkbox](https://github.com/emilebres/react-virtualized-checkbox): Checkbox group component with virtualization for large number of options
 * [react-virtualized-select](https://github.com/bvaughn/react-virtualized-select): Drop-down menu for React with windowing to support large numbers of options.
 * [react-vtree](https://github.com/Lodin/react-vtree): Low-level tree component for React with virtualization to support large number of elements.
+* [react-virtualized-tree](https://github.com/diogofcunha/react-virtualized-tree/): A reactive tree component that aims to render large sets of tree structured data in an elegant and performant way
 
 Contributions
 ------------
