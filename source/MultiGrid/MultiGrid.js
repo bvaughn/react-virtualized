@@ -23,6 +23,7 @@ export default class MultiGrid extends PureComponent {
     enableFixedRowScroll: PropTypes.bool.isRequired,
     fixedColumnCount: PropTypes.number.isRequired,
     fixedRowCount: PropTypes.number.isRequired,
+    onScrollbarPresenceChange: PropTypes.func,
     style: PropTypes.object.isRequired,
     styleBottomLeftGrid: PropTypes.object.isRequired,
     styleBottomRightGrid: PropTypes.object.isRequired,
@@ -256,6 +257,7 @@ export default class MultiGrid extends PureComponent {
     const {
       onScroll,
       onSectionRendered,
+      onScrollbarPresenceChange, // eslint-disable-line no-unused-vars
       scrollLeft: scrollLeftProp, // eslint-disable-line no-unused-vars
       scrollToColumn,
       scrollTop: scrollTopProp, // eslint-disable-line no-unused-vars
@@ -586,6 +588,15 @@ export default class MultiGrid extends PureComponent {
         showHorizontalScrollbar: horizontal,
         showVerticalScrollbar: vertical,
       });
+
+      const {onScrollbarPresenceChange} = this.props;
+      if (typeof onScrollbarPresenceChange === 'function') {
+        onScrollbarPresenceChange({
+          horizontal,
+          size,
+          vertical,
+        });
+      }
     }
   }
 

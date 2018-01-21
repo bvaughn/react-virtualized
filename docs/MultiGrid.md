@@ -18,6 +18,7 @@ Some properties (eg `columnCount`, `rowCount`) are adjusted slightly to supporte
 | enableFixedRowScroll | boolean |  | Fixed row can be actively scrolled; disabled by default |
 | fixedColumnCount | number |  | Number of fixed columns; defaults to `0` |
 | fixedRowCount | number |  | Number of fixed rows; defaults to `0` |
+| onScrollbarPresenceChange | Function |  | Called whenever a horizontal or vertical scrollbar is added or removed from the botto, right `Grid`.: `({ horizontal: boolean, size: number, vertical: boolean }): void` |
 | style | object |  | Optional custom inline style to attach to root `MultiGrid` element. |
 | styleBottomLeftGrid | object |  | Optional custom inline style to attach to bottom-left `Grid` element. |
 | styleBottomRightGrid | object |  | Optional custom inline style to attach to bottom-right `Grid` element. |
