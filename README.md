@@ -154,7 +154,7 @@ Pure Components
 ---------------
 
 By default all react-virtualized components use [`shallowCompare`](https://facebook.github.io/react/docs/shallow-compare.html) to avoid re-rendering unless props or state has changed.
-This ocassionally confuses users when a collection's data changes (eg `['a','b','c']` => `['d','e','f']`) but props do not (eg `array.length`).
+This occasionally confuses users when a collection's data changes (eg `['a','b','c']` => `['d','e','f']`) but props do not (eg `array.length`).
 
 The solution to this is to let react-virtualized know that something external has changed.
 This can be done a couple of different ways.
