@@ -1,24 +1,24 @@
-/* @flow */
-import cn from 'classnames'
-import CodeMirror from 'react-codemirror'
-import React, { Component } from 'react'
-import { ContentBox, ContentBoxHeader } from '../ContentBox'
-import generate from './Generator'
-import styles from './Wizard.css'
+import cn from 'classnames';
+import CodeMirror from 'react-codemirror';
+import React, {Component} from 'react';
+import {ContentBox, ContentBoxHeader} from '../ContentBox';
+import generate from './Generator';
+import styles from './Wizard.css';
 
-require('codemirror/mode/jsx/jsx')
+require('codemirror/mode/jsx/jsx');
 
 const codeMirrorOptions = {
   mode: 'jsx',
-  theme: 'dracula'
-}
+  theme: 'dracula',
+};
 
 // @TODO Clean up this class; it's pretty hacky.
 export default class Wizard extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
+      key: 0,
       cellsHaveKnownHeight: true,
       cellsHaveKnownWidth: true,
       cellsHaveUniformHeight: true,
@@ -28,13 +28,16 @@ export default class Wizard extends Component {
       doNotVirtualizeColumns: false,
       hasMultipleColumns: true,
       hasMultipleRows: true,
-      nonCheckerboardPattern: false
-    }
+      nonCheckerboardPattern: false,
+    };
   }
 
-  render () {
-    const state = this._sanitizeState()
-    const markup = generate(state)
+  // TODO Remove this key hack once JedWatson/react-codemirror/issues/106 is fixed
+  updateState = obj => this.setState(state => ({...obj, key: state.key + 1}));
+
+  render() {
+    const state = this._sanitizeState();
+    const markup = generate(state);
 
     const {
       cellsHaveKnownHeight,
@@ -46,87 +49,132 @@ export default class Wizard extends Component {
       doNotVirtualizeColumns,
       hasMultipleColumns,
       hasMultipleRows,
-      nonCheckerboardPattern
-    } = state
+      nonCheckerboardPattern,
+    } = state;
 
     return (
       <div className={styles.Wrapper}>
         <ContentBox>
-          <ContentBoxHeader text='Collection Layout and Sizing' />
+          <ContentBoxHeader text="Collection Layout and Sizing" />
           <Option
             checked={hasMultipleRows}
-            label='Will your collection have more than 1 row of data?'
-            onChange={(hasMultipleRows) => this.setState({ hasMultipleRows })}
+            label="Will your collection have more than 1 row of data?"
+            onChange={hasMultipleRows => this.updateState({hasMultipleRows})}
           />
           <Option
             checked={hasMultipleColumns}
-            label='Will your collection have more than 1 column of data?'
-            onChange={(hasMultipleColumns) => this.setState({ hasMultipleColumns })}
+            label="Will your collection have more than 1 column of data?"
+            onChange={hasMultipleColumns =>
+              this.updateState({hasMultipleColumns})
+            }
           />
           <Option
             checked={doNotVirtualizeColumns}
             disabled={!hasMultipleColumns}
-            label='Should all your columns be visible at once?'
-            onChange={(doNotVirtualizeColumns) => this.setState({ doNotVirtualizeColumns })}
+            label="Should all your columns be visible at once?"
+            onChange={doNotVirtualizeColumns =>
+              this.updateState({doNotVirtualizeColumns})
+            }
           />
           <Option
             checked={nonCheckerboardPattern}
             disabled={!hasMultipleColumns || !hasMultipleRows}
-            label='Is your data scattered (not in a checkerboard pattern)?'
-            onChange={(nonCheckerboardPattern) => this.setState({ nonCheckerboardPattern })}
+            label="Is your data scattered (not in a checkerboard pattern)?"
+            onChange={nonCheckerboardPattern =>
+              this.updateState({nonCheckerboardPattern})
+            }
           />
           <Option
             disabled={!hasMultipleRows && !hasMultipleColumns}
             checked={collectionHasFixedHeight}
-            label='Does your collection have a fixed height?'
-            onChange={(collectionHasFixedHeight) => this.setState({ collectionHasFixedHeight })}
+            label="Does your collection have a fixed height?"
+            onChange={collectionHasFixedHeight =>
+              this.updateState({collectionHasFixedHeight})
+            }
           />
           <Option
             disabled={!hasMultipleRows && !hasMultipleColumns}
             checked={collectionHasFixedWidth}
-            label='Does your collection have a fixed width?'
-            onChange={(collectionHasFixedWidth) => this.setState({ collectionHasFixedWidth })}
+            label="Does your collection have a fixed width?"
+            onChange={collectionHasFixedWidth =>
+              this.updateState({collectionHasFixedWidth})
+            }
           />
         </ContentBox>
         <ContentBox>
-          <ContentBoxHeader text='Cell Sizing' />
+          <ContentBoxHeader text="Cell Sizing" />
           <Option
-            disabled={nonCheckerboardPattern || doNotVirtualizeColumns || !cellsHaveKnownWidth || (!hasMultipleRows && !hasMultipleColumns)}
-            checked={cellsHaveKnownHeight && !nonCheckerboardPattern && !doNotVirtualizeColumns}
-            label='Do you know the height of your rows ahead of time?'
-            onChange={(cellsHaveKnownHeight) => this.setState({ cellsHaveKnownHeight })}
+            disabled={
+              nonCheckerboardPattern ||
+              doNotVirtualizeColumns ||
+              !cellsHaveKnownWidth ||
+              (!hasMultipleRows && !hasMultipleColumns)
+            }
+            checked={
+              cellsHaveKnownHeight &&
+              !nonCheckerboardPattern &&
+              !doNotVirtualizeColumns
+            }
+            label="Do you know the height of your rows ahead of time?"
+            onChange={cellsHaveKnownHeight =>
+              this.updateState({cellsHaveKnownHeight})
+            }
           />
           <Option
-            disabled={nonCheckerboardPattern || doNotVirtualizeColumns || !cellsHaveKnownHeight || (!hasMultipleRows && !hasMultipleColumns)}
-            checked={cellsHaveKnownWidth && !nonCheckerboardPattern && !doNotVirtualizeColumns}
-            label='Do you know the width of your columns ahead of time?'
-            onChange={(cellsHaveKnownWidth) => this.setState({ cellsHaveKnownWidth })}
+            disabled={
+              nonCheckerboardPattern ||
+              doNotVirtualizeColumns ||
+              !cellsHaveKnownHeight ||
+              (!hasMultipleRows && !hasMultipleColumns)
+            }
+            checked={
+              cellsHaveKnownWidth &&
+              !nonCheckerboardPattern &&
+              !doNotVirtualizeColumns
+            }
+            label="Do you know the width of your columns ahead of time?"
+            onChange={cellsHaveKnownWidth =>
+              this.updateState({cellsHaveKnownWidth})
+            }
           />
           <Option
             checked={cellsHaveUniformHeight}
-            disabled={!hasMultipleRows || nonCheckerboardPattern || !cellsHaveKnownHeight}
-            label='Are all of your rows the same height?'
-            onChange={(cellsHaveUniformHeight) => this.setState({ cellsHaveUniformHeight })}
+            disabled={
+              !hasMultipleRows ||
+              nonCheckerboardPattern ||
+              !cellsHaveKnownHeight
+            }
+            label="Are all of your rows the same height?"
+            onChange={cellsHaveUniformHeight =>
+              this.updateState({cellsHaveUniformHeight})
+            }
           />
           <Option
             checked={cellsHaveUniformWidth}
-            disabled={!hasMultipleColumns || nonCheckerboardPattern || !cellsHaveKnownWidth}
-            label='Are all of your columns the same width?'
-            onChange={(cellsHaveUniformWidth) => this.setState({ cellsHaveUniformWidth })}
+            disabled={
+              !hasMultipleColumns ||
+              nonCheckerboardPattern ||
+              !cellsHaveKnownWidth
+            }
+            label="Are all of your columns the same width?"
+            onChange={cellsHaveUniformWidth =>
+              this.updateState({cellsHaveUniformWidth})
+            }
           />
         </ContentBox>
         <ContentBox>
-          <ContentBoxHeader text='Suggested Starting Point' />
+          <ContentBoxHeader text="Suggested Starting Point" />
           <CodeMirror
             options={codeMirrorOptions}
             value={markup}
+            key={this.state.key}
           />
         </ContentBox>
       </div>
-    )
+    );
   }
 
-  _sanitizeState () {
+  _sanitizeState() {
     const {
       cellsHaveKnownHeight,
       cellsHaveKnownWidth,
@@ -137,46 +185,49 @@ export default class Wizard extends Component {
       doNotVirtualizeColumns,
       hasMultipleColumns,
       hasMultipleRows,
-      nonCheckerboardPattern
-    } = this.state
+      nonCheckerboardPattern,
+    } = this.state;
 
     return {
       cellsHaveKnownHeight,
       cellsHaveKnownWidth,
-      cellsHaveUniformHeight: cellsHaveUniformHeight && hasMultipleRows && !nonCheckerboardPattern && cellsHaveKnownHeight,
-      cellsHaveUniformWidth: cellsHaveUniformWidth && hasMultipleColumns && !nonCheckerboardPattern && cellsHaveKnownWidth,
+      cellsHaveUniformHeight:
+        cellsHaveUniformHeight &&
+        hasMultipleRows &&
+        !nonCheckerboardPattern &&
+        cellsHaveKnownHeight,
+      cellsHaveUniformWidth:
+        cellsHaveUniformWidth &&
+        hasMultipleColumns &&
+        !nonCheckerboardPattern &&
+        cellsHaveKnownWidth,
       collectionHasFixedHeight,
       collectionHasFixedWidth,
       doNotVirtualizeColumns: doNotVirtualizeColumns && hasMultipleColumns,
       hasMultipleColumns,
       hasMultipleRows,
-      nonCheckerboardPattern: nonCheckerboardPattern && hasMultipleColumns && hasMultipleRows
-    }
+      nonCheckerboardPattern:
+        nonCheckerboardPattern && hasMultipleColumns && hasMultipleRows,
+    };
   }
 }
 
-function Option ({
-  checked,
-  disabled = false,
-  label,
-  onChange
-}) {
+function Option({checked, disabled = false, label, onChange}) {
   return (
     <div
       className={cn(styles.Option, {
-        [styles.OptionDisabled]: disabled
-      })}
-    >
+        [styles.OptionDisabled]: disabled,
+      })}>
       <label className={styles.Label}>
         <input
           checked={checked}
           className={styles.Input}
           disabled={disabled}
-          onChange={(event) => onChange(event.target.checked)}
-          type='checkbox'
+          onChange={event => onChange(event.target.checked)}
+          type="checkbox"
         />
         {label}
       </label>
     </div>
-  )
+  );
 }

@@ -11,12 +11,15 @@ Describes the header and cell contents of a table column.
 | className | String |  | CSS class to apply to rendered cell container |
 | columnData | Object |  | Additional data passed to this column's `cellDataGetter`. Use this object to relay action-creators or relational data. |
 | dataKey | any | ✓ | Uniquely identifies the row-data attribute corresponding to this cell (eg this might be "name" in an array of user objects). |
+| defaultSortDirection| [SortDirection](SortDirection.md) |  | Default sort order when clicked for the first time. Valid options include "ASC" and "DESC". Defaults to "ASC" |
 | disableSort | Boolean |  | If sort is enabled for the table at large, disable it for this column |
 | flexGrow | Number |  | Flex grow style; defaults to 0 |
 | flexShrink | Number |  | Flex shrink style; defaults to 1 |
 | headerClassName | String |  | CSS class to apply to this column's header |
 | headerRenderer | Function |  | Optional callback responsible for rendering a column's header column. [Learn more](#headerrenderer) |
-| label | String |  | Header label for this column |
+| headerStyle | Object |  | Optional inline style to apply to this column's header |
+| id | String |  | Optional id to set on the column header; used for [`aria-describedby`](https://www.w3.org/TR/wai-aria/states_and_properties#aria-describedby) |
+| label | Node |  | Header label for this column |
 | maxWidth | Number |  | Maximum width of column; this property will only be used if :flexGrow is greater than 0 |
 | minWidth | Number |  | Minimum width of column |
 | style | Object |  | Optional inline style to apply to rendered cell container |
@@ -69,7 +72,7 @@ function ({
   columnData: any,
   dataKey: string,
   disableSort: boolean,
-  label: string,
+  label: any,
   sortBy: string,
   sortDirection: SortDirection
 }): element

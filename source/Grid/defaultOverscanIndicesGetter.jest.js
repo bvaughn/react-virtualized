@@ -1,23 +1,23 @@
 import overscanIndicesGetter, {
   SCROLL_DIRECTION_BACKWARD,
-  SCROLL_DIRECTION_FORWARD
-} from './defaultOverscanIndicesGetter'
+  SCROLL_DIRECTION_FORWARD,
+} from './defaultOverscanIndicesGetter';
 
 describe('overscanIndicesGetter', () => {
-  function testHelper ({
+  function testHelper({
     cellCount,
     startIndex,
     stopIndex,
     overscanCellsCount,
-    scrollDirection
+    scrollDirection,
   }) {
     return overscanIndicesGetter({
       cellCount,
       overscanCellsCount,
       scrollDirection,
       startIndex,
-      stopIndex
-    })
+      stopIndex,
+    });
   }
 
   it('should not overscan if :overscanCellsCount is 0', () => {
@@ -27,12 +27,12 @@ describe('overscanIndicesGetter', () => {
         startIndex: 10,
         stopIndex: 20,
         overscanCellsCount: 0,
-        scrollDirection: SCROLL_DIRECTION_BACKWARD
-      })
+        scrollDirection: SCROLL_DIRECTION_BACKWARD,
+      }),
     ).toEqual({
       overscanStartIndex: 10,
-      overscanStopIndex: 20
-    })
+      overscanStopIndex: 20,
+    });
 
     expect(
       testHelper({
@@ -40,13 +40,13 @@ describe('overscanIndicesGetter', () => {
         startIndex: 10,
         stopIndex: 20,
         overscanCellsCount: 0,
-        scrollDirection: SCROLL_DIRECTION_FORWARD
-      })
+        scrollDirection: SCROLL_DIRECTION_FORWARD,
+      }),
     ).toEqual({
       overscanStartIndex: 10,
-      overscanStopIndex: 20
-    })
-  })
+      overscanStopIndex: 20,
+    });
+  });
 
   it('should overscan forward', () => {
     expect(
@@ -55,13 +55,13 @@ describe('overscanIndicesGetter', () => {
         startIndex: 20,
         stopIndex: 30,
         overscanCellsCount: 10,
-        scrollDirection: SCROLL_DIRECTION_FORWARD
-      })
+        scrollDirection: SCROLL_DIRECTION_FORWARD,
+      }),
     ).toEqual({
       overscanStartIndex: 20,
-      overscanStopIndex: 40
-    })
-  })
+      overscanStopIndex: 40,
+    });
+  });
 
   it('should overscan backward', () => {
     expect(
@@ -70,13 +70,13 @@ describe('overscanIndicesGetter', () => {
         startIndex: 20,
         stopIndex: 30,
         overscanCellsCount: 10,
-        scrollDirection: SCROLL_DIRECTION_BACKWARD
-      })
+        scrollDirection: SCROLL_DIRECTION_BACKWARD,
+      }),
     ).toEqual({
       overscanStartIndex: 10,
-      overscanStopIndex: 30
-    })
-  })
+      overscanStopIndex: 30,
+    });
+  });
 
   it('should not overscan beyond the start of the list', () => {
     expect(
@@ -85,13 +85,13 @@ describe('overscanIndicesGetter', () => {
         startIndex: 5,
         stopIndex: 15,
         overscanCellsCount: 10,
-        scrollDirection: SCROLL_DIRECTION_BACKWARD
-      })
+        scrollDirection: SCROLL_DIRECTION_BACKWARD,
+      }),
     ).toEqual({
       overscanStartIndex: 0,
-      overscanStopIndex: 15
-    })
-  })
+      overscanStopIndex: 15,
+    });
+  });
 
   it('should not overscan beyond the end of the list', () => {
     expect(
@@ -100,11 +100,11 @@ describe('overscanIndicesGetter', () => {
         startIndex: 10,
         stopIndex: 20,
         overscanCellsCount: 10,
-        scrollDirection: SCROLL_DIRECTION_FORWARD
-      })
+        scrollDirection: SCROLL_DIRECTION_FORWARD,
+      }),
     ).toEqual({
       overscanStartIndex: 10,
-      overscanStopIndex: 24
-    })
-  })
-})
+      overscanStopIndex: 24,
+    });
+  });
+});

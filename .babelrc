@@ -1,7 +1,18 @@
 {
   "env": {
     "commonjs": {
+      "ignore": [
+        "*.jest.js",
+        "*.e2e.js",
+        "*.ssr.js",
+        "*.example.js",
+        "source/demo",
+        "source/jest-*.js",
+        "source/TestUtils.js"
+      ],
       "plugins": [
+        "transform-runtime",
+        "flow-react-proptypes",
         [
           "transform-react-remove-prop-types", {
             "mode": "wrap"
@@ -9,14 +20,14 @@
         ]
       ],
       "presets": [
-        "es2015",
+        "env",
         "react",
+        "flow",
         "stage-1"
       ]
     },
     "development": {
       "plugins": [
-        "typecheck",
         [
           "react-transform",
           {
@@ -42,14 +53,25 @@
         ]
       ],
       "presets": [
-        "es2015",
+        "env",
         "react",
+        "flow",
         "stage-1"
       ]
     },
     "es": {
+      "ignore": [
+        "*.jest.js",
+        "*.e2e.js",
+        "*.ssr.js",
+        "*.example.js",
+        "source/demo",
+        "source/jest-*.js",
+        "source/TestUtils.js"
+      ],
       "plugins": [
         "transform-runtime",
+        "flow-react-proptypes",
         [
           "transform-react-remove-prop-types", {
             "mode": "wrap"
@@ -57,28 +79,30 @@
         ]
       ],
       "presets": [
-        "es2015-rollup",
+        ["env", { "modules": false }],
         "react",
+        "flow",
         "stage-1"
       ]
     },
     "production": {
       "comments": false,
       "plugins": [
-        "transform-react-remove-prop-types",
         "transform-runtime"
       ],
       "presets": [
-        "es2015",
+        "env",
         "react",
+        "flow",
         "stage-1"
       ]
     },
     "test": {
       "comments": false,
       "presets": [
-        "es2015",
+        "env",
         "react",
+        "flow",
         "stage-1"
       ]
     }

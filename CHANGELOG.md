@@ -1,6 +1,104 @@
 Changelog
 ------------
 
+##### 9.18.0
+* ✨ Add `onScrollbarPresenceChange` prop to `MultiGrid`.
+
+##### 9.17.3
+* 🐛 Fix `Grid` server-side rendering which was broken after natural scrolling tweak in Chrome. ([TrySound](https://github.com/TrySound) - [#970](https://github.com/bvaughn/react-virtualized/pull/970))
+
+##### 9.17.2
+* ✨ Eliminate unnecessary renders for `CellMeasurer` and `Grid`. ([bvaughn](https://github.com/bvaughn) - [#969](https://github.com/bvaughn/react-virtualized/pull/969))
+
+##### 9.17.1
+* 🐛 `CellMeasurer` works properly in iframes and popup windows. ([dfdeagle47](https://github.com/dfdeagle47) - [#968](https://github.com/bvaughn/react-virtualized/pull/968))
+
+##### 9.17.0
+
+* More natural scrolling speeds for large lists in Chrome. ([TrySound](https://github.com/TrySound) - [#936](https://github.com/bvaughn/react-virtualized/pull/936))
+* Support for multi-column sort added to `Table` component. Read more about this [here](https://github.com/bvaughn/react-virtualized/blob/master/docs/multiColumnSortTable.md). Special thanks to [CzBuCHi](https://github.com/CzBuCHi) for the initial proposal and iteration in PRs [#946](https://github.com/bvaughn/react-virtualized/pull/946) and [#957](https://github.com/bvaughn/react-virtualized/pull/957). ([bvaughn](https://github.com/bvaughn) - [#966](https://github.com/bvaughn/react-virtualized/pull/966))
+* ✨ Improved `Table` performance for cases with large numbers of columns. ([gannunziata](https://github.com/gannunziata) - [#942](https://github.com/bvaughn/react-virtualized/pull/942))
+* 🐛 Fixed potential initial render bug when using `CellMeasurer` with a `List`. ([OriR](https://github.com/OriR) - [#959](https://github.com/bvaughn/react-virtualized/pull/959))
+* 🐛 `Masonry` component now renders at least one column to avoid an invalid, Infinity height layout issue. ([djeeg](https://github.com/djeeg) - [#961](https://github.com/bvaughn/react-virtualized/pull/961))
+* 🎉 Optional `className` and `style` props added to `AutoSizer` component.
+
+##### 9.16.1
+
+* 🐛 Run server-side rendering tests under pure node environment and fix SSR in `WindowScroller` ([TrySound](https://github.com/TrySound) - [#953](https://github.com/bvaughn/react-virtualized/pull/953))
+* 🎉 Warn on passing wrong value to registerChild in `WindowScroller` ([TrySound](https://github.com/TrySound) - [#949](https://github.com/bvaughn/react-virtualized/pull/949))
+* 🐛 Fixed overrided merge `WindowScroller` scrollElement prop type ([TrySound](https://github.com/TrySound) - [#948](https://github.com/bvaughn/react-virtualized/pull/948))
+* 🎉 `AutoSizer` (via the `detectElementResize` helper) now supports properly rendering into iframes and child windows ([ahutchings](https://github.com/ahutchings) - [#900](https://github.com/bvaughn/react-virtualized/pull/900))
+
+##### 9.16.0
+
+* 🐛 Fixed window check for SSR in `detectElementResize` ([eqyiel](https://github.com/eqyiel) - [#945](https://github.com/bvaughn/react-virtualized/pull/945))
+* 🎉 Allowed custom `WindowScroller` child with `registerChild` in children function ([TrySound](https://github.com/TrySound) - [#940](https://github.com/bvaughn/react-virtualized/pull/940) and [#947](https://github.com/bvaughn/react-virtualized/pull/947))
+* 🐛 Fixed `WindowScroller` scrollElement prop type ([TrySound](https://github.com/TrySound) - [#939](https://github.com/bvaughn/react-virtualized/pull/939))
+
+##### 9.15.0
+
+* 🎉 Detected `WindowScroller` container (not only window) resize similar to `AutoSizer` ([TrySound](https://github.com/TrySound) - [#918](https://github.com/bvaughn/react-virtualized/pull/918))
+* 🐛 Prevented position breaking on `WindowScroller` container resize ([TrySound](https://github.com/TrySound) - [#920](https://github.com/bvaughn/react-virtualized/pull/920))
+* 🎉 Published `AutoSizer` Flow types ([TrySound](https://github.com/TrySound) - [#934](https://github.com/bvaughn/react-virtualized/pull/934))
+* 🎉 Published `WindowScroller` Flow types ([TrySound](https://github.com/TrySound) - [#915](https://github.com/bvaughn/react-virtualized/pull/915))
+
+##### 9.14.1
+* 🐛 Fixed server-side rendering bug in `WindowScroller` with undefined `window` variable.
+
+##### 9.14.0
+* 🎉 Added `serverHeight` and `serverWidth` props to `WindowScroller` for better server-side rendering support.
+
+##### 9.13.0
+* 🎉 Added `headerStyle` support for `Table` columns ([@mucsi96](https://github.com/mucsi96) - [#877](https://github.com/bvaughn/react-virtualized/pull/877))
+* 🐛 Fixed `Masonry` bug that caused cells to be unnecessarily destroyed and then recreated when new cells were measured - d561d9c
+
+##### 9.12.0
+* 🎉 Added `defaultWidth` and `defaultHeight` props to `AutoSizer` to better support server-side rendering.
+
+##### 9.11.1
+* 🐛 `Masonry` component now properly pre-renders as specified by `overscanByPixels`
+
+##### 9.11.0
+* 🐛 `List` and `Grid` scroll snapping / resetting bugfix #825 by @TrySound
+* 🐛 `MultiGrid` crash due to `scrollTo*` prop being `NaN` #829 by @mcordova47
+* 🐛 `MultiGrid` invalid `tabIndex` prop type #818 by @kalley
+* 🎉 Column default sort direction #833 by @mbseid
+
+##### 9.10.1
+* 🐛 Server-side rendering `window` reference bugfix
+* 🐛 `Grid.defaultProps` bugfix
+
+##### 9.10.0
+* ✨ `Grid` uses `requestAnimationFrame` instead of `setTimeout` for improved scroll-ended debounce timing ([@guilhermefloriani](https://github.com/guilhermefloriani) - [#742](https://github.com/bvaughn/react-virtualized/pull/742))
+* 🎉 `onRowRightClick` prop added to `Table` ([@damian-codilime](https://github.com/damian-codilime) - [#741](https://github.com/bvaughn/react-virtualized/pull/741))
+* 🎉 `Table` component now allow children that extend `Column` ([@CptLemming](https://github.com/CptLemming) - [#748](https://github.com/bvaughn/react-virtualized/pull/748))
+* 🐛 Firefox edge-case bugfix ([@ReinAkane](https://github.com/ReinAkane) - [#798](https://github.com/bvaughn/react-virtualized/pull/798))
+* 🎉 `containerProps` prop added to `Grid` ([@implausible](https://github.com/implausible) - [#778](https://github.com/bvaughn/react-virtualized/pull/778))
+* ✨ `Grid` accessibility improved via better aria attributes ([@smockle](https://github.com/smockle) - [#744](https://github.com/bvaughn/react-virtualized/pull/744))
+* ✨ `CellMeasurererCache.clearAll` also sets row and column counts ([@tcosentino](https://github.com/tcosentino) - [#796](https://github.com/bvaughn/react-virtualized/pull/796))
+
+##### 9.9.0
+* 🎉 `InfiniteLoader` API method `resetLoadMoreRowsCache` accepts optional parameter to auto-reload most recent range of rows. ([@BamaBoy](https://github.com/BamaBoy) - [#704](https://github.com/bvaughn/react-virtualized/pull/704))
+* 🎉 `MultiGrid` now supports scrolling when hovering over fixed rows or columns by way of new `enableFixedColumnScroll` and `enableFixedRowScroll` props. ([@danalloway](https://github.com/danalloway) - [#708](https://github.com/bvaughn/react-virtualized/pull/708))
+* 🎉 `WindowScroller` supports new configurable `scrollingResetTimeInterval` prop (similar to `Grid`). ([@djeeg](https://github.com/djeeg) - [#728](https://github.com/bvaughn/react-virtualized/pull/728))
+* 🐛 Edge-case bugfix for style caching of `Grids` locked with `ScrollSync`. ([@nathanpower](https://github.com/nathanpower) - [#727](https://github.com/bvaughn/react-virtualized/pull/727))
+* ✨ New `onScrollbarPresenceChange` prop added to `Grid`.
+
+##### 9.8.0
+* 🎉 `WindowScroller` supports `scrollToIndex` prop. ([@leoasis](https://github.com/leoasis) - [#643](https://github.com/bvaughn/react-virtualized/pull/643))
+* 🎉 Allow `ArrowKeyStepper` to be used as a controlled component. ([@mking-clari](https://github.com/mking-clari) - [#688](https://github.com/bvaughn/react-virtualized/pull/688))
+* 🎉New `handleScroll` method on `Grid` to better support custom scrollbars. ([@5angel](https://github.com/5angel) - [#693](https://github.com/bvaughn/react-virtualized/pull/693))
+* 🐛 Added edge-case gaurd to `WindowScroller ` to prevent calling `setState` when unmounted. ([@liorbrauer](https://github.com/liorbrauer) - [#689](https://github.com/bvaughn/react-virtualized/pull/689))
+* 🐛 Fixed edge-case in `Grid` where setting an initial scroll-to offset with a `height` or `width` of 0 caused the scroll-to prop to be ignored when size later changed. ([#691](https://github.com/bvaughn/react-virtualized/pull/691))
+
+##### 9.7.6
+* ✨ Better aria roles set for `Table` column cells and headers. ([@jchen527](https://github.com/jchen527) - [#681](https://github.com/bvaughn/react-virtualized/pull/681))
+* 🐛 `CellMeasurer` restores `width` and `height` `style` values after measuring to avoid edge-case layout bugs. ([@marcelmokos](https://github.com/marcelmokos) - [#675](https://github.com/bvaughn/react-virtualized/pull/675))
+
+##### 9.7.5
+* ✨ Improved performance for `CellMeasurerCache` by removing some unnecessary computations for fixed-width/fixed-height use cases. ([@RaviDasari](https://github.com/RaviDasari) - [#676](https://github.com/bvaughn/react-virtualized/pull/676))
+* 🐛 `MultiGrid` ensures correct row/column indices are passed to `CellMeasurerCache` for top-right and bottom `Grid`s. ([#670](https://github.com/bvaughn/react-virtualized/pull/670))
+
 ##### 9.7.4
 * 🎉 Add `nonce` attribute to `AutoSizer` for better [Content Security Policy compliance](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute). ([@akihikodaki](https://github.com/akihikodaki) - [#663](https://github.com/bvaughn/react-virtualized/pull/663))
 * ✨ `Column` renderers now accept a `columnIndex` parameter as well. This allows multiple `Table` columns to more easily use `CellMeasurer` to compute the min row height. ([@BamaBoy](https://github.com/BamaBoy) - [#662](https://github.com/bvaughn/react-virtualized/pull/662))

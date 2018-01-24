@@ -2,7 +2,7 @@
 export type CellDataGetterParams = {
   columnData: ?any,
   dataKey: string,
-  rowData: any
+  rowData: any,
 };
 
 export type CellRendererParams = {
@@ -10,22 +10,22 @@ export type CellRendererParams = {
   columnData: ?any,
   dataKey: string,
   rowData: any,
-  rowIndex: number
+  rowIndex: number,
 };
 
 export type HeaderRowRendererParams = {
   className: string,
   columns: Array<any>,
-  style: any
+  style: any,
 };
 
 export type HeaderRendererParams = {
   columnData: ?any,
   dataKey: string,
   disableSort: ?boolean,
-  label: ?string,
+  label: ?any,
   sortBy: ?string,
-  sortDirection: ?string
+  sortDirection: ?string,
 };
 
 export type RowRendererParams = {
@@ -38,5 +38,5 @@ export type RowRendererParams = {
   onRowMouseOver: ?Function,
   onRowMouseOut: ?Function,
   rowData: any,
-  style: any
+  style: any,
 };

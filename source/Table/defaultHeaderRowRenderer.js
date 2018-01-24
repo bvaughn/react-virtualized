@@ -1,17 +1,15 @@
 /** @flow */
-import React from 'react'
-import type { HeaderRowRendererParams } from './types'
+import React from 'react';
+import type {HeaderRowRendererParams} from './types';
 
-export default function defaultHeaderRowRenderer ({
+export default function defaultHeaderRowRenderer({
   className,
   columns,
-  style
+  style,
 }: HeaderRowRendererParams) {
-  return <div
-    className={className}
-    role='row'
-    style={style}
-  >
-    {columns}
-  </div>
+  return (
+    <div className={className} role="row" style={style}>
+      {columns}
+    </div>
+  );
 }

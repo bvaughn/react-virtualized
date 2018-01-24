@@ -9,7 +9,7 @@ This phase uses estimated cell sizes (provided by the `cellMeasurerCache` proper
 ##### Phase 2: Layout
 This phase uses the external `cellPositioner` to position cells. At this time the positioner has access to cached size measurements for all cells. The positions it returns are cached by `Masonry` for fast access later.
 
-Phase one is repeated if the user scrolls beyond the current layout's bounds. If the layout is invalidated due to eg a resize, cached positions can be cleared using `recomputeCellPositions()`.
+Phase one is repeated if the user scrolls beyond the current layout's bounds. If the layout is invalidated due to eg a resize, cached positions can be cleared using `recomputeCellPositions()` or `clearCellPositions()`.
 
 #### Animation Constraints
 * Simple animations are supported (eg translate/slide into place on initial reveal).
@@ -41,6 +41,16 @@ Phase one is repeated if the user scrolls beyond the current layout's bounds. If
 | style | mixed |  | Optional custom inline style to attach to root `Masonry` element. |
 | tabIndex | number |  | Optional override of tab index default; defaults to 0. |
 | width | number | ✓ | Width of the component; this value determines the number of visible items. |
+
+## Public Methods
+
+##### clearCellPositions ()
+
+Clears internal position cache and force-updates.
+
+##### recomputeCellPositions ()
+
+Resets internal position cache, synchronously re-computes positions, then force-updates.
 
 ### cellRenderer
 

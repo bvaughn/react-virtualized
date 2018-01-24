@@ -10,24 +10,24 @@
  * @param currentOffset Container's current (x or y) offset
  * @return Offset to use to ensure the specified cell is visible
  */
-export default function getUpdatedOffsetForIndex ({
+export default function getUpdatedOffsetForIndex({
   align = 'auto',
   cellOffset,
   cellSize,
   containerSize,
-  currentOffset
+  currentOffset,
 }) {
-  const maxOffset = cellOffset
-  const minOffset = maxOffset - containerSize + cellSize
+  const maxOffset = cellOffset;
+  const minOffset = maxOffset - containerSize + cellSize;
 
   switch (align) {
     case 'start':
-      return maxOffset
+      return maxOffset;
     case 'end':
-      return minOffset
+      return minOffset;
     case 'center':
-      return maxOffset - ((containerSize - cellSize) / 2)
+      return maxOffset - (containerSize - cellSize) / 2;
     default:
-      return Math.max(minOffset, Math.min(maxOffset, currentOffset))
+      return Math.max(minOffset, Math.min(maxOffset, currentOffset));
   }
 }

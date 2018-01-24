@@ -1,76 +1,93 @@
-let mountedInstances = []
-let originalBodyPointerEvents = null
-let disablePointerEventsTimeoutId = null
+// @flow
 
-/**
- * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
- * This improves performance and makes scrolling smoother.
- */
-export const IS_SCROLLING_TIMEOUT = 150
+import {
+  requestAnimationTimeout,
+  cancelAnimationTimeout,
+} from '../../utils/requestAnimationTimeout';
+import WindowScroller from '../WindowScroller.js';
 
-function enablePointerEventsIfDisabled () {
+let mountedInstances = [];
+let originalBodyPointerEvents = null;
+let disablePointerEventsTimeoutId = null;
+
+function enablePointerEventsIfDisabled() {
   if (disablePointerEventsTimeoutId) {
-    disablePointerEventsTimeoutId = null
+    disablePointerEventsTimeoutId = null;
 
-    document.body.style.pointerEvents = originalBodyPointerEvents
+    if (document.body && originalBodyPointerEvents != null) {
+      document.body.style.pointerEvents = originalBodyPointerEvents;
+    }
 
-    originalBodyPointerEvents = null
+    originalBodyPointerEvents = null;
   }
 }
 
-function enablePointerEventsAfterDelayCallback () {
-  enablePointerEventsIfDisabled()
-  mountedInstances.forEach(
-    instance => instance.__resetIsScrolling()
-  )
+function enablePointerEventsAfterDelayCallback() {
+  enablePointerEventsIfDisabled();
+  mountedInstances.forEach(instance => instance.__resetIsScrolling());
 }
 
-function enablePointerEventsAfterDelay () {
+function enablePointerEventsAfterDelay() {
   if (disablePointerEventsTimeoutId) {
-    clearTimeout(disablePointerEventsTimeoutId)
+    cancelAnimationTimeout(disablePointerEventsTimeoutId);
   }
 
-  disablePointerEventsTimeoutId = setTimeout(
-      enablePointerEventsAfterDelayCallback,
-      IS_SCROLLING_TIMEOUT
-    )
-}
-
-function onScrollWindow (event) {
-  if (event.currentTarget === window && originalBodyPointerEvents == null) {
-    originalBodyPointerEvents = document.body.style.pointerEvents
-
-    document.body.style.pointerEvents = 'none'
-  }
-  enablePointerEventsAfterDelay()
+  var maximumTimeout = 0;
   mountedInstances.forEach(instance => {
-    if (instance.scrollElement === event.currentTarget) {
-      instance.__handleWindowScrollEvent(event)
-    }
-  })
+    maximumTimeout = Math.max(
+      maximumTimeout,
+      instance.props.scrollingResetTimeInterval,
+    );
+  });
+
+  disablePointerEventsTimeoutId = requestAnimationTimeout(
+    enablePointerEventsAfterDelayCallback,
+    maximumTimeout,
+  );
 }
 
-export function registerScrollListener (component, element) {
+function onScrollWindow(event) {
   if (
-    !mountedInstances.some(
-      instance => instance.scrollElement === element
-    )
+    event.currentTarget === window &&
+    originalBodyPointerEvents == null &&
+    document.body
   ) {
-    element.addEventListener('scroll', onScrollWindow)
+    originalBodyPointerEvents = document.body.style.pointerEvents;
+
+    document.body.style.pointerEvents = 'none';
   }
-  mountedInstances.push(component)
+  enablePointerEventsAfterDelay();
+  mountedInstances.forEach(instance => {
+    if (instance.props.scrollElement === event.currentTarget) {
+      instance.__handleWindowScrollEvent();
+    }
+  });
 }
 
-export function unregisterScrollListener (component, element) {
+export function registerScrollListener(
+  component: WindowScroller,
+  element: Element,
+) {
+  if (
+    !mountedInstances.some(instance => instance.props.scrollElement === element)
+  ) {
+    element.addEventListener('scroll', onScrollWindow);
+  }
+  mountedInstances.push(component);
+}
+
+export function unregisterScrollListener(
+  component: WindowScroller,
+  element: Element,
+) {
   mountedInstances = mountedInstances.filter(
-    instance => instance !== component
-  )
+    instance => instance !== component,
+  );
   if (!mountedInstances.length) {
-    element.removeEventListener('scroll', onScrollWindow)
+    element.removeEventListener('scroll', onScrollWindow);
     if (disablePointerEventsTimeoutId) {
-      clearTimeout(disablePointerEventsTimeoutId)
-      enablePointerEventsIfDisabled()
+      cancelAnimationTimeout(disablePointerEventsTimeoutId);
+      enablePointerEventsIfDisabled();
     }
   }
 }
-

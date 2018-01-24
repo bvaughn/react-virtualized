@@ -8,8 +8,10 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  border: none;
   border-right: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
+  outline: none;
 }
 
 .FocusedCell {
@@ -19,4 +21,12 @@
 
 .Radio {
   margin-left: 0.5rem;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+}
+.checkbox {
+  margin-right: 5px;
 }

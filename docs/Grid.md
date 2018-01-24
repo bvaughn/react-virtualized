@@ -12,7 +12,9 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index. [Learn more](#cellrenderer) |
 | className | String |  | Optional custom CSS class name to attach to root `Grid` element. |
 | columnCount | Number | ✓ | Number of columns in grid. |
-| columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number` |
+| columnWidth | Number or Function | ✓ | Either a fixed column width (number) or a function that returns the width of a column given its index: `({ index: number }): number`. If function is used, specify `estimatedColumnSize` for more consistent scrolling behavior. |
+| containerProps | Object |  | Responsible for adding props to the cell-container, i.e. `onWheel`.
+| containerRole | string |  | ARIA role for the cell-container; defaults to "rowgroup" |
 | containerStyle | Object |  | Optional custom inline style to attach to inner cell-container element. |
 | deferredMeasurementCache | `CellMeasurer` |  | If CellMeasurer is used to measure this Grid's children, this should be a pointer to its CellMeasurerCache. A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data. |
 | estimatedColumnSize | Number |  | Used to estimate the total width of a `Grid` before all of its columns have actually been measured. The estimated total width is adjusted as columns are rendered. |
@@ -23,12 +25,13 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowCount` or `columnCount` is empty: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered. This callback is only invoked when visible rows have changed: `({ columnOverscanStartIndex: number, columnOverscanStopIndex: number, columnStartIndex: number, columnStopIndex: number, rowOverscanStartIndex: number, rowOverscanStopIndex: number, rowStartIndex: number, rowStopIndex: number }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, clientWidth: number, scrollHeight: number, scrollLeft: number, scrollTop: number, scrollWidth: number }): void` |
+| onScrollbarPresenceChange | Function |  | Called whenever a horizontal or vertical scrollbar is added or removed.: `({ horizontal: boolean, size: number, vertical: boolean }): void` |
 | overscanColumnCount | Number |  | Number of columns to render before/after the visible slice of the grid. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important note about this property. |
 | overscanIndicesGetter | Function |  | Responsible for calculating the number of cells to overscan before and after a specified range [Learn more](#overscanindicesgetter) |
 | overscanRowCount | Number |  | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important note about this property. |
 | role | String |  | Optional override of ARIA role default; defaults to `grid`. |
 | rowCount | Number | ✓ | Number of rows in grid. |
-| rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
+| rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number`. If function is used, specify `estimatedRowSize` for more consistent scrolling behavior. |
 | scrollingResetTimeInterval | Number |  | Wait this amount of time after the last scroll event before resetting Grid `pointer-events`; defaults to 150ms. |
 | scrollLeft | Number |  | Horizontal offset |
 | scrollToAlignment | String |  | Controls the alignment of scrolled-to-cells. The default ("_auto_") scrolls the least amount possible to ensure that the specified cell is fully visible. Use "_start_" to always align cells to the top/left of the `Grid` and "_end_" to align them bottom/right. Use "_center_" to align specified cell in the middle of container. |
@@ -44,6 +47,11 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 ##### getOffsetForCell ({ alignment: ?string, columnIndex: ?number, rowIndex: ?number })
 
 Gets offsets for a given cell and alignment.
+
+##### handleScrollEvent ({ scrollLeft, scrollTop })
+
+This method handles a scroll event originating from an external scroll control.
+It's an advanced method and should probably not be used unless you're implementing a custom scroll-bar solution.
 
 ##### measureAllCells
 
@@ -162,7 +170,7 @@ function cellRangeRenderer ({
 
 ### overscanIndicesGetter
 This is an advanced property.
-This function is responsible for calculating the number of cells to overscan before and after a specified range. By default, React Virtualized optimizes the number of cells to overscan based on scroll direction. If you'd like to customize this behavior, you may want to fork the [`defaultOverscanIndicesGetter`](https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/defaultOverscanIndicesGetter.js) function.
+This function is responsible for calculating the number of cells to overscan before and after a specified range. By default, React Virtualized optimizes the number of cells to overscan based on scroll direction. If you'd like to customize this behavior, you may want to fork the [`defaultOverscanIndicesGetter`](https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/defaultOverscanIndicesGetter.js) function.
 
 ```
 function overscanIndicesGetter ({

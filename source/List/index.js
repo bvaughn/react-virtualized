@@ -1,3 +1,6 @@
 /** @flow */
-export default from './List'
-export List from './List'
+
+export type {RowRendererParams} from './types';
+
+export {default} from './List';
+export {default as List} from './List';

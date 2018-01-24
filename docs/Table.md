@@ -27,6 +27,7 @@ This component expects explicit `width` and `height` parameters.
 | onRowDoubleClick | Function |  | Callback invoked when a user double-clicks on a table row. `({ event: Event, index: number, rowData: any }): void` |
 | onRowMouseOut | Function | | Callback invoked when the mouse leaves a table row. `({ event: Event, index: number, rowData: any }): void` |
 | onRowMouseOver | Function |  | Callback invoked when a user moves the mouse over a table row. `({ event: Event, index: number, rowData: any }): void` |
+| onRowRightClick | Function |  | Callback invoked when a user right-clicks on a table row. `({ event: Event, index: number, rowData: any }): void` |
 | onRowsRendered | Function |  | Callback invoked with information about the slice of rows that were just rendered: `({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void` |
 | overscanRowCount | Number |  | Number of rows to render above/below the visible bounds of the list. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important note about this property. |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, scrollHeight: number, scrollTop: number }): void` |
@@ -39,7 +40,7 @@ This component expects explicit `width` and `height` parameters.
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |
-| sort | Function |  | Sort function to be called if a sortable header is clicked. `({ sortBy: string, sortDirection: SortDirection }): void` |
+| sort | Function |  | Sort function to be called if a sortable header is clicked. `({ defaultSortDirection: string, event: MouseEvent, sortBy: string, sortDirection: SortDirection }): void` |
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |
 | style | Object |  | Optional custom inline style to attach to root `Table` element. |
@@ -166,7 +167,7 @@ import ReactDOM from 'react-dom';
 import { Column, Table } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
-// Table data as a array of objects
+// Table data as an array of objects
 const list = [
   { name: 'Brian Vaughn', description: 'Software engineer' }
   // And so on...

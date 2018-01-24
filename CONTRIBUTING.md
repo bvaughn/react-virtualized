@@ -11,7 +11,7 @@ In return, they should reciprocate that respect in addressing your issue or asse
 
 The issue tracker is the preferred channel for bug reports but please respect the following restrictions:
 
-* Please **do not** use the issue tracker for personal support requests (use [Gitter](https://gitter.im/bvaughn/react-virtualized)).
+* Please **do not** use the issue tracker for personal support requests (use [Slack](http://slack.reactvirtualized.com)).
 * Please **do not** derail or troll issues. Keep the discussion on topic and respect the opinions of others.
 
 <a name="bugs"></a>
@@ -91,32 +91,38 @@ Follow this process if you'd like your work considered for inclusion in the proj
    git pull upstream master
    ```
 
-3. Create a new topic branch (off the main project development branch) to
+3. Install/update dependencies:
+
+   ```bash
+   yarn install
+   ```
+
+4. Create a new topic branch (off the main project development branch) to
    contain your feature, change, or fix:
 
    ```bash
    git checkout -b <topic-branch-name>
    ```
 
-4. Commit your changes in logical chunks.
+5. Commit your changes in logical chunks.
    Please adhere to these [git commit message guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
    or your code is unlikely be merged into the main project.
    Use Git's [interactive rebase](https://help.github.com/articles/interactive-rebase)
    feature to tidy up your commits before making them public.
 
-5. Locally merge (or rebase) the upstream development branch into your topic branch:
+6. Locally merge (or rebase) the upstream development branch into your topic branch:
 
    ```bash
    git pull [--rebase] upstream master
    ```
 
-6. Push your topic branch up to your fork:
+7. Push your topic branch up to your fork:
 
    ```bash
    git push origin <topic-branch-name>
    ```
 
-7. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/)
+8. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/)
     with a clear title and description.
 
 **IMPORTANT**: By submitting a patch, you agree to allow the project owner to license your work under the same license as that used by this project (MIT).
@@ -128,7 +134,7 @@ You can run the local demo with NPM like so:
 
 ```bash
 cd <root>
-npm start
+yarn start
 ```
 
 The local app will then be available at http://localhost:3001
@@ -141,5 +147,5 @@ You can run unit tests with NPM like so:
 
 ```bash
 cd <root>
-npm test
+yarn test
 ```

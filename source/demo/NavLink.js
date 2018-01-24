@@ -1,20 +1,14 @@
-/** @flow */
-import React from 'react'
-import { NavLink as RRNavLink } from 'react-router-dom'
-import Icon from './Icon'
-import styles from './NavLink.css'
+import React from 'react';
+import {NavLink as RRNavLink} from 'react-router-dom';
+import Icon from './Icon';
+import styles from './NavLink.css';
 
-export default function NavLink ({ children, href, iconType, to }) {
-  let link
-  let icon
+export default function NavLink({children, href, iconType, to}) {
+  let link;
+  let icon;
 
   if (iconType) {
-    icon = (
-      <Icon
-        className={styles.Icon}
-        type={iconType}
-      />
-    )
+    icon = <Icon className={styles.Icon} type={iconType} />;
   }
 
   if (to) {
@@ -22,25 +16,17 @@ export default function NavLink ({ children, href, iconType, to }) {
       <RRNavLink
         activeClassName={styles.ActiveNavLink}
         className={styles.NavLink}
-        to={to}
-      >
+        to={to}>
         {icon} {children}
       </RRNavLink>
-    )
+    );
   } else {
     link = (
-      <a
-        className={styles.NavLink}
-        href={href}
-      >
+      <a className={styles.NavLink} href={href}>
         {icon} {children}
       </a>
-    )
+    );
   }
 
-  return (
-    <li className={styles.NavListItem}>
-      {link}
-    </li>
-  )
+  return <li className={styles.NavListItem}>{link}</li>;
 }

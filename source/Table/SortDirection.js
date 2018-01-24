@@ -9,7 +9,7 @@ const SortDirection = {
    * Sort items in descending order.
    * This means arranging from the highest value to the lowest (e.g. z-a, 9-0).
    */
-  DESC: 'DESC'
-}
+  DESC: 'DESC',
+};
 
-export default SortDirection
+export default SortDirection;

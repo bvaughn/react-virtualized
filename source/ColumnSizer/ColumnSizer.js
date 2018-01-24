@@ -1,6 +1,6 @@
 /** @flow */
-import PropTypes from 'prop-types'
-import { PureComponent } from 'react'
+import PropTypes from 'prop-types';
+import {PureComponent} from 'react';
 
 /**
  * High-order component that auto-calculates column-widths for `Grid` cells.
@@ -28,22 +28,17 @@ export default class ColumnSizer extends PureComponent {
     columnCount: PropTypes.number.isRequired,
 
     /** Width of Grid or Table child */
-    width: PropTypes.number.isRequired
+    width: PropTypes.number.isRequired,
   };
 
-  constructor (props, context) {
-    super(props, context)
+  constructor(props, context) {
+    super(props, context);
 
-    this._registerChild = this._registerChild.bind(this)
+    this._registerChild = this._registerChild.bind(this);
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    const {
-      columnMaxWidth,
-      columnMinWidth,
-      columnCount,
-      width
-    } = this.props
+  componentDidUpdate(prevProps) {
+    const {columnMaxWidth, columnMinWidth, columnCount, width} = this.props;
 
     if (
       columnMaxWidth !== prevProps.columnMaxWidth ||
@@ -52,53 +47,52 @@ export default class ColumnSizer extends PureComponent {
       width !== prevProps.width
     ) {
       if (this._registeredChild) {
-        this._registeredChild.recomputeGridSize()
+        this._registeredChild.recomputeGridSize();
       }
     }
   }
 
-  render () {
+  render() {
     const {
       children,
       columnMaxWidth,
       columnMinWidth,
       columnCount,
-      width
-    } = this.props
+      width,
+    } = this.props;
 
-    const safeColumnMinWidth = columnMinWidth || 1
+    const safeColumnMinWidth = columnMinWidth || 1;
 
     const safeColumnMaxWidth = columnMaxWidth
       ? Math.min(columnMaxWidth, width)
-      : width
+      : width;
 
-    let columnWidth = width / columnCount
-    columnWidth = Math.max(safeColumnMinWidth, columnWidth)
-    columnWidth = Math.min(safeColumnMaxWidth, columnWidth)
-    columnWidth = Math.floor(columnWidth)
+    let columnWidth = width / columnCount;
+    columnWidth = Math.max(safeColumnMinWidth, columnWidth);
+    columnWidth = Math.min(safeColumnMaxWidth, columnWidth);
+    columnWidth = Math.floor(columnWidth);
 
-    let adjustedWidth = Math.min(width, columnWidth * columnCount)
+    let adjustedWidth = Math.min(width, columnWidth * columnCount);
 
     return children({
       adjustedWidth,
       columnWidth,
       getColumnWidth: () => columnWidth,
-      registerChild: this._registerChild
-    })
+      registerChild: this._registerChild,
+    });
   }
 
-  _registerChild (child) {
-    if (
-      child &&
-      typeof child.recomputeGridSize !== 'function'
-    ) {
-      throw Error('Unexpected child type registered; only Grid/MultiGrid children are supported.')
+  _registerChild(child) {
+    if (child && typeof child.recomputeGridSize !== 'function') {
+      throw Error(
+        'Unexpected child type registered; only Grid/MultiGrid children are supported.',
+      );
     }
 
-    this._registeredChild = child
+    this._registeredChild = child;
 
     if (this._registeredChild) {
-      this._registeredChild.recomputeGridSize()
+      this._registeredChild.recomputeGridSize();
     }
   }
 }

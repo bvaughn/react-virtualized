@@ -2,8 +2,8 @@
 
 ![NPM version](https://img.shields.io/npm/v/react-virtualized.svg?style=flat)
 ![NPM license](https://img.shields.io/npm/l/react-virtualized.svg?style=flat)
-![NPM total downloads](https://img.shields.io/npm/dt/react-virtualized.svg?style=flat)
-![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat)
+[![NPM total downloads](https://img.shields.io/npm/dt/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
+[![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
 [![Circle CI badge](https://img.shields.io/circleci/project/bvaughn/react-virtualized/master.svg?style=flat)](https://circleci.com/gh/bvaughn/react-virtualized)
 [![Codecov badge](https://img.shields.io/codecov/c/github/bvaughn/react-virtualized/master.svg)](https://codecov.io/github/bvaughn/react-virtualized)
 [![Slack chat](https://slackin-ucxxtydvmw.now.sh/badge.svg)](https://react-virtualized.now.sh)
@@ -112,6 +112,25 @@ import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
 import List from 'react-virtualized/dist/commonjs/List'
 ```
 
+If the above syntax looks too cumbersome, or you import react-virtualized components from a lot of places, you can also configure a Webpack alias. For example:
+
+```js
+// Partial webpack.config.js
+{
+  alias: {
+    'react-virtualized/List': 'react-virtualized/dist/es/List',
+  },
+  ...rest
+}
+```
+
+Then you can just import like so:
+```js
+import List from 'react-virtualized/List';
+
+// Now you can use <List {...props} />
+```
+
 You can also use a global-friendly UMD build:
 
 ```html
@@ -135,7 +154,7 @@ Pure Components
 ---------------
 
 By default all react-virtualized components use [`shallowCompare`](https://facebook.github.io/react/docs/shallow-compare.html) to avoid re-rendering unless props or state has changed.
-This ocassionally confuses users when a collection's data changes (eg `['a','b','c']` => `['d','e','f']`) but props do not (eg `array.length`).
+This occasionally confuses users when a collection's data changes (eg `['a','b','c']` => `['d','e','f']`) but props do not (eg `array.length`).
 
 The solution to this is to let react-virtualized know that something external has changed.
 This can be done a couple of different ways.
@@ -171,6 +190,7 @@ There are also a couple of how-to guides:
 * [Using AutoSizer](docs/usingAutoSizer.md)
 * [Creating an infinite-loading list](docs/creatingAnInfiniteLoadingList.md)
 * [Natural sort Table](docs/tableWithNaturalSort.md)
+* [Sorting a Table by multiple columns](docs/multiColumnSortTable.md)
 
 
 Examples
@@ -214,6 +234,8 @@ Here are some great components built on top of react-virtualized:
 * [react-sortable-tree](https://github.com/fritz-c/react-sortable-tree): Drag-and-drop sortable representation of hierarchical data
 * [react-virtualized-checkbox](https://github.com/emilebres/react-virtualized-checkbox): Checkbox group component with virtualization for large number of options
 * [react-virtualized-select](https://github.com/bvaughn/react-virtualized-select): Drop-down menu for React with windowing to support large numbers of options.
+* [react-vtree](https://github.com/Lodin/react-vtree): Low-level tree component for React with virtualization to support large number of elements.
+* [react-virtualized-tree](https://github.com/diogofcunha/react-virtualized-tree/): A reactive tree component that aims to render large sets of tree structured data in an elegant and performant way
 
 Contributions
 ------------

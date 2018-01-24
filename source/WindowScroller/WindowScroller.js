@@ -1,155 +1,266 @@
-/** @flow */
-import PropTypes from 'prop-types'
-import { PureComponent } from 'react'
-import ReactDOM from 'react-dom'
-import { registerScrollListener, unregisterScrollListener } from './utils/onScroll'
-import { getDimensions, getPositionOffset, getScrollOffset } from './utils/dimensions'
+// @flow
 
-export default class WindowScroller extends PureComponent {
-  static propTypes = {
-    /**
-     * Function responsible for rendering children.
-     * This function should implement the following signature:
-     * ({ height, isScrolling, scrollLeft, scrollTop, width }) => PropTypes.element
-     */
-    children: PropTypes.func.isRequired,
+import * as React from 'react';
+import ReactDOM from 'react-dom';
+import {
+  registerScrollListener,
+  unregisterScrollListener,
+} from './utils/onScroll';
+import {
+  getDimensions,
+  getPositionOffset,
+  getScrollOffset,
+} from './utils/dimensions';
+import createDetectElementResize from '../vendor/detectElementResize';
 
-    /** Callback to be invoked on-resize: ({ height, width }) */
-    onResize: PropTypes.func.isRequired,
+type Props = {
+  /**
+   * Function responsible for rendering children.
+   * This function should implement the following signature:
+   * ({ height, isScrolling, scrollLeft, scrollTop, width }) => PropTypes.element
+   */
+  children: ({
+    onChildScroll: ({scrollTop: number}) => void,
+    registerChild: (?Element) => void,
+    height: number,
+    isScrolling: boolean,
+    scrollLeft: number,
+    scrollTop: number,
+    width: number,
+  }) => React.Node,
 
-    /** Callback to be invoked on-scroll: ({ scrollLeft, scrollTop }) */
-    onScroll: PropTypes.func.isRequired,
+  /** Callback to be invoked on-resize: ({ height, width }) */
+  onResize: ({height: number, width: number}) => void,
 
-    /** Element to attach scroll event listeners. Defaults to window. */
-    scrollElement: PropTypes.any
-  };
+  /** Callback to be invoked on-scroll: ({ scrollLeft, scrollTop }) */
+  onScroll: ({scrollLeft: number, scrollTop: number}) => void,
 
+  /** Element to attach scroll event listeners. Defaults to window. */
+  scrollElement: ?(typeof window | Element),
+  /**
+   * Wait this amount of time after the last scroll event before resetting child `pointer-events`.
+   */
+  scrollingResetTimeInterval: number,
+
+  /** Height used for server-side rendering */
+  serverHeight: number,
+
+  /** Width used for server-side rendering */
+  serverWidth: number,
+};
+
+type State = {
+  height: number,
+  width: number,
+  isScrolling: boolean,
+  scrollLeft: number,
+  scrollTop: number,
+};
+
+type ResizeHandler = (element: Element, onResize: () => void) => void;
+
+type DetectElementResize = {
+  addResizeListener: ResizeHandler,
+  removeResizeListener: ResizeHandler,
+};
+
+/**
+ * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
+ * This improves performance and makes scrolling smoother.
+ */
+export const IS_SCROLLING_TIMEOUT = 150;
+
+const getWindow = () => (typeof window !== 'undefined' ? window : undefined);
+
+export default class WindowScroller extends React.PureComponent<Props, State> {
   static defaultProps = {
     onResize: () => {},
-    onScroll: () => {}
+    onScroll: () => {},
+    scrollingResetTimeInterval: IS_SCROLLING_TIMEOUT,
+    scrollElement: getWindow(),
+    serverHeight: 0,
+    serverWidth: 0,
   };
 
-  constructor (props) {
-    super(props)
+  _window = getWindow();
+  _isMounted = false;
+  _positionFromTop = 0;
+  _positionFromLeft = 0;
+  _detectElementResize: DetectElementResize;
+  _child: ?Element;
 
-    // Handle server-side rendering case
-    const { width, height } = typeof window !== 'undefined'
-      ? getDimensions(props.scrollElement || window)
-      : { width: 0, height: 0 }
+  state = {
+    ...getDimensions(this.props.scrollElement, this.props),
+    isScrolling: false,
+    scrollLeft: 0,
+    scrollTop: 0,
+  };
 
-    this.state = {
-      height,
-      width,
-      isScrolling: false,
-      scrollLeft: 0,
-      scrollTop: 0
+  updatePosition(
+    scrollElement: ?Element = this.props.scrollElement,
+    props: Props = this.props,
+  ) {
+    const {onResize} = this.props;
+    const {height, width} = this.state;
+
+    const thisNode = this._child || ReactDOM.findDOMNode(this);
+    if (thisNode instanceof Element && scrollElement) {
+      const offset = getPositionOffset(thisNode, scrollElement);
+      this._positionFromTop = offset.top;
+      this._positionFromLeft = offset.left;
     }
 
-    this._onResize = this._onResize.bind(this)
-    this.__handleWindowScrollEvent = this.__handleWindowScrollEvent.bind(this)
-    this.__resetIsScrolling = this.__resetIsScrolling.bind(this)
-  }
-
-  // Can’t use defaultProps for scrollElement without breaking server-side rendering
-  get scrollElement () {
-    return this.props.scrollElement || window
-  }
-
-  updatePosition (scrollElement) {
-    const { onResize } = this.props
-    const { height, width } = this.state
-
-    scrollElement = scrollElement || this.props.scrollElement || window
-    const offset = getPositionOffset(ReactDOM.findDOMNode(this), scrollElement)
-    this._positionFromTop = offset.top
-    this._positionFromLeft = offset.left
-
-    const dimensions = getDimensions(scrollElement)
-    if (
-      height !== dimensions.height ||
-      width !== dimensions.width
-    ) {
+    const dimensions = getDimensions(scrollElement, props);
+    if (height !== dimensions.height || width !== dimensions.width) {
       this.setState({
         height: dimensions.height,
-        width: dimensions.width
-      })
+        width: dimensions.width,
+      });
       onResize({
         height: dimensions.height,
-        width: dimensions.width
-      })
+        width: dimensions.width,
+      });
     }
   }
 
-  componentDidMount () {
-    const scrollElement = this.props.scrollElement || window
+  componentDidMount() {
+    const scrollElement = this.props.scrollElement;
 
-    this.updatePosition(scrollElement)
+    this._detectElementResize = createDetectElementResize();
 
-    registerScrollListener(this, scrollElement)
+    this.updatePosition(scrollElement);
 
-    window.addEventListener('resize', this._onResize, false)
+    if (scrollElement) {
+      registerScrollListener(this, scrollElement);
+      this._registerResizeListener(scrollElement);
+    }
+
+    this._isMounted = true;
   }
 
-  componentWillReceiveProps (nextProps) {
-    const scrollElement = this.props.scrollElement || window
-    const nextScrollElement = nextProps.scrollElement || window
+  componentWillReceiveProps(nextProps: Props) {
+    const scrollElement = this.props.scrollElement;
+    const nextScrollElement = nextProps.scrollElement;
 
-    if (scrollElement !== nextScrollElement) {
-      this.updatePosition(nextScrollElement)
+    if (
+      scrollElement !== nextScrollElement &&
+      scrollElement &&
+      nextScrollElement
+    ) {
+      this.updatePosition(nextScrollElement, nextProps);
 
-      unregisterScrollListener(this, scrollElement)
-      registerScrollListener(this, nextScrollElement)
+      unregisterScrollListener(this, scrollElement);
+      registerScrollListener(this, nextScrollElement);
+
+      this._unregisterResizeListener(scrollElement);
+      this._registerResizeListener(nextScrollElement);
     }
   }
 
-  componentWillUnmount () {
-    unregisterScrollListener(this, this.props.scrollElement || window)
+  componentWillUnmount() {
+    const scrollElement = this.props.scrollElement;
+    if (scrollElement) {
+      unregisterScrollListener(this, scrollElement);
+      this._unregisterResizeListener(scrollElement);
+    }
 
-    window.removeEventListener('resize', this._onResize, false)
+    this._isMounted = false;
   }
 
-  render () {
-    const { children } = this.props
-    const { isScrolling, scrollTop, scrollLeft, height, width } = this.state
+  render() {
+    const {children} = this.props;
+    const {isScrolling, scrollTop, scrollLeft, height, width} = this.state;
 
     return children({
-      width,
+      onChildScroll: this._onChildScroll,
+      registerChild: this._registerChild,
       height,
       isScrolling,
       scrollLeft,
-      scrollTop
-    })
+      scrollTop,
+      width,
+    });
   }
 
-  _onResize (event) {
-    this.updatePosition()
-  }
+  _registerChild = element => {
+    if (element && !(element instanceof Element)) {
+      console.warn(
+        'WindowScroller registerChild expects to be passed Element or null',
+      );
+    }
+    this._child = element;
+    this.updatePosition();
+  };
+
+  _onChildScroll = ({scrollTop}) => {
+    if (this.state.scrollTop === scrollTop) {
+      return;
+    }
+
+    const scrollElement = this.props.scrollElement;
+    if (scrollElement) {
+      if (typeof scrollElement.scrollTo === 'function') {
+        scrollElement.scrollTo(0, scrollTop + this._positionFromTop);
+      } else {
+        scrollElement.scrollTop = scrollTop + this._positionFromTop;
+      }
+    }
+  };
+
+  _registerResizeListener = element => {
+    if (element === window) {
+      window.addEventListener('resize', this._onResize, false);
+    } else {
+      this._detectElementResize.addResizeListener(element, this._onResize);
+    }
+  };
+
+  _unregisterResizeListener = element => {
+    if (element === window) {
+      window.removeEventListener('resize', this._onResize, false);
+    } else if (element) {
+      this._detectElementResize.removeResizeListener(element, this._onResize);
+    }
+  };
+
+  _onResize = () => {
+    this.updatePosition();
+  };
 
   // Referenced by utils/onScroll
-  __handleWindowScrollEvent (event) {
-    const { onScroll } = this.props
+  __handleWindowScrollEvent = () => {
+    if (!this._isMounted) {
+      return;
+    }
 
-    const scrollElement = this.props.scrollElement || window
-    const scrollOffset = getScrollOffset(scrollElement)
-    const scrollLeft = Math.max(0, scrollOffset.left - this._positionFromLeft)
-    const scrollTop = Math.max(0, scrollOffset.top - this._positionFromTop)
+    const {onScroll} = this.props;
 
-    this.setState({
-      isScrolling: true,
-      scrollLeft,
-      scrollTop
-    })
+    const scrollElement = this.props.scrollElement;
+    if (scrollElement) {
+      const scrollOffset = getScrollOffset(scrollElement);
+      const scrollLeft = Math.max(
+        0,
+        scrollOffset.left - this._positionFromLeft,
+      );
+      const scrollTop = Math.max(0, scrollOffset.top - this._positionFromTop);
 
-    onScroll({
-      scrollLeft,
-      scrollTop
-    })
-  }
+      this.setState({
+        isScrolling: true,
+        scrollLeft,
+        scrollTop,
+      });
+
+      onScroll({
+        scrollLeft,
+        scrollTop,
+      });
+    }
+  };
 
   // Referenced by utils/onScroll
-  __resetIsScrolling () {
+  __resetIsScrolling = () => {
     this.setState({
-      isScrolling: false
-    })
-  }
+      isScrolling: false,
+    });
+  };
 }

@@ -1,26 +1,23 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-import cn from 'classnames'
-import styles from './LabeledInput.css'
+import PropTypes from 'prop-types';
+import React from 'react';
+import cn from 'classnames';
+import styles from './LabeledInput.css';
 
-export function LabeledInput ({
+export function LabeledInput({
   disabled,
   label,
   name,
   onChange,
   placeholder,
-  value
+  value,
 }) {
   const labelClassName = cn(styles.Label, {
-    [styles.LabelDisabled]: disabled
-  })
+    [styles.LabelDisabled]: disabled,
+  });
 
   return (
     <div className={styles.LabeledInput}>
-      <label
-        className={labelClassName}
-        title={label}
-      >
+      <label className={labelClassName} title={label}>
         {label}
       </label>
       <input
@@ -33,7 +30,7 @@ export function LabeledInput ({
         disabled={disabled}
       />
     </div>
-  )
+  );
 }
 LabeledInput.propTypes = {
   disabled: PropTypes.bool,
@@ -41,13 +38,9 @@ LabeledInput.propTypes = {
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  value: PropTypes.any
-}
+  value: PropTypes.any,
+};
 
-export function InputRow ({ children }) {
-  return (
-    <div className={styles.InputRow}>
-      {children}
-    </div>
-  )
+export function InputRow({children}) {
+  return <div className={styles.InputRow}>{children}</div>;
 }
