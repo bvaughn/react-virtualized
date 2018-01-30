@@ -9,6 +9,26 @@ import {
 
 import type {AnimationTimeoutId} from '../utils/requestAnimationTimeout';
 
+type Props = {
+  autoHeight: boolean,
+  cellCount: number,
+  cellMeasurerCache: CellMeasurerCache,
+  cellPositioner: Positioner,
+  cellRenderer: CellRenderer,
+  className: ?string,
+  height: number,
+  id: ?string,
+  keyMapper: KeyMapper,
+  onCellsRendered: ?OnCellsRenderedCallback,
+  onScroll: ?OnScrollCallback,
+  overscanByPixels: number,
+  role: string,
+  scrollingResetTimeInterval: number,
+  style: mixed,
+  tabIndex: number,
+  width: number,
+};
+
 const emptyObject = {};
 
 /**
@@ -45,9 +65,7 @@ export const DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150;
  *   The left position of all items within a column must align.
  *   (Items may not span multiple columns.)
  */
-export default class Masonry extends PureComponent {
-  props: Props;
-
+export default class Masonry extends PureComponent<Props> {
   static defaultProps = {
     autoHeight: false,
     keyMapper: identity,
@@ -458,23 +476,3 @@ type Position = {
 };
 
 export type Positioner = (index: number) => Position;
-
-type Props = {
-  autoHeight: boolean,
-  cellCount: number,
-  cellMeasurerCache: CellMeasurerCache,
-  cellPositioner: Positioner,
-  cellRenderer: CellRenderer,
-  className: ?string,
-  height: number,
-  id: ?string,
-  keyMapper: KeyMapper,
-  onCellsRendered: ?OnCellsRenderedCallback,
-  onScroll: ?OnScrollCallback,
-  overscanByPixels: number,
-  role: string,
-  scrollingResetTimeInterval: number,
-  style: mixed,
-  tabIndex: number,
-  width: number,
-};
