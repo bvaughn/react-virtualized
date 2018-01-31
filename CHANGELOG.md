@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.18.2
+* 🐛 Fix previous change
+
 ##### 9.18.1
 * ✨ Prevent generating cjs `prop-types` requires in esm build ([TrySound](https://github.com/TrySound) - [#950](https://github.com/bvaughn/react-virtualized/pull/950))
 
