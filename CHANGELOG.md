@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.18.3
+* 🐛 Temporary revert prop types in esm
+
 ##### 9.18.2
 * 🐛 Fix previous change
 
