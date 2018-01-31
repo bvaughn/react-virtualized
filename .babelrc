@@ -1,0 +1,102 @@
+{
+  "env": {
+    "commonjs": {
+      "ignore": [
+        "*.jest.js",
+        "*.e2e.js",
+        "*.ssr.js",
+        "*.example.js",
+        "source/demo",
+        "source/jest-*.js",
+        "source/TestUtils.js"
+      ],
+      "plugins": [
+        "transform-runtime",
+        ["flow-react-proptypes", { "deadCode": true }],
+        ["transform-react-remove-prop-types", { "mode": "wrap" }]
+      ],
+      "presets": [
+        "env",
+        "react",
+        "flow",
+        "stage-1"
+      ]
+    },
+    "development": {
+      "plugins": [
+        [
+          "react-transform",
+          {
+            "transforms": [
+              {
+                "transform": "react-transform-hmr",
+                "imports": [
+                  "react"
+                ],
+                "locals": [
+                  "module"
+                ]
+              },
+              {
+                "transform": "react-transform-catch-errors",
+                "imports": [
+                  "react",
+                  "redbox-react"
+                ]
+              }
+            ]
+          }
+        ]
+      ],
+      "presets": [
+        "env",
+        "react",
+        "flow",
+        "stage-1"
+      ]
+    },
+    "es": {
+      "ignore": [
+        "*.jest.js",
+        "*.e2e.js",
+        "*.ssr.js",
+        "*.example.js",
+        "source/demo",
+        "source/jest-*.js",
+        "source/TestUtils.js"
+      ],
+      "plugins": [
+        "transform-runtime",
+        ["flow-react-proptypes", { "deadCode": true }],
+        ["transform-react-remove-prop-types", { "mode": "wrap" }]
+      ],
+      "presets": [
+        ["env", { "modules": false }],
+        "react",
+        "flow",
+        "stage-1"
+      ]
+    },
+    "production": {
+      "comments": false,
+      "plugins": [
+        "transform-runtime"
+      ],
+      "presets": [
+        ["env", { "modules": false }],
+        "react",
+        "flow",
+        "stage-1"
+      ]
+    },
+    "test": {
+      "comments": false,
+      "presets": [
+        "env",
+        "react",
+        "flow",
+        "stage-1"
+      ]
+    }
+  }
+}
