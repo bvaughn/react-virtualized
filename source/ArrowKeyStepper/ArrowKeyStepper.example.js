@@ -174,7 +174,8 @@ export default class ArrowKeyStepperExample extends React.PureComponent<
     });
 
     return (
-      <button
+      <span
+        role="none"
         className={className}
         key={key}
         onClick={
@@ -187,7 +188,7 @@ export default class ArrowKeyStepperExample extends React.PureComponent<
         }
         style={style}>
         {`r:${rowIndex}, c:${columnIndex}`}
-      </button>
+      </span>
     );
   };
 
