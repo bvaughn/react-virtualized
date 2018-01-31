@@ -12,12 +12,8 @@
       ],
       "plugins": [
         "transform-runtime",
-        "flow-react-proptypes",
-        [
-          "transform-react-remove-prop-types", {
-            "mode": "wrap"
-          }
-        ]
+        ["flow-react-proptypes", { "deadCode": true }],
+        ["transform-react-remove-prop-types", { "mode": "wrap" }]
       ],
       "presets": [
         "env",
@@ -72,11 +68,8 @@
       "plugins": [
         "transform-runtime",
         "flow-react-proptypes",
-        [
-          "transform-react-remove-prop-types", {
-            "mode": "wrap"
-          }
-        ]
+        ["flow-react-proptypes", { "deadCode": true, "useESModules": true }],
+        ["transform-react-remove-prop-types", { "mode": "wrap" }]
       ],
       "presets": [
         ["env", { "modules": false }],
