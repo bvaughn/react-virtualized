@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### 9.18.4
+* ✨ Upgrade flow to prop types converter and enable esm
+
 ##### 9.18.3
 * 🐛 Temporary revert prop types in esm
 
