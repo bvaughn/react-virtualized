@@ -481,7 +481,10 @@ export default class Grid extends React.PureComponent<Props, State> {
     // Store this flag to let the next cDU pass know it needs to recompute the scroll offset.
     this._recomputeScrollLeftFlag =
       scrollToColumn >= 0 && columnIndex <= scrollToColumn;
-    this._recomputeScrollTopFlag = scrollToRow >= 0 && rowIndex <= scrollToRow;
+    this._recomputeScrollTopFlag = scrollToRow >= 0 &&
+      (this.state.scrollDirectionVertical === SCROLL_DIRECTION_FORWARD ?
+        rowIndex <= scrollToRow :
+        rowIndex >= scrollToRow);
 
     // Clear cell cache in case we are scrolling;
     // Invalid row heights likely mean invalid cached content as well.

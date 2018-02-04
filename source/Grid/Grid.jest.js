@@ -637,6 +637,86 @@ describe('Grid', () => {
       expect(node.scrollTop).toBe(1920);
     });
 
+    // See issue #998
+    it('call to recomputeGridSize should not reset position to scrollToRow when scrolling forward', () => {
+      const cellRendererCalls = [];
+      function cellRenderer({ columnIndex, key, rowIndex, style }) {
+        cellRendererCalls.push({ columnIndex, rowIndex });
+        return defaultCellRenderer({ columnIndex, key, rowIndex, style });
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollToRow: 0,
+        width: 100,
+      };
+
+      const grid = render(getMarkup(props));
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 },
+      ]);
+
+      //scroll forward to row 45
+      simulateScroll({ grid, scrollTop: 900 });
+
+      expect(grid.state.scrollDirectionVertical).toEqual(
+        SCROLL_DIRECTION_FORWARD,
+      );
+      cellRendererCalls.splice(0);
+
+      grid.recomputeGridSize({ rowIndex: 45 });
+
+      //grid should still be at row 45
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 45 },
+        { columnIndex: 0, rowIndex: 46 },
+      ]);
+    });
+    // see #998
+    it('call to recomputeGridSize should not reset position to scrollToRow when scrolling backward', () => {
+      const cellRendererCalls = [];
+      function cellRenderer({ columnIndex, key, rowIndex, style }) {
+        cellRendererCalls.push({ columnIndex, rowIndex });
+        return defaultCellRenderer({ columnIndex, key, rowIndex, style });
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollToRow: 99,
+        width: 100,
+      };
+
+      const grid = render(getMarkup(props));
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 0 },
+        { columnIndex: 0, rowIndex: 1 },
+        { columnIndex: 0, rowIndex: 98 },
+        { columnIndex: 0, rowIndex: 99 },
+      ]);
+
+      //scroll backward to row 45
+      simulateScroll({ grid, scrollTop: 900 });
+
+      expect(grid.state.scrollDirectionVertical).toEqual(
+        SCROLL_DIRECTION_BACKWARD,
+      );
+      cellRendererCalls.splice(0);
+
+      grid.recomputeGridSize({ rowIndex: 45 });
+      
+      //grid should still be at row 45
+      expect(cellRendererCalls).toEqual([
+        { columnIndex: 0, rowIndex: 45 },
+        { columnIndex: 0, rowIndex: 46 },
+      ]);
+    });
+
+
     it('should restore scroll offset for column when row count increases from 0 (and vice versa)', () => {
       const props = {
         columnWidth: 50,
