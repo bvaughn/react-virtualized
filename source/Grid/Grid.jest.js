@@ -638,7 +638,7 @@ describe('Grid', () => {
     });
 
     // See issue #998
-    it('call to recomputeGridSize should not reset position to scrollToRow when scrolling forward', () => {
+    it('call to recomputeGridSize should not reset position to scrollTo[Row|Column] when scrolling forward', () => {
       const cellRendererCalls = [];
       function cellRenderer({ columnIndex, key, rowIndex, style }) {
         cellRendererCalls.push({ columnIndex, rowIndex });
@@ -650,6 +650,7 @@ describe('Grid', () => {
         height: 40,
         rowHeight: 20,
         scrollToRow: 0,
+        scrollToColumn: 0,
         width: 100,
       };
 
@@ -660,23 +661,23 @@ describe('Grid', () => {
       ]);
 
       //scroll forward to row 45
-      simulateScroll({ grid, scrollTop: 900 });
+      simulateScroll({ grid, scrollTop: 900, scrollLeft: 2400 });
 
       expect(grid.state.scrollDirectionVertical).toEqual(
         SCROLL_DIRECTION_FORWARD,
       );
       cellRendererCalls.splice(0);
 
-      grid.recomputeGridSize({ rowIndex: 45 });
+      grid.recomputeGridSize({ rowIndex: 45, columnIndex: 24 });
 
-      //grid should still be at row 45
+      //grid should still be at row 45, column 24
       expect(cellRendererCalls).toEqual([
-        { columnIndex: 0, rowIndex: 45 },
-        { columnIndex: 0, rowIndex: 46 },
+        { columnIndex: 24, rowIndex: 45 },
+        { columnIndex: 24, rowIndex: 46 },
       ]);
     });
     // see #998
-    it('call to recomputeGridSize should not reset position to scrollToRow when scrolling backward', () => {
+    it('call to recomputeGridSize should not reset position to scrollTo[Row|Column] when scrolling backward', () => {
       const cellRendererCalls = [];
       function cellRenderer({ columnIndex, key, rowIndex, style }) {
         cellRendererCalls.push({ columnIndex, rowIndex });
@@ -688,6 +689,7 @@ describe('Grid', () => {
         height: 40,
         rowHeight: 20,
         scrollToRow: 99,
+        scrollToColumn: 49,
         width: 100,
       };
 
@@ -695,24 +697,24 @@ describe('Grid', () => {
       expect(cellRendererCalls).toEqual([
         { columnIndex: 0, rowIndex: 0 },
         { columnIndex: 0, rowIndex: 1 },
-        { columnIndex: 0, rowIndex: 98 },
-        { columnIndex: 0, rowIndex: 99 },
+        { columnIndex: 49, rowIndex: 98 },
+        { columnIndex: 49, rowIndex: 99 },
       ]);
 
       //scroll backward to row 45
-      simulateScroll({ grid, scrollTop: 900 });
+      simulateScroll({ grid, scrollTop: 900, scrollLeft: 2400 });
 
       expect(grid.state.scrollDirectionVertical).toEqual(
         SCROLL_DIRECTION_BACKWARD,
       );
       cellRendererCalls.splice(0);
 
-      grid.recomputeGridSize({ rowIndex: 45 });
+      grid.recomputeGridSize({ rowIndex: 45, columnIndex: 24 });
       
-      //grid should still be at row 45
+      //grid should still be at row 45 and column 24
       expect(cellRendererCalls).toEqual([
-        { columnIndex: 0, rowIndex: 45 },
-        { columnIndex: 0, rowIndex: 46 },
+        { columnIndex: 24, rowIndex: 45 },
+        { columnIndex: 24, rowIndex: 46 },
       ]);
     });
 
