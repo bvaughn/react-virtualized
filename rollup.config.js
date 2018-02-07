@@ -1,6 +1,7 @@
 import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
+import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';
 
 export default {
@@ -22,7 +23,9 @@ export default {
     }),
     babel({
       exclude: 'node_modules/**',
-      runtimeHelpers: true,
+    }),
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('development'),
     }),
     uglify({
       mangle: false,

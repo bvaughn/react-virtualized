@@ -7,12 +7,17 @@ const bootstrap = async () => {
   const scripts = [
     './node_modules/react/umd/react.development.js',
     './node_modules/react-dom/umd/react-dom.development.js',
+    './node_modules/prop-types/prop-types.js',
     './dist/umd/react-virtualized.js',
   ];
 
   for (const path of scripts) {
     await page.addScriptTag({path});
   }
+
+  page.on('console', msg =>
+    msg.args().forEach(arg => console.log(arg.toString())),
+  );
 
   return page;
 };
