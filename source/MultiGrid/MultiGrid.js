@@ -139,9 +139,14 @@ export default class MultiGrid extends PureComponent {
         rowIndex,
       });
 
+    let oldLeftGridWidth = this._leftGridWidth;
     this._leftGridWidth = null;
     this._topGridHeight = null;
     this._maybeCalculateCachedStyles(null, this.props, null, this.state);
+    if (oldLeftGridWidth != this._leftGridWidth)
+    {
+      this.forceUpdate();
+    }
   }
 
   componentDidMount() {
