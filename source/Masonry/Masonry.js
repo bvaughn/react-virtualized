@@ -29,6 +29,11 @@ type Props = {
   width: number,
 };
 
+type State = {
+  isScrolling: boolean,
+  scrollTop: number,
+};
+
 const emptyObject = {};
 
 /**
@@ -65,7 +70,7 @@ export const DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150;
  *   The left position of all items within a column must align.
  *   (Items may not span multiple columns.)
  */
-export default class Masonry extends PureComponent<Props> {
+export default class Masonry extends PureComponent<Props, State> {
   static defaultProps = {
     autoHeight: false,
     keyMapper: identity,
@@ -78,6 +83,11 @@ export default class Masonry extends PureComponent<Props> {
     tabIndex: 0,
   };
 
+  state = {
+    isScrolling: false,
+    scrollTop: 0,
+  };
+
   _debounceResetIsScrollingId: AnimationTimeoutId;
   _invalidateOnUpdateStartIndex: ?number = null;
   _invalidateOnUpdateStopIndex: ?number = null;
@@ -86,21 +96,6 @@ export default class Masonry extends PureComponent<Props> {
   _startIndexMemoized: ?number = null;
   _stopIndex: ?number = null;
   _stopIndexMemoized: ?number = null;
-
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      isScrolling: false,
-      scrollTop: 0,
-    };
-
-    this._debounceResetIsScrollingCallback = this._debounceResetIsScrollingCallback.bind(
-      this,
-    );
-    this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this);
-    this._onScroll = this._onScroll.bind(this);
-  }
 
   clearCellPositions() {
     this._positionCache = new PositionCache();
@@ -133,34 +128,42 @@ export default class Masonry extends PureComponent<Props> {
     this.forceUpdate();
   }
 
+  static getDerivedStateFromProps(
+    nextProps: Props,
+    prevState: State,
+  ): $Shape<State> {
+    if (
+      nextProps.scrollTop !== undefined &&
+      prevState.scrollTop !== nextProps.scrollTop
+    ) {
+      return {
+        isScrolling: true,
+        scrollTop: nextProps.scrollTop,
+      };
+    }
+
+    return null;
+  }
+
   componentDidMount() {
     this._checkInvalidateOnUpdate();
     this._invokeOnScrollCallback();
     this._invokeOnCellsRenderedCallback();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     this._checkInvalidateOnUpdate();
     this._invokeOnScrollCallback();
     this._invokeOnCellsRenderedCallback();
+
+    if (this.props.scrollTop !== prevProps.scrollTop) {
+      this._debounceResetIsScrolling();
+    }
   }
 
   componentWillUnmount() {
     if (this._debounceResetIsScrollingId) {
       cancelAnimationTimeout(this._debounceResetIsScrollingId);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const {scrollTop} = this.props;
-
-    if (scrollTop !== nextProps.scrollTop) {
-      this._debounceResetIsScrolling();
-
-      this.setState({
-        isScrolling: true,
-        scrollTop: nextProps.scrollTop,
-      });
     }
   }
 
@@ -328,11 +331,11 @@ export default class Masonry extends PureComponent<Props> {
     );
   }
 
-  _debounceResetIsScrollingCallback() {
+  _debounceResetIsScrollingCallback = () => {
     this.setState({
       isScrolling: false,
     });
-  }
+  };
 
   _getEstimatedTotalHeight() {
     const {cellCount, cellMeasurerCache, width} = this.props;
@@ -396,11 +399,11 @@ export default class Masonry extends PureComponent<Props> {
     }
   }
 
-  _setScrollingContainerRef(ref) {
+  _setScrollingContainerRef = ref => {
     this._scrollingContainer = ref;
-  }
+  };
 
-  _onScroll(event) {
+  _onScroll = event => {
     const {height} = this.props;
 
     const eventScrollTop = event.target.scrollTop;
@@ -433,7 +436,7 @@ export default class Masonry extends PureComponent<Props> {
         scrollTop,
       });
     }
-  }
+  };
 }
 
 function identity(value) {
