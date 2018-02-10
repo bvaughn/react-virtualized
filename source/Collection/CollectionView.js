@@ -139,30 +139,30 @@ export default class CollectionView extends PureComponent {
     verticalOverscanSize: 0,
   };
 
-  constructor(props, context) {
-    super(props, context);
+  state = {
+    isScrolling: false,
+    scrollLeft: 0,
+    scrollTop: 0,
+  };
 
-    this.state = {
-      isScrolling: false,
-      scrollLeft: 0,
-      scrollTop: 0,
-    };
+  _calculateSizeAndPositionDataOnNextUpdate = false;
 
-    this._calculateSizeAndPositionDataOnNextUpdate = false;
+  // Invokes callbacks only when their values have changed.
+  _onSectionRenderedMemoizer = createCallbackMemoizer();
+  _onScrollMemoizer = createCallbackMemoizer(false);
 
-    // Invokes callbacks only when their values have changed.
-    this._onSectionRenderedMemoizer = createCallbackMemoizer();
-    this._onScrollMemoizer = createCallbackMemoizer(false);
+  constructor(...args) {
+    super(...args);
 
-    // Bind functions to instance so they don't lose context when passed around.
-    this._invokeOnSectionRenderedHelper = this._invokeOnSectionRenderedHelper.bind(
-      this,
-    );
-    this._onScroll = this._onScroll.bind(this);
-    this._setScrollingContainerRef = this._setScrollingContainerRef.bind(this);
-    this._updateScrollPositionForScrollToCell = this._updateScrollPositionForScrollToCell.bind(
-      this,
-    );
+    // If this component is being rendered server-side, getScrollbarSize() will return undefined.
+    // We handle this case in componentDidMount()
+    this._scrollbarSize = getScrollbarSize();
+    if (this._scrollbarSize === undefined) {
+      this._scrollbarSizeMeasured = false;
+      this._scrollbarSize = 0;
+    } else {
+      this._scrollbarSizeMeasured = true;
+    }
   }
 
   /**
@@ -176,6 +176,39 @@ export default class CollectionView extends PureComponent {
   }
 
   /* ---------------------------- Component lifecycle methods ---------------------------- */
+
+  /**
+   * @private
+   * This method updates scrollLeft/scrollTop in state for the following conditions:
+   * 1) Empty content (0 rows or columns)
+   * 2) New scroll props overriding the current state
+   * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
+   */
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (
+      nextProps.cellCount === 0 &&
+      (prevState.scrollLeft !== 0 || prevState.scrollTop !== 0)
+    ) {
+      return {
+        scrollLeft: 0,
+        scrollTop: 0,
+      };
+    } else if (
+      nextProps.scrollLeft !== prevState.scrollLeft ||
+      nextProps.scrollTop !== prevState.scrollTop
+    ) {
+      const newState = {};
+      if (nextProps.scrollLeft != null) {
+        newState.scrollLeft = nextProps.scrollLeft;
+      }
+      if (nextProps.scrollTop != null) {
+        newState.scrollTop = nextProps.scrollTop;
+      }
+      return newState;
+    }
+
+    return null;
+  }
 
   componentDidMount() {
     const {cellLayoutManager, scrollLeft, scrollToCell, scrollTop} = this.props;
@@ -253,63 +286,9 @@ export default class CollectionView extends PureComponent {
     this._invokeOnSectionRenderedHelper();
   }
 
-  componentWillMount() {
-    const {cellLayoutManager} = this.props;
-
-    cellLayoutManager.calculateSizeAndPositionData();
-
-    // If this component is being rendered server-side, getScrollbarSize() will return undefined.
-    // We handle this case in componentDidMount()
-    this._scrollbarSize = getScrollbarSize();
-    if (this._scrollbarSize === undefined) {
-      this._scrollbarSizeMeasured = false;
-      this._scrollbarSize = 0;
-    } else {
-      this._scrollbarSizeMeasured = true;
-    }
-  }
-
   componentWillUnmount() {
     if (this._disablePointerEventsTimeoutId) {
       clearTimeout(this._disablePointerEventsTimeoutId);
-    }
-  }
-
-  /**
-   * @private
-   * This method updates scrollLeft/scrollTop in state for the following conditions:
-   * 1) Empty content (0 rows or columns)
-   * 2) New scroll props overriding the current state
-   * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
-   */
-  componentWillReceiveProps(nextProps) {
-    const {scrollLeft, scrollTop} = this.state;
-
-    if (nextProps.cellCount === 0 && (scrollLeft !== 0 || scrollTop !== 0)) {
-      this._setScrollPosition({
-        scrollLeft: 0,
-        scrollTop: 0,
-      });
-    } else if (
-      nextProps.scrollLeft !== this.props.scrollLeft ||
-      nextProps.scrollTop !== this.props.scrollTop
-    ) {
-      this._setScrollPosition({
-        scrollLeft: nextProps.scrollLeft,
-        scrollTop: nextProps.scrollTop,
-      });
-    }
-
-    if (
-      nextProps.cellCount !== this.props.cellCount ||
-      nextProps.cellLayoutManager !== this.props.cellLayoutManager ||
-      this._calculateSizeAndPositionDataOnNextUpdate
-    ) {
-      nextProps.cellLayoutManager.calculateSizeAndPositionData();
-    }
-
-    if (this._calculateSizeAndPositionDataOnNextUpdate) {
-      this._calculateSizeAndPositionDataOnNextUpdate = false;
     }
   }
 
@@ -329,6 +308,19 @@ export default class CollectionView extends PureComponent {
     } = this.props;
 
     const {isScrolling, scrollLeft, scrollTop} = this.state;
+
+    // Memoization reset
+    if (
+      this._prevCellCount !== cellCount ||
+      this._prevCellLayoutManager !== cellLayoutManager ||
+      this._calculateSizeAndPositionDataOnNextUpdate
+    ) {
+      this._prevCellCount = cellCount;
+      this._prevCellLayoutManager = cellLayoutManager;
+      this._calculateSizeAndPositionDataOnNextUpdate = false;
+
+      cellLayoutManager.calculateSizeAndPositionData();
+    }
 
     const {
       height: totalHeight,
@@ -442,7 +434,7 @@ export default class CollectionView extends PureComponent {
     }, IS_SCROLLING_TIMEOUT);
   }
 
-  _invokeOnSectionRenderedHelper() {
+  _invokeOnSectionRenderedHelper = () => {
     const {cellLayoutManager, onSectionRendered} = this.props;
 
     this._onSectionRenderedMemoizer({
@@ -451,7 +443,7 @@ export default class CollectionView extends PureComponent {
         indices: cellLayoutManager.getLastRenderedIndices(),
       },
     });
-  }
+  };
 
   _invokeOnScrollMemoizer({scrollLeft, scrollTop, totalHeight, totalWidth}) {
     this._onScrollMemoizer({
@@ -474,9 +466,9 @@ export default class CollectionView extends PureComponent {
     });
   }
 
-  _setScrollingContainerRef(ref) {
+  _setScrollingContainerRef = ref => {
     this._scrollingContainer = ref;
-  }
+  };
 
   _setScrollPosition({scrollLeft, scrollTop}) {
     const newState = {
@@ -497,9 +489,11 @@ export default class CollectionView extends PureComponent {
     ) {
       this.setState(newState);
     }
+
+    return null;
   }
 
-  _updateScrollPositionForScrollToCell() {
+  _updateScrollPositionForScrollToCell = () => {
     const {
       cellLayoutManager,
       height,
@@ -526,9 +520,9 @@ export default class CollectionView extends PureComponent {
         this._setScrollPosition(scrollPosition);
       }
     }
-  }
+  };
 
-  _onScroll(event) {
+  _onScroll = event => {
     // In certain edge-cases React dispatches an onScroll event with an invalid target.scrollLeft / target.scrollTop.
     // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
     // See issue #404 for more information.
@@ -593,5 +587,5 @@ export default class CollectionView extends PureComponent {
       totalWidth,
       totalHeight,
     });
-  }
+  };
 }
