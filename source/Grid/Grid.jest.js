@@ -972,22 +972,33 @@ describe('Grid', () => {
   });
 
   describe(':scrollLeft and :scrollTop properties', () => {
-    it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
-      let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex;
-      findDOMNode(
+    it('should adjust :scrollTop and :scrollLeft styles when those props are used', () => {
+      const grid = findDOMNode(
         render(
           getMarkup({
-            onSectionRendered: params =>
-              ({
-                columnStartIndex,
-                columnStopIndex,
-                rowStartIndex,
-                rowStopIndex,
-              } = params),
             scrollLeft: 250,
             scrollTop: 100,
           }),
         ),
+      );
+      expect(grid.scrollLeft).toEqual(250);
+      expect(grid.scrollTop).toEqual(100);
+    });
+
+    it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
+      let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex;
+      render(
+        getMarkup({
+          onSectionRendered: params =>
+            ({
+              columnStartIndex,
+              columnStopIndex,
+              rowStartIndex,
+              rowStopIndex,
+            } = params),
+          scrollLeft: 250,
+          scrollTop: 100,
+        }),
       );
       expect(rowStartIndex).toEqual(5);
       expect(rowStopIndex).toEqual(9);
@@ -2300,11 +2311,10 @@ describe('Grid', () => {
       scrollTop: 2100,
     });
 
-    // cellRendererCalls[0] is the element at rowIndex 0
-    const firstProps = cellRendererCalls[1];
-    const secondProps = cellRendererCalls[2];
+    const firstProps = cellRendererCalls[0];
+    const secondProps = cellRendererCalls[1];
 
-    expect(cellRendererCalls.length).toEqual(3);
+    expect(cellRendererCalls.length).toEqual(2);
     expect(firstProps.style).not.toBe(secondProps.style);
   });
 
