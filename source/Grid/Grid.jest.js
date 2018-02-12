@@ -1961,11 +1961,11 @@ describe('Grid', () => {
           width: 0,
         }),
       );
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1500);
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150);
+      expect(grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize()).toEqual(1500);
+      expect(grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize()).toEqual(150);
       grid.measureAllCells();
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1000);
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200);
+      expect(grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize()).toEqual(1000);
+      expect(grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize()).toEqual(200);
     });
   });
 
@@ -2070,7 +2070,7 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.height,
       ).toEqual('2000px'); // 100 rows * 20px rowHeight
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000);
+      expect(grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize()).toEqual(2000);
     });
   });
 
@@ -2102,7 +2102,7 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.width,
       ).toEqual('2500px'); // 50 columns * 50px columnWidth
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(2500);
+      expect(grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize()).toEqual(2500);
     });
   });
 
@@ -2208,18 +2208,18 @@ describe('Grid', () => {
 
       const grid = render(getMarkup(props));
 
-      expect(Object.keys(grid._styleCache).length).toBe(4);
+      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(4);
 
       simulateScroll({grid, scrollTop: 50});
 
-      expect(Object.keys(grid._styleCache).length).toBe(6);
+      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(6);
 
       // Allow scrolling timeout to complete so that cell cache is reset
       await new Promise(resolve =>
         setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL * 2),
       );
 
-      expect(Object.keys(grid._styleCache).length).toBe(4);
+      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(4);
 
       done();
     });
@@ -2236,7 +2236,7 @@ describe('Grid', () => {
 
       const grid = render(getMarkup(props));
 
-      expect(Object.keys(grid._styleCache).length).toBe(4);
+      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(4);
 
       render(
         getMarkup({
@@ -2245,11 +2245,11 @@ describe('Grid', () => {
         }),
       );
 
-      expect(Object.keys(grid._styleCache).length).toBe(6);
+      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(6);
 
       grid.recomputeGridSize();
 
-      expect(Object.keys(grid._styleCache).length).toBe(4);
+      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(4);
     });
 
     it('should clear style cache if cell sizes change', () => {
@@ -2333,7 +2333,7 @@ describe('Grid', () => {
       }),
     );
 
-    const keys = Object.keys(grid._styleCache);
+    const keys = Object.keys(grid.state.instanceProps.styleCache);
 
     expect(keys).toEqual(['0-0', '1-1']);
   });

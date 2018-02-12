@@ -17,8 +17,11 @@ export type CellRendererParams = {
 
 export type CellRenderer = (props: CellRendererParams) => React.Element<*>;
 
+export type CellCache = {[key: string]: React.Element<*>};
+export type StyleCache = {[key: string]: Object};
+
 export type CellRangeRendererParams = {
-  cellCache: Object,
+  cellCache: CellCache,
   cellRenderer: CellRenderer,
   columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
   columnStartIndex: number,
@@ -32,7 +35,7 @@ export type CellRangeRendererParams = {
   rowStopIndex: number,
   scrollLeft: number,
   scrollTop: number,
-  styleCache: Object,
+  styleCache: StyleCache,
   verticalOffsetAdjustment: number,
   visibleColumnIndices: Object,
   visibleRowIndices: Object,
