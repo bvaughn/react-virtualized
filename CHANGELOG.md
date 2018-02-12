@@ -1,6 +1,9 @@
 Changelog
 ------------
 
+##### NEXT
+* Replaced `componentWillMount`, `componentWillReceiveProps`, and `componentWillUpdate` with async-safe lifecycles in advance of React 16.4 deprecation warnings. Added [react-lifecycles-compat](https://github.com/reactjs/react-lifecycles-compat) as a dependency, to ensure backwards compatibility.
+
 ##### 9.18.5
 * 🐛 Revert changes > 9.18.0
 
