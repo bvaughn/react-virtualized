@@ -1,13 +1,13 @@
 /** @flow */
 
-import {caf, raf, win} from './animationFrame';
+import {caf, raf} from './animationFrame';
 
 export type AnimationTimeoutId = {
   id: number,
 };
 
 export const cancelAnimationTimeout = (frame: AnimationTimeoutId) =>
-  caf.call(win, frame.id);
+  caf(frame.id);
 
 /**
  * Recursively calls requestAnimationFrame until a specified delay has been met or exceeded.
@@ -25,12 +25,12 @@ export const requestAnimationTimeout = (
     if (Date.now() - start >= delay) {
       callback.call();
     } else {
-      frame.id = raf.call(win, timeout);
+      frame.id = raf(timeout);
     }
   };
 
   const frame: AnimationTimeoutId = {
-    id: raf.call(win, timeout),
+    id: raf(timeout),
   };
 
   return frame;

@@ -5,7 +5,7 @@ type CancelAnimationFrame = (requestId: number) => void;
 type RequestAnimationFrame = (callback: Callback) => number;
 
 // Properly handle server-side rendering.
-export let win;
+let win;
 if (typeof window !== 'undefined') {
   win = window;
 } else if (typeof self !== 'undefined') {
@@ -36,5 +36,5 @@ const cancel =
     (win: any).clearTimeout(id);
   };
 
-export const raf: RequestAnimationFrame = (request: any);
-export const caf: CancelAnimationFrame = (cancel: any);
+export const raf: RequestAnimationFrame = (request: any).bind(win);
+export const caf: CancelAnimationFrame = (cancel: any).bind(win);
