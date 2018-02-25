@@ -6,7 +6,7 @@ The simplest way to do this is to add items to the front of the list (`unshift`)
 Here is a high level template for doing this:
 
 ```jsx
-export default class Example extends Component {
+export default class Example extends React.Component {
   constructor (props) {
     super(props)
 

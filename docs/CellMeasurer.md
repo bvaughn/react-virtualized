@@ -58,7 +58,7 @@ This example shows a `Grid` with fixed row heights and dynamic column widths.
 For more examples check out the component [demo page](https://bvaughn.github.io/react-virtualized/#/components/CellMeasurer).
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { CellMeasurer, CellMeasurerCache, Grid } from 'react-virtualized';
 
 // In this example, average cell width is assumed to be about 100px.
@@ -115,7 +115,7 @@ To support this, a function-child is passed to `CellMeasurer` which then receive
 `measure` should be called when cell content is ready to be measured (in this case, when the image has loaded).
 
 ```jsx
-import React from 'react';
+import * as React from 'react';
 import { CellMeasurer, CellMeasurerCache, Grid } from 'react-virtualized';
 
 // In this example, average cell height is assumed to be about 50px.

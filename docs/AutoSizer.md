@@ -28,8 +28,8 @@ The simple way to fix this is to nest `AutoSizer` inside of a `block` element (l
 Read more about common `AutoSizer` questions [here](usingAutoSizer.md).
 
 ```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { AutoSizer, List } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
