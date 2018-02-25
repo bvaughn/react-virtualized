@@ -1,6 +1,6 @@
 /** @flow */
 import PropTypes from 'prop-types';
-import {Component} from 'react';
+import * as React from 'react';
 import defaultHeaderRenderer from './defaultHeaderRenderer';
 import defaultCellRenderer from './defaultCellRenderer';
 import defaultCellDataGetter from './defaultCellDataGetter';
@@ -9,7 +9,7 @@ import SortDirection from './SortDirection';
 /**
  * Describes the header and cell contents of a table column.
  */
-export default class Column extends Component {
+export default class Column extends React.Component {
   static propTypes = {
     /** Optional aria-label value to set on the column header */
     'aria-label': PropTypes.string,

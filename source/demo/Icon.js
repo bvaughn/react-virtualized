@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 import styles from './Icon.css';
 
 // TODO: Remove unused BURGER and ARROW_LEFT?

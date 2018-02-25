@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import styles from './ColumnSizer.example.css';
 import AutoSizer from '../AutoSizer';
 import ColumnSizer from './ColumnSizer';
@@ -13,7 +13,7 @@ import {
 } from '../demo/ContentBox';
 import {LabeledInput, InputRow} from '../demo/LabeledInput';
 
-export default class ColumnSizerExample extends PureComponent {
+export default class ColumnSizerExample extends React.PureComponent {
   constructor(props) {
     super(props);
 

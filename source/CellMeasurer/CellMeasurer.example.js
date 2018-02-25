@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
@@ -23,7 +23,7 @@ const demoComponents = [
   DynamicHeightTableColumn,
 ];
 
-export default class CellMeasurerExample extends PureComponent {
+export default class CellMeasurerExample extends React.PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
   };

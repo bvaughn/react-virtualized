@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
@@ -12,7 +12,7 @@ import Grid from './Grid';
 import cn from 'classnames';
 import styles from './Grid.example.css';
 
-export default class GridExample extends PureComponent {
+export default class GridExample extends React.PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
   };

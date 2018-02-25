@@ -3,8 +3,8 @@
  * @jest-environment node
  */
 
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
+import * as React from 'react';
+import * as ReactDOMServer from 'react-dom/server';
 import Grid from './Grid';
 
 declare var test: any;
