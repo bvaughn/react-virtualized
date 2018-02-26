@@ -316,7 +316,7 @@ describe('Grid', () => {
 
     it('should scroll over to the middle', () => {
       const grid = render(getMarkup({scrollToColumn: 24}));
-      // 100 columns * 50 item width = 5,000 total item width
+      // 50 columns * 50 item width = 2,500 total item width
       // 4 columns can be visible at a time and :scrollLeft is initially 0,
       // So the minimum amount of scrolling leaves the 25th item at the right (just scrolled into view).
       expect(grid.state.scrollLeft).toEqual(1050);
@@ -324,8 +324,8 @@ describe('Grid', () => {
 
     it('should scroll to the far right', () => {
       const grid = render(getMarkup({scrollToColumn: 49}));
-      // 100 columns * 50 item width = 5,000 total item width
-      // Target offset for the last item then is 5,000 - 200
+      // 50 columns * 50 item width = 2,500 total item width
+      // Target offset for the last item then is 2,500 - 200
       expect(grid.state.scrollLeft).toEqual(2300);
     });
 
@@ -394,7 +394,7 @@ describe('Grid', () => {
           scrollToRow: 49,
         }),
       );
-      // 100 columns * 50 item width = 5,000 total item width
+      // 50 columns * 50 item width = 2,500 total item width
       // 100 rows * 20 item height = 2,000 total item height
       // 4 columns and 5 rows can be visible at a time.
       // The minimum amount of scrolling leaves the specified cell in the bottom/right corner (just scrolled into view).
@@ -417,7 +417,7 @@ describe('Grid', () => {
           scrollToRow: 49,
         }),
       );
-      // 100 columns * 50 item width = 5,000 total item width
+      // 50 columns * 50 item width = 2,500 total item width
       // 100 rows * 20 item height = 2,000 total item height
       // We first scroll past the specified cell and then back.
       // The minimum amount of scrolling then should leave the specified cell in the top/left corner (just scrolled into view).
@@ -440,7 +440,7 @@ describe('Grid', () => {
           scrollToRow: 49,
         }),
       );
-      // 100 columns * 50 item width = 5,000 total item width
+      // 50 columns * 50 item width = 2,500 total item width
       // Viewport width is 200
       // Column 24 starts at 1,200, center point at 1,225, so...
       expect(grid.state.scrollLeft).toEqual(1125);
@@ -532,7 +532,7 @@ describe('Grid', () => {
         columnIndex: 24,
         rowIndex: 49,
       });
-      // 100 columns * 50 item width = 5,000 total item width
+      // 50 columns * 50 item width = 2,500 total item width
       // 4 columns can be visible at a time and :scrollLeft is initially 0,
       // So the minimum amount of scrolling leaves the 25th item at the right (just scrolled into view).
       expect(grid.state.scrollLeft).toEqual(1050);
@@ -603,7 +603,7 @@ describe('Grid', () => {
         columnIndex: 24,
         rowIndex: 49,
       });
-      // 100 columns * 50 item width = 5,000 total item width
+      // 50 columns * 50 item width = 2,500 total item width
       // 4 columns can be visible at a time and :scrollLeft is initially 0,
       // So the minimum amount of scrolling leaves the 25th item at the right (just scrolled into view).
       expect(scrollLeft).toEqual(1050);
