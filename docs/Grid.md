@@ -49,6 +49,14 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 
 Gets offsets for a given cell and alignment.
 
+##### getTotalRowsHeight
+
+Gets estimated total rows' height.
+
+##### getTotalColumnsWidth
+
+Gets estimated total columns' width.
+
 ##### handleScrollEvent ({ scrollLeft, scrollTop })
 
 This method handles a scroll event originating from an external scroll control.
