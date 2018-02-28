@@ -27,8 +27,8 @@ The child function is passed the following named parameters:
 This example displays a `Grid` that shrinks to fit sparse content (using the `adjustedWidth` parameter). An interactive demo of this component can be seen [here](https://bvaughn.github.io/react-virtualized/#/components/ColumnSizer).
 
 ```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { ColumnSizer, Grid } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 

@@ -41,8 +41,8 @@ This example uses `InfiniteLoader` to prefetch rows in a `List` list as a user s
 An interactive demo can be seen [here](https://bvaughn.github.io/react-virtualized/#/components/InfiniteLoader).
 
 ```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { InfiniteLoader, List } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
@@ -100,7 +100,7 @@ ReactDOM.render(
 It is not common to use `InfiniteLoader` and `Grid` together but it is possible using an approach like this:
 
 ```jsx
-class MyComponent extends Component {
+class MyComponent extends React.Component {
   constructor (props, context) {
     super(props, context)
 

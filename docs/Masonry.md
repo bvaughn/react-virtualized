@@ -132,8 +132,8 @@ masonryRef.recomputeCellPositions()
 Below is a very basic `Masonry` example with a naive layout algorithm.
 
 ```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import {
   CellMeasurer,
   CellMeasurerCache,

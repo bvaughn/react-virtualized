@@ -38,8 +38,8 @@ This method is automatically triggered when the component mounts as well as when
 ### Examples
 
 ```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { List, WindowScroller } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
@@ -66,8 +66,8 @@ ReactDOM.render(
 using `registerChild`
 
 ```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { List, WindowScroller } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 

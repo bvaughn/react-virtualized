@@ -162,8 +162,8 @@ This function accepts the following named parameters:
 Below is a very basic `Table` example. This table has only 2 columns, each containing a simple string. Both have a fixed width and neither is sortable. [See here](../source/Table/Table.example.js) for a more full-featured example including custom cell renderers, sortable headers, and more.
 
 ```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { Column, Table } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 

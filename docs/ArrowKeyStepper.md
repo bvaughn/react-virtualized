@@ -41,8 +41,8 @@ The child function is passed the following named parameters:
 You can decorate any virtualized component (eg. `Table`, `Grid`, or `List`) with arrow-key snapping like so:
 
 ```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { ArrowKeyStepper, Grid } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 

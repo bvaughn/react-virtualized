@@ -9,7 +9,7 @@ Once you have sorted a `Table` there is no way to return to an unsorted, "natura
 Fortunately `Table` makes it easy for you to implement this functionality within your application code like so:
 
 ```jsx
-export default class NaturalSortTable extends Component {
+export default class NaturalSortTable extends React.Component {
   constructor (props, context) {
     super(props, context)
 
