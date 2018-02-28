@@ -1,5 +1,5 @@
 /** @flow */
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import cn from 'classnames';
 import PositionCache from './PositionCache';
 import {
@@ -65,7 +65,7 @@ export const DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150;
  *   The left position of all items within a column must align.
  *   (Items may not span multiple columns.)
  */
-export default class Masonry extends PureComponent<Props> {
+export default class Masonry extends React.PureComponent<Props> {
   static defaultProps = {
     autoHeight: false,
     keyMapper: identity,

@@ -1,6 +1,6 @@
 /* global Element */
 
-import React from 'react';
+import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import {render} from '../TestUtils';
 import WindowScroller, {IS_SCROLLING_TIMEOUT} from './WindowScroller';

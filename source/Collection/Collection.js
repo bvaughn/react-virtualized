@@ -1,6 +1,6 @@
 /** @flow */
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import CollectionView from './CollectionView';
 import calculateSizeAndPositionData from './utils/calculateSizeAndPositionData';
 import getUpdatedOffsetForIndex from '../utils/getUpdatedOffsetForIndex';
@@ -10,7 +10,7 @@ import type {ScrollPosition, SizeInfo} from './types';
  * Renders scattered or non-linear data.
  * Unlike Grid, which renders checkerboard data, Collection can render arbitrarily positioned- even overlapping- data.
  */
-export default class Collection extends PureComponent {
+export default class Collection extends React.PureComponent {
   static propTypes = {
     'aria-label': PropTypes.string,
 

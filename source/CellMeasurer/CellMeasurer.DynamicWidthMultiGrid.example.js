@@ -1,12 +1,12 @@
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import CellMeasurer from './CellMeasurer';
 import CellMeasurerCache from './CellMeasurerCache';
 import MultiGrid from '../MultiGrid';
 import styles from './CellMeasurer.example.css';
 
-export default class DynamicWidthMultiGrid extends PureComponent {
+export default class DynamicWidthMultiGrid extends React.PureComponent {
   static propTypes = {
     getClassName: PropTypes.func.isRequired,
     getContent: PropTypes.func.isRequired,

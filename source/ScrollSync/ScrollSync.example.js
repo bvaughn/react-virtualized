@@ -1,5 +1,5 @@
 /** @flow */
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
@@ -17,7 +17,7 @@ const LEFT_COLOR_TO = hexToRgb('#BC3959');
 const TOP_COLOR_FROM = hexToRgb('#000000');
 const TOP_COLOR_TO = hexToRgb('#333333');
 
-export default class GridExample extends PureComponent {
+export default class GridExample extends React.PureComponent {
   constructor(props, context) {
     super(props, context);
 

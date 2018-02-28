@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Immutable from 'immutable';
 import defaultCellDataGetter from './defaultCellDataGetter';
 import defaultCellRenderer from './defaultCellRenderer';

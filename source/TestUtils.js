@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom';
 
 /**
  * Helper method for testing components that may use Portal and thus require cleanup.

@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import {PureComponent} from 'react';
+import * as React from 'react';
 
 /**
  * HOC that simplifies the process of synchronizing scrolling between two or more virtualized components.
  */
-export default class ScrollSync extends PureComponent {
+export default class ScrollSync extends React.PureComponent {
   static propTypes = {
     /**
      * Function responsible for rendering 2 or more virtualized components.
