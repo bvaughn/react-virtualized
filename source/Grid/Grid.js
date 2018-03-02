@@ -618,6 +618,7 @@ export default class Grid extends React.PureComponent<Props, State> {
           columnOrRowCountJustIncreasedFromZero)
       ) {
         this._scrollingContainer.scrollLeft = scrollLeft;
+        this.state.scrollLeft = this._scrollingContainer.scrollLeft;
       }
       if (
         !autoHeight &&
@@ -627,6 +628,7 @@ export default class Grid extends React.PureComponent<Props, State> {
           columnOrRowCountJustIncreasedFromZero)
       ) {
         this._scrollingContainer.scrollTop = scrollTop;
+        this.state.scrollTop = this._scrollingContainer.scrollTop;
       }
     }
 
