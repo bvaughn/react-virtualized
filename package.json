@@ -73,8 +73,8 @@
     "url": "https://github.com/bvaughn/react-virtualized/issues"
   },
   "jest": {
-    "globalSetup": "./source/jest-global-setup.js",
-    "globalTeardown": "./source/jest-global-teardown.js",
+    "globalSetup": "jest-environment-puppeteer/setup",
+    "globalTeardown": "jest-environment-puppeteer/teardown",
     "setupFiles": [
       "./source/jest-setup.js"
     ],
@@ -134,13 +134,12 @@
     "husky": "^0.14.3",
     "immutable": "^3.7.5",
     "jest": "^22.0.4",
-    "jest-environment-node": "^22.0.4",
-    "make-dir": "^1.1.0",
+    "jest-environment-puppeteer": "^1.1.1",
     "postcss": "^6.0.14",
     "postcss-cli": "^4.1.1",
     "postcss-loader": "^2.0.9",
     "prettier": "^1.9.2",
-    "puppeteer": "^1.0.0",
+    "puppeteer": "^1.1.1",
     "react": "^16.0.0",
     "react-codemirror": "^1.0.0",
     "react-dom": "^16.0.0",
