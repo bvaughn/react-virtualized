@@ -9,8 +9,8 @@ import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 
-import defaultRowRenderer from './defaultRowRenderer';
-import defaultHeaderRowRenderer from './defaultHeaderRowRenderer';
+import defaultTableRowRenderer from './defaultTableRowRenderer';
+import defaultTableHeaderRowRenderer from './defaultTableHeaderRowRenderer';
 import SortDirection from './SortDirection';
 
 /**
@@ -233,8 +233,8 @@ export default class Table extends React.PureComponent {
     onScroll: () => null,
     overscanIndicesGetter: accessibilityOverscanIndicesGetter,
     overscanRowCount: 10,
-    rowRenderer: defaultRowRenderer,
-    headerRowRenderer: defaultHeaderRowRenderer,
+    rowRenderer: defaultTableRowRenderer,
+    headerRowRenderer: defaultTableHeaderRowRenderer,
     rowStyle: {},
     scrollToAlignment: 'auto',
     scrollToIndex: -1,

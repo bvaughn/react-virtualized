@@ -5,7 +5,7 @@ import type {RowRendererParams} from './types';
 /**
  * Default row renderer for Table.
  */
-export default function defaultRowRenderer({
+export default function defaultTableRowRenderer({
   className,
   columns,
   index,

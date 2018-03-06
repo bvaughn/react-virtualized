@@ -6,7 +6,7 @@ import type {HeaderRendererParams} from './types';
 /**
  * Default table header renderer.
  */
-export default function defaultHeaderRenderer({
+export default function defaultTableHeaderRenderer({
   dataKey,
   label,
   sortBy,

@@ -38,7 +38,7 @@ function ({
 }): any
 ```
 
-A [default `cellDataGetter`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultCellDataGetter.js) is provided that simply returns the attribute as a String.
+A [default `cellDataGetter`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultTableCellDataGetter.js) is provided that simply returns the attribute as a String.
 This function expects to operate on either a vanilla Object or a Map-like object with a get method.
 You should override this default method if your data is calculated or requires any custom processing.
 
@@ -59,7 +59,7 @@ function ({
 }): node
 ```
 
-A [default `cellRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultCellRenderer.js) is provided that displays an attribute as a simple string
+A [default `cellRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultTableCellRenderer.js) is provided that displays an attribute as a simple string
 You should override this default method if your data is some other type of object or requires custom formatting.
 
 #### headerRenderer
@@ -78,5 +78,5 @@ function ({
 }): element
 ```
 
-A [default `headerRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultHeaderRenderer.js) is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
+A [default `headerRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultTableHeaderRenderer.js) is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
 You should override this default method if you want to customize the appearance of table columns.
