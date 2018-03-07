@@ -100,6 +100,8 @@ export default class MultiGridExample extends React.PureComponent {
               styleTopLeftGrid={STYLE_TOP_LEFT_GRID}
               styleTopRightGrid={STYLE_TOP_RIGHT_GRID}
               width={width}
+              hideTopRightGridScrollbar
+              hideBottomLeftGridScrollbar
             />
           )}
         </AutoSizer>
