@@ -1,7 +1,7 @@
 /** @flow */
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
@@ -15,7 +15,7 @@ import SortDirection from './SortDirection';
 import SortIndicator from './SortIndicator';
 import styles from './Table.example.css';
 
-export default class TableExample extends PureComponent {
+export default class TableExample extends React.PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
   };

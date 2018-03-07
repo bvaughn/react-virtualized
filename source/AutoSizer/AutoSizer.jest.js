@@ -1,6 +1,6 @@
 /* global Element, Event */
 
-import React from 'react';
+import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import {render} from '../TestUtils';
 import AutoSizer from './AutoSizer';

@@ -3,7 +3,7 @@ import InfiniteLoader, {
   isRangeVisible,
   scanForUnloadedRanges,
 } from './InfiniteLoader';
-import React, {Component} from 'react';
+import * as React from 'react';
 import List from '../List';
 import {render} from '../TestUtils';
 
@@ -434,7 +434,7 @@ describe('isRangeVisible', () => {
 describe('forceUpdateReactVirtualizedComponent', () => {
   it('should call :recomputeGridSize if defined', () => {
     const recomputeGridSize = jest.fn();
-    class TestComponent extends Component {
+    class TestComponent extends React.Component {
       recomputeGridSize = recomputeGridSize;
       render() {
         return <div />;
@@ -447,7 +447,7 @@ describe('forceUpdateReactVirtualizedComponent', () => {
 
   it('should called :recomputeRowHeights if defined', () => {
     const recomputeRowHeights = jest.fn();
-    class TestComponent extends Component {
+    class TestComponent extends React.Component {
       recomputeRowHeights = recomputeRowHeights;
       render() {
         return <div />;
@@ -460,7 +460,7 @@ describe('forceUpdateReactVirtualizedComponent', () => {
 
   it('should call :forceUpdate otherwise', () => {
     const forceUpdate = jest.fn();
-    class TestComponent extends Component {
+    class TestComponent extends React.Component {
       forceUpdate = forceUpdate;
       render() {
         return <div />;

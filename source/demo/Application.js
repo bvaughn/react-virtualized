@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {Redirect} from 'react-router';
 import {HashRouter, Route} from 'react-router-dom';
 
@@ -44,7 +44,7 @@ const COMPONENT_EXAMPLES_MAP = {
 // HACK Generate arbitrary data for use in example components :)
 const list = Immutable.List(generateRandomList());
 
-export default class Application extends PureComponent {
+export default class Application extends React.PureComponent {
   static childContextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
     customElement: PropTypes.any,

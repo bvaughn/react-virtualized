@@ -1,7 +1,7 @@
 /** @flow */
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
@@ -29,7 +29,7 @@ const STYLE_TOP_RIGHT_GRID = {
   fontWeight: 'bold',
 };
 
-export default class MultiGridExample extends PureComponent {
+export default class MultiGridExample extends React.PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
   };

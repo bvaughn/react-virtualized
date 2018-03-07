@@ -5,7 +5,7 @@ import type {CellPosition} from '../Grid';
 import cn from 'classnames';
 import Column from './Column';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 
@@ -17,7 +17,7 @@ import SortDirection from './SortDirection';
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
  * This component expects explicit width, height, and padding parameters.
  */
-export default class Table extends PureComponent {
+export default class Table extends React.PureComponent {
   static propTypes = {
     'aria-label': PropTypes.string,
 

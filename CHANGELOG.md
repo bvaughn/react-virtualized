@@ -1,6 +1,14 @@
 Changelog
 ------------
 
+##### 9.18.5
+* 🐛 Revert changes > 9.18.0
+
+<!--
+##### 9.18.1
+* ✨ Prevent generating cjs `prop-types` requires in esm build ([TrySound](https://github.com/TrySound) - [#950](https://github.com/bvaughn/react-virtualized/pull/950))
+-->
+
 ##### 9.18.0
 * ✨ Add `onScrollbarPresenceChange` prop to `MultiGrid`.
 

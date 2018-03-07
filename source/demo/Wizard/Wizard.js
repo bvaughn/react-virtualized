@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import CodeMirror from 'react-codemirror';
-import React, {Component} from 'react';
+import * as React from 'react';
 import {ContentBox, ContentBoxHeader} from '../ContentBox';
 import generate from './Generator';
 import styles from './Wizard.css';
@@ -13,7 +13,7 @@ const codeMirrorOptions = {
 };
 
 // @TODO Clean up this class; it's pretty hacky.
-export default class Wizard extends Component {
+export default class Wizard extends React.Component {
   constructor(props) {
     super(props);
 

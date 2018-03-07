@@ -1,5 +1,5 @@
 /** @flow */
-import {PureComponent} from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import createCallbackMemoizer from '../utils/createCallbackMemoizer';
 
@@ -8,7 +8,7 @@ import createCallbackMemoizer from '../utils/createCallbackMemoizer';
  * This component decorates a virtual component and just-in-time prefetches rows as a user scrolls.
  * It is intended as a convenience component; fork it if you'd like finer-grained control over data-loading.
  */
-export default class InfiniteLoader extends PureComponent {
+export default class InfiniteLoader extends React.PureComponent {
   static propTypes = {
     /**
      * Function responsible for rendering a virtualized component.

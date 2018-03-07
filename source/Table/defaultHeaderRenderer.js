@@ -1,5 +1,5 @@
 /** @flow */
-import React from 'react';
+import * as React from 'react';
 import SortIndicator from './SortIndicator';
 import type {HeaderRendererParams} from './types';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import {Simulate} from 'react-dom/test-utils';
 import {render} from '../TestUtils';

@@ -2,7 +2,7 @@
 
 import {List as ImmutableList} from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
@@ -16,7 +16,7 @@ type State = {
   hideDescription: boolean,
 };
 
-export default class AutoSizerExample extends PureComponent<{}, State> {
+export default class AutoSizerExample extends React.PureComponent<{}, State> {
   static contextTypes = {
     list: PropTypes.instanceOf(ImmutableList).isRequired,
   };
