@@ -8,6 +8,7 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 |:---|:---|:---:|:---|
 | autoContainerWidth | Boolean |  | Set the width of the inner scrollable container to 'auto'. This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar. |
 | autoHeight | Boolean |  | Outer `height` of `Grid` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
+| autoWidth | Boolean |  | Outer `width` of `Grid` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
 | cellRangeRenderer | Function |  | Responsible for rendering a group of cells given their index ranges. [Learn more](#cellrangerenderer) |
 | cellRenderer | Function | ✓ | Responsible for rendering a cell given an row and column index. [Learn more](#cellrenderer) |
 | className | String |  | Optional custom CSS class name to attach to root `Grid` element. |
