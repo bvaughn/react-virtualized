@@ -18,6 +18,7 @@ Join the official Slack chat at [react-virtualized.now.sh](https://react-virtual
 The following wonderful companies have sponsored react-virtualized:
 
 <a href="https://www.treasuredata.com/"><img width="64" height="64" title="Treasure Data" src="https://cloud.githubusercontent.com/assets/29597/17391516/962647f8-59cb-11e6-83be-aa1bac299dd0.png"></a>
+<a href="https://developer.hpe.com/"><img width="64" height="64" title="HPE Dev" src="https://user-images.githubusercontent.com/5983843/37311298-1c3a711a-261d-11e8-9129-ef1589d7063f.png"></a>
 <a href="https://opencollective.com/react-virtualized/sponsor/0/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/react-virtualized/sponsor/1/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/1/avatar.svg"></a>
 <a href="https://opencollective.com/react-virtualized/sponsor/2/website" target="_blank"><img src="https://opencollective.com/react-virtualized/sponsor/2/avatar.svg"></a>
