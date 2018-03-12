@@ -1,7 +1,7 @@
 ScrollSync
 ---------------
 
-High order component that simplifies the process of synchronizing scrolling between two or more virtualized components.
+High-order component that simplifies the process of synchronizing scrolling between two or more virtualized components.
 
 ### Prop Types
 | Property | Type | Required? | Description |
