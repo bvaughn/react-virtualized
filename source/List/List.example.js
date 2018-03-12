@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import styles from './List.example.css';
 import AutoSizer from '../AutoSizer';
 import List from './List';
@@ -12,7 +12,7 @@ import {
 } from '../demo/ContentBox';
 import {LabeledInput, InputRow} from '../demo/LabeledInput';
 
-export default class ListExample extends PureComponent {
+export default class ListExample extends React.PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
   };

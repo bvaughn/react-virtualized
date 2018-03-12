@@ -1,5 +1,5 @@
 /** @flow */
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   ContentBox,
@@ -15,7 +15,7 @@ import styles from './InfiniteLoader.example.css';
 const STATUS_LOADING = 1;
 const STATUS_LOADED = 2;
 
-export default class InfiniteLoaderExample extends PureComponent {
+export default class InfiniteLoaderExample extends React.PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
   };

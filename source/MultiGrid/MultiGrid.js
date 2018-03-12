@@ -1,6 +1,6 @@
 /** @flow */
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import CellMeasurerCacheDecorator from './CellMeasurerCacheDecorator';
 import Grid from '../Grid';
 
@@ -13,7 +13,7 @@ const SCROLLBAR_SIZE_BUFFER = 20;
  * If no sticky columns, only 1 sticky header Grid will be rendered.
  * If sticky columns, 2 sticky header Grids will be rendered.
  */
-export default class MultiGrid extends PureComponent {
+export default class MultiGrid extends React.PureComponent {
   static propTypes = {
     classNameBottomLeftGrid: PropTypes.string.isRequired,
     classNameBottomRightGrid: PropTypes.string.isRequired,

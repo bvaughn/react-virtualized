@@ -3,7 +3,7 @@
 import cn from 'classnames';
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
@@ -20,7 +20,10 @@ type State = {
   showHeaderText: boolean,
 };
 
-export default class WindowScrollerExample extends PureComponent<{}, State> {
+export default class WindowScrollerExample extends React.PureComponent<
+  {},
+  State,
+> {
   static contextTypes = {
     customElement: PropTypes.any,
     isScrollingCustomElement: PropTypes.bool.isRequired,

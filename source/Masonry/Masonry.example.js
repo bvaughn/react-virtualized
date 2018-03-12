@@ -1,7 +1,7 @@
 /** @flow */
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import {
   ContentBox,
   ContentBoxHeader,
@@ -15,7 +15,7 @@ import createCellPositioner from './createCellPositioner';
 import Masonry from './Masonry';
 import styles from './Masonry.example.css';
 
-export default class GridExample extends PureComponent {
+export default class GridExample extends React.PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
   };

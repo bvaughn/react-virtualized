@@ -1,6 +1,6 @@
 /** @flow */
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import Immutable from 'immutable';
 import {
   ContentBox,
@@ -17,7 +17,7 @@ import styles from './Collection.example.css';
 const GUTTER_SIZE = 3;
 const CELL_WIDTH = 75;
 
-export default class CollectionExample extends PureComponent {
+export default class CollectionExample extends React.PureComponent {
   static contextTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
   };

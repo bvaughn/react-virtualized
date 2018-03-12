@@ -1,12 +1,12 @@
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
+import * as React from 'react';
 import CellMeasurer from './CellMeasurer';
 import CellMeasurerCache from './CellMeasurerCache';
 import {Column, Table} from '../Table';
 import styles from './CellMeasurer.example.css';
 
-export default class DynamicHeightTableColumn extends PureComponent {
+export default class DynamicHeightTableColumn extends React.PureComponent {
   static propTypes = {
     list: PropTypes.instanceOf(Immutable.List).isRequired,
     width: PropTypes.number.isRequired,

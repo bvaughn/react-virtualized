@@ -1,11 +1,11 @@
 /** @flow */
 import PropTypes from 'prop-types';
-import {PureComponent} from 'react';
+import * as React from 'react';
 
 /**
  * High-order component that auto-calculates column-widths for `Grid` cells.
  */
-export default class ColumnSizer extends PureComponent {
+export default class ColumnSizer extends React.PureComponent {
   static propTypes = {
     /**
      * Function responsible for rendering a virtualized Grid.

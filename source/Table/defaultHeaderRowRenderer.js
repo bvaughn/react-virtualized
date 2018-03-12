@@ -1,5 +1,5 @@
 /** @flow */
-import React from 'react';
+import * as React from 'react';
 import type {HeaderRowRendererParams} from './types';
 
 export default function defaultHeaderRowRenderer({
