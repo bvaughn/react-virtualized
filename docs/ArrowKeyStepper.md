@@ -1,7 +1,7 @@
 ArrowKeyStepper
 ---------------
 
-High-order component that decorates another virtualized component and responds to arrow-key events by scrolling one row or column at a time.
+A High-order component (A component that takes a component and returns a component) that decorates another virtualized component and responds to arrow-key events by scrolling one row or column at a time.
 This provides a snap-to behavior rather than the default browser scrolling behavior.
 
 Note that unlike the other HOCs in react-virtualized, the `ArrowKeyStepper` adds a `<div>` element around its children in order to attach a key-down event handler.
