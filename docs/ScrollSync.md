@@ -1,26 +1,26 @@
 ScrollSync
 ---------------
 
-High-order component that simplifies the process of synchronizing scrolling between two or more virtualized components.
+A High-order component that decorates multiple virtualized components such as `Grid` or `List` in order to synchronize their scroll positions. Passes synchronized scroll offsets to a render prop.
 
 ### Prop Types
-| Property | Type | Required? | Description |
-|:---|:---|:---:|:---|
-| children | Function | ✓ | Function responsible for rendering 2 or more virtualized components. [See below](#children-function) for details about this function's signature. |
+| Property | Type     | Required? | Description                                                                                                                                       |
+| :------- | :------- | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| children | Function | ✓         | Function responsible for rendering 2 or more virtualized components. [See below](#children-function) for details about this function's signature. |
 
 ### Children function
 
 The child function is passed the following named parameters:
 
-| Parameter | Type | Description |
-|:---|:---|:---|
-| clientHeight | Number | Height of the visible portion of the `Grid` (or other scroll-synced component) |
-| clientWidth | Number | Width of the visible portion of the `Grid` (or other scroll-synced component) |
-| onScroll | Function | This function should be passed through to at least one of the virtualized child components. Updates to it will trigger updates to the scroll offset parameters which will in turn update the other virtualized children. |
-| scrollHeight | Number | Total height of all rows in the `Grid` (or other scroll-synced component) |
-| scrollLeft | Number | The current scroll-left offset. |
-| scrollTop | Number | The current scroll-top offset. |
-| scrollWidth | Number | Total width of all rows in the `Grid` (or other scroll-synced component) |
+| Parameter    | Type     | Description                                                                                                                                                                                                              |
+| :----------- | :------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| clientHeight | Number   | Height of the visible portion of the `Grid` (or other scroll-synced component)                                                                                                                                           |
+| clientWidth  | Number   | Width of the visible portion of the `Grid` (or other scroll-synced component)                                                                                                                                            |
+| onScroll     | Function | This function should be passed through to at least one of the virtualized child components. Updates to it will trigger updates to the scroll offset parameters which will in turn update the other virtualized children. |
+| scrollHeight | Number   | Total height of all rows in the `Grid` (or other scroll-synced component)                                                                                                                                                |
+| scrollLeft   | Number   | The current scroll-left offset.                                                                                                                                                                                          |
+| scrollTop    | Number   | The current scroll-top offset.                                                                                                                                                                                           |
+| scrollWidth  | Number   | Total width of all rows in the `Grid` (or other scroll-synced component)                                                                                                                                                 |
 
 ### Examples
 
