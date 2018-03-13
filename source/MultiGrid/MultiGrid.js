@@ -279,17 +279,25 @@ export default class MultiGrid extends React.PureComponent {
     return (
       <div style={this._containerOuterStyle}>
         <div style={this._containerTopStyle}>
-          {this._renderTopLeftGrid(rest)}
+          {this._renderTopLeftGrid({
+            ...rest,
+            scrollToColumn,
+            scrollToRow,
+          })}
           {this._renderTopRightGrid({
             ...rest,
             onScroll,
             scrollLeft,
+            scrollToColumn,
+            scrollToRow,
           })}
         </div>
         <div style={this._containerBottomStyle}>
           {this._renderBottomLeftGrid({
             ...rest,
             onScroll,
+            scrollToColumn,
+            scrollToRow,
             scrollTop,
           })}
           {this._renderBottomRightGrid({
@@ -622,6 +630,8 @@ export default class MultiGrid extends React.PureComponent {
       fixedColumnCount,
       fixedRowCount,
       rowCount,
+      scrollToColumn,
+      scrollToRow,
       scrollTop,
     } = props;
     const {showVerticalScrollbar} = this.state;
@@ -644,6 +654,8 @@ export default class MultiGrid extends React.PureComponent {
         ref={this._bottomLeftGridRef}
         rowCount={Math.max(0, rowCount - fixedRowCount) + additionalRowCount}
         rowHeight={this._rowHeightBottomGrid}
+        scrollToColumn={scrollToColumn}
+        scrollToRow={scrollToRow - fixedRowCount}
         scrollTop={scrollTop}
         style={this._bottomLeftGridStyle}
         tabIndex={null}
@@ -685,7 +697,12 @@ export default class MultiGrid extends React.PureComponent {
   }
 
   _renderTopLeftGrid(props) {
-    const {fixedColumnCount, fixedRowCount} = props;
+    const {
+      fixedColumnCount,
+      fixedRowCount,
+      scrollToColumn,
+      scrollToRow,
+    } = props;
 
     if (!fixedColumnCount || !fixedRowCount) {
       return null;
@@ -699,6 +716,8 @@ export default class MultiGrid extends React.PureComponent {
         height={this._getTopGridHeight(props)}
         ref={this._topLeftGridRef}
         rowCount={fixedRowCount}
+        scrollToColumn={scrollToColumn}
+        scrollToRow={scrollToRow}
         style={this._topLeftGridStyle}
         tabIndex={null}
         width={this._getLeftGridWidth(props)}
@@ -713,6 +732,8 @@ export default class MultiGrid extends React.PureComponent {
       fixedColumnCount,
       fixedRowCount,
       scrollLeft,
+      scrollToColumn,
+      scrollToRow,
     } = props;
     const {showHorizontalScrollbar} = this.state;
 
@@ -737,6 +758,8 @@ export default class MultiGrid extends React.PureComponent {
         ref={this._topRightGridRef}
         rowCount={fixedRowCount}
         scrollLeft={scrollLeft}
+        scrollToColumn={scrollToColumn - fixedColumnCount}
+        scrollToRow={scrollToRow}
         style={this._topRightGridStyle}
         tabIndex={null}
         width={this._getRightGridWidth(props)}
