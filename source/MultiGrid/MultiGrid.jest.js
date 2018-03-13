@@ -248,6 +248,44 @@ describe('MultiGrid', () => {
       expect(bottomLeftAfter.style.getPropertyValue('width')).toEqual('75px');
       expect(bottomRightAfter.style.getPropertyValue('width')).toEqual('325px');
     });
+    
+    it('should update the MultiGrid width when cell width changes by getter function', () => {
+      let columnWidths = [100, 100, 100, 100, 100];
+      function getCoumnWidth({index}) {
+        return columnWidths[index];
+      }
+      
+      let multiGrid;
+      let rendered = findDOMNode(
+        render(
+          getMarkup({
+            fixedColumnCount: 1,
+            fixedRowCount: 1,
+            rowHeight: 30,
+            columnWidth: getCoumnWidth,
+            ref: ref => {
+              multiGrid = ref;
+            },
+          }),
+        ),
+      );
+
+      let grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
+      expect(grids.length).toEqual(4);
+      let [topLeft, topRight, bottomLeft, bottomRight] = grids;
+      expect(topLeft.style.getPropertyValue('width')).toEqual('100px');
+      expect(topRight.style.getPropertyValue('width')).toEqual('300px');
+      expect(bottomLeft.style.getPropertyValue('width')).toEqual('100px');
+      expect(bottomRight.style.getPropertyValue('width')).toEqual('300px');
+      
+      columnWidths = [80, 100, 100, 100, 100];
+      multiGrid.recomputeGridSize();
+
+      expect(topLeft.style.getPropertyValue('width')).toEqual('80px');
+      expect(topRight.style.getPropertyValue('width')).toEqual('320px');
+      expect(bottomLeft.style.getPropertyValue('width')).toEqual('80px');
+      expect(bottomRight.style.getPropertyValue('width')).toEqual('320px');
+    });
   });
 
   describe('scrollToColumn and scrollToRow', () => {
