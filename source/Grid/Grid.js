@@ -525,19 +525,29 @@ export default class Grid extends React.PureComponent<Props, State> {
 
     const props = this.props;
 
+    let maybeStateA = null;
+    let maybeStateB = null;
+
     // Don't adjust scroll offset for single-column grids (eg List, Table).
     // This can cause a funky scroll offset because of the vertical scrollbar width.
     if (columnCount > 1 && columnIndex !== undefined) {
-      Grid._updateScrollLeftForScrollToColumn({
+      maybeStateA = Grid._updateScrollLeftForScrollToColumn({
         ...props,
         scrollToColumn: columnIndex,
       });
     }
 
     if (rowIndex !== undefined) {
-      Grid._updateScrollTopForScrollToRow({
+      maybeStateB = Grid._updateScrollTopForScrollToRow({
         ...props,
         scrollToRow: rowIndex,
+      });
+    }
+
+    if (maybeStateA !== null || maybeStateB !== null) {
+      this.setState({
+        ...maybeStateA,
+        maybeStateB,
       });
     }
   }
@@ -1310,25 +1320,26 @@ export default class Grid extends React.PureComponent<Props, State> {
     return null;
   }
 
-  /**
-   * Scroll to the specified offset(s).
-   * Useful for animating position changes.
-   */
-  scrollToPosition({scrollLeft, scrollTop}: ScrollPosition) {
-    const maybeState = Grid._getScrollToPositionStateUpdate({
+  static scrollToPosition({scrollLeft, scrollTop}: ScrollPosition): $Shape<State> | null {
+    return Grid._getScrollToPositionStateUpdate({
       prevState: this.state,
       scrollLeft,
       scrollTop,
     });
+  }
+
+  /**
+   * Scroll to the specified offset(s).
+   * Useful for animating position changes.
+   */
+  scrollToPosition(params: ScrollPosition) {
+    const maybeState = Grid.scrollToPosition(params);
     if (maybeState !== null) {
       this.setState(maybeState);
     }
   }
 
-  _getCalculatedScrollLeft(
-    props: Props = this.props,
-    state: State = this.state,
-  ) {
+  static _getCalculatedScrollLeft(props: Props, state: State) {
     const {
       columnCount,
       height,
@@ -1356,7 +1367,14 @@ export default class Grid extends React.PureComponent<Props, State> {
     }
   }
 
-  static _updateScrollLeftForScrollToColumn(props: Props, state: State) {
+  _getCalculatedScrollLeft(
+    props: Props = this.props,
+    state: State = this.state,
+  ) {
+    return Grid._getCalculatedScrollLeft(props, state);
+  }
+
+  static _updateScrollLeftForScrollToColumn(props: Props, state: State): $Shape<State> | null {
     const {scrollLeft} = state;
     const calculatedScrollLeft = Grid._getCalculatedScrollLeft(props, state);
 
@@ -1365,10 +1383,12 @@ export default class Grid extends React.PureComponent<Props, State> {
       calculatedScrollLeft >= 0 &&
       scrollLeft !== calculatedScrollLeft
     ) {
-      Grid.scrollToPosition({
+      return Grid.scrollToPosition({
         scrollLeft: calculatedScrollLeft,
       });
     }
+
+    return null;
   }
 
   _updateScrollLeftForScrollToColumn(
@@ -1438,7 +1458,7 @@ export default class Grid extends React.PureComponent<Props, State> {
     Grid._resetStyleCache(this.state.instanceProps);
   }
 
-  static _updateScrollTopForScrollToRow(props: Props, state: State) {
+  static _updateScrollTopForScrollToRow(props: Props, state: State): $Shape<State> | null {
     const {scrollTop} = state;
     const calculatedScrollTop = Grid._getCalculatedScrollTop(props, state);
 
@@ -1447,10 +1467,12 @@ export default class Grid extends React.PureComponent<Props, State> {
       calculatedScrollTop >= 0 &&
       scrollTop !== calculatedScrollTop
     ) {
-      Grid.scrollToPosition({
+      return Grid.scrollToPosition({
         scrollTop: calculatedScrollTop,
       });
     }
+
+    return null;
   }
 
   _updateScrollTopForScrollToRow(
