@@ -17,13 +17,13 @@ export default class DynamicHeightTableColumn extends React.PureComponent {
     minHeight: 25,
   });
 
-  _prevWidth = this.props.width;
+  _lastRenderedWidth = this.props.width;
 
   render() {
     const {width} = this.props;
 
-    if (this._prevWidth !== this.props.width) {
-      this._prevWidth = this.props.width;
+    if (this._lastRenderedWidth !== this.props.width) {
+      this._lastRenderedWidth = this.props.width;
       this._cache.clearAll();
     }
 

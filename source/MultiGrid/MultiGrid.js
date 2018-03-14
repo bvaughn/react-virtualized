@@ -162,15 +162,16 @@ export default class MultiGrid extends React.PureComponent {
       nextProps.scrollLeft !== prevState.scrollLeft ||
       nextProps.scrollTop !== prevState.scrollTop
     ) {
-      const newState = {};
-      if (nextProps.scrollLeft != null && nextProps.scrollLeft >= 0) {
-        newState.scrollLeft = nextProps.scrollLeft;
-      }
-      if (nextProps.scrollTop != null && nextProps.scrollTop >= 0) {
-        newState.scrollTop = nextProps.scrollTop;
-      }
-
-      return newState;
+      return {
+        scrollLeft:
+          nextProps.scrollLeft != null && nextProps.scrollLeft >= 0
+            ? nextProps.scrollLeft
+            : prevState.scrollLeft,
+        scrollTop:
+          nextProps.scrollTop != null && nextProps.scrollTop >= 0
+            ? nextProps.scrollTop
+            : prevState.scrollTop,
+      };
     }
 
     return null;
@@ -428,17 +429,19 @@ export default class MultiGrid extends React.PureComponent {
     } = this.props;
 
     const sizeChange =
-      resetAll || height !== this._prevHeight || width !== this._prevWidth;
+      resetAll ||
+      height !== this._lastRenderedHeight ||
+      width !== this._lastRenderedWidth;
     const leftSizeChange =
       resetAll ||
-      columnWidth !== this._prevColumnWidth ||
-      fixedColumnCount !== this._prevFixedColumnCount;
+      columnWidth !== this._lastRenderedColumnWidth ||
+      fixedColumnCount !== this._lastRenderedFixedColumnCount;
     const topSizeChange =
       resetAll ||
-      fixedRowCount !== this._prevFixedRowCount ||
-      rowHeight !== this._prevRowHeight;
+      fixedRowCount !== this._lastRenderedFixedRowCount ||
+      rowHeight !== this._lastRenderedRowHeight;
 
-    if (resetAll || sizeChange || style !== this._prevStyle) {
+    if (resetAll || sizeChange || style !== this._lastRenderedStyle) {
       this._containerOuterStyle = {
         height,
         overflow: 'visible', // Let :focus outline show through
@@ -462,7 +465,10 @@ export default class MultiGrid extends React.PureComponent {
       };
     }
 
-    if (resetAll || styleBottomLeftGrid !== this._prevStyleBottomLeftGrid) {
+    if (
+      resetAll ||
+      styleBottomLeftGrid !== this._lastRenderedStyleBottomLeftGrid
+    ) {
       this._bottomLeftGridStyle = {
         left: 0,
         overflowX: 'hidden',
@@ -475,7 +481,7 @@ export default class MultiGrid extends React.PureComponent {
     if (
       resetAll ||
       leftSizeChange ||
-      styleBottomRightGrid !== this._prevStyleBottomRightGrid
+      styleBottomRightGrid !== this._lastRenderedStyleBottomRightGrid
     ) {
       this._bottomRightGridStyle = {
         left: this._getLeftGridWidth(this.props),
@@ -484,7 +490,7 @@ export default class MultiGrid extends React.PureComponent {
       };
     }
 
-    if (resetAll || styleTopLeftGrid !== this._prevStyleTopLeftGrid) {
+    if (resetAll || styleTopLeftGrid !== this._lastRenderedStyleTopLeftGrid) {
       this._topLeftGridStyle = {
         left: 0,
         overflowX: 'hidden',
@@ -498,7 +504,7 @@ export default class MultiGrid extends React.PureComponent {
     if (
       resetAll ||
       leftSizeChange ||
-      styleTopRightGrid !== this._prevStyleTopRightGrid
+      styleTopRightGrid !== this._lastRenderedStyleTopRightGrid
     ) {
       this._topRightGridStyle = {
         left: this._getLeftGridWidth(this.props),
@@ -510,40 +516,40 @@ export default class MultiGrid extends React.PureComponent {
       };
     }
 
-    this._prevColumnWidth = columnWidth;
-    this._prevFixedColumnCount = fixedColumnCount;
-    this._prevFixedRowCount = fixedRowCount;
-    this._prevHeight = height;
-    this._prevRowHeight = rowHeight;
-    this._prevStyle = style;
-    this._prevStyleBottomLeftGrid = styleBottomLeftGrid;
-    this._prevStyleBottomRightGrid = styleBottomRightGrid;
-    this._prevStyleTopLeftGrid = styleTopLeftGrid;
-    this._prevStyleTopRightGrid = styleTopRightGrid;
-    this._prevWidth = width;
+    this._lastRenderedColumnWidth = columnWidth;
+    this._lastRenderedFixedColumnCount = fixedColumnCount;
+    this._lastRenderedFixedRowCount = fixedRowCount;
+    this._lastRenderedHeight = height;
+    this._lastRenderedRowHeight = rowHeight;
+    this._lastRenderedStyle = style;
+    this._lastRenderedStyleBottomLeftGrid = styleBottomLeftGrid;
+    this._lastRenderedStyleBottomRightGrid = styleBottomRightGrid;
+    this._lastRenderedStyleTopLeftGrid = styleTopLeftGrid;
+    this._lastRenderedStyleTopRightGrid = styleTopRightGrid;
+    this._lastRenderedWidth = width;
   }
 
   _prepareForRender() {
     if (
-      this._prevColumnWidth !== this.props.columnWidth ||
-      this._prevFixedColumnCount !== this.props.fixedColumnCount
+      this._lastRenderedColumnWidth !== this.props.columnWidth ||
+      this._lastRenderedFixedColumnCount !== this.props.fixedColumnCount
     ) {
       this._leftGridWidth = null;
     }
 
     if (
-      this._prevFixedRowCount !== this.props.fixedRowCount ||
-      this._prevRowHeight !== this.props.rowHeight
+      this._lastRenderedFixedRowCount !== this.props.fixedRowCount ||
+      this._lastRenderedRowHeight !== this.props.rowHeight
     ) {
       this._topGridHeight = null;
     }
 
     this._maybeCalculateCachedStyles();
 
-    this._prevColumnWidth = this.props.columnWidth;
-    this._prevFixedColumnCount = this.props.fixedColumnCount;
-    this._prevFixedRowCount = this.props.fixedRowCount;
-    this._prevRowHeight = this.props.rowHeight;
+    this._lastRenderedColumnWidth = this.props.columnWidth;
+    this._lastRenderedFixedColumnCount = this.props.fixedColumnCount;
+    this._lastRenderedFixedRowCount = this.props.fixedRowCount;
+    this._lastRenderedRowHeight = this.props.rowHeight;
   }
 
   _onScroll = scrollInfo => {

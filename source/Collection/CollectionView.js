@@ -197,14 +197,16 @@ export default class CollectionView extends React.PureComponent {
       nextProps.scrollLeft !== prevState.scrollLeft ||
       nextProps.scrollTop !== prevState.scrollTop
     ) {
-      const newState = {};
-      if (nextProps.scrollLeft != null) {
-        newState.scrollLeft = nextProps.scrollLeft;
-      }
-      if (nextProps.scrollTop != null) {
-        newState.scrollTop = nextProps.scrollTop;
-      }
-      return newState;
+      return {
+        scrollLeft:
+          nextProps.scrollLeft != null
+            ? nextProps.scrollLeft
+            : prevState.scrollLeft,
+        scrollTop:
+          nextProps.scrollTop != null
+            ? nextProps.scrollTop
+            : prevState.scrollTop,
+      };
     }
 
     return null;
@@ -311,12 +313,12 @@ export default class CollectionView extends React.PureComponent {
 
     // Memoization reset
     if (
-      this._prevCellCount !== cellCount ||
-      this._prevCellLayoutManager !== cellLayoutManager ||
+      this._lastRenderedCellCount !== cellCount ||
+      this._lastRenderedCellLayoutManager !== cellLayoutManager ||
       this._calculateSizeAndPositionDataOnNextUpdate
     ) {
-      this._prevCellCount = cellCount;
-      this._prevCellLayoutManager = cellLayoutManager;
+      this._lastRenderedCellCount = cellCount;
+      this._lastRenderedCellLayoutManager = cellLayoutManager;
       this._calculateSizeAndPositionDataOnNextUpdate = false;
 
       cellLayoutManager.calculateSizeAndPositionData();

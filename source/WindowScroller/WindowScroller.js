@@ -88,7 +88,6 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _positionFromLeft = 0;
   _detectElementResize: DetectElementResize;
   _child: ?Element;
-  _prevScrollElement: ?(typeof window | Element);
 
   state = {
     ...getDimensions(this.props.scrollElement, this.props),
