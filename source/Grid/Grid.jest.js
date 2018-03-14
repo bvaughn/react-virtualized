@@ -972,33 +972,22 @@ describe('Grid', () => {
   });
 
   describe(':scrollLeft and :scrollTop properties', () => {
-    it('should adjust :scrollTop and :scrollLeft styles when those props are used', () => {
-      const grid = findDOMNode(
+    it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
+      let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex;
+      findDOMNode(
         render(
           getMarkup({
+            onSectionRendered: params =>
+              ({
+                columnStartIndex,
+                columnStopIndex,
+                rowStartIndex,
+                rowStopIndex,
+              } = params),
             scrollLeft: 250,
             scrollTop: 100,
           }),
         ),
-      );
-      expect(grid.scrollLeft).toEqual(250);
-      expect(grid.scrollTop).toEqual(100);
-    });
-
-    it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
-      let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex;
-      render(
-        getMarkup({
-          onSectionRendered: params =>
-            ({
-              columnStartIndex,
-              columnStopIndex,
-              rowStartIndex,
-              rowStopIndex,
-            } = params),
-          scrollLeft: 250,
-          scrollTop: 100,
-        }),
       );
       expect(rowStartIndex).toEqual(5);
       expect(rowStopIndex).toEqual(9);
@@ -1564,7 +1553,7 @@ describe('Grid', () => {
 
   describe('estimated row and column sizes', () => {
     it('should not estimate sizes if actual sizes are numbers', () => {
-      render(
+      const grid = render(
         getMarkup({
           columnWidth: 100,
           estimatedColumnSize: 150,
@@ -1572,12 +1561,12 @@ describe('Grid', () => {
           rowHeight: 20,
         }),
       );
-      expect(Grid._getEstimatedColumnSize(grid.props)).toEqual(100);
-      expect(Grid._getEstimatedRowSize(grid.props)).toEqual(20);
+      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(100);
+      expect(grid._getEstimatedRowSize(grid.props)).toEqual(20);
     });
 
     it('should estimate row and column sizes if actual sizes are functions', () => {
-      render(
+      const grid = render(
         getMarkup({
           columnWidth: () => 100,
           estimatedColumnSize: 150,
@@ -1585,8 +1574,8 @@ describe('Grid', () => {
           rowHeight: () => 20,
         }),
       );
-      expect(Grid._getEstimatedColumnSize(grid.props)).toEqual(150);
-      expect(Grid._getEstimatedRowSize(grid.props)).toEqual(15);
+      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(150);
+      expect(grid._getEstimatedRowSize(grid.props)).toEqual(15);
     });
   });
 
@@ -1961,11 +1950,11 @@ describe('Grid', () => {
           width: 0,
         }),
       );
-      expect(grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize()).toEqual(1500);
-      expect(grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize()).toEqual(150);
+      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1500);
+      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150);
       grid.measureAllCells();
-      expect(grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize()).toEqual(1000);
-      expect(grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize()).toEqual(200);
+      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1000);
+      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200);
     });
   });
 
@@ -2070,7 +2059,7 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.height,
       ).toEqual('2000px'); // 100 rows * 20px rowHeight
-      expect(grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize()).toEqual(2000);
+      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000);
     });
   });
 
@@ -2102,7 +2091,7 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.width,
       ).toEqual('2500px'); // 50 columns * 50px columnWidth
-      expect(grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize()).toEqual(2500);
+      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(2500);
     });
   });
 
@@ -2208,18 +2197,18 @@ describe('Grid', () => {
 
       const grid = render(getMarkup(props));
 
-      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(4);
+      expect(Object.keys(grid._styleCache).length).toBe(4);
 
       simulateScroll({grid, scrollTop: 50});
 
-      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(6);
+      expect(Object.keys(grid._styleCache).length).toBe(6);
 
       // Allow scrolling timeout to complete so that cell cache is reset
       await new Promise(resolve =>
         setTimeout(resolve, DEFAULT_SCROLLING_RESET_TIME_INTERVAL * 2),
       );
 
-      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(4);
+      expect(Object.keys(grid._styleCache).length).toBe(4);
 
       done();
     });
@@ -2236,7 +2225,7 @@ describe('Grid', () => {
 
       const grid = render(getMarkup(props));
 
-      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(4);
+      expect(Object.keys(grid._styleCache).length).toBe(4);
 
       render(
         getMarkup({
@@ -2245,11 +2234,11 @@ describe('Grid', () => {
         }),
       );
 
-      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(6);
+      expect(Object.keys(grid._styleCache).length).toBe(6);
 
       grid.recomputeGridSize();
 
-      expect(Object.keys(grid.state.instanceProps.styleCache).length).toBe(4);
+      expect(Object.keys(grid._styleCache).length).toBe(4);
     });
 
     it('should clear style cache if cell sizes change', () => {
@@ -2311,10 +2300,11 @@ describe('Grid', () => {
       scrollTop: 2100,
     });
 
-    const firstProps = cellRendererCalls[0];
-    const secondProps = cellRendererCalls[1];
+    // cellRendererCalls[0] is the element at rowIndex 0
+    const firstProps = cellRendererCalls[1];
+    const secondProps = cellRendererCalls[2];
 
-    expect(cellRendererCalls.length).toEqual(2);
+    expect(cellRendererCalls.length).toEqual(3);
     expect(firstProps.style).not.toBe(secondProps.style);
   });
 
@@ -2333,7 +2323,7 @@ describe('Grid', () => {
       }),
     );
 
-    const keys = Object.keys(grid.state.instanceProps.styleCache);
+    const keys = Object.keys(grid._styleCache);
 
     expect(keys).toEqual(['0-0', '1-1']);
   });
