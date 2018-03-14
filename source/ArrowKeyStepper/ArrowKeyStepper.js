@@ -4,6 +4,7 @@ import type {RenderedSection} from '../Grid';
 import type {ScrollIndices} from './types';
 
 import * as React from 'react';
+import polyfill from 'react-lifecycles-compat';
 
 /**
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
@@ -30,7 +31,7 @@ type Props = {
 
 type State = ScrollIndices;
 
-export default class ArrowKeyStepper extends React.PureComponent<Props, State> {
+class ArrowKeyStepper extends React.PureComponent<Props, State> {
   static defaultProps = {
     disabled: false,
     isControlled: false,
@@ -173,3 +174,7 @@ export default class ArrowKeyStepper extends React.PureComponent<Props, State> {
     }
   }
 }
+
+polyfill(ArrowKeyStepper);
+
+export default ArrowKeyStepper;

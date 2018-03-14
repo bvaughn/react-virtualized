@@ -1,6 +1,7 @@
 /** @flow */
-import * as React from 'react';
 import cn from 'classnames';
+import * as React from 'react';
+import polyfill from 'react-lifecycles-compat';
 import PositionCache from './PositionCache';
 import {
   requestAnimationTimeout,
@@ -70,7 +71,7 @@ export const DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150;
  *   The left position of all items within a column must align.
  *   (Items may not span multiple columns.)
  */
-export default class Masonry extends React.PureComponent<Props, State> {
+class Masonry extends React.PureComponent<Props, State> {
   static defaultProps = {
     autoHeight: false,
     keyMapper: identity,
@@ -477,5 +478,9 @@ type Position = {
   left: number,
   top: number,
 };
+
+polyfill(Masonry);
+
+export default Masonry;
 
 export type Positioner = (index: number) => Position;

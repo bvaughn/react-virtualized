@@ -1,7 +1,8 @@
 /** @flow */
+import cn from 'classnames';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import cn from 'classnames';
+import polyfill from 'react-lifecycles-compat';
 import createCallbackMemoizer from '../utils/createCallbackMemoizer';
 import getScrollbarSize from 'dom-helpers/util/scrollbarSize';
 
@@ -26,7 +27,7 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  * Monitors changes in properties (eg. cellCount) and state (eg. scroll offsets) to determine when rendering needs to occur.
  * This component does not render any visible content itself; it defers to the specified :cellLayoutManager.
  */
-export default class CollectionView extends React.PureComponent {
+class CollectionView extends React.PureComponent {
   static propTypes = {
     'aria-label': PropTypes.string,
 
@@ -591,3 +592,7 @@ export default class CollectionView extends React.PureComponent {
     });
   };
 }
+
+polyfill(CollectionView);
+
+export default CollectionView;

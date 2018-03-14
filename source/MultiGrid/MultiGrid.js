@@ -1,6 +1,7 @@
 /** @flow */
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import polyfill from 'react-lifecycles-compat';
 import CellMeasurerCacheDecorator from './CellMeasurerCacheDecorator';
 import Grid from '../Grid';
 
@@ -13,7 +14,7 @@ const SCROLLBAR_SIZE_BUFFER = 20;
  * If no sticky columns, only 1 sticky header Grid will be rendered.
  * If sticky columns, 2 sticky header Grids will be rendered.
  */
-export default class MultiGrid extends React.PureComponent {
+class MultiGrid extends React.PureComponent {
   static propTypes = {
     classNameBottomLeftGrid: PropTypes.string.isRequired,
     classNameBottomRightGrid: PropTypes.string.isRequired,
@@ -755,3 +756,7 @@ export default class MultiGrid extends React.PureComponent {
     this._topRightGrid = ref;
   };
 }
+
+polyfill(MultiGrid);
+
+export default MultiGrid;
