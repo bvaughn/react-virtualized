@@ -96,10 +96,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     scrollTop: 0,
   };
 
-  updatePosition(
-    scrollElement: ?Element = this.props.scrollElement,
-    props: Props = this.props,
-  ) {
+  updatePosition(scrollElement: ?Element = this.props.scrollElement) {
     const {onResize} = this.props;
     const {height, width} = this.state;
 
@@ -110,7 +107,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
       this._positionFromLeft = offset.left;
     }
 
-    const dimensions = getDimensions(scrollElement, props);
+    const dimensions = getDimensions(scrollElement, this.props);
     if (height !== dimensions.height || width !== dimensions.width) {
       this.setState({
         height: dimensions.height,
@@ -138,22 +135,22 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     this._isMounted = true;
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    const scrollElement = this.props.scrollElement;
-    const nextScrollElement = nextProps.scrollElement;
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    const {scrollElement} = this.props;
+    const {scrollElement: prevScrollElement} = prevProps;
 
     if (
-      scrollElement !== nextScrollElement &&
-      scrollElement &&
-      nextScrollElement
+      prevScrollElement !== scrollElement &&
+      prevScrollElement != null &&
+      scrollElement != null
     ) {
-      this.updatePosition(nextScrollElement, nextProps);
+      this.updatePosition(scrollElement);
 
-      unregisterScrollListener(this, scrollElement);
-      registerScrollListener(this, nextScrollElement);
+      unregisterScrollListener(this, prevScrollElement);
+      registerScrollListener(this, scrollElement);
 
-      this._unregisterResizeListener(scrollElement);
-      this._registerResizeListener(nextScrollElement);
+      this._unregisterResizeListener(prevScrollElement);
+      this._registerResizeListener(scrollElement);
     }
   }
 
