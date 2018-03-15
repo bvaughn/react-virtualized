@@ -4,6 +4,8 @@ Thanks for contributing to react-virtualized!
 
 - [ ] The existing test suites (`npm test`) all pass
 - [ ] For any new features or bug fixes, both positive and negative test cases have been added
+- [ ] For any new features, documentation has been added
+- [ ] For any documentation changes, the text has been proofread and is clear to both experienced users and beginners.
 - [ ] Format your code with [prettier](https://github.com/prettier/prettier) (`npm run prettier`).
 - [ ] Run the [Flow](https://flowtype.org/) typechecks (`npm run typecheck`).
 
