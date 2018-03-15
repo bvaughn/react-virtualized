@@ -86,6 +86,29 @@ describe('createMultiSort', () => {
       simulate(multiSort.sort, 'a');
       expect(multiSort.sortBy).toEqual(['a']);
     });
+
+    it('resets sort-direction fields', () => {
+      const multiSort = createMultiSort(jest.fn(), {
+        defaultSortBy: ['a', 'b'],
+        defaultSortDirection: {
+          a: 'DESC',
+          b: 'ASC',
+        },
+      });
+      expect(multiSort.sortBy).toEqual(['a', 'b']);
+      expect(multiSort.sortDirection.a).toEqual('DESC');
+      expect(multiSort.sortDirection.b).toEqual('ASC');
+
+      simulate(multiSort.sort, 'a');
+      expect(multiSort.sortBy).toEqual(['a']);
+      expect(multiSort.sortDirection.a).toEqual('ASC');
+      expect(multiSort.sortDirection.b).toEqual(undefined);
+
+      simulate(multiSort.sort, 'b');
+      expect(multiSort.sortBy).toEqual(['b']);
+      expect(multiSort.sortDirection.a).toEqual(undefined);
+      expect(multiSort.sortDirection.b).toEqual('ASC');
+    });
   });
 
   describe('on shift click', () => {
