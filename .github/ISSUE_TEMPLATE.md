@@ -1,10 +1,10 @@
-# Asking a Question?
+## Asking a Question?
 
 Please don't file GitHub issues to ask questions! Instead use:
 * Stack Overflow: http://stackoverflow.com/questions/tagged/react-virtualized
 * The react-virtualized Slack channel: https://react-virtualized.now.sh
 
-**Do you want to request a *feature* or report a *bug*?**
+### Do you want to request a *feature* or report a *bug*?
 
 <!--
 Requesting a feature?
@@ -22,10 +22,10 @@ Please include either a failing unit test or a simple repro. You can start by fo
 
 -->
 
-**What is the current behavior?**
+### What is the current behavior?
 
-**If the current behavior is a bug, please provide the steps to reproduce and if possible a minimal demo of the problem. Your bug will get fixed much faster if we can run your code and it doesn't have dependencies other than React. Paste the link to your JSFiddle (https://jsfiddle.net/Luktwrdm/) or CodeSandbox (https://codesandbox.io/s/new) example below:**
+If the current behavior is a bug, please provide the steps to reproduce and if possible a minimal demo of the problem. Your bug will get fixed much faster if we can run your code and it doesn't have dependencies other than React and react-virtualized. Paste the link to your JSFiddle (https://codesandbox.io/s/03qpzq1p9p?module=%2FExample.js) or Plnkr (https://plnkr.co/edit/6syKo8cx3RfoO96hXFT1) example below:
 
-**What is the expected behavior?**
+### What is the expected behavior?
 
-**Which versions of react-virtualized, and which browser / OS are affected by this issue? Did this work in previous versions of React?**
+### Which versions of React and react-virtualized, and which browser / OS are affected by this issue? Did this work in previous versions of react-virtualized?
