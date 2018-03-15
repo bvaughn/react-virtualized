@@ -59,7 +59,7 @@ import ReactDOM from 'react-dom';
 import { Collection } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
-// Collection data as an array of arrays
+// Collection data as an array of objects
 const list = [
   { name: 'Brian Vaughn', x: 13, y: 34, width: 123, height: 234 }
   // And so on...
