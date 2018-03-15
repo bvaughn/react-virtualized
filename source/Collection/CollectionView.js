@@ -492,8 +492,6 @@ class CollectionView extends React.PureComponent {
     ) {
       this.setState(newState);
     }
-
-    return null;
   }
 
   _updateScrollPositionForScrollToCell = () => {
