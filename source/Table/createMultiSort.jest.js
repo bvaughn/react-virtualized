@@ -147,6 +147,28 @@ describe('createMultiSort', () => {
       expect(multiSort.sortDirection.a).toBe('ASC');
       expect(multiSort.sortDirection.b).toBe('ASC');
     });
+
+    it('able to shift+click more than once', () => {
+      const multiSort = createMultiSort(jest.fn());
+
+      simulate(multiSort.sort, 'a');
+      expect(multiSort.sortBy).toEqual(['a']);
+      expect(multiSort.sortDirection.a).toBe('ASC');
+
+      simulate(multiSort.sort, 'b', 'shift');
+      expect(multiSort.sortBy).toEqual(['a', 'b']);
+      expect(multiSort.sortDirection.a).toBe('ASC');
+      expect(multiSort.sortDirection.b).toBe('ASC');
+
+      simulate(multiSort.sort, 'b');
+      expect(multiSort.sortBy).toEqual(['b']);
+      expect(multiSort.sortDirection.b).toBe('DESC');
+
+      simulate(multiSort.sort, 'a', 'shift');
+      expect(multiSort.sortBy).toEqual(['b', 'a']);
+      expect(multiSort.sortDirection.a).toBe('ASC');
+      expect(multiSort.sortDirection.b).toBe('DESC');
+    });
   });
 
   ['control', 'meta'].forEach(modifier => {
