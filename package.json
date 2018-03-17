@@ -10,7 +10,7 @@
   "jsnext:main": "dist/es/index.js",
   "license": "MIT",
   "scripts": {
-    "build:types": "flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/WindowScroller dist/es/WindowScroller && flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/AutoSizer dist/es/AutoSizer ",
+    "build:types": "flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/WindowScroller dist/es/WindowScroller && flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/AutoSizer dist/es/AutoSizer && flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/CellMeasurer dist/es/CellMeasurer",
     "build": "npm run build:commonjs && npm run build:css && npm run build:es && npm run build:demo && npm run build:umd",
     "build:commonjs": "npm run clean:commonjs && cross-env NODE_ENV=commonjs babel source --out-dir dist/commonjs",
     "build:css": "postcss source/styles.css -o styles.css --use autoprefixer",

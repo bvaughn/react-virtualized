@@ -1,7 +1,7 @@
 /** @flow */
 import * as React from 'react';
 import {findDOMNode} from 'react-dom';
-import CellMeasurerCache from './CellMeasurerCache.js';
+import {CellMeasureCache} from './CellMeasurerCache.js';
 
 type Children = (params: {measure: () => void}) => React.Element<*>;
 
@@ -11,7 +11,7 @@ type Cell = {
 };
 
 type Props = {
-  cache: CellMeasurerCache,
+  cache: CellMeasureCache,
   children: Children | React.Element<*>,
   columnIndex?: number,
   index?: number,

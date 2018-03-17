@@ -25,10 +25,24 @@ type IndexParam = {
   index: number,
 };
 
+export interface CellMeasureCache {
+  hasFixedWidth(): boolean;
+  hasFixedHeight(): boolean;
+  has(rowIndex: number, columnIndex: number): boolean;
+  set(
+    rowIndex: number,
+    columnIndex: number,
+    width: number,
+    height: number,
+  ): void;
+  getHeight(rowIndex: number, columnIndex?: number): number;
+  getWidth(rowIndex: number, columnIndex?: number): number;
+}
+
 /**
  * Caches measurements for a given cell.
  */
-export default class CellMeasurerCache {
+export default class CellMeasurerCache implements CellMeasureCache {
   _cellHeightCache: Cache = {};
   _cellWidthCache: Cache = {};
   _columnWidthCache: Cache = {};
@@ -174,7 +188,12 @@ export default class CellMeasurerCache {
       : this._defaultHeight;
   };
 
-  set(rowIndex: number, columnIndex: number, width: number, height: number) {
+  set(
+    rowIndex: number,
+    columnIndex: number,
+    width: number,
+    height: number,
+  ): void {
     const key = this._keyMapper(rowIndex, columnIndex);
 
     if (columnIndex >= this._columnCount) {
