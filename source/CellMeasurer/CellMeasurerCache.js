@@ -1,5 +1,7 @@
 /** @flow */
 
+import type {CellMeasureCache} from './types';
+
 export const DEFAULT_HEIGHT = 30;
 export const DEFAULT_WIDTH = 100;
 
@@ -24,20 +26,6 @@ type Cache = {
 type IndexParam = {
   index: number,
 };
-
-export interface CellMeasureCache {
-  hasFixedWidth(): boolean;
-  hasFixedHeight(): boolean;
-  has(rowIndex: number, columnIndex: number): boolean;
-  set(
-    rowIndex: number,
-    columnIndex: number,
-    width: number,
-    height: number,
-  ): void;
-  getHeight(rowIndex: number, columnIndex?: number): number;
-  getWidth(rowIndex: number, columnIndex?: number): number;
-}
 
 /**
  * Caches measurements for a given cell.
