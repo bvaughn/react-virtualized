@@ -1,7 +1,7 @@
 ScrollSync
 ---------------
 
-A High-order component that decorates multiple virtualized components such as `Grid` or `List` in order to synchronize their scroll positions. Passes synchronized scroll offsets to a render prop.
+High-order component that decorates multiple virtualized components such as `Grid` or `List` in order to synchronize their scroll positions. Passes synchronized scroll offsets to a render prop.
 
 ### Prop Types
 | Property | Type     | Required? | Description                                                                                                                                       |
