@@ -1,4 +1,4 @@
-/** @rlow */
+/** @flow */
 import type {Index, SizeAndPositionInfo} from './types';
 
 /**
