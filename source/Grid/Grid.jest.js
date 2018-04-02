@@ -1950,11 +1950,19 @@ describe('Grid', () => {
           width: 0,
         }),
       );
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1500);
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(1500);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(150);
       grid.measureAllCells();
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1000);
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(1000);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(200);
     });
   });
 
@@ -2059,7 +2067,9 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.height,
       ).toEqual('2000px'); // 100 rows * 20px rowHeight
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(2000);
     });
   });
 
@@ -2091,7 +2101,9 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.width,
       ).toEqual('2500px'); // 50 columns * 50px columnWidth
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(2500);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(2500);
     });
   });
 
