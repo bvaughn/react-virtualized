@@ -12,26 +12,20 @@ export default class DynamicHeightTableColumn extends React.PureComponent {
     width: PropTypes.number.isRequired,
   };
 
-  constructor(props, context) {
-    super(props, context);
+  _cache = new CellMeasurerCache({
+    fixedWidth: true,
+    minHeight: 25,
+  });
 
-    this._cache = new CellMeasurerCache({
-      fixedWidth: true,
-      minHeight: 25,
-    });
-
-    this._columnCellRenderer = this._columnCellRenderer.bind(this);
-    this._rowGetter = this._rowGetter.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.width !== this.props.width) {
-      this._cache.clearAll();
-    }
-  }
+  _lastRenderedWidth = this.props.width;
 
   render() {
     const {width} = this.props;
+
+    if (this._lastRenderedWidth !== this.props.width) {
+      this._lastRenderedWidth = this.props.width;
+      this._cache.clearAll();
+    }
 
     return (
       <Table
@@ -66,7 +60,7 @@ export default class DynamicHeightTableColumn extends React.PureComponent {
     );
   }
 
-  _columnCellRenderer({dataKey, parent, rowIndex}) {
+  _columnCellRenderer = ({dataKey, parent, rowIndex}) => {
     const {list} = this.props;
 
     const datum = list.get(rowIndex % list.size);
@@ -88,11 +82,11 @@ export default class DynamicHeightTableColumn extends React.PureComponent {
         </div>
       </CellMeasurer>
     );
-  }
+  };
 
-  _rowGetter({index}) {
+  _rowGetter = ({index}) => {
     const {list} = this.props;
 
     return list.get(index % list.size);
-  }
+  };
 }
