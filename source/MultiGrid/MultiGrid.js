@@ -651,10 +651,12 @@ class MultiGrid extends React.PureComponent {
     if (hideBottomLeftGridScrollbar) {
       return (
         <div
+          className="BottomLeftGrid_ScrollWrapper"
           style={{
             ...this._bottomLeftGridStyle,
             height,
             width,
+            overflowY: 'hidden',
           }}>
           {bottomLeftGrid}
         </div>
@@ -726,7 +728,7 @@ class MultiGrid extends React.PureComponent {
       scrollLeft,
       hideTopRightGridScrollbar,
     } = props;
-    const {showHorizontalScrollbar} = this.state;
+    const {showHorizontalScrollbar, scrollbarSize} = this.state;
 
     if (!fixedRowCount) {
       return null;
@@ -735,16 +737,15 @@ class MultiGrid extends React.PureComponent {
     const additionalColumnCount = showHorizontalScrollbar ? 1 : 0,
       height = this._getTopGridHeight(props),
       width = this._getRightGridWidth(props),
-      scrollbarSize = this.state.showHorizontalScrollbar ? this.state.scrollbarSize : 0;
+      additionalHeight = showHorizontalScrollbar ? scrollbarSize : 0;
 
     let gridHeight = height,
       style = this._topRightGridStyle;
 
     if (hideTopRightGridScrollbar) {
-      gridHeight = height + scrollbarSize;
+      gridHeight = height + additionalHeight;
       style = {
-        ...this._topRightGridStyle, 
-        position: 'relative',
+        ...this._topRightGridStyle,
         left: 0,
       };
     }
@@ -773,6 +774,7 @@ class MultiGrid extends React.PureComponent {
     if (hideTopRightGridScrollbar) {
       return (
         <div
+          className="TopRightGrid_ScrollWrapper"
           style={{
             ...this._topRightGridStyle,
             height,

@@ -171,6 +171,57 @@ describe('MultiGrid', () => {
     });
   });
 
+  describe('hideTopRightGridScrollbar, hideBottomLeftGridScrollbar should hide the scrollbars', () => {
+    function getScrollbarSize20() {
+      return 20;
+    }
+    it('should add scroll wrappers to hide scroll bar when configured for fixed columns and rows with scroll interaction', () => {
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            enableFixedColumnScroll: true,
+            enableFixedRowScroll: true,
+            fixedColumnCount: 1,
+            fixedRowCount: 1,
+            hideTopRightGridScrollbar: true,
+            hideBottomLeftGridScrollbar: true,
+            getScrollbarSize: getScrollbarSize20,
+          }),
+        ),
+      );
+      let wrappers = rendered.querySelectorAll('.TopRightGrid_ScrollWrapper');
+      expect(wrappers.length).toEqual(1);
+      const [topRightWrapper] = wrappers;
+      wrappers = rendered.querySelectorAll('.BottomLeftGrid_ScrollWrapper');
+      expect(wrappers.length).toEqual(1);
+      const [bottomLeftWrapper] = wrappers;
+
+      expect(topRightWrapper.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(topRightWrapper.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(bottomLeftWrapper.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(bottomLeftWrapper.style.getPropertyValue('overflow-y')).toEqual('hidden');
+
+      expect(topRightWrapper.style.getPropertyValue('height')).toEqual('20px');
+      expect(bottomLeftWrapper.style.getPropertyValue('height')).toEqual('280px');
+      expect(topRightWrapper.style.getPropertyValue('width')).toEqual('350px');
+      expect(bottomLeftWrapper.style.getPropertyValue('width')).toEqual('50px');
+
+      const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
+      expect(grids.length).toEqual(4);
+      const [topLeft, topRight, bottomLeft, bottomRight] = grids;
+      expect(topLeft.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(topLeft.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(topRight.style.getPropertyValue('overflow-x')).toEqual('auto');
+      expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(topRight.style.getPropertyValue('height')).toEqual('40px');
+      expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('auto');
+      expect(bottomLeft.style.getPropertyValue('width')).toEqual('70px');
+      expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto');
+      expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto');
+    });
+  });
+
   describe('#recomputeGridSize', () => {
     it('should clear calculated cached styles in recomputeGridSize', () => {
       let fixedRowHeight = 75;
