@@ -37,7 +37,8 @@
     "test:jest": "jest --no-watchman --runInBand",
     "test:ci": "jest --no-watchman --maxWorkers 2 --coverage && codecov",
     "watch": "watch 'clear && npm run test -s' source",
-    "watch:jest": "jest --no-watchman --watch"
+    "watch:jest": "jest --no-watchman --watch",
+    "debug": "node --inspect-brk node_modules/.bin/jest --no-watchman --runInBand source/Grid/SingleTests.jest.js"
   },
   "babel": {
     "presets": [

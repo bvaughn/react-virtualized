@@ -594,7 +594,7 @@ class Grid extends React.PureComponent<Props, State> {
       scrollToRow,
       width,
     } = this.props;
-    console.log('componentDidMount');
+    // console.log('componentDidMount');
 
     const {instanceProps} = this.state;
 
@@ -605,7 +605,7 @@ class Grid extends React.PureComponent<Props, State> {
     // If this component was first rendered server-side, scrollbar size will be undefined.
     // In that event we need to remeasure.
     if (!instanceProps.scrollbarSizeMeasured) {
-      console.log('setting state');
+      // console.log('setting state');
       // this._scrollbarSize = getScrollbarSize();
       this.setState(prevState => ({
         instanceProps: {
@@ -679,9 +679,9 @@ class Grid extends React.PureComponent<Props, State> {
       scrollTop,
       instanceProps,
     } = this.state;
-    console.log('componentDidUpdate');
-    // console.log(instanceProps.columnStartIndex, instanceProps.columnStopIndex);
-    // console.log(instanceProps.rowStartIndex, instanceProps.rowStopIndex);
+    // console.log('componentDidUpdate');
+    // // console.log(instanceProps.columnStartIndex, instanceProps.columnStopIndex);
+    // // console.log(instanceProps.rowStartIndex, instanceProps.rowStopIndex);
 
     // If cell sizes have been invalidated (eg we are using CellMeasurer) then reset cached positions.
     // We must do this at the start of the method as we may calculate and update scroll position below.
@@ -797,7 +797,7 @@ class Grid extends React.PureComponent<Props, State> {
     this._maybeCallOnScrollbarPresenceChange();
 
     // reset _clearedStyleCacheFromPropChange
-    // console.log(
+    // // console.log(
     //   instanceProps.clearStyleCache,
     //   this._clearedStyleCacheFromPropChange,
     // );
@@ -805,7 +805,7 @@ class Grid extends React.PureComponent<Props, State> {
     //   instanceProps.clearStyleCache &&
     //   this._clearedStyleCacheFromPropChange
     // ) {
-    //   console.log('reset');
+    //   // console.log('reset');
     //   this._clearedStyleCacheFromPropChange = !this
     //     ._clearedStyleCacheFromPropChange;
     // }
@@ -813,7 +813,7 @@ class Grid extends React.PureComponent<Props, State> {
       prevProps.columnWidth !== this.props.columnWidth ||
       prevProps.rowHeight !== this.props.rowHeight
     ) {
-      console.log('should clearStyleCache');
+      // console.log('should clearStyleCache');
       this._styleCache = {};
       this.forceUpdate();
     }
@@ -835,7 +835,8 @@ class Grid extends React.PureComponent<Props, State> {
     nextProps: Props,
     prevState: State,
   ): $Shape<State> {
-    console.log('getDerivedStateFromProps');
+    // console.log('getDerivedStateFromProps');
+    debugger;
     const newState = {};
 
     if (
@@ -868,7 +869,7 @@ class Grid extends React.PureComponent<Props, State> {
       // TODO RESET CACHE,
       // How do we tell render that we need to do this
       // instanceProps.styleCache = {};
-      // console.log('should clearStyleCache');
+      // // console.log('should clearStyleCache');
       // instanceProps.clearStyleCache = true;
       // instanceProps.prevPrevColumnWidth = instanceProps.prevColumnWidth;
       // instanceProps.prevPrevRowHeight = instanceProps.prevRowHeight;
@@ -986,7 +987,7 @@ class Grid extends React.PureComponent<Props, State> {
   }
 
   render() {
-    console.log('render');
+    // console.log('render');
     const {
       autoContainerWidth,
       autoHeight,
@@ -1031,7 +1032,7 @@ class Grid extends React.PureComponent<Props, State> {
     //   (instanceProps.prevPrevRowHeight !== instanceProps.prevRowHeight ||
     //     instanceProps.prevPrevColumnWidth !== instanceProps.prevColumnWidth)
     // ) {
-    //   console.log('clearStyleCache');
+    //   // console.log('clearStyleCache');
     //   this._styleCache = {};
     // }
 
@@ -1136,7 +1137,7 @@ class Grid extends React.PureComponent<Props, State> {
       scrollTop,
       instanceProps,
     } = state;
-    console.log('_calculateChildrenToRender');
+    // console.log('_calculateChildrenToRender');
 
     const isScrolling = this._isScrolling(props, state);
 
