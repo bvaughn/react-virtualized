@@ -585,6 +585,7 @@ class Grid extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
+    debugger;
     const {
       getScrollbarSize,
       height,
@@ -662,6 +663,7 @@ class Grid extends React.PureComponent<Props, State> {
    * 1) New scroll-to-cell props have been set
    */
   componentDidUpdate(prevProps: Props, prevState: State) {
+    debugger;
     const {
       autoHeight,
       autoWidth,
@@ -987,6 +989,8 @@ class Grid extends React.PureComponent<Props, State> {
   }
 
   render() {
+    debugger;
+
     // console.log('render');
     const {
       autoContainerWidth,
@@ -1117,6 +1121,8 @@ class Grid extends React.PureComponent<Props, State> {
     props: Props = this.props,
     state: State = this.state,
   ) {
+    debugger;
+
     const {
       cellRenderer,
       cellRangeRenderer,
@@ -1605,6 +1611,8 @@ class Grid extends React.PureComponent<Props, State> {
   // }
 
   _resetStyleCache() {
+    debugger;
+
     const styleCache = this._styleCache;
 
     // Reset cell and style caches once scrolling stops.
