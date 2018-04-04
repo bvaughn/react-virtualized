@@ -974,8 +974,8 @@ class Grid extends React.PureComponent<Props, State> {
     instanceProps.prevScrollToRow = nextProps.scrollToRow;
 
     // getting scrollBarSize from componentWillMount
-    const scrollBarSize = nextProps.getScrollbarSize();
-    if (scrollBarSize === undefined) {
+    instanceProps.scrollbarSize = nextProps.getScrollbarSize();
+    if (instanceProps.scrollbarSize === undefined) {
       instanceProps.scrollbarSizeMeasured = false;
       instanceProps.scrollbarSize = 0;
     } else {
