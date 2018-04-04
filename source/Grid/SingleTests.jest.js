@@ -59,31 +59,38 @@ describe('Grid', () => {
     );
   }
 
-  it('should trigger on-update if scrollbar visibility has changed', () => {
-    const onScrollbarPresenceChange = jest.fn();
-    render(
-      getMarkup({
-        columnCount: 1,
-        getScrollbarSize: getScrollbarSize20,
-        onScrollbarPresenceChange,
-        rowCount: 1,
-      }),
-    );
-    expect(onScrollbarPresenceChange).not.toHaveBeenCalled();
+  it('should clear style cache if cell sizes change', () => {
+    const cellRendererCalls = [];
+    function cellRenderer(params) {
+      cellRendererCalls.push(params);
+      return <div key={params.key} style={params.style} />;
+    }
+
+    const props = {
+      cellRenderer,
+      columnWidth: 100,
+      height: 100,
+      overscanColumnCount: 0,
+      overscanRowCount: 0,
+      rowHeight: 100,
+      width: 100,
+    };
+
+    render(getMarkup(props));
+
+    expect(cellRendererCalls.length).toEqual(1);
+    expect(cellRendererCalls[0].style.width).toEqual(100);
 
     render(
       getMarkup({
-        columnCount: 100,
-        getScrollbarSize: getScrollbarSize20,
-        onScrollbarPresenceChange,
-        rowCount: 100,
+        ...props,
+        columnWidth: 50,
+        width: 50,
       }),
     );
-    expect(onScrollbarPresenceChange).toHaveBeenCalled();
 
-    const args = onScrollbarPresenceChange.mock.calls[0][0];
-    expect(args.horizontal).toBe(true);
-    expect(args.size).toBe(getScrollbarSize20());
-    expect(args.vertical).toBe(true);
+    expect(cellRendererCalls.length).toEqual(2);
+    expect(cellRendererCalls[1].style.width).toEqual(50);
   });
+});
 });

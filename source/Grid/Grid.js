@@ -811,14 +811,14 @@ class Grid extends React.PureComponent<Props, State> {
     //   this._clearedStyleCacheFromPropChange = !this
     //     ._clearedStyleCacheFromPropChange;
     // }
-    if (
-      prevProps.columnWidth !== this.props.columnWidth ||
-      prevProps.rowHeight !== this.props.rowHeight
-    ) {
-      // console.log('should clearStyleCache');
-      this._styleCache = {};
-      this.forceUpdate();
-    }
+    // if (
+    //   prevProps.columnWidth !== this.props.columnWidth ||
+    //   prevProps.rowHeight !== this.props.rowHeight
+    // ) {
+    //   // console.log('should clearStyleCache');
+    //   this._styleCache = {};
+    //   this.forceUpdate();
+    // }
   }
 
   componentWillUnmount() {
