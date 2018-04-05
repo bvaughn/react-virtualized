@@ -93,4 +93,3 @@ describe('Grid', () => {
     expect(cellRendererCalls[1].style.width).toEqual(50);
   });
 });
-});
