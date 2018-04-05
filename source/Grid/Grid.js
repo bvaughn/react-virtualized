@@ -954,13 +954,12 @@ class Grid extends React.PureComponent<Props, State> {
 
     // do we need to set styleCache = {}
     if (needToResetStyleCache) {
-      console.log('resetting styleCache');
       this._styleCache = {};
     }
 
     // calculate _styleCache here
     // if state.isScrolling (not from _isScrolling) then reset
-    if (this.state.isScrolling) {
+    if (!this.state.isScrolling) {
       this._resetStyleCache();
     }
 
