@@ -2313,10 +2313,11 @@ describe('Grid', () => {
     });
 
     // cellRendererCalls[0] is the element at rowIndex 0
-    const firstProps = cellRendererCalls[1];
-    const secondProps = cellRendererCalls[2];
+    // only two calls. Since the scrollTop is updated in getDerivedStateFromProps
+    const firstProps = cellRendererCalls[0];
+    const secondProps = cellRendererCalls[1];
 
-    expect(cellRendererCalls.length).toEqual(3);
+    expect(cellRendererCalls.length).toEqual(2);
     expect(firstProps.style).not.toBe(secondProps.style);
   });
 
