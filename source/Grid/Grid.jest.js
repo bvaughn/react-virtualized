@@ -1561,8 +1561,8 @@ describe('Grid', () => {
           rowHeight: 20,
         }),
       );
-      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(100);
-      expect(grid._getEstimatedRowSize(grid.props)).toEqual(20);
+      expect(Grid._getEstimatedColumnSize(grid.props)).toEqual(100);
+      expect(Grid._getEstimatedRowSize(grid.props)).toEqual(20);
     });
 
     it('should estimate row and column sizes if actual sizes are functions', () => {
@@ -1574,8 +1574,8 @@ describe('Grid', () => {
           rowHeight: () => 20,
         }),
       );
-      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(150);
-      expect(grid._getEstimatedRowSize(grid.props)).toEqual(15);
+      expect(Grid._getEstimatedColumnSize(grid.props)).toEqual(150);
+      expect(Grid._getEstimatedRowSize(grid.props)).toEqual(15);
     });
   });
 
