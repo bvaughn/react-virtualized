@@ -547,7 +547,7 @@ class Grid extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    debugger;
+    // debugger;
     const {
       getScrollbarSize,
       height,
@@ -667,8 +667,7 @@ class Grid extends React.PureComponent<Props, State> {
       if (
         !autoWidth &&
         scrollLeft >= 0 &&
-        ((scrollLeft !== prevState.scrollLeft &&
-          scrollLeft !== this._scrollingContainer.scrollLeft) ||
+        (scrollLeft !== this._scrollingContainer.scrollLeft ||
           columnOrRowCountJustIncreasedFromZero)
       ) {
         this._scrollingContainer.scrollLeft = scrollLeft;
@@ -676,8 +675,7 @@ class Grid extends React.PureComponent<Props, State> {
       if (
         !autoHeight &&
         scrollTop >= 0 &&
-        ((scrollTop !== prevState.scrollTop &&
-          scrollTop !== this._scrollingContainer.scrollTop) ||
+        (scrollTop !== this._scrollingContainer.scrollTop ||
           columnOrRowCountJustIncreasedFromZero)
       ) {
         this._scrollingContainer.scrollTop = scrollTop;
@@ -773,7 +771,7 @@ class Grid extends React.PureComponent<Props, State> {
     nextProps: Props,
     prevState: State,
   ): $Shape<State> {
-    debugger;
+    // debugger;
     const newState = {};
 
     if (
@@ -920,7 +918,7 @@ class Grid extends React.PureComponent<Props, State> {
   }
 
   render() {
-    debugger;
+    // debugger;
 
     const {
       autoContainerWidth,
@@ -1044,7 +1042,7 @@ class Grid extends React.PureComponent<Props, State> {
     props: Props = this.props,
     state: State = this.state,
   ) {
-    debugger;
+    // debugger;
 
     const {
       cellRenderer,
@@ -1360,6 +1358,7 @@ class Grid extends React.PureComponent<Props, State> {
     scrollLeft?: number,
     scrollTop?: number,
   }): $Shape<State> {
+    // debugger;
     const newState: Object = {
       scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED,
     };
@@ -1525,7 +1524,7 @@ class Grid extends React.PureComponent<Props, State> {
   }
 
   _resetStyleCache() {
-    debugger;
+    // debugger;
 
     const styleCache = this._styleCache;
 
