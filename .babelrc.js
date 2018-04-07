@@ -24,6 +24,14 @@ if (env === 'commonjs' || env === 'es') {
   }
 }
 
+if (env === 'rollup') {
+  module.exports = {
+    comments: false,
+    plugins: ['external-helpers'],
+    presets: [['env', { modules: false }], 'react', 'flow', 'stage-2'],
+  };
+}
+
 if (env === 'development') {
   module.exports = {
     presets: ['react', 'flow', 'stage-2'],
