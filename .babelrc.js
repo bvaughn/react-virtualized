@@ -13,7 +13,7 @@ if (env === 'commonjs' || env === 'es') {
     ],
     plugins: [
       'transform-runtime',
-      ['flow-react-proptypes', {deadCode: true}],
+      ['flow-react-proptypes', {deadCode: true, useESModules: true}],
       ['transform-react-remove-prop-types', {mode: 'wrap'}],
     ],
     presets: [['env', {modules: false}], 'react', 'flow', 'stage-2'],
