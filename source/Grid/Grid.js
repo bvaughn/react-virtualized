@@ -1610,5 +1610,5 @@ class Grid extends React.PureComponent<Props, State> {
   };
 }
 
-// polyfill(Grid);
+polyfill(Grid);
 export default Grid;
