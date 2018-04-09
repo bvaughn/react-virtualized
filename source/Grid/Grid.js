@@ -298,11 +298,13 @@ class Grid extends React.PureComponent<Props, State> {
   _columnStopIndex: number;
   _rowStartIndex: number;
   _rowStopIndex: number;
-
   _renderedColumnStartIndex = 0;
   _renderedColumnStopIndex = 0;
   _renderedRowStartIndex = 0;
   _renderedRowStopIndex = 0;
+
+  _initialScrollTop: number;
+  _initialScrollLeft: number;
 
   _disablePointerEventsTimeoutId: ?AnimationTimeoutId;
 
@@ -347,6 +349,16 @@ class Grid extends React.PureComponent<Props, State> {
 
       needToResetStyleCache: false,
     };
+
+    if (props.scrollToRow > 0) {
+      this._initialScrollTop = this._getCalculatedScrollTop(props, this.state);
+    }
+    if (props.scrollToColumn > 0) {
+      this._initialScrollLeft = this._getCalculatedScrollLeft(
+        props,
+        this.state,
+      );
+    }
   }
 
   /**
@@ -558,6 +570,10 @@ class Grid extends React.PureComponent<Props, State> {
     } = this.props;
 
     const {instanceProps} = this.state;
+
+    // Reset initial offsets to be ignored in browser
+    this._initialScrollTop = 0;
+    this._initialScrollLeft = 0;
 
     // If cell sizes have been invalidated (eg we are using CellMeasurer) then reset cached positions.
     // We must do this at the start of the method as we may calculate and update scroll position below.
@@ -1068,10 +1084,13 @@ class Grid extends React.PureComponent<Props, State> {
     const {
       scrollDirectionHorizontal,
       scrollDirectionVertical,
-      scrollLeft,
-      scrollTop,
       instanceProps,
     } = state;
+
+    const scrollTop =
+      this._initialScrollTop > 0 ? this._initialScrollTop : state.scrollTop;
+    const scrollLeft =
+      this._initialScrollLeft > 0 ? this._initialScrollLeft : state.scrollLeft;
 
     const isScrolling = this._isScrolling(props, state);
 
@@ -1437,7 +1456,9 @@ class Grid extends React.PureComponent<Props, State> {
           : Math.min(finalColumn, scrollToColumn);
       const totalRowsHeight = instanceProps.rowSizeAndPositionManager.getTotalSize();
       const scrollBarSize =
-        totalRowsHeight > height ? instanceProps.scrollbarSize : 0;
+        instanceProps.scrollbarSizeMeasured && totalRowsHeight > height
+          ? instanceProps.scrollbarSize
+          : 0;
 
       return instanceProps.columnSizeAndPositionManager.getUpdatedOffsetForIndex(
         {
@@ -1448,6 +1469,7 @@ class Grid extends React.PureComponent<Props, State> {
         },
       );
     }
+    return 0;
   }
 
   _getCalculatedScrollLeft(
@@ -1505,7 +1527,9 @@ class Grid extends React.PureComponent<Props, State> {
         scrollToRow < 0 ? finalRow : Math.min(finalRow, scrollToRow);
       const totalColumnsWidth = instanceProps.columnSizeAndPositionManager.getTotalSize();
       const scrollBarSize =
-        totalColumnsWidth > width ? instanceProps.scrollbarSize : 0;
+        instanceProps.scrollbarSizeMeasured && totalColumnsWidth > width
+          ? instanceProps.scrollbarSize
+          : 0;
 
       return instanceProps.rowSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: scrollToAlignment,
@@ -1514,6 +1538,7 @@ class Grid extends React.PureComponent<Props, State> {
         targetIndex,
       });
     }
+    return 0;
   }
 
   _getCalculatedScrollTop(
