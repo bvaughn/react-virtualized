@@ -37,6 +37,7 @@ This component expects explicit `width` and `height` parameters.
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number` |
 | rowRenderer | Function |  | Responsible for rendering a table row given an array of columns. [Learn more](#rowrenderer) |
 | rowStyle | Object or Function |  | Optional custom inline style to attach to table rows. This value may be either a style object or a function with the signature `({ index: number }): Object`. Note that for the header row an index of `-1` is provided. |
+| rowKey | String or Function |  | Either the `dataKey` to use as a unique identifier or a function with the signature `({ rowData: any }): String. When no `rowKey` is provided, a row identifier is generated from its index. |
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
 | scrollTop | Number |  | Vertical offset |

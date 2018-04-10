@@ -425,7 +425,15 @@ export default class Table extends React.PureComponent {
     );
   }
 
-  _createColumn({column, columnIndex, isScrolling, parent, rowData, rowIndex}) {
+  _createColumn({
+    column,
+    columnIndex,
+    customKey,
+    isScrolling,
+    parent,
+    rowData,
+    rowIndex,
+  }) {
     const {
       cellDataGetter,
       cellRenderer,
@@ -451,6 +459,10 @@ export default class Table extends React.PureComponent {
 
     const title = typeof renderedCell === 'string' ? renderedCell : null;
 
+    const key = customKey
+      ? customKey + '-' + dataKey
+      : 'Row' + rowIndex + '-' + 'Col' + columnIndex;
+
     // Avoid using object-spread syntax with multiple objects here,
     // Since it results in an extra method call to 'babel-runtime/helpers/extends'
     // See PR https://github.com/bvaughn/react-virtualized/pull/942
@@ -458,7 +470,7 @@ export default class Table extends React.PureComponent {
       <div
         aria-describedby={id}
         className={cn('ReactVirtualized__Table__rowColumn', className)}
-        key={'Row' + rowIndex + '-' + 'Col' + columnIndex}
+        key={key}
         role="gridcell"
         style={style}
         title={title}>
@@ -584,6 +596,7 @@ export default class Table extends React.PureComponent {
       onRowMouseOver,
       onRowMouseOut,
       rowClassName,
+      rowKey,
       rowGetter,
       rowRenderer,
       rowStyle,
@@ -597,9 +610,18 @@ export default class Table extends React.PureComponent {
       typeof rowStyle === 'function' ? rowStyle({index}) : rowStyle;
     const rowData = rowGetter({index});
 
+    const customKey =
+      rowKey &&
+      (typeof rowKey === 'function'
+        ? rowKey(rowData)
+        : typeof rowData.get === 'function'
+          ? String(rowData.get(rowKey))
+          : String(rowData[rowKey]));
+
     const columns = React.Children.toArray(children).map(
       (column, columnIndex) =>
         this._createColumn({
+          customKey,
           column,
           columnIndex,
           isScrolling,
@@ -624,7 +646,7 @@ export default class Table extends React.PureComponent {
       columns,
       index,
       isScrolling,
-      key,
+      key: customKey || key,
       onRowClick,
       onRowDoubleClick,
       onRowRightClick,
