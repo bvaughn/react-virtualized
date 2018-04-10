@@ -381,6 +381,17 @@ describe('Table', () => {
       );
       expect(nameColumn.getAttribute('title')).toEqual(null);
     });
+
+    it('should use rowKey to generate keys when its a string', () => {
+      const {Grid} = render(
+        getMarkup({
+          rowKey: 'email',
+        }),
+      );
+      Grid._childrenToDisplay.forEach((row, index) => {
+        expect(row.key).toEqual(array[index].email);
+      });
+    });
   });
 
   describe('sorting', () => {
