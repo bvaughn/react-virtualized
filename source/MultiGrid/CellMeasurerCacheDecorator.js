@@ -43,7 +43,7 @@ export default class CellMeasurerCacheDecorator {
   }
 
   columnWidth = ({index}: IndexParam) => {
-    this._cellMeasurerCache.columnWidth({
+    return this._cellMeasurerCache.columnWidth({
       index: index + this._columnIndexOffset,
     });
   };
@@ -86,7 +86,7 @@ export default class CellMeasurerCacheDecorator {
   }
 
   rowHeight = ({index}: IndexParam) => {
-    this._cellMeasurerCache.rowHeight({
+    return this._cellMeasurerCache.rowHeight({
       index: index + this._rowIndexOffset,
     });
   };
