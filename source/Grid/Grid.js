@@ -31,7 +31,7 @@ import {
   requestAnimationTimeout,
   cancelAnimationTimeout,
 } from '../utils/requestAnimationTimeout';
-
+import {getMaxElementSize} from './utils/maxElementSize.js'; 
 /**
  * Specifies the number of milliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
@@ -212,6 +212,13 @@ type Props = {
 
   /** Width of Grid; this property determines the number of visible (vs virtualized) columns.  */
   width: number,
+
+  /* Vertical Max Scroll Size */
+  verticalMaxScrollSize: number,
+
+  /* Vertical Max Scroll Size */
+  horizontalMaxScrollSize: number,
+
 };
 
 type State = {
@@ -254,6 +261,8 @@ export default class Grid extends React.PureComponent<Props, State> {
     scrollToRow: -1,
     style: {},
     tabIndex: 0,
+    horizontalMaxScrollSize: getMaxElementSize(),
+    verticalMaxScrollSize: getMaxElementSize(),
   };
 
   state = {
@@ -316,11 +325,13 @@ export default class Grid extends React.PureComponent<Props, State> {
       cellCount: props.columnCount,
       cellSizeGetter: params => this._columnWidthGetter(params),
       estimatedCellSize: this._getEstimatedColumnSize(props),
+      maxScrollSize: props.horizontalMaxScrollSize,
     });
     this._rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.rowCount,
       cellSizeGetter: params => this._rowHeightGetter(params),
       estimatedCellSize: this._getEstimatedRowSize(props),
+      maxScrollSize: props.verticalMaxScrollSize,
     });
   }
 
