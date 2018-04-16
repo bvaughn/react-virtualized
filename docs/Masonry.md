@@ -41,6 +41,7 @@ Phase one is repeated if the user scrolls beyond the current layout's bounds. If
 | style | mixed |  | Optional custom inline style to attach to root `Masonry` element. |
 | tabIndex | number |  | Optional override of tab index default; defaults to 0. |
 | width | number | ✓ | Width of the component; this value determines the number of visible items. |
+| rowDirection | string |  | row direction of items, can be ```ltr``` or ```rtl``` defaults to ```ltr``` |
 
 ## Public Methods
 
