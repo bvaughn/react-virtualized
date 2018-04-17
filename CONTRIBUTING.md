@@ -104,7 +104,7 @@ Follow this process if you'd like your work considered for inclusion in the proj
    git checkout -b <topic-branch-name>
    ```
 
-5. Commit your changes in logical chunks.
+5. Make sure to run ```yarn prettier``` for auto code styling then commit your changes in logical chunks.
    Please adhere to these [git commit message guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
    or your code is unlikely be merged into the main project.
    Use Git's [interactive rebase](https://help.github.com/articles/interactive-rebase)
