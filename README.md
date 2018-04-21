@@ -218,6 +218,7 @@ Here are some online demos of each component:
 * [WindowScroller](https://bvaughn.github.io/react-virtualized/#/components/WindowScroller)
 
 And here are some "recipe" type demos:
+* [Table with resizable (drag and drop) columns](https://codesandbox.io/s/j30k46l7xw)
 * [Collapsable tree view](https://rawgit.com/bvaughn/react-virtualized/master/playground/tree.html)
 * [Full-page grid (spreadsheet)](https://rawgit.com/bvaughn/react-virtualized/master/playground/grid.html)
 * [Dynamic cell measuring](https://rawgit.com/bvaughn/react-virtualized/master/playground/chat.html)
