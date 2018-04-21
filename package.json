@@ -38,7 +38,14 @@
     "test:jest": "jest --no-watchman --runInBand",
     "test:ci": "jest --no-watchman --maxWorkers 2 --coverage && codecov",
     "watch": "watch 'clear && npm run test -s' source",
-    "watch:jest": "jest --no-watchman --watch"
+    "watch:jest": "jest --no-watchman --watch",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "babel": {
     "presets": [
@@ -137,6 +144,7 @@
     "immutable": "^3.7.5",
     "jest": "^22.0.4",
     "jest-environment-puppeteer": "^1.1.1",
+    "lint-staged": "^7.0.4",
     "postcss": "^6.0.14",
     "postcss-cli": "^4.1.1",
     "postcss-loader": "^2.0.9",
