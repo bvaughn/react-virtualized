@@ -140,6 +140,7 @@
     "postcss": "^6.0.14",
     "postcss-cli": "^4.1.1",
     "postcss-loader": "^2.0.9",
+    "pre-commit": "^1.2.2",
     "prettier": "^1.9.2",
     "puppeteer": "^1.1.1",
     "react": "^16.2.0",
@@ -175,5 +176,9 @@
     "transform": [
       "loose-envify"
     ]
-  }
+  },
+  "pre-commit": [
+    "prettier",
+    "lint"
+  ]
 }
