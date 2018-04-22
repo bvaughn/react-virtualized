@@ -175,7 +175,7 @@ describe('InfiniteLoader', () => {
     it('should not interfere with :threshold', () => {
       render(
         getMarkup({
-          minimumBatchSize: 10,
+          minimumBatchSize: 15,
           threshold: 10,
         }),
       );
@@ -263,7 +263,7 @@ describe('InfiniteLoader', () => {
     expect(loadMoreRowsCalls).toEqual([{startIndex: 0, stopIndex: 19}]);
     loadMoreRowsCalls.splice(0);
     innerOnRowsRendered({startIndex: 0, stopIndex: 20});
-    expect(loadMoreRowsCalls).toEqual([{startIndex: 0, stopIndex: 20}]);
+    expect(loadMoreRowsCalls).toEqual([{startIndex: 0, stopIndex: 39}]);
   });
 
   it('resetLoadMoreRowsCache should reset memoized state', () => {
