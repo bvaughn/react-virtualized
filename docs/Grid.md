@@ -132,8 +132,8 @@ function cellRangeRenderer ({
   horizontalOffsetAdjustment,   // Horizontal pixel offset (required for scaling)
   isScrolling,                  // The Grid is currently being scrolled
   rowSizeAndPositionManager,    // @see CellSizeAndPositionManager,
-  rowStartIndex,                // Index of first column (inclusive) to render
-  rowStopIndex,                 // Index of last column (inclusive) to render
+  rowStartIndex,                // Index of first row (inclusive) to render
+  rowStopIndex,                 // Index of last row (inclusive) to render
   scrollLeft,                   // Current horizontal scroll offset of Grid
   scrollTop,                    // Current vertical scroll offset of Grid
   styleCache,                   // Temporary style (size & position) cache used while scrolling
