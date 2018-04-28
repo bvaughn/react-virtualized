@@ -1586,18 +1586,14 @@ class Grid extends React.PureComponent<Props, State> {
     props: Props = this.props,
     state: State = this.state,
   ) {
-    this.setState(() => {
-      const stateUpdate = Grid._getScrollTopForScrollToRowStateUpdate(
-        props,
-        state,
-      );
-
-      if (stateUpdate) {
-        stateUpdate.needToResetStyleCache = false;
-        return stateUpdate;
-      }
-      return null;
-    });
+    const stateUpdate = Grid._getScrollTopForScrollToRowStateUpdate(
+      props,
+      state,
+    );
+    if (stateUpdate) {
+      stateUpdate.needToResetStyleCache = false;
+    }
+    this.setState(stateUpdate);
   }
 
   _onScroll = (event: Event) => {
