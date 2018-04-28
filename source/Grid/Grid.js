@@ -1283,7 +1283,6 @@ class Grid extends React.PureComponent<Props, State> {
 
   _invokeOnGridRenderedHelper = () => {
     const {onSectionRendered} = this.props;
-    const {instanceProps} = this.state;
 
     this._onGridRenderedMemoizer({
       callback: onSectionRendered,
