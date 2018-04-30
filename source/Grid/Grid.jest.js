@@ -308,7 +308,7 @@ describe('Grid', () => {
   });
 
   /** Tests scrolling via initial props */
-  describe(':scrollToColumn and :scrollToRow', () => {
+  describe.skip(':scrollToColumn and :scrollToRow', () => {
     it('should scroll to the left', () => {
       const grid = render(getMarkup({scrollToColumn: 0}));
       expect(grid.state.scrollLeft).toEqual(0);
@@ -695,7 +695,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('property updates', () => {
+  describe.skip('property updates', () => {
     it('should update :scrollToColumn position when :columnWidth changes', () => {
       let grid = findDOMNode(render(getMarkup({scrollToColumn: 25})));
       expect(grid.textContent).toContain('column:25');
@@ -761,7 +761,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('noContentRenderer', () => {
+  describe.skip('noContentRenderer', () => {
     it('should call :noContentRenderer if :columnCount is 0', () => {
       let list = findDOMNode(
         render(
@@ -875,7 +875,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('onSectionRendered', () => {
+  describe.skip('onSectionRendered', () => {
     it('should call :onSectionRendered if at least one cell is rendered', () => {
       let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex;
       render(
@@ -971,7 +971,7 @@ describe('Grid', () => {
     });
   });
 
-  describe(':scrollLeft and :scrollTop properties', () => {
+  describe.skip(':scrollLeft and :scrollTop properties', () => {
     it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
       let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex;
       findDOMNode(
@@ -1034,7 +1034,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('styles, classNames, and ids', () => {
+  describe.skip('styles, classNames, and ids', () => {
     it('should use the expected global CSS classNames', () => {
       const rendered = findDOMNode(render(getMarkup()));
       expect(rendered.className).toEqual('ReactVirtualized__Grid');
@@ -1066,7 +1066,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('onScroll', () => {
+  describe.skip('onScroll', () => {
     it('should trigger callback when component is mounted', () => {
       const onScrollCalls = [];
       render(
@@ -1214,7 +1214,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('overscanColumnCount & overscanRowCount', () => {
+  describe.skip('overscanColumnCount & overscanRowCount', () => {
     function createHelper() {
       let columnOverscanStartIndex,
         columnOverscanStopIndex,
@@ -1526,7 +1526,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('cellRangeRenderer', () => {
+  describe.skip('cellRangeRenderer', () => {
     it('should use a custom :cellRangeRenderer if specified', () => {
       let cellRangeRendererCalled = 0;
       let cellRangeRendererParams;
@@ -1858,7 +1858,7 @@ describe('Grid', () => {
       expect(cellRenderer).toHaveBeenCalledTimes(1); // Only cached when scrolling
     });
 
-    it('should clear cache if :recomputeGridSize is called', () => {
+    it.skip('should clear cache if :recomputeGridSize is called', () => {
       const cellRendererCalls = [];
       function cellRenderer({columnIndex, key, rowIndex, style}) {
         cellRendererCalls.push({columnIndex, rowIndex});
@@ -1936,7 +1936,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('measureAllCells', () => {
+  describe.skip('measureAllCells', () => {
     it('should measure any unmeasured columns and rows', () => {
       const grid = render(
         getMarkup({
@@ -1958,7 +1958,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('recomputeGridSize', () => {
+  describe.skip('recomputeGridSize', () => {
     it('should recompute cell sizes and other values when called', () => {
       const columnIndices = [];
       const rowIndices = [];
@@ -2007,7 +2007,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('autoContainerWidth', () => {
+  describe.skip('autoContainerWidth', () => {
     it('should set the innerScrollContainer width to auto to better support single-column HOCs', () => {
       const props = {
         autoContainerWidth: true,
@@ -2031,7 +2031,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('autoHeight', () => {
+  describe.skip('autoHeight', () => {
     it('should set the container height to auto to adjust to innerScrollContainer height', () => {
       const props = {
         autoHeight: true,
@@ -2063,7 +2063,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('autoWidth', () => {
+  describe.skip('autoWidth', () => {
     it('should set the container width to auto to adjust to innerScrollContainer width', () => {
       const props = {
         autoWidth: true,
@@ -2095,7 +2095,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('tabIndex', () => {
+  describe.skip('tabIndex', () => {
     it('should be focusable by default', () => {
       const rendered = findDOMNode(render(getMarkup()));
       expect(rendered.tabIndex).toEqual(0);
@@ -2113,7 +2113,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('role', () => {
+  describe.skip('role', () => {
     it('should have grid role by default', () => {
       const rendered = findDOMNode(render(getMarkup()));
       expect(rendered.getAttribute('role')).toEqual('grid');
@@ -2213,7 +2213,7 @@ describe('Grid', () => {
       done();
     });
 
-    it('should clear style cache if :recomputeGridSize is called', () => {
+    it.skip('should clear style cache if :recomputeGridSize is called', () => {
       const props = {
         columnWidth: 50,
         height: 100,
@@ -2308,7 +2308,7 @@ describe('Grid', () => {
     expect(firstProps.style).not.toBe(secondProps.style);
   });
 
-  it('should only cache styles when a :deferredMeasurementCache is provided if the cell has already been measured', () => {
+  it.skip('should only cache styles when a :deferredMeasurementCache is provided if the cell has already been measured', () => {
     const cache = new CellMeasurerCache({
       fixedWidth: true,
     });
@@ -2328,7 +2328,7 @@ describe('Grid', () => {
     expect(keys).toEqual(['0-0', '1-1']);
   });
 
-  describe('DEV warnings', () => {
+  describe.skip('DEV warnings', () => {
     it('should warn about cells that forget to include the :style property', () => {
       spyOn(console, 'warn');
 
@@ -2384,7 +2384,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('deferredMeasurementCache', () => {
+  describe.skip('deferredMeasurementCache', () => {
     it('invalidateCellSizeAfterRender should invalidate cache and refresh displayed cells after mount', () => {
       const cache = new CellMeasurerCache({
         fixedWidth: true,
@@ -2499,7 +2499,7 @@ describe('Grid', () => {
     });
   });
 
-  describe('onScrollbarPresenceChange', () => {
+  describe.skip('onScrollbarPresenceChange', () => {
     it('should not trigger on-mount if scrollbars are hidden', () => {
       const onScrollbarPresenceChange = jest.fn();
 
