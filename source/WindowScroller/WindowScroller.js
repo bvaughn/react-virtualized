@@ -7,6 +7,7 @@ import {
   unregisterScrollListener,
 } from './utils/onScroll';
 import {
+  isWindow,
   getDimensions,
   getPositionOffset,
   getScrollOffset,
@@ -96,12 +97,15 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     scrollTop: 0,
   };
 
-  updatePosition(scrollElement: ?Element = this.props.scrollElement) {
+  updatePosition(scrollElement: ?any = this.props.scrollElement) {
     const {onResize} = this.props;
     const {height, width} = this.state;
 
     const thisNode = this._child || ReactDOM.findDOMNode(this);
-    if (thisNode instanceof Element && scrollElement) {
+    if (
+      scrollElement &&
+      (thisNode instanceof Element || thisNode instanceof scrollElement.Element)
+    ) {
       const offset = getPositionOffset(thisNode, scrollElement);
       this._positionFromTop = offset.top;
       this._positionFromLeft = offset.left;
@@ -205,16 +209,16 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   };
 
   _registerResizeListener = element => {
-    if (element === window) {
-      window.addEventListener('resize', this._onResize, false);
+    if (isWindow(element)) {
+      element.addEventListener('resize', this._onResize, false);
     } else {
       this._detectElementResize.addResizeListener(element, this._onResize);
     }
   };
 
   _unregisterResizeListener = element => {
-    if (element === window) {
-      window.removeEventListener('resize', this._onResize, false);
+    if (isWindow(element)) {
+      element.removeEventListener('resize', this._onResize, false);
     } else if (element) {
       this._detectElementResize.removeResizeListener(element, this._onResize);
     }

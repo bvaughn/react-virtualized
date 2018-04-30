@@ -429,6 +429,31 @@ describe('WindowScroller', () => {
       expect(window.scrollY).toEqual(200 + windowScroller._positionFromTop);
     });
 
+    it('should scroll the scrollElement (when it is an iframe) the desired amount', (done) => {
+      let windowScroller;
+      const renderFn = jest.fn();
+      const iframe = document.createElement('iframe');
+      iframe.addEventListener('load', handleLoad, true);
+      document.body.appendChild(iframe);
+      function handleLoad(){
+        const {contentWindow} = iframe;
+        render(
+          getMarkup({
+            ref: ref => {
+              windowScroller = ref;
+            },
+            renderFn,
+            scrollElement: contentWindow,
+          }),
+        );
+
+        renderFn.mock.calls[0][0].onChildScroll({scrollTop: 200});
+        console.log('here', contentWindow.scrollY)
+        expect(contentWindow.scrollY).toEqual(200 + windowScroller._positionFromTop);
+        done()
+      }
+    });
+
     it('should not scroll the scrollElement if trying to scroll to where we already are', () => {
       const renderFn = jest.fn();
 
