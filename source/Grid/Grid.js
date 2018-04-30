@@ -832,11 +832,13 @@ class Grid extends React.PureComponent<Props, State> {
     instanceProps.columnSizeAndPositionManager.configure({
       cellCount: nextProps.columnCount,
       estimatedCellSize: Grid._getEstimatedColumnSize(nextProps),
+      cellSizeGetter: Grid._wrapSizeGetter(nextProps.columnWidth),
     });
 
     instanceProps.rowSizeAndPositionManager.configure({
       cellCount: nextProps.rowCount,
       estimatedCellSize: Grid._getEstimatedRowSize(nextProps),
+      cellSizeGetter: Grid._wrapSizeGetter(nextProps.rowHeight),
     });
 
     if (
@@ -857,15 +859,6 @@ class Grid extends React.PureComponent<Props, State> {
         isScrolling: false,
       });
     }
-
-    // Update getters. this is a little hacky
-    // TODO: move the configure?
-    instanceProps.columnSizeAndPositionManager._cellSizeAndPositionManager._cellSizeGetter = Grid._wrapSizeGetter(
-      nextProps.columnWidth,
-    );
-    instanceProps.rowSizeAndPositionManager._cellSizeAndPositionManager._cellSizeGetter = Grid._wrapSizeGetter(
-      nextProps.rowHeight,
-    );
 
     let maybeStateA;
     let maybeStateB;
