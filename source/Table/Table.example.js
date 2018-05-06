@@ -196,6 +196,7 @@ export default class TableExample extends React.PureComponent {
                 rowHeight={useDynamicRowHeight ? this._getRowHeight : rowHeight}
                 rowGetter={rowGetter}
                 rowCount={rowCount}
+                rowKey="index"
                 scrollToIndex={scrollToIndex}
                 sort={this._sort}
                 sortBy={sortBy}
