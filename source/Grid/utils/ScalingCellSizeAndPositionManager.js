@@ -42,7 +42,11 @@ export default class ScalingCellSizeAndPositionManager {
     );
   }
 
-  configure(params: {cellCount: number, estimatedCellSize: number}) {
+  configure(params: {
+    cellCount: number,
+    estimatedCellSize: number,
+    cellSizeGetter: CellSizeGetter,
+  }) {
     this._cellSizeAndPositionManager.configure(params);
   }
 

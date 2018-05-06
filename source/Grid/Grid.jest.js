@@ -1561,8 +1561,8 @@ describe('Grid', () => {
           rowHeight: 20,
         }),
       );
-      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(100);
-      expect(grid._getEstimatedRowSize(grid.props)).toEqual(20);
+      expect(Grid._getEstimatedColumnSize(grid.props)).toEqual(100);
+      expect(Grid._getEstimatedRowSize(grid.props)).toEqual(20);
     });
 
     it('should estimate row and column sizes if actual sizes are functions', () => {
@@ -1574,8 +1574,8 @@ describe('Grid', () => {
           rowHeight: () => 20,
         }),
       );
-      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(150);
-      expect(grid._getEstimatedRowSize(grid.props)).toEqual(15);
+      expect(Grid._getEstimatedColumnSize(grid.props)).toEqual(150);
+      expect(Grid._getEstimatedRowSize(grid.props)).toEqual(15);
     });
   });
 
@@ -1950,11 +1950,19 @@ describe('Grid', () => {
           width: 0,
         }),
       );
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1500);
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(1500);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(150);
       grid.measureAllCells();
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1000);
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(1000);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(200);
     });
   });
 
@@ -2059,7 +2067,9 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.height,
       ).toEqual('2000px'); // 100 rows * 20px rowHeight
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(2000);
     });
   });
 
@@ -2091,7 +2101,9 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.width,
       ).toEqual('2500px'); // 50 columns * 50px columnWidth
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(2500);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(2500);
     });
   });
 
@@ -2301,10 +2313,11 @@ describe('Grid', () => {
     });
 
     // cellRendererCalls[0] is the element at rowIndex 0
-    const firstProps = cellRendererCalls[1];
-    const secondProps = cellRendererCalls[2];
+    // only two calls. Since the scrollTop is updated in getDerivedStateFromProps
+    const firstProps = cellRendererCalls[0];
+    const secondProps = cellRendererCalls[1];
 
-    expect(cellRendererCalls.length).toEqual(3);
+    expect(cellRendererCalls.length).toEqual(2);
     expect(firstProps.style).not.toBe(secondProps.style);
   });
 

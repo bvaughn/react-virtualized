@@ -426,13 +426,13 @@ describe('List', () => {
           width: 0,
         }),
       );
-      expect(rendered.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(
-        150,
-      );
+      expect(
+        rendered.Grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(150);
       rendered.measureAllRows();
-      expect(rendered.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(
-        200,
-      );
+      expect(
+        rendered.Grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(200);
     });
   });
 
