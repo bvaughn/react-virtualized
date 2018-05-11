@@ -387,6 +387,20 @@ class Grid extends React.PureComponent<Props, State> {
   }
 
   /**
+   * Gets estimated total rows' height.
+   */
+  getTotalRowsHeight() {
+    return this.state.instanceProps.rowSizeAndPositionManager.getTotalSize();
+  }
+
+  /**
+   * Gets estimated total columns' width.
+   */
+  getTotalColumnsWidth() {
+    return this.state.instanceProps.columnSizeAndPositionManager.getTotalSize();
+  }
+
+  /**
    * This method handles a scroll event originating from an external scroll control.
    * It's an advanced method and should probably not be used unless you're implementing a custom scroll-bar solution.
    */

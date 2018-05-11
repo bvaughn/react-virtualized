@@ -613,6 +613,22 @@ describe('Grid', () => {
       expect(scrollTop).toEqual(900);
     });
 
+    it('should support getTotalRowsHeight() public method', () => {
+      const grid = render(getMarkup());
+      grid.recomputeGridSize();
+      const totalHeight = grid.getTotalRowsHeight();
+      // 100 rows * 20 item height = 2,000 total item height
+      expect(totalHeight).toEqual(2000);
+    });
+
+    it('should support getTotalColumnsWidth() public method', () => {
+      const grid = render(getMarkup());
+      grid.recomputeGridSize();
+      const totalWidth = grid.getTotalColumnsWidth();
+      // 50 columns * 50 item width = 2,500 total item width
+      expect(totalWidth).toEqual(2500);
+    });
+
     // See issue #565
     it('should update scroll position to account for changed cell sizes within a function prop wrapper', () => {
       let rowHeight = 20;
