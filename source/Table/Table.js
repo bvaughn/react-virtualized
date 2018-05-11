@@ -386,7 +386,10 @@ export default class Table extends React.PureComponent {
         className={cn('ReactVirtualized__Table', className)}
         id={id}
         role="grid"
-        style={style}>
+        style={{
+          width,
+          ...style,
+        }}>
         {!disableHeader &&
           headerRowRenderer({
             className: cn('ReactVirtualized__Table__headerRow', rowClass),
