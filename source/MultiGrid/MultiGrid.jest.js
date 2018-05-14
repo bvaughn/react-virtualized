@@ -196,13 +196,23 @@ describe('MultiGrid', () => {
       expect(wrappers.length).toEqual(1);
       const [bottomLeftWrapper] = wrappers;
 
-      expect(topRightWrapper.style.getPropertyValue('overflow-x')).toEqual('hidden');
-      expect(topRightWrapper.style.getPropertyValue('overflow-y')).toEqual('hidden');
-      expect(bottomLeftWrapper.style.getPropertyValue('overflow-x')).toEqual('hidden');
-      expect(bottomLeftWrapper.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(topRightWrapper.style.getPropertyValue('overflow-x')).toEqual(
+        'hidden',
+      );
+      expect(topRightWrapper.style.getPropertyValue('overflow-y')).toEqual(
+        'hidden',
+      );
+      expect(bottomLeftWrapper.style.getPropertyValue('overflow-x')).toEqual(
+        'hidden',
+      );
+      expect(bottomLeftWrapper.style.getPropertyValue('overflow-y')).toEqual(
+        'hidden',
+      );
 
       expect(topRightWrapper.style.getPropertyValue('height')).toEqual('20px');
-      expect(bottomLeftWrapper.style.getPropertyValue('height')).toEqual('280px');
+      expect(bottomLeftWrapper.style.getPropertyValue('height')).toEqual(
+        '280px',
+      );
       expect(topRightWrapper.style.getPropertyValue('width')).toEqual('350px');
       expect(bottomLeftWrapper.style.getPropertyValue('width')).toEqual('50px');
 
