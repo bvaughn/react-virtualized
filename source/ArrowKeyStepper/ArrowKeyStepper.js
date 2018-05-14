@@ -4,6 +4,7 @@ import type {RenderedSection} from '../Grid';
 import type {ScrollIndices} from './types';
 
 import * as React from 'react';
+import polyfill from 'react-lifecycles-compat';
 
 /**
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
@@ -28,14 +29,18 @@ type Props = {
   scrollToRow: number,
 };
 
-export default class ArrowKeyStepper extends React.PureComponent<
-  Props,
-  ScrollIndices,
-> {
+type State = ScrollIndices;
+
+class ArrowKeyStepper extends React.PureComponent<Props, State> {
   static defaultProps = {
     disabled: false,
     isControlled: false,
     mode: 'edges',
+    scrollToColumn: 0,
+    scrollToRow: 0,
+  };
+
+  state = {
     scrollToColumn: 0,
     scrollToRow: 0,
   };
@@ -45,40 +50,25 @@ export default class ArrowKeyStepper extends React.PureComponent<
   _rowStartIndex = 0;
   _rowStopIndex = 0;
 
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      scrollToColumn: props.scrollToColumn,
-      scrollToRow: props.scrollToRow,
-    };
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (this.props.isControlled) {
-      return;
+  static getDerivedStateFromProps(
+    nextProps: Props,
+    prevState: State,
+  ): $Shape<State> {
+    if (nextProps.isControlled) {
+      return null;
     }
-
-    const {scrollToColumn, scrollToRow} = nextProps;
-
-    const {
-      scrollToColumn: prevScrollToColumn,
-      scrollToRow: prevScrollToRow,
-    } = this.props;
 
     if (
-      prevScrollToColumn !== scrollToColumn &&
-      prevScrollToRow !== scrollToRow
+      nextProps.scrollToColumn !== prevState.scrollToColumn ||
+      nextProps.scrollToRow !== prevState.scrollToRow
     ) {
-      this.setState({
-        scrollToColumn,
-        scrollToRow,
-      });
-    } else if (prevScrollToColumn !== scrollToColumn) {
-      this.setState({scrollToColumn});
-    } else if (prevScrollToRow !== scrollToRow) {
-      this.setState({scrollToRow});
+      return {
+        scrollToColumn: nextProps.scrollToColumn,
+        scrollToRow: nextProps.scrollToRow,
+      };
     }
+
+    return null;
   }
 
   setScrollIndexes({scrollToColumn, scrollToRow}: ScrollIndices) {
@@ -184,3 +174,7 @@ export default class ArrowKeyStepper extends React.PureComponent<
     }
   }
 }
+
+polyfill(ArrowKeyStepper);
+
+export default ArrowKeyStepper;

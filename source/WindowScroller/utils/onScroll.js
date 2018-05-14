@@ -4,7 +4,7 @@ import {
   requestAnimationTimeout,
   cancelAnimationTimeout,
 } from '../../utils/requestAnimationTimeout';
-import WindowScroller from '../WindowScroller.js';
+import type WindowScroller from '../WindowScroller.js';
 
 let mountedInstances = [];
 let originalBodyPointerEvents = null;
