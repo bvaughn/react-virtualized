@@ -11,6 +11,7 @@ type CellSizeAndPositionManagerParams = {
 type ConfigureParams = {
   cellCount: number,
   estimatedCellSize: number,
+  cellSizeGetter: CellSizeGetter,
 };
 
 type GetUpdatedOffsetForIndex = {
@@ -63,9 +64,10 @@ export default class CellSizeAndPositionManager {
     return false;
   }
 
-  configure({cellCount, estimatedCellSize}: ConfigureParams) {
+  configure({cellCount, estimatedCellSize, cellSizeGetter}: ConfigureParams) {
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
+    this._cellSizeGetter = cellSizeGetter;
   }
 
   getCellCount(): number {

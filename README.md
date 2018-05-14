@@ -180,7 +180,7 @@ For example:
 ###### Public methods
 
 `Grid` and `Collection` components can be forcefully re-rendered using [`forceUpdate`](https://facebook.github.io/react/docs/component-api.html#forceupdate).
-For `Table` and `List`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/Table.md#forceupdategrid) to ensure that the inner `Grid` is also updated.
+For `Table` and `List`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/Table.md#forceupdategrid) to ensure that the inner `Grid` is also updated. For `MultiGrid`, you'll need to call [`forceUpdateGrids`](https://github.com/bvaughn/react-virtualized/blob/master/docs/MultiGrid.md#forceupdategrids) to ensure that the inner `Grid`s are updated.
 
 Documentation
 ---------------
@@ -218,6 +218,7 @@ Here are some online demos of each component:
 * [WindowScroller](https://bvaughn.github.io/react-virtualized/#/components/WindowScroller)
 
 And here are some "recipe" type demos:
+* [Table with resizable (drag and drop) columns](https://codesandbox.io/s/j30k46l7xw)
 * [Collapsable tree view](https://rawgit.com/bvaughn/react-virtualized/master/playground/tree.html)
 * [Full-page grid (spreadsheet)](https://rawgit.com/bvaughn/react-virtualized/master/playground/grid.html)
 * [Dynamic cell measuring](https://rawgit.com/bvaughn/react-virtualized/master/playground/chat.html)

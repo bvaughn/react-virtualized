@@ -11,13 +11,13 @@
   "sideEffects": false,
   "license": "MIT",
   "scripts": {
-    "build:types": "flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/WindowScroller dist/es/WindowScroller && flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/AutoSizer dist/es/AutoSizer ",
+    "build:types": "flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/WindowScroller dist/es/WindowScroller && flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/AutoSizer dist/es/AutoSizer",
     "build": "npm run build:commonjs && npm run build:css && npm run build:es && npm run build:demo && npm run build:umd",
     "build:commonjs": "npm run clean:commonjs && cross-env NODE_ENV=commonjs babel source --out-dir dist/commonjs",
     "build:css": "postcss source/styles.css -o styles.css --use autoprefixer",
     "build:demo": "npm run clean:demo && cross-env NODE_ENV=production webpack --config webpack.config.demo.js -p --bail",
     "build:es": "npm run clean:es && npm run build:types && cross-env NODE_ENV=es babel source --out-dir dist/es",
-    "build:umd": "npm run clean:umd && cross-env NODE_ENV=production webpack --config webpack.config.umd.js --bail",
+    "build:umd": "npm run clean:umd && cross-env NODE_ENV=rollup rollup -c",
     "check-all": "yarn prettier && yarn lint && yarn flow",
     "ci-check": "yarn prettier:diff && yarn lint && yarn flow",
     "clean": "npm run clean:commonjs && npm run clean:demo && npm run clean:es && npm run clean:umd",
@@ -38,7 +38,14 @@
     "test:jest": "jest --no-watchman --runInBand",
     "test:ci": "jest --no-watchman --maxWorkers 2 --coverage && codecov",
     "watch": "watch 'clear && npm run test -s' source",
-    "watch:jest": "jest --no-watchman --watch"
+    "watch:jest": "jest --no-watchman --watch",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "babel": {
     "presets": [
@@ -103,7 +110,8 @@
     "babel-eslint": "^8.1.2",
     "babel-jest": "^22.0.4",
     "babel-loader": "7.1.2",
-    "babel-plugin-flow-react-proptypes": "^13.0.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-flow-react-proptypes": "^21.0.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.12",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -136,6 +144,7 @@
     "immutable": "^3.7.5",
     "jest": "^22.0.4",
     "jest-environment-puppeteer": "^1.1.1",
+    "lint-staged": "^7.0.4",
     "postcss": "^6.0.14",
     "postcss-cli": "^4.1.1",
     "postcss-loader": "^2.0.9",
@@ -147,6 +156,12 @@
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "rimraf": "^2.4.3",
+    "rollup": "^0.57.1",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-uglify": "^3.0.0",
     "style-loader": "^0.19.1",
     "watch": "^1.0.2",
     "webpack": "^3.10.0",

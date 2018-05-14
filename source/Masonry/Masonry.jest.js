@@ -279,6 +279,25 @@ describe('Masonry', () => {
       );
       assertVisibleCells(rendered, '27,29,30,31,32,33,34,35,36');
     });
+
+    it('should set right instead of left in a cell styles for rtl row direction', () => {
+      // Share instances between renders to avoid resetting state in ways we don't intend
+      const cellMeasurerCache = createCellMeasurerCache();
+      const cellPositioner = createCellPositioner(cellMeasurerCache);
+
+      let rendered = findDOMNode(
+        render(
+          getMarkup({
+            cellMeasurerCache,
+            cellPositioner,
+            rowDirection: 'rtl',
+          }),
+        ),
+      );
+      Array.from(rendered.querySelectorAll('.cell')).map(node => {
+        expect(node.style.right).toMatch(/px/);
+      });
+    });
   });
 
   describe('recomputeCellPositions', () => {

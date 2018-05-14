@@ -13,7 +13,7 @@ if (env === 'commonjs' || env === 'es') {
     ],
     plugins: [
       'transform-runtime',
-      ['flow-react-proptypes', {deadCode: true}],
+      ['flow-react-proptypes', {deadCode: true, useESModules: true}],
       ['transform-react-remove-prop-types', {mode: 'wrap'}],
     ],
     presets: [['env', {modules: false}], 'react', 'flow', 'stage-2'],
@@ -22,6 +22,14 @@ if (env === 'commonjs' || env === 'es') {
   if (env === 'commonjs') {
     module.exports.plugins.push('transform-es2015-modules-commonjs');
   }
+}
+
+if (env === 'rollup') {
+  module.exports = {
+    comments: false,
+    plugins: ['external-helpers'],
+    presets: [['env', { modules: false }], 'react', 'flow', 'stage-2'],
+  };
 }
 
 if (env === 'development') {
