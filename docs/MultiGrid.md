@@ -24,6 +24,8 @@ Some properties (eg `columnCount`, `rowCount`) are adjusted slightly to supporte
 | styleBottomRightGrid | object |  | Optional custom inline style to attach to bottom-right `Grid` element. |
 | styleTopLeftGrid | object |  | Optional custom inline style to attach to top-left `Grid` element. |
 | styleTopRightGrid | object |  | Optional custom inline style to attach to top-right `Grid` element. |
+| hideTopRightGridScrollbar | boolean |  | Optional hides top-right `Grid` scrollbar by adding an additional wrapper. Only useful if `enableFixedRowScroll` is set to `true` |
+| hideBottomLeftGridScrollbar | boolean |  | Optional hides bottom-left `Grid` scrollbar by adding an additional wrapper. Only useful if `enableFixedColumnScroll` is set to `true` |
 
 ### Public Methods
 
