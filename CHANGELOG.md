@@ -12,6 +12,7 @@ Changelog
 * Add lint-staged and precommit hooks ([TrySound](https://github.com/TrySound)) - [#1082](https://github.com/bvaughn/react-virtualized/pull/1082)
 * Add `scrollToRow` and `scrollToColumn` support for ssr. ([microcood](https://github.com/microcood)) - [#1072](https://github.com/bvaughn/react-virtualized/pull/1072)
 * Add `getTotalRowsHeight` and `getTotalColumnsWidth` to `Grid`. ([nihgwu](https://github.com/nihgwu)) - [#1022](https://github.com/bvaughn/react-virtualized/pull/1022)
+* Allow top-right and bottom-left scrollbars in `MultiGrid` be hidden. ([RaviDasari](https://github.com/RaviDasari)) - [#1040](https://github.com/bvaughn/react-virtualized/pull/1040)
 * Documentation changes
   * Added `forceUpdateGrid` documentation for `MultiGrid`. ([kartikluke](https://github.com/kartikluke)) - [#1079](https://github.com/bvaughn/react-virtualized/pull/1079)  
   * 🐛 Fixed typo in `Grid` docs. ([r-kot](https://github.com/r-kot)) - [#1092](https://github.com/bvaughn/react-virtualized/pull/1092)
