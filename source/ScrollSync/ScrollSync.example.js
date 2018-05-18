@@ -236,12 +236,8 @@ export default class GridExample extends React.PureComponent {
   _renderLeftSideCell({columnIndex, key, rowIndex, style}) {
     const rowClass =
       rowIndex % 2 === 0
-        ? columnIndex % 2 === 0
-          ? styles.evenRow
-          : styles.oddRow
-        : columnIndex % 2 !== 0
-          ? styles.evenRow
-          : styles.oddRow;
+        ? columnIndex % 2 === 0 ? styles.evenRow : styles.oddRow
+        : columnIndex % 2 !== 0 ? styles.evenRow : styles.oddRow;
     const classNames = cn(rowClass, styles.cell);
 
     return (
