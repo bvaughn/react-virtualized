@@ -1,7 +1,7 @@
 /** @flow */
 import cn from 'classnames';
 import * as React from 'react';
-import { polyfill } from 'react-lifecycles-compat';
+import {polyfill} from 'react-lifecycles-compat';
 import PositionCache from './PositionCache';
 import {
   requestAnimationTimeout,
