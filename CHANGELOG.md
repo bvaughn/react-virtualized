@@ -1,6 +1,10 @@
 Changelog
 ------------
 
+##### 9.19.1
+
+* Updated [react-lifecycles-compat](https://github.com/reactjs/react-lifecycles-compat) to 3.0.4. ([pigcan](https://github.com/pigcan)) - [#1114](https://github.com/bvaughn/react-virtualized/pull/1114)
+
 ##### 9.19.0
 
 * Replaced `componentWillMount`, `componentWillReceiveProps`, and `componentWillUpdate` with async-safe lifecycles in advance of React 16.x deprecation warnings. Added [react-lifecycles-compat](https://github.com/reactjs/react-lifecycles-compat) as a dependency, to ensure backwards compatibility.
