@@ -100,7 +100,7 @@
       "!source/TestUtils.js",
       "!**/*.example.js"
     ],
-    "testRegex": ".(jest|e2e|ssr).js",
+    "testRegex": ".(jest|e2e|ssr).js$",
     "verbose": true
   },
   "devDependencies": {
@@ -155,6 +155,7 @@
     "react-dom": "^16.2.0",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "react-test-renderer": "^16.2.0",
     "rimraf": "^2.4.3",
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",

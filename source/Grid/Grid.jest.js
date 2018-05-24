@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import {Simulate} from 'react-dom/test-utils';
+import TestRenderer from 'react-test-renderer';
 import {render} from '../TestUtils';
 import Grid, {DEFAULT_SCROLLING_RESET_TIME_INTERVAL} from './Grid';
 import {CellMeasurer, CellMeasurerCache} from '../CellMeasurer';
@@ -2611,5 +2612,10 @@ describe('Grid', () => {
       );
       expect(onScrollbarPresenceChange).not.toHaveBeenCalled();
     });
+  });
+
+  it('should not complain when using react-test-renderer', () => {
+    const tree = TestRenderer.create(getMarkup()).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });
