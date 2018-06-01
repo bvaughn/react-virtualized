@@ -459,7 +459,7 @@ class Grid extends React.PureComponent<Props, State> {
             : SCROLL_DIRECTION_BACKWARD
           : this.state.scrollDirectionVertical;
 
-      const newState: Object = {
+      const newState: $Shape<State> = {
         isScrolling: true,
         scrollDirectionHorizontal,
         scrollDirectionVertical,
@@ -597,10 +597,10 @@ class Grid extends React.PureComponent<Props, State> {
     // In that event we need to remeasure.
     if (!instanceProps.scrollbarSizeMeasured) {
       this.setState(prevState => {
-        prevState.instanceProps.scrollbarSize = getScrollbarSize();
-        prevState.instanceProps.scrollbarSizeMeasured = true;
-        prevState.needToResetStyleCache = false;
-        return prevState;
+        const stateUpdate = {...prevState, needToResetStyleCache: false};
+        stateUpdate.instanceProps.scrollbarSize = getScrollbarSize();
+        stateUpdate.instanceProps.scrollbarSizeMeasured = true;
+        return stateUpdate;
       });
     }
 
@@ -608,18 +608,15 @@ class Grid extends React.PureComponent<Props, State> {
       (typeof scrollLeft === 'number' && scrollLeft >= 0) ||
       (typeof scrollTop === 'number' && scrollTop >= 0)
     ) {
-      this.setState(prevState => {
-        const stateUpdate = Grid._getScrollToPositionStateUpdate({
-          prevState,
-          scrollLeft,
-          scrollTop,
-        });
-        if (stateUpdate) {
-          stateUpdate.needToResetStyleCache = false;
-          return stateUpdate;
-        }
-        return null;
+      const stateUpdate = Grid._getScrollToPositionStateUpdate({
+        prevState: this.state,
+        scrollLeft,
+        scrollTop,
       });
+      if (stateUpdate) {
+        stateUpdate.needToResetStyleCache = false;
+        this.setState(stateUpdate);
+      }
     }
 
     // refs don't work in `react-test-renderer`
@@ -1436,19 +1433,16 @@ class Grid extends React.PureComponent<Props, State> {
    * Useful for animating position changes.
    */
   scrollToPosition({scrollLeft, scrollTop}: ScrollPosition) {
-    this.setState(prevState => {
-      const stateUpdate = Grid._getScrollToPositionStateUpdate({
-        prevState,
-        scrollLeft,
-        scrollTop,
-      });
-
-      if (stateUpdate) {
-        stateUpdate.needToResetStyleCache = false;
-        return stateUpdate;
-      }
-      return null;
+    const stateUpdate = Grid._getScrollToPositionStateUpdate({
+      prevState: this.state,
+      scrollLeft,
+      scrollTop,
     });
+
+    if (stateUpdate) {
+      stateUpdate.needToResetStyleCache = false;
+      this.setState(stateUpdate);
+    }
   }
 
   static _wrapSizeGetter(value: CellSize): CellSizeGetter {
@@ -1530,8 +1524,8 @@ class Grid extends React.PureComponent<Props, State> {
     );
     if (stateUpdate) {
       stateUpdate.needToResetStyleCache = false;
+      this.setState(stateUpdate);
     }
-    this.setState(stateUpdate);
   }
 
   static _getCalculatedScrollTop(nextProps: Props, prevState: State) {
@@ -1626,8 +1620,8 @@ class Grid extends React.PureComponent<Props, State> {
     );
     if (stateUpdate) {
       stateUpdate.needToResetStyleCache = false;
+      this.setState(stateUpdate);
     }
-    this.setState(stateUpdate);
   }
 
   _onScroll = (event: Event) => {
