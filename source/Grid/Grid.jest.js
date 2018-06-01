@@ -2615,7 +2615,7 @@ describe('Grid', () => {
   });
 
   it('should not complain when using react-test-renderer', () => {
-    const tree = TestRenderer.create(getMarkup()).toJSON();
-    expect(tree).toMatchSnapshot();
+    const instance = TestRenderer.create(getMarkup()).getInstance();
+    expect(instance).toBeTruthy();
   });
 });
