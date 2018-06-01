@@ -622,13 +622,16 @@ class Grid extends React.PureComponent<Props, State> {
       });
     }
 
-    // setting the ref's scrollLeft and scrollTop.
-    // Somehow in MultiGrid the main grid doesn't trigger a update on mount.
-    if (this._scrollingContainer.scrollLeft !== this.state.scrollLeft) {
-      this._scrollingContainer.scrollLeft = this.state.scrollLeft;
-    }
-    if (this._scrollingContainer.scrollTop !== this.state.scrollTop) {
-      this._scrollingContainer.scrollTop = this.state.scrollTop;
+    // refs don't work in `react-test-renderer`
+    if (this._scrollingContainer) {
+      // setting the ref's scrollLeft and scrollTop.
+      // Somehow in MultiGrid the main grid doesn't trigger a update on mount.
+      if (this._scrollingContainer.scrollLeft !== this.state.scrollLeft) {
+        this._scrollingContainer.scrollLeft = this.state.scrollLeft;
+      }
+      if (this._scrollingContainer.scrollTop !== this.state.scrollTop) {
+        this._scrollingContainer.scrollTop = this.state.scrollTop;
+      }
     }
 
     // Don't update scroll offset if the size is 0; we don't render any cells in this case.
