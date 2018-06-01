@@ -1440,7 +1440,6 @@ class Grid extends React.PureComponent<Props, State> {
       stateUpdate.needToResetStyleCache = false;
       this.setState(stateUpdate);
     }
-    return null;
   }
 
   static _wrapSizeGetter(value: CellSize): CellSizeGetter {
