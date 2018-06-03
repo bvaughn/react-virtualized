@@ -1,7 +1,7 @@
 /** @flow */
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import polyfill from 'react-lifecycles-compat';
+import {polyfill} from 'react-lifecycles-compat';
 import CellMeasurerCacheDecorator from './CellMeasurerCacheDecorator';
 import Grid from '../Grid';
 
@@ -30,6 +30,8 @@ class MultiGrid extends React.PureComponent {
     styleBottomRightGrid: PropTypes.object.isRequired,
     styleTopLeftGrid: PropTypes.object.isRequired,
     styleTopRightGrid: PropTypes.object.isRequired,
+    hideTopRightGridScrollbar: PropTypes.bool,
+    hideBottomLeftGridScrollbar: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -48,6 +50,8 @@ class MultiGrid extends React.PureComponent {
     styleBottomRightGrid: {},
     styleTopLeftGrid: {},
     styleTopRightGrid: {},
+    hideTopRightGridScrollbar: false,
+    hideBottomLeftGridScrollbar: false,
   };
 
   state = {
@@ -611,6 +615,7 @@ class MultiGrid extends React.PureComponent {
       fixedColumnCount,
       fixedRowCount,
       rowCount,
+      hideBottomLeftGridScrollbar,
     } = props;
     const {showVerticalScrollbar} = this.state;
 
@@ -618,25 +623,47 @@ class MultiGrid extends React.PureComponent {
       return null;
     }
 
-    const additionalRowCount = showVerticalScrollbar ? 1 : 0;
+    const additionalRowCount = showVerticalScrollbar ? 1 : 0,
+      height = this._getBottomGridHeight(props),
+      width = this._getLeftGridWidth(props),
+      scrollbarSize = this.state.showVerticalScrollbar
+        ? this.state.scrollbarSize
+        : 0,
+      gridWidth = hideBottomLeftGridScrollbar ? width + scrollbarSize : width;
 
-    return (
+    const bottomLeftGrid = (
       <Grid
         {...props}
         cellRenderer={this._cellRendererBottomLeftGrid}
         className={this.props.classNameBottomLeftGrid}
         columnCount={fixedColumnCount}
         deferredMeasurementCache={this._deferredMeasurementCacheBottomLeftGrid}
-        height={this._getBottomGridHeight(props)}
+        height={height}
         onScroll={enableFixedColumnScroll ? this._onScrollTop : undefined}
         ref={this._bottomLeftGridRef}
         rowCount={Math.max(0, rowCount - fixedRowCount) + additionalRowCount}
         rowHeight={this._rowHeightBottomGrid}
         style={this._bottomLeftGridStyle}
         tabIndex={null}
-        width={this._getLeftGridWidth(props)}
+        width={gridWidth}
       />
     );
+
+    if (hideBottomLeftGridScrollbar) {
+      return (
+        <div
+          className="BottomLeftGrid_ScrollWrapper"
+          style={{
+            ...this._bottomLeftGridStyle,
+            height,
+            width,
+            overflowY: 'hidden',
+          }}>
+          {bottomLeftGrid}
+        </div>
+      );
+    }
+    return bottomLeftGrid;
   }
 
   _renderBottomRightGrid(props) {
@@ -700,16 +727,31 @@ class MultiGrid extends React.PureComponent {
       fixedColumnCount,
       fixedRowCount,
       scrollLeft,
+      hideTopRightGridScrollbar,
     } = props;
-    const {showHorizontalScrollbar} = this.state;
+    const {showHorizontalScrollbar, scrollbarSize} = this.state;
 
     if (!fixedRowCount) {
       return null;
     }
 
-    const additionalColumnCount = showHorizontalScrollbar ? 1 : 0;
+    const additionalColumnCount = showHorizontalScrollbar ? 1 : 0,
+      height = this._getTopGridHeight(props),
+      width = this._getRightGridWidth(props),
+      additionalHeight = showHorizontalScrollbar ? scrollbarSize : 0;
 
-    return (
+    let gridHeight = height,
+      style = this._topRightGridStyle;
+
+    if (hideTopRightGridScrollbar) {
+      gridHeight = height + additionalHeight;
+      style = {
+        ...this._topRightGridStyle,
+        left: 0,
+      };
+    }
+
+    const topRightGrid = (
       <Grid
         {...props}
         cellRenderer={this._cellRendererTopRightGrid}
@@ -719,16 +761,32 @@ class MultiGrid extends React.PureComponent {
         }
         columnWidth={this._columnWidthRightGrid}
         deferredMeasurementCache={this._deferredMeasurementCacheTopRightGrid}
-        height={this._getTopGridHeight(props)}
+        height={gridHeight}
         onScroll={enableFixedRowScroll ? this._onScrollLeft : undefined}
         ref={this._topRightGridRef}
         rowCount={fixedRowCount}
         scrollLeft={scrollLeft}
-        style={this._topRightGridStyle}
+        style={style}
         tabIndex={null}
-        width={this._getRightGridWidth(props)}
+        width={width}
       />
     );
+
+    if (hideTopRightGridScrollbar) {
+      return (
+        <div
+          className="TopRightGrid_ScrollWrapper"
+          style={{
+            ...this._topRightGridStyle,
+            height,
+            width,
+            overflowX: 'hidden',
+          }}>
+          {topRightGrid}
+        </div>
+      );
+    }
+    return topRightGrid;
   }
 
   _rowHeightBottomGrid = ({index}) => {

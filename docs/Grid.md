@@ -49,6 +49,14 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 
 Gets offsets for a given cell and alignment.
 
+##### getTotalRowsHeight
+
+Gets estimated total rows' height.
+
+##### getTotalColumnsWidth
+
+Gets estimated total columns' width.
+
 ##### handleScrollEvent ({ scrollLeft, scrollTop })
 
 This method handles a scroll event originating from an external scroll control.
@@ -132,8 +140,8 @@ function cellRangeRenderer ({
   horizontalOffsetAdjustment,   // Horizontal pixel offset (required for scaling)
   isScrolling,                  // The Grid is currently being scrolled
   rowSizeAndPositionManager,    // @see CellSizeAndPositionManager,
-  rowStartIndex,                // Index of first column (inclusive) to render
-  rowStopIndex,                 // Index of last column (inclusive) to render
+  rowStartIndex,                // Index of first row (inclusive) to render
+  rowStopIndex,                 // Index of last row (inclusive) to render
   scrollLeft,                   // Current horizontal scroll offset of Grid
   scrollTop,                    // Current vertical scroll offset of Grid
   styleCache,                   // Temporary style (size & position) cache used while scrolling

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import {Simulate} from 'react-dom/test-utils';
+import TestRenderer from 'react-test-renderer';
 import {render} from '../TestUtils';
 import Grid, {DEFAULT_SCROLLING_RESET_TIME_INTERVAL} from './Grid';
 import {CellMeasurer, CellMeasurerCache} from '../CellMeasurer';
@@ -611,6 +612,22 @@ describe('Grid', () => {
       // 5 rows can be visible at a time and :scrollTop is initially 0,
       // So the minimum amount of scrolling leaves the 50th item at the bottom (just scrolled into view).
       expect(scrollTop).toEqual(900);
+    });
+
+    it('should support getTotalRowsHeight() public method', () => {
+      const grid = render(getMarkup());
+      grid.recomputeGridSize();
+      const totalHeight = grid.getTotalRowsHeight();
+      // 100 rows * 20 item height = 2,000 total item height
+      expect(totalHeight).toEqual(2000);
+    });
+
+    it('should support getTotalColumnsWidth() public method', () => {
+      const grid = render(getMarkup());
+      grid.recomputeGridSize();
+      const totalWidth = grid.getTotalColumnsWidth();
+      // 50 columns * 50 item width = 2,500 total item width
+      expect(totalWidth).toEqual(2500);
     });
 
     // See issue #565
@@ -1561,8 +1578,8 @@ describe('Grid', () => {
           rowHeight: 20,
         }),
       );
-      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(100);
-      expect(grid._getEstimatedRowSize(grid.props)).toEqual(20);
+      expect(Grid._getEstimatedColumnSize(grid.props)).toEqual(100);
+      expect(Grid._getEstimatedRowSize(grid.props)).toEqual(20);
     });
 
     it('should estimate row and column sizes if actual sizes are functions', () => {
@@ -1574,8 +1591,8 @@ describe('Grid', () => {
           rowHeight: () => 20,
         }),
       );
-      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(150);
-      expect(grid._getEstimatedRowSize(grid.props)).toEqual(15);
+      expect(Grid._getEstimatedColumnSize(grid.props)).toEqual(150);
+      expect(Grid._getEstimatedRowSize(grid.props)).toEqual(15);
     });
   });
 
@@ -1950,11 +1967,19 @@ describe('Grid', () => {
           width: 0,
         }),
       );
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1500);
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(1500);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(150);
       grid.measureAllCells();
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1000);
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(1000);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(200);
     });
   });
 
@@ -2059,7 +2084,9 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.height,
       ).toEqual('2000px'); // 100 rows * 20px rowHeight
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(2000);
     });
   });
 
@@ -2091,7 +2118,9 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.width,
       ).toEqual('2500px'); // 50 columns * 50px columnWidth
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(2500);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(2500);
     });
   });
 
@@ -2301,10 +2330,11 @@ describe('Grid', () => {
     });
 
     // cellRendererCalls[0] is the element at rowIndex 0
-    const firstProps = cellRendererCalls[1];
-    const secondProps = cellRendererCalls[2];
+    // only two calls. Since the scrollTop is updated in getDerivedStateFromProps
+    const firstProps = cellRendererCalls[0];
+    const secondProps = cellRendererCalls[1];
 
-    expect(cellRendererCalls.length).toEqual(3);
+    expect(cellRendererCalls.length).toEqual(2);
     expect(firstProps.style).not.toBe(secondProps.style);
   });
 
@@ -2582,5 +2612,10 @@ describe('Grid', () => {
       );
       expect(onScrollbarPresenceChange).not.toHaveBeenCalled();
     });
+  });
+
+  it('should not complain when using react-test-renderer', () => {
+    const instance = TestRenderer.create(getMarkup()).getInstance();
+    expect(instance).toBeTruthy();
   });
 });

@@ -1,5 +1,7 @@
 /** @flow */
 
+import type {CellMeasureCache} from './types';
+
 export const DEFAULT_HEIGHT = 30;
 export const DEFAULT_WIDTH = 100;
 
@@ -28,7 +30,7 @@ type IndexParam = {
 /**
  * Caches measurements for a given cell.
  */
-export default class CellMeasurerCache {
+export default class CellMeasurerCache implements CellMeasureCache {
   _cellHeightCache: Cache = {};
   _cellWidthCache: Cache = {};
   _columnWidthCache: Cache = {};
@@ -174,7 +176,12 @@ export default class CellMeasurerCache {
       : this._defaultHeight;
   };
 
-  set(rowIndex: number, columnIndex: number, width: number, height: number) {
+  set(
+    rowIndex: number,
+    columnIndex: number,
+    width: number,
+    height: number,
+  ): void {
     const key = this._keyMapper(rowIndex, columnIndex);
 
     if (columnIndex >= this._columnCount) {

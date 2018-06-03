@@ -5,7 +5,7 @@ A component that enables a `Table` or `List` component to be scrolled based on t
 This can be used to create layouts similar to Facebook or Twitter news feeds.
 
 **Note** that this component does not currently work with a horizontally-scrolling `Grid` as horizontal scrolls reset the internal `scrollTop`.
-This may change with a future release but for the time being this component is should be used with `Table` or `List` only.
+This may change with a future release but for the time being this component should be used with `Table` or `List` only.
 
 ### Prop Types
 | Property | Type | Required? | Description |

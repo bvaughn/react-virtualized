@@ -1,7 +1,7 @@
 /** @flow */
 import cn from 'classnames';
 import * as React from 'react';
-import polyfill from 'react-lifecycles-compat';
+import {polyfill} from 'react-lifecycles-compat';
 import PositionCache from './PositionCache';
 import {
   requestAnimationTimeout,
@@ -28,6 +28,7 @@ type Props = {
   style: mixed,
   tabIndex: number,
   width: number,
+  rowDirection: string,
 };
 
 type State = {
@@ -82,6 +83,7 @@ class Masonry extends React.PureComponent<Props, State> {
     scrollingResetTimeInterval: DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
     style: emptyObject,
     tabIndex: 0,
+    rowDirection: 'ltr',
   };
 
   state = {
@@ -183,6 +185,7 @@ class Masonry extends React.PureComponent<Props, State> {
       style,
       tabIndex,
       width,
+      rowDirection,
     } = this.props;
 
     const {isScrolling, scrollTop} = this.state;
@@ -217,7 +220,7 @@ class Masonry extends React.PureComponent<Props, State> {
             parent: this,
             style: {
               height: cellMeasurerCache.getHeight(index),
-              left,
+              [rowDirection === 'ltr' ? 'left' : 'right']: left,
               position: 'absolute',
               top,
               width: cellMeasurerCache.getWidth(index),

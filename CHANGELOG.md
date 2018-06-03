@@ -1,8 +1,28 @@
 Changelog
 ------------
 
-##### NEXT
-* Replaced `componentWillMount`, `componentWillReceiveProps`, and `componentWillUpdate` with async-safe lifecycles in advance of React 16.4 deprecation warnings. Added [react-lifecycles-compat](https://github.com/reactjs/react-lifecycles-compat) as a dependency, to ensure backwards compatibility.
+##### 9.19.1
+
+* Updated [react-lifecycles-compat](https://github.com/reactjs/react-lifecycles-compat) to 3.0.4. ([pigcan](https://github.com/pigcan)) - [#1114](https://github.com/bvaughn/react-virtualized/pull/1114)
+
+##### 9.19.0
+
+* Replaced `componentWillMount`, `componentWillReceiveProps`, and `componentWillUpdate` with async-safe lifecycles in advance of React 16.x deprecation warnings. Added [react-lifecycles-compat](https://github.com/reactjs/react-lifecycles-compat) as a dependency, to ensure backwards compatibility.
+* Public flow interface for `CellMeasurer`. ([diogofcunha](https://github.com/diogofcunha)) - [#1058](https://github.com/bvaughn/react-virtualized/pull/1058)
+* Improved build by setting `sideEffects` to `false`. ([0xR](https://github.com/0xR)) - [#1064](https://github.com/bvaughn/react-virtualized/pull/1064)
+* 🐛 Fix flow type checks. ([RyanLiu0235](https://github.com/RyanLiu0235)) - [#1066](https://github.com/bvaughn/react-virtualized/pull/1066)
+* Rollup for UMD build. ([TrySound](https://github.com/TrySound)) - [#994](https://github.com/bvaughn/react-virtualized/pull/994)
+* Row direction support for `Masonry` ([bardiarastin](https://github.com/bardiarastin)) - [#1071](https://github.com/bvaughn/react-virtualized/pull/1071)
+* Add lint-staged and precommit hooks ([TrySound](https://github.com/TrySound)) - [#1082](https://github.com/bvaughn/react-virtualized/pull/1082)
+* Add `scrollToRow` and `scrollToColumn` support for ssr. ([microcood](https://github.com/microcood)) - [#1072](https://github.com/bvaughn/react-virtualized/pull/1072)
+* Add `getTotalRowsHeight` and `getTotalColumnsWidth` to `Grid`. ([nihgwu](https://github.com/nihgwu)) - [#1022](https://github.com/bvaughn/react-virtualized/pull/1022)
+* Allow top-right and bottom-left scrollbars in `MultiGrid` be hidden. ([RaviDasari](https://github.com/RaviDasari)) - [#1040](https://github.com/bvaughn/react-virtualized/pull/1040)
+* Documentation changes
+  * Added `forceUpdateGrid` documentation for `MultiGrid`. ([kartikluke](https://github.com/kartikluke)) - [#1079](https://github.com/bvaughn/react-virtualized/pull/1079)  
+  * 🐛 Fixed typo in `Grid` docs. ([r-kot](https://github.com/r-kot)) - [#1092](https://github.com/bvaughn/react-virtualized/pull/1092)
+  * 🐛 Fixed typo in `Collection` docs. ([skipjack](https://github.com/skipjack)) - [#1050](https://github.com/bvaughn/react-virtualized/pull/1050)
+  * Added dynamically measured images example for `Masonry`. ([kirill-konshin](https://github.com/kirill-konshin)) - [#1081](https://github.com/bvaughn/react-virtualized/pull/1081)  
+
 
 ##### 9.18.5
 * 🐛 Revert changes > 9.18.0
