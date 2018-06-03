@@ -16,14 +16,11 @@ Provide as much information as possible about your requested feature. Here are a
 
 Reporting a Bug?
 
-Please include either a failing unit test or a simple repro. You can start by forking one of these:
-
-* Code Sandbox: https://codesandbox.io/s/03qpzq1p9p?module=%2FExample.js
-* Plnkr: https://plnkr.co/edit/6syKo8cx3RfoO96hXFT1
+Please include either a failing unit test or a simple repro. You can start by forking this Code Sandbox: https://codesandbox.io/s/03qpzq1p9p?module=%2FExample.js
 
 ### What is the current behavior?
 
-If the current behavior is a bug, please provide the steps to reproduce and if possible a minimal demo of the problem. Your bug will get fixed much faster if we can run your code and it doesn't have dependencies other than React and react-virtualized. Paste the link to your JSFiddle (https://codesandbox.io/s/03qpzq1p9p?module=%2FExample.js) or Plnkr (https://plnkr.co/edit/6syKo8cx3RfoO96hXFT1) example below:
+If the current behavior is a bug, please provide the steps to reproduce and if possible a minimal demo of the problem. Your bug will get fixed much faster if we can run your code and it doesn't have dependencies other than React and react-virtualized. Paste the link to your [Code Sandbox](https://codesandbox.io/s/03qpzq1p9p?module=%2FExample.js) below:
 
 ### What is the expected behavior?
 
@@ -33,4 +30,5 @@ If the current behavior is a bug, please provide the steps to reproduce and if p
 | Browser           |          |
 | OS                |          |
 | React             |          |
+| React DOM         |          |
 | react-virtualized |          |
