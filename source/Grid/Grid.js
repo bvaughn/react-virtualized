@@ -814,37 +814,22 @@ class Grid extends React.PureComponent<Props, State> {
     ) {
       newState.scrollLeft = 0;
       newState.scrollTop = 0;
+
+      // only use scroll{Left,Top} form props if scrollTo{Column,Row} isn't specified
+      // scrollTo{Column,Row} should override scroll{Left,Top}
     } else if (
-      nextProps.scrollLeft !== prevState.scrollLeft ||
-      nextProps.scrollTop !== prevState.scrollTop
+      (nextProps.scrollLeft !== prevState.scrollLeft &&
+        nextProps.scrollToColumn < 0) ||
+      (nextProps.scrollTop !== prevState.scrollTop && nextProps.scrollToRow < 0)
     ) {
-      // this handles the weird edge case where setting scrollToColumn in
-      // multigrid was causing multiple getDerivedStateFromProps calls. Overriding
-      // the state set in the first time.
-      // We should warn since if scrollTo{column,row} and scroll{left,top} is specified,
-      // scrollTo{column,row} should override.
-      if (
-        nextProps.scrollToColumn > 0 &&
-        prevState.scrollLeft &&
-        nextProps.scrollLeft === 0
-      ) {
-        //NOOP
-      } else if (
-        nextProps.scrollToRow > 0 &&
-        prevState.scrollTop &&
-        nextProps.scrollTop === 0
-      ) {
-        //NOOP
-      } else {
-        Object.assign(
-          newState,
-          Grid._getScrollToPositionStateUpdate({
-            prevState,
-            scrollLeft: nextProps.scrollLeft,
-            scrollTop: nextProps.scrollTop,
-          }),
-        );
-      }
+      Object.assign(
+        newState,
+        Grid._getScrollToPositionStateUpdate({
+          prevState,
+          scrollLeft: nextProps.scrollLeft,
+          scrollTop: nextProps.scrollTop,
+        }),
+      );
     }
 
     let {instanceProps} = prevState;
