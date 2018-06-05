@@ -28,12 +28,6 @@ export default function defaultCellRangeRenderer({
 }: CellRangeRendererParams) {
   const renderedCells = [];
 
-  console.log(
-    'calling defaultCellRangeRenderer',
-    isScrolling,
-    isScrollingOptOut,
-  );
-
   // Browsers have native size limits for elements (eg Chrome 33M pixels, IE 1.5M pixes).
   // User cannot scroll beyond these size limitations.
   // In order to work around this, ScalingCellSizeAndPositionManager compresses offsets.
