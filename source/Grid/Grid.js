@@ -136,6 +136,12 @@ type Props = {
    */
   isScrolling?: boolean,
 
+  /**
+   * Opt-out of isScrolling param passed to cellRangeRenderer.
+   * To avoid the extra render when scroll stops.
+   */
+  isScrollingOptOut: boolean,
+
   /** Optional renderer to be used in place of rows when either :rowCount or :columnCount is 0.  */
   noContentRenderer: NoContentRenderer,
 
@@ -276,6 +282,7 @@ class Grid extends React.PureComponent<Props, State> {
     scrollToRow: -1,
     style: {},
     tabIndex: 0,
+    isScrollingOptOut: false,
   };
 
   // Invokes onSectionRendered callback only when start/stop row or column indices change
@@ -1093,6 +1100,7 @@ class Grid extends React.PureComponent<Props, State> {
       overscanRowCount,
       rowCount,
       width,
+      isScrollingOptOut,
     } = props;
 
     const {
@@ -1229,6 +1237,7 @@ class Grid extends React.PureComponent<Props, State> {
         deferredMeasurementCache,
         horizontalOffsetAdjustment,
         isScrolling,
+        isScrollingOptOut,
         parent: this,
         rowSizeAndPositionManager: instanceProps.rowSizeAndPositionManager,
         rowStartIndex,
@@ -1561,11 +1570,15 @@ class Grid extends React.PureComponent<Props, State> {
 
   _resetStyleCache() {
     const styleCache = this._styleCache;
+    const cellCache = this._cellCache;
+    const {isScrollingOptOut} = this.props;
 
     // Reset cell and style caches once scrolling stops.
     // This makes Grid simpler to use (since cells commonly change).
     // And it keeps the caches from growing too large.
     // Performance is most sensitive when a user is scrolling.
+    // Don't clear visible cells from cellCache if isScrollingOptOut is specified.
+    // This keeps the cellCache to a resonable size.
     this._cellCache = {};
     this._styleCache = {};
 
@@ -1582,6 +1595,10 @@ class Grid extends React.PureComponent<Props, State> {
       ) {
         let key = `${rowIndex}-${columnIndex}`;
         this._styleCache[key] = styleCache[key];
+
+        if (isScrollingOptOut) {
+          this._cellCache[key] = cellCache[key];
+        }
       }
     }
   }

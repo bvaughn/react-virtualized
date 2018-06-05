@@ -16,6 +16,7 @@ export default function defaultCellRangeRenderer({
   deferredMeasurementCache,
   horizontalOffsetAdjustment,
   isScrolling,
+  isScrollingOptOut,
   parent, // Grid (or List or Table)
   rowSizeAndPositionManager,
   rowStartIndex,
@@ -26,6 +27,12 @@ export default function defaultCellRangeRenderer({
   visibleRowIndices,
 }: CellRangeRendererParams) {
   const renderedCells = [];
+
+  console.log(
+    'calling defaultCellRangeRenderer',
+    isScrolling,
+    isScrollingOptOut,
+  );
 
   // Browsers have native size limits for elements (eg Chrome 33M pixels, IE 1.5M pixes).
   // User cannot scroll beyond these size limitations.
@@ -109,8 +116,11 @@ export default function defaultCellRangeRenderer({
       // However if we are scaling scroll positions and sizes, we should also avoid caching.
       // This is because the offset changes slightly as scroll position changes and caching leads to stale values.
       // For more info refer to issue #395
+      //
+      // If isScrollingOptOut is specified, we always cache cells.
+      // For more info refer to issue #1028
       if (
-        isScrolling &&
+        (isScrollingOptOut || isScrolling) &&
         !horizontalOffsetAdjustment &&
         !verticalOffsetAdjustment
       ) {
