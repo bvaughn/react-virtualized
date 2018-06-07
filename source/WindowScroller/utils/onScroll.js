@@ -3,7 +3,7 @@
 import {
   requestAnimationTimeout,
   cancelAnimationTimeout,
-} from '../../utils/requestAnimationTimeout';
+} from '../../utils/requestAnimationFrameWrapper';
 import type WindowScroller from '../WindowScroller.js';
 
 let mountedInstances = [];
