@@ -36,8 +36,8 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | scrollingResetTimeInterval | Number |  | Wait this amount of time after the last scroll event before resetting Grid `pointer-events`; defaults to 150ms. |
 | scrollLeft | Number |  | Horizontal offset |
 | scrollToAlignment | String |  | Controls the alignment of scrolled-to-cells. The default ("_auto_") scrolls the least amount possible to ensure that the specified cell is fully visible. Use "_start_" to always align cells to the top/left of the `Grid` and "_end_" to align them bottom/right. Use "_center_" to align specified cell in the middle of container. |
-| scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary) |
-| scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
+| scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary). Takes precedence over `scrollLeft`. |
+| scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary). Takes precedence over `scrollTop`. |
 | scrollTop | Number |  | Vertical offset |
 | style | Object |  | Optional custom inline style to attach to root `Grid` element. |
 | tabIndex | Number |  | Optional override of tab index default; defaults to `0`. |
