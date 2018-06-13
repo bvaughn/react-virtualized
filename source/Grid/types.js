@@ -29,6 +29,7 @@ export type CellRangeRendererParams = {
   deferredMeasurementCache?: Object,
   horizontalOffsetAdjustment: number,
   isScrolling: boolean,
+  isScrollingOptOut: boolean,
   parent: Object,
   rowSizeAndPositionManager: ScalingCellSizeAndPositionManager,
   rowStartIndex: number,

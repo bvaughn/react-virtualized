@@ -1905,6 +1905,52 @@ describe('Grid', () => {
       expect(cellRendererCalls.length).not.toEqual(0);
     });
 
+    it('should not clear cache if :isScrollingOptOut is true', () => {
+      const cellRendererCalls = [];
+      function cellRenderer({columnIndex, key, rowIndex, style}) {
+        cellRendererCalls.push({columnIndex, rowIndex});
+        return defaultCellRenderer({columnIndex, key, rowIndex, style});
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollTop: 0,
+        width: 100,
+        isScrollingOptOut: true,
+      };
+
+      render(getMarkup(props));
+      render(getMarkup(props));
+      expect(cellRendererCalls).toEqual([
+        {columnIndex: 0, rowIndex: 0},
+        {columnIndex: 0, rowIndex: 1},
+      ]);
+
+      cellRendererCalls.splice(0);
+
+      render(
+        getMarkup({
+          ...props,
+          isScrolling: false,
+        }),
+      );
+
+      // Visible cells are cached
+      expect(cellRendererCalls.length).toEqual(0);
+
+      render(
+        getMarkup({
+          ...props,
+          isScrolling: true,
+        }),
+      );
+
+      // Only cleared non-visible cells
+      expect(cellRendererCalls.length).toEqual(0);
+    });
+
     it('should support a custom :scrollingResetTimeInterval prop', async done => {
       const cellRendererCalls = [];
       const scrollingResetTimeInterval =
