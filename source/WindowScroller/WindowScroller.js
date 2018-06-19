@@ -239,7 +239,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
         0,
         scrollOffset.left - this._positionFromLeft,
       );
-      const scrollTop = Math.max(0, scrollOffset.top - this._positionFromTop);
+      const scrollTop = scrollOffset.top - this._positionFromTop;
 
       this.setState({
         isScrolling: true,
