@@ -221,6 +221,7 @@ export default class TableExample extends React.PureComponent {
                   disableSort
                   label="The description label is really long so that it will be truncated"
                   dataKey="random"
+                  headerRenderer={this._headerRenderer}
                   className={styles.exampleColumn}
                   cellRenderer={({cellData}) => cellData}
                   flexGrow={1}
