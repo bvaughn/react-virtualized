@@ -1,6 +1,6 @@
 [<img src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" alt="React virtualized" data-canonical-src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" width="330" height="100" />](http://bvaughn.github.io/react-virtualized/)
 
-![NPM version](https://img.shields.io/npm/v/react-virtualized.svg?style=flat)
+[![NPM version](https://img.shields.io/npm/v/react-virtualized.svg?style=flat)](https://www.npmjs.com/package/react-virtualized)
 ![NPM license](https://img.shields.io/npm/l/react-virtualized.svg?style=flat)
 [![NPM total downloads](https://img.shields.io/npm/dt/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
 [![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
