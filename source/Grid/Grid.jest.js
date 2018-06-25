@@ -654,6 +654,56 @@ describe('Grid', () => {
       expect(node.scrollTop).toBe(1920);
     });
 
+    it('should not restore scrollLeft when scrolling left and recomputeGridSize with columnIndex smaller than scrollToColumn', () => {
+      const props = {
+        columnWidth: 50,
+        columnCount: 100,
+        height: 100,
+        rowCount: 100,
+        rowHeight: 20,
+        scrollToColumn: 50,
+        scrollToRow: 50,
+        width: 100,
+      };
+      const grid = render(getMarkup(props));
+
+      expect(grid.state.scrollLeft).toEqual(2450);
+
+      simulateScroll({grid, scrollLeft: 2250});
+      expect(grid.state.scrollLeft).toEqual(2250);
+      expect(grid.state.scrollDirectionHorizontal).toEqual(
+        SCROLL_DIRECTION_BACKWARD,
+      );
+
+      grid.recomputeGridSize({columnIndex: 30});
+      expect(grid.state.scrollLeft).toEqual(2250);
+    });
+
+    it('should not restore scrollTop when scrolling up and recomputeGridSize with rowIndex smaller than scrollToRow', () => {
+      const props = {
+        columnWidth: 50,
+        columnCount: 100,
+        height: 100,
+        rowCount: 100,
+        rowHeight: 20,
+        scrollToColumn: 50,
+        scrollToRow: 50,
+        width: 100,
+      };
+      const grid = render(getMarkup(props));
+
+      expect(grid.state.scrollTop).toEqual(920);
+
+      simulateScroll({grid, scrollTop: 720});
+      expect(grid.state.scrollTop).toEqual(720);
+      expect(grid.state.scrollDirectionVertical).toEqual(
+        SCROLL_DIRECTION_BACKWARD,
+      );
+
+      grid.recomputeGridSize({rowIndex: 20});
+      expect(grid.state.scrollTop).toEqual(720);
+    });
+
     it('should restore scroll offset for column when row count increases from 0 (and vice versa)', () => {
       const props = {
         columnWidth: 50,
