@@ -11,7 +11,7 @@ import Collection from './Collection';
 import {CELLS, SECTION_SIZE} from './TestData';
 
 describe('Collection', () => {
-  function defaultCellRenderer({index, key, style}) {
+  function defaultTableCellRenderer({index, key, style}) {
     return (
       <div className="cell" key={key} style={style}>
         cell:{index}
@@ -31,7 +31,7 @@ describe('Collection', () => {
     return (
       <Collection
         cellCount={cellCount}
-        cellRenderer={defaultCellRenderer}
+        cellRenderer={defaultTableCellRenderer}
         cellSizeAndPositionGetter={defaultCellSizeAndPositionGetter}
         height={SECTION_SIZE}
         sectionSize={SECTION_SIZE}
@@ -636,7 +636,7 @@ describe('Collection', () => {
     const cellRendererCalls = [];
     function cellRenderer({index, isScrolling, key, style}) {
       cellRendererCalls.push(isScrolling);
-      return defaultCellRenderer({index, key, style});
+      return defaultTableCellRenderer({index, key, style});
     }
 
     const collection = render(
@@ -723,7 +723,7 @@ describe('Collection', () => {
       const cellRendererCalls = [];
       function cellRenderer({isScrolling, index, key, style}) {
         cellRendererCalls.push({isScrolling, index});
-        return defaultCellRenderer({index, key, style});
+        return defaultTableCellRenderer({index, key, style});
       }
 
       const props = {
@@ -756,7 +756,7 @@ describe('Collection', () => {
       const cellRendererCalls = [];
       function cellRenderer({isScrolling, index, key, style}) {
         cellRendererCalls.push({isScrolling, index});
-        return defaultCellRenderer({index, key, style});
+        return defaultTableCellRenderer({index, key, style});
       }
 
       const props = {
@@ -793,7 +793,7 @@ describe('Collection', () => {
       const cellRendererCalls = [];
       function cellRenderer({isScrolling, index, key, style}) {
         cellRendererCalls.push({isScrolling, index});
-        return defaultCellRenderer({isScrolling, index, key, style});
+        return defaultTableCellRenderer({isScrolling, index, key, style});
       }
 
       const props = {

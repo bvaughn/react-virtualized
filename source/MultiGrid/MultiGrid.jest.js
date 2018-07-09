@@ -7,7 +7,7 @@ import {CellMeasurerCache} from '../CellMeasurer';
 // These tests only focus on what MultiGrid does specifically.
 // The inner Grid component is tested in depth elsewhere.
 describe('MultiGrid', () => {
-  function defaultCellRenderer({columnIndex, key, rowIndex, style}) {
+  function defaultTableCellRenderer({columnIndex, key, rowIndex, style}) {
     return (
       <div className="gridItem" key={key} style={style}>
         {`row:${rowIndex}, column:${columnIndex}`}
@@ -18,7 +18,7 @@ describe('MultiGrid', () => {
   function getMarkup(props = {}) {
     return (
       <MultiGrid
-        cellRenderer={defaultCellRenderer}
+        cellRenderer={defaultTableCellRenderer}
         columnCount={50}
         columnWidth={50}
         fixedColumnCount={2}

@@ -1,6 +1,6 @@
 By default, `Table` assumes that its data will be sorted by single attribute, in either ascending or descending order.
 For advanced use cases, you may want to sort by multiple fields.
-This can be accomplished using the `createMultiSort` utility.
+This can be accomplished using the `createTableMultiSort` utility.
 
 ```jsx
 import {
@@ -19,7 +19,7 @@ function sort({
   // When you're done, setState() or update your Flux store, etc.
 }
 
-const sortState = createMultiSort(sort);
+const sortState = createTableMultiSort(sort);
 
 // When rendering your header columns,
 // Use the sort state exposed by sortState:
@@ -49,9 +49,9 @@ const headerRenderer = ({ dataKey, label }) => {
 </Table>
 ```
 
-The `createMultiSort` utility also accepts default sort-by values:
+The `createTableMultiSort` utility also accepts default sort-by values:
 ```js
-const sortState = createMultiSort(sort, {
+const sortState = createTableMultiSort(sort, {
   defaultSortBy: ['firstName', 'lastName'],
   defaultSortDirection: {
     firstName: 'ASC',

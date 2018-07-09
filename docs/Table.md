@@ -103,7 +103,7 @@ The Table component supports the following static class names
 
 This is an advanced property.
 It is useful for situations where you require additional hooks into `Table` to render additional custom UI elements.
-You may want to start by forking the [`defaultTableHeaderRowRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultHeaderRowRenderer.js) function.
+You may want to start by forking the [`defaultTableHeaderRowRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultTableHeaderRowRenderer.js) function.
 
 This function accepts the following named parameters:
 
@@ -140,7 +140,7 @@ function CustomizedTable (props) {
 }
 ```
 
-If you require greater customization, you may want to fork the [`defaultTableRowRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultRowRenderer.js) function.
+If you require greater customization, you may want to fork the [`defaultTableRowRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultTableRowRenderer.js) function.
 
 This function accepts the following named parameters:
 

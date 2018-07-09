@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Immutable from 'immutable';
-import defaultCellDataGetter from './defaultCellDataGetter';
-import defaultCellRenderer from './defaultCellRenderer';
-import defaultHeaderRenderer from './defaultHeaderRenderer';
+import defaultTableCellDataGetter from './defaultTableCellDataGetter';
+import defaultTableCellRenderer from './defaultTableCellRenderer';
+import defaultTableHeaderRenderer from './defaultTableHeaderRenderer';
 
 describe('Column', () => {
   const rowData = Immutable.Map({
@@ -10,16 +10,16 @@ describe('Column', () => {
     bar: 1,
   });
 
-  describe('defaultCellDataGetter', () => {
+  describe('defaultTableCellDataGetter', () => {
     it('should return a value for specified attributes', () => {
       expect(
-        defaultCellDataGetter({
+        defaultTableCellDataGetter({
           dataKey: 'foo',
           rowData,
         }),
       ).toEqual('Foo');
       expect(
-        defaultCellDataGetter({
+        defaultTableCellDataGetter({
           dataKey: 'bar',
           rowData,
         }),
@@ -28,7 +28,7 @@ describe('Column', () => {
 
     it('should return undefined for missing attributes', () => {
       expect(
-        defaultCellDataGetter({
+        defaultTableCellDataGetter({
           dataKey: 'baz',
           rowData,
         }),
@@ -36,10 +36,10 @@ describe('Column', () => {
     });
   });
 
-  describe('defaultCellRenderer', () => {
+  describe('defaultTableCellRenderer', () => {
     it('should render a value for specified attributes', () => {
       expect(
-        defaultCellRenderer({
+        defaultTableCellRenderer({
           cellData: 'Foo',
           dataKey: 'foo',
           rowData,
@@ -47,7 +47,7 @@ describe('Column', () => {
         }),
       ).toEqual('Foo');
       expect(
-        defaultCellRenderer({
+        defaultTableCellRenderer({
           cellData: 1,
           dataKey: 'bar',
           rowData,
@@ -58,7 +58,7 @@ describe('Column', () => {
 
     it('should render empty string for null or missing attributes', () => {
       expect(
-        defaultCellRenderer({
+        defaultTableCellRenderer({
           cellData: null,
           dataKey: 'baz',
           rowData,
@@ -66,7 +66,7 @@ describe('Column', () => {
         }),
       ).toEqual('');
       expect(
-        defaultCellRenderer({
+        defaultTableCellRenderer({
           cellData: undefined,
           dataKey: 'baz',
           rowData,
@@ -76,10 +76,10 @@ describe('Column', () => {
     });
   });
 
-  describe('defaultHeaderRenderer', () => {
+  describe('defaultTableHeaderRenderer', () => {
     it('should render a value for specified attributes', () => {
       expect(
-        defaultHeaderRenderer({
+        defaultTableHeaderRenderer({
           dataKey: 'foo',
           label: 'squirrel',
         })[0].props.children,
@@ -87,7 +87,7 @@ describe('Column', () => {
 
       const label = <div className="rabbit">Rabbit</div>;
       expect(
-        defaultHeaderRenderer({
+        defaultTableHeaderRenderer({
           dataKey: 'bar',
           label: label,
         })[0].props.children,
@@ -96,13 +96,13 @@ describe('Column', () => {
 
     it('should render empty string for null or missing attributes', () => {
       expect(
-        defaultHeaderRenderer({
+        defaultTableHeaderRenderer({
           dataKey: 'foo',
           label: null,
         })[0].props.children,
       ).toBeNull();
       expect(
-        defaultHeaderRenderer({
+        defaultTableHeaderRenderer({
           dataKey: 'bar',
           label: undefined,
         })[0].props.children,

@@ -1,9 +1,9 @@
 /** @flow */
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import defaultHeaderRenderer from './defaultHeaderRenderer';
-import defaultCellRenderer from './defaultCellRenderer';
-import defaultCellDataGetter from './defaultCellDataGetter';
+import defaultTableHeaderRenderer from './defaultTableHeaderRenderer';
+import defaultTableCellRenderer from './defaultTableCellRenderer';
+import defaultTableCellDataGetter from './defaultTableCellDataGetter';
 import SortDirection from './SortDirection';
 
 /**
@@ -82,12 +82,12 @@ export default class Column extends React.Component {
   };
 
   static defaultProps = {
-    cellDataGetter: defaultCellDataGetter,
-    cellRenderer: defaultCellRenderer,
+    cellDataGetter: defaultTableCellDataGetter,
+    cellRenderer: defaultTableCellRenderer,
     defaultSortDirection: SortDirection.ASC,
     flexGrow: 0,
     flexShrink: 1,
-    headerRenderer: defaultHeaderRenderer,
+    headerRenderer: defaultTableHeaderRenderer,
     style: {},
   };
 }

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type {HeaderRowRendererParams} from './types';
 
-export default function defaultHeaderRowRenderer({
+export default function defaultTableHeaderRowRenderer({
   className,
   columns,
   style,

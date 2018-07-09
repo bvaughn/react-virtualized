@@ -6,7 +6,7 @@ import type {CellDataGetterParams} from './types';
  * This function expects to operate on either a vanilla Object or an Immutable Map.
  * You should override the column's cellDataGetter if your data is some other type of object.
  */
-export default function defaultCellDataGetter({
+export default function defaultTableCellDataGetter({
   dataKey,
   rowData,
 }: CellDataGetterParams) {

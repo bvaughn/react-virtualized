@@ -27,7 +27,7 @@ function getScrollbarSize20() {
 }
 
 describe('Grid', () => {
-  function defaultCellRenderer({columnIndex, key, rowIndex, style}) {
+  function defaultTableCellRenderer({columnIndex, key, rowIndex, style}) {
     return (
       <div className="gridItem" key={key} style={style}>
         {`row:${rowIndex}, column:${columnIndex}`}
@@ -44,7 +44,7 @@ describe('Grid', () => {
   function getMarkup(props = {}) {
     return (
       <Grid
-        cellRenderer={defaultCellRenderer}
+        cellRenderer={defaultTableCellRenderer}
         columnCount={NUM_COLUMNS}
         columnWidth={DEFAULT_COLUMN_WIDTH}
         getScrollbarSize={getScrollbarSize0}
@@ -1650,7 +1650,7 @@ describe('Grid', () => {
     const cellRendererCalls = [];
     function cellRenderer({columnIndex, isScrolling, key, rowIndex, style}) {
       cellRendererCalls.push(isScrolling);
-      return defaultCellRenderer({columnIndex, key, rowIndex, style});
+      return defaultTableCellRenderer({columnIndex, key, rowIndex, style});
     }
     const grid = render(
       getMarkup({
@@ -1698,7 +1698,7 @@ describe('Grid', () => {
     const cellRendererCalls = [];
     function cellRenderer(props) {
       cellRendererCalls.push(props);
-      return defaultCellRenderer(props);
+      return defaultTableCellRenderer(props);
     }
     render(
       getMarkup({
@@ -1721,7 +1721,7 @@ describe('Grid', () => {
       const cellRendererCalls = [];
       function cellRenderer({columnIndex, key, rowIndex, style}) {
         cellRendererCalls.push({columnIndex, rowIndex});
-        return defaultCellRenderer({columnIndex, key, rowIndex, style});
+        return defaultTableCellRenderer({columnIndex, key, rowIndex, style});
       }
       const props = {
         cellRenderer,
@@ -1761,7 +1761,7 @@ describe('Grid', () => {
       const cellRendererCalls = [];
       function cellRenderer({columnIndex, key, rowIndex, style}) {
         cellRendererCalls.push({columnIndex, rowIndex});
-        return defaultCellRenderer({columnIndex, key, rowIndex, style});
+        return defaultTableCellRenderer({columnIndex, key, rowIndex, style});
       }
       const props = {
         cellRenderer,
@@ -1802,7 +1802,7 @@ describe('Grid', () => {
       const cellRendererCalls = [];
       function cellRenderer({columnIndex, key, rowIndex, style}) {
         cellRendererCalls.push({columnIndex, rowIndex});
-        return defaultCellRenderer({columnIndex, key, rowIndex, style});
+        return defaultTableCellRenderer({columnIndex, key, rowIndex, style});
       }
       const props = {
         cellRenderer,
@@ -1843,7 +1843,7 @@ describe('Grid', () => {
       const cellRendererCalls = [];
       function cellRenderer({columnIndex, key, rowIndex, style}) {
         cellRendererCalls.push({columnIndex, rowIndex});
-        return defaultCellRenderer({columnIndex, key, rowIndex, style});
+        return defaultTableCellRenderer({columnIndex, key, rowIndex, style});
       }
       const props = {
         cellRenderer,
@@ -1929,7 +1929,7 @@ describe('Grid', () => {
       const cellRendererCalls = [];
       function cellRenderer({columnIndex, key, rowIndex, style}) {
         cellRendererCalls.push({columnIndex, rowIndex});
-        return defaultCellRenderer({columnIndex, key, rowIndex, style});
+        return defaultTableCellRenderer({columnIndex, key, rowIndex, style});
       }
       const props = {
         cellRenderer,
@@ -2007,7 +2007,7 @@ describe('Grid', () => {
         DEFAULT_SCROLLING_RESET_TIME_INTERVAL * 2;
       function cellRenderer({columnIndex, key, rowIndex, style}) {
         cellRendererCalls.push({columnIndex, rowIndex});
-        return defaultCellRenderer({columnIndex, key, rowIndex, style});
+        return defaultTableCellRenderer({columnIndex, key, rowIndex, style});
       }
       const props = {
         cellRenderer,

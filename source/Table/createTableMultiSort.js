@@ -34,7 +34,7 @@ type MultiSortReturn = {
   sortDirection: SortDirectionMap,
 };
 
-export default function createMultiSort(
+export default function createTableMultiSort(
   sortCallback: Function,
   {defaultSortBy, defaultSortDirection = {}}: MultiSortOptions = {},
 ): MultiSortReturn {
