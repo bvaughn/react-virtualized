@@ -97,6 +97,9 @@ type Props = {
   /** Unfiltered props for the Grid container. */
   containerProps?: Object,
 
+  /** Callback to access container ref. */
+  containerRef?: (ref: Element) => void,
+
   /** ARIA role for the cell-container.  */
   containerRole: string,
 
@@ -1381,6 +1384,9 @@ class Grid extends React.PureComponent<Props, State> {
 
   _setScrollingContainerRef = (ref: Element) => {
     this._scrollingContainer = ref;
+    if (this.props.containerRef) {
+      this.props.containerRef(ref);
+    }
   };
 
   /**
