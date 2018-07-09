@@ -15,7 +15,7 @@ import type {
   CellCache,
   StyleCache,
 } from './types';
-import type {AnimationTimeoutId} from '../utils/requestAnimationTimeout';
+import type {AnimationTimeoutId} from '../utils/requestAnimationFrameWrapper';
 
 import * as React from 'react';
 import cn from 'classnames';
@@ -33,7 +33,7 @@ import {polyfill} from 'react-lifecycles-compat';
 import {
   requestAnimationTimeout,
   cancelAnimationTimeout,
-} from '../utils/requestAnimationTimeout';
+} from '../utils/requestAnimationFrameWrapper';
 
 /**
  * Specifies the number of milliseconds during which to disable pointer events while a scroll is in progress.

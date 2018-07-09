@@ -6,9 +6,9 @@ import PositionCache from './PositionCache';
 import {
   requestAnimationTimeout,
   cancelAnimationTimeout,
-} from '../utils/requestAnimationTimeout';
+} from '../utils/requestAnimationFrameWrapper';
 
-import type {AnimationTimeoutId} from '../utils/requestAnimationTimeout';
+import type {AnimationTimeoutId} from '../utils/requestAnimationFrameWrapper';
 
 type Props = {
   autoHeight: boolean,
