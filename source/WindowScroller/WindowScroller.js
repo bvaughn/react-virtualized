@@ -91,9 +91,9 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
 
   state = {
     ...getDimensions(this.props.scrollElement, this.props),
-    isScrolling: false,
     scrollLeft: 0,
     scrollTop: 0,
+    isScrolling: false,
   };
 
   updatePosition(scrollElement: ?Element = this.props.scrollElement) {
@@ -118,9 +118,38 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
         width: dimensions.width,
       });
     }
+
+    const scrollProperties = this._getScrollProperties(scrollElement) || {};
+    if (
+      scrollProperties.scrollTop !== this.state.scrollTop ||
+      scrollProperties.scrollLeft !== this.state.scrollLeft
+    ) {
+      this.setState(scrollProperties);
+    }
+  }
+
+  _getScrollProperties(scrollElement) {
+    if (!this._isMounted) {
+      return;
+    }
+
+    const {onScroll} = this.props;
+
+    if (scrollElement) {
+      const scrollOffset = getScrollOffset(scrollElement);
+      const scrollLeft = scrollOffset.left - this._positionFromLeft;
+      const scrollTop = scrollOffset.top - this._positionFromTop;
+
+      return {
+        scrollLeft,
+        scrollTop,
+      };
+    }
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     const scrollElement = this.props.scrollElement;
 
     this._detectElementResize = createDetectElementResize();
@@ -131,8 +160,6 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
       registerScrollListener(this, scrollElement);
       this._registerResizeListener(scrollElement);
     }
-
-    this._isMounted = true;
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -226,32 +253,18 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
 
   // Referenced by utils/onScroll
   __handleWindowScrollEvent = () => {
-    if (!this._isMounted) {
+    let scrollProperties = this._getScrollProperties(this.props.scrollElement);
+    if (!scrollProperties) {
       return;
     }
 
     const {onScroll} = this.props;
+    this.setState({
+      isScrolling: true,
+      ...scrollProperties,
+    });
 
-    const scrollElement = this.props.scrollElement;
-    if (scrollElement) {
-      const scrollOffset = getScrollOffset(scrollElement);
-      const scrollLeft = Math.max(
-        0,
-        scrollOffset.left - this._positionFromLeft,
-      );
-      const scrollTop = scrollOffset.top - this._positionFromTop;
-
-      this.setState({
-        isScrolling: true,
-        scrollLeft,
-        scrollTop,
-      });
-
-      onScroll({
-        scrollLeft,
-        scrollTop,
-      });
-    }
+    onScroll(scrollProperties);
   };
 
   // Referenced by utils/onScroll

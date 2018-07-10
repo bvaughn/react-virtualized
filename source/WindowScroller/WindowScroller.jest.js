@@ -133,6 +133,41 @@ describe('WindowScroller', () => {
     delete document.documentElement.getBoundingClientRect;
   });
 
+  it('should have negative scrollTop values if there is content above the WindowScroller on initial render', () => {
+    const renderFn = jest.fn();
+
+    // Simulate scrolled documentElement
+    const component = render(
+      getMarkup({
+        headerElements: <div style={{height: 501}} />,
+        renderFn,
+      }),
+    );
+    expect(renderFn).lastCalledWith(
+      expect.objectContaining({
+        scrollTop: -501,
+      }),
+    );
+  });
+
+  it('should have negative scrollTop values if there is content above the WindowScroller and there is a scroll', () => {
+    const renderFn = jest.fn();
+
+    // Simulate scrolled documentElement
+    const component = render(
+      getMarkup({
+        headerElements: <div style={{height: 501}} />,
+        renderFn,
+      }),
+    );
+    simulateWindowScroll({scrollY: 1});
+    expect(renderFn).lastCalledWith(
+      expect.objectContaining({
+        scrollTop: -500,
+      }),
+    );
+  });
+
   it('inherits the window height and passes it to child component', () => {
     const renderFn = jest.fn();
     const component = render(getMarkup({renderFn}));
