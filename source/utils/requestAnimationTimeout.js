@@ -19,7 +19,11 @@ export const requestAnimationTimeout = (
   callback: Function,
   delay: number,
 ): AnimationTimeoutId => {
-  const start = Date.now();
+  let start;
+  // wait for end of processing current event handler, because event handler may be long
+  Promise.resolve().then(() => {
+    start = Date.now();
+  });
 
   const timeout = () => {
     if (Date.now() - start >= delay) {

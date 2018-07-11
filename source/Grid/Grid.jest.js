@@ -4,6 +4,7 @@ import {Simulate} from 'react-dom/test-utils';
 import TestRenderer from 'react-test-renderer';
 import {render} from '../TestUtils';
 import Grid, {DEFAULT_SCROLLING_RESET_TIME_INTERVAL} from './Grid';
+import defaultCellRangeRenderer from './defaultCellRangeRenderer';
 import {CellMeasurer, CellMeasurerCache} from '../CellMeasurer';
 import {
   SCROLL_DIRECTION_BACKWARD,
@@ -1999,6 +2000,42 @@ describe('Grid', () => {
 
       // Only cleared non-visible cells
       expect(cellRendererCalls.length).toEqual(0);
+    });
+
+    it('should not trigger render by _debounceScrollEndedCallback if process slow table', async () => {
+      const scrollingResetTimeInterval = 50;
+      let cellRangeRendererCalls = 0;
+      function cellRangeRenderer(props) {
+        const startTime = Date.now();
+        while (Date.now() - startTime <= scrollingResetTimeInterval); // imitate very slow render
+        cellRangeRendererCalls++;
+        return defaultCellRangeRenderer(props);
+      }
+      const props = {
+        scrollingResetTimeInterval,
+        cellRangeRenderer,
+      };
+
+      const grid = render(getMarkup(props));
+      render(getMarkup(props));
+      expect(cellRangeRendererCalls).toEqual(1);
+
+      for (let i = 1; i <= 5; i++) {
+        cellRangeRendererCalls = 0;
+        simulateScroll({grid, scrollTop: i});
+        // small wait for maybe early _debounceScrollEndedCallback
+        await new Promise(resolve =>
+          setTimeout(resolve, scrollingResetTimeInterval / 2),
+        );
+        expect(cellRangeRendererCalls).toEqual(1);
+      }
+
+      cellRangeRendererCalls = 0;
+      // wait for real _debounceScrollEndedCallback
+      await new Promise(resolve =>
+        setTimeout(resolve, scrollingResetTimeInterval * 1.5),
+      );
+      expect(cellRangeRendererCalls).toEqual(1);
     });
 
     it('should support a custom :scrollingResetTimeInterval prop', async done => {
