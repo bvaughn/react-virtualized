@@ -1,6 +1,11 @@
 Changelog
 ------------
 
+##### 9.20.1
+
+* 🐛 Removing `sideEffects: false` from package.json. ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1163](https://github.com/bvaughn/react-virtualized/pull/1163))
+* 🐛 Fix `scrollToIndex` behavior in `InfiniteLoader`. ([mengdage](https://github.com/mengdage), [dcolens](https://github.com/dcolens) - [#1154](https://github.com/bvaughn/react-virtualized/pull/1154))
+
 ##### 9.20.0
 
 * 🎉 Code of Conduct and updated Issue/PR templates. ([aem](https://github.com/aem) - [#1052](https://github.com/bvaughn/react-virtualized/pull/1052))
