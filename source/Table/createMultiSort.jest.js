@@ -86,6 +86,29 @@ describe('createMultiSort', () => {
       simulate(multiSort.sort, 'a');
       expect(multiSort.sortBy).toEqual(['a']);
     });
+
+    it('resets sort-direction fields', () => {
+      const multiSort = createMultiSort(jest.fn(), {
+        defaultSortBy: ['a', 'b'],
+        defaultSortDirection: {
+          a: 'DESC',
+          b: 'ASC',
+        },
+      });
+      expect(multiSort.sortBy).toEqual(['a', 'b']);
+      expect(multiSort.sortDirection.a).toEqual('DESC');
+      expect(multiSort.sortDirection.b).toEqual('ASC');
+
+      simulate(multiSort.sort, 'a');
+      expect(multiSort.sortBy).toEqual(['a']);
+      expect(multiSort.sortDirection.a).toEqual('ASC');
+      expect(multiSort.sortDirection.b).toEqual(undefined);
+
+      simulate(multiSort.sort, 'b');
+      expect(multiSort.sortBy).toEqual(['b']);
+      expect(multiSort.sortDirection.a).toEqual(undefined);
+      expect(multiSort.sortDirection.b).toEqual('ASC');
+    });
   });
 
   describe('on shift click', () => {
@@ -123,6 +146,28 @@ describe('createMultiSort', () => {
       expect(multiSort.sortBy).toEqual(['a', 'b']);
       expect(multiSort.sortDirection.a).toBe('ASC');
       expect(multiSort.sortDirection.b).toBe('ASC');
+    });
+
+    it('able to shift+click more than once', () => {
+      const multiSort = createMultiSort(jest.fn());
+
+      simulate(multiSort.sort, 'a');
+      expect(multiSort.sortBy).toEqual(['a']);
+      expect(multiSort.sortDirection.a).toBe('ASC');
+
+      simulate(multiSort.sort, 'b', 'shift');
+      expect(multiSort.sortBy).toEqual(['a', 'b']);
+      expect(multiSort.sortDirection.a).toBe('ASC');
+      expect(multiSort.sortDirection.b).toBe('ASC');
+
+      simulate(multiSort.sort, 'b');
+      expect(multiSort.sortBy).toEqual(['b']);
+      expect(multiSort.sortDirection.b).toBe('DESC');
+
+      simulate(multiSort.sort, 'a', 'shift');
+      expect(multiSort.sortBy).toEqual(['b', 'a']);
+      expect(multiSort.sortDirection.a).toBe('ASC');
+      expect(multiSort.sortDirection.b).toBe('DESC');
     });
   });
 

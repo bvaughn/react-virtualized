@@ -73,9 +73,18 @@ export default function createMultiSort(
         delete sortDirection[dataKey];
       }
     } else {
+      // Clear sortBy array of all non-selected keys
       sortBy.length = 0;
       sortBy.push(dataKey);
 
+      // Clear sortDirection object of all non-selected keys
+      const sortDirectionKeys = Object.keys(sortDirection);
+      sortDirectionKeys.forEach(key => {
+        if (key !== dataKey) delete sortDirection[key];
+      });
+
+      // If key is already selected, reverse sort direction.
+      // Else, set sort direction to default direction.
       if (sortDirection.hasOwnProperty(dataKey)) {
         sortDirection[dataKey] =
           sortDirection[dataKey] === 'ASC' ? 'DESC' : 'ASC';
