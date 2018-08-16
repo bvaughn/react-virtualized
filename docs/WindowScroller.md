@@ -17,6 +17,7 @@ This may change with a future release but for the time being this component shou
 | scrollingResetTimeInterval | Number |  | Wait this amount of time after the last scroll event before resetting WindowScroller `pointer-events`; defaults to 150ms. |
 | serverHeight | Number |  | Height used for server-side rendering. |
 | serverWidth | Number |  | Width used for server-side rendering. |
+| autoHeight | Boolean | | Use height of inner scroll container instead of height |
 
 ### Render Props  
 | Property | Type | Description |
