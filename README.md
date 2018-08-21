@@ -240,6 +240,7 @@ Here are some great components built on top of react-virtualized:
 * [react-virtualized-select](https://github.com/bvaughn/react-virtualized-select): Drop-down menu for React with windowing to support large numbers of options.
 * [react-vtree](https://github.com/Lodin/react-vtree): Low-level tree component for React with virtualization to support large number of elements.
 * [react-virtualized-tree](https://github.com/diogofcunha/react-virtualized-tree/): A reactive tree component that aims to render large sets of tree structured data in an elegant and performant way
+* [react-timeline-9000](https://github.com/BHP-DevHub/react-timeline-9000/): A calendar timeline component that is capable of displaying and interacting with a large number of items
 
 Contributions
 ------------
