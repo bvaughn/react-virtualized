@@ -228,7 +228,7 @@ class MultiGrid extends React.PureComponent {
 
     // scrollTop and scrollLeft props are explicitly filtered out and ignored
 
-    const {scrollLeft, scrollTop} = this.state;
+    const {scrollLeft, scrollTop, isScrolling} = this.state;
 
     return (
       <div style={this._containerOuterStyle}>
@@ -238,6 +238,7 @@ class MultiGrid extends React.PureComponent {
             ...rest,
             onScroll,
             scrollLeft,
+            isScrolling: isScrolling || undefined,
           })}
         </div>
         <div style={this._containerBottomStyle}>
@@ -245,6 +246,7 @@ class MultiGrid extends React.PureComponent {
             ...rest,
             onScroll,
             scrollTop,
+            isScrolling: isScrolling || undefined,
           })}
           {this._renderBottomRightGrid({
             ...rest,
@@ -559,9 +561,14 @@ class MultiGrid extends React.PureComponent {
 
   _onScroll = scrollInfo => {
     const {scrollLeft, scrollTop} = scrollInfo;
+    const isScrolling =
+      this.state.scrollTop !== scrollTop ||
+      this.state.scrollLeft !== scrollLeft;
+
     this.setState({
       scrollLeft,
       scrollTop,
+      isScrolling,
     });
     const onScroll = this.props.onScroll;
     if (onScroll) {

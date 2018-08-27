@@ -712,4 +712,27 @@ describe('MultiGrid', () => {
       expect(onScrollbarPresenceChange).not.toHaveBeenCalled();
     });
   });
+
+  describe('isScrolling', () => {
+    it('should be true for all cells being rendered while scrolling', () => {
+      const cellRenderer = jest.fn();
+
+      const component = render(
+        getMarkup({
+          cellRenderer,
+        }),
+      );
+      cellRenderer.mockReset();
+
+      component._bottomRightGrid.handleScrollEvent({
+        scrollTop: 100,
+      });
+      expect(cellRenderer).toHaveBeenCalled();
+
+      cellRenderer.mock.calls.forEach(call => {
+        const args = call[0];
+        expect(args.isScrolling).toBeTruthy();
+      });
+    });
+  });
 });
