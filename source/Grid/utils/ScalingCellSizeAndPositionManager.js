@@ -140,7 +140,7 @@ export default class ScalingCellSizeAndPositionManager {
       containerSize,
       offset: safeOffset,
     });
-    while (true) {
+    for (;;) {
       const safeOffset1 = this._safeOffsetToOffset({
         containerSize,
         offset,
