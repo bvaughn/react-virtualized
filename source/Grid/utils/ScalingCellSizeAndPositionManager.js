@@ -132,15 +132,29 @@ export default class ScalingCellSizeAndPositionManager {
     containerSize,
     offset, // safe
   }: ContainerSizeAndOffset): VisibleCellRange {
-    offset = this._safeOffsetToOffset({
+    let safeOffset = this._safeOffsetToOffset({
       containerSize,
       offset,
     });
-
-    return this._cellSizeAndPositionManager.getVisibleCellRange({
+    let range = this._cellSizeAndPositionManager.getVisibleCellRange({
       containerSize,
-      offset,
+      offset: safeOffset,
     });
+    while (true) {
+      const safeOffset1 = this._safeOffsetToOffset({
+        containerSize,
+        offset,
+      });
+      if (safeOffset === safeOffset1) {
+        break;
+      }
+      safeOffset = safeOffset1;
+      range = this._cellSizeAndPositionManager.getVisibleCellRange({
+        containerSize,
+        offset: safeOffset,
+      });
+    }
+    return range;
   }
 
   resetCell(index: number): void {
