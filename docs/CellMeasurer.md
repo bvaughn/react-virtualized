@@ -116,7 +116,7 @@ To support this, a function-child is passed to `CellMeasurer` which then receive
 
 ```jsx
 import React from 'react';
-import { CellMeasurer, CellMeasurerCache, Grid } from 'react-virtualized';
+import { CellMeasurer, CellMeasurerCache, List } from 'react-virtualized';
 
 // In this example, average cell height is assumed to be about 50px.
 // This value will be used for the initial `Grid` layout.
