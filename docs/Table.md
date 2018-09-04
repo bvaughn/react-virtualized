@@ -22,6 +22,7 @@ This component expects explicit `width` and `height` parameters.
 | height | Number | ✓ | Fixed/available height for out DOM element |
 | id | String |  | Optional custom id to attach to root `Table` element. |
 | noRowsRenderer | Function |  | Callback used to render placeholder content when :rowCount is 0 |
+| onColumnClick | Function |  | Callback invoked when a user clicks on a table column. `({ columnData: any, dataKey: string, event: Event }): void` |
 | onHeaderClick | Function |  | Callback invoked when a user clicks on a table header. `({ columnData: any, dataKey: string, event: Event }): void` |
 | onRowClick | Function |  | Callback invoked when a user clicks on a table row. `({ event: Event, index: number, rowData: any }): void` |
 | onRowDoubleClick | Function |  | Callback invoked when a user double-clicks on a table row. `({ event: Event, index: number, rowData: any }): void` |
