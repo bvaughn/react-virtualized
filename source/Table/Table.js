@@ -85,6 +85,12 @@ export default class Table extends React.PureComponent {
     noRowsRenderer: PropTypes.func,
 
     /**
+     * Optional callback when a column is clicked.
+     * ({ columnData: any, dataKey: string }): void
+     */
+    onColumnClick: PropTypes.func,
+
+    /**
      * Optional callback when a column's header is clicked.
      * ({ columnData: any, dataKey: string }): void
      */
@@ -426,6 +432,7 @@ export default class Table extends React.PureComponent {
   }
 
   _createColumn({column, columnIndex, isScrolling, parent, rowData, rowIndex}) {
+    const {onColumnClick} = this.props;
     const {
       cellDataGetter,
       cellRenderer,
@@ -447,6 +454,10 @@ export default class Table extends React.PureComponent {
       rowIndex,
     });
 
+    const onClick = event => {
+      onColumnClick && onColumnClick({columnData, dataKey, event});
+    };
+
     const style = this._cachedColumnStyles[columnIndex];
 
     const title = typeof renderedCell === 'string' ? renderedCell : null;
@@ -459,6 +470,7 @@ export default class Table extends React.PureComponent {
         aria-describedby={id}
         className={cn('ReactVirtualized__Table__rowColumn', className)}
         key={'Row' + rowIndex + '-' + 'Col' + columnIndex}
+        onClick={onClick}
         role="gridcell"
         style={style}
         title={title}>
