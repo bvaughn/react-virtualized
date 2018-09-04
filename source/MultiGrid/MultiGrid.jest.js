@@ -309,8 +309,8 @@ describe('MultiGrid', () => {
       expect(bottomLeftAfter.style.getPropertyValue('width')).toEqual('75px');
       expect(bottomRightAfter.style.getPropertyValue('width')).toEqual('325px');
     });
-	
-	it('should update the MultiGrid width when cell height changes by getter function', () => {
+
+    it('should update the MultiGrid width when cell height changes by getter function', () => {
       let rowHeights = [30, 30, 30, 30, 30];
       function getRowHeight({index}) {
         return rowHeights[index] || 30;
@@ -347,13 +347,13 @@ describe('MultiGrid', () => {
       expect(bottomLeft.style.getPropertyValue('height')).toEqual('250px');
       expect(bottomRight.style.getPropertyValue('height')).toEqual('250px');
     });
-	
-	it('should update the MultiGrid width when cell width changes by getter function', () => {
+
+    it('should update the MultiGrid width when cell width changes by getter function', () => {
       let columnWidths = [100, 100, 100, 100, 100];
       function getCoumnWidth({index}) {
         return columnWidths[index];
       }
-      
+
       let multiGrid;
       let rendered = findDOMNode(
         render(
@@ -376,7 +376,7 @@ describe('MultiGrid', () => {
       expect(topRight.style.getPropertyValue('width')).toEqual('300px');
       expect(bottomLeft.style.getPropertyValue('width')).toEqual('100px');
       expect(bottomRight.style.getPropertyValue('width')).toEqual('300px');
-      
+
       columnWidths = [80, 100, 100, 100, 100];
       multiGrid.recomputeGridSize();
 
