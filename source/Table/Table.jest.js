@@ -1191,10 +1191,29 @@ describe('Table', () => {
       expect(node.getAttribute('role')).toEqual('grid');
     });
 
+    it('should set aria col/row count on the table', () => {
+      const node = findDOMNode(render(getMarkup()));
+      expect(node.getAttribute('aria-colcount')).toEqual('2');
+      expect(node.getAttribute('aria-rowcount')).toEqual(`${list.size}`);
+    });
+
+    it('should pass down aria labels on the table', () => {
+      const node = findDOMNode(
+        render(
+          getMarkup({
+            'aria-label': 'my-table-label',
+            'aria-labelledby': 'my-table-label-id',
+          }),
+        ),
+      );
+      expect(node.getAttribute('aria-label')).toEqual('my-table-label');
+      expect(node.getAttribute('aria-labelledby')).toEqual('my-table-label-id');
+    });
+
     it('should set aria role on the header row', () => {
       const rendered = findDOMNode(render(getMarkup()));
       const row = rendered.querySelector('.ReactVirtualized__Table__headerRow');
-      expect(row.getAttribute('role')).toEqual('row');
+      expect(row.getAttribute('role')).toEqual('rowheader');
     });
 
     it('should set appropriate aria role on the grid', () => {
@@ -1209,12 +1228,28 @@ describe('Table', () => {
       expect(row.getAttribute('role')).toEqual('row');
     });
 
+    it('should set aria rowindex on a row', () => {
+      const rendered = findDOMNode(render(getMarkup()));
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row');
+      expect(rows[0].getAttribute('aria-rowindex')).toEqual('1');
+      expect(rows[1].getAttribute('aria-rowindex')).toEqual('2');
+    });
+
     it('should set aria role on a cell', () => {
       const rendered = findDOMNode(render(getMarkup()));
       const cell = rendered.querySelector(
         '.ReactVirtualized__Table__rowColumn',
       );
       expect(cell.getAttribute('role')).toEqual('gridcell');
+    });
+
+    it('should set aria colindex on a cell', () => {
+      const rendered = findDOMNode(render(getMarkup()));
+      const cells = rendered.querySelectorAll(
+        '.ReactVirtualized__Table__rowColumn',
+      );
+      expect(cells[0].getAttribute('aria-colindex')).toEqual('1');
+      expect(cells[1].getAttribute('aria-colindex')).toEqual('2');
     });
 
     it('should set aria-describedby on a cell when the column has an id', () => {
@@ -1294,6 +1329,19 @@ describe('Table', () => {
         '.ReactVirtualized__Table__headerColumn',
       );
       expect(header.getAttribute('aria-sort')).toEqual('descending');
+    });
+
+    it('should set aria-sort to "none" if the column is sortable but not the current sort', () => {
+      const rendered = findDOMNode(
+        render(getMarkup({disableSort: true, sort: jest.fn()})),
+      );
+      const headers = rendered.querySelectorAll(
+        '.ReactVirtualized__Table__headerColumn',
+      );
+      // the first column is not sortable
+      expect(headers[0].getAttribute('aria-sort')).toBe(null);
+      // the second column is sortable
+      expect(headers[1].getAttribute('aria-sort')).toEqual('none');
     });
 
     it('should set id on a header column when the column has an id', () => {

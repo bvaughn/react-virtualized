@@ -378,19 +378,26 @@ export default class Table extends React.PureComponent {
       };
     });
 
+    const columns = this._getHeaderColumns();
+
     // Note that we specify :rowCount, :scrollbarWidth, :sortBy, and :sortDirection as properties on Grid even though these have nothing to do with Grid.
     // This is done because Grid is a pure component and won't update unless its properties or state has changed.
     // Any property that should trigger a re-render of Grid then is specified here to avoid a stale display.
     return (
       <div
+        aria-label={this.props['aria-label']}
+        aria-labelledby={this.props['aria-labelledby']}
+        aria-colcount={columns.length}
+        aria-rowcount={this.props.rowCount}
         className={cn('ReactVirtualized__Table', className)}
         id={id}
         role="grid"
+        tabIndex="0"
         style={style}>
         {!disableHeader &&
           headerRowRenderer({
             className: cn('ReactVirtualized__Table__headerRow', rowClass),
-            columns: this._getHeaderColumns(),
+            columns,
             style: {
               ...rowStyleObject,
               height: headerHeight,
@@ -456,6 +463,7 @@ export default class Table extends React.PureComponent {
     // See PR https://github.com/bvaughn/react-virtualized/pull/942
     return (
       <div
+        aria-colindex={columnIndex + 1}
         aria-describedby={id}
         className={cn('ReactVirtualized__Table__rowColumn', className)}
         key={'Row' + rowIndex + '-' + 'Col' + columnIndex}
@@ -545,6 +553,7 @@ export default class Table extends React.PureComponent {
       };
 
       headerAriaLabel = column.props['aria-label'] || label || dataKey;
+      headerAriaSort = 'none';
       headerTabIndex = 0;
       headerOnClick = onClick;
       headerOnKeyDown = onKeyDown;
