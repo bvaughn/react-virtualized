@@ -1213,7 +1213,7 @@ describe('Table', () => {
     it('should set aria role on the header row', () => {
       const rendered = findDOMNode(render(getMarkup()));
       const row = rendered.querySelector('.ReactVirtualized__Table__headerRow');
-      expect(row.getAttribute('role')).toEqual('rowheader');
+      expect(row.getAttribute('role')).toEqual('row');
     });
 
     it('should set appropriate aria role on the grid', () => {
