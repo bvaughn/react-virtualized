@@ -9,7 +9,7 @@ This guide covers a few of the most commonly asked questions about using the com
 
 This component uses [`javascript-detect-element-resize`](https://github.com/sdecima/javascript-detect-element-resize) algorithm, and it does a little direct DOM manipulation to its parent, outside React's VirtualDOM.
 
-If the parent has style `position: static` (default value), it changes to `position: relative`. It also and injects a sibling `div` for size measuring.
+If the parent has style `position: static` (default value), it changes to `position: relative`. It also injects a sibling `div` for size measuring.
 
 #### Why is my `AutoSizer` setting a height of 0?
 `AutoSizer` expands to _fill_ its parent but it will not _stretch_ the parent.
