@@ -31,8 +31,6 @@ export default class GridExample extends React.PureComponent {
       fixedWidth: true,
     });
 
-    this._columnHeights = {};
-
     this.state = {
       columnWidth: 200,
       height: 300,
@@ -121,7 +119,6 @@ export default class GridExample extends React.PureComponent {
             label="Column Width"
             name="columnWidth"
             onChange={event => {
-              this._columnHeights = {};
               this._cache.clearAll();
               this.setState(
                 {
@@ -140,7 +137,6 @@ export default class GridExample extends React.PureComponent {
             label="Gutter Size"
             name="gutterSize"
             onChange={event => {
-              this._columnHeights = {};
               this.setState(
                 {
                   gutterSize: parseInt(event.target.value, 10) || 10,
@@ -228,7 +224,6 @@ export default class GridExample extends React.PureComponent {
   _onResize({width}) {
     this._width = width;
 
-    this._columnHeights = {};
     this._calculateColumnCount();
     this._resetCellPositioner();
     this._masonry.recomputeCellPositions();
