@@ -19,7 +19,11 @@ import SortDirection from './SortDirection';
  */
 export default class Table extends React.PureComponent {
   static propTypes = {
+    /** This is just set on the grid top element. */
     'aria-label': PropTypes.string,
+
+    /** This is just set on the grid top element. */
+    'aria-labelledby': PropTypes.string,
 
     /**
      * Removes fixed height from the scrollingContainer so that the total height
@@ -383,6 +387,10 @@ export default class Table extends React.PureComponent {
     // Any property that should trigger a re-render of Grid then is specified here to avoid a stale display.
     return (
       <div
+        aria-label={this.props['aria-label']}
+        aria-labelledby={this.props['aria-labelledby']}
+        aria-colcount={React.Children.toArray(children).length}
+        aria-rowcount={this.props.rowCount}
         className={cn('ReactVirtualized__Table', className)}
         id={id}
         role="grid"
@@ -456,6 +464,7 @@ export default class Table extends React.PureComponent {
     // See PR https://github.com/bvaughn/react-virtualized/pull/942
     return (
       <div
+        aria-colindex={columnIndex + 1}
         aria-describedby={id}
         className={cn('ReactVirtualized__Table__rowColumn', className)}
         key={'Row' + rowIndex + '-' + 'Col' + columnIndex}
@@ -545,6 +554,7 @@ export default class Table extends React.PureComponent {
       };
 
       headerAriaLabel = column.props['aria-label'] || label || dataKey;
+      headerAriaSort = 'none';
       headerTabIndex = 0;
       headerOnClick = onClick;
       headerOnKeyDown = onKeyDown;

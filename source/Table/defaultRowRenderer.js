@@ -18,7 +18,7 @@ export default function defaultRowRenderer({
   rowData,
   style,
 }: RowRendererParams) {
-  const a11yProps = {};
+  const a11yProps = {'aria-rowindex': index + 1};
 
   if (
     onRowClick ||
