@@ -702,6 +702,30 @@ describe('Table', () => {
     });
   });
 
+  describe('onColumnClick', () => {
+    it('should call :onColumnClick with the correct arguments when a column is clicked', () => {
+      const onColumnClick = jest.fn();
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            onColumnClick,
+          }),
+        ),
+      );
+      const nameColumn = rendered.querySelector(
+        '.ReactVirtualized__Table__rowColumn:first-of-type',
+      );
+
+      Simulate.click(nameColumn);
+
+      expect(onColumnClick).toHaveBeenCalledTimes(1);
+      const params = onColumnClick.mock.calls[0][0];
+      expect(params.dataKey).toEqual('name');
+      expect(params.columnData.data).toEqual(123);
+      expect(params.event.type).toEqual('click');
+    });
+  });
+
   describe('onHeaderClick', () => {
     it('should call :onHeaderClick with the correct arguments when a column header is clicked and sorting is disabled', () => {
       const onHeaderClick = jest.fn();
