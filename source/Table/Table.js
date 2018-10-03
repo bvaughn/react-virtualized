@@ -406,11 +406,11 @@ export default class Table extends React.PureComponent {
             className: cn('ReactVirtualized__Table__headerRow', rowClass),
             columns: this._getHeaderColumns(),
             style: {
-              ...rowStyleObject,
               height: headerHeight,
               overflow: 'hidden',
               paddingRight: scrollbarWidth,
               width: width,
+              ...rowStyleObject,
             },
           })}
 
@@ -635,10 +635,10 @@ export default class Table extends React.PureComponent {
     const className = cn('ReactVirtualized__Table__row', rowClass);
     const flattenedStyle = {
       ...style,
-      ...rowStyleObject,
       height: this._getRowHeight(index),
       overflow: 'hidden',
       paddingRight: scrollbarWidth,
+      ...rowStyleObject,
     };
 
     return rowRenderer({
