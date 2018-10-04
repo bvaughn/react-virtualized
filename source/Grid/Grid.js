@@ -512,19 +512,23 @@ class Grid extends React.PureComponent<Props, State> {
   }
 
   /**
-   * Pre-measure all columns and rows in a Grid.
+   * Pre-measure all columns and rows in a Grid if rowCount and columnCount are set.
    * Typically cells are only measured as needed and estimated sizes are used for cells that have not yet been measured.
    * This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
    */
   measureAllCells() {
     const {columnCount, rowCount} = this.props;
     const {instanceProps} = this.state;
-    instanceProps.columnSizeAndPositionManager.getSizeAndPositionOfCell(
-      columnCount - 1,
-    );
-    instanceProps.rowSizeAndPositionManager.getSizeAndPositionOfCell(
-      rowCount - 1,
-    );
+    if (columnCount !== undefined && columnCount > 0) {
+      instanceProps.columnSizeAndPositionManager.getSizeAndPositionOfCell(
+        columnCount - 1,
+      );
+    }
+    if (rowCount !== undefined && rowCount > 0) {
+      instanceProps.rowSizeAndPositionManager.getSizeAndPositionOfCell(
+        rowCount - 1,
+      );
+    }
   }
 
   /**
