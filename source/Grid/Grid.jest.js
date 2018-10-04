@@ -2114,6 +2114,21 @@ describe('Grid', () => {
         grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
       ).toEqual(200);
     });
+    it('should not throw an exception if called on an empty list', () => {
+      const grid = render(
+        getMarkup({
+          columnCount: 0,
+          columnWidth: () => 100,
+          estimatedColumnSize: 150,
+          estimatedRowSize: 15,
+          height: 0,
+          rowCount: 0,
+          rowHeight: () => 20,
+          width: 0,
+        }),
+      );
+      grid.measureAllCells();
+    });
   });
 
   describe('recomputeGridSize', () => {
