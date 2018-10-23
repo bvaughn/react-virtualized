@@ -1,5 +1,16 @@
 Changelog
 ------------
+##### 9.21.0
+
+* 🎉 Added new use case example for CellMeasurer. ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1168](https://github.com/bvaughn/react-virtualized/pull/1168))
+* 🎉 Added react-timeline-9000 as a related library. ([vasdee](https://github.com/vasdee) - [#1197](https://github.com/bvaughn/react-virtualized/pull/1197))
+* 🐛 Fix CellMeasurer docs with correct import statement. ([skipjack](https://github.com/skipjack) - [#1187](https://github.com/bvaughn/react-virtualized/pull/1187))
+* 🐛 Fix broken Slack badge. ([slieshke](https://github.com/slieshke) - [#1205](https://github.com/bvaughn/react-virtualized/pull/1205))
+* 🐛 Fix type in CellMeasurer example. ([rloqvist](https://github.com/rloqvist) - [#1190](https://github.com/bvaughn/react-virtualized/pull/1190))
+* 🐛 Fix Table aria attributes. ([jsomsanith](https://github.com/jsomsanith) - [#1208](https://github.com/bvaughn/react-virtualized/pull/1208))
+* 🐛 Removed unused variable in Masonry example. ([ignocide](https://github.com/ignocide) - [#1218](https://github.com/bvaughn/react-virtualized/pull/1218))
+* 🎉 Add onColumnClick to Table. ([grahamlyus](https://github.com/grahamlyus) - [#1207](https://github.com/bvaughn/react-virtualized/pull/1207))
+* 🎉 Allow users to override default table row styles. ([emroussel](https://github.com/emroussel) - [#1175](https://github.com/bvaughn/react-virtualized/pull/1175))
 
 ##### 9.20.1
 
