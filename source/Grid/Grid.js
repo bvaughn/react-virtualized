@@ -548,6 +548,7 @@ class Grid extends React.PureComponent<Props, State> {
         ? columnIndex <= scrollToColumn
         : columnIndex >= scrollToColumn);
     this._recomputeScrollTopFlag =
+      this.state.scrollPositionChangeReason === 'requested' &&
       scrollToRow >= 0 &&
       (this.state.scrollDirectionVertical === SCROLL_DIRECTION_FORWARD
         ? rowIndex <= scrollToRow
