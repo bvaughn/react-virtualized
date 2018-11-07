@@ -196,7 +196,9 @@ export default class CellSizeAndPositionManager {
         idealOffset = maxOffset - (containerSize - datum.size) / 2;
         break;
       default:
-        idealOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
+        if (datum.size >= containerSize) idealOffset = maxOffset;
+        else
+          idealOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
         break;
     }
 
