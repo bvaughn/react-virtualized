@@ -144,7 +144,7 @@ Changelog
 * 🎉 `WindowScroller` supports `scrollToIndex` prop. ([@leoasis](https://github.com/leoasis) - [#643](https://github.com/bvaughn/react-virtualized/pull/643))
 * 🎉 Allow `ArrowKeyStepper` to be used as a controlled component. ([@mking-clari](https://github.com/mking-clari) - [#688](https://github.com/bvaughn/react-virtualized/pull/688))
 * 🎉New `handleScroll` method on `Grid` to better support custom scrollbars. ([@5angel](https://github.com/5angel) - [#693](https://github.com/bvaughn/react-virtualized/pull/693))
-* 🐛 Added edge-case gaurd to `WindowScroller ` to prevent calling `setState` when unmounted. ([@liorbrauer](https://github.com/liorbrauer) - [#689](https://github.com/bvaughn/react-virtualized/pull/689))
+* 🐛 Added edge-case guard to `WindowScroller ` to prevent calling `setState` when unmounted. ([@liorbrauer](https://github.com/liorbrauer) - [#689](https://github.com/bvaughn/react-virtualized/pull/689))
 * 🐛 Fixed edge-case in `Grid` where setting an initial scroll-to offset with a `height` or `width` of 0 caused the scroll-to prop to be ignored when size later changed. ([#691](https://github.com/bvaughn/react-virtualized/pull/691))
 
 ##### 9.7.6
@@ -953,7 +953,7 @@ Fixed `AutoSizer` bug that caused it to prevent parent flex containers from shri
 Added `scrollToIndex` property to `FlexTable` to be passed through to inner `Grid`.
 
 ##### 4.6.6
-Better gaurd against `NaN` values for `clientWidth` and `offsetWidth` for test environments using `jsdom`.
+Better guard against `NaN` values for `clientWidth` and `offsetWidth` for test environments using `jsdom`.
 
 ##### 4.6.5
 Added `react-dom` to the Webpack :externals node to avoid including it in the build.
