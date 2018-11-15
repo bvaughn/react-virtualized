@@ -1,20 +1,50 @@
-import PropTypes from 'prop-types';
+// @flow
 import * as React from 'react';
+
+type Scrollable = {
+  +scrollToPosition: ({scrollTop: number, scrollLeft: number}) => void,
+};
+
+type ScrollableElement = ?React.ElementRef<any> & Scrollable;
+
+type OnScrollParams = {
+  clientHeight: number,
+  clientWidth: number,
+  scrollHeight: number,
+  scrollLeft: number,
+  scrollTop: number,
+  scrollWidth: number,
+};
+
+type Props = {
+  /**
+   * Function responsible for rendering 2 or more virtualized components.
+   */
+  children: (
+    params: OnScrollParams & {onScroll: OnScrollParams => void} & {
+      registerChild: (element: ScrollableElement | null) => void,
+    },
+  ) => React.Node,
+};
+
+type State = {
+  clientHeight: number,
+  clientWidth: number,
+  scrollHeight: number,
+  scrollLeft: number,
+  scrollTop: number,
+  scrollWidth: number,
+};
 
 /**
  * HOC that simplifies the process of synchronizing scrolling between two or more virtualized components.
  */
-export default class ScrollSync extends React.PureComponent {
-  static propTypes = {
-    /**
-     * Function responsible for rendering 2 or more virtualized components.
-     * This function should implement the following signature:
-     * ({ onScroll, scrollLeft, scrollTop }) => PropTypes.element
-     */
-    children: PropTypes.func.isRequired,
-  };
+export default class ScrollSync extends React.PureComponent<Props, State> {
+  _elements: (ScrollableElement | null)[] = [];
+  _onScroll: (params: OnScrollParams) => void;
+  _registerChild: (element: ScrollableElement | null) => void;
 
-  constructor(props, context) {
+  constructor(props: Props, context: any) {
     super(props, context);
 
     this.state = {
@@ -27,6 +57,9 @@ export default class ScrollSync extends React.PureComponent {
     };
 
     this._onScroll = this._onScroll.bind(this);
+    this._registerChild = this._registerChild.bind(this);
+
+    this._elements = [];
   }
 
   render() {
@@ -48,6 +81,7 @@ export default class ScrollSync extends React.PureComponent {
       scrollLeft,
       scrollTop,
       scrollWidth,
+      registerChild: this._registerChild,
     });
   }
 
@@ -67,5 +101,18 @@ export default class ScrollSync extends React.PureComponent {
       scrollTop,
       scrollWidth,
     });
+    this._elements.forEach(element => {
+      if (element != null && element.scrollToPosition)
+        element.scrollToPosition({scrollLeft, scrollTop});
+    });
+  }
+
+  _registerChild(element: ScrollableElement | null) {
+    if (element == null || !element.scrollToPosition) {
+      console.warn(
+        "ScrollSync registerChild expects to be passed a component with 'scrollToPosition' function",
+      );
+    }
+    this._elements.push(element);
   }
 }

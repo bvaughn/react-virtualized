@@ -194,8 +194,8 @@ type Props = {
   /** Wait this amount of time after the last scroll event before resetting Grid `pointer-events`. */
   scrollingResetTimeInterval: number,
 
-  /** Horizontal offset. */
-  scrollLeft?: number,
+  /** Horizontal offset on mount. */
+  defaultScrollLeft?: number,
 
   /**
    * Controls scroll-to-cell behavior of the Grid.
@@ -207,8 +207,8 @@ type Props = {
   /** Column index to ensure visible (by forcefully scrolling if necessary) */
   scrollToColumn: number,
 
-  /** Vertical offset. */
-  scrollTop?: number,
+  /** Vertical offset on mount. */
+  defaultScrollTop?: number,
 
   /** Row index to ensure visible (by forcefully scrolling if necessary) */
   scrollToRow: number,
@@ -350,9 +350,10 @@ class Grid extends React.PureComponent<Props, State> {
       isScrolling: false,
       scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
       scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
-      scrollLeft: 0,
-      scrollTop: 0,
-      scrollPositionChangeReason: null,
+      ...Grid._getScrollToPositionStateUpdate({
+        scrollTop: props.defaultScrollTop || 0,
+        scrollLeft: props.defaultScrollLeft || 0,
+      }),
 
       needToResetStyleCache: false,
     };
@@ -590,9 +591,7 @@ class Grid extends React.PureComponent<Props, State> {
     const {
       getScrollbarSize,
       height,
-      scrollLeft,
       scrollToColumn,
-      scrollTop,
       scrollToRow,
       width,
     } = this.props;
@@ -616,21 +615,6 @@ class Grid extends React.PureComponent<Props, State> {
         stateUpdate.instanceProps.scrollbarSizeMeasured = true;
         return stateUpdate;
       });
-    }
-
-    if (
-      (typeof scrollLeft === 'number' && scrollLeft >= 0) ||
-      (typeof scrollTop === 'number' && scrollTop >= 0)
-    ) {
-      const stateUpdate = Grid._getScrollToPositionStateUpdate({
-        prevState: this.state,
-        scrollLeft,
-        scrollTop,
-      });
-      if (stateUpdate) {
-        stateUpdate.needToResetStyleCache = false;
-        this.setState(stateUpdate);
-      }
     }
 
     // refs don't work in `react-test-renderer`
@@ -660,8 +644,8 @@ class Grid extends React.PureComponent<Props, State> {
 
     // Initialize onScroll callback
     this._invokeOnScrollMemoizer({
-      scrollLeft: scrollLeft || 0,
-      scrollTop: scrollTop || 0,
+      scrollLeft: this.state.scrollLeft || 0,
+      scrollTop: this.state.scrollTop || 0,
       totalColumnsWidth: instanceProps.columnSizeAndPositionManager.getTotalSize(),
       totalRowsHeight: instanceProps.rowSizeAndPositionManager.getTotalSize(),
     });
@@ -828,22 +812,6 @@ class Grid extends React.PureComponent<Props, State> {
     ) {
       newState.scrollLeft = 0;
       newState.scrollTop = 0;
-
-      // only use scroll{Left,Top} from props if scrollTo{Column,Row} isn't specified
-      // scrollTo{Column,Row} should override scroll{Left,Top}
-    } else if (
-      (nextProps.scrollLeft !== prevState.scrollLeft &&
-        nextProps.scrollToColumn < 0) ||
-      (nextProps.scrollTop !== prevState.scrollTop && nextProps.scrollToRow < 0)
-    ) {
-      Object.assign(
-        newState,
-        Grid._getScrollToPositionStateUpdate({
-          prevState,
-          scrollLeft: nextProps.scrollLeft,
-          scrollTop: nextProps.scrollTop,
-        }),
-      );
     }
 
     let {instanceProps} = prevState;
@@ -1392,7 +1360,7 @@ class Grid extends React.PureComponent<Props, State> {
     scrollLeft,
     scrollTop,
   }: {
-    prevState: State,
+    prevState?: State,
     scrollLeft?: number,
     scrollTop?: number,
   }): $Shape<State> {
@@ -1402,7 +1370,7 @@ class Grid extends React.PureComponent<Props, State> {
 
     if (typeof scrollLeft === 'number' && scrollLeft >= 0) {
       newState.scrollDirectionHorizontal =
-        scrollLeft > prevState.scrollLeft
+        prevState == null || scrollLeft > prevState.scrollLeft
           ? SCROLL_DIRECTION_FORWARD
           : SCROLL_DIRECTION_BACKWARD;
       newState.scrollLeft = scrollLeft;
@@ -1410,7 +1378,7 @@ class Grid extends React.PureComponent<Props, State> {
 
     if (typeof scrollTop === 'number' && scrollTop >= 0) {
       newState.scrollDirectionVertical =
-        scrollTop > prevState.scrollTop
+        prevState == null || scrollTop > prevState.scrollTop
           ? SCROLL_DIRECTION_FORWARD
           : SCROLL_DIRECTION_BACKWARD;
       newState.scrollTop = scrollTop;
@@ -1419,10 +1387,10 @@ class Grid extends React.PureComponent<Props, State> {
     if (
       (typeof scrollLeft === 'number' &&
         scrollLeft >= 0 &&
-        scrollLeft !== prevState.scrollLeft) ||
+        (prevState == null || scrollLeft !== prevState.scrollLeft)) ||
       (typeof scrollTop === 'number' &&
         scrollTop >= 0 &&
-        scrollTop !== prevState.scrollTop)
+        (prevState == null || scrollTop !== prevState.scrollTop))
     ) {
       return newState;
     }
@@ -1434,10 +1402,26 @@ class Grid extends React.PureComponent<Props, State> {
    * Useful for animating position changes.
    */
   scrollToPosition({scrollLeft, scrollTop}: ScrollPosition) {
+    const {
+      scrollHeight,
+      scrollWidth,
+      clientHeight,
+      clientWidth,
+    } = this._scrollingContainer;
+
+    const maxScrollTop = scrollHeight - clientHeight;
+    const maxScrollLeft = scrollWidth - clientWidth;
+
     const stateUpdate = Grid._getScrollToPositionStateUpdate({
       prevState: this.state,
-      scrollLeft,
-      scrollTop,
+      scrollLeft:
+        scrollLeft != null && maxScrollLeft
+          ? Math.min(scrollLeft, maxScrollLeft)
+          : scrollLeft,
+      scrollTop:
+        scrollTop != null && maxScrollTop
+          ? Math.min(scrollTop, maxScrollTop)
+          : scrollTop,
     });
 
     if (stateUpdate) {

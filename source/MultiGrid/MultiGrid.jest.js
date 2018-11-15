@@ -462,7 +462,7 @@ describe('MultiGrid', () => {
           getMarkup({
             columnWidth: 50,
             fixedColumnCount: 2,
-            scrollLeft: 850,
+            defaultScrollLeft: 850,
           }),
         ),
       );
@@ -479,7 +479,7 @@ describe('MultiGrid', () => {
           getMarkup({
             columnWidth: 50,
             fixedColumnCount: 2,
-            scrollTop: 500,
+            defaultScrollTop: 500,
           }),
         ),
       );
@@ -490,20 +490,25 @@ describe('MultiGrid', () => {
       expect(bottomRightGrid.scrollTop).toEqual(500);
     });
 
-    it('should adjust :scrollTop and :scrollLeft when scrollTop and scrollLeft change', () => {
-      render(getMarkup());
-      const rendered = findDOMNode(
-        render(
-          getMarkup({
-            scrollTop: 750,
-            scrollLeft: 900,
-          }),
-        ),
-      );
+    it('should adjust :scrollTop and :scrollLeft DOM properties when scrollToPosition() is called', () => {
+      const multiGrid = render(getMarkup());
+      const rendered = findDOMNode(multiGrid);
       const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
+
       const topRightGrid = grids[1];
       const bottomLeftGrid = grids[2];
       const bottomRightGrid = grids[3];
+
+      expect(topRightGrid.scrollLeft).toEqual(0);
+      expect(bottomRightGrid.scrollLeft).toEqual(0);
+      expect(bottomLeftGrid.scrollTop).toEqual(0);
+      expect(bottomRightGrid.scrollTop).toEqual(0);
+
+      multiGrid.scrollToPosition({
+        scrollTop: 750,
+        scrollLeft: 900,
+      });
+
       expect(topRightGrid.scrollLeft).toEqual(900);
       expect(bottomRightGrid.scrollLeft).toEqual(900);
       expect(bottomLeftGrid.scrollTop).toEqual(750);

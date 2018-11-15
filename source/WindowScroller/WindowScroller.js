@@ -13,6 +13,9 @@ import {
 } from './utils/dimensions';
 import createDetectElementResize from '../vendor/detectElementResize';
 
+type Scrollable = {+scrollToPosition: (scrollTop: number) => void};
+type ScrollableElement = ?React.ElementRef<any> & Scrollable;
+
 type Props = {
   /**
    * Function responsible for rendering children.
@@ -21,7 +24,8 @@ type Props = {
    */
   children: ({
     onChildScroll: ({scrollTop: number}) => void,
-    registerChild: (?Element) => void,
+    registerChild: (ScrollableElement | null) => void,
+    registerChildContainer: (?Element) => void,
     height: number,
     isScrolling: boolean,
     scrollLeft: number,
@@ -87,7 +91,8 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _positionFromTop = 0;
   _positionFromLeft = 0;
   _detectElementResize: DetectElementResize;
-  _child: ?Element;
+  _child: ScrollableElement | null;
+  _childContainer: ?Element;
 
   state = {
     ...getDimensions(this.props.scrollElement, this.props),
@@ -100,7 +105,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     const {onResize} = this.props;
     const {height, width} = this.state;
 
-    const thisNode = this._child || ReactDOM.findDOMNode(this);
+    const thisNode = this._childContainer || ReactDOM.findDOMNode(this);
     if (thisNode instanceof Element && scrollElement) {
       const offset = getPositionOffset(thisNode, scrollElement);
       this._positionFromTop = offset.top;
@@ -171,6 +176,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     return children({
       onChildScroll: this._onChildScroll,
       registerChild: this._registerChild,
+      registerChildContainer: this._registerChildContainer,
       height,
       isScrolling,
       scrollLeft,
@@ -180,12 +186,21 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   }
 
   _registerChild = element => {
-    if (element && !(element instanceof Element)) {
+    if (element == null || !element.scrollToPosition) {
       console.warn(
-        'WindowScroller registerChild expects to be passed Element or null',
+        "WindowScroller registerChild expects to be passed a component with 'scrollToPosition' function",
       );
     }
     this._child = element;
+  };
+
+  _registerChildContainer = element => {
+    if (element && !(element instanceof Element)) {
+      console.warn(
+        'WindowScroller registerChildContainer expects to be passed Element or null',
+      );
+    }
+    this._childContainer = element;
     this.updatePosition();
   };
 
@@ -251,6 +266,10 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
         scrollLeft,
         scrollTop,
       });
+
+      if (this._child != null && this._child.scrollToPosition) {
+        this._child.scrollToPosition(scrollTop);
+      }
     }
   };
 

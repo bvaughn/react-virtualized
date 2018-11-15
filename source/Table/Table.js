@@ -203,8 +203,8 @@ export default class Table extends React.PureComponent {
     /** Row index to ensure visible (by forcefully scrolling if necessary) */
     scrollToIndex: PropTypes.number.isRequired,
 
-    /** Vertical offset. */
-    scrollTop: PropTypes.number,
+    /** Vertical offset on mount. */
+    defaultScrollTop: PropTypes.number,
 
     /**
      * Sort function to be called if a sortable header is clicked.

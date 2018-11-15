@@ -55,8 +55,6 @@ class MultiGrid extends React.PureComponent {
   };
 
   state = {
-    scrollLeft: 0,
-    scrollTop: 0,
     scrollbarSize: 0,
     showHorizontalScrollbar: false,
     showVerticalScrollbar: false,
@@ -107,6 +105,12 @@ class MultiGrid extends React.PureComponent {
     this._bottomRightGrid && this._bottomRightGrid.forceUpdate();
     this._topLeftGrid && this._topLeftGrid.forceUpdate();
     this._topRightGrid && this._topRightGrid.forceUpdate();
+  }
+
+  scrollToPosition({scrollTop, scrollLeft}) {
+    if (this._bottomRightGrid) {
+      this._bottomRightGrid.scrollToPosition({scrollTop, scrollLeft});
+    }
   }
 
   /** See Grid#invalidateCellSizeAfterRender */
@@ -162,42 +166,7 @@ class MultiGrid extends React.PureComponent {
     this._maybeCalculateCachedStyles(true);
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (
-      nextProps.scrollLeft !== prevState.scrollLeft ||
-      nextProps.scrollTop !== prevState.scrollTop
-    ) {
-      return {
-        scrollLeft:
-          nextProps.scrollLeft != null && nextProps.scrollLeft >= 0
-            ? nextProps.scrollLeft
-            : prevState.scrollLeft,
-        scrollTop:
-          nextProps.scrollTop != null && nextProps.scrollTop >= 0
-            ? nextProps.scrollTop
-            : prevState.scrollTop,
-      };
-    }
-
-    return null;
-  }
-
   componentDidMount() {
-    const {scrollLeft, scrollTop} = this.props;
-
-    if (scrollLeft > 0 || scrollTop > 0) {
-      const newState = {};
-
-      if (scrollLeft > 0) {
-        newState.scrollLeft = scrollLeft;
-      }
-
-      if (scrollTop > 0) {
-        newState.scrollTop = scrollTop;
-      }
-
-      this.setState(newState);
-    }
     this._handleInvalidatedGridSize();
   }
 
@@ -226,10 +195,6 @@ class MultiGrid extends React.PureComponent {
       return null;
     }
 
-    // scrollTop and scrollLeft props are explicitly filtered out and ignored
-
-    const {scrollLeft, scrollTop} = this.state;
-
     return (
       <div style={this._containerOuterStyle}>
         <div style={this._containerTopStyle}>
@@ -237,23 +202,19 @@ class MultiGrid extends React.PureComponent {
           {this._renderTopRightGrid({
             ...rest,
             onScroll,
-            scrollLeft,
           })}
         </div>
         <div style={this._containerBottomStyle}>
           {this._renderBottomLeftGrid({
             ...rest,
             onScroll,
-            scrollTop,
           })}
           {this._renderBottomRightGrid({
             ...rest,
             onScroll,
             onSectionRendered,
-            scrollLeft,
             scrollToColumn,
             scrollToRow,
-            scrollTop,
           })}
         </div>
       </div>
@@ -559,10 +520,12 @@ class MultiGrid extends React.PureComponent {
 
   _onScroll = scrollInfo => {
     const {scrollLeft, scrollTop} = scrollInfo;
-    this.setState({
-      scrollLeft,
-      scrollTop,
-    });
+    if (this._topRightGrid) {
+      this._topRightGrid.scrollToPosition({scrollLeft});
+    }
+    if (this._bottomLeftGrid) {
+      this._bottomLeftGrid.scrollToPosition({scrollTop});
+    }
     const onScroll = this.props.onScroll;
     if (onScroll) {
       onScroll(scrollInfo);
@@ -595,18 +558,16 @@ class MultiGrid extends React.PureComponent {
 
   _onScrollLeft = scrollInfo => {
     const {scrollLeft} = scrollInfo;
-    this._onScroll({
-      scrollLeft,
-      scrollTop: this.state.scrollTop,
-    });
+    if (this._bottomRightGrid) {
+      this._bottomRightGrid.scrollToPosition({scrollLeft});
+    }
   };
 
   _onScrollTop = scrollInfo => {
     const {scrollTop} = scrollInfo;
-    this._onScroll({
-      scrollTop,
-      scrollLeft: this.state.scrollLeft,
-    });
+    if (this._bottomRightGrid) {
+      this._bottomRightGrid.scrollToPosition({scrollTop});
+    }
   };
 
   _renderBottomLeftGrid(props) {
@@ -765,7 +726,6 @@ class MultiGrid extends React.PureComponent {
         onScroll={enableFixedRowScroll ? this._onScrollLeft : undefined}
         ref={this._topRightGridRef}
         rowCount={fixedRowCount}
-        scrollLeft={scrollLeft}
         style={style}
         tabIndex={null}
         width={width}

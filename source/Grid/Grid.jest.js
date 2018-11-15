@@ -1039,8 +1039,8 @@ describe('Grid', () => {
     });
   });
 
-  describe(':scrollLeft and :scrollTop properties', () => {
-    it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
+  describe(':defaultScrollLeft and :defaultScrollTop properties', () => {
+    it('should render correctly when :defaultScrollLeft and :defaultScrollTop properties are specified', () => {
       let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex;
       findDOMNode(
         render(
@@ -1052,8 +1052,8 @@ describe('Grid', () => {
                 rowStartIndex,
                 rowStopIndex,
               } = params),
-            scrollLeft: 250,
-            scrollTop: 100,
+            defaultScrollLeft: 250,
+            defaultScrollTop: 100,
           }),
         ),
       );
@@ -1062,11 +1062,13 @@ describe('Grid', () => {
       expect(columnStartIndex).toEqual(5);
       expect(columnStopIndex).toEqual(8);
     });
+  });
 
-    it('should render correctly when :scrollLeft and :scrollTop properties are updated', () => {
+  describe('scrollToPosition() method', () => {
+    it('should render correctly when scrollToPosition() is called', () => {
       let columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex;
 
-      render(
+      const grid = render(
         getMarkup({
           onSectionRendered: params =>
             ({
@@ -1077,24 +1079,17 @@ describe('Grid', () => {
             } = params),
         }),
       );
+
       expect(rowStartIndex).toEqual(0);
       expect(rowStopIndex).toEqual(4);
       expect(columnStartIndex).toEqual(0);
       expect(columnStopIndex).toEqual(3);
 
-      render(
-        getMarkup({
-          onSectionRendered: params =>
-            ({
-              columnStartIndex,
-              columnStopIndex,
-              rowStartIndex,
-              rowStopIndex,
-            } = params),
-          scrollLeft: 250,
-          scrollTop: 100,
-        }),
-      );
+      grid.scrollToPosition({
+        scrollLeft: 250,
+        scrollTop: 100,
+      });
+
       expect(rowStartIndex).toEqual(5);
       expect(rowStopIndex).toEqual(9);
       expect(columnStartIndex).toEqual(5);
@@ -1140,8 +1135,8 @@ describe('Grid', () => {
       render(
         getMarkup({
           onScroll: params => onScrollCalls.push(params),
-          scrollLeft: 50,
-          scrollTop: 100,
+          defaultScrollLeft: 50,
+          defaultScrollTop: 100,
         }),
       );
       expect(onScrollCalls).toEqual([
@@ -1209,8 +1204,8 @@ describe('Grid', () => {
           columnCount: 1,
           columnWidth: 50,
           onScroll: params => onScrollCalls.push(params),
-          scrollLeft: 0,
-          scrollTop: 10,
+          defaultScrollLeft: 0,
+          defaultScrollTop: 10,
           width: 200,
         }),
       );
@@ -1237,8 +1232,8 @@ describe('Grid', () => {
           rowCount: 1,
           rowHeight: 50,
           onScroll: params => onScrollCalls.push(params),
-          scrollLeft: 0,
-          scrollTop: 10,
+          defaultScrollLeft: 0,
+          defaultScrollTop: 10,
           height: 200,
         }),
       );
@@ -1421,11 +1416,11 @@ describe('Grid', () => {
       );
     });
 
-    it('should set the correct scroll direction when scroll position is updated from props', () => {
+    it('should set the correct scroll direction when scroll position is updated by calling scrollToPosition()', () => {
       let grid = render(
         getMarkup({
-          scrollLeft: 50,
-          scrollTop: 50,
+          defaultScrollLeft: 50,
+          defaultScrollTop: 50,
         }),
       );
 
@@ -1436,12 +1431,10 @@ describe('Grid', () => {
         SCROLL_DIRECTION_FORWARD,
       );
 
-      grid = render(
-        getMarkup({
-          scrollLeft: 0,
-          scrollTop: 0,
-        }),
-      );
+      grid.scrollToPosition({
+        scrollLeft: 0,
+        scrollTop: 0,
+      });
 
       expect(grid.state.scrollDirectionHorizontal).toEqual(
         SCROLL_DIRECTION_BACKWARD,
@@ -1450,12 +1443,10 @@ describe('Grid', () => {
         SCROLL_DIRECTION_BACKWARD,
       );
 
-      grid = render(
-        getMarkup({
-          scrollLeft: 100,
-          scrollTop: 100,
-        }),
-      );
+      grid.scrollToPosition({
+        scrollLeft: 100,
+        scrollTop: 100,
+      });
 
       expect(grid.state.scrollDirectionHorizontal).toEqual(
         SCROLL_DIRECTION_FORWARD,
@@ -1937,7 +1928,7 @@ describe('Grid', () => {
         columnWidth: 100,
         height: 40,
         rowHeight: 20,
-        scrollTop: 0,
+        defaultScrollTop: 0,
         width: 100,
       };
 
@@ -1967,7 +1958,7 @@ describe('Grid', () => {
         columnWidth: 100,
         height: 40,
         rowHeight: 20,
-        scrollTop: 0,
+        defaultScrollTop: 0,
         width: 100,
         isScrollingOptOut: true,
       };
@@ -2337,7 +2328,7 @@ describe('Grid', () => {
         columnWidth: 100,
         height: 40,
         rowHeight: 20,
-        scrollTop: 0,
+        defaultScrollTop: 0,
         width: 100,
       };
 
@@ -2389,12 +2380,7 @@ describe('Grid', () => {
 
       expect(Object.keys(grid._styleCache).length).toBe(4);
 
-      render(
-        getMarkup({
-          ...props,
-          scrollTop: 50,
-        }),
-      );
+      grid.scrollToPosition({scrollTop: 50});
 
       expect(Object.keys(grid._styleCache).length).toBe(6);
 
@@ -2453,7 +2439,7 @@ describe('Grid', () => {
         rowHeight: 100,
         columnWidth: 100,
         rowCount: getMaxElementSize() * 2 / 100, // lots of offset
-        scrollTop: 2000,
+        defaultScrollTop: 2000,
       }),
     );
 
