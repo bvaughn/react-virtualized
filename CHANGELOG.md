@@ -177,7 +177,7 @@ Changelog
 ##### 9.6.0
 * 🎉 `WindowScroller` and `Grid` now support horizontal window-scrolling via new `autoWidth` property. ([@maxnowack](https://github.com/maxnowack) - [#644](https://github.com/bvaughn/react-virtualized/pull/644))
 * 🐛 Fixed a Content Security Policy (CSP) issue in an upstream dependency that impacted users of the `Masonry` component. For more information see issue [#640](https://github.com/bvaughn/react-virtualized/issues/640).
-* ✨ `List` and `Table` always overscan 1 row in the direction _not_ being scrolled to better support keyboard nativigation (via TAB and SHIFT+TAB). For more information see [issue #625](https://github.com/bvaughn/react-virtualized/issues/625).
+* ✨ `List` and `Table` always overscan 1 row in the direction _not_ being scrolled to better support keyboard navigation (via TAB and SHIFT+TAB). For more information see [issue #625](https://github.com/bvaughn/react-virtualized/issues/625).
 * ✨ `Grid` no longer alters scroll direction for one axis (eg vertical) if a scroll event occurs for another axis (eg horizontal).
 
 ##### 9.5.0
@@ -527,7 +527,7 @@ By default this is disabled but `VirtualScroll` and `FlexTable` both enable it o
 Renamed `Grid` refs within `FlexTable` and `VirtualScroll` from `_grid` to `Grid`.
 
 This is done to better support interoperability between `FlexTable` and `react-sortable-hoc` which requires a handle on the inner `Grid`.
-Technically the change is not required but it is more inline with JavaScript naming conventions (since I plan to preserve this proprety from an Api perspective).
+Technically the change is not required but it is more inline with JavaScript naming conventions (since I plan to preserve this property from an Api perspective).
 
 ##### 7.15.0
 Added support for greater `FlexTable` customization via a new `rowRenderer` property.
