@@ -39,7 +39,7 @@ const list = [
   // And so on...
 ];
 
-function rowRenderer ({ key, index, style}) {
+function rowRenderer ({ key, index, style }) {
   return (
     <div
       key={key}
