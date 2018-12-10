@@ -134,9 +134,12 @@ export default class InfiniteLoader extends React.PureComponent {
     });
 
     // For memoize comparison
-    const squashedUnloadedRanges = [].concat(...unloadedRanges.map(
-      ({startIndex, stopIndex}) => [startIndex, stopIndex]
-    ));
+    const squashedUnloadedRanges = [].concat(
+      ...unloadedRanges.map(({startIndex, stopIndex}) => [
+        startIndex,
+        stopIndex,
+      ]),
+    );
 
     this._loadMoreRowsMemoizer({
       callback: () => {
