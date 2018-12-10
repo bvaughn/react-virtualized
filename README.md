@@ -13,6 +13,7 @@
 React components for efficiently rendering large lists and tabular data.
 Check out [the demo](https://bvaughn.github.io/react-virtualized/) for some examples.
 Join the official Slack chat at [react-virtualized.now.sh](https://react-virtualized.now.sh/).
+If you're looking for a smaller & faster version please look at [`react-window`](https://github.com/bvaughn/react-window).
 
 ### Sponsors
 The following wonderful companies have sponsored react-virtualized:
