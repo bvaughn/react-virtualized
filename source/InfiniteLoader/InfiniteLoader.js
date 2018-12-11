@@ -133,13 +133,7 @@ export default class InfiniteLoader extends React.PureComponent {
       stopIndex: Math.min(rowCount - 1, stopIndex + threshold),
     });
 
-    // For memoize comparison
-    const squashedUnloadedRanges = [].concat(
-      ...unloadedRanges.map(({startIndex, stopIndex}) => [
-        startIndex,
-        stopIndex,
-      ]),
-    );
+    const squashedUnloadedRanges = squashRanges(unloadedRanges);
 
     this._loadMoreRowsMemoizer({
       callback: () => {
@@ -271,4 +265,15 @@ export function forceUpdateReactVirtualizedComponent(
   } else {
     component.forceUpdate();
   }
+}
+
+function squashRanges(ranges) {
+  const result = new Array(ranges.length * 2);
+  let k = 0;
+  for (let i = 0; i < ranges.length; i++) {
+    const {startIndex, stopIndex} = ranges[i];
+    result[k++] = startIndex;
+    result[k++] = stopIndex;
+  }
+  return result;
 }
