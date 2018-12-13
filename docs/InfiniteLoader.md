@@ -104,33 +104,29 @@ class MyComponent extends Component {
   constructor (props, context) {
     super(props, context)
 
-    this._infiniteLoaderChildFunction = this._infiniteLoaderChildFunction.bind(this)
     this._onSectionRendered = this._onSectionRendered.bind(this)
   }
 
   render () {
-    const { infiniteLoaderProps } = this.props
+    const { infiniteLoaderProps, gridProps } = this.props
 
     <InfiniteLoader {...infiniteLoaderProps}>
-      {this._infiniteLoaderChildFunction}
+      {({ onRowsRendered, registerChild }) => {
+        this._onRowsRendered = onRowsRendered;
+
+        return (
+          <Grid
+            {...gridProps}
+            onSectionRendered={this._onSectionRendered}
+            ref={registerChild}
+          />
+        );
+      }}
     </InfiniteLoader>
   }
 
-  _infiniteLoaderChildFunction ({ onRowsRendered, registerChild }) => {
-    this._onRowsRendered = onRowsRendered
-
-    const { gridProps } = this.props
-
-    return (
-      <Grid
-        {...gridProps}
-        onSectionRendered={this._onSectionRendered}
-        ref={registerChild}
-      />
-    )
-  }
-
   _onSectionRendered ({ columnStartIndex, columnStopIndex, rowStartIndex, rowStopIndex }) {
+    const columnCount = 3;
     const startIndex = rowStartIndex * columnCount + columnStartIndex
     const stopIndex = rowStopIndex * columnCount + columnStopIndex
 
