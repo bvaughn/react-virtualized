@@ -116,7 +116,7 @@ class MyComponent extends Component {
     </InfiniteLoader>
   }
 
-  _infiniteLoaderChildFunction ({ onRowsRendered, registerChild }) => {
+  _infiniteLoaderChildFunction ({ onRowsRendered, registerChild }) {
     this._onRowsRendered = onRowsRendered
 
     const { gridProps } = this.props
