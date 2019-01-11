@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import styles from './Icon.css';
@@ -22,7 +22,7 @@ Icon.propTypes = {
 export default function Icon({className, title, type}) {
   return (
     <svg
-      className={cn(styles.Icon, className)}
+      className={clsx(styles.Icon, className)}
       height={12}
       title={title}
       viewBox="0 0 24 24"

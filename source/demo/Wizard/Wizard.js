@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import clsx from 'clsx';
 import CodeMirror from 'react-codemirror';
 import * as React from 'react';
 import {ContentBox, ContentBoxHeader} from '../ContentBox';
@@ -215,7 +215,7 @@ export default class Wizard extends React.Component {
 function Option({checked, disabled = false, label, onChange}) {
   return (
     <div
-      className={cn(styles.Option, {
+      className={clsx(styles.Option, {
         [styles.OptionDisabled]: disabled,
       })}>
       <label className={styles.Label}>

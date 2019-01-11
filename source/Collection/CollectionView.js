@@ -1,5 +1,5 @@
 /** @flow */
-import cn from 'classnames';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import {polyfill} from 'react-lifecycles-compat';
@@ -385,7 +385,7 @@ class CollectionView extends React.PureComponent {
       <div
         ref={this._setScrollingContainerRef}
         aria-label={this.props['aria-label']}
-        className={cn('ReactVirtualized__Collection', className)}
+        className={clsx('ReactVirtualized__Collection', className)}
         id={id}
         onScroll={this._onScroll}
         role="grid"
