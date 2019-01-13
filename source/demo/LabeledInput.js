@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import cn from 'classnames';
+import clsx from 'clsx';
 import styles from './LabeledInput.css';
 
 export function LabeledInput({
@@ -11,7 +11,7 @@ export function LabeledInput({
   placeholder,
   value,
 }) {
-  const labelClassName = cn(styles.Label, {
+  const labelClassName = clsx(styles.Label, {
     [styles.LabelDisabled]: disabled,
   });
 

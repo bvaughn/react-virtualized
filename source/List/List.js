@@ -14,7 +14,7 @@ import type {RowRenderer, RenderedRows, Scroll} from './types';
 
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 import * as React from 'react';
-import cn from 'classnames';
+import clsx from 'clsx';
 
 /**
  * It is inefficient to create and manage a large list of DOM elements within a scrolling container
@@ -189,7 +189,7 @@ export default class List extends React.PureComponent<Props> {
   render() {
     const {className, noRowsRenderer, scrollToIndex, width} = this.props;
 
-    const classNames = cn('ReactVirtualized__List', className);
+    const classNames = clsx('ReactVirtualized__List', className);
 
     return (
       <Grid

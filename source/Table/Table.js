@@ -2,7 +2,7 @@
 
 import type {CellPosition} from '../Grid';
 
-import cn from 'classnames';
+import clsx from 'clsx';
 import Column from './Column';
 import PropTypes from 'prop-types';
 import * as React from 'react';
@@ -397,13 +397,13 @@ export default class Table extends React.PureComponent {
         aria-labelledby={this.props['aria-labelledby']}
         aria-colcount={React.Children.toArray(children).length}
         aria-rowcount={this.props.rowCount}
-        className={cn('ReactVirtualized__Table', className)}
+        className={clsx('ReactVirtualized__Table', className)}
         id={id}
         role="grid"
         style={style}>
         {!disableHeader &&
           headerRowRenderer({
-            className: cn('ReactVirtualized__Table__headerRow', rowClass),
+            className: clsx('ReactVirtualized__Table__headerRow', rowClass),
             columns: this._getHeaderColumns(),
             style: {
               height: headerHeight,
@@ -417,7 +417,7 @@ export default class Table extends React.PureComponent {
         <Grid
           {...this.props}
           autoContainerWidth
-          className={cn('ReactVirtualized__Table__Grid', gridClassName)}
+          className={clsx('ReactVirtualized__Table__Grid', gridClassName)}
           cellRenderer={this._createRow}
           columnWidth={width}
           columnCount={1}
@@ -477,7 +477,7 @@ export default class Table extends React.PureComponent {
       <div
         aria-colindex={columnIndex + 1}
         aria-describedby={id}
-        className={cn('ReactVirtualized__Table__rowColumn', className)}
+        className={clsx('ReactVirtualized__Table__rowColumn', className)}
         key={'Row' + rowIndex + '-' + 'Col' + columnIndex}
         onClick={onClick}
         role="gridcell"
@@ -508,7 +508,7 @@ export default class Table extends React.PureComponent {
     } = column.props;
     const sortEnabled = !disableSort && sort;
 
-    const classNames = cn(
+    const classNames = clsx(
       'ReactVirtualized__Table__headerColumn',
       headerClassName,
       column.props.headerClassName,
@@ -632,7 +632,7 @@ export default class Table extends React.PureComponent {
         }),
     );
 
-    const className = cn('ReactVirtualized__Table__row', rowClass);
+    const className = clsx('ReactVirtualized__Table__row', rowClass);
     const flattenedStyle = {
       ...style,
       height: this._getRowHeight(index),

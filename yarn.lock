@@ -1859,7 +1859,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.3, classnames@^2.2.5:
+classnames@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
   integrity sha1-+zgB1FNGdknvNgPH1hoCvRKb3m0=
@@ -1930,6 +1930,11 @@ clone@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.2.tgz#260b7a99ebb1edfe247538175f783243cb19d149"
   integrity sha1-Jgt6meux7f4kdTgXX3gyQ8sZ0Uk=
+
+clsx@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.0.1.tgz#6d956b00ecc771185bf0ec47383f5a06d941b11f"
+  integrity sha512-PtvbklBG/M2NVzwaYqTGcD+EqMXLNrec1lpgNkz07CoOsYnXsCBjde24Tki8wBKi9jrWX2rJnmKoMJoYUc3zhQ==
 
 co@^4.6.0:
   version "4.6.0"

@@ -18,7 +18,7 @@ import type {
 import type {AnimationTimeoutId} from '../utils/requestAnimationTimeout';
 
 import * as React from 'react';
-import cn from 'classnames';
+import clsx from 'clsx';
 import calculateSizeAndPositionDataAndUpdateScrollOffset from './utils/calculateSizeAndPositionDataAndUpdateScrollOffset';
 import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager';
 import createCallbackMemoizer from '../utils/createCallbackMemoizer';
@@ -1044,7 +1044,7 @@ class Grid extends React.PureComponent<Props, State> {
         {...containerProps}
         aria-label={this.props['aria-label']}
         aria-readonly={this.props['aria-readonly']}
-        className={cn('ReactVirtualized__Grid', className)}
+        className={clsx('ReactVirtualized__Grid', className)}
         id={id}
         onScroll={this._onScroll}
         role={role}

@@ -7,7 +7,7 @@ import {
   ContentBoxParagraph,
 } from '../demo/ContentBox';
 import AutoSizer from '../AutoSizer';
-import cn from 'classnames';
+import clsx from 'clsx';
 import styles from './CellMeasurer.example.css';
 import DynamicWidthGrid from './CellMeasurer.DynamicWidthGrid.example.js';
 import DynamicHeightGrid from './CellMeasurer.DynamicHeightGrid.example.js';
@@ -110,7 +110,7 @@ export default class CellMeasurerExample extends React.PureComponent {
 function getClassName({columnIndex, rowIndex}) {
   const rowClass = rowIndex % 2 === 0 ? styles.evenRow : styles.oddRow;
 
-  return cn(rowClass, styles.cell, {
+  return clsx(rowClass, styles.cell, {
     [styles.centeredCell]: columnIndex > 2,
   });
 }
@@ -127,7 +127,7 @@ function getContent({index, datum, long = true}) {
 }
 
 function Tab({children, currentTab, id, onClick}) {
-  const classNames = cn(styles.Tab, {
+  const classNames = clsx(styles.Tab, {
     [styles.ActiveTab]: currentTab === id,
   });
 

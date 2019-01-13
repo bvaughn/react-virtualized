@@ -1,10 +1,10 @@
 import * as React from 'react';
-import cn from 'classnames';
+import clsx from 'clsx';
 import styles from './ContentBox.css';
 
 export function ContentBox({className, children, style}) {
   return (
-    <div className={cn(styles.ContentBox, className)} style={style}>
+    <div className={clsx(styles.ContentBox, className)} style={style}>
       {children}
     </div>
   );
