@@ -231,7 +231,7 @@ export default class CellSizeAndPositionManager {
     const lastIndex = this._cellCount - 1;
     // Our search algorithms find the nearest match at or below the specified offset.
     // So make sure the offset is at least 0 or no match will be found.
-    const targetOffset = Math.max(0, Math.min(offset, vector.start(lastIndex)));
+    let targetOffset = Math.max(0, Math.min(offset, vector.start(lastIndex)));
     // First interrogate the constant-time lookup table
     let nearestCellIndex = vector.indexOf(targetOffset);
 
@@ -246,6 +246,14 @@ export default class CellSizeAndPositionManager {
         return nearestCellIndex;
       }
       nearestCellIndex = vector.indexOf(targetOffset);
+      // Guard in case `getSizeAndPositionOfCell` didn't fully measure to
+      // the nearestCellIndex. This might happen scrolling quickly down
+      // and back up on large lists -- possible race with React or DOM?
+      if (nearestCellIndex === -1) {
+        nearestCellIndex = this._lastMeasuredIndex;
+        this._lastMeasuredIndex = nearestCellIndex - 1;
+        targetOffset = Math.max(0, Math.min(offset, vector.start(lastIndex)));
+      }
     }
 
     return nearestCellIndex;
