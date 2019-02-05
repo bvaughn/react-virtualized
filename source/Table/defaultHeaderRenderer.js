@@ -17,7 +17,7 @@ export default function defaultHeaderRenderer({
     <span
       className="ReactVirtualized__Table__headerTruncatedText"
       key="label"
-      title={label}>
+      title={typeof label === 'string' ? label : null}>
       {label}
     </span>,
   ];
