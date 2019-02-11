@@ -57,14 +57,17 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
     style: {},
   };
 
-  state = {
-    height: this.props.defaultHeight || 0,
-    width: this.props.defaultWidth || 0,
-  };
-
   _parentNode: ?HTMLElement;
   _autoSizer: ?HTMLElement;
   _detectElementResize: DetectElementResize;
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      height: this.props.defaultHeight || 0,
+      width: this.props.defaultWidth || 0,
+    };
+  }
 
   componentDidMount() {
     const {nonce} = this.props;
