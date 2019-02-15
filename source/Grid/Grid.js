@@ -619,8 +619,8 @@ class Grid extends React.PureComponent<Props, State> {
     }
 
     if (
-      (typeof scrollLeft === 'number' && scrollLeft >= 0) ||
-      (typeof scrollTop === 'number' && scrollTop >= 0)
+      (typeof scrollLeft === 'number' && scrollLeft > 0) ||
+      (typeof scrollTop === 'number' && scrollTop > 0)
     ) {
       const stateUpdate = Grid._getScrollToPositionStateUpdate({
         prevState: this.state,
@@ -637,10 +637,10 @@ class Grid extends React.PureComponent<Props, State> {
     if (this._scrollingContainer) {
       // setting the ref's scrollLeft and scrollTop.
       // Somehow in MultiGrid the main grid doesn't trigger a update on mount.
-      if (this._scrollingContainer.scrollLeft !== this.state.scrollLeft) {
+      if (this.state.scrollLeft !== 0 && this._scrollingContainer.scrollLeft !== this.state.scrollLeft) {
         this._scrollingContainer.scrollLeft = this.state.scrollLeft;
       }
-      if (this._scrollingContainer.scrollTop !== this.state.scrollTop) {
+      if (this.state.scrollTop !== 0 && this._scrollingContainer.scrollTop !== this.state.scrollTop) {
         this._scrollingContainer.scrollTop = this.state.scrollTop;
       }
     }
