@@ -1,7 +1,6 @@
 .DS_Store
 build
 coverage
-dist
 node_modules
 npm-debug.log
 styles.css
