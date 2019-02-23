@@ -83,6 +83,11 @@ The following wonderful companies have sponsored react-virtualized:
 <a href="https://opencollective.com/react-virtualized/backer/28/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/28/avatar.svg"></a>
 <a href="https://opencollective.com/react-virtualized/backer/29/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/29/avatar.svg"></a>
 
+A word about `react-window`
+---------------
+
+If you're considering adding `react-virtualized` to a project, take a look at [`react-window`](https://github.com/bvaughn/react-window) as a possible lighter-weight alternative. [Learn more about how the two libraries compare here.](https://github.com/bvaughn/react-window#how-is-react-window-different-from-react-virtualized)
+
 Getting started
 ---------------
 
