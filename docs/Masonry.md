@@ -29,6 +29,7 @@ Phase one is repeated if the user scrolls beyond the current layout's bounds. If
 | cellMeasurerCache | mixed | ✓ | Caches item measurements. Default sizes help `Masonry` decide how many images to batch-measure. Learn more [here](CellMeasurer.md#cellmeasurercache). |
 | cellPositioner | function | ✓ | Positions a cell given an index: `(index: number) => ({ left: number, top: number })`. [Learn more](#createmasonrycellpositioner) |
 | cellRenderer | function | ✓ | Responsible for rendering a cell given an index. [Learn more](#cellrenderer) |
+| parentRenderer | function |  | Responsible for rendering a custom parent component. [Learn more](#parentRenderer) |
 | className | string |  | Optional custom CSS class name to attach to root `Masonry` element. |
 | height | number | ✓ | Height of the component; this value determines the number of visible items. |
 | id | string |  | Optional custom id to attach to root `Masonry` element. |
@@ -77,6 +78,23 @@ function cellRenderer ({
         {/* Your content goes here */}
       </div>
     </CellMeasurer>
+  );
+}
+```
+
+### parentRenderer
+
+Responsible for rendering a custom parent component. This function accepts the following named parameters:
+
+```jsx
+function parentRenderer ({
+  isScrolling, // The Grid is currently being scrolled
+  children,    // Your cells passed as an array
+}) {
+  return (
+    <MyCustomParentComponent>
+      {children}
+    </MyCustomParentComponent>
   );
 }
 ```
