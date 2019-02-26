@@ -12,6 +12,7 @@ import type {AnimationTimeoutId} from '../utils/requestAnimationTimeout';
 
 type Props = {
   autoHeight: boolean,
+  parentRenderer: ?ParentRenderer,
   cellCount: number,
   cellMeasurerCache: CellMeasurerCache,
   cellPositioner: Positioner,
@@ -173,6 +174,7 @@ class Masonry extends React.PureComponent<Props, State> {
   render() {
     const {
       autoHeight,
+      parentRenderer,
       cellCount,
       cellMeasurerCache,
       cellRenderer,
@@ -301,7 +303,7 @@ class Masonry extends React.PureComponent<Props, State> {
             pointerEvents: isScrolling ? 'none' : '',
             position: 'relative',
           }}>
-          {children}
+          {parentRenderer ? parentRenderer({children, isScrolling}) : children}
         </div>
       </div>
     );
@@ -457,6 +459,11 @@ export type CellMeasurerCache = {
   getHeight: (index: number) => number,
   getWidth: (index: number) => number,
 };
+
+type ParentRenderer = (params: {|
+  children: Array,
+  isScrolling: boolean,
+|}) => mixed;
 
 type CellRenderer = (params: {|
   index: number,
