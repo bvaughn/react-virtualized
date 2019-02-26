@@ -322,12 +322,12 @@ class Grid extends React.PureComponent<Props, State> {
     super(props);
     const columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.columnCount,
-      cellSizeGetter: params => Grid._wrapSizeGetter(props.columnWidth)(params),
+      cellSizeGetter: Grid._wrapSizeGetter(props.columnWidth),
       estimatedCellSize: Grid._getEstimatedColumnSize(props),
     });
     const rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.rowCount,
-      cellSizeGetter: params => Grid._wrapSizeGetter(props.rowHeight)(params),
+      cellSizeGetter: Grid._wrapSizeGetter(props.rowHeight),
       estimatedCellSize: Grid._getEstimatedRowSize(props),
     });
 
