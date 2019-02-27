@@ -1,17 +1,17 @@
 /** @flow */
 
-import type {Alignment, CellSizeGetter, VisibleCellRange} from '../types';
+import type {Alignment, CellSize, VisibleCellRange} from '../types';
 
 type CellSizeAndPositionManagerParams = {
   cellCount: number,
-  cellSizeGetter: CellSizeGetter,
+  cellSize: CellSize,
   estimatedCellSize: number,
 };
 
 type ConfigureParams = {
   cellCount: number,
   estimatedCellSize: number,
-  cellSizeGetter: CellSizeGetter,
+  cellSize: CellSize,
 };
 
 type GetUpdatedOffsetForIndex = {
@@ -47,27 +47,33 @@ export default class CellSizeAndPositionManager {
   _lastBatchedIndex = -1;
 
   _cellCount: number;
-  _cellSizeGetter: CellSizeGetter;
+  _cellSize: CellSize;
   _estimatedCellSize: number;
 
   constructor({
     cellCount,
-    cellSizeGetter,
+    cellSize,
     estimatedCellSize,
   }: CellSizeAndPositionManagerParams) {
-    this._cellSizeGetter = cellSizeGetter;
+    this._cellSize = cellSize;
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
+  }
+
+  static _getSize(index: number): number {
+    return typeof this._cellSize === 'function'
+      ? this._cellSize({index})
+      : this._cellSize;
   }
 
   areOffsetsAdjusted() {
     return false;
   }
 
-  configure({cellCount, estimatedCellSize, cellSizeGetter}: ConfigureParams) {
+  configure({cellCount, estimatedCellSize, cellSize}: ConfigureParams) {
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
-    this._cellSizeGetter = cellSizeGetter;
+    this._cellSize = cellSize;
   }
 
   getCellCount(): number {
