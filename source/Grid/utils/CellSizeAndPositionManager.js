@@ -60,7 +60,7 @@ export default class CellSizeAndPositionManager {
     this._estimatedCellSize = estimatedCellSize;
   }
 
-  static _getSize(index: number): number {
+  _getSize(index: number): number {
     return typeof this._cellSize === 'function'
       ? this._cellSize({index})
       : this._cellSize;
@@ -92,16 +92,41 @@ export default class CellSizeAndPositionManager {
     return 0;
   }
 
-  /**
-   * This method returns the size and position for the cell at the specified index.
-   * It just-in-time calculates (or used cached values) for cells leading up to the index.
-   */
-  getSizeAndPositionOfCell(index: number): SizeAndPositionData {
+  _validateIndex(index: number) {
     if (index < 0 || index >= this._cellCount) {
       throw Error(
         `Requested index ${index} is outside of range 0..${this._cellCount}`,
       );
     }
+  }
+
+  /**
+   * This method returns the size and position of a cell without the need to iterate over,
+   * and cache, all cells up to the passed index.
+   * In case the CellSize is a number, we can just multiply to find the offset.
+   */
+  _arithmeticallyCalculateSizeAndPosition(index: number): SizeAndPositionData {
+    this._validateIndex(index);
+
+    if (typeof this._cellSize !== 'number') {
+      throw Error(
+        `_calculateSizeAndPositionByHeight should only be called if CellSize is a number.
+         Current CellSize type is ${typeof this._cellSize}.`,
+      );
+    }
+
+    return {
+      offset: this._cellSize * index,
+      size: this._cellSize,
+    };
+  }
+
+  /**
+   * This method returns the size and position for the cell at the specified index.
+   * It just-in-time calculates (or used cached values) for cells leading up to the index.
+   */
+  _iterativelyCalculateSizeAndPosition(index: number): SizeAndPositionData {
+    this._validateIndex(index);
 
     if (index > this._lastMeasuredIndex) {
       let lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
@@ -110,7 +135,7 @@ export default class CellSizeAndPositionManager {
         lastMeasuredCellSizeAndPosition.size;
 
       for (var i = this._lastMeasuredIndex + 1; i <= index; i++) {
-        let size = this._cellSizeGetter({index: i});
+        let size = this._getSize(i);
 
         // undefined or NaN probably means a logic error in the size getter.
         // null means we're using CellMeasurer and haven't yet measured a given index.
@@ -137,6 +162,20 @@ export default class CellSizeAndPositionManager {
     }
 
     return this._cellSizeAndPositionData[index];
+  }
+
+  /**
+   * This method returns the size and position for the cell at the specified index.
+   * It decides on the correct calculation method according to the type of CelSize.
+   */
+  getSizeAndPositionOfCell(index: number): SizeAndPositionData {
+    this._validateIndex(index);
+
+    if (typeof this._cellSize === 'function') {
+      return this._iterativelyCalculateSizeAndPosition(index);
+    }
+
+    return this._arithmeticallyCalculateSizeAndPosition(index);
   }
 
   getSizeAndPositionOfLastMeasuredCell(): SizeAndPositionData {
