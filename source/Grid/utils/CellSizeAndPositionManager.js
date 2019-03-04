@@ -55,8 +55,8 @@ export default class CellSizeAndPositionManager {
     cellSize,
     estimatedCellSize,
   }: CellSizeAndPositionManagerParams) {
-    this._cellSize = cellSize;
     this._cellCount = cellCount;
+    this._cellSize = cellSize;
     this._estimatedCellSize = estimatedCellSize;
   }
 
@@ -92,6 +92,10 @@ export default class CellSizeAndPositionManager {
     return 0;
   }
 
+  _isCellSizeNumeric(): number {
+    return typeof this._cellSize === 'number';
+  }
+
   _validateIndex(index: number) {
     if (index < 0 || index >= this._cellCount) {
       throw Error(
@@ -108,7 +112,7 @@ export default class CellSizeAndPositionManager {
   _arithmeticallyCalculateSizeAndPosition(index: number): SizeAndPositionData {
     this._validateIndex(index);
 
-    if (typeof this._cellSize !== 'number') {
+    if (!this._isCellSizeNumeric()) {
       throw Error(
         `_calculateSizeAndPositionByHeight should only be called if CellSize is a number.
          Current CellSize type is ${typeof this._cellSize}.`,
@@ -166,16 +170,16 @@ export default class CellSizeAndPositionManager {
 
   /**
    * This method returns the size and position for the cell at the specified index.
-   * It decides on the correct calculation method according to the type of CelSize.
+   * It decides on the correct calculation method according to the type of CellSize.
    */
   getSizeAndPositionOfCell(index: number): SizeAndPositionData {
     this._validateIndex(index);
 
-    if (typeof this._cellSize === 'function') {
-      return this._iterativelyCalculateSizeAndPosition(index);
+    if (this._isCellSizeNumeric()) {
+      return this._arithmeticallyCalculateSizeAndPosition(index);
     }
 
-    return this._arithmeticallyCalculateSizeAndPosition(index);
+    return this._iterativelyCalculateSizeAndPosition(index);
   }
 
   getSizeAndPositionOfLastMeasuredCell(): SizeAndPositionData {
@@ -191,8 +195,13 @@ export default class CellSizeAndPositionManager {
    * Total size of all cells being measured.
    * This value will be completely estimated initially.
    * As cells are measured, the estimate will be updated.
+   * If cellSize is numeric, just calculate the height.
    */
   getTotalSize(): number {
+    if (this._isCellSizeNumeric()) {
+      return this._cellCount * this._cellSize;
+    }
+
     const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
     const totalSizeOfMeasuredCells =
       lastMeasuredCellSizeAndPosition.offset +
@@ -327,6 +336,20 @@ export default class CellSizeAndPositionManager {
     );
   }
 
+  _arithmeticallyCalculateNearesetCell(offset: number): number {
+    if (!this._isCellSizeNumeric()) {
+      throw Error(
+        `_arithmeticallyCalculateNearesetCell should only be called if CellSize is a number.
+         Current CellSize type is ${typeof this._cellSize}.`,
+      );
+    }
+
+    // We need to return the nearest, yet lowest cell, so floor it
+    // We might get a very high offset so just return count - 1 is such a case, which
+    // mean offset to the last item
+    return Math.min(Math.floor(offset / this._cellSize), this._cellCount - 1);
+  }
+
   /**
    * Searches for the cell (index) nearest the specified offset.
    *
@@ -341,6 +364,12 @@ export default class CellSizeAndPositionManager {
     // Our search algorithms find the nearest match at or below the specified offset.
     // So make sure the offset is at least 0 or no match will be found.
     offset = Math.max(0, offset);
+
+    // If cell size is a numeric value, we can calc the lowest cell instead of running
+    // search algorithms
+    if (this._isCellSizeNumeric()) {
+      return this._arithmeticallyCalculateNearesetCell(offset);
+    }
 
     const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
     const lastMeasuredIndex = Math.max(0, this._lastMeasuredIndex);
