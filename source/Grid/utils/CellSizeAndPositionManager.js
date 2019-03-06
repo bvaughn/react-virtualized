@@ -92,10 +92,6 @@ export default class CellSizeAndPositionManager {
     return 0;
   }
 
-  _isCellSizeNumeric(): number {
-    return typeof this._cellSize === 'number';
-  }
-
   _validateIndex(index: number) {
     if (index < 0 || index >= this._cellCount) {
       throw Error(
@@ -112,7 +108,7 @@ export default class CellSizeAndPositionManager {
   _arithmeticallyCalculateSizeAndPosition(index: number): SizeAndPositionData {
     this._validateIndex(index);
 
-    if (!this._isCellSizeNumeric()) {
+    if (typeof this._cellSize !== 'number') {
       throw Error(
         `_calculateSizeAndPositionByHeight should only be called if CellSize is a number.
          Current CellSize type is ${typeof this._cellSize}.`,
@@ -175,7 +171,7 @@ export default class CellSizeAndPositionManager {
   getSizeAndPositionOfCell(index: number): SizeAndPositionData {
     this._validateIndex(index);
 
-    if (this._isCellSizeNumeric()) {
+    if (typeof this._cellSize === 'number') {
       return this._arithmeticallyCalculateSizeAndPosition(index);
     }
 
@@ -198,7 +194,7 @@ export default class CellSizeAndPositionManager {
    * If cellSize is numeric, just calculate the height.
    */
   getTotalSize(): number {
-    if (this._isCellSizeNumeric()) {
+    if (typeof this._cellSize === 'number') {
       return this._cellCount * this._cellSize;
     }
 
@@ -337,7 +333,7 @@ export default class CellSizeAndPositionManager {
   }
 
   _arithmeticallyCalculateNearesetCell(offset: number): number {
-    if (!this._isCellSizeNumeric()) {
+    if (typeof this._cellSize !== 'number') {
       throw Error(
         `_arithmeticallyCalculateNearesetCell should only be called if CellSize is a number.
          Current CellSize type is ${typeof this._cellSize}.`,
@@ -367,7 +363,7 @@ export default class CellSizeAndPositionManager {
 
     // If cell size is a numeric value, we can calc the lowest cell instead of running
     // search algorithms
-    if (this._isCellSizeNumeric()) {
+    if (typeof this._cellSize === 'number') {
       return this._arithmeticallyCalculateNearesetCell(offset);
     }
 
