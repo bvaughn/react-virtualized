@@ -1,6 +1,5 @@
 import CellSizeAndPositionManager from './CellSizeAndPositionManager';
 
-// Default init with a cellSize function as many of the tests are when the cellSize is a function
 describe('CellSizeAndPositionManager', () => {
   function getCellSizeAndPositionManager({
     cellCount = 100,
@@ -53,24 +52,54 @@ describe('CellSizeAndPositionManager', () => {
       );
     });
 
-    it('should find the first cell', () => {
+    it('should find the first cell for numeric CellSize', () => {
+      const {cellSizeAndPositionManager} = getCellSizeAndPositionManager({
+        cellSize: 10,
+      });
+      expect(cellSizeAndPositionManager._findNearestCell(0)).toEqual(0);
+      expect(cellSizeAndPositionManager._findNearestCell(9)).toEqual(0);
+    });
+
+    it('should find the first cell for thunk CellSize', () => {
       const {cellSizeAndPositionManager} = getCellSizeAndPositionManager();
       expect(cellSizeAndPositionManager._findNearestCell(0)).toEqual(0);
       expect(cellSizeAndPositionManager._findNearestCell(9)).toEqual(0);
     });
 
-    it('should find the last cell', () => {
+    it('should find the last cell for numeric CellSize', () => {
+      const {cellSizeAndPositionManager} = getCellSizeAndPositionManager({
+        cellSize: 10,
+      });
+      expect(cellSizeAndPositionManager._findNearestCell(990)).toEqual(99);
+      expect(cellSizeAndPositionManager._findNearestCell(991)).toEqual(99);
+    });
+
+    it('should find the last cell for thunk CellSize', () => {
       const {cellSizeAndPositionManager} = getCellSizeAndPositionManager();
       expect(cellSizeAndPositionManager._findNearestCell(990)).toEqual(99);
       expect(cellSizeAndPositionManager._findNearestCell(991)).toEqual(99);
     });
 
-    it('should find the a cell that exactly matches a specified offset in the middle', () => {
+    it('should find the a cell that exactly matches a specified offset in the middle, numeric CellSize', () => {
+      const {cellSizeAndPositionManager} = getCellSizeAndPositionManager({
+        cellSize: 10,
+      });
+      expect(cellSizeAndPositionManager._findNearestCell(100)).toEqual(10);
+    });
+
+    it('should find the a cell that exactly matches a specified offset in the middle, thunk CellSize', () => {
       const {cellSizeAndPositionManager} = getCellSizeAndPositionManager();
       expect(cellSizeAndPositionManager._findNearestCell(100)).toEqual(10);
     });
 
-    it('should find the cell closest to (but before) the specified offset in the middle', () => {
+    it('should find the cell closest to (but before) the specified offset in the middle, numeric CellSize', () => {
+      const {cellSizeAndPositionManager} = getCellSizeAndPositionManager({
+        cellSize: 10,
+      });
+      expect(cellSizeAndPositionManager._findNearestCell(100)).toEqual(10);
+    });
+
+    it('should find the cell closest to (but before) the specified offset in the middle, thunk CellSize', () => {
       const {cellSizeAndPositionManager} = getCellSizeAndPositionManager();
       expect(cellSizeAndPositionManager._findNearestCell(100)).toEqual(10);
     });
@@ -87,7 +116,25 @@ describe('CellSizeAndPositionManager', () => {
       ).toThrow();
     });
 
-    it('should return the correct size and position information for the requested cell', () => {
+    it('should return the correct size and position information for the requested cell, numeric CellSize', () => {
+      const {cellSizeAndPositionManager} = getCellSizeAndPositionManager({
+        cellSize: 10,
+      });
+      expect(
+        cellSizeAndPositionManager.getSizeAndPositionOfCell(0).offset,
+      ).toEqual(0);
+      expect(
+        cellSizeAndPositionManager.getSizeAndPositionOfCell(0).size,
+      ).toEqual(10);
+      expect(
+        cellSizeAndPositionManager.getSizeAndPositionOfCell(1).offset,
+      ).toEqual(10);
+      expect(
+        cellSizeAndPositionManager.getSizeAndPositionOfCell(2).offset,
+      ).toEqual(20);
+    });
+
+    it('should return the correct size and position information for the requested cell, thunk CellSize', () => {
       const {cellSizeAndPositionManager} = getCellSizeAndPositionManager();
       expect(
         cellSizeAndPositionManager.getSizeAndPositionOfCell(0).offset,
