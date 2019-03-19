@@ -146,6 +146,25 @@ describe('WindowScroller', () => {
     );
   });
 
+  it('inherits the scrollElement height and passes it to child component', () => {
+    const renderFn = jest.fn();
+    const scrollElement = document.createElement('div');
+    scrollElement.getBoundingClientRect = () =>
+      Object.defineProperties(
+        {},
+        {
+          height: {enumerable: false, value: 200},
+          width: {enumerable: false, value: 250},
+        },
+      );
+    const component = render(getMarkup({renderFn, scrollElement}));
+
+    expect(component.state.height).toEqual(200);
+    renderFn.mock.calls.forEach(call =>
+      expect(call[0]).toEqual(expect.objectContaining({height: 200})),
+    );
+  });
+
   it('should restore pointerEvents on body after IS_SCROLLING_TIMEOUT', async () => {
     render(getMarkup());
     document.body.style.pointerEvents = 'all';

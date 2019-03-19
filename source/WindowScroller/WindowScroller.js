@@ -89,12 +89,17 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _detectElementResize: DetectElementResize;
   _child: ?Element;
 
-  state = {
-    ...getDimensions(this.props.scrollElement, this.props),
-    isScrolling: false,
-    scrollLeft: 0,
-    scrollTop: 0,
-  };
+  constructor(props: Props) {
+    super(props);
+    const {height, width} = getDimensions(props.scrollElement, props);
+    this.state = {
+      height,
+      width,
+      isScrolling: false,
+      scrollLeft: 0,
+      scrollTop: 0,
+    };
+  }
 
   updatePosition(scrollElement: ?Element = this.props.scrollElement) {
     const {onResize} = this.props;
