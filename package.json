@@ -171,6 +171,7 @@
     "babel-runtime": "^6.26.0",
     "clsx": "^1.0.1",
     "dom-helpers": "^2.4.0 || ^3.0.0",
+    "linear-layout-vector": "0.0.1",
     "loose-envify": "^1.3.0",
     "prop-types": "^15.6.0",
     "react-lifecycles-compat": "^3.0.4"
