@@ -1,5 +1,16 @@
 Changelog
 ------------
+##### 9.21.1
+
+* 🐛 Fix doc typos. ([tienpham94](https://github.com/tienpham94) - [#1268](https://github.com/bvaughn/react-virtualized/pull/1268))
+* 🐛 Fix typos in changelog. ([misacorn](https://github.com/misacorn) - [#1267](https://github.com/bvaughn/react-virtualized/pull/1267))
+* 🐛 Fix formatting in AutoSizer.md ([jacklee814](https://github.com/jacklee814) - [#1246](https://github.com/bvaughn/react-virtualized/pull/1246))
+* 🐛 Fix usage of reduce in InfiniteLoader ([jedwards1211](https://github.com/jedwards1211) - [#1277](https://github.com/bvaughn/react-virtualized/pull/1277))
+* 🎉 Migrate from classnames to clsx ([TrySound](https://github.com/TrySound) - [#1306](https://github.com/bvaughn/react-virtualized/pull/1306))
+* 🐛 Ensure a string title for header ([oakfang](https://github.com/oakfang) - [#1321](https://github.com/bvaughn/react-virtualized/pull/1321))
+* 🎉 Use sparse array for cell position caches ([trxcllnt](https://github.com/trxcllnt) - [#1312](https://github.com/bvaughn/react-virtualized/pull/1312))
+* 🐛 Fix scrollToPosition ([jaycrypto](https://github.com/jaycrypto) - [#1288](https://github.com/bvaughn/react-virtualized/pull/1288))
+
 ##### 9.21.0
 
 * 🎉 Added new use case example for CellMeasurer. ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1168](https://github.com/bvaughn/react-virtualized/pull/1168))
