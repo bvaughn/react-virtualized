@@ -28,7 +28,7 @@ if (env === 'rollup') {
   module.exports = {
     comments: false,
     plugins: ['external-helpers'],
-    presets: [['env', { modules: false }], 'react', 'flow', 'stage-2'],
+    presets: [['env', {modules: false}], 'react', 'flow', 'stage-2'],
   };
 }
 

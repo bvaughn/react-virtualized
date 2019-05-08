@@ -1,44 +1,43 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const path = require('path')
-const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 module.exports = {
   devtool: 'eval',
   entry: {
-    demo: './source/demo/index'
+    demo: './source/demo/index',
   },
   output: {
     path: path.join(__dirname, 'build'),
-    filename: 'static/[name].js'
+    filename: 'static/[name].js',
   },
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
       inject: true,
-      template: './index.html'
-    })
+      template: './index.html',
+    }),
   ],
   module: {
     rules: [
       {
         test: /\.js$/,
         use: ['babel-loader'],
-        include: path.join(__dirname, 'source')
+        include: path.join(__dirname, 'source'),
       },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader?modules', 'postcss-loader'],
-        include: path.join(__dirname, 'source')
+        include: path.join(__dirname, 'source'),
       },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader?minimize=false'],
-        include: path.join(__dirname, 'styles.css')
-      }
-    ]
+        include: path.join(__dirname, 'styles.css'),
+      },
+    ],
   },
   devServer: {
     contentBase: 'build',
-    port: 3001
-  }
-}
+    port: 3001,
+  },
+};
