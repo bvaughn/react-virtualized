@@ -221,6 +221,12 @@ type Props = {
 
   /** Width of Grid; this property determines the number of visible (vs virtualized) columns.  */
   width: number,
+
+  /** Scroll Container element to render */
+  scrollContainerComponent: string | React.ComponentType<any>,
+
+  /** Inner Scroll Container element to render */
+  innerScrollContainerComponent: string | React.ComponentType<any>,
 };
 
 type InstanceProps = {
@@ -285,6 +291,8 @@ class Grid extends React.PureComponent<Props, State> {
     style: {},
     tabIndex: 0,
     isScrollingOptOut: false,
+    scrollContainerComponent: 'div',
+    innerScrollContainerComponent: 'div',
   };
 
   // Invokes onSectionRendered callback only when start/stop row or column indices change
@@ -825,7 +833,7 @@ class Grid extends React.PureComponent<Props, State> {
     prevState: State,
   ): $Shape<State> {
     const newState = {};
-    let {instanceProps} = prevState;
+    const {instanceProps} = prevState;
 
     if (
       (nextProps.columnCount === 0 && prevState.scrollLeft !== 0) ||
@@ -981,6 +989,8 @@ class Grid extends React.PureComponent<Props, State> {
       style,
       tabIndex,
       width,
+      scrollContainerComponent,
+      innerScrollContainerComponent,
     } = this.props;
     const {instanceProps, needToResetStyleCache} = this.state;
 
@@ -1044,41 +1054,49 @@ class Grid extends React.PureComponent<Props, State> {
     const showNoContentRenderer =
       childrenToDisplay.length === 0 && height > 0 && width > 0;
 
-    return (
-      <div
-        ref={this._setScrollingContainerRef}
-        {...containerProps}
-        aria-label={this.props['aria-label']}
-        aria-readonly={this.props['aria-readonly']}
-        className={clsx('ReactVirtualized__Grid', className)}
-        id={id}
-        onScroll={this._onScroll}
-        role={role}
-        style={{
-          ...gridStyle,
-          ...style,
-        }}
-        tabIndex={tabIndex}>
-        {childrenToDisplay.length > 0 && (
-          <div
-            className="ReactVirtualized__Grid__innerScrollContainer"
-            role={containerRole}
-            style={{
-              width: autoContainerWidth ? 'auto' : totalColumnsWidth,
-              height: totalRowsHeight,
-              maxWidth: totalColumnsWidth,
-              maxHeight: totalRowsHeight,
-              overflow: 'hidden',
-              pointerEvents: isScrolling ? 'none' : '',
-              position: 'relative',
-              ...containerStyle,
-            }}>
-            {childrenToDisplay}
-          </div>
-        )}
-        {showNoContentRenderer && noContentRenderer()}
-      </div>
-    );
+    const scrollContainerProps = {
+      ...containerProps,
+      ref: this._setScrollingContainerRef,
+      'aria-label': this.props['aria-label'],
+      'aria-readonly': this.props['aria-readonly'],
+      className: clsx('ReactVirtualized__Grid', className),
+      id,
+      onScroll: this._onScroll,
+      role,
+      style: {
+        ...gridStyle,
+        ...style,
+      },
+      tabIndex,
+    };
+
+    let innerScrollContainer = null;
+    if (childrenToDisplay.length > 0) {
+      const innerScrollContainerProps = {
+        className: 'ReactVirtualized__Grid__innerScrollContainer',
+        key: 'ReactVirtualized__VirtualGrid__innerScrollContainer',
+        role: containerRole,
+        style: {
+          width: autoContainerWidth ? 'auto' : totalColumnsWidth,
+          height: totalRowsHeight,
+          maxWidth: totalColumnsWidth,
+          maxHeight: totalRowsHeight,
+          overflow: 'hidden',
+          pointerEvents: isScrolling ? 'none' : '',
+          position: 'relative',
+          ...containerStyle,
+        },
+      };
+      innerScrollContainer = React.createElement(
+        innerScrollContainerComponent,
+        innerScrollContainerProps,
+        childrenToDisplay,
+      );
+    }
+    return React.createElement(scrollContainerComponent, scrollContainerProps, [
+      innerScrollContainer,
+      showNoContentRenderer && noContentRenderer(),
+    ]);
   }
 
   /* ---------------------------- Helper methods ---------------------------- */
@@ -1591,7 +1609,7 @@ class Grid extends React.PureComponent<Props, State> {
         columnIndex <= this._columnStopIndex;
         columnIndex++
       ) {
-        let key = `${rowIndex}-${columnIndex}`;
+        const key = `${rowIndex}-${columnIndex}`;
         this._styleCache[key] = styleCache[key];
 
         if (isScrollingOptOut) {
