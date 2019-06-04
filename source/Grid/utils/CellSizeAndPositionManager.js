@@ -1,6 +1,5 @@
 /** @flow */
 
-import LinearLayoutVector from 'linear-layout-vector';
 import type {Alignment, CellSizeGetter, VisibleCellRange} from '../types';
 
 type CellSizeAndPositionManagerParams = {
@@ -39,10 +38,13 @@ type SizeAndPositionData = {
 export default class CellSizeAndPositionManager {
   // Cache of size and position data for cells, mapped by cell index.
   // Note that invalid values may exist in this map so only rely on cells up to this._lastMeasuredIndex
-  _layoutVector: LinearLayoutVector;
+  _cellSizeAndPositionData = {};
 
   // Measurements for cells up to this index can be trusted; cells afterward should be estimated.
   _lastMeasuredIndex = -1;
+
+  // Used in deferred mode to track which cells have been queued for measurement.
+  _lastBatchedIndex = -1;
 
   _cellCount: number;
   _cellSizeGetter: CellSizeGetter;
@@ -56,9 +58,6 @@ export default class CellSizeAndPositionManager {
     this._cellSizeGetter = cellSizeGetter;
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
-    this._layoutVector = new LinearLayoutVector();
-    this._layoutVector.setLength(cellCount);
-    this._layoutVector.setDefaultSize(estimatedCellSize);
   }
 
   areOffsetsAdjusted() {
@@ -69,8 +68,6 @@ export default class CellSizeAndPositionManager {
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
     this._cellSizeGetter = cellSizeGetter;
-    this._layoutVector.setLength(cellCount);
-    this._layoutVector.setDefaultSize(estimatedCellSize);
   }
 
   getCellCount(): number {
@@ -99,42 +96,50 @@ export default class CellSizeAndPositionManager {
         `Requested index ${index} is outside of range 0..${this._cellCount}`,
       );
     }
-    const vector = this._layoutVector;
-    if (index > this._lastMeasuredIndex) {
-      const token = {index: this._lastMeasuredIndex + 1};
 
-      for (var i = token.index; i <= index; token.index = ++i) {
-        const size = this._cellSizeGetter(token);
+    if (index > this._lastMeasuredIndex) {
+      let lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
+      let offset =
+        lastMeasuredCellSizeAndPosition.offset +
+        lastMeasuredCellSizeAndPosition.size;
+
+      for (var i = this._lastMeasuredIndex + 1; i <= index; i++) {
+        let size = this._cellSizeGetter({index: i});
+
         // undefined or NaN probably means a logic error in the size getter.
         // null means we're using CellMeasurer and haven't yet measured a given index.
-        if (size === undefined || size !== size) {
+        if (size === undefined || isNaN(size)) {
           throw Error(`Invalid size returned for cell ${i} of value ${size}`);
-        } else if (size !== null) {
-          vector.setItemSize(i, size);
+        } else if (size === null) {
+          this._cellSizeAndPositionData[i] = {
+            offset,
+            size: 0,
+          };
+
+          this._lastBatchedIndex = index;
+        } else {
+          this._cellSizeAndPositionData[i] = {
+            offset,
+            size,
+          };
+
+          offset += size;
+
+          this._lastMeasuredIndex = index;
         }
       }
-      this._lastMeasuredIndex = Math.min(index, this._cellCount - 1);
     }
 
-    return {
-      offset: vector.start(index),
-      size: vector.getItemSize(index),
-    };
+    return this._cellSizeAndPositionData[index];
   }
 
   getSizeAndPositionOfLastMeasuredCell(): SizeAndPositionData {
-    const index = this._lastMeasuredIndex;
-    if (index <= 0) {
-      return {
-        offset: 0,
-        size: 0,
-      };
-    }
-    const vector = this._layoutVector;
-    return {
-      offset: vector.start(index),
-      size: vector.getItemSize(index),
-    };
+    return this._lastMeasuredIndex >= 0
+      ? this._cellSizeAndPositionData[this._lastMeasuredIndex]
+      : {
+          offset: 0,
+          size: 0,
+        };
   }
 
   /**
@@ -143,8 +148,14 @@ export default class CellSizeAndPositionManager {
    * As cells are measured, the estimate will be updated.
    */
   getTotalSize(): number {
-    const lastIndex = this._cellCount - 1;
-    return lastIndex >= 0 ? this._layoutVector.end(lastIndex) : 0;
+    const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
+    const totalSizeOfMeasuredCells =
+      lastMeasuredCellSizeAndPosition.offset +
+      lastMeasuredCellSizeAndPosition.size;
+    const numUnmeasuredCells = this._cellCount - this._lastMeasuredIndex - 1;
+    const totalSizeOfUnmeasuredCells =
+      numUnmeasuredCells * this._estimatedCellSize;
+    return totalSizeOfMeasuredCells + totalSizeOfUnmeasuredCells;
   }
 
   /**
@@ -195,15 +206,31 @@ export default class CellSizeAndPositionManager {
   }
 
   getVisibleCellRange(params: GetVisibleCellRangeParams): VisibleCellRange {
-    if (this.getTotalSize() === 0) {
+    let {containerSize, offset} = params;
+
+    const totalSize = this.getTotalSize();
+
+    if (totalSize === 0) {
       return {};
     }
 
-    const {containerSize, offset} = params;
-    const maxOffset = offset + containerSize - 1;
+    const maxOffset = offset + containerSize;
+    const start = this._findNearestCell(offset);
+
+    const datum = this.getSizeAndPositionOfCell(start);
+    offset = datum.offset + datum.size;
+
+    let stop = start;
+
+    while (offset < maxOffset && stop < this._cellCount - 1) {
+      stop++;
+
+      offset += this.getSizeAndPositionOfCell(stop).size;
+    }
+
     return {
-      start: this._findNearestCell(offset),
-      stop: this._findNearestCell(maxOffset),
+      start,
+      stop,
     };
   }
 
@@ -214,6 +241,45 @@ export default class CellSizeAndPositionManager {
    */
   resetCell(index: number): void {
     this._lastMeasuredIndex = Math.min(this._lastMeasuredIndex, index - 1);
+  }
+
+  _binarySearch(high: number, low: number, offset: number): number {
+    while (low <= high) {
+      const middle = low + Math.floor((high - low) / 2);
+      const currentOffset = this.getSizeAndPositionOfCell(middle).offset;
+
+      if (currentOffset === offset) {
+        return middle;
+      } else if (currentOffset < offset) {
+        low = middle + 1;
+      } else if (currentOffset > offset) {
+        high = middle - 1;
+      }
+    }
+
+    if (low > 0) {
+      return low - 1;
+    } else {
+      return 0;
+    }
+  }
+
+  _exponentialSearch(index: number, offset: number): number {
+    let interval = 1;
+
+    while (
+      index < this._cellCount &&
+      this.getSizeAndPositionOfCell(index).offset < offset
+    ) {
+      index += interval;
+      interval *= 2;
+    }
+
+    return this._binarySearch(
+      Math.min(index, this._cellCount - 1),
+      Math.floor(index / 2),
+      offset,
+    );
   }
 
   /**
@@ -227,35 +293,21 @@ export default class CellSizeAndPositionManager {
       throw Error(`Invalid offset ${offset} specified`);
     }
 
-    const vector = this._layoutVector;
-    const lastIndex = this._cellCount - 1;
     // Our search algorithms find the nearest match at or below the specified offset.
     // So make sure the offset is at least 0 or no match will be found.
-    let targetOffset = Math.max(0, Math.min(offset, vector.start(lastIndex)));
-    // First interrogate the constant-time lookup table
-    let nearestCellIndex = vector.indexOf(targetOffset);
+    offset = Math.max(0, offset);
 
-    // If we haven't yet measured this high, compute sizes for each cell up to the desired offset.
-    while (nearestCellIndex > this._lastMeasuredIndex) {
-      // Measure all the cells up to the one we want to find presently.
-      // Do this before the last-index check to ensure the sparse array
-      // is fully populated.
-      this.getSizeAndPositionOfCell(nearestCellIndex);
-      // No need to search and compare again if we're at the end.
-      if (nearestCellIndex === lastIndex) {
-        return nearestCellIndex;
-      }
-      nearestCellIndex = vector.indexOf(targetOffset);
-      // Guard in case `getSizeAndPositionOfCell` didn't fully measure to
-      // the nearestCellIndex. This might happen scrolling quickly down
-      // and back up on large lists -- possible race with React or DOM?
-      if (nearestCellIndex === -1) {
-        nearestCellIndex = this._lastMeasuredIndex;
-        this._lastMeasuredIndex = nearestCellIndex - 1;
-        targetOffset = Math.max(0, Math.min(offset, vector.start(lastIndex)));
-      }
+    const lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
+    const lastMeasuredIndex = Math.max(0, this._lastMeasuredIndex);
+
+    if (lastMeasuredCellSizeAndPosition.offset >= offset) {
+      // If we've already measured cells within this range just use a binary search as it's faster.
+      return this._binarySearch(lastMeasuredIndex, 0, offset);
+    } else {
+      // If we haven't yet measured this high, fallback to an exponential search with an inner binary search.
+      // The exponential search avoids pre-computing sizes for the full set of cells as a binary search would.
+      // The overall complexity for this approach is O(log n).
+      return this._exponentialSearch(lastMeasuredIndex, offset);
     }
-
-    return nearestCellIndex;
   }
 }
