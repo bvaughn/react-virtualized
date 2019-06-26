@@ -416,6 +416,7 @@ export default class Table extends React.PureComponent {
 
         <Grid
           {...this.props}
+          aria-readonly={null}
           autoContainerWidth
           className={clsx('ReactVirtualized__Table__Grid', gridClassName)}
           cellRenderer={this._createRow}
