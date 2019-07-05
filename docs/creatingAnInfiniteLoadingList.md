@@ -68,3 +68,5 @@ function MyComponent ({
   )
 }
 ```
+
+[CodeSandbox Example](https://codesandbox.io/s/infinite-scroll-synthetic-window-list-rnfy4)
