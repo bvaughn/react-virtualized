@@ -1,6 +1,8 @@
 Creating an Infinite-Loading List
 ---------------
+## [CodeSandbox Example](https://codesandbox.io/s/infinite-scroll-synthetic-window-list-rnfy4)
 
+## Integrating `InfiniteLoader`
 The `InfiniteLoader` component was created to help break large data sets down into chunks that could be just-in-time loaded as they were scrolled into view.
 It can also be used to create an infinite-loading list (eg. Twitter or Facebook).
 Here's a basic example of how you might implement that:
@@ -68,5 +70,3 @@ function MyComponent ({
   )
 }
 ```
-
-[CodeSandbox Example](https://codesandbox.io/s/infinite-scroll-synthetic-window-list-rnfy4)
