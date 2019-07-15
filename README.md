@@ -1,12 +1,12 @@
 [<img src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" alt="React virtualized" data-canonical-src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" width="330" height="100" />](http://bvaughn.github.io/react-virtualized/)
 
-![NPM version](https://img.shields.io/npm/v/react-virtualized.svg?style=flat)
+[![NPM version](https://img.shields.io/npm/v/react-virtualized.svg?style=flat)](https://www.npmjs.com/package/react-virtualized)
 ![NPM license](https://img.shields.io/npm/l/react-virtualized.svg?style=flat)
 [![NPM total downloads](https://img.shields.io/npm/dt/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
 [![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
-[![Circle CI badge](https://img.shields.io/circleci/project/bvaughn/react-virtualized/master.svg?style=flat)](https://circleci.com/gh/bvaughn/react-virtualized)
+[![CircleCI](https://circleci.com/gh/bvaughn/react-virtualized/tree/master.svg?style=svg)](https://circleci.com/gh/bvaughn/react-virtualized/tree/master)
 [![Codecov badge](https://img.shields.io/codecov/c/github/bvaughn/react-virtualized/master.svg)](https://codecov.io/github/bvaughn/react-virtualized)
-[![Slack chat](https://slackin-ucxxtydvmw.now.sh/badge.svg)](https://react-virtualized.now.sh)
+[![Slack chat](https://react-virtualized.now.sh/badge.svg)](https://react-virtualized.now.sh)
 [![OpenCollective](https://opencollective.com/react-virtualized/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/react-virtualized/sponsors/badge.svg)](#sponsors)
 
@@ -82,6 +82,11 @@ The following wonderful companies have sponsored react-virtualized:
 <a href="https://opencollective.com/react-virtualized/backer/27/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/27/avatar.svg"></a>
 <a href="https://opencollective.com/react-virtualized/backer/28/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/28/avatar.svg"></a>
 <a href="https://opencollective.com/react-virtualized/backer/29/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/29/avatar.svg"></a>
+
+A word about `react-window`
+---------------
+
+If you're considering adding `react-virtualized` to a project, take a look at [`react-window`](https://github.com/bvaughn/react-window) as a possible lighter-weight alternative. [Learn more about how the two libraries compare here.](https://github.com/bvaughn/react-window#how-is-react-window-different-from-react-virtualized)
 
 Getting started
 ---------------
@@ -180,7 +185,7 @@ For example:
 ###### Public methods
 
 `Grid` and `Collection` components can be forcefully re-rendered using [`forceUpdate`](https://facebook.github.io/react/docs/component-api.html#forceupdate).
-For `Table` and `List`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/Table.md#forceupdategrid) to ensure that the inner `Grid` is also updated.
+For `Table` and `List`, you'll need to call [`forceUpdateGrid`](https://github.com/bvaughn/react-virtualized/blob/master/docs/Table.md#forceupdategrid) to ensure that the inner `Grid` is also updated. For `MultiGrid`, you'll need to call [`forceUpdateGrids`](https://github.com/bvaughn/react-virtualized/blob/master/docs/MultiGrid.md#forceupdategrids) to ensure that the inner `Grid`s are updated.
 
 Documentation
 ---------------
@@ -218,6 +223,7 @@ Here are some online demos of each component:
 * [WindowScroller](https://bvaughn.github.io/react-virtualized/#/components/WindowScroller)
 
 And here are some "recipe" type demos:
+* [Table with resizable (drag and drop) columns](https://codesandbox.io/s/j30k46l7xw)
 * [Collapsable tree view](https://rawgit.com/bvaughn/react-virtualized/master/playground/tree.html)
 * [Full-page grid (spreadsheet)](https://rawgit.com/bvaughn/react-virtualized/master/playground/grid.html)
 * [Dynamic cell measuring](https://rawgit.com/bvaughn/react-virtualized/master/playground/chat.html)
@@ -239,6 +245,7 @@ Here are some great components built on top of react-virtualized:
 * [react-virtualized-select](https://github.com/bvaughn/react-virtualized-select): Drop-down menu for React with windowing to support large numbers of options.
 * [react-vtree](https://github.com/Lodin/react-vtree): Low-level tree component for React with virtualization to support large number of elements.
 * [react-virtualized-tree](https://github.com/diogofcunha/react-virtualized-tree/): A reactive tree component that aims to render large sets of tree structured data in an elegant and performant way
+* [react-timeline-9000](https://github.com/BHP-DevHub/react-timeline-9000/): A calendar timeline component that is capable of displaying and interacting with a large number of items
 
 Contributions
 ------------

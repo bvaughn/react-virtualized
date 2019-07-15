@@ -1,6 +1,6 @@
 // @flow
 
-import cn from 'classnames';
+import clsx from 'clsx';
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
 import * as React from 'react';
@@ -139,7 +139,7 @@ export default class WindowScrollerExample extends React.PureComponent<
   _rowRenderer = ({index, isScrolling, isVisible, key, style}) => {
     const {list} = this.context;
     const row = list.get(index);
-    const className = cn(styles.row, {
+    const className = clsx(styles.row, {
       [styles.rowScrolling]: isScrolling,
       isVisible: isVisible,
     });

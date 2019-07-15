@@ -25,8 +25,8 @@ It should be configured based on the type of measurements you need. It accepts t
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| defaultHeight | number | | Umeasured cells will initially report this height |  
-| defaultWidth | number | | Umeasured cells will initially report this width |
+| defaultHeight | number | | Unmeasured cells will initially report this height |  
+| defaultWidth | number | | Unmeasured cells will initially report this width |
 | fixedHeight | boolean | | Rendered cells will have a fixed height, dynamic width |
 | fixedWidth | boolean | | Rendered cells will have a fixed width, dynamic height |
 | minHeight | number | | Derived row height (of multiple cells) should not be less than this value |
@@ -116,7 +116,7 @@ To support this, a function-child is passed to `CellMeasurer` which then receive
 
 ```jsx
 import React from 'react';
-import { CellMeasurer, CellMeasurerCache, Grid } from 'react-virtualized';
+import { CellMeasurer, CellMeasurerCache, List } from 'react-virtualized';
 
 // In this example, average cell height is assumed to be about 50px.
 // This value will be used for the initial `Grid` layout.
@@ -160,6 +160,20 @@ function renderList (props) {
     />
   );
 }
+```
+
+###### Using `CellMeasurer` with equal dynamic cell heights or widths
+
+```jsx
+// Normally, every cell gets measured individually and is very slow.
+// However, with the keyMapper prop we can specify a constant return value and
+// tell CellMeasurer that all measurements after the first one will hit the
+// cache and we get a speedy solution.
+const cache = new CellMeasurerCache({
+  defaultHeight: 30,
+  fixedWidth: true,
+  keyMapper: () => 1,
+});
 ```
 
 ### Limitations and Performance Considerations

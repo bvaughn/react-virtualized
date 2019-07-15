@@ -1,7 +1,7 @@
 /** @flow */
-import cn from 'classnames';
+import clsx from 'clsx';
 import * as React from 'react';
-import polyfill from 'react-lifecycles-compat';
+import {polyfill} from 'react-lifecycles-compat';
 import PositionCache from './PositionCache';
 import {
   requestAnimationTimeout,
@@ -273,7 +273,7 @@ class Masonry extends React.PureComponent<Props, State> {
       <div
         ref={this._setScrollingContainerRef}
         aria-label={this.props['aria-label']}
-        className={cn('ReactVirtualized__Masonry', className)}
+        className={clsx('ReactVirtualized__Masonry', className)}
         id={id}
         onScroll={this._onScroll}
         role={role}

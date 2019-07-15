@@ -49,6 +49,7 @@ describe('Table', () => {
     maxWidth,
     minWidth,
     defaultSortDirection,
+    label,
     ...flexTableProps
   } = {}) {
     return (
@@ -63,7 +64,7 @@ describe('Table', () => {
         width={100}
         {...flexTableProps}>
         <Column
-          label="Name"
+          label={label || 'Name'}
           dataKey="name"
           columnData={columnData}
           width={50}
@@ -265,13 +266,13 @@ describe('Table', () => {
           width: 0,
         }),
       );
-      expect(rendered.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(
-        150,
-      );
+      expect(
+        rendered.Grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(150);
       rendered.measureAllRows();
-      expect(rendered.Grid._rowSizeAndPositionManager.getTotalSize()).toEqual(
-        200,
-      );
+      expect(
+        rendered.Grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(200);
     });
   });
 
@@ -378,6 +379,34 @@ describe('Table', () => {
       );
       const nameColumn = rendered.querySelector(
         '.ReactVirtualized__Table__rowColumn:first-of-type',
+      );
+      expect(nameColumn.getAttribute('title')).toEqual(null);
+    });
+
+    it('should set the rendered header label as header :title if it is a string', () => {
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            label: 'Custom',
+          }),
+        ),
+      );
+      const nameColumn = rendered.querySelector(
+        '.ReactVirtualized__Table__headerTruncatedText:first-of-type',
+      );
+      expect(nameColumn.getAttribute('title')).toContain('Custom');
+    });
+
+    it('should not set a header :title if the rendered header label is not a string', () => {
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            label: <div>Custom</div>,
+          }),
+        ),
+      );
+      const nameColumn = rendered.querySelector(
+        '.ReactVirtualized__Table__headerTruncatedText:first-of-type',
       );
       expect(nameColumn.getAttribute('title')).toEqual(null);
     });
@@ -699,6 +728,30 @@ describe('Table', () => {
       );
       const bodyDOMNode = findDOMNode(rendered.Grid);
       expect(bodyDOMNode.textContent).toEqual('');
+    });
+  });
+
+  describe('onColumnClick', () => {
+    it('should call :onColumnClick with the correct arguments when a column is clicked', () => {
+      const onColumnClick = jest.fn();
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            onColumnClick,
+          }),
+        ),
+      );
+      const nameColumn = rendered.querySelector(
+        '.ReactVirtualized__Table__rowColumn:first-of-type',
+      );
+
+      Simulate.click(nameColumn);
+
+      expect(onColumnClick).toHaveBeenCalledTimes(1);
+      const params = onColumnClick.mock.calls[0][0];
+      expect(params.dataKey).toEqual('name');
+      expect(params.columnData.data).toEqual(123);
+      expect(params.event.type).toEqual('click');
     });
   });
 
@@ -1191,6 +1244,25 @@ describe('Table', () => {
       expect(node.getAttribute('role')).toEqual('grid');
     });
 
+    it('should set aria col/row count on the table', () => {
+      const node = findDOMNode(render(getMarkup()));
+      expect(node.getAttribute('aria-colcount')).toEqual('2');
+      expect(node.getAttribute('aria-rowcount')).toEqual(`${list.size}`);
+    });
+
+    it('should pass down aria labels on the table', () => {
+      const node = findDOMNode(
+        render(
+          getMarkup({
+            'aria-label': 'my-table-label',
+            'aria-labelledby': 'my-table-label-id',
+          }),
+        ),
+      );
+      expect(node.getAttribute('aria-label')).toEqual('my-table-label');
+      expect(node.getAttribute('aria-labelledby')).toEqual('my-table-label-id');
+    });
+
     it('should set aria role on the header row', () => {
       const rendered = findDOMNode(render(getMarkup()));
       const row = rendered.querySelector('.ReactVirtualized__Table__headerRow');
@@ -1209,12 +1281,28 @@ describe('Table', () => {
       expect(row.getAttribute('role')).toEqual('row');
     });
 
+    it('should set aria rowindex on a row', () => {
+      const rendered = findDOMNode(render(getMarkup()));
+      const rows = rendered.querySelectorAll('.ReactVirtualized__Table__row');
+      expect(rows[0].getAttribute('aria-rowindex')).toEqual('1');
+      expect(rows[1].getAttribute('aria-rowindex')).toEqual('2');
+    });
+
     it('should set aria role on a cell', () => {
       const rendered = findDOMNode(render(getMarkup()));
       const cell = rendered.querySelector(
         '.ReactVirtualized__Table__rowColumn',
       );
       expect(cell.getAttribute('role')).toEqual('gridcell');
+    });
+
+    it('should set aria colindex on a cell', () => {
+      const rendered = findDOMNode(render(getMarkup()));
+      const cells = rendered.querySelectorAll(
+        '.ReactVirtualized__Table__rowColumn',
+      );
+      expect(cells[0].getAttribute('aria-colindex')).toEqual('1');
+      expect(cells[1].getAttribute('aria-colindex')).toEqual('2');
     });
 
     it('should set aria-describedby on a cell when the column has an id', () => {
@@ -1294,6 +1382,19 @@ describe('Table', () => {
         '.ReactVirtualized__Table__headerColumn',
       );
       expect(header.getAttribute('aria-sort')).toEqual('descending');
+    });
+
+    it('should set aria-sort to "none" if the column is sortable but not the current sort', () => {
+      const rendered = findDOMNode(
+        render(getMarkup({disableSort: true, sort: jest.fn()})),
+      );
+      const headers = rendered.querySelectorAll(
+        '.ReactVirtualized__Table__headerColumn',
+      );
+      // the first column is not sortable
+      expect(headers[0].getAttribute('aria-sort')).toBe(null);
+      // the second column is sortable
+      expect(headers[1].getAttribute('aria-sort')).toEqual('none');
     });
 
     it('should set id on a header column when the column has an id', () => {

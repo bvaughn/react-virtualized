@@ -9,7 +9,7 @@ import {
 import {LabeledInput, InputRow} from '../demo/LabeledInput';
 import AutoSizer from '../AutoSizer';
 import Grid from './Grid';
-import cn from 'classnames';
+import clsx from 'clsx';
 import styles from './Grid.example.css';
 
 export default class GridExample extends React.PureComponent {
@@ -236,7 +236,7 @@ export default class GridExample extends React.PureComponent {
         break;
     }
 
-    const classNames = cn(rowClass, styles.cell, {
+    const classNames = clsx(rowClass, styles.cell, {
       [styles.centeredCell]: columnIndex > 2,
     });
 
@@ -250,7 +250,7 @@ export default class GridExample extends React.PureComponent {
   _renderLeftSideCell({key, rowIndex, style}) {
     const datum = this._getDatum(rowIndex);
 
-    const classNames = cn(styles.cell, styles.letterCell);
+    const classNames = clsx(styles.cell, styles.letterCell);
 
     // Don't modify styles.
     // These are frozen by React now (as of 16.0.0).

@@ -1,8 +1,64 @@
 Changelog
 ------------
+##### 9.21.1
 
-##### NEXT
-* Replaced `componentWillMount`, `componentWillReceiveProps`, and `componentWillUpdate` with async-safe lifecycles in advance of React 16.4 deprecation warnings. Added [react-lifecycles-compat](https://github.com/reactjs/react-lifecycles-compat) as a dependency, to ensure backwards compatibility.
+* 🐛 Fix doc typos. ([tienpham94](https://github.com/tienpham94) - [#1268](https://github.com/bvaughn/react-virtualized/pull/1268))
+* 🐛 Fix typos in changelog. ([misacorn](https://github.com/misacorn) - [#1267](https://github.com/bvaughn/react-virtualized/pull/1267))
+* 🐛 Fix formatting in AutoSizer.md ([jacklee814](https://github.com/jacklee814) - [#1246](https://github.com/bvaughn/react-virtualized/pull/1246))
+* 🐛 Fix usage of reduce in InfiniteLoader ([jedwards1211](https://github.com/jedwards1211) - [#1277](https://github.com/bvaughn/react-virtualized/pull/1277))
+* 🎉 Migrate from classnames to clsx ([TrySound](https://github.com/TrySound) - [#1306](https://github.com/bvaughn/react-virtualized/pull/1306))
+* 🐛 Ensure a string title for header ([oakfang](https://github.com/oakfang) - [#1321](https://github.com/bvaughn/react-virtualized/pull/1321))
+* 🎉 Use sparse array for cell position caches ([trxcllnt](https://github.com/trxcllnt) - [#1312](https://github.com/bvaughn/react-virtualized/pull/1312))
+* 🐛 Fix scrollToPosition ([jaycrypto](https://github.com/jaycrypto) - [#1288](https://github.com/bvaughn/react-virtualized/pull/1288))
+
+##### 9.21.0
+
+* 🎉 Added new use case example for CellMeasurer. ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1168](https://github.com/bvaughn/react-virtualized/pull/1168))
+* 🎉 Added react-timeline-9000 as a related library. ([vasdee](https://github.com/vasdee) - [#1197](https://github.com/bvaughn/react-virtualized/pull/1197))
+* 🐛 Fix CellMeasurer docs with correct import statement. ([skipjack](https://github.com/skipjack) - [#1187](https://github.com/bvaughn/react-virtualized/pull/1187))
+* 🐛 Fix broken Slack badge. ([slieshke](https://github.com/slieshke) - [#1205](https://github.com/bvaughn/react-virtualized/pull/1205))
+* 🐛 Fix type in CellMeasurer example. ([rloqvist](https://github.com/rloqvist) - [#1190](https://github.com/bvaughn/react-virtualized/pull/1190))
+* 🐛 Fix Table aria attributes. ([jsomsanith](https://github.com/jsomsanith) - [#1208](https://github.com/bvaughn/react-virtualized/pull/1208))
+* 🐛 Removed unused variable in Masonry example. ([ignocide](https://github.com/ignocide) - [#1218](https://github.com/bvaughn/react-virtualized/pull/1218))
+* 🎉 Add onColumnClick to Table. ([grahamlyus](https://github.com/grahamlyus) - [#1207](https://github.com/bvaughn/react-virtualized/pull/1207))
+* 🎉 Allow users to override default table row styles. ([emroussel](https://github.com/emroussel) - [#1175](https://github.com/bvaughn/react-virtualized/pull/1175))
+
+##### 9.20.1
+
+* 🐛 Removing `sideEffects: false` from package.json. ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1163](https://github.com/bvaughn/react-virtualized/pull/1163))
+* 🐛 Prevent early `debounceScrollEndedCallback`. ([Gvozd](https://github.com/Gvozd) - [#1141](https://github.com/bvaughn/react-virtualized/pull/1141))
+* 🐛 Fix `scrollToIndex` behavior in `InfiniteLoader`. ([mengdage](https://github.com/mengdage), [dcolens](https://github.com/dcolens) - [#1154](https://github.com/bvaughn/react-virtualized/pull/1154))
+
+##### 9.20.0
+
+* 🎉 Code of Conduct and updated Issue/PR templates. ([aem](https://github.com/aem) - [#1052](https://github.com/bvaughn/react-virtualized/pull/1052))
+* 🐛 Make scrollTo{Column,Row} take precedence over scroll{Left,Top}. ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1130](https://github.com/bvaughn/react-virtualized/pull/1130))
+* 🐛 No `setState(null)`. ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1129](https://github.com/bvaughn/react-virtualized/pull/1129))
+* 🎉 New `isScrollingOptOut` prop for `Grid` that prevents re-rendering on scroll-end. ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1131](https://github.com/bvaughn/react-virtualized/pull/1131))
+* 🐛 Updated npm badge link. ([SpainTrain](https://github.com/SpainTrain) - [#1146](https://github.com/bvaughn/react-virtualized/pull/1146))
+
+##### 9.19.1
+
+* Updated [react-lifecycles-compat](https://github.com/reactjs/react-lifecycles-compat) to 3.0.4. ([pigcan](https://github.com/pigcan) - [#1114](https://github.com/bvaughn/react-virtualized/pull/1114))
+
+##### 9.19.0
+
+* Replaced `componentWillMount`, `componentWillReceiveProps`, and `componentWillUpdate` with async-safe lifecycles in advance of React 16.x deprecation warnings. Added [react-lifecycles-compat](https://github.com/reactjs/react-lifecycles-compat) as a dependency, to ensure backwards compatibility.
+* Public flow interface for `CellMeasurer`. ([diogofcunha](https://github.com/diogofcunha) - [#1058](https://github.com/bvaughn/react-virtualized/pull/1058))
+* Improved build by setting `sideEffects` to `false`. ([0xR](https://github.com/0xR) - [#1064](https://github.com/bvaughn/react-virtualized/pull/1064))
+* 🐛 Fix flow type checks. ([RyanLiu0235](https://github.com/RyanLiu0235) - [#1066](https://github.com/bvaughn/react-virtualized/pull/1066))
+* Rollup for UMD build. ([TrySound](https://github.com/TrySound) - [#994](https://github.com/bvaughn/react-virtualized/pull/994))
+* Row direction support for `Masonry` ([bardiarastin](https://github.com/bardiarastin) - [#1071](https://github.com/bvaughn/react-virtualized/pull/1071))
+* Add lint-staged and precommit hooks ([TrySound](https://github.com/TrySound) - [#1082](https://github.com/bvaughn/react-virtualized/pull/1082))
+* Add `scrollToRow` and `scrollToColumn` support for ssr. ([microcood](https://github.com/microcood) - [#1072](https://github.com/bvaughn/react-virtualized/pull/1072))
+* Add `getTotalRowsHeight` and `getTotalColumnsWidth` to `Grid`. ([nihgwu](https://github.com/nihgwu) - [#1022](https://github.com/bvaughn/react-virtualized/pull/1022))
+* Allow top-right and bottom-left scrollbars in `MultiGrid` be hidden. ([RaviDasari](https://github.com/RaviDasari) - [#1040](https://github.com/bvaughn/react-virtualized/pull/1040))
+* Documentation changes
+  * Added `forceUpdateGrid` documentation for `MultiGrid`. ([kartikluke](https://github.com/kartikluke) - [#1079](https://github.com/bvaughn/react-virtualized/pull/1079))
+  * 🐛 Fixed typo in `Grid` docs. ([r-kot](https://github.com/r-kot) - [#1092](https://github.com/bvaughn/react-virtualized/pull/1092))
+  * 🐛 Fixed typo in `Collection` docs. ([skipjack](https://github.com/skipjack) - [#1050](https://github.com/bvaughn/react-virtualized/pull/1050))
+  * Added dynamically measured images example for `Masonry`. ([kirill-konshin](https://github.com/kirill-konshin) - [#1081](https://github.com/bvaughn/react-virtualized/pull/1081))
+
 
 ##### 9.18.5
 * 🐛 Revert changes > 9.18.0
@@ -99,7 +155,7 @@ Changelog
 * 🎉 `WindowScroller` supports `scrollToIndex` prop. ([@leoasis](https://github.com/leoasis) - [#643](https://github.com/bvaughn/react-virtualized/pull/643))
 * 🎉 Allow `ArrowKeyStepper` to be used as a controlled component. ([@mking-clari](https://github.com/mking-clari) - [#688](https://github.com/bvaughn/react-virtualized/pull/688))
 * 🎉New `handleScroll` method on `Grid` to better support custom scrollbars. ([@5angel](https://github.com/5angel) - [#693](https://github.com/bvaughn/react-virtualized/pull/693))
-* 🐛 Added edge-case gaurd to `WindowScroller ` to prevent calling `setState` when unmounted. ([@liorbrauer](https://github.com/liorbrauer) - [#689](https://github.com/bvaughn/react-virtualized/pull/689))
+* 🐛 Added edge-case guard to `WindowScroller ` to prevent calling `setState` when unmounted. ([@liorbrauer](https://github.com/liorbrauer) - [#689](https://github.com/bvaughn/react-virtualized/pull/689))
 * 🐛 Fixed edge-case in `Grid` where setting an initial scroll-to offset with a `height` or `width` of 0 caused the scroll-to prop to be ignored when size later changed. ([#691](https://github.com/bvaughn/react-virtualized/pull/691))
 
 ##### 9.7.6
@@ -132,7 +188,7 @@ Changelog
 ##### 9.6.0
 * 🎉 `WindowScroller` and `Grid` now support horizontal window-scrolling via new `autoWidth` property. ([@maxnowack](https://github.com/maxnowack) - [#644](https://github.com/bvaughn/react-virtualized/pull/644))
 * 🐛 Fixed a Content Security Policy (CSP) issue in an upstream dependency that impacted users of the `Masonry` component. For more information see issue [#640](https://github.com/bvaughn/react-virtualized/issues/640).
-* ✨ `List` and `Table` always overscan 1 row in the direction _not_ being scrolled to better support keyboard nativigation (via TAB and SHIFT+TAB). For more information see [issue #625](https://github.com/bvaughn/react-virtualized/issues/625).
+* ✨ `List` and `Table` always overscan 1 row in the direction _not_ being scrolled to better support keyboard navigation (via TAB and SHIFT+TAB). For more information see [issue #625](https://github.com/bvaughn/react-virtualized/issues/625).
 * ✨ `Grid` no longer alters scroll direction for one axis (eg vertical) if a scroll event occurs for another axis (eg horizontal).
 
 ##### 9.5.0
@@ -482,7 +538,7 @@ By default this is disabled but `VirtualScroll` and `FlexTable` both enable it o
 Renamed `Grid` refs within `FlexTable` and `VirtualScroll` from `_grid` to `Grid`.
 
 This is done to better support interoperability between `FlexTable` and `react-sortable-hoc` which requires a handle on the inner `Grid`.
-Technically the change is not required but it is more inline with JavaScript naming conventions (since I plan to preserve this proprety from an Api perspective).
+Technically the change is not required but it is more inline with JavaScript naming conventions (since I plan to preserve this property from an Api perspective).
 
 ##### 7.15.0
 Added support for greater `FlexTable` customization via a new `rowRenderer` property.
@@ -908,7 +964,7 @@ Fixed `AutoSizer` bug that caused it to prevent parent flex containers from shri
 Added `scrollToIndex` property to `FlexTable` to be passed through to inner `Grid`.
 
 ##### 4.6.6
-Better gaurd against `NaN` values for `clientWidth` and `offsetWidth` for test environments using `jsdom`.
+Better guard against `NaN` values for `clientWidth` and `offsetWidth` for test environments using `jsdom`.
 
 ##### 4.6.5
 Added `react-dom` to the Webpack :externals node to avoid including it in the build.

@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import {Simulate} from 'react-dom/test-utils';
+import TestRenderer from 'react-test-renderer';
 import {render} from '../TestUtils';
 import Grid, {DEFAULT_SCROLLING_RESET_TIME_INTERVAL} from './Grid';
+import defaultCellRangeRenderer from './defaultCellRangeRenderer';
 import {CellMeasurer, CellMeasurerCache} from '../CellMeasurer';
 import {
   SCROLL_DIRECTION_BACKWARD,
@@ -613,6 +615,22 @@ describe('Grid', () => {
       expect(scrollTop).toEqual(900);
     });
 
+    it('should support getTotalRowsHeight() public method', () => {
+      const grid = render(getMarkup());
+      grid.recomputeGridSize();
+      const totalHeight = grid.getTotalRowsHeight();
+      // 100 rows * 20 item height = 2,000 total item height
+      expect(totalHeight).toEqual(2000);
+    });
+
+    it('should support getTotalColumnsWidth() public method', () => {
+      const grid = render(getMarkup());
+      grid.recomputeGridSize();
+      const totalWidth = grid.getTotalColumnsWidth();
+      // 50 columns * 50 item width = 2,500 total item width
+      expect(totalWidth).toEqual(2500);
+    });
+
     // See issue #565
     it('should update scroll position to account for changed cell sizes within a function prop wrapper', () => {
       let rowHeight = 20;
@@ -635,6 +653,56 @@ describe('Grid', () => {
       });
 
       expect(node.scrollTop).toBe(1920);
+    });
+
+    it('should not restore scrollLeft when scrolling left and recomputeGridSize with columnIndex smaller than scrollToColumn', () => {
+      const props = {
+        columnWidth: 50,
+        columnCount: 100,
+        height: 100,
+        rowCount: 100,
+        rowHeight: 20,
+        scrollToColumn: 50,
+        scrollToRow: 50,
+        width: 100,
+      };
+      const grid = render(getMarkup(props));
+
+      expect(grid.state.scrollLeft).toEqual(2450);
+
+      simulateScroll({grid, scrollLeft: 2250});
+      expect(grid.state.scrollLeft).toEqual(2250);
+      expect(grid.state.scrollDirectionHorizontal).toEqual(
+        SCROLL_DIRECTION_BACKWARD,
+      );
+
+      grid.recomputeGridSize({columnIndex: 30});
+      expect(grid.state.scrollLeft).toEqual(2250);
+    });
+
+    it('should not restore scrollTop when scrolling up and recomputeGridSize with rowIndex smaller than scrollToRow', () => {
+      const props = {
+        columnWidth: 50,
+        columnCount: 100,
+        height: 100,
+        rowCount: 100,
+        rowHeight: 20,
+        scrollToColumn: 50,
+        scrollToRow: 50,
+        width: 100,
+      };
+      const grid = render(getMarkup(props));
+
+      expect(grid.state.scrollTop).toEqual(920);
+
+      simulateScroll({grid, scrollTop: 720});
+      expect(grid.state.scrollTop).toEqual(720);
+      expect(grid.state.scrollDirectionVertical).toEqual(
+        SCROLL_DIRECTION_BACKWARD,
+      );
+
+      grid.recomputeGridSize({rowIndex: 20});
+      expect(grid.state.scrollTop).toEqual(720);
     });
 
     it('should restore scroll offset for column when row count increases from 0 (and vice versa)', () => {
@@ -1561,8 +1629,8 @@ describe('Grid', () => {
           rowHeight: 20,
         }),
       );
-      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(100);
-      expect(grid._getEstimatedRowSize(grid.props)).toEqual(20);
+      expect(Grid._getEstimatedColumnSize(grid.props)).toEqual(100);
+      expect(Grid._getEstimatedRowSize(grid.props)).toEqual(20);
     });
 
     it('should estimate row and column sizes if actual sizes are functions', () => {
@@ -1574,8 +1642,8 @@ describe('Grid', () => {
           rowHeight: () => 20,
         }),
       );
-      expect(grid._getEstimatedColumnSize(grid.props)).toEqual(150);
-      expect(grid._getEstimatedRowSize(grid.props)).toEqual(15);
+      expect(Grid._getEstimatedColumnSize(grid.props)).toEqual(150);
+      expect(Grid._getEstimatedRowSize(grid.props)).toEqual(15);
     });
   });
 
@@ -1888,6 +1956,88 @@ describe('Grid', () => {
       expect(cellRendererCalls.length).not.toEqual(0);
     });
 
+    it('should not clear cache if :isScrollingOptOut is true', () => {
+      const cellRendererCalls = [];
+      function cellRenderer({columnIndex, key, rowIndex, style}) {
+        cellRendererCalls.push({columnIndex, rowIndex});
+        return defaultCellRenderer({columnIndex, key, rowIndex, style});
+      }
+      const props = {
+        cellRenderer,
+        columnWidth: 100,
+        height: 40,
+        rowHeight: 20,
+        scrollTop: 0,
+        width: 100,
+        isScrollingOptOut: true,
+      };
+
+      render(getMarkup(props));
+      render(getMarkup(props));
+      expect(cellRendererCalls).toEqual([
+        {columnIndex: 0, rowIndex: 0},
+        {columnIndex: 0, rowIndex: 1},
+      ]);
+
+      cellRendererCalls.splice(0);
+
+      render(
+        getMarkup({
+          ...props,
+          isScrolling: false,
+        }),
+      );
+
+      // Visible cells are cached
+      expect(cellRendererCalls.length).toEqual(0);
+
+      render(
+        getMarkup({
+          ...props,
+          isScrolling: true,
+        }),
+      );
+
+      // Only cleared non-visible cells
+      expect(cellRendererCalls.length).toEqual(0);
+    });
+
+    it('should not trigger render by _debounceScrollEndedCallback if process slow table', async () => {
+      const scrollingResetTimeInterval = 50;
+      let cellRangeRendererCalls = 0;
+      function cellRangeRenderer(props) {
+        const startTime = Date.now();
+        while (Date.now() - startTime <= scrollingResetTimeInterval); // imitate very slow render
+        cellRangeRendererCalls++;
+        return defaultCellRangeRenderer(props);
+      }
+      const props = {
+        scrollingResetTimeInterval,
+        cellRangeRenderer,
+      };
+
+      const grid = render(getMarkup(props));
+      render(getMarkup(props));
+      expect(cellRangeRendererCalls).toEqual(1);
+
+      for (let i = 1; i <= 5; i++) {
+        cellRangeRendererCalls = 0;
+        simulateScroll({grid, scrollTop: i});
+        // small wait for maybe early _debounceScrollEndedCallback
+        await new Promise(resolve =>
+          setTimeout(resolve, scrollingResetTimeInterval / 2),
+        );
+        expect(cellRangeRendererCalls).toEqual(1);
+      }
+
+      cellRangeRendererCalls = 0;
+      // wait for real _debounceScrollEndedCallback
+      await new Promise(resolve =>
+        setTimeout(resolve, scrollingResetTimeInterval * 1.5),
+      );
+      expect(cellRangeRendererCalls).toEqual(1);
+    });
+
     it('should support a custom :scrollingResetTimeInterval prop', async done => {
       const cellRendererCalls = [];
       const scrollingResetTimeInterval =
@@ -1950,11 +2100,19 @@ describe('Grid', () => {
           width: 0,
         }),
       );
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1500);
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(150);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(1500);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(150);
       grid.measureAllCells();
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(1000);
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(200);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(1000);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(200);
     });
   });
 
@@ -2059,7 +2217,9 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.height,
       ).toEqual('2000px'); // 100 rows * 20px rowHeight
-      expect(grid._rowSizeAndPositionManager.getTotalSize()).toEqual(2000);
+      expect(
+        grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
+      ).toEqual(2000);
     });
   });
 
@@ -2091,7 +2251,9 @@ describe('Grid', () => {
         rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
           .style.width,
       ).toEqual('2500px'); // 50 columns * 50px columnWidth
-      expect(grid._columnSizeAndPositionManager.getTotalSize()).toEqual(2500);
+      expect(
+        grid.state.instanceProps.columnSizeAndPositionManager.getTotalSize(),
+      ).toEqual(2500);
     });
   });
 
@@ -2301,10 +2463,11 @@ describe('Grid', () => {
     });
 
     // cellRendererCalls[0] is the element at rowIndex 0
-    const firstProps = cellRendererCalls[1];
-    const secondProps = cellRendererCalls[2];
+    // only two calls. Since the scrollTop is updated in getDerivedStateFromProps
+    const firstProps = cellRendererCalls[0];
+    const secondProps = cellRendererCalls[1];
 
-    expect(cellRendererCalls.length).toEqual(3);
+    expect(cellRendererCalls.length).toEqual(2);
     expect(firstProps.style).not.toBe(secondProps.style);
   });
 
@@ -2582,5 +2745,10 @@ describe('Grid', () => {
       );
       expect(onScrollbarPresenceChange).not.toHaveBeenCalled();
     });
+  });
+
+  it('should not complain when using react-test-renderer', () => {
+    const instance = TestRenderer.create(getMarkup()).getInstance();
+    expect(instance).toBeTruthy();
   });
 });

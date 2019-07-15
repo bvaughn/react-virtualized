@@ -23,10 +23,11 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | height | Number | ✓ | Height of Grid; this property determines the number of visible (vs virtualized) rows. |
 | id | String |  | Optional custom id to attach to root `Grid` element. |
 | isScrolling | Boolean |  | Override internal is-scrolling state tracking. This property is primarily intended for use with the WindowScroller component. |
+| isScrollingOptOut | Boolean |  | Prevents re-rendering of visible cells on scroll end. |
 | noContentRenderer | Function |  | Optional renderer to be rendered inside the grid when either `rowCount` or `columnCount` is empty: `(): PropTypes.node` |
 | onSectionRendered | Function |  | Callback invoked with information about the section of the Grid that was just rendered. This callback is only invoked when visible rows have changed: `({ columnOverscanStartIndex: number, columnOverscanStopIndex: number, columnStartIndex: number, columnStopIndex: number, rowOverscanStartIndex: number, rowOverscanStopIndex: number, rowStartIndex: number, rowStopIndex: number }): void` |
 | onScroll | Function |  | Callback invoked whenever the scroll offset changes within the inner scrollable region: `({ clientHeight: number, clientWidth: number, scrollHeight: number, scrollLeft: number, scrollTop: number, scrollWidth: number }): void` |
-| onScrollbarPresenceChange | Function |  | Called whenever a horizontal or vertical scrollbar is added or removed.: `({ horizontal: boolean, size: number, vertical: boolean }): void` |
+| onScrollbarPresenceChange | Function |  | Called whenever a horizontal or vertical scrollbar is added or removed: `({ horizontal: boolean, size: number, vertical: boolean }): void` |
 | overscanColumnCount | Number |  | Number of columns to render before/after the visible slice of the grid. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important note about this property. |
 | overscanIndicesGetter | Function |  | Responsible for calculating the number of cells to overscan before and after a specified range [Learn more](#overscanindicesgetter) |
 | overscanRowCount | Number |  | Number of rows to render above/below the visible slice of the grid. This can help reduce flickering during scrolling on certain browsers/devices. See [here](overscanUsage.md) for an important note about this property. |
@@ -36,8 +37,8 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | scrollingResetTimeInterval | Number |  | Wait this amount of time after the last scroll event before resetting Grid `pointer-events`; defaults to 150ms. |
 | scrollLeft | Number |  | Horizontal offset |
 | scrollToAlignment | String |  | Controls the alignment of scrolled-to-cells. The default ("_auto_") scrolls the least amount possible to ensure that the specified cell is fully visible. Use "_start_" to always align cells to the top/left of the `Grid` and "_end_" to align them bottom/right. Use "_center_" to align specified cell in the middle of container. |
-| scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary) |
-| scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
+| scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary). Takes precedence over `scrollLeft`. |
+| scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary). Takes precedence over `scrollTop`. |
 | scrollTop | Number |  | Vertical offset |
 | style | Object |  | Optional custom inline style to attach to root `Grid` element. |
 | tabIndex | Number |  | Optional override of tab index default; defaults to `0`. |
@@ -48,6 +49,14 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 ##### getOffsetForCell ({ alignment: ?string, columnIndex: ?number, rowIndex: ?number })
 
 Gets offsets for a given cell and alignment.
+
+##### getTotalRowsHeight
+
+Gets estimated total rows' height.
+
+##### getTotalColumnsWidth
+
+Gets estimated total columns' width.
 
 ##### handleScrollEvent ({ scrollLeft, scrollTop })
 
@@ -132,8 +141,8 @@ function cellRangeRenderer ({
   horizontalOffsetAdjustment,   // Horizontal pixel offset (required for scaling)
   isScrolling,                  // The Grid is currently being scrolled
   rowSizeAndPositionManager,    // @see CellSizeAndPositionManager,
-  rowStartIndex,                // Index of first column (inclusive) to render
-  rowStopIndex,                 // Index of last column (inclusive) to render
+  rowStartIndex,                // Index of first row (inclusive) to render
+  rowStopIndex,                 // Index of last row (inclusive) to render
   scrollLeft,                   // Current horizontal scroll offset of Grid
   scrollTop,                    // Current vertical scroll offset of Grid
   styleCache,                   // Temporary style (size & position) cache used while scrolling

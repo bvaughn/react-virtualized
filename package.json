@@ -3,12 +3,11 @@
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
-  "version": "9.18.5",
+  "version": "9.21.1",
   "homepage": "https://github.com/bvaughn/react-virtualized",
   "main": "dist/commonjs/index.js",
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
-  "sideEffects": false,
   "license": "MIT",
   "scripts": {
     "build:types": "flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/WindowScroller dist/es/WindowScroller && flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/AutoSizer dist/es/AutoSizer",
@@ -38,7 +37,14 @@
     "test:jest": "jest --no-watchman --runInBand",
     "test:ci": "jest --no-watchman --maxWorkers 2 --coverage && codecov",
     "watch": "watch 'clear && npm run test -s' source",
-    "watch:jest": "jest --no-watchman --watch"
+    "watch:jest": "jest --no-watchman --watch",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "babel": {
     "presets": [
@@ -93,7 +99,7 @@
       "!source/TestUtils.js",
       "!**/*.example.js"
     ],
-    "testRegex": ".(jest|e2e|ssr).js",
+    "testRegex": ".(jest|e2e|ssr).js$",
     "verbose": true
   },
   "devDependencies": {
@@ -137,6 +143,7 @@
     "immutable": "^3.7.5",
     "jest": "^22.0.4",
     "jest-environment-puppeteer": "^1.1.1",
+    "lint-staged": "^7.0.4",
     "postcss": "^6.0.14",
     "postcss-cli": "^4.1.1",
     "postcss-loader": "^2.0.9",
@@ -147,6 +154,7 @@
     "react-dom": "^16.2.0",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "react-test-renderer": "^16.2.0",
     "rimraf": "^2.4.3",
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",
@@ -161,11 +169,11 @@
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
-    "classnames": "^2.2.3",
+    "clsx": "^1.0.1",
     "dom-helpers": "^2.4.0 || ^3.0.0",
     "loose-envify": "^1.3.0",
     "prop-types": "^15.6.0",
-    "react-lifecycles-compat": "^1.0.2"
+    "react-lifecycles-compat": "^3.0.4"
   },
   "peerDependencies": {
     "react": "^15.3.0 || ^16.0.0-alpha",

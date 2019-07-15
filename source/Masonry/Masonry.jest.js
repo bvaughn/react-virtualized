@@ -290,14 +290,13 @@ describe('Masonry', () => {
           getMarkup({
             cellMeasurerCache,
             cellPositioner,
-            rowDirection: 'rtl'
+            rowDirection: 'rtl',
           }),
         ),
       );
-      Array.from(rendered.querySelectorAll('.cell'))
-      .map(node => {
+      Array.from(rendered.querySelectorAll('.cell')).map(node => {
         expect(node.style.right).toMatch(/px/);
-      })
+      });
     });
   });
 

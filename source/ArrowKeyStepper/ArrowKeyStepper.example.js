@@ -9,7 +9,7 @@ import {
 import ArrowKeyStepper, {type ScrollIndices} from './';
 import AutoSizer from '../AutoSizer';
 import Grid from '../Grid';
-import cn from 'classnames';
+import clsx from 'clsx';
 import styles from './ArrowKeyStepper.example.css';
 
 type State = {
@@ -168,7 +168,7 @@ export default class ArrowKeyStepperExample extends React.PureComponent<
     scrollToRow: number,
     style: Object,
   }) => {
-    const className = cn(styles.Cell, {
+    const className = clsx(styles.Cell, {
       [styles.FocusedCell]:
         columnIndex === scrollToColumn && rowIndex === scrollToRow,
     });

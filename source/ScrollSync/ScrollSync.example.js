@@ -8,7 +8,7 @@ import {
 import AutoSizer from '../AutoSizer';
 import Grid from '../Grid';
 import ScrollSync from './ScrollSync';
-import cn from 'classnames';
+import clsx from 'clsx';
 import styles from './ScrollSync.example.css';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 
@@ -238,7 +238,7 @@ export default class GridExample extends React.PureComponent {
       rowIndex % 2 === 0
         ? columnIndex % 2 === 0 ? styles.evenRow : styles.oddRow
         : columnIndex % 2 !== 0 ? styles.evenRow : styles.oddRow;
-    const classNames = cn(rowClass, styles.cell);
+    const classNames = clsx(rowClass, styles.cell);
 
     return (
       <div className={classNames} key={key} style={style}>
