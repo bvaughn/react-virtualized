@@ -149,6 +149,7 @@ This function accepts the following named parameters:
 |:---|:---|
 | className | Row-level class name |
 | columns | Array of React nodes |
+| key | Unique key within array of rendered rows |
 | index | Row index |
 | isScrolling | Boolean flag indicating if `Table` is currently being scrolled |
 | onRowClick | Optional row `onClick` handler |

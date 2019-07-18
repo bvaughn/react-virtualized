@@ -33,6 +33,7 @@ export type RowRendererParams = {
   columns: Array<any>,
   index: number,
   isScrolling: boolean,
+  key: string,
   onRowClick: ?Function,
   onRowDoubleClick: ?Function,
   onRowMouseOver: ?Function,
