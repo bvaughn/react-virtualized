@@ -50,7 +50,7 @@ export default class DynamicHeightList extends React.PureComponent {
     const imageWidth = 300;
     const imageHeight = datum.size * (1 + index % 3);
 
-    const source = `https://fillmurray.com/${imageWidth}/${imageHeight}`;
+    const source = `https://www.fillmurray.com/${imageWidth}/${imageHeight}`;
 
     return (
       <CellMeasurer
