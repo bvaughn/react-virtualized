@@ -337,6 +337,17 @@ export default class Table extends React.PureComponent {
     }
   }
 
+  getScrollbarWidth() {
+    if (this.Grid) {
+      const Grid = findDOMNode(this.Grid);
+      const clientWidth = Grid.clientWidth || 0;
+      const offsetWidth = Grid.offsetWidth || 0;
+      return offsetWidth - clientWidth;
+    }
+
+    return 0;
+  }
+
   componentDidMount() {
     this._setScrollbarWidth();
   }
@@ -726,13 +737,8 @@ export default class Table extends React.PureComponent {
   }
 
   _setScrollbarWidth() {
-    if (this.Grid) {
-      const Grid = findDOMNode(this.Grid);
-      const clientWidth = Grid.clientWidth || 0;
-      const offsetWidth = Grid.offsetWidth || 0;
-      const scrollbarWidth = offsetWidth - clientWidth;
+    const scrollbarWidth = this.getScrollbarWidth();
 
-      this.setState({scrollbarWidth});
-    }
+    this.setState({scrollbarWidth});
   }
 }
