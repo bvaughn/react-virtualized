@@ -200,6 +200,51 @@ There are also a couple of how-to guides:
 * [Natural sort Table](docs/tableWithNaturalSort.md)
 * [Sorting a Table by multiple columns](docs/multiColumnSortTable.md)
 
+Testing
+---------------
+As this library does not come pre-compiled, it requires to be transformed by your loader, otherwise you may get errors such as:
+
+```
+\path\to\src\node_modules\react-virtualized\dist\es\Table\index.js:1
+({"Object.<anonymous>":function(module,exports,require,__dirname,__filename,global,jest){import createMultiSort from './createMultiSort';
+SyntaxError: Unexpected identifier
+```
+
+To fix these, you must ensure `node_modules/react-virtualized` is transformed.
+
+With CRA ([Create-React-App](https://github.com/facebook/create-react-app)) and Jest you can either:
+
+ 1. Add a `transformIgnorePattern` to the `jest` config in `package.json`
+ 
+ Example `package.json`
+ 
+ ```json
+ {
+ ...
+  "jest": {
+    ...
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-virtualized)/"
+    ]
+  }
+}
+  ```
+  **OR**
+  
+  2. Add the following CLI arg to your `npm test` script: `--transformIgnorePatterns "node_modules/(?!react-virtualized)/"`
+  
+  Example `package.json`
+  
+  ```json
+  {
+  ...
+  "scripts": {
+    ...
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!react-virtualized)/\"",
+  }
+}
+
+  ```
 
 Examples
 ---------------
