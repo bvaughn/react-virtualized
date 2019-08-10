@@ -219,15 +219,15 @@ With CRA ([Create-React-App](https://github.com/facebook/create-react-app)) and 
  Example `package.json`
  
  ```json
- {
- ...
-  "jest": {
+  {
     ...
-    "transformIgnorePatterns": [
-      "node_modules/(?!react-virtualized)/"
-    ]
+    "jest": {
+      ...
+      "transformIgnorePatterns": [
+        "node_modules/(?!react-virtualized)/"
+      ]
+    }
   }
-}
   ```
   **OR**
   
@@ -241,8 +241,8 @@ With CRA ([Create-React-App](https://github.com/facebook/create-react-app)) and 
   "scripts": {
     ...
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!react-virtualized)/\"",
+    }
   }
-}
 
   ```
 
