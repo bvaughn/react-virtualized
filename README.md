@@ -237,10 +237,10 @@ With CRA ([Create-React-App](https://github.com/facebook/create-react-app)) and 
   
   ```json
   {
-  ...
-  "scripts": {
     ...
-    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!react-virtualized)/\"",
+    "scripts": {
+      ...
+      "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!react-virtualized)/\"",
     }
   }
 
