@@ -61,6 +61,10 @@ This may be appropriate if the underlying row data has changed but the row sizes
 
 Gets offset for a given row and alignment.
 
+##### getScrollbarWidth
+
+Gets the scrollbar width used to pad the table-header.
+
 ##### measureAllRows
 Pre-measure all rows in a `Table`.
 
