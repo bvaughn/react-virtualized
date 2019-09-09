@@ -410,7 +410,7 @@ class Masonry extends React.PureComponent<Props, State> {
   _onScroll = event => {
     const {height} = this.props;
 
-    const eventScrollTop = event.target.scrollTop;
+    const eventScrollTop = event.currentTarget.scrollTop;
 
     // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
     // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
