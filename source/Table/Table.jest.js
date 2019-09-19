@@ -1099,7 +1099,7 @@ describe('Table', () => {
     });
 
     it('should use custom :styles if specified', () => {
-      const columnStyle = {backgroundColor: 'red'};
+      const columnStyle = {backgroundColor: 'red', overflow: 'visible'};
       const headerStyle = {backgroundColor: 'blue'};
       const columnHeaderStyle = {color: 'yellow'};
       const rowStyle = {backgroundColor: 'green'};
@@ -1119,6 +1119,10 @@ describe('Table', () => {
         node.querySelector('.ReactVirtualized__Table__rowColumn').style
           .backgroundColor,
       ).toEqual('red');
+      expect(
+        node.querySelector('.ReactVirtualized__Table__rowColumn').style
+          .overflow,
+      ).toEqual('visible');
       expect(
         node.querySelector('.ReactVirtualized__Table__headerColumn').style
           .backgroundColor,

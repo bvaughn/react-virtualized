@@ -394,8 +394,8 @@ export default class Table extends React.PureComponent {
       );
 
       this._cachedColumnStyles[index] = {
-        ...flexStyles,
         overflow: 'hidden',
+        ...flexStyles,
       };
     });
 
