@@ -8,6 +8,7 @@
  * 2) Defer initialization code via a top-level function wrapper (to support SSR).
  * 3) Avoid unnecessary reflows by not measuring size for scroll events bubbling from children.
  * 4) Add nonce for style element.
+ * 5) Added support for injecting custom window object
  **/
 
 export default function createDetectElementResize(nonce, hostWindow) {
