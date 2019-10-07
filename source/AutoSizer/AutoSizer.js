@@ -64,7 +64,7 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
 
   _parentNode: ?HTMLElement;
   _autoSizer: ?HTMLElement;
-  _window: ?Window;
+  _window: ?any; // uses any instead of Window because Flow doesn't have window type
   _detectElementResize: DetectElementResize;
 
   componentDidMount() {
