@@ -24,7 +24,8 @@ export default function createDetectElementResize(nonce, hostWindow) {
     _window = global;
   }
 
-  var attachEvent = typeof _window.document !== 'undefined' && _window.document.attachEvent;
+  var attachEvent =
+    typeof _window.document !== 'undefined' && _window.document.attachEvent;
 
   if (!attachEvent) {
     var requestFrame = (function() {
