@@ -170,7 +170,7 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
       const height = this._parentNode.offsetHeight || 0;
       const width = this._parentNode.offsetWidth || 0;
 
-      const style = (this._window && this._window.getComputedStyle(this._parentNode)) || {};
+      const style = ((this._window || window).getComputedStyle(this._parentNode)) || {};
       const paddingLeft = parseInt(style.paddingLeft, 10) || 0;
       const paddingRight = parseInt(style.paddingRight, 10) || 0;
       const paddingTop = parseInt(style.paddingTop, 10) || 0;
