@@ -64,7 +64,7 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
 
   _parentNode: ?HTMLElement;
   _autoSizer: ?HTMLElement;
-  _window?: Window;
+  _window: ?Window;
   _detectElementResize: DetectElementResize;
 
   componentDidMount() {
