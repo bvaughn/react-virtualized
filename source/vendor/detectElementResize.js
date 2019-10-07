@@ -13,7 +13,7 @@
 export default function createDetectElementResize(nonce, hostWindow) {
   // Check `document` and `window` in case of server-side rendering
   var _window;
-  if (typeof hostWindow !== "undefined") {
+  if (typeof hostWindow !== 'undefined') {
     _window = hostWindow;
   } else if (typeof window !== 'undefined') {
     _window = window;
