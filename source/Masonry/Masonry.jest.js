@@ -97,7 +97,10 @@ function getMarkup(props = {}) {
 function simulateScroll(masonry, scrollTop = 0) {
   const target = {scrollTop};
   masonry._scrollingContainer = target; // HACK to work around _onScroll target check
-  Simulate.scroll(findDOMNode(masonry), {target});
+
+  const masonryNode = findDOMNode(masonry);
+  masonryNode.scrollTop = scrollTop;
+  Simulate.scroll(masonryNode);
 }
 
 describe('Masonry', () => {
@@ -297,6 +300,35 @@ describe('Masonry', () => {
       Array.from(rendered.querySelectorAll('.cell')).map(node => {
         expect(node.style.right).toMatch(/px/);
       });
+    });
+
+    it('should consider scroll only of the container element and not of any ancestor element', () => {
+      const cellMeasurerCache = createCellMeasurerCache();
+      const renderScrollableCell = index => (
+        <div
+          style={{height: '50px', overflow: 'visible'}}
+          id={`scrollable-cell-${index}`}>
+          <div style={{height: '500px'}}>{index}</div>
+        </div>
+      );
+      const cellRenderer = createCellRenderer(
+        cellMeasurerCache,
+        renderScrollableCell,
+      );
+
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            overscanByPixels: 0,
+            cellMeasurerCache,
+            cellRenderer,
+          }),
+        ),
+      );
+      assertVisibleCells(rendered, '0,1,2,3,4,5');
+      const cellEl = rendered.querySelector('#scrollable-cell-1');
+      Simulate.scroll(cellEl, {target: {scrollTop: 100}});
+      assertVisibleCells(rendered, '0,1,2,3,4,5');
     });
   });
 
