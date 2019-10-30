@@ -6,7 +6,6 @@
 [![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
 [![CircleCI](https://circleci.com/gh/bvaughn/react-virtualized/tree/master.svg?style=svg)](https://circleci.com/gh/bvaughn/react-virtualized/tree/master)
 [![Codecov badge](https://img.shields.io/codecov/c/github/bvaughn/react-virtualized/master.svg)](https://codecov.io/github/bvaughn/react-virtualized)
-[![Discord](https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat)](https://discord.gg/sVn5ez8)
 [![OpenCollective](https://opencollective.com/react-virtualized/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/react-virtualized/sponsors/badge.svg)](#sponsors)
 
