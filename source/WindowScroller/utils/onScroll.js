@@ -5,29 +5,29 @@ import {
   cancelAnimationTimeout,
 } from '../../utils/requestAnimationTimeout';
 import type WindowScroller from '../WindowScroller.js';
+import {isWindow} from './dimensions';
 
 let mountedInstances = [];
 let originalBodyPointerEvents = null;
 let disablePointerEventsTimeoutId = null;
 
-function enablePointerEventsIfDisabled() {
+function enablePointerEventsIfDisabled(doc) {
   if (disablePointerEventsTimeoutId) {
     disablePointerEventsTimeoutId = null;
-
-    if (document.body && originalBodyPointerEvents != null) {
-      document.body.style.pointerEvents = originalBodyPointerEvents;
+    if (doc.body && originalBodyPointerEvents != null) {
+      doc.body.style.pointerEvents = originalBodyPointerEvents;
     }
 
     originalBodyPointerEvents = null;
   }
 }
 
-function enablePointerEventsAfterDelayCallback() {
-  enablePointerEventsIfDisabled();
+const createEnablePointerEventsAfterDelayCallback = doc => () => {
+  enablePointerEventsIfDisabled(doc);
   mountedInstances.forEach(instance => instance.__resetIsScrolling());
-}
+};
 
-function enablePointerEventsAfterDelay() {
+function enablePointerEventsAfterDelay(element) {
   if (disablePointerEventsTimeoutId) {
     cancelAnimationTimeout(disablePointerEventsTimeoutId);
   }
@@ -41,22 +41,25 @@ function enablePointerEventsAfterDelay() {
   });
 
   disablePointerEventsTimeoutId = requestAnimationTimeout(
-    enablePointerEventsAfterDelayCallback,
+    createEnablePointerEventsAfterDelayCallback(element),
     maximumTimeout,
   );
 }
 
 function onScrollWindow(event) {
-  if (
-    event.currentTarget === window &&
-    originalBodyPointerEvents == null &&
-    document.body
-  ) {
-    originalBodyPointerEvents = document.body.style.pointerEvents;
+  const element = event.currentTarget;
+  const doc = element.document;
 
-    document.body.style.pointerEvents = 'none';
+  if (
+    isWindow(event.currentTarget) &&
+    originalBodyPointerEvents == null &&
+    doc.body
+  ) {
+    originalBodyPointerEvents = doc.body.style.pointerEvents;
+
+    doc.body.style.pointerEvents = 'none';
   }
-  enablePointerEventsAfterDelay();
+  enablePointerEventsAfterDelay(doc);
   mountedInstances.forEach(instance => {
     if (instance.props.scrollElement === event.currentTarget) {
       instance.__handleWindowScrollEvent();
@@ -66,7 +69,7 @@ function onScrollWindow(event) {
 
 export function registerScrollListener(
   component: WindowScroller,
-  element: Element,
+  element: any,
 ) {
   if (
     !mountedInstances.some(instance => instance.props.scrollElement === element)
@@ -78,8 +81,9 @@ export function registerScrollListener(
 
 export function unregisterScrollListener(
   component: WindowScroller,
-  element: Element,
+  element: any,
 ) {
+  const doc = isWindow(element) ? element.document : document;
   mountedInstances = mountedInstances.filter(
     instance => instance !== component,
   );
@@ -87,7 +91,7 @@ export function unregisterScrollListener(
     element.removeEventListener('scroll', onScrollWindow);
     if (disablePointerEventsTimeoutId) {
       cancelAnimationTimeout(disablePointerEventsTimeoutId);
-      enablePointerEventsIfDisabled();
+      enablePointerEventsIfDisabled(doc);
     }
   }
 }

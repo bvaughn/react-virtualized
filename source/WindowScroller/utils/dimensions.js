@@ -16,12 +16,14 @@ type WindowScrollerProps = {
   serverWidth: number,
 };
 
-const isWindow = element => element === window;
+export const isWindow = (element: ?any) =>
+  element === window ||
+  (element && element.location && element.document && element.frameElement);
 
 const getBoundingBox = element => element.getBoundingClientRect();
 
 export function getDimensions(
-  scrollElement: ?Element,
+  scrollElement: ?any,
   props: WindowScrollerProps,
 ): Dimensions {
   if (!scrollElement) {
@@ -30,7 +32,7 @@ export function getDimensions(
       width: props.serverWidth,
     };
   } else if (isWindow(scrollElement)) {
-    const {innerHeight, innerWidth} = window;
+    const {innerWidth, innerHeight} = scrollElement;
     return {
       height: typeof innerHeight === 'number' ? innerHeight : 0,
       width: typeof innerWidth === 'number' ? innerWidth : 0,
@@ -46,9 +48,9 @@ export function getDimensions(
  * Handles edge-case where a user is navigating back (history) from an already-scrolled page.
  * In this case the body’s top or left position will be a negative number and this element’s top or left will be increased (by that amount).
  */
-export function getPositionOffset(element: Element, container: Element) {
-  if (isWindow(container) && document.documentElement) {
-    const containerElement = document.documentElement;
+export function getPositionOffset(element: Element, container: any) {
+  if (isWindow(container) && container.document.documentElement) {
+    const containerElement = container.document.documentElement;
     const elementRect = getBoundingBox(element);
     const containerRect = getBoundingBox(containerElement);
     return {
@@ -70,17 +72,17 @@ export function getPositionOffset(element: Element, container: Element) {
  * Gets the vertical and horizontal scroll amount of the element, accounting for IE compatibility
  * and API differences between `window` and other DOM elements.
  */
-export function getScrollOffset(element: Element) {
-  if (isWindow(element) && document.documentElement) {
+export function getScrollOffset(element: any) {
+  if (isWindow(element) && element.document.documentElement) {
     return {
       top:
-        'scrollY' in window
-          ? window.scrollY
-          : document.documentElement.scrollTop,
+        'scrollY' in element
+          ? element.scrollY
+          : element.document.documentElement.scrollTop,
       left:
-        'scrollX' in window
-          ? window.scrollX
-          : document.documentElement.scrollLeft,
+        'scrollX' in element
+          ? element.scrollX
+          : element.document.documentElement.scrollLeft,
     };
   } else {
     return {
