@@ -165,7 +165,7 @@
     "style-loader": "^0.19.1",
     "watch": "^1.0.2",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.9.7"
+    "webpack-dev-server": "^3.1.11"
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
