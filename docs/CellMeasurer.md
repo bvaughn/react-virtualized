@@ -184,5 +184,5 @@ Measuring a column's width requires measuring all rows in order to determine the
 The same is true in reverse for measuring a row's height.
 For this reason it may not be a good idea to use this HOC for `Grid`s containing a large number of both columns _and_ cells.
 
-Since this component measures one cell at a time to determine it's width/height, it will likely be slow if a user skips many rows (or columns) at once by scrolling with a scrollbar or via a scroll-to-cell prop.
+Since this component measures one cell at a time to determine its width/height, it will likely be slow if a user skips many rows (or columns) at once by scrolling with a scrollbar or via a scroll-to-cell prop.
 There is (unfortunately) no workaround for this performance limitation at the moment.
