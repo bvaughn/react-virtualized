@@ -232,8 +232,6 @@ type InstanceProps = {
   prevIsScrolling: boolean,
   prevScrollToColumn: number,
   prevScrollToRow: number,
-  prevScrollLeft: ?number,
-  prevScrollTop: ?number,
 
   columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
   rowSizeAndPositionManager: ScalingCellSizeAndPositionManager,
@@ -345,8 +343,6 @@ class Grid extends React.PureComponent<Props, State> {
         prevIsScrolling: props.isScrolling === true,
         prevScrollToColumn: props.scrollToColumn,
         prevScrollToRow: props.scrollToRow,
-        prevScrollLeft: props.scrollLeft,
-        prevScrollTop: props.scrollTop,
 
         scrollbarSize: 0,
         scrollbarSizeMeasured: false,
@@ -354,8 +350,8 @@ class Grid extends React.PureComponent<Props, State> {
       isScrolling: false,
       scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
       scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
-      scrollLeft: props.scrollLeft || 0,
-      scrollTop: props.scrollTop || 0,
+      scrollLeft: 0,
+      scrollTop: 0,
       scrollPositionChangeReason: null,
 
       needToResetStyleCache: false,
@@ -825,7 +821,6 @@ class Grid extends React.PureComponent<Props, State> {
     prevState: State,
   ): $Shape<State> {
     const newState = {};
-    let {instanceProps} = prevState;
 
     if (
       (nextProps.columnCount === 0 && prevState.scrollLeft !== 0) ||
@@ -837,10 +832,9 @@ class Grid extends React.PureComponent<Props, State> {
       // only use scroll{Left,Top} from props if scrollTo{Column,Row} isn't specified
       // scrollTo{Column,Row} should override scroll{Left,Top}
     } else if (
-      (nextProps.scrollLeft !== instanceProps.prevScrollLeft &&
+      (nextProps.scrollLeft !== prevState.scrollLeft &&
         nextProps.scrollToColumn < 0) ||
-      (nextProps.scrollTop !== instanceProps.prevScrollTop &&
-        nextProps.scrollToRow < 0)
+      (nextProps.scrollTop !== prevState.scrollTop && nextProps.scrollToRow < 0)
     ) {
       Object.assign(
         newState,
@@ -851,6 +845,8 @@ class Grid extends React.PureComponent<Props, State> {
         }),
       );
     }
+
+    let {instanceProps} = prevState;
 
     // Initially we should not clearStyleCache
     newState.needToResetStyleCache = false;
@@ -948,8 +944,6 @@ class Grid extends React.PureComponent<Props, State> {
     instanceProps.prevRowHeight = nextProps.rowHeight;
     instanceProps.prevScrollToColumn = nextProps.scrollToColumn;
     instanceProps.prevScrollToRow = nextProps.scrollToRow;
-    instanceProps.prevScrollLeft = nextProps.scrollLeft;
-    instanceProps.prevScrollTop = nextProps.scrollTop;
 
     // getting scrollBarSize (moved from componentWillMount)
     instanceProps.scrollbarSize = nextProps.getScrollbarSize();
