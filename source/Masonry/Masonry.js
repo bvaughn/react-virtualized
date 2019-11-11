@@ -238,9 +238,9 @@ class Masonry extends React.PureComponent<Props, State> {
       const batchSize = Math.min(
         cellCount - measuredCellCount,
         Math.ceil(
-          (scrollTop + height + overscanByPixels - shortestColumnSize) /
-            cellMeasurerCache.defaultHeight *
-            width /
+          (((scrollTop + height + overscanByPixels - shortestColumnSize) /
+            cellMeasurerCache.defaultHeight) *
+            width) /
             cellMeasurerCache.defaultWidth,
         ),
       );

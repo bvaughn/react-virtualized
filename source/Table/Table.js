@@ -557,8 +557,8 @@ export default class Table extends React.PureComponent {
       const newSortDirection = isFirstTimeSort
         ? defaultSortDirection
         : sortDirection === SortDirection.DESC
-          ? SortDirection.ASC
-          : SortDirection.DESC;
+        ? SortDirection.ASC
+        : SortDirection.DESC;
 
       const onClick = event => {
         sortEnabled &&
@@ -673,9 +673,7 @@ export default class Table extends React.PureComponent {
    * Determines the flex-shrink, flex-grow, and width values for a cell (header or column).
    */
   _getFlexStyleForColumn(column, customStyle = {}) {
-    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${
-      column.props.width
-    }px`;
+    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${column.props.width}px`;
 
     const style = {
       ...customStyle,

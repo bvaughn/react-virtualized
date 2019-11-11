@@ -35,14 +35,18 @@ export default function Generator({
   if (baseComponent.columnWidthProp) {
     baseComponent.props[baseComponent.columnWidthProp] = hasMultipleColumns
       ? cellsHaveKnownWidth
-        ? cellsHaveUniformWidth ? 100 : '({ index }) => 100'
+        ? cellsHaveUniformWidth
+          ? 100
+          : '({ index }) => 100'
         : 'getColumnWidth'
       : widthValue;
   }
   if (baseComponent.rowHeightProp) {
     baseComponent.props[baseComponent.rowHeightProp] = hasMultipleRows
       ? cellsHaveKnownHeight
-        ? cellsHaveUniformHeight ? 50 : '({ index }) => 50'
+        ? cellsHaveUniformHeight
+          ? 50
+          : '({ index }) => 50'
         : 'getRowHeight'
       : heightValue;
   }
@@ -54,7 +58,9 @@ export default function Generator({
   }
   if (baseComponent.rowCountProp) {
     baseComponent.props[baseComponent.rowCountProp] = hasMultipleRows
-      ? hasMultipleColumns ? 'numRows' : 'collection.size'
+      ? hasMultipleColumns
+        ? 'numRows'
+        : 'collection.size'
       : '1';
   }
 
