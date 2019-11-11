@@ -2452,7 +2452,7 @@ describe('Grid', () => {
         height: 100,
         rowHeight: 100,
         columnWidth: 100,
-        rowCount: getMaxElementSize() * 2 / 100, // lots of offset
+        rowCount: (getMaxElementSize() * 2) / 100, // lots of offset
         scrollTop: 2000,
       }),
     );

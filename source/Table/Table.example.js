@@ -302,8 +302,8 @@ export default class TableExample extends React.PureComponent {
 
     return list
       .sortBy(item => item[sortBy])
-      .update(
-        list => (sortDirection === SortDirection.DESC ? list.reverse() : list),
+      .update(list =>
+        sortDirection === SortDirection.DESC ? list.reverse() : list,
       );
   }
 

@@ -37,14 +37,12 @@
     "test:jest": "jest --no-watchman --runInBand",
     "test:ci": "jest --no-watchman --maxWorkers 2 --coverage && codecov",
     "watch": "watch 'clear && npm run test -s' source",
-    "watch:jest": "jest --no-watchman --watch",
-    "precommit": "lint-staged"
+    "watch:jest": "jest --no-watchman --watch"
   },
-  "lint-staged": {
-    "*.{js,md}": [
-      "prettier --write",
-      "git add"
-    ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "babel": {
     "presets": [
@@ -139,7 +137,7 @@
     "flow-copy-source": "^1.2.1",
     "gh-pages": "^1.0.0",
     "html-webpack-plugin": "^2.30.1",
-    "husky": "^0.14.3",
+    "husky": "^3.0.9",
     "immutable": "^3.7.5",
     "jest": "^22.0.4",
     "jest-environment-puppeteer": "^1.1.1",
@@ -147,7 +145,8 @@
     "postcss": "^6.0.14",
     "postcss-cli": "^4.1.1",
     "postcss-loader": "^2.0.9",
-    "prettier": "^1.9.2",
+    "prettier": "1.19.1",
+    "pretty-quick": "^2.0.1",
     "puppeteer": "^1.1.1",
     "react": "^16.2.0",
     "react-codemirror": "^1.0.0",

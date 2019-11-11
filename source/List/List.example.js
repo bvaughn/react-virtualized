@@ -223,7 +223,9 @@ export default class ListExample extends React.PureComponent {
         case 100:
           additionalContent = (
             <div>
-              It is large-sized.<br />It has a 3rd row.
+              It is large-sized.
+              <br />
+              It has a 3rd row.
             </div>
           );
           break;

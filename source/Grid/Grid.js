@@ -736,7 +736,8 @@ class Grid extends React.PureComponent<Props, State> {
     // So we should always recalculate offset afterwards.
     const sizeJustIncreasedFromZero =
       (prevProps.width === 0 || prevProps.height === 0) &&
-      (height > 0 && width > 0);
+      height > 0 &&
+      width > 0;
 
     // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
     // @TODO Do we also need this check or can the one in componentWillUpdate() suffice?
