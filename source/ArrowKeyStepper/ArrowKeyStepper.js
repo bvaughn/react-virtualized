@@ -55,7 +55,7 @@ class ArrowKeyStepper extends React.PureComponent<Props, State> {
     prevState: State,
   ): $Shape<State> {
     if (nextProps.isControlled) {
-      return null;
+      return {};
     }
 
     if (
@@ -68,7 +68,7 @@ class ArrowKeyStepper extends React.PureComponent<Props, State> {
       };
     }
 
-    return null;
+    return {};
   }
 
   setScrollIndexes({scrollToColumn, scrollToRow}: ScrollIndices) {

@@ -1,5 +1,3 @@
-/* global Element, Event */
-
 import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import {render} from '../TestUtils';

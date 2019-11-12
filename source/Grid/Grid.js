@@ -1427,7 +1427,7 @@ class Grid extends React.PureComponent<Props, State> {
     ) {
       return newState;
     }
-    return null;
+    return {};
   }
 
   /**
@@ -1513,7 +1513,7 @@ class Grid extends React.PureComponent<Props, State> {
         scrollTop: -1,
       });
     }
-    return null;
+    return {};
   }
 
   _updateScrollLeftForScrollToColumn(
@@ -1617,7 +1617,7 @@ class Grid extends React.PureComponent<Props, State> {
         scrollTop: calculatedScrollTop,
       });
     }
-    return null;
+    return {};
   }
 
   _updateScrollTopForScrollToRow(

@@ -12,44 +12,63 @@ if (env === 'commonjs' || env === 'es') {
       'source/TestUtils.js',
     ],
     plugins: [
-      'transform-runtime',
+      '@babel/plugin-transform-runtime',
+      '@babel/plugin-proposal-class-properties',
       ['flow-react-proptypes', {deadCode: true, useESModules: true}],
       ['transform-react-remove-prop-types', {mode: 'wrap'}],
     ],
-    presets: [['env', {modules: false}], 'react', 'flow', 'stage-2'],
+    presets: [
+      ['@babel/preset-env', {modules: false}],
+      '@babel/preset-react',
+      '@babel/preset-flow',
+    ],
   };
 
   if (env === 'commonjs') {
-    module.exports.plugins.push('transform-es2015-modules-commonjs');
+    module.exports.plugins.push('@babel/plugin-transform-modules-commonjs');
   }
 }
 
 if (env === 'rollup') {
   module.exports = {
     comments: false,
-    plugins: ['external-helpers'],
-    presets: [['env', {modules: false}], 'react', 'flow', 'stage-2'],
+    plugins: [
+      '@babel/plugin-external-helpers',
+      '@babel/plugin-proposal-class-properties',
+    ],
+    presets: [
+      ['@babel/preset-env', {modules: false}],
+      '@babel/preset-react',
+      '@babel/preset-flow',
+    ],
   };
 }
 
 if (env === 'development') {
   module.exports = {
-    presets: ['react', 'flow', 'stage-2'],
+    presets: ['@babel/preset-react', '@babel/preset-flow'],
   };
 }
 
 if (env === 'production') {
   module.exports = {
     comments: false,
-    plugins: ['transform-runtime'],
-    presets: ['env', 'react', 'flow', 'stage-2'],
+    plugins: [
+      '@babel/plugin-transform-runtime',
+      '@babel/plugin-proposal-class-properties',
+    ],
+    presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-flow'],
   };
 }
 
 if (env === 'test') {
   module.exports = {
     comments: false,
-    plugins: ['transform-es2015-modules-commonjs'],
-    presets: ['react', 'flow', 'stage-2'],
+
+    plugins: [
+      '@babel/plugin-transform-modules-commonjs',
+      '@babel/plugin-proposal-class-properties',
+    ],
+    presets: ['@babel/preset-react', '@babel/preset-flow'],
   };
 }
