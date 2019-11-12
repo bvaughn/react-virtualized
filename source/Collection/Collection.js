@@ -58,7 +58,7 @@ export default class Collection extends React.PureComponent {
     this._cellMetadata = [];
     this._lastRenderedCellIndices = [];
 
-    // Cell cache during scroll (for perforamnce)
+    // Cell cache during scroll (for performance)
     this._cellCache = [];
 
     this._isScrollingChange = this._isScrollingChange.bind(this);

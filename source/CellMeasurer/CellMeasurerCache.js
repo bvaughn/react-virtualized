@@ -117,7 +117,7 @@ export default class CellMeasurerCache implements CellMeasureCache {
   columnWidth = ({index}: IndexParam) => {
     const key = this._keyMapper(0, index);
 
-    return this._columnWidthCache.hasOwnProperty(key)
+    return this._columnWidthCache[key] !== undefined
       ? this._columnWidthCache[key]
       : this._defaultWidth;
   };
@@ -144,7 +144,7 @@ export default class CellMeasurerCache implements CellMeasureCache {
     } else {
       const key = this._keyMapper(rowIndex, columnIndex);
 
-      return this._cellHeightCache.hasOwnProperty(key)
+      return this._cellHeightCache[key] !== undefined
         ? Math.max(this._minHeight, this._cellHeightCache[key])
         : this._defaultHeight;
     }
@@ -156,7 +156,7 @@ export default class CellMeasurerCache implements CellMeasureCache {
     } else {
       const key = this._keyMapper(rowIndex, columnIndex);
 
-      return this._cellWidthCache.hasOwnProperty(key)
+      return this._cellWidthCache[key] !== undefined
         ? Math.max(this._minWidth, this._cellWidthCache[key])
         : this._defaultWidth;
     }
@@ -165,13 +165,13 @@ export default class CellMeasurerCache implements CellMeasureCache {
   has(rowIndex: number, columnIndex: number = 0): boolean {
     const key = this._keyMapper(rowIndex, columnIndex);
 
-    return this._cellHeightCache.hasOwnProperty(key);
+    return this._cellHeightCache[key] !== undefined;
   }
 
   rowHeight = ({index}: IndexParam) => {
     const key = this._keyMapper(index, 0);
 
-    return this._rowHeightCache.hasOwnProperty(key)
+    return this._rowHeightCache[key] !== undefined
       ? this._rowHeightCache[key]
       : this._defaultHeight;
   };
