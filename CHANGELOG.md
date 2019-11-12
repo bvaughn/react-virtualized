@@ -1,5 +1,17 @@
 ## Changelog
 
+##### 9.21.2
+
+- 🎉 Update prettier ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1455](https://github.com/bvaughn/react-virtualized/pull/1455))
+- 🎉 Remove slack from documentation ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1417](https://github.com/bvaughn/react-virtualized/pull/1417))
+- 🐛 Fix masionry scroll handler target ([chinmay17](https://github.com/chinmay17) - [#1420](https://github.com/bvaughn/react-virtualized/pull/1420))
+- 🎉 AutoSizer upport for multi window ([mbman](https://github.com/mbman) - [#1421](https://github.com/bvaughn/react-virtualized/pull/1421))
+- 🎉 Upgrade dom-helpers ([dominykas](https://github.com/dominykas) - [#1424](https://github.com/bvaughn/react-virtualized/pull/1424))
+- 🎉 Remove react-vtree from docs ([Lodin](https://github.com/Lodin) - [#1415](https://github.com/bvaughn/react-virtualized/pull/1415))
+- 🐛 Fix detection of chrome ([nifgraup](https://github.com/nifgraup) - [#1355](https://github.com/bvaughn/react-virtualized/pull/1355))
+- 🐛 Fix hostname issues for images ([nickstew](https://github.com/nickstew) - [#1401](https://github.com/bvaughn/react-virtualized/pull/1401))
+- 🐛 Fix aria attributes on Table ([eps1lon](https://github.com/eps1lon) - [#1380](https://github.com/bvaughn/react-virtualized/pull/1380))
+
 ##### 9.21.1
 
 - 🐛 Fix doc typos. ([tienpham94](https://github.com/tienpham94) - [#1268](https://github.com/bvaughn/react-virtualized/pull/1268))
