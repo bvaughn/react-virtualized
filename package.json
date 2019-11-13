@@ -25,7 +25,6 @@
     "deploy": "gh-pages -d build",
     "lint": "eslint 'source/**/*.js'",
     "typecheck": "flow check",
-    "prebuild": "yarn run typecheck && yarn run lint",
     "prettier": "prettier --write '{playground,source}/**/*.js'",
     "prettier:diff": "prettier --list-different '{playground,source}/**/*.js'",
     "postpublish": "yarn run deploy",
