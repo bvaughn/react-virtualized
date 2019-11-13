@@ -3,16 +3,9 @@ For advanced use cases, you may want to sort by multiple fields.
 This can be accomplished using the `createMultiSort` utility.
 
 ```jsx
-import {
-  createTableMultiSort,
-  Column,
-  Table,
-} from 'react-virtualized';
+import {createTableMultiSort, Column, Table} from 'react-virtualized';
 
-function sort({
-  sortBy,
-  sortDirection,
-}) {
+function sort({sortBy, sortDirection}) {
   // 'sortBy' is an ordered Array of fields.
   // 'sortDirection' is a map of field name to "ASC" or "DESC" directions.
   // Sort your collection however you'd like.
@@ -23,7 +16,7 @@ const sortState = createMultiSort(sort);
 
 // When rendering your header columns,
 // Use the sort state exposed by sortState:
-const headerRenderer = ({ dataKey, label }) => {
+const headerRenderer = ({dataKey, label}) => {
   const showSortIndicator = sortState.sortBy.includes(dataKey);
   return (
     <>
@@ -40,16 +33,13 @@ const headerRenderer = ({ dataKey, label }) => {
   {...tableProps}
   sort={sortState.sort}
   sortBy={undefined}
-  sortDirection={undefined}
->
-  <Column
-    {...columnProps}
-    headerRenderer={headerRenderer}
-  />
-</Table>
+  sortDirection={undefined}>
+  <Column {...columnProps} headerRenderer={headerRenderer} />
+</Table>;
 ```
 
 The `createMultiSort` utility also accepts default sort-by values:
+
 ```js
 const sortState = createMultiSort(sort, {
   defaultSortBy: ['firstName', 'lastName'],

@@ -1,5 +1,4 @@
-WindowScroller
----------------
+## WindowScroller
 
 A component that enables a `Table` or `List` component to be scrolled based on the window's scroll positions.
 This can be used to create layouts similar to Facebook or Twitter news feeds.
@@ -8,24 +7,26 @@ This can be used to create layouts similar to Facebook or Twitter news feeds.
 This may change with a future release but for the time being this component should be used with `Table` or `List` only.
 
 ### Prop Types
-| Property | Type | Required? | Description |
-|:---|:---|:---:|:---|
-| children | Function | ✓ | Function responsible for rendering children. This function should implement the following signature: `({ height: number, width: number, isScrolling: boolean, scrollTop: number, registerChild: function, onChildScroll: function }) => PropTypes.element` |
-| onResize | Function |  | Callback to be invoked on-resize; it is passed the following named parameters: `({ height: number, width: number })`. |
-| onScroll | Function |  | Callback to be invoked on-scroll; it is passed the following named parameters: `({ scrollTop: number, scrollLeft: number })`. |
-| scrollElement | any |  | Element to attach scroll event listeners. Defaults to `window`. |
-| scrollingResetTimeInterval | Number |  | Wait this amount of time after the last scroll event before resetting WindowScroller `pointer-events`; defaults to 150ms. |
-| serverHeight | Number |  | Height used for server-side rendering. |
-| serverWidth | Number |  | Width used for server-side rendering. |
 
-### Render Props  
-| Property | Type | Description |
-|:---|:---|:---|
-| height | Number | The height of the viewport. |
-| isScrolling | Boolean | Indicates if the `Table` or `List` is scrolling |
-| onChildScroll | Function | Used by the `Table` or `List`'s `onScroll` prop to "scroll" the list |
+| Property                   | Type     | Required? | Description                                                                                                                                                                                                                                                |
+| :------------------------- | :------- | :-------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| children                   | Function |     ✓     | Function responsible for rendering children. This function should implement the following signature: `({ height: number, width: number, isScrolling: boolean, scrollTop: number, registerChild: function, onChildScroll: function }) => PropTypes.element` |
+| onResize                   | Function |           | Callback to be invoked on-resize; it is passed the following named parameters: `({ height: number, width: number })`.                                                                                                                                      |
+| onScroll                   | Function |           | Callback to be invoked on-scroll; it is passed the following named parameters: `({ scrollTop: number, scrollLeft: number })`.                                                                                                                              |
+| scrollElement              | any      |           | Element to attach scroll event listeners. Defaults to `window`.                                                                                                                                                                                            |
+| scrollingResetTimeInterval | Number   |           | Wait this amount of time after the last scroll event before resetting WindowScroller `pointer-events`; defaults to 150ms.                                                                                                                                  |
+| serverHeight               | Number   |           | Height used for server-side rendering.                                                                                                                                                                                                                     |
+| serverWidth                | Number   |           | Width used for server-side rendering.                                                                                                                                                                                                                      |
+
+### Render Props
+
+| Property      | Type     | Description                                                                                                |
+| :------------ | :------- | :--------------------------------------------------------------------------------------------------------- |
+| height        | Number   | The height of the viewport.                                                                                |
+| isScrolling   | Boolean  | Indicates if the `Table` or `List` is scrolling                                                            |
+| onChildScroll | Function | Used by the `Table` or `List`'s `onScroll` prop to "scroll" the list                                       |
 | registerChild | Function | specify grid container deeper in layout (by default `WindowScroller` uses `ReactDOM.findDOMNode` function) |
-| scrollTop | Number | Scroll distance from the page |
+| scrollTop     | Number   | Scroll distance from the page                                                                              |
 
 ### Public Methods
 

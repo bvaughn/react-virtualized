@@ -1,5 +1,4 @@
-Using AutoSizer
----------------
+## Using AutoSizer
 
 The `AutoSizer` component decorates a React element and automatically manages `width` and `height` properties so that decorated element fills the available space. This simplifies usage of components like `Grid`, `Table`, and `List` that require explicit dimensions.
 
@@ -12,6 +11,7 @@ This component uses [`javascript-detect-element-resize`](https://github.com/sdec
 If the parent has style `position: static` (default value), it changes to `position: relative`. It also injects a sibling `div` for size measuring.
 
 #### Why is my `AutoSizer` setting a height of 0?
+
 `AutoSizer` expands to _fill_ its parent but it will not _stretch_ the parent.
 This is done to prevent problems with flexbox layouts.
 If `AutoSizer` is reporting a height (or width) of 0- then it's likely that the parent element (or one of its parents) has a height of 0.
@@ -19,21 +19,17 @@ One easy way to test this is to add a style property (eg `background-color: red;
 (eg You may need to add `height: 100%` or `flex: 1` to the parent.)
 
 #### Can I use AutoSizer to manage only width or height (not both)?
+
 You can use `AutoSizer` to control only one dimension of its child component using the `disableHeight` or `disableWidth` attributes. For example, a fixed-height component that should grow to fill the available width can be created like so:
 
 ```jsx
 <AutoSizer disableHeight>
-  {({ width }) => (
-    <Component
-      height={200}
-      width={width}
-      {...props}
-    />
-  )}
+  {({width}) => <Component height={200} width={width} {...props} />}
 </AutoSizer>
 ```
 
 #### Can I use AutoSizer within a flex container?
+
 When using an `AutoSizer` as a direct child of a flex box it usually works out best to wrap it with a div, like so:
 
 ```jsx
@@ -54,13 +50,14 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
 ```
 
 #### Can I use AutoSizer with other HOCs like InfiniteLoader?
+
 `AutoSizer` can be used within other react-virtualized HOCs such as `InfiniteLoader` or `ScrollSync` like so:
 
 ```jsx
 <InfiniteLoader {...infiniteLoaderProps}>
-  {({ onRowsRendered, registerChild }) => (
+  {({onRowsRendered, registerChild}) => (
     <AutoSizer>
-      {({ height, width }) => (
+      {({height, width}) => (
         <List
           ref={registerChild}
           width={width}
@@ -77,6 +74,7 @@ When using an `AutoSizer` as a direct child of a flex box it usually works out b
 You can see an example of this [here](https://bvaughn.github.io/react-virtualized/#/components/InfiniteLoader).
 
 ### Applying Content Security Policy
+
 [The specification of Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#intro)
 describes as the following:
 

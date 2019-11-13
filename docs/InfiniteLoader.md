@@ -1,5 +1,4 @@
-InfiniteLoader
----------------
+## InfiniteLoader
 
 A component that manages just-in-time fetching of data as a user scrolls up or down in a list.
 
@@ -11,30 +10,33 @@ This is an advanced component and can be confusing in certain situations.
 [See below for more information](#edge-cases-and-considerations).
 
 ### Prop Types
-| Property | Type | Required? | Description |
-|:---|:---|:---:|:---|
-| children | Function | ✓ | Function responsible for rendering a virtualized component. This function should implement the following signature: `({ onRowsRendered: Function, registerChild: Function }) => PropTypes.element` |
-| isRowLoaded | Function | ✓ | Function responsible for tracking the loaded state of each row. It should implement the following signature: `({ index: number }): boolean` |
-| loadMoreRows | Function | ✓ | Callback to be invoked when more rows must be loaded. It should implement the following signature: `({ startIndex: number, stopIndex: number }): Promise`. The returned Promise should be resolved once row data has finished loading. It will be used to determine when to refresh the list with the newly-loaded data. This callback may be called multiple times in reaction to a single scroll event. |
-| minimumBatchSize | Number |  | Minimum number of rows to be loaded at a time. This property can be used to batch requests to reduce HTTP requests. Defaults to `10`. |
-| rowCount | Number | ✓ | Number of rows in list; can be arbitrary high number if actual number is unknown. |
-| threshold | Number |  | Threshold at which to pre-fetch data. A threshold X means that data will start loading when a user scrolls within X rows. Defaults to `15`. |
+
+| Property         | Type     | Required? | Description                                                                                                                                                                                                                                                                                                                                                                                               |
+| :--------------- | :------- | :-------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| children         | Function |     ✓     | Function responsible for rendering a virtualized component. This function should implement the following signature: `({ onRowsRendered: Function, registerChild: Function }) => PropTypes.element`                                                                                                                                                                                                        |
+| isRowLoaded      | Function |     ✓     | Function responsible for tracking the loaded state of each row. It should implement the following signature: `({ index: number }): boolean`                                                                                                                                                                                                                                                               |
+| loadMoreRows     | Function |     ✓     | Callback to be invoked when more rows must be loaded. It should implement the following signature: `({ startIndex: number, stopIndex: number }): Promise`. The returned Promise should be resolved once row data has finished loading. It will be used to determine when to refresh the list with the newly-loaded data. This callback may be called multiple times in reaction to a single scroll event. |
+| minimumBatchSize | Number   |           | Minimum number of rows to be loaded at a time. This property can be used to batch requests to reduce HTTP requests. Defaults to `10`.                                                                                                                                                                                                                                                                     |
+| rowCount         | Number   |     ✓     | Number of rows in list; can be arbitrary high number if actual number is unknown.                                                                                                                                                                                                                                                                                                                         |
+| threshold        | Number   |           | Threshold at which to pre-fetch data. A threshold X means that data will start loading when a user scrolls within X rows. Defaults to `15`.                                                                                                                                                                                                                                                               |
 
 ### Public Methods
 
 ##### resetLoadMoreRowsCache (autoReload: boolean = false)
+
 Reset any cached data about already-loaded rows. This method should be called if any/all loaded data needs to be refetched (eg a filtered list where the search criteria changes). If `autoReload` passed as true, the last loaded batch would be automatically reloaded.
 
 ### Children function
 
 The child function is passed the following named parameters:
 
-| Parameter | Type | Description |
-|:---|:---|:---|
-| onRowsRendered | Function | This function should be passed as the child's `onRowsRendered` property. It informs the loader when the user is scrolling. |
-| registerChild | Function | This function should be set as the child's `ref` property. It enables a set of rows to be refreshed once their data has finished loading. |
+| Parameter      | Type     | Description                                                                                                                               |
+| :------------- | :------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| onRowsRendered | Function | This function should be passed as the child's `onRowsRendered` property. It informs the loader when the user is scrolling.                |
+| registerChild  | Function | This function should be set as the child's `ref` property. It enables a set of rows to be refreshed once their data has finished loading. |
 
 ### Examples
+
 ###### InfiniteLoader and List
 
 This example uses `InfiniteLoader` to prefetch rows in a `List` list as a user scrolls.
@@ -97,6 +99,7 @@ ReactDOM.render(
 ```
 
 ###### InfiniteLoader and Grid
+
 It is not common to use `InfiniteLoader` and `Grid` together but it is possible using an approach like this:
 
 ```jsx
@@ -169,6 +172,7 @@ In that case it is possible that `InfiniteLoader` will not _know_ to call `loadM
 
 The easiest way to address this is for your application code to call `loadMoreRows` when it detects that the underlying collection may have changed.
 For example:
+
 ```js
 _loadMoreRows ({ startIndex, stopIndex }) {
   this._loadMoreRowsStartIndex = startIndex

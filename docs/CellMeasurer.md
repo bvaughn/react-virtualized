@@ -1,5 +1,4 @@
-CellMeasurer
----------------
+## CellMeasurer
 
 High-order component that automatically measures a cell's contents by temporarily rendering it in a way that is not visible to the user.
 Specify a fixed width to measure dynamic height (or vice versa).
@@ -9,13 +8,14 @@ This is an advanced component and has some limitations and performance considera
 `CellMeasurer` can be used with `Grid`, `List`, and `Table` components. It is not intended to be used with the `Collection` component.
 
 ### Prop Types
-| Property | Type | Required? | Description |
-|:---|:---|:---:|:---|
-| cache | `CellMeasurerCache` | ✓ | Cache to be shared between `CellMeasurer` and its parent `Grid`. Learn more [here](#cellmeasurercache). |
-| children | Element or Function | ✓ | Either a React element as a child (eg `<div />`) or a function (eg. `({ measure }) => <div />`). See [below](#using-cellmeasurer-with-images) for more detailed examples. |
-| columnIndex | number | ✓ | Index of column being measured (within the parent `Grid`) or 0 (if used within a `List` or `Table`). |
-| parent | `Grid` | ✓ | Reference to the parent `Grid`; this value is passed by `Grid` to the `cellRenderer` and should be passed along as-is. |
-| rowIndex | number | ✓ | Index of row being measured (within the parent `Grid`). |
+
+| Property    | Type                | Required? | Description                                                                                                                                                               |
+| :---------- | :------------------ | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| cache       | `CellMeasurerCache` |     ✓     | Cache to be shared between `CellMeasurer` and its parent `Grid`. Learn more [here](#cellmeasurercache).                                                                   |
+| children    | Element or Function |     ✓     | Either a React element as a child (eg `<div />`) or a function (eg. `({ measure }) => <div />`). See [below](#using-cellmeasurer-with-images) for more detailed examples. |
+| columnIndex | number              |     ✓     | Index of column being measured (within the parent `Grid`) or 0 (if used within a `List` or `Table`).                                                                      |
+| parent      | `Grid`              |     ✓     | Reference to the parent `Grid`; this value is passed by `Grid` to the `cellRenderer` and should be passed along as-is.                                                    |
+| rowIndex    | number              |     ✓     | Index of row being measured (within the parent `Grid`).                                                                                                                   |
 
 ### CellMeasurerCache
 
@@ -23,15 +23,16 @@ The `CellMeasurerCache` stores `CellMeasurer` measurements and shares them with 
 It should be configured based on the type of measurements you need. It accepts the following parameters:
 
 ### Prop Types
-| Property | Type | Required? | Description |
-|:---|:---|:---:|:---|
-| defaultHeight | number | | Unmeasured cells will initially report this height |  
-| defaultWidth | number | | Unmeasured cells will initially report this width |
-| fixedHeight | boolean | | Rendered cells will have a fixed height, dynamic width |
-| fixedWidth | boolean | | Rendered cells will have a fixed width, dynamic height |
-| minHeight | number | | Derived row height (of multiple cells) should not be less than this value |
-| minWidth | number | | Derived column width (of multiple cells) should not be less than this value |
-| keyMapper | KeyMapper | | Enables more intelligent mapping of a given column and row index to an item ID. This prevents a cell cache from being invalidated when its parent collection is modified. `(rowIndex: number, columnIndex: number) => any` |
+
+| Property      | Type      | Required? | Description                                                                                                                                                                                                                |
+| :------------ | :-------- | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| defaultHeight | number    |           | Unmeasured cells will initially report this height                                                                                                                                                                         |
+| defaultWidth  | number    |           | Unmeasured cells will initially report this width                                                                                                                                                                          |
+| fixedHeight   | boolean   |           | Rendered cells will have a fixed height, dynamic width                                                                                                                                                                     |
+| fixedWidth    | boolean   |           | Rendered cells will have a fixed width, dynamic height                                                                                                                                                                     |
+| minHeight     | number    |           | Derived row height (of multiple cells) should not be less than this value                                                                                                                                                  |
+| minWidth      | number    |           | Derived column width (of multiple cells) should not be less than this value                                                                                                                                                |
+| keyMapper     | KeyMapper |           | Enables more intelligent mapping of a given column and row index to an item ID. This prevents a cell cache from being invalidated when its parent collection is modified. `(rowIndex: number, columnIndex: number) => any` |
 
 Note that while all of the individual parameters above are optional, you must supply at least some of them.
 `CellMeasurerCache` is not meant to measure cells that are both dynamic width _and_ height.
@@ -41,11 +42,13 @@ See [below](#limitations-and-performance-considerations) for more information.
 ### `CellMeasurerCache` Public Methods
 
 ##### clear (rowIndex: number, columnIndex: number)
+
 Reset cached measurements for a specific cell.
 
 This should be called when a cell needs to be re-measured to handle dynamic content (eg. replacing a loading indicator with loaded content or reacting to state-changes for stateful cells).
 
 ##### clearAll ()
+
 Reset cached measurements for all cells.
 
 This method should be called when a `Grid`, `List` or `Table` needs to reflow content due to a resizing event for a responsive layout (eg. a window width resize may have an impact on the height of cells).

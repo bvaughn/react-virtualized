@@ -29,32 +29,23 @@ Due to the complexity of this change there is no codemod. However you can use th
 
 ```jsx
 // Can be used for Grid, List, or Table
-function createCellRenderer (cellRenderer) {
-  console.warn('cellRenderer udpate needed')
+function createCellRenderer(cellRenderer) {
+  console.warn('cellRenderer udpate needed');
 
-  return function cellRendererWrapper ({ key, style, ...rest }) {
+  return function cellRendererWrapper({key, style, ...rest}) {
     return (
-      <div
-        className='Grid__cell'
-        key={key}
-        style={style}
-      >
+      <div className="Grid__cell" key={key} style={style}>
         {cellRenderer(rest)}
       </div>
-    )
-  }
+    );
+  };
 }
 
 // Demonstrates example usage
-function renderGrid (props) {
-  const { cellRenderer, ...rest } = props
+function renderGrid(props) {
+  const {cellRenderer, ...rest} = props;
 
-  return (
-    <Grid
-      cellRenderer={createCellRenderer(cellRenderer)}
-      {...rest}
-    />
-  )
+  return <Grid cellRenderer={createCellRenderer(cellRenderer)} {...rest} />;
 }
 ```
 
@@ -63,11 +54,11 @@ function renderGrid (props) {
 Removing the DOM wrapper for cells (and rows) means that you can now fully control a cell's styles.
 However this means that you'll need to audit your code to ensure that you've migrated the following properties:
 
-| Component | Properties to be removed |
-|:---|:---|
-| `Grid` | `cellClassName`, `cellStyle` |
-| `VirtualScroll` | `rowClassName`, `rowStyle` |
-| `FlexTable` | `rowWrapperClassName`, `rowWrapperStyle` |
+| Component       | Properties to be removed                 |
+| :-------------- | :--------------------------------------- |
+| `Grid`          | `cellClassName`, `cellStyle`             |
+| `VirtualScroll` | `rowClassName`, `rowStyle`               |
+| `FlexTable`     | `rowWrapperClassName`, `rowWrapperStyle` |
 
 Here is an example:
 
@@ -118,7 +109,7 @@ function renderGrid (props) {
 
 Typically this step will not require any action. However if you have customized react-virtualized's global styles, you'll need to be update your overrides as follows:
 
-1. Add the prefix: _ReactVirtualized___.
+1. Add the prefix: \_ReactVirtualized\_\_\_.
 2. Replace _FlexTable_ with _Table_ and _VirtualScroll_ with _List_.
 
 ```css
