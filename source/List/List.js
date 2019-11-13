@@ -83,8 +83,8 @@ type Props = {
   /** Row index to ensure visible (by forcefully scrolling if necessary) */
   scrollToIndex: number,
 
-  /** Vertical offset. */
-  scrollTop?: number,
+  /** Vertical offset on mount. */
+  defaultScrollTop?: number,
 
   /** Optional inline style */
   style: Object,

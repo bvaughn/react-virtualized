@@ -70,6 +70,10 @@ describe('WindowScroller', () => {
     window.innerWidth = 500;
   });
 
+  afterEach(() => {
+    jest.spyOn(console, 'warn').mockRestore();
+  });
+
   // Starts updating scrollTop only when the top position is reached
   it('should have correct top and left properties to be defined on :_positionFromTop and :_positionFromLeft', () => {
     const component = render(getMarkup());
@@ -79,7 +83,38 @@ describe('WindowScroller', () => {
     expect(component._positionFromLeft).toEqual(left);
   });
 
-  it('should allow passing child element with registerChild of children function param', () => {
+  it('should allow passing child element containing scrollToPosition function with registerChild of children function param', () => {
+    const scrollToPosition = jest.fn();
+    const child = {scrollToPosition: scrollToPosition};
+
+    const renderFn = jest.fn();
+
+    render(getMarkup({renderFn}));
+    renderFn.mock.calls[0][0].registerChild(child);
+
+    expect(scrollToPosition).not.toHaveBeenCalled();
+
+    simulateWindowScroll({scrollX: 100, scrollY: 100});
+
+    expect(scrollToPosition).toHaveBeenCalled();
+  });
+
+  it('should warn on passing null or component without scrollToPosition function in registerChild', () => {
+    const warnFn = jest.spyOn(console, 'warn');
+    const renderFn = jest.fn();
+
+    render(getMarkup({renderFn}));
+
+    renderFn.mock.calls[0][0].registerChild({scroll: () => null});
+    renderFn.mock.calls[0][0].registerChild({scrollToPosition: () => null});
+    renderFn.mock.calls[0][0].registerChild(null);
+
+    expect(warnFn).toHaveBeenCalledTimes(2);
+
+    warnFn.mockRestore();
+  });
+
+  it('should allow passing a container of a child element with registerChildContainer of children function param', () => {
     const scrollElement = document.createElement('div');
     scrollElement.scrollTop = 100;
     scrollElement.scrollLeft = 150;
@@ -87,29 +122,35 @@ describe('WindowScroller', () => {
       top: 200,
       left: 250,
     });
-    const child = document.createElement('div');
-    child.getBoundingClientRect = () => ({
+    const childContainer = document.createElement('div');
+    childContainer.getBoundingClientRect = () => ({
       top: 300,
       left: 350,
     });
     const renderFn = jest.fn();
+
     const component = render(getMarkup({scrollElement, renderFn}));
-    renderFn.mock.calls[0][0].registerChild(child);
+
+    renderFn.mock.calls[0][0].registerChildContainer(childContainer);
+
     expect(component._positionFromTop).toEqual(300 + 100 - 200);
     expect(component._positionFromLeft).toEqual(350 + 150 - 250);
   });
 
-  it('should warn on passing non-element or not null', () => {
+  it('should warn on passing non-element or not null in registerChildContainer', () => {
     const warnFn = jest.spyOn(console, 'warn');
     const renderFn = jest.fn();
 
     render(getMarkup({renderFn}));
 
-    renderFn.mock.calls[0][0].registerChild(1);
-    renderFn.mock.calls[0][0].registerChild(document.createElement('div'));
-    renderFn.mock.calls[0][0].registerChild(null);
+    renderFn.mock.calls[0][0].registerChildContainer(1);
+    renderFn.mock.calls[0][0].registerChildContainer(
+      document.createElement('div'),
+    );
+    renderFn.mock.calls[0][0].registerChildContainer(null);
 
     expect(warnFn).toHaveBeenCalledTimes(1);
+
     warnFn.mockRestore();
   });
 

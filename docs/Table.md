@@ -11,6 +11,7 @@ This component expects explicit `width` and `height` parameters.
 | autoHeight | Boolean |  | Outer `height` of `Table` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
 | children | [Column](Column.md) | ✓ | One or more Columns describing the data displayed in this table |
 | className | String |  | Optional custom CSS class name to attach to root `Table` element. |
+| defaultScrollTop | Number |  | Vertical offset on mount. |
 | disableHeader | Boolean |  | Do not render the table header (only the rows) |
 | estimatedRowSize | Number |  | Used to estimate the total height of a `Table` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | gridClassName | String |  | Optional custom CSS class name to attach to inner Grid element |
@@ -40,7 +41,6 @@ This component expects explicit `width` and `height` parameters.
 | rowStyle | Object or Function |  | Optional custom inline style to attach to table rows. This value may be either a style object or a function with the signature `({ index: number }): Object`. Note that for the header row an index of `-1` is provided. |
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
-| scrollTop | Number |  | Vertical offset |
 | sort | Function |  | Sort function to be called if a sortable header is clicked. `({ defaultSortDirection: string, event: MouseEvent, sortBy: string, sortDirection: SortDirection }): void` |
 | sortBy | String |  | Data is currently sorted by this `dataKey` (if it is sorted at all) |
 | sortDirection | [SortDirection](SortDirection.md) |  | Data is currently sorted in this direction (if it is sorted at all) |

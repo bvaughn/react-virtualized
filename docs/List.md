@@ -10,6 +10,7 @@ That means that `List` also accepts [`Grid` props](Grid.md) in addition to the p
 |:---|:---|:---:|:---|
 | autoHeight | Boolean |  | Outer `height` of `List` is set to "auto". This property should only be used in conjunction with the `WindowScroller` HOC. |
 | className | String |  | Optional custom CSS class name to attach to root `List` element. |
+| defaultScrollTop | Number |  | Vertical scroll offset on mount. |
 | estimatedRowSize | Number |  | Used to estimate the total height of a `List` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
 | height | Number | ✓ | Height constraint for list (determines how many actual rows are rendered) |
 | id | String |  | Optional custom id to attach to root `List` element. |
@@ -22,7 +23,6 @@ That means that `List` also accepts [`Grid` props](Grid.md) in addition to the p
 | rowRenderer | Function | ✓ | Responsible for rendering a row. [Learn more](#rowrenderer).|
 | scrollToAlignment | String |  | Controls the alignment scrolled-to-rows. The default ("_auto_") scrolls the least amount possible to ensure that the specified row is fully visible. Use "_start_" to always align rows to the top of the list and "_end_" to align them bottom. Use "_center_" to align them in the middle of container. |
 | scrollToIndex | Number |  | Row index to ensure visible (by forcefully scrolling if necessary) |
-| scrollTop | Number |  | Forced vertical scroll offset; can be used to synchronize scrolling between components |
 | style | Object |  | Optional custom inline style to attach to root `List` element. |
 | tabIndex | Number |  | Optional override of tab index default; defaults to `0`. |
 | width | Number | ✓ | Width of the list |

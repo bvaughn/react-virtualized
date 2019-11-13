@@ -41,6 +41,10 @@ Pass-thru that calls `measureAllCells` on all child `Grid`s.
 
 Pass-thru that calls `recomputeGridSize` on all child `Grid`s.
 
+##### scrollToPosition ({ scrollLeft, scrollTop })
+
+Pass-thru that calls `scrollToPosition` on the main scrolling `Grid` and syncs all others.
+
 ### Examples
 
 ```jsx

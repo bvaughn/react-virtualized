@@ -69,6 +69,23 @@ describe('List', () => {
       expect(rendered.textContent).toContain('Name 10');
       expect(rendered.textContent).toContain('Name 19');
     });
+    it('should render correctly when scrollToPosition() is called', () => {
+      let startIndex, stopIndex;
+
+      const list = render(
+        getMarkup({
+          onRowsRendered: params => ({startIndex, stopIndex} = params),
+        }),
+      );
+
+      expect(startIndex).toEqual(0);
+      expect(stopIndex).toEqual(9);
+
+      list.scrollToPosition(100);
+
+      expect(startIndex).toEqual(10);
+      expect(stopIndex).toEqual(19);
+    });
   });
 
   /** Tests scrolling via initial props */
@@ -280,39 +297,14 @@ describe('List', () => {
     });
   });
 
-  describe(':scrollTop property', () => {
-    it('should render correctly when an initial :scrollTop property is specified', () => {
+  describe(':defaultScrollTop property', () => {
+    it('should render correctly when an :defaultScrollTop property is specified', () => {
       let startIndex, stopIndex;
       render(
         getMarkup({
           onRowsRendered: params => ({startIndex, stopIndex} = params),
-          scrollTop: 100,
+          defaultScrollTop: 100,
         }),
-      );
-      expect(startIndex).toEqual(10);
-      expect(stopIndex).toEqual(19);
-    });
-
-    it('should render correctly when :scrollTop property is updated', () => {
-      let startIndex, stopIndex;
-
-      findDOMNode(
-        render(
-          getMarkup({
-            onRowsRendered: params => ({startIndex, stopIndex} = params),
-          }),
-        ),
-      );
-      expect(startIndex).toEqual(0);
-      expect(stopIndex).toEqual(9);
-
-      findDOMNode(
-        render(
-          getMarkup({
-            onRowsRendered: params => ({startIndex, stopIndex} = params),
-            scrollTop: 100,
-          }),
-        ),
       );
       expect(startIndex).toEqual(10);
       expect(stopIndex).toEqual(19);

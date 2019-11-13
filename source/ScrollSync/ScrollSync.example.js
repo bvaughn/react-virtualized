@@ -1,4 +1,3 @@
-/** @flow */
 import * as React from 'react';
 import {
   ContentBox,
@@ -76,6 +75,7 @@ export default class GridExample extends React.PureComponent {
             scrollLeft,
             scrollTop,
             scrollWidth,
+            registerChild,
           }) => {
             const x = scrollLeft / (scrollWidth - clientWidth);
             const y = scrollTop / (scrollHeight - clientHeight);
@@ -140,8 +140,8 @@ export default class GridExample extends React.PureComponent {
                     height={height - scrollbarSize()}
                     rowHeight={rowHeight}
                     rowCount={rowCount}
-                    scrollTop={scrollTop}
                     width={columnWidth}
+                    ref={registerChild}
                   />
                 </div>
                 <div className={styles.GridColumn}>
@@ -164,8 +164,8 @@ export default class GridExample extends React.PureComponent {
                             cellRenderer={this._renderHeaderCell}
                             rowHeight={rowHeight}
                             rowCount={1}
-                            scrollLeft={scrollLeft}
                             width={width - scrollbarSize()}
+                            ref={registerChild}
                           />
                         </div>
                         <div
