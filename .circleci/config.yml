@@ -108,6 +108,12 @@ workflows:
       - test:
           requires:
             - build
+          filters:
+            branches:
+              ignore: gh-pages
       - coverage:
           requires:
             - build
+          filters:
+            branches:
+              ignore: gh-pages
