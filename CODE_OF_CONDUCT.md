@@ -71,7 +71,7 @@ If you experience or witness unacceptable behaviorâ€”or have any other concernsâ
 
 - Through email:
   - [brian.david.vaughn@gmail.com](mailto:brian.david.vaughn@gmail.com) (Brian Vaughn)
-  - [amarkon895@gmail.com](mailto:amarkon895@gmail.com) (Adam Markon)
+  - [me@weiweiwu.me](mailto:me@weiweiwu.me) (Wei-Wei Wu)
 
 All reports will be handled with discretion. In your report please include:
 
