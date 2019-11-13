@@ -1,5 +1,6 @@
-// @flow
+/** @flow */
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 type Scrollable = {
   +scrollToPosition: ({scrollTop: number, scrollLeft: number}) => void,
@@ -19,6 +20,8 @@ type OnScrollParams = {
 type Props = {
   /**
    * Function responsible for rendering 2 or more virtualized components.
+   * This function should implement the following signature:
+   * ({ onScroll, scrollLeft, scrollTop, registerChild }) => PropTypes.element
    */
   children: (
     params: OnScrollParams & {onScroll: OnScrollParams => void} & {
@@ -40,6 +43,10 @@ type State = {
  * HOC that simplifies the process of synchronizing scrolling between two or more virtualized components.
  */
 export default class ScrollSync extends React.PureComponent<Props, State> {
+  static propTypes = {
+    children: PropTypes.func.isRequired,
+  };
+
   _elements: (ScrollableElement | null)[] = [];
 
   constructor(props: Props) {
@@ -78,14 +85,14 @@ export default class ScrollSync extends React.PureComponent<Props, State> {
     });
   }
 
-  _onScroll({
+  _onScroll = ({
     clientHeight,
     clientWidth,
     scrollHeight,
     scrollLeft,
     scrollTop,
     scrollWidth,
-  }) {
+  }) => {
     this.setState({
       clientHeight,
       clientWidth,
@@ -95,17 +102,17 @@ export default class ScrollSync extends React.PureComponent<Props, State> {
       scrollWidth,
     });
     this._elements.forEach(element => {
-      if (element != null && element.scrollToPosition)
+      if (!!element && element.scrollToPosition)
         element.scrollToPosition({scrollLeft, scrollTop});
     });
-  }
+  };
 
-  _registerChild(element: ScrollableElement | null) {
-    if (element == null || !element.scrollToPosition) {
+  _registerChild = (element: ScrollableElement | null) => {
+    if (!element || !element.scrollToPosition) {
       console.warn(
         "ScrollSync registerChild expects to be passed a component with 'scrollToPosition' function",
       );
     }
     this._elements.push(element);
-  }
+  };
 }
