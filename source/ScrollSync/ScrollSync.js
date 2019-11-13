@@ -41,11 +41,9 @@ type State = {
  */
 export default class ScrollSync extends React.PureComponent<Props, State> {
   _elements: (ScrollableElement | null)[] = [];
-  _onScroll: (params: OnScrollParams) => void;
-  _registerChild: (element: ScrollableElement | null) => void;
 
-  constructor(props: Props, context: any) {
-    super(props, context);
+  constructor(props: Props) {
+    super(props);
 
     this.state = {
       clientHeight: 0,
@@ -55,11 +53,6 @@ export default class ScrollSync extends React.PureComponent<Props, State> {
       scrollTop: 0,
       scrollWidth: 0,
     };
-
-    this._onScroll = this._onScroll.bind(this);
-    this._registerChild = this._registerChild.bind(this);
-
-    this._elements = [];
   }
 
   render() {
