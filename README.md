@@ -6,13 +6,11 @@
 [![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
 [![CircleCI](https://circleci.com/gh/bvaughn/react-virtualized/tree/master.svg?style=svg)](https://circleci.com/gh/bvaughn/react-virtualized/tree/master)
 [![Codecov badge](https://img.shields.io/codecov/c/github/bvaughn/react-virtualized/master.svg)](https://codecov.io/github/bvaughn/react-virtualized)
-[![Slack chat](https://react-virtualized.now.sh/badge.svg)](https://react-virtualized.now.sh)
 [![OpenCollective](https://opencollective.com/react-virtualized/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/react-virtualized/sponsors/badge.svg)](#sponsors)
 
 React components for efficiently rendering large lists and tabular data.
 Check out [the demo](https://bvaughn.github.io/react-virtualized/) for some examples.
-Join the official Slack chat at [react-virtualized.now.sh](https://react-virtualized.now.sh/).
 
 ### Sponsors
 The following wonderful companies have sponsored react-virtualized:
@@ -82,6 +80,11 @@ The following wonderful companies have sponsored react-virtualized:
 <a href="https://opencollective.com/react-virtualized/backer/27/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/27/avatar.svg"></a>
 <a href="https://opencollective.com/react-virtualized/backer/28/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/28/avatar.svg"></a>
 <a href="https://opencollective.com/react-virtualized/backer/29/website" target="_blank"><img src="https://opencollective.com/react-virtualized/backer/29/avatar.svg"></a>
+
+A word about `react-window`
+---------------
+
+If you're considering adding `react-virtualized` to a project, take a look at [`react-window`](https://github.com/bvaughn/react-window) as a possible lighter-weight alternative. [Learn more about how the two libraries compare here.](https://github.com/bvaughn/react-window#how-is-react-window-different-from-react-virtualized)
 
 Getting started
 ---------------
@@ -238,7 +241,6 @@ Here are some great components built on top of react-virtualized:
 * [react-sortable-tree](https://github.com/fritz-c/react-sortable-tree): Drag-and-drop sortable representation of hierarchical data
 * [react-virtualized-checkbox](https://github.com/emilebres/react-virtualized-checkbox): Checkbox group component with virtualization for large number of options
 * [react-virtualized-select](https://github.com/bvaughn/react-virtualized-select): Drop-down menu for React with windowing to support large numbers of options.
-* [react-vtree](https://github.com/Lodin/react-vtree): Low-level tree component for React with virtualization to support large number of elements.
 * [react-virtualized-tree](https://github.com/diogofcunha/react-virtualized-tree/): A reactive tree component that aims to render large sets of tree structured data in an elegant and performant way
 * [react-timeline-9000](https://github.com/BHP-DevHub/react-timeline-9000/): A calendar timeline component that is capable of displaying and interacting with a large number of items
 

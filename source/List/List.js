@@ -223,8 +223,8 @@ export default class List extends React.PureComponent<Props> {
     // However as of React 16, style props are auto-frozen (at least in dev mode)
     // Check to make sure we can still modify the style before proceeding.
     // https://github.com/facebook/react/commit/977357765b44af8ff0cfea327866861073095c12#commitcomment-20648713
-    const {writable} = Object.getOwnPropertyDescriptor(style, 'width');
-    if (writable) {
+    const widthDescriptor = Object.getOwnPropertyDescriptor(style, 'width');
+    if (widthDescriptor && widthDescriptor.writable) {
       // By default, List cells should be 100% width.
       // This prevents them from flowing under a scrollbar (if present).
       style.width = '100%';

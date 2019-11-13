@@ -337,6 +337,17 @@ export default class Table extends React.PureComponent {
     }
   }
 
+  getScrollbarWidth() {
+    if (this.Grid) {
+      const Grid = findDOMNode(this.Grid);
+      const clientWidth = Grid.clientWidth || 0;
+      const offsetWidth = Grid.offsetWidth || 0;
+      return offsetWidth - clientWidth;
+    }
+
+    return 0;
+  }
+
   componentDidMount() {
     this._setScrollbarWidth();
   }
@@ -383,8 +394,8 @@ export default class Table extends React.PureComponent {
       );
 
       this._cachedColumnStyles[index] = {
-        ...flexStyles,
         overflow: 'hidden',
+        ...flexStyles,
       };
     });
 
@@ -416,6 +427,7 @@ export default class Table extends React.PureComponent {
 
         <Grid
           {...this.props}
+          aria-readonly={null}
           autoContainerWidth
           className={clsx('ReactVirtualized__Table__Grid', gridClassName)}
           cellRenderer={this._createRow}
@@ -545,8 +557,8 @@ export default class Table extends React.PureComponent {
       const newSortDirection = isFirstTimeSort
         ? defaultSortDirection
         : sortDirection === SortDirection.DESC
-          ? SortDirection.ASC
-          : SortDirection.DESC;
+        ? SortDirection.ASC
+        : SortDirection.DESC;
 
       const onClick = event => {
         sortEnabled &&
@@ -661,9 +673,7 @@ export default class Table extends React.PureComponent {
    * Determines the flex-shrink, flex-grow, and width values for a cell (header or column).
    */
   _getFlexStyleForColumn(column, customStyle = {}) {
-    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${
-      column.props.width
-    }px`;
+    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${column.props.width}px`;
 
     const style = {
       ...customStyle,
@@ -725,13 +735,8 @@ export default class Table extends React.PureComponent {
   }
 
   _setScrollbarWidth() {
-    if (this.Grid) {
-      const Grid = findDOMNode(this.Grid);
-      const clientWidth = Grid.clientWidth || 0;
-      const offsetWidth = Grid.offsetWidth || 0;
-      const scrollbarWidth = offsetWidth - clientWidth;
+    const scrollbarWidth = this.getScrollbarWidth();
 
-      this.setState({scrollbarWidth});
-    }
+    this.setState({scrollbarWidth});
   }
 }

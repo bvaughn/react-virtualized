@@ -46,9 +46,10 @@ export default function createMultiSort(
   const sortDirection = {};
 
   sortBy.forEach(dataKey => {
-    sortDirection[dataKey] = defaultSortDirection.hasOwnProperty(dataKey)
-      ? defaultSortDirection[dataKey]
-      : 'ASC';
+    sortDirection[dataKey] =
+      defaultSortDirection[dataKey] !== undefined
+        ? defaultSortDirection[dataKey]
+        : 'ASC';
   });
 
   function sort({
@@ -58,7 +59,7 @@ export default function createMultiSort(
   }: SortParams): void {
     if (event.shiftKey) {
       // Shift + click appends a column to existing criteria
-      if (sortDirection.hasOwnProperty(dataKey)) {
+      if (sortDirection[dataKey] !== undefined) {
         sortDirection[dataKey] =
           sortDirection[dataKey] === 'ASC' ? 'DESC' : 'ASC';
       } else {
@@ -85,7 +86,7 @@ export default function createMultiSort(
 
       // If key is already selected, reverse sort direction.
       // Else, set sort direction to default direction.
-      if (sortDirection.hasOwnProperty(dataKey)) {
+      if (sortDirection[dataKey] !== undefined) {
         sortDirection[dataKey] =
           sortDirection[dataKey] === 'ASC' ? 'DESC' : 'ASC';
       } else {

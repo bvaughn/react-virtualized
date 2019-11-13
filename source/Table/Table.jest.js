@@ -49,6 +49,7 @@ describe('Table', () => {
     maxWidth,
     minWidth,
     defaultSortDirection,
+    label,
     ...flexTableProps
   } = {}) {
     return (
@@ -63,7 +64,7 @@ describe('Table', () => {
         width={100}
         {...flexTableProps}>
         <Column
-          label="Name"
+          label={label || 'Name'}
           dataKey="name"
           columnData={columnData}
           width={50}
@@ -378,6 +379,34 @@ describe('Table', () => {
       );
       const nameColumn = rendered.querySelector(
         '.ReactVirtualized__Table__rowColumn:first-of-type',
+      );
+      expect(nameColumn.getAttribute('title')).toEqual(null);
+    });
+
+    it('should set the rendered header label as header :title if it is a string', () => {
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            label: 'Custom',
+          }),
+        ),
+      );
+      const nameColumn = rendered.querySelector(
+        '.ReactVirtualized__Table__headerTruncatedText:first-of-type',
+      );
+      expect(nameColumn.getAttribute('title')).toContain('Custom');
+    });
+
+    it('should not set a header :title if the rendered header label is not a string', () => {
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            label: <div>Custom</div>,
+          }),
+        ),
+      );
+      const nameColumn = rendered.querySelector(
+        '.ReactVirtualized__Table__headerTruncatedText:first-of-type',
       );
       expect(nameColumn.getAttribute('title')).toEqual(null);
     });
@@ -1068,7 +1097,7 @@ describe('Table', () => {
     });
 
     it('should use custom :styles if specified', () => {
-      const columnStyle = {backgroundColor: 'red'};
+      const columnStyle = {backgroundColor: 'red', overflow: 'visible'};
       const headerStyle = {backgroundColor: 'blue'};
       const columnHeaderStyle = {color: 'yellow'};
       const rowStyle = {backgroundColor: 'green'};
@@ -1088,6 +1117,10 @@ describe('Table', () => {
         node.querySelector('.ReactVirtualized__Table__rowColumn').style
           .backgroundColor,
       ).toEqual('red');
+      expect(
+        node.querySelector('.ReactVirtualized__Table__rowColumn').style
+          .overflow,
+      ).toEqual('visible');
       expect(
         node.querySelector('.ReactVirtualized__Table__headerColumn').style
           .backgroundColor,

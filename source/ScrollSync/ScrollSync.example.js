@@ -9,7 +9,7 @@ import Grid from '../Grid';
 import ScrollSync from './ScrollSync';
 import clsx from 'clsx';
 import styles from './ScrollSync.example.css';
-import scrollbarSize from 'dom-helpers/util/scrollbarSize';
+import scrollbarSize from 'dom-helpers/scrollbarSize';
 
 const LEFT_COLOR_FROM = hexToRgb('#471061');
 const LEFT_COLOR_TO = hexToRgb('#BC3959');
@@ -60,10 +60,10 @@ export default class GridExample extends React.PureComponent {
         </ContentBoxParagraph>
 
         <ContentBoxParagraph>
-          This example shows two <code>Grid</code>
-          s and one <code>List</code> configured to mimic a spreadsheet with a
-          fixed header and first column. It also shows how a scroll callback can
-          be used to control UI properties such as background color.
+          This example shows two <code>Grid</code>s and one <code>List</code>{' '}
+          configured to mimic a spreadsheet with a fixed header and first
+          column. It also shows how a scroll callback can be used to control UI
+          properties such as background color.
         </ContentBoxParagraph>
 
         <ScrollSync>
@@ -108,9 +108,7 @@ export default class GridExample extends React.PureComponent {
                     left: 0,
                     top: 0,
                     color: leftColor,
-                    backgroundColor: `rgb(${topBackgroundColor.r},${
-                      topBackgroundColor.g
-                    },${topBackgroundColor.b})`,
+                    backgroundColor: `rgb(${topBackgroundColor.r},${topBackgroundColor.g},${topBackgroundColor.b})`,
                   }}>
                   <Grid
                     cellRenderer={this._renderLeftHeaderCell}
@@ -130,9 +128,7 @@ export default class GridExample extends React.PureComponent {
                     left: 0,
                     top: rowHeight,
                     color: leftColor,
-                    backgroundColor: `rgb(${leftBackgroundColor.r},${
-                      leftBackgroundColor.g
-                    },${leftBackgroundColor.b})`,
+                    backgroundColor: `rgb(${leftBackgroundColor.r},${leftBackgroundColor.g},${leftBackgroundColor.b})`,
                   }}>
                   <Grid
                     overscanColumnCount={overscanColumnCount}
@@ -154,9 +150,7 @@ export default class GridExample extends React.PureComponent {
                       <div>
                         <div
                           style={{
-                            backgroundColor: `rgb(${topBackgroundColor.r},${
-                              topBackgroundColor.g
-                            },${topBackgroundColor.b})`,
+                            backgroundColor: `rgb(${topBackgroundColor.r},${topBackgroundColor.g},${topBackgroundColor.b})`,
                             color: topColor,
                             height: rowHeight,
                             width: width - scrollbarSize(),
@@ -176,9 +170,7 @@ export default class GridExample extends React.PureComponent {
                         </div>
                         <div
                           style={{
-                            backgroundColor: `rgb(${middleBackgroundColor.r},${
-                              middleBackgroundColor.g
-                            },${middleBackgroundColor.b})`,
+                            backgroundColor: `rgb(${middleBackgroundColor.r},${middleBackgroundColor.g},${middleBackgroundColor.b})`,
                             color: middleColor,
                             height,
                             width,
@@ -236,8 +228,12 @@ export default class GridExample extends React.PureComponent {
   _renderLeftSideCell({columnIndex, key, rowIndex, style}) {
     const rowClass =
       rowIndex % 2 === 0
-        ? columnIndex % 2 === 0 ? styles.evenRow : styles.oddRow
-        : columnIndex % 2 !== 0 ? styles.evenRow : styles.oddRow;
+        ? columnIndex % 2 === 0
+          ? styles.evenRow
+          : styles.oddRow
+        : columnIndex % 2 !== 0
+        ? styles.evenRow
+        : styles.oddRow;
     const classNames = clsx(rowClass, styles.cell);
 
     return (

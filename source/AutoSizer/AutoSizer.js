@@ -64,6 +64,7 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
 
   _parentNode: ?HTMLElement;
   _autoSizer: ?HTMLElement;
+  _window: ?any; // uses any instead of Window because Flow doesn't have window type
   _detectElementResize: DetectElementResize;
 
   componentDidMount() {
@@ -80,10 +81,14 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
       // This handles edge-cases where the component has already been unmounted before its ref has been set,
       // As well as libraries like react-lite which have a slightly different lifecycle.
       this._parentNode = this._autoSizer.parentNode;
+      this._window = this._autoSizer.parentNode.ownerDocument.defaultView;
 
       // Defer requiring resize handler in order to support server-side rendering.
       // See issue #41
-      this._detectElementResize = createDetectElementResize(nonce);
+      this._detectElementResize = createDetectElementResize(
+        nonce,
+        this._window,
+      );
       this._detectElementResize.addResizeListener(
         this._parentNode,
         this._onResize,
@@ -165,7 +170,8 @@ export default class AutoSizer extends React.PureComponent<Props, State> {
       const height = this._parentNode.offsetHeight || 0;
       const width = this._parentNode.offsetWidth || 0;
 
-      const style = window.getComputedStyle(this._parentNode) || {};
+      const win = this._window || window;
+      const style = win.getComputedStyle(this._parentNode) || {};
       const paddingLeft = parseInt(style.paddingLeft, 10) || 0;
       const paddingRight = parseInt(style.paddingRight, 10) || 0;
       const paddingTop = parseInt(style.paddingTop, 10) || 0;

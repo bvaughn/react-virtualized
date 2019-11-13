@@ -7,9 +7,9 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - dependencies-{{ checksum "yarn.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - dependencies-
+            - dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-
       - run:
           name: Install
           command: yarn install
@@ -22,14 +22,14 @@ jobs:
           command: yarn ci-check
   test:
     docker:
-      - image: circleci/node:8.9.1-stretch-browsers
+      - image: circleci/node:10.16.3-stretch-browsers
     steps:
       - checkout
       - restore_cache:
           keys:
-          - dependencies-{{ checksum "yarn.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - dependencies-
+            - dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-
       - run:
           name: Install
           command: yarn install

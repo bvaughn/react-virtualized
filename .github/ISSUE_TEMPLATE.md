@@ -2,7 +2,6 @@
 
 Please don't file GitHub issues to ask questions! Instead use:
 * Stack Overflow: http://stackoverflow.com/questions/tagged/react-virtualized
-* The react-virtualized Slack channel: https://react-virtualized.now.sh
 
 ### Do you want to request a *feature* or report a *bug*?
 

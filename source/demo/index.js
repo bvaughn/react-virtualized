@@ -1,5 +1,5 @@
 // IE 10+ compatibility for demo (must come before other imports)
-import 'babel-polyfill';
+import '@babel/polyfill';
 
 // Import react-virtualized styles as part of bootstrap process
 import '../../styles.css';

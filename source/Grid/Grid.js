@@ -28,7 +28,7 @@ import defaultOverscanIndicesGetter, {
 } from './defaultOverscanIndicesGetter';
 import updateScrollIndexHelper from './utils/updateScrollIndexHelper';
 import defaultCellRangeRenderer from './defaultCellRangeRenderer';
-import scrollbarSize from 'dom-helpers/util/scrollbarSize';
+import scrollbarSize from 'dom-helpers/scrollbarSize';
 import {polyfill} from 'react-lifecycles-compat';
 import {
   requestAnimationTimeout,
@@ -720,7 +720,8 @@ class Grid extends React.PureComponent<Props, State> {
     // So we should always recalculate offset afterwards.
     const sizeJustIncreasedFromZero =
       (prevProps.width === 0 || prevProps.height === 0) &&
-      (height > 0 && width > 0);
+      height > 0 &&
+      width > 0;
 
     // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
     // @TODO Do we also need this check or can the one in componentWillUpdate() suffice?
@@ -1394,7 +1395,7 @@ class Grid extends React.PureComponent<Props, State> {
     ) {
       return newState;
     }
-    return null;
+    return {};
   }
 
   /**
@@ -1496,7 +1497,7 @@ class Grid extends React.PureComponent<Props, State> {
         scrollTop: -1,
       });
     }
-    return null;
+    return {};
   }
 
   _updateScrollLeftForScrollToColumn(
@@ -1600,7 +1601,7 @@ class Grid extends React.PureComponent<Props, State> {
         scrollTop: calculatedScrollTop,
       });
     }
-    return null;
+    return {};
   }
 
   _updateScrollTopForScrollToRow(
