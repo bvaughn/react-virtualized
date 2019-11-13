@@ -1007,23 +1007,11 @@ describe('Table', () => {
     });
   });
 
-  describe(':scrollTop property', () => {
-    it('should render correctly when an initial :scrollTop property is specified', () => {
-      let startIndex, stopIndex;
-      render(
-        getMarkup({
-          onRowsRendered: params => ({startIndex, stopIndex} = params),
-          scrollTop: 80,
-        }),
-      );
-      expect(startIndex).toEqual(8);
-      expect(stopIndex).toEqual(15);
-    });
-
-    it('should render correctly when :scrollTop property is updated', () => {
+  describe('scrollToPosition', () => {
+    it('should render correctly when scrollToPosition() is called', () => {
       let startIndex, stopIndex;
 
-      render(
+      const table = render(
         getMarkup({
           onRowsRendered: params => ({startIndex, stopIndex} = params),
         }),
@@ -1031,10 +1019,20 @@ describe('Table', () => {
       expect(startIndex).toEqual(0);
       expect(stopIndex).toEqual(7);
 
+      table.scrollToPosition(80);
+
+      expect(startIndex).toEqual(8);
+      expect(stopIndex).toEqual(15);
+    });
+  });
+
+  describe(':defaultScrollTop property', () => {
+    it('should render correctly when an :defaultScrollTop property is specified', () => {
+      let startIndex, stopIndex;
       render(
         getMarkup({
           onRowsRendered: params => ({startIndex, stopIndex} = params),
-          scrollTop: 80,
+          defaultScrollTop: 80,
         }),
       );
       expect(startIndex).toEqual(8);
@@ -1516,7 +1514,7 @@ describe('Table', () => {
         rowHeight: 15,
         rowCount: 20,
         scrollToAlignment: 'auto',
-        scrollTop: 0,
+        defaultScrollTop: 0,
         sortBy: 'name',
         sortDirection: SortDirection.ASC,
         tabIndex: null,
@@ -1528,7 +1526,7 @@ describe('Table', () => {
         rowHeight: 10,
         rowCount: 10,
         scrollToAlignment: 'center',
-        scrollTop: 1,
+        defaultScrollTop: 1,
         sortBy: 'email',
         sortDirection: SortDirection.DESC,
         tabIndex: 1,

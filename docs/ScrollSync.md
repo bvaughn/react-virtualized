@@ -17,6 +17,7 @@ The child function is passed the following named parameters:
 | clientHeight | Number | Height of the visible portion of the `Grid` (or other scroll-synced component) |
 | clientWidth | Number | Width of the visible portion of the `Grid` (or other scroll-synced component) |
 | onScroll | Function | This function should be passed through to at least one of the virtualized child components. Updates to it will trigger updates to the scroll offset parameters which will in turn update the other virtualized children. |
+| registerChild | Function | This function should be passed as a `ref` to all virtualized child components. These components must have `scrollToPosition` method implemented. |
 | scrollHeight | Number | Total height of all rows in the `Grid` (or other scroll-synced component) |
 | scrollLeft | Number | The current scroll-left offset. |
 | scrollTop | Number | The current scroll-top offset. |
@@ -33,16 +34,17 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 function render (props) {
   return (
     <ScrollSync>
-      {({ clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth }) => (
+      {({ clientHeight, clientWidth, onScroll, scrollHeight, scrollLeft, scrollTop, scrollWidth, registerChild }) => (
         <div className='Table'>
           <div className='LeftColumn'>
             <List
-              scrollTop={scrollTop}
+              ref={registerChild}
               {...props}
             />
           </div>
           <div className='RightColumn'>
             <Grid
+              ref={registerChild}
               onScroll={onScroll}
               {...props}
             />

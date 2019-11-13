@@ -89,15 +89,19 @@ export default class WindowScrollerExample extends React.PureComponent<
         <WindowScroller
           ref={this._setRef}
           scrollElement={isScrollingCustomElement ? customElement : window}>
-          {({height, isScrolling, registerChild, onChildScroll, scrollTop}) => (
+          {({
+            height,
+            isScrolling,
+            registerChild,
+            registerChildContainer,
+            onChildScroll,
+          }) => (
             <div className={styles.WindowScrollerWrapper}>
               <AutoSizer disableHeight>
                 {({width}) => (
-                  <div ref={registerChild}>
+                  <div ref={registerChildContainer}>
                     <List
-                      ref={el => {
-                        window.listEl = el;
-                      }}
+                      ref={registerChild}
                       autoHeight
                       className={styles.List}
                       height={height}
@@ -108,7 +112,6 @@ export default class WindowScrollerExample extends React.PureComponent<
                       rowHeight={30}
                       rowRenderer={this._rowRenderer}
                       scrollToIndex={scrollToIndex}
-                      scrollTop={scrollTop}
                       width={width}
                     />
                   </div>

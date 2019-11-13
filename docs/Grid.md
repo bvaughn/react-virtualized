@@ -17,6 +17,8 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | containerProps | Object |  | Responsible for adding props to the cell-container, i.e. `onWheel`.
 | containerRole | string |  | ARIA role for the cell-container; defaults to "rowgroup" |
 | containerStyle | Object |  | Optional custom inline style to attach to inner cell-container element. |
+| defaultScrollLeft | Number |  | Horizontal offset on mount |
+| defaultScrollTop | Number |  | Vertical offset on mount |
 | deferredMeasurementCache | `CellMeasurer` |  | If CellMeasurer is used to measure this Grid's children, this should be a pointer to its CellMeasurerCache. A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data. |
 | estimatedColumnSize | Number |  | Used to estimate the total width of a `Grid` before all of its columns have actually been measured. The estimated total width is adjusted as columns are rendered. |
 | estimatedRowSize | Number |  | Used to estimate the total height of a `Grid` before all of its rows have actually been measured. The estimated total height is adjusted as rows are rendered. |
@@ -35,11 +37,9 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | rowCount | Number | ✓ | Number of rows in grid. |
 | rowHeight | Number or Function | ✓ | Either a fixed row height (number) or a function that returns the height of a row given its index: `({ index: number }): number`. If function is used, specify `estimatedRowSize` for more consistent scrolling behavior. |
 | scrollingResetTimeInterval | Number |  | Wait this amount of time after the last scroll event before resetting Grid `pointer-events`; defaults to 150ms. |
-| scrollLeft | Number |  | Horizontal offset |
 | scrollToAlignment | String |  | Controls the alignment of scrolled-to-cells. The default ("_auto_") scrolls the least amount possible to ensure that the specified cell is fully visible. Use "_start_" to always align cells to the top/left of the `Grid` and "_end_" to align them bottom/right. Use "_center_" to align specified cell in the middle of container. |
 | scrollToColumn | Number |  | Column index to ensure visible (by forcefully scrolling if necessary). Takes precedence over `scrollLeft`. |
 | scrollToRow | Number |  | Row index to ensure visible (by forcefully scrolling if necessary). Takes precedence over `scrollTop`. |
-| scrollTop | Number |  | Vertical offset |
 | style | Object |  | Optional custom inline style to attach to root `Grid` element. |
 | tabIndex | Number |  | Optional override of tab index default; defaults to `0`. |
 | width | Number | ✓ | Width of Grid; this property determines the number of visible (vs virtualized) columns. |

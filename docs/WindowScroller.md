@@ -10,7 +10,7 @@ This may change with a future release but for the time being this component shou
 ### Prop Types
 | Property | Type | Required? | Description |
 |:---|:---|:---:|:---|
-| children | Function | ✓ | Function responsible for rendering children. This function should implement the following signature: `({ height: number, width: number, isScrolling: boolean, scrollTop: number, registerChild: function, onChildScroll: function }) => PropTypes.element` |
+| children | Function | ✓ | Function responsible for rendering children. This function should implement the following signature: `({ height: number, width: number, isScrolling: boolean, scrollTop: number, registerChild: function, registerChildContainer: function, onChildScroll: function }) => PropTypes.element` |
 | onResize | Function |  | Callback to be invoked on-resize; it is passed the following named parameters: `({ height: number, width: number })`. |
 | onScroll | Function |  | Callback to be invoked on-scroll; it is passed the following named parameters: `({ scrollTop: number, scrollLeft: number })`. |
 | scrollElement | any |  | Element to attach scroll event listeners. Defaults to `window`. |
@@ -24,7 +24,8 @@ This may change with a future release but for the time being this component shou
 | height | Number | The height of the viewport. |
 | isScrolling | Boolean | Indicates if the `Table` or `List` is scrolling |
 | onChildScroll | Function | Used by the `Table` or `List`'s `onScroll` prop to "scroll" the list |
-| registerChild | Function | specify grid container deeper in layout (by default `WindowScroller` uses `ReactDOM.findDOMNode` function) |
+| registerChild | Function | This function should be passed as a `ref` to virtualized child component. The component must have `scrollToPosition` method implemented. |
+| registerChildContainer | Function | Specify grid container deeper in layout (by default `WindowScroller` uses `ReactDOM.findDOMNode` function) |
 | scrollTop | Number | Scroll distance from the page |
 
 ### Public Methods
@@ -45,7 +46,7 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 
 ReactDOM.render(
   <WindowScroller>
-    {({ height, isScrolling, onChildScroll, scrollTop }) => (
+    {({ height, isScrolling, onChildScroll, registerChild }) => (
       <List
         autoHeight
         height={height}
@@ -54,7 +55,7 @@ ReactDOM.render(
         rowCount={...}
         rowHeight={...}
         rowRenderer={...}
-        scrollTop={scrollTop}
+        ref={registerChild}
         width={...}
       />
     )}
@@ -63,7 +64,7 @@ ReactDOM.render(
 );
 ```
 
-using `registerChild`
+using `registerChildContainer`
 
 ```javascript
 import React from 'react';
@@ -73,12 +74,12 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 
 ReactDOM.render(
   <WindowScroller>
-    {({ height, isScrolling, registerChild, scrollTop }) => (
+    {({ height, isScrolling, registerChildContainer, registerChild }) => (
       <div>
         <header>
           Table header
         </header>
-        <div ref={registerChild}>
+        <div ref={registerChildContainer}>
           <List
             autoHeight
             height={height}
@@ -86,7 +87,7 @@ ReactDOM.render(
             rowCount={...}
             rowHeight={...}
             rowRenderer={...}
-            scrollTop={scrollTop}
+            ref={registerChild}
             width={...}
           />
         </div>
