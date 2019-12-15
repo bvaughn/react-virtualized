@@ -39,4 +39,5 @@ export type RowRendererParams = {
   onRowMouseOut: ?Function,
   rowData: any,
   style: any,
+  key: string,
 };

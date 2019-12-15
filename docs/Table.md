@@ -159,6 +159,7 @@ This function accepts the following named parameters:
 | onRowMouseOut    | Optional row `onMouseOut` handler                              |
 | rowData          | Row data                                                       |
 | style            | Row-level style object                                         |
+| key              | Unique key within array of rendered rows                       |
 
 ### Examples
 
