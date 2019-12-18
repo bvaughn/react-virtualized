@@ -97,15 +97,15 @@ This method can be used to safely scroll back to a cell that a user has scrolled
 
 The Table component supports the following static class names
 
-| Property                                      | Description                                 |
-| :-------------------------------------------- | :------------------------------------------ |
-| ReactVirtualized\_\_Table                     | Main (outer) element                        |
-| ReactVirtualized**Table**headerColumn         | Header cell (similar to `thead > tr > th`)  |
-| ReactVirtualized**Table**headerRow            | Header row (similar to `thead > tr`)        |
-| ReactVirtualized**Table**row                  | Table row (akin to `tbody > tr`)            |
-| ReactVirtualized**Table**rowColumn            | Table column (akin to `tbody > tr > td`)    |
-| ReactVirtualized**Table**sortableHeaderColumn | Applied to header columns that are sortable |
-| ReactVirtualized**Table**sortableHeaderIcon   | SVG sort indicator                          |
+| Property                                          | Description                                 |
+| :------------------------------------------------ | :------------------------------------------ |
+| ReactVirtualized\_\_Table                         | Main (outer) element                        |
+| ReactVirtualized\_\_Table\_\_headerColumnn        | Header cell (similar to `thead > tr > th`)  |
+| ReactVirtualized\_\_Table\_\_headerRow            | Header row (similar to `thead > tr`)        |
+| ReactVirtualized\_\_Table\_\_row                  | Table row (akin to `tbody > tr`)            |
+| ReactVirtualized\_\_Table\_\_rowColumn            | Table column (akin to `tbody > tr > td`)    |
+| ReactVirtualized\_\_Table\_\_sortableHeaderColumn | Applied to header columns that are sortable |
+| ReactVirtualized\_\_Table\_\_sortableHeaderIcon   | SVG sort indicator                          |
 
 ### headerRowRenderer
 
