@@ -673,7 +673,10 @@ export default class Table extends React.PureComponent {
    * Determines the flex-shrink, flex-grow, and width values for a cell (header or column).
    */
   _getFlexStyleForColumn(column, customStyle = {}) {
-    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${column.props.width}px`;
+    const w = column.props.width;
+    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${
+      w != null ? (isNaN(w) ? w : w + 'px') : 'auto'
+    }`;
 
     const style = {
       ...customStyle,
