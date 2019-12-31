@@ -30,6 +30,8 @@ type Props = {
 export default class CellMeasurer extends React.PureComponent<Props> {
   static __internalCellMeasurerFlag = false;
 
+  _child: ?Element;
+
   componentDidMount() {
     this._maybeMeasureCell();
   }
