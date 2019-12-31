@@ -9,13 +9,20 @@ This is an advanced component and has some limitations and performance considera
 
 ### Prop Types
 
-| Property    | Type                | Required? | Description                                                                                                                                                               |
-| :---------- | :------------------ | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| cache       | `CellMeasurerCache` |     ✓     | Cache to be shared between `CellMeasurer` and its parent `Grid`. Learn more [here](#cellmeasurercache).                                                                   |
-| children    | Element or Function |     ✓     | Either a React element as a child (eg `<div />`) or a function (eg. `({ measure }) => <div />`). See [below](#using-cellmeasurer-with-images) for more detailed examples. |
-| columnIndex | number              |     ✓     | Index of column being measured (within the parent `Grid`) or 0 (if used within a `List` or `Table`).                                                                      |
-| parent      | `Grid`              |     ✓     | Reference to the parent `Grid`; this value is passed by `Grid` to the `cellRenderer` and should be passed along as-is.                                                    |
-| rowIndex    | number              |     ✓     | Index of row being measured (within the parent `Grid`).                                                                                                                   |
+| Property    | Type                | Required? | Description                                                                                                                                                                                                  |
+| :---------- | :------------------ | :-------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| cache       | `CellMeasurerCache` |     ✓     | Cache to be shared between `CellMeasurer` and its parent `Grid`. Learn more [here](#cellmeasurercache).                                                                                                      |
+| children    | Element or Function |     ✓     | Either a React element as a child (eg `<div />`) or a function (eg. `({ measure, registerChild }) => <div ref={registerChild} />`). See [below](#using-cellmeasurer-with-images) for more detailed examples. |
+| columnIndex | number              |     ✓     | Index of column being measured (within the parent `Grid`) or 0 (if used within a `List` or `Table`).                                                                                                         |
+| parent      | `Grid`              |     ✓     | Reference to the parent `Grid`; this value is passed by `Grid` to the `cellRenderer` and should be passed along as-is.                                                                                       |
+| rowIndex    | number              |     ✓     | Index of row being measured (within the parent `Grid`).                                                                                                                                                      |
+
+### Render Props
+
+| Property      | Type     | Description                                                                                                                    |
+| :------------ | :------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| measure       | Function | Perform the cell measurements.                                                                                                 |
+| registerChild | Function | Specify DOM element to be measured, can be used as a `ref` (by default `WindowScroller` uses `ReactDOM.findDOMNode` function). |
 
 ### CellMeasurerCache
 
@@ -110,11 +117,69 @@ function renderGrid (props) {
 }
 ```
 
+##### Using `registerChild`
+
+By default, `CellMeasurer` uses `findDOMNode` to access the DOM element to measure.
+This API is [deprecated in React `StrictMode`](https://reactjs.org/docs/strict-mode.html#warning-about-deprecated-finddomnode-usage), so you may want to avoid its usage.
+As an alternative, you can use `registerChild` render prop to specify the element, e.g. by passing as a `ref`.
+
+```jsx
+import React from 'react';
+import { CellMeasurer, CellMeasurerCache, Grid } from 'react-virtualized';
+
+// In this example, average cell width is assumed to be about 100px.
+// This value will be used for the initial `Grid` layout.
+// Cell measurements smaller than 75px should also be rounded up.
+// Height is not dynamic.
+const cache = new CellMeasurerCache({
+  defaultWidth: 100,
+  minWidth: 75,
+  fixedHeight: true
+});
+
+function cellRenderer ({ columnIndex, key, parent, rowIndex, style }) {
+  const content // Derive this from your data somehow
+
+  return (
+    <CellMeasurer
+      cache={cache}
+      columnIndex={columnIndex}
+      key={key}
+      parent={parent}
+      rowIndex={rowIndex}
+    >
+      {({registerChild}) => (
+        <div
+          style={{
+            ...style,
+            height: 35,
+            whiteSpace: 'nowrap'
+          }}
+        >
+          {content}
+        </div>
+      )}
+    </CellMeasurer>
+  );
+}
+
+function renderGrid (props) {
+  return (
+    <Grid
+      {...props}
+      columnWidth={cache.columnWidth}
+      deferredMeasurementCache={cache}
+      cellRenderer={cellRenderer}
+    />
+  );
+}
+```
+
 ###### Using `CellMeasurer` with images
 
 This example shows how you might use the `CellMeasurer` component along with the `List` component in order to display dynamic-height rows.
 The difference between this example and the above example is that the height of the row is not determined until image data has loaded.
-To support this, a function-child is passed to `CellMeasurer` which then receives a `measure` parameter.
+To support this, a function-child is passed to `CellMeasurer` which then receives `measure` and `registerChild` parameters.
 `measure` should be called when cell content is ready to be measured (in this case, when the image has loaded).
 
 ```jsx
@@ -140,9 +205,9 @@ function rowRenderer ({ index, isScrolling, key, parent, style }) {
       parent={parent}
       rowIndex={index}
     >
-      {({ measure }) => (
+      {({ measure, registerChild }) => (
         // 'style' attribute required to position cell (within parent List)
-        <div style={style}>
+        <div ref={registerChild} style={style}>
           <img
             onLoad={measure}
             src={source}
