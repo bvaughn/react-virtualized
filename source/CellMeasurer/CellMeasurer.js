@@ -30,6 +30,8 @@ type Props = {
 export default class CellMeasurer extends React.PureComponent<Props> {
   static __internalCellMeasurerFlag = false;
 
+  _child: ?Element;
+
   componentDidMount() {
     this._maybeMeasureCell();
   }
@@ -42,14 +44,17 @@ export default class CellMeasurer extends React.PureComponent<Props> {
     const {children} = this.props;
 
     return typeof children === 'function'
-      ? children({measure: this._measure})
+      ? children({
+          measure: this._measure,
+          registerChild: this._registerChild,
+        })
       : children;
   }
 
   _getCellMeasurements() {
     const {cache} = this.props;
 
-    const node = findDOMNode(this);
+    const node = this._child || findDOMNode(this);
 
     // TODO Check for a bad combination of fixedWidth and missing numeric width or vice versa with height
 
@@ -143,6 +148,18 @@ export default class CellMeasurer extends React.PureComponent<Props> {
           rowIndex,
         });
       }
+    }
+  };
+
+  _registerChild = element => {
+    if (element && !(element instanceof Element)) {
+      console.warn(
+        'CellMeasurer registerChild expects to be passed Element or null',
+      );
+    }
+    this._child = element;
+    if (element) {
+      this._maybeMeasureCell();
     }
   };
 }

@@ -8,16 +8,19 @@ import CellMeasurerCache, {
 } from './CellMeasurerCache';
 
 // Accounts for the fact that JSDom doesn't support measurements.
-function mockClientWidthAndHeight({height, width}) {
+function mockClientWidthAndHeight(
+  {height, width},
+  object = HTMLElement.prototype,
+) {
   const heightFn = jest.fn().mockReturnValue(height);
   const widthFn = jest.fn().mockReturnValue(width);
 
-  Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+  Object.defineProperty(object, 'offsetHeight', {
     configurable: true,
     get: heightFn,
   });
 
-  Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+  Object.defineProperty(object, 'offsetWidth', {
     configurable: true,
     get: widthFn,
   });
@@ -150,7 +153,72 @@ describe('CellMeasurer', () => {
     expect(widthFn).toHaveBeenCalledTimes(0);
   });
 
-  it('componentDidUpdate() should pass a :measure param to a function child', () => {
+  it('registerChild() should measure content that is not already in the cache', () => {
+    const cache = new CellMeasurerCache({fixedWidth: true});
+    const parent = createParent({cache});
+
+    const element = document.createElement('div');
+    const {heightFn, widthFn} = mockClientWidthAndHeight(
+      {
+        height: 20,
+        width: 100,
+      },
+      element,
+    );
+
+    expect(heightFn).toHaveBeenCalledTimes(0);
+    expect(widthFn).toHaveBeenCalledTimes(0);
+    expect(cache.has(0, 0)).toBe(false);
+
+    renderHelper({
+      cache,
+      parent,
+      children({registerChild}) {
+        registerChild(element);
+        return null;
+      },
+    });
+
+    expect(parent.invalidateCellSizeAfterRender).toHaveBeenCalled();
+    expect(heightFn).toHaveBeenCalledTimes(1);
+    expect(widthFn).toHaveBeenCalledTimes(1);
+    expect(cache.has(0, 0)).toBe(true);
+    expect(cache.getWidth(0, 0)).toBe(100);
+    expect(cache.getHeight(0, 0)).toBe(20);
+  });
+
+  it('registerChild() should not measure content that is already in the cache', () => {
+    const cache = new CellMeasurerCache({fixedWidth: true});
+    cache.set(0, 0, 100, 20);
+
+    const parent = createParent({cache});
+
+    const element = document.createElement('div');
+    const {heightFn, widthFn} = mockClientWidthAndHeight(
+      {
+        height: 20,
+        width: 100,
+      },
+      element,
+    );
+
+    expect(cache.has(0, 0)).toBe(true);
+
+    renderHelper({
+      cache,
+      parent,
+      children({registerChild}) {
+        registerChild(element);
+        return null;
+      },
+    });
+
+    expect(parent.invalidateCellSizeAfterRender).not.toHaveBeenCalled();
+    expect(heightFn).toHaveBeenCalledTimes(0);
+    expect(widthFn).toHaveBeenCalledTimes(0);
+  });
+
+  it('should pass a :measure param to a function child', () => {
     const cache = new CellMeasurerCache({
       fixedWidth: true,
     });
