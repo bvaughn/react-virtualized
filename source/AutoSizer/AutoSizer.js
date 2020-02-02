@@ -49,7 +49,7 @@ type DetectElementResize = {
   removeResizeListener: ResizeHandler,
 };
 
-export default class AutoSizer extends React.PureComponent<Props, State> {
+export default class AutoSizer extends React.Component<Props, State> {
   static defaultProps = {
     onResize: () => {},
     disableHeight: false,
