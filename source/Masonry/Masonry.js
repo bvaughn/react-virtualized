@@ -29,6 +29,7 @@ type Props = {
   tabIndex: number,
   width: number,
   rowDirection: string,
+  scrollTop?: number,
 };
 
 type State = {
