@@ -55,6 +55,8 @@ const SCROLL_POSITION_CHANGE_REASONS = {
 const renderNull: NoContentRenderer = () => null;
 
 type ScrollPosition = {
+  scrollWidth?: number,
+  clientWidth?: number,
   scrollTop?: number,
   scrollLeft?: number,
 };
@@ -418,8 +420,8 @@ class Grid extends React.PureComponent<Props, State> {
    * It's an advanced method and should probably not be used unless you're implementing a custom scroll-bar solution.
    */
   handleScrollEvent({
-    scrollWidth,
-    clientWidth,
+    scrollWidth = 0,
+    clientWidth = 0,
     scrollLeft: scrollLeftParam = 0,
     scrollTop: scrollTopParam = 0,
   }: ScrollPosition) {
