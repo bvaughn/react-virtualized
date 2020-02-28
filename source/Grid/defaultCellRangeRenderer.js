@@ -14,6 +14,7 @@ export default function defaultCellRangeRenderer({
   columnStartIndex,
   columnStopIndex,
   deferredMeasurementCache,
+  direction,
   horizontalOffsetAdjustment,
   isScrolling,
   isScrollingOptOut,
@@ -38,6 +39,7 @@ export default function defaultCellRangeRenderer({
     rowSizeAndPositionManager.areOffsetsAdjusted();
 
   const canCacheStyle = !isScrolling && !areOffsetsAdjusted;
+  const isRtl = direction === 'rtl';
 
   for (let rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
     let rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex);
@@ -71,17 +73,23 @@ export default function defaultCellRangeRenderer({
           // Position not-yet-measured cells at top/left 0,0,
           // And give them width/height of 'auto' so they can grow larger than the parent Grid if necessary.
           // Positioning them further to the right/bottom influences their measured size.
+          const columnOffset = 0;
+
           style = {
             height: 'auto',
-            left: 0,
+            left: isRtl ? undefined : columnOffset,
+            right: isRtl ? columnOffset : undefined,
             position: 'absolute',
             top: 0,
             width: 'auto',
           };
         } else {
+          const columnOffset = columnDatum.offset + horizontalOffsetAdjustment;
+
           style = {
             height: rowDatum.size,
-            left: columnDatum.offset + horizontalOffsetAdjustment,
+            left: isRtl ? undefined : columnOffset,
+            right: isRtl ? columnOffset : undefined,
             position: 'absolute',
             top: rowDatum.offset + verticalOffsetAdjustment,
             width: columnDatum.size,

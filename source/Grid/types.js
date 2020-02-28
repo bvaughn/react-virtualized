@@ -20,6 +20,8 @@ export type CellRenderer = (props: CellRendererParams) => React.Element<*>;
 export type CellCache = {[key: string]: React.Element<*>};
 export type StyleCache = {[key: string]: Object};
 
+export type Direction = 'ltr' | 'rtl';
+
 export type CellRangeRendererParams = {
   cellCache: CellCache,
   cellRenderer: CellRenderer,
@@ -27,6 +29,7 @@ export type CellRangeRendererParams = {
   columnStartIndex: number,
   columnStopIndex: number,
   deferredMeasurementCache?: Object,
+  direction: Direction,
   horizontalOffsetAdjustment: number,
   isScrolling: boolean,
   isScrollingOptOut: boolean,

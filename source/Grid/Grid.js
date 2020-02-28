@@ -6,6 +6,7 @@ import type {
   CellPosition,
   CellSize,
   CellSizeGetter,
+  Direction,
   NoContentRenderer,
   Scroll,
   ScrollbarPresenceChange,
@@ -34,6 +35,7 @@ import {
   requestAnimationTimeout,
   cancelAnimationTimeout,
 } from '../utils/requestAnimationTimeout';
+import getRTLOffsetType from './utils/getRTLOffsetType';
 
 /**
  * Specifies the number of milliseconds during which to disable pointer events while a scroll is in progress.
@@ -108,6 +110,9 @@ type Props = {
    * A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data.
    */
   deferredMeasurementCache?: Object,
+
+  /** Direction (RTL or LTR) */
+  direction: Direction,
 
   /**
    * Used to estimate the total width of a Grid before all of its columns have actually been measured.
@@ -265,6 +270,7 @@ class Grid extends React.PureComponent<Props, State> {
     cellRangeRenderer: defaultCellRangeRenderer,
     containerRole: 'rowgroup',
     containerStyle: {},
+    direction: 'ltr',
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
     getScrollbarSize: scrollbarSize,
@@ -412,6 +418,8 @@ class Grid extends React.PureComponent<Props, State> {
    * It's an advanced method and should probably not be used unless you're implementing a custom scroll-bar solution.
    */
   handleScrollEvent({
+    scrollWidth,
+    clientWidth,
     scrollLeft: scrollLeftParam = 0,
     scrollTop: scrollTopParam = 0,
   }: ScrollPosition) {
@@ -424,7 +432,7 @@ class Grid extends React.PureComponent<Props, State> {
     // Prevent pointer events from interrupting a smooth scroll
     this._debounceScrollEnded();
 
-    const {autoHeight, autoWidth, height, width} = this.props;
+    const {autoHeight, autoWidth, direction, height, width} = this.props;
     const {instanceProps} = this.state;
 
     // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
@@ -434,9 +442,29 @@ class Grid extends React.PureComponent<Props, State> {
     const scrollbarSize = instanceProps.scrollbarSize;
     const totalRowsHeight = instanceProps.rowSizeAndPositionManager.getTotalSize();
     const totalColumnsWidth = instanceProps.columnSizeAndPositionManager.getTotalSize();
+
+    let calculatedScrollLeft = scrollLeftParam;
+
+    // TRICKY According to the spec, scrollLeft should be negative for RTL aligned elements.
+    // This is not the case for all browsers though (e.g. Chrome reports values as positive, measured relative to the left).
+    // It's also easier for this component if we convert offsets to the same format as they would be in for ltr.
+    // So the simplest solution is to determine which browser behavior we're dealing with, and convert based on it.
+    if (direction === 'rtl') {
+      switch (getRTLOffsetType()) {
+        case 'negative': {
+          calculatedScrollLeft = -scrollLeftParam;
+          break;
+        }
+        case 'positive-descending': {
+          calculatedScrollLeft = scrollWidth - clientWidth - scrollLeftParam;
+          break;
+        }
+      }
+    }
+
     const scrollLeft = Math.min(
       Math.max(0, totalColumnsWidth - width + scrollbarSize),
-      scrollLeftParam,
+      calculatedScrollLeft,
     );
     const scrollTop = Math.min(
       Math.max(0, totalRowsHeight - height + scrollbarSize),
@@ -679,6 +707,7 @@ class Grid extends React.PureComponent<Props, State> {
       autoHeight,
       autoWidth,
       columnCount,
+      direction,
       height,
       rowCount,
       scrollToAlignment,
@@ -719,7 +748,30 @@ class Grid extends React.PureComponent<Props, State> {
         (scrollLeft !== this._scrollingContainer.scrollLeft ||
           columnOrRowCountJustIncreasedFromZero)
       ) {
-        this._scrollingContainer.scrollLeft = scrollLeft;
+        const outerRef = this._scrollingContainer;
+
+        // TRICKY According to the spec, scrollLeft should be negative for RTL aligned elements.
+        // This is not the case for all browsers though (e.g. Chrome reports values as positive, measured relative to the left).
+        // So we need to determine which browser behavior we're dealing with, and mimic it.
+        if (direction === 'rtl') {
+          switch (getRTLOffsetType()) {
+            case 'negative': {
+              outerRef.scrollLeft = -scrollLeft;
+              break;
+            }
+            case 'positive-ascending': {
+              outerRef.scrollLeft = scrollLeft;
+              break;
+            }
+            default: {
+              const {clientWidth, scrollWidth} = outerRef;
+              outerRef.scrollLeft = scrollWidth - clientWidth - scrollLeft;
+              break;
+            }
+          }
+        } else {
+          outerRef.scrollLeft = Math.max(0, scrollLeft);
+        }
       }
       if (
         !autoHeight &&
@@ -969,6 +1021,7 @@ class Grid extends React.PureComponent<Props, State> {
       containerProps,
       containerRole,
       containerStyle,
+      direction,
       height,
       id,
       noContentRenderer,
@@ -983,7 +1036,7 @@ class Grid extends React.PureComponent<Props, State> {
 
     const gridStyle: Object = {
       boxSizing: 'border-box',
-      direction: 'ltr',
+      direction,
       height: autoHeight ? 'auto' : height,
       position: 'relative',
       width: autoWidth ? 'auto' : width,
@@ -1086,6 +1139,7 @@ class Grid extends React.PureComponent<Props, State> {
       cellRenderer,
       cellRangeRenderer,
       columnCount,
+      direction,
       deferredMeasurementCache,
       height,
       overscanColumnCount,
@@ -1228,6 +1282,7 @@ class Grid extends React.PureComponent<Props, State> {
         columnStartIndex,
         columnStopIndex,
         deferredMeasurementCache,
+        direction,
         horizontalOffsetAdjustment,
         isScrolling,
         isScrollingOptOut,
