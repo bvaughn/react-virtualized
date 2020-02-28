@@ -709,7 +709,6 @@ class Grid extends React.PureComponent<Props, State> {
       autoHeight,
       autoWidth,
       columnCount,
-      direction,
       height,
       rowCount,
       scrollToAlignment,
@@ -718,6 +717,7 @@ class Grid extends React.PureComponent<Props, State> {
       width,
     } = this.props;
     const {
+      direction,
       scrollLeft,
       scrollPositionChangeReason,
       scrollTop,
@@ -734,45 +734,50 @@ class Grid extends React.PureComponent<Props, State> {
       (columnCount > 0 && prevProps.columnCount === 0) ||
       (rowCount > 0 && prevProps.rowCount === 0);
 
+    const directionChanged = direction !== prevState.direction;
+
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
     // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
     // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
     // So we only set these when we require an adjustment of the scroll position.
     // See issue #2 for more information.
     if (
-      scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+      scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED ||
+      directionChanged
     ) {
       // @TRICKY :autoHeight and :autoWidth properties instructs Grid to leave :scrollTop and :scrollLeft management to an external HOC (eg WindowScroller).
       // In this case we should avoid checking scrollingContainer.scrollTop and scrollingContainer.scrollLeft since it forces layout/flow.
       if (
-        !autoWidth &&
-        scrollLeft >= 0 &&
-        (scrollLeft !== this._scrollingContainer.scrollLeft ||
-          columnOrRowCountJustIncreasedFromZero)
+        (!autoWidth &&
+          scrollLeft >= 0 &&
+          (scrollLeft !== this._scrollingContainer.scrollLeft ||
+            columnOrRowCountJustIncreasedFromZero)) ||
+        directionChanged
       ) {
-        const outerRef = this._scrollingContainer;
-
         // TRICKY According to the spec, scrollLeft should be negative for RTL aligned elements.
         // This is not the case for all browsers though (e.g. Chrome reports values as positive, measured relative to the left).
         // So we need to determine which browser behavior we're dealing with, and mimic it.
         if (direction === 'rtl') {
           switch (getRTLOffsetType()) {
             case 'negative': {
-              outerRef.scrollLeft = -scrollLeft;
+              this._scrollingContainer.scrollLeft = -scrollLeft;
+
               break;
             }
             case 'positive-ascending': {
-              outerRef.scrollLeft = scrollLeft;
+              this._scrollingContainer.scrollLeft = scrollLeft;
               break;
             }
             default: {
-              const {clientWidth, scrollWidth} = outerRef;
-              outerRef.scrollLeft = scrollWidth - clientWidth - scrollLeft;
+              const {clientWidth, scrollWidth} = this._scrollingContainer;
+
+              this._scrollingContainer.scrollLeft =
+                scrollWidth - clientWidth - scrollLeft;
               break;
             }
           }
         } else {
-          outerRef.scrollLeft = Math.max(0, scrollLeft);
+          this._scrollingContainer.scrollLeft = Math.max(0, scrollLeft);
         }
       }
       if (
@@ -883,6 +888,10 @@ class Grid extends React.PureComponent<Props, State> {
     ) {
       newState.scrollLeft = 0;
       newState.scrollTop = 0;
+    } else if (nextProps.direction !== prevState.direction) {
+      newState.scrollLeft = 0;
+      newState.scrollTop = 0;
+      newState.direction = nextProps.direction;
 
       // only use scroll{Left,Top} from props if scrollTo{Column,Row} isn't specified
       // scrollTo{Column,Row} should override scroll{Left,Top}
@@ -956,6 +965,8 @@ class Grid extends React.PureComponent<Props, State> {
       computeMetadataCallback: () =>
         instanceProps.columnSizeAndPositionManager.resetCell(0),
       computeMetadataCallbackProps: nextProps,
+      direction: prevState.direction,
+      nextDirection: nextProps.direction,
       nextCellsCount: nextProps.columnCount,
       nextCellSize:
         typeof nextProps.columnWidth === 'number'
