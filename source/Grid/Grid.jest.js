@@ -339,6 +339,7 @@ describe('Grid', () => {
 
     it('should reset scrollLeft to 0 when direction changes', () => {
       const props = {
+        direction: 'ltr',
         columnWidth: 50,
         columnCount: 100,
         height: 100,
@@ -355,9 +356,6 @@ describe('Grid', () => {
 
       simulateScroll({grid, scrollLeft: 2250});
       expect(grid.state.scrollLeft).toEqual(2250);
-      expect(grid.state.scrollDirectionHorizontal).toEqual(
-        SCROLL_DIRECTION_BACKWARD,
-      );
 
       grid = render(
         getMarkup({
@@ -366,12 +364,7 @@ describe('Grid', () => {
         }),
       );
 
-      const node = findDOMNode(grid);
-
       expect(grid.state.scrollLeft).toEqual(0);
-
-      expect(node.scrollLeft).toEqual(0);
-      expect(node.style.direction).toEqual('rtl');
     });
   });
 

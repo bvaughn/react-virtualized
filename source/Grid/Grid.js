@@ -355,6 +355,7 @@ class Grid extends React.PureComponent<Props, State> {
         scrollbarSize: 0,
         scrollbarSizeMeasured: false,
       },
+      direction: props.direction,
       isScrolling: false,
       scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
       scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
@@ -875,6 +876,7 @@ class Grid extends React.PureComponent<Props, State> {
    * 1) Empty content (0 rows or columns)
    * 2) New scroll props overriding the current state
    * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
+   * 4) The direction (rtl or ltr) has changed, making any previous scroll offset invalid
    */
   static getDerivedStateFromProps(
     nextProps: Props,
@@ -916,7 +918,8 @@ class Grid extends React.PureComponent<Props, State> {
     newState.needToResetStyleCache = false;
     if (
       nextProps.columnWidth !== instanceProps.prevColumnWidth ||
-      nextProps.rowHeight !== instanceProps.prevRowHeight
+      nextProps.rowHeight !== instanceProps.prevRowHeight ||
+      nextProps.direction !== prevState.direction
     ) {
       // Reset cache. set it to {} in render
       newState.needToResetStyleCache = true;
