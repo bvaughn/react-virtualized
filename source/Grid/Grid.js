@@ -248,6 +248,7 @@ type InstanceProps = {
 };
 
 type State = {
+  direction: Direction,
   instanceProps: InstanceProps,
   isScrolling: boolean,
   scrollDirectionHorizontal: -1 | 1,
