@@ -969,6 +969,8 @@ class Grid extends React.PureComponent<Props, State> {
       containerProps,
       containerRole,
       containerStyle,
+      ScrollWrapper,
+      scrollWrapperProps,
       height,
       id,
       noContentRenderer,
@@ -1039,39 +1041,53 @@ class Grid extends React.PureComponent<Props, State> {
     const showNoContentRenderer =
       childrenToDisplay.length === 0 && height > 0 && width > 0;
 
+    const hasCustomScrollWrapper = !!ScrollWrapper;
+    ScrollWrapper = ScrollWrapper || React.Fragment;
+
     return (
       <div
-        ref={this._setScrollingContainerRef}
+        ref={
+          hasCustomScrollWrapper ? undefined : this._setScrollingContainerRef
+        }
         {...containerProps}
         aria-label={this.props['aria-label']}
         aria-readonly={this.props['aria-readonly']}
         className={clsx('ReactVirtualized__Grid', className)}
         id={id}
-        onScroll={this._onScroll}
+        onScroll={hasCustomScrollWrapper ? undefined : this._onScroll}
         role={role}
         style={{
           ...gridStyle,
           ...style,
         }}
         tabIndex={tabIndex}>
-        {childrenToDisplay.length > 0 && (
-          <div
-            className="ReactVirtualized__Grid__innerScrollContainer"
-            role={containerRole}
-            style={{
-              width: autoContainerWidth ? 'auto' : totalColumnsWidth,
-              height: totalRowsHeight,
-              maxWidth: totalColumnsWidth,
-              maxHeight: totalRowsHeight,
-              overflow: 'hidden',
-              pointerEvents: isScrolling ? 'none' : '',
-              position: 'relative',
-              ...containerStyle,
-            }}>
-            {childrenToDisplay}
-          </div>
-        )}
-        {showNoContentRenderer && noContentRenderer()}
+        <ScrollWrapper
+          ref={
+            hasCustomScrollWrapper ? this._setScrollingContainerRef : undefined
+          }
+          onScroll={this._onScroll}
+          width={width}
+          height={height}
+          {...scrollWrapperProps}>
+          {childrenToDisplay.length > 0 && (
+            <div
+              className="ReactVirtualized__Grid__innerScrollContainer"
+              role={containerRole}
+              style={{
+                width: autoContainerWidth ? 'auto' : totalColumnsWidth,
+                height: totalRowsHeight,
+                maxWidth: totalColumnsWidth,
+                maxHeight: totalRowsHeight,
+                overflow: 'hidden',
+                pointerEvents: isScrolling ? 'none' : '',
+                position: 'relative',
+                ...containerStyle,
+              }}>
+              {childrenToDisplay}
+            </div>
+          )}
+          {showNoContentRenderer && noContentRenderer()}
+        </ScrollWrapper>
       </div>
     );
   }
