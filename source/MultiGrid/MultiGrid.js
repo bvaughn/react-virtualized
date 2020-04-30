@@ -635,15 +635,6 @@ class MultiGrid extends React.PureComponent {
         : 0,
       gridWidth = hideBottomLeftGridScrollbar ? width + scrollbarSize : width;
 
-    let style = this._bottomLeftGridStyle;
-
-    if (hideBottomLeftGridScrollbar) {
-      style = {
-        ...this._bottomLeftGridStyle,
-        overflowY: 'hidden',
-      };
-    }
-
     const bottomLeftGrid = (
       <Grid
         {...props}
@@ -656,7 +647,7 @@ class MultiGrid extends React.PureComponent {
         ref={this._bottomLeftGridRef}
         rowCount={Math.max(0, rowCount - fixedRowCount) + additionalRowCount}
         rowHeight={this._rowHeightBottomGrid}
-        style={style}
+        style={this._bottomLeftGridStyle}
         tabIndex={null}
         width={gridWidth}
       />
@@ -765,7 +756,6 @@ class MultiGrid extends React.PureComponent {
       style = {
         ...this._topRightGridStyle,
         left: 0,
-        overflowX: 'hidden',
       };
     }
 

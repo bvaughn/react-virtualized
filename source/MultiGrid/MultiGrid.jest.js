@@ -221,11 +221,11 @@ describe('MultiGrid', () => {
       const [topLeft, topRight, bottomLeft, bottomRight] = grids;
       expect(topLeft.style.getPropertyValue('overflow-x')).toEqual('hidden');
       expect(topLeft.style.getPropertyValue('overflow-y')).toEqual('hidden');
-      expect(topRight.style.getPropertyValue('overflow-x')).toEqual('hidden');
+      expect(topRight.style.getPropertyValue('overflow-x')).toEqual('auto');
       expect(topRight.style.getPropertyValue('overflow-y')).toEqual('hidden');
       expect(topRight.style.getPropertyValue('height')).toEqual('40px');
       expect(bottomLeft.style.getPropertyValue('overflow-x')).toEqual('hidden');
-      expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('hidden');
+      expect(bottomLeft.style.getPropertyValue('overflow-y')).toEqual('auto');
       expect(bottomLeft.style.getPropertyValue('width')).toEqual('70px');
       expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto');
       expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto');
