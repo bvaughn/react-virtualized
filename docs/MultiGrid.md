@@ -8,24 +8,26 @@ Some properties (eg `columnCount`, `rowCount`) are adjusted slightly to supporte
 
 ### Prop Types
 
-| Property                    | Type     | Required? | Description                                                                                                                                                               |
-| :-------------------------- | :------- | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| classNameBottomLeftGrid     | string   |           | Optional custom className to attach to bottom-left `Grid` element.                                                                                                        |
-| classNameBottomRightGrid    | string   |           | Optional custom className to attach to bottom-right `Grid` element.                                                                                                       |
-| classNameTopLeftGrid        | string   |           | Optional custom className to attach to top-left `Grid` element.                                                                                                           |
-| classNameTopRightGrid       | string   |           | Optional custom className to attach to top-right `Grid` element.                                                                                                          |
-| enableFixedColumnScroll     | boolean  |           | Fixed column can be actively scrolled; disabled by default                                                                                                                |
-| enableFixedRowScroll        | boolean  |           | Fixed row can be actively scrolled; disabled by default                                                                                                                   |
-| fixedColumnCount            | number   |           | Number of fixed columns; defaults to `0`                                                                                                                                  |
-| fixedRowCount               | number   |           | Number of fixed rows; defaults to `0`                                                                                                                                     |
-| onScrollbarPresenceChange   | Function |           | Called whenever a horizontal or vertical scrollbar is added or removed from the bottom, right `Grid`.: `({ horizontal: boolean, size: number, vertical: boolean }): void` |
-| style                       | object   |           | Optional custom inline style to attach to root `MultiGrid` element.                                                                                                       |
-| styleBottomLeftGrid         | object   |           | Optional custom inline style to attach to bottom-left `Grid` element.                                                                                                     |
-| styleBottomRightGrid        | object   |           | Optional custom inline style to attach to bottom-right `Grid` element.                                                                                                    |
-| styleTopLeftGrid            | object   |           | Optional custom inline style to attach to top-left `Grid` element.                                                                                                        |
-| styleTopRightGrid           | object   |           | Optional custom inline style to attach to top-right `Grid` element.                                                                                                       |
-| hideTopRightGridScrollbar   | boolean  |           | Optional hides top-right `Grid` scrollbar by adding an additional wrapper. Only useful if `enableFixedRowScroll` is set to `true`                                         |
-| hideBottomLeftGridScrollbar | boolean  |           | Optional hides bottom-left `Grid` scrollbar by adding an additional wrapper. Only useful if `enableFixedColumnScroll` is set to `true`                                    |
+| Property                      | Type            | Required? | Description                                                                                                                                                               |
+| :---------------------------- | :-------------- | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| classNameBottomLeftGrid       | string          |           | Optional custom className to attach to bottom-left `Grid` element.                                                                                                        |
+| classNameBottomRightGrid      | string          |           | Optional custom className to attach to bottom-right `Grid` element.                                                                                                       |
+| classNameTopLeftGrid          | string          |           | Optional custom className to attach to top-left `Grid` element.                                                                                                           |
+| classNameTopRightGrid         | string          |           | Optional custom className to attach to top-right `Grid` element.                                                                                                          |
+| enableFixedColumnScroll       | boolean         |           | Fixed column can be actively scrolled; disabled by default                                                                                                                |
+| enableFixedRowScroll          | boolean         |           | Fixed row can be actively scrolled; disabled by default                                                                                                                   |
+| fixedColumnCount              | number          |           | Number of fixed columns; defaults to `0`                                                                                                                                  |
+| fixedRowCount                 | number          |           | Number of fixed rows; defaults to `0`                                                                                                                                     |
+| onScrollbarPresenceChange     | Function        |           | Called whenever a horizontal or vertical scrollbar is added or removed from the bottom, right `Grid`.: `({ horizontal: boolean, size: number, vertical: boolean }): void` |
+| style                         | object          |           | Optional custom inline style to attach to root `MultiGrid` element.                                                                                                       |
+| styleBottomLeftGrid           | object          |           | Optional custom inline style to attach to bottom-left `Grid` element.                                                                                                     |
+| styleBottomRightGrid          | object          |           | Optional custom inline style to attach to bottom-right `Grid` element.                                                                                                    |
+| styleTopLeftGrid              | object          |           | Optional custom inline style to attach to top-left `Grid` element.                                                                                                        |
+| styleTopRightGrid             | object          |           | Optional custom inline style to attach to top-right `Grid` element.                                                                                                       |
+| hideTopRightGridScrollbar     | boolean         |           | Optional hides top-right `Grid` scrollbar by adding an additional wrapper. Only useful if `enableFixedRowScroll` is set to `true`                                         |
+| hideBottomLeftGridScrollbar   | boolean         |           | Optional hides bottom-left `Grid` scrollbar by adding an additional wrapper. Only useful if `enableFixedColumnScroll` is set to `true`                                    |
+| scrollWrapperBottomRight      | React Component |           | Optional custom component to handle display of custom scrollbars in the bottom right grid. It should take as prop innerRef, onScroll, width and height.                   |
+| scrollWrapperBottomRightProps | object          |           | Optional additional props to be passed to the custom scrollbar wrapper                                                                                                    |
 
 ### Public Methods
 
@@ -60,5 +62,50 @@ function render() {
       width={width}
     />
   );
+}
+```
+
+With custom scrollbars:
+
+```jsx
+import {MultiGrid} from 'react-virtualized';
+import {Scrollbars} from 'react-custom-scrollbars';
+
+function render() {
+  return (
+    <MultiGrid
+      cellRenderer={cellRenderer}
+      columnWidth={75}
+      columnCount={50}
+      fixedColumnCount={2}
+      fixedRowCount={1}
+      height={300}
+      rowHeight={40}
+      rowCount={100}
+      width={width}
+      enableFixedColumnScroll
+      enableFixedRowScroll
+      hideTopRightGridScrollbar
+      hideBottomLeftGridScrollbar
+      scrollWrapperBottomRight={CustomScrollbars}
+    />
+  );
+}
+
+class CustomScrollbars extends React.Component {
+  registerRef = (node: {view: Element}) => {
+    this.props.innerRef(node.view);
+  };
+
+  render() {
+    const {innerRef, width, height, style, ...rest} = this.props;
+    return (
+      <Scrollbars
+        ref={this.registerRef}
+        style={{width, height, ...style}}
+        {...rest}
+      />
+    );
+  }
 }
 ```
