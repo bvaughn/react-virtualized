@@ -171,6 +171,41 @@ describe('MultiGrid', () => {
     });
   });
 
+  it('should inject custom scrollbar if provided', () => {
+    const CustomScrollbar = ({innerRef, onScroll, children}) => {
+      return (
+        <div
+          ref={innerRef}
+          onScroll={onScroll}
+          className="custom-scrollbar-wrapper">
+          {children}
+        </div>
+      );
+    };
+    const rendered = findDOMNode(
+      render(
+        getMarkup({
+          enableFixedColumnScroll: true,
+          enableFixedRowScroll: true,
+          fixedColumnCount: 1,
+          fixedRowCount: 1,
+          scrollWrapperBottomRight: CustomScrollbar,
+        }),
+      ),
+    );
+    const grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
+    expect(grids.length).toEqual(4);
+    const bottomRight = grids[3];
+
+    const scrollWrappers = rendered.querySelectorAll(
+      '.custom-scrollbar-wrapper',
+    );
+    expect(scrollWrappers.length).toEqual(1);
+    const scrollWrapper = scrollWrappers[0];
+
+    expect(bottomRight.contains(scrollWrapper)).toBe(true);
+  });
+
   describe('hideTopRightGridScrollbar, hideBottomLeftGridScrollbar should hide the scrollbars', () => {
     function getScrollbarSize20() {
       return 20;
