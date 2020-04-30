@@ -969,7 +969,6 @@ class Grid extends React.PureComponent<Props, State> {
       containerProps,
       containerRole,
       containerStyle,
-      ScrollWrapper,
       scrollWrapperProps,
       height,
       id,
@@ -1041,8 +1040,8 @@ class Grid extends React.PureComponent<Props, State> {
     const showNoContentRenderer =
       childrenToDisplay.length === 0 && height > 0 && width > 0;
 
-    const hasCustomScrollWrapper = !!ScrollWrapper;
-    ScrollWrapper = ScrollWrapper || React.Fragment;
+    const hasCustomScrollWrapper = !!this.props.ScrollWrapper;
+    const ScrollWrapper = this.props.ScrollWrapper || React.Fragment;
 
     return (
       <div
@@ -1062,13 +1061,15 @@ class Grid extends React.PureComponent<Props, State> {
         }}
         tabIndex={tabIndex}>
         <ScrollWrapper
-          ref={
-            hasCustomScrollWrapper ? this._setScrollingContainerRef : undefined
-          }
-          onScroll={this._onScroll}
-          width={width}
-          height={height}
-          {...scrollWrapperProps}>
+          {...(hasCustomScrollWrapper
+            ? {
+                ...scrollWrapperProps,
+                ref: this._setScrollingContainerRef,
+                onScroll: this._onScroll,
+                width,
+                height,
+              }
+            : undefined)}>
           {childrenToDisplay.length > 0 && (
             <div
               className="ReactVirtualized__Grid__innerScrollContainer"
