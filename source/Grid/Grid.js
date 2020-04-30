@@ -1070,7 +1070,7 @@ class Grid extends React.PureComponent<Props, State> {
           {...(hasCustomScrollWrapper
             ? {
                 ...scrollWrapperProps,
-                ref: this._setScrollingContainerRef,
+                innerRef: this._setScrollingContainerRef,
                 onScroll: this._onScroll,
                 width,
                 height,

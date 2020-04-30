@@ -2,6 +2,7 @@
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import {Scrollbars} from 'react-custom-scrollbars';
 import {
   ContentBox,
   ContentBoxHeader,
@@ -102,6 +103,7 @@ export default class MultiGridExample extends React.PureComponent {
               width={width}
               hideTopRightGridScrollbar
               hideBottomLeftGridScrollbar
+              ScrollWrapper={ColoredScrollbars}
             />
           )}
         </AutoSizer>
@@ -136,6 +138,43 @@ export default class MultiGridExample extends React.PureComponent {
         name={property}
         onChange={eventHandler}
         value={value}
+      />
+    );
+  }
+}
+
+// Custom scrollbar to showcase
+
+class ColoredScrollbars extends React.Component {
+  state = {top: 0};
+
+  handleUpdate = values => {
+    const {top} = values;
+    this.setState({top});
+  };
+
+  renderThumb = ({style, ...props}) => {
+    const {top} = this.state;
+    const color = Math.round(255 - top * 255);
+    const thumbStyle = {
+      backgroundColor: `rgb(${color}, ${color}, ${color})`,
+    };
+    return <div style={{...style, ...thumbStyle}} {...props} />;
+  };
+
+  registerRef = node => {
+    this.props.innerRef(node.view);
+  };
+
+  render() {
+    const {innerRef, ...rest} = this.props;
+    return (
+      <Scrollbars
+        ref={this.registerRef}
+        renderThumbHorizontal={this.renderThumb}
+        renderThumbVertical={this.renderThumb}
+        onUpdate={this.handleUpdate}
+        {...rest}
       />
     );
   }

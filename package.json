@@ -120,6 +120,7 @@
     "puppeteer": "^2.0.0",
     "react": "^16.11.0",
     "react-codemirror": "^1.0.0",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.11.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
