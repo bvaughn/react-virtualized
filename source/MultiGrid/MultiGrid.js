@@ -32,8 +32,8 @@ class MultiGrid extends React.PureComponent {
     styleTopRightGrid: PropTypes.object.isRequired,
     hideTopRightGridScrollbar: PropTypes.bool,
     hideBottomLeftGridScrollbar: PropTypes.bool,
-    ScrollWrapper: PropTypes.elementType,
-    scrollWrapperProps: PropTypes.object,
+    scrollWrapperBottomRight: PropTypes.elementType,
+    scrollWrapperBottomRightProps: PropTypes.object,
   };
 
   static defaultProps = {
@@ -54,8 +54,8 @@ class MultiGrid extends React.PureComponent {
     styleTopRightGrid: {},
     hideTopRightGridScrollbar: false,
     hideBottomLeftGridScrollbar: false,
-    ScrollWrapper: null,
-    scrollWrapperProps: null,
+    scrollWrapperBottomRight: null,
+    scrollWrapperBottomRightProps: null,
   };
 
   state = {
@@ -687,8 +687,8 @@ class MultiGrid extends React.PureComponent {
       rowCount,
       scrollToColumn,
       scrollToRow,
-      ScrollWrapper,
-      scrollWrapperProps,
+      scrollWrapperBottomRight,
+      scrollWrapperBottomRightProps,
     } = props;
 
     return (
@@ -709,8 +709,8 @@ class MultiGrid extends React.PureComponent {
         scrollToRow={scrollToRow - fixedRowCount}
         style={this._bottomRightGridStyle}
         width={this._getRightGridWidth(props)}
-        ScrollWrapper={ScrollWrapper}
-        scrollWrapperProps={scrollWrapperProps}
+        scrollWrapper={scrollWrapperBottomRight}
+        scrollWrapperProps={scrollWrapperBottomRightProps}
       />
     );
   }

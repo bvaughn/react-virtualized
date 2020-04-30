@@ -103,7 +103,7 @@ export default class MultiGridExample extends React.PureComponent {
               width={width}
               hideTopRightGridScrollbar
               hideBottomLeftGridScrollbar
-              ScrollWrapper={ColoredScrollbars}
+              scrollWrapperBottomRight={ColoredScrollbars}
             />
           )}
         </AutoSizer>
@@ -146,34 +146,27 @@ export default class MultiGridExample extends React.PureComponent {
 // Custom scrollbar to showcase
 
 class ColoredScrollbars extends React.Component {
-  state = {top: 0};
-
-  handleUpdate = values => {
-    const {top} = values;
-    this.setState({top});
-  };
-
   renderThumb = ({style, ...props}) => {
-    const {top} = this.state;
-    const color = Math.round(255 - top * 255);
     const thumbStyle = {
-      backgroundColor: `rgb(${color}, ${color}, ${color})`,
+      backgroundColor: 'blue',
     };
     return <div style={{...style, ...thumbStyle}} {...props} />;
   };
 
-  registerRef = node => {
+  registerRef = (node: {view: Element}) => {
     this.props.innerRef(node.view);
   };
 
   render() {
-    const {innerRef, ...rest} = this.props;
+    // eslint-disable-next-line no-unused-vars
+    const {innerRef, width, height, style, ...rest} = this.props;
     return (
       <Scrollbars
         ref={this.registerRef}
         renderThumbHorizontal={this.renderThumb}
         renderThumbVertical={this.renderThumb}
-        onUpdate={this.handleUpdate}
+        autoHide={false}
+        style={{width, height, ...style}}
         {...rest}
       />
     );

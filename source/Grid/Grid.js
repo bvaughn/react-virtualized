@@ -214,7 +214,7 @@ type Props = {
   scrollToRow: number,
 
   /** Component type to handle the custom scrollbars */
-  ScrollWrapper?: React.ComponentType<Object>,
+  scrollWrapper?: React.ComponentType<Object>,
 
   /** Additional scroll wrapper props if needed */
   scrollWrapperProps?: Object,
@@ -1046,8 +1046,8 @@ class Grid extends React.PureComponent<Props, State> {
     const showNoContentRenderer =
       childrenToDisplay.length === 0 && height > 0 && width > 0;
 
-    const hasCustomScrollWrapper = !!this.props.ScrollWrapper;
-    const ScrollWrapper = this.props.ScrollWrapper || React.Fragment;
+    const hasCustomScrollWrapper = !!this.props.scrollWrapper;
+    const ScrollWrapper = this.props.scrollWrapper || React.Fragment;
 
     return (
       <div
