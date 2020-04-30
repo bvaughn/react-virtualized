@@ -213,6 +213,12 @@ type Props = {
   /** Row index to ensure visible (by forcefully scrolling if necessary) */
   scrollToRow: number,
 
+  /** Component type to handle the custom scrollbars */
+  ScrollWrapper?: React.ComponentType<Object>,
+
+  /** Additional scroll wrapper props if needed */
+  scrollWrapperProps?: Object,
+
   /** Optional inline style */
   style: Object,
 
