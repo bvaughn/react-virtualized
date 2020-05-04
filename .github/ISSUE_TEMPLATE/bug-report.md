@@ -1,7 +1,4 @@
-## Asking a Question?
-
-Please don't file GitHub issues to ask questions! Instead use:
-* Stack Overflow: http://stackoverflow.com/questions/tagged/react-virtualized
+## Bug Report
 
 Please include either a failing unit test or a simple repro. You can start by forking this Code Sandbox: https://codesandbox.io/s/03qpzq1p9p?module=%2FExample.js
 
