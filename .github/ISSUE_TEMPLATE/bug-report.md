@@ -1,3 +1,8 @@
+---
+name: Bug Report
+about: Bugs, missing documentation, or unexpected behavior 🤔.
+---
+
 ## Bug Report
 
 Please include either a failing unit test or a simple repro. You can start by forking this Code Sandbox: https://codesandbox.io/s/03qpzq1p9p?module=%2FExample.js
