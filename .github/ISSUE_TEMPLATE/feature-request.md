@@ -1,3 +1,8 @@
+---
+name: Feature request
+about: Ideas and suggestions
+---
+
 ## Feature Request
 
 Provide as much information as possible about your requested feature. Here are a few questions you may consider answering:
