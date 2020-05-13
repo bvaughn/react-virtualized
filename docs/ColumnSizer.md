@@ -7,6 +7,7 @@ High-order component that auto-calculates column-widths for `Grid` cells.
 | Property       | Type     | Required? | Description                                                                                                                                                                                                          |
 | :------------- | :------- | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | children       | Function |     ✓     | Function responsible for rendering a virtualized Grid. This function should implement the following signature: `({ adjustedWidth: number, getColumnWidth: Function, registerChild: Function }) => PropTypes.element` |
+| columnCount | Number   |     ✓     | Number of columns in Grid or Table child                                                                                                                                                                                |
 | columnMaxWidth | Number   |           | Optional maximum allowed column width                                                                                                                                                                                |
 | columnMinWidth | Number   |           | Optional minimum allowed column width                                                                                                                                                                                |
 | width          | Number   |     ✓     | Width of Grid or `Table` child                                                                                                                                                                                       |
@@ -40,7 +41,8 @@ ReactDOM.render(
     columnMaxWidth={100}
     columnMinWidth={50}
     columnCount={numColumns}
-    width={someCalculatedWidth}>
+    width={someCalculatedWidth}
+  >
     {({adjustedWidth, getColumnWidth, registerChild}) => (
       <Grid
         ref={registerChild}
