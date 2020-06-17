@@ -457,7 +457,7 @@ describe('Collection', () => {
   describe(':scrollLeft and :scrollTop properties', () => {
     it('should render correctly when an initial :scrollLeft and :scrollTop properties are specified', () => {
       let indices;
-      render(
+      const collection = render(
         getMarkup({
           onSectionRendered: params => {
             indices = params.indices;
@@ -467,6 +467,9 @@ describe('Collection', () => {
         }),
       );
       compareArrays(indices, [3, 4, 5, 7, 8, 9]);
+      expect(
+        collection._collectionView.state.scrollPositionChangeReason,
+      ).toEqual('requested');
     });
 
     it('should render correctly when :scrollLeft and :scrollTop properties are updated', () => {
@@ -479,7 +482,7 @@ describe('Collection', () => {
         }),
       );
       compareArrays(indices, [0, 1, 2, 3]);
-      render(
+      const collection = render(
         getMarkup({
           onSectionRendered: params => {
             indices = params.indices;
@@ -489,6 +492,9 @@ describe('Collection', () => {
         }),
       );
       compareArrays(indices, [3, 4, 5, 7, 8, 9]);
+      expect(
+        collection._collectionView.state.scrollPositionChangeReason,
+      ).toEqual('requested');
     });
   });
 
