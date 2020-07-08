@@ -116,6 +116,8 @@ class CollectionView extends React.PureComponent {
      */
     style: PropTypes.object,
 
+    tabIndex: PropTypes.number,
+
     /**
      * Enables the `Collection` to vertically "overscan" its content similar to how `Grid` does.
      * This can reduce flicker around the edges when a user scrolls quickly.
@@ -137,6 +139,7 @@ class CollectionView extends React.PureComponent {
     scrollToAlignment: 'auto',
     scrollToCell: -1,
     style: {},
+    tabIndex: 0,
     verticalOverscanSize: 0,
   };
 
@@ -306,6 +309,7 @@ class CollectionView extends React.PureComponent {
       id,
       noContentRenderer,
       style,
+      tabIndex,
       verticalOverscanSize,
       width,
     } = this.props;
@@ -393,7 +397,7 @@ class CollectionView extends React.PureComponent {
           ...collectionStyle,
           ...style,
         }}
-        tabIndex={0}>
+        tabIndex={tabIndex}>
         {cellCount > 0 && (
           <div
             className="ReactVirtualized__Collection__innerScrollContainer"

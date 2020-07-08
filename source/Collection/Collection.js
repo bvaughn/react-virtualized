@@ -45,6 +45,7 @@ export default class Collection extends React.PureComponent {
      * Optionally override the size of the sections a Collection's cells are split into.
      */
     sectionSize: PropTypes.number,
+    tabIndex: PropTypes.number,
   };
 
   static defaultProps = {
