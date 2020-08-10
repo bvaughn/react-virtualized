@@ -1,5 +1,13 @@
 ## Changelog
 
+##### 9.22.0
+
+- Make AutoSizer a Component ([vzaidman](https://github.com/vzaidman) - [#1490](https://github.com/bvaughn/react-virtualized/pull/1490))
+- Update masonry props and docs ([seanstrom](https://github.com/seanstrom) - [#1493](https://github.com/bvaughn/react-virtualized/pull/1493))
+- CellMeasurer: add registerChild render prop ([Hypnosphi](https://github.com/Hypnosphi) - [#1477](https://github.com/bvaughn/react-virtualized/pull/1477))
+- Fix Table class names in documentation ([jakemmarsh](https://github.com/jakemmarsh) - [#1471](https://github.com/bvaughn/react-virtualized/pull/1471))
+- Fix style.css import in demo ([Dominic0512](https://github.com/Dominic0512) - [#1466](https://github.com/bvaughn/react-virtualized/pull/1466))
+
 ##### 9.21.2
 
 - 🎉 Update prettier ([wuweiweiwu](https://github.com/wuweiweiwu) - [#1455](https://github.com/bvaughn/react-virtualized/pull/1455))
