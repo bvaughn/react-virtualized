@@ -1769,10 +1769,10 @@ babel-plugin-dynamic-import-node@^2.3.0:
   dependencies:
     object.assign "^4.1.0"
 
-babel-plugin-flow-react-proptypes@^25.1.0:
-  version "25.1.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-flow-react-proptypes/-/babel-plugin-flow-react-proptypes-25.1.0.tgz#864eeef3b3a3958953a9b014ed0bdc96fffa694c"
-  integrity sha512-zFR5vlrPiXQzmE6f/QR4P2ivaykRuNDH9D72L3fm1vYrgE+nvvOV/mQzFvgSnjVKJSfot+YONwLtqM/iMVnkLA==
+babel-plugin-flow-react-proptypes@^26.0.0:
+  version "26.0.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-flow-react-proptypes/-/babel-plugin-flow-react-proptypes-26.0.0.tgz#5ccd42ce45e28f88d5a0594c9f5685bc79440782"
+  integrity sha512-Cev/n+TqUGjo2221YLe4n9om/0Wd2AjhdVhyAqshHgzn4+HovznCzehxROD+74KBq0i4ard9bdLf7L7lb22FRw==
   dependencies:
     "@babel/template" "^7.2.2"
     "@babel/traverse" "^7.0.0"
