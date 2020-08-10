@@ -85,7 +85,7 @@
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "8.0.6",
-    "babel-plugin-flow-react-proptypes": "^25.1.0",
+    "babel-plugin-flow-react-proptypes": "^26.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "codecov": "^3.6.1",
     "codemirror": "^5.49.2",
