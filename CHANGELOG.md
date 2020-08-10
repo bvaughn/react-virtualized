@@ -1,5 +1,9 @@
 ## Changelog
 
+##### 9.22.2
+
+- CollectionView scrollTop/scrollLeft ([dawnmist](https://github.com/dawnmist) - [#1260](https://github.com/bvaughn/react-virtualized/pull/1260))
+
 ##### 9.22.1
 
 - Upgrade babel-plugin-flow-react-proptypes ([Hypnosphi](https://github.com/Hypnosphi) - [#1578](https://github.com/bvaughn/react-virtualized/pull/1578))
