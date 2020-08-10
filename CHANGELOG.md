@@ -1,5 +1,9 @@
 ## Changelog
 
+##### 9.22.1
+
+- Upgrade babel-plugin-flow-react-proptypes ([Hypnosphi](https://github.com/Hypnosphi) - [#1578](https://github.com/bvaughn/react-virtualized/pull/1578))
+
 ##### 9.22.0
 
 - Make AutoSizer a Component ([vzaidman](https://github.com/vzaidman) - [#1490](https://github.com/bvaughn/react-virtualized/pull/1490))
