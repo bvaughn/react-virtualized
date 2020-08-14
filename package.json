@@ -9,6 +9,9 @@
   "module": "dist/es/index.js",
   "jsnext:main": "dist/es/index.js",
   "license": "MIT",
+  "sideEffects": [
+    "*.css"
+  ],
   "scripts": {
     "build:types": "flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/WindowScroller dist/es/WindowScroller && flow-copy-source --ignore \"**/*.{jest,e2e,ssr,example}.js\" source/AutoSizer dist/es/AutoSizer",
     "build": "yarn run build:commonjs && yarn run build:css && yarn run build:es && yarn run build:demo && yarn run build:umd",
