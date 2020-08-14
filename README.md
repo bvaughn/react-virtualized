@@ -107,34 +107,6 @@ import 'react-virtualized/styles.css';
 
 // You can import any component you want as a named export from 'react-virtualized', eg
 import {Column, Table} from 'react-virtualized';
-
-// But if you only use a few react-virtualized components,
-// And you're concerned about increasing your application's bundle size,
-// You can directly import only the components you need, like so:
-import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
-import List from 'react-virtualized/dist/commonjs/List';
-```
-
-Note webpack 4 makes this optimization itself, see the [documentation](https://webpack.js.org/guides/tree-shaking/#mark-the-file-as-side-effect-free).
-
-If the above syntax looks too cumbersome, or you import react-virtualized components from a lot of places, you can also configure a Webpack alias. For example:
-
-```js
-// Partial webpack.config.js
-{
-  alias: {
-    'react-virtualized/List': 'react-virtualized/dist/es/List',
-  },
-  ...rest
-}
-```
-
-Then you can just import like so:
-
-```js
-import List from 'react-virtualized/List';
-
-// Now you can use <List {...props} />
 ```
 
 You can also use a global-friendly UMD build:
