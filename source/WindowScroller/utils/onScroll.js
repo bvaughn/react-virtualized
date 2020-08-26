@@ -6,6 +6,7 @@ import {
 } from '../../utils/requestAnimationTimeout';
 import type WindowScroller from '../WindowScroller.js';
 
+// mountedInstances: [Instance, scrollElement][]
 let mountedInstances = [];
 let originalBodyPointerEvents = null;
 let disablePointerEventsTimeoutId = null;
@@ -24,7 +25,7 @@ function enablePointerEventsIfDisabled() {
 
 function enablePointerEventsAfterDelayCallback() {
   enablePointerEventsIfDisabled();
-  mountedInstances.forEach(instance => instance.__resetIsScrolling());
+  mountedInstances.forEach(instance => instance[0].__resetIsScrolling());
 }
 
 function enablePointerEventsAfterDelay() {
@@ -36,7 +37,7 @@ function enablePointerEventsAfterDelay() {
   mountedInstances.forEach(instance => {
     maximumTimeout = Math.max(
       maximumTimeout,
-      instance.props.scrollingResetTimeInterval,
+      instance[0].props.scrollingResetTimeInterval,
     );
   });
 
@@ -58,8 +59,8 @@ function onScrollWindow(event: Event) {
   }
   enablePointerEventsAfterDelay();
   mountedInstances.forEach(instance => {
-    if (instance.props.scrollElement === event.currentTarget) {
-      instance.__handleWindowScrollEvent();
+    if (instance[1] === event.currentTarget) {
+      instance[0].__handleWindowScrollEvent();
     }
   });
 }
@@ -68,22 +69,27 @@ export function registerScrollListener(
   component: WindowScroller,
   element: Element,
 ) {
-  if (
-    !mountedInstances.some(instance => instance.props.scrollElement === element)
-  ) {
+  if (!mountedInstances.some(instance => instance[1] === element)) {
     element.addEventListener('scroll', onScrollWindow);
   }
-  mountedInstances.push(component);
+  mountedInstances.push([component, component.props.scrollElement]);
 }
 
 export function unregisterScrollListener(
   component: WindowScroller,
   element: Element,
 ) {
+  // remove current instance
   mountedInstances = mountedInstances.filter(
-    instance => instance !== component,
+    instance => instance[0] !== component,
   );
-  if (!mountedInstances.length) {
+
+  // filter all instance => element === prevScrollElement
+  const prevScrollElementInstances = mountedInstances.filter(
+    instance => instance[1] === element,
+  );
+
+  if (!prevScrollElementInstances.length) {
     element.removeEventListener('scroll', onScrollWindow);
     if (disablePointerEventsTimeoutId) {
       cancelAnimationTimeout(disablePointerEventsTimeoutId);
