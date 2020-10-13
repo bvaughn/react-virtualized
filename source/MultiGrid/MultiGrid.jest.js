@@ -169,6 +169,81 @@ describe('MultiGrid', () => {
       expect(bottomRight.style.getPropertyValue('overflow-x')).toEqual('auto');
       expect(bottomRight.style.getPropertyValue('overflow-y')).toEqual('auto');
     });
+    it('should update the MultiGrid width when cell width changes by getter function', () => {
+      let columnWidths = [100, 100, 100, 100, 100];
+      function getColumnWidth({index}) {
+        return columnWidths[index];
+      }
+
+      let multiGrid;
+      let rendered = findDOMNode(
+        render(
+          getMarkup({
+            fixedColumnCount: 1,
+            fixedRowCount: 1,
+            rowHeight: 30,
+            columnWidth: getColumnWidth,
+            ref: ref => {
+              multiGrid = ref;
+            },
+          }),
+        ),
+      );
+
+      let grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
+      expect(grids.length).toEqual(4);
+      let [topLeft, topRight, bottomLeft, bottomRight] = grids;
+      expect(topLeft.style.getPropertyValue('width')).toEqual('100px');
+      expect(topRight.style.getPropertyValue('width')).toEqual('300px');
+      expect(bottomLeft.style.getPropertyValue('width')).toEqual('100px');
+      expect(bottomRight.style.getPropertyValue('width')).toEqual('300px');
+
+      columnWidths = [80, 100, 100, 100, 100];
+      multiGrid.recomputeGridSize();
+
+      expect(topLeft.style.getPropertyValue('width')).toEqual('80px');
+      expect(topRight.style.getPropertyValue('width')).toEqual('320px');
+      expect(bottomLeft.style.getPropertyValue('width')).toEqual('80px');
+      expect(bottomRight.style.getPropertyValue('width')).toEqual('320px');
+    });
+
+    it('should update the MultiGrid width when cell height changes by getter function', () => {
+      let rowHeights = [30, 30, 30, 30, 30];
+      function getRowHeight({index}) {
+        return rowHeights[index] || 30;
+      }
+
+      let multiGrid;
+      let rendered = findDOMNode(
+        render(
+          getMarkup({
+            fixedColumnCount: 1,
+            fixedRowCount: 1,
+            rowHeight: getRowHeight,
+            columnWidth: 100,
+            ref: ref => {
+              multiGrid = ref;
+            },
+          }),
+        ),
+      );
+
+      let grids = rendered.querySelectorAll('.ReactVirtualized__Grid');
+      expect(grids.length).toEqual(4);
+      let [topLeft, topRight, bottomLeft, bottomRight] = grids;
+      expect(topLeft.style.getPropertyValue('height')).toEqual('30px');
+      expect(topRight.style.getPropertyValue('height')).toEqual('30px');
+      expect(bottomLeft.style.getPropertyValue('height')).toEqual('270px');
+      expect(bottomRight.style.getPropertyValue('height')).toEqual('270px');
+
+      rowHeights = [50, 30, 30, 30, 30];
+      multiGrid.recomputeGridSize();
+
+      expect(topLeft.style.getPropertyValue('height')).toEqual('50px');
+      expect(topRight.style.getPropertyValue('height')).toEqual('50px');
+      expect(bottomLeft.style.getPropertyValue('height')).toEqual('250px');
+      expect(bottomRight.style.getPropertyValue('height')).toEqual('250px');
+    });
   });
 
   describe('hideTopRightGridScrollbar, hideBottomLeftGridScrollbar should hide the scrollbars', () => {
