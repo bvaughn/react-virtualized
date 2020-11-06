@@ -1,6 +1,6 @@
 /** @flow */
 
-import type {CellRangeRendererParams} from './types';
+import type {CellRangeRendererParams} from './cellRange.types';
 
 /**
  * Default implementation of cellRangeRenderer used by Grid.
