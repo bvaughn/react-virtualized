@@ -183,7 +183,7 @@ export default function createDetectElementResize(nonce, hostWindow) {
         (element.__resizeTriggers__ = doc.createElement('div')).className =
           'resize-triggers';
         var resizeTriggersHtml = 
-          '<div class="expand-trigger"><div></div></div>' + 
+          '<div class="expand-trigger"><div></div></div>' +
           '<div class="contract-trigger"></div>';
         if (window.trustedTypes) {
           var staticPolicy = trustedTypes.createPolicy(
