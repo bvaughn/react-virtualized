@@ -182,7 +182,7 @@ export default function createDetectElementResize(nonce, hostWindow) {
         element.__resizeListeners__ = [];
         (element.__resizeTriggers__ = doc.createElement('div')).className =
           'resize-triggers';
-        var resizeTriggersHtml = 
+        var resizeTriggersHtml =
           '<div class="expand-trigger"><div></div></div>' +
           '<div class="contract-trigger"></div>';
         if (window.trustedTypes) {
