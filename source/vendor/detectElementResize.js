@@ -187,7 +187,9 @@ export default function createDetectElementResize(nonce, hostWindow) {
           '<div class="contract-trigger"></div>';
         if (window.trustedTypes) {
           var staticPolicy = trustedTypes.createPolicy(
-            'react-virtualized-auto-sizer', {createHTML: () => resizeTriggersHtml});
+            'react-virtualized-auto-sizer',
+            {createHTML: () => resizeTriggersHtml},
+          );
           element.__resizeTriggers__.innerHTML = staticPolicy.createHTML('');
         } else {
           element.__resizeTriggers__.innerHTML = resizeTriggersHtml;
