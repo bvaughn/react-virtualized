@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from 'react';
-import ScalingCellSizeAndPositionManager from './utils/ScalingCellSizeAndPositionManager';
 
 export type CellPosition = {columnIndex: number, rowIndex: number};
 
@@ -19,32 +18,6 @@ export type CellRenderer = (props: CellRendererParams) => React.Element<*>;
 
 export type CellCache = {[key: string]: React.Element<*>};
 export type StyleCache = {[key: string]: Object};
-
-export type CellRangeRendererParams = {
-  cellCache: CellCache,
-  cellRenderer: CellRenderer,
-  columnSizeAndPositionManager: ScalingCellSizeAndPositionManager,
-  columnStartIndex: number,
-  columnStopIndex: number,
-  deferredMeasurementCache?: Object,
-  horizontalOffsetAdjustment: number,
-  isScrolling: boolean,
-  isScrollingOptOut: boolean,
-  parent: Object,
-  rowSizeAndPositionManager: ScalingCellSizeAndPositionManager,
-  rowStartIndex: number,
-  rowStopIndex: number,
-  scrollLeft: number,
-  scrollTop: number,
-  styleCache: StyleCache,
-  verticalOffsetAdjustment: number,
-  visibleColumnIndices: Object,
-  visibleRowIndices: Object,
-};
-
-export type CellRangeRenderer = (
-  params: CellRangeRendererParams,
-) => React.Element<*>[];
 
 export type CellSizeGetter = (params: {index: number}) => number;
 

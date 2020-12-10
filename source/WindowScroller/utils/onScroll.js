@@ -1,10 +1,11 @@
 // @flow
-
+import * as React from 'react';
 import {
   requestAnimationTimeout,
   cancelAnimationTimeout,
 } from '../../utils/requestAnimationTimeout';
-import type WindowScroller from '../WindowScroller.js';
+
+// import type WindowScroller from '../WindowScroller.js';
 
 let mountedInstances = [];
 let originalBodyPointerEvents = null;
@@ -65,7 +66,7 @@ function onScrollWindow(event: Event) {
 }
 
 export function registerScrollListener(
-  component: WindowScroller,
+  component: React.ComponentType<Props>,
   element: Element,
 ) {
   if (
@@ -77,7 +78,7 @@ export function registerScrollListener(
 }
 
 export function unregisterScrollListener(
-  component: WindowScroller,
+  component: React.ComponentType<Props>,
   element: Element,
 ) {
   mountedInstances = mountedInstances.filter(

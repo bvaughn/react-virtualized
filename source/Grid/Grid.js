@@ -2,7 +2,6 @@
 
 import type {
   CellRenderer,
-  CellRangeRenderer,
   CellPosition,
   CellSize,
   CellSizeGetter,
@@ -15,6 +14,7 @@ import type {
   CellCache,
   StyleCache,
 } from './types';
+import type {CellRangeRenderer} from './cellRange.types';
 import type {AnimationTimeoutId} from '../utils/requestAnimationTimeout';
 
 import * as React from 'react';

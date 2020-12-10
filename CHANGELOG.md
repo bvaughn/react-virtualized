@@ -1,5 +1,9 @@
 ## Changelog
 
+##### 9.23.0
+
+- 🐛 Fix circular dependency in react-virtualized ([velusgautam](https://github.com/velusgautam) - [#1609](https://github.com/bvaughn/react-virtualized/pull/1609))
+
 ##### 9.22.2
 
 - CollectionView scrollTop/scrollLeft ([dawnmist](https://github.com/dawnmist) - [#1260](https://github.com/bvaughn/react-virtualized/pull/1260))
