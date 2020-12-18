@@ -1,5 +1,9 @@
 ## Changelog
 
+##### 9.22.3
+
+- Add Trusted Types support ([shhnjk](https://github.com/shhnjk) - [#1614](https://github.com/bvaughn/react-virtualized/pull/1614))
+
 ##### 9.22.2
 
 - CollectionView scrollTop/scrollLeft ([dawnmist](https://github.com/dawnmist) - [#1260](https://github.com/bvaughn/react-virtualized/pull/1260))
