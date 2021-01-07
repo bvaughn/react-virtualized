@@ -263,7 +263,7 @@ class Grid extends React.PureComponent<Props, State> {
     autoHeight: false,
     autoWidth: false,
     cellRangeRenderer: defaultCellRangeRenderer,
-    containerRole: 'rowgroup',
+    containerRole: 'row',
     containerStyle: {},
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
