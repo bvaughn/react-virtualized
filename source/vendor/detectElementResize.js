@@ -182,18 +182,13 @@ export default function createDetectElementResize(nonce, hostWindow) {
         element.__resizeListeners__ = [];
         (element.__resizeTriggers__ = doc.createElement('div')).className =
           'resize-triggers';
-        var resizeTriggersHtml =
-          '<div class="expand-trigger"><div></div></div>' +
-          '<div class="contract-trigger"></div>';
-        if (window.trustedTypes) {
-          var staticPolicy = trustedTypes.createPolicy(
-            'react-virtualized-auto-sizer',
-            {createHTML: () => resizeTriggersHtml},
-          );
-          element.__resizeTriggers__.innerHTML = staticPolicy.createHTML('');
-        } else {
-          element.__resizeTriggers__.innerHTML = resizeTriggersHtml;
-        }
+        var expandTrigger = doc.createElement('div');
+        expandTrigger.className = 'expand-trigger';
+        expandTrigger.appendChild(doc.createElement('div'));
+        var contractTrigger = doc.createElement('div');
+        contractTrigger.className = 'contract-trigger';
+        element.__resizeTriggers__.appendChild(expandTrigger);
+        element.__resizeTriggers__.appendChild(contractTrigger);
         element.appendChild(element.__resizeTriggers__);
         resetTriggers(element);
         element.addEventListener('scroll', scrollListener, true);
