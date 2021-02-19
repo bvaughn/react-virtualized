@@ -1,10 +1,11 @@
 // @flow
 'no babel-plugin-flow-react-proptypes';
+
 import {
   requestAnimationTimeout,
   cancelAnimationTimeout,
 } from '../../utils/requestAnimationTimeout';
-import type {WindowScroller} from '../WindowScroller.js';
+import type WindowScroller from '../WindowScroller.js';
 
 let mountedInstances = [];
 let originalBodyPointerEvents = null;
