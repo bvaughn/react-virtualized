@@ -626,9 +626,7 @@ class MultiGrid extends React.PureComponent {
     const additionalRowCount = showHorizontalScrollbar ? 1 : 0,
       height = this._getBottomGridHeight(props),
       width = this._getLeftGridWidth(props),
-      scrollbarSize = showHorizontalScrollbar
-        ? this.state.scrollbarSize
-        : 0,
+      scrollbarSize = showHorizontalScrollbar ? this.state.scrollbarSize : 0,
       gridWidth = hideBottomLeftGridScrollbar ? width + scrollbarSize : width;
 
     const bottomLeftGrid = (
