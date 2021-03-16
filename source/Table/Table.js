@@ -29,6 +29,7 @@ export default class Table extends React.PureComponent {
      * Removes fixed height from the scrollingContainer so that the total height
      * of rows can stretch the window. Intended for use with WindowScroller
      */
+    role: PropTypes.string,
     autoHeight: PropTypes.bool,
 
     /** One or more Columns describing the data displayed in this row */
@@ -249,6 +250,7 @@ export default class Table extends React.PureComponent {
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
     style: {},
+    role: 'grid',
   };
 
   constructor(props) {
@@ -373,6 +375,7 @@ export default class Table extends React.PureComponent {
       scrollToIndex,
       style,
       width,
+      role,
     } = this.props;
     const {scrollbarWidth} = this.state;
 
@@ -410,7 +413,7 @@ export default class Table extends React.PureComponent {
         aria-rowcount={this.props.rowCount}
         className={clsx('ReactVirtualized__Table', className)}
         id={id}
-        role="grid"
+        role={role}
         style={style}>
         {!disableHeader &&
           headerRowRenderer({

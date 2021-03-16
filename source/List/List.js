@@ -94,6 +94,12 @@ type Props = {
 
   /** Width of list */
   width: number,
+
+  /** aria-role */
+  role: string,
+
+  /** container role */
+  containerRole: string,
 };
 
 export default class List extends React.PureComponent<Props> {
@@ -108,6 +114,8 @@ export default class List extends React.PureComponent<Props> {
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
     style: {},
+    role: 'navigation',
+    containerRole: 'listbox',
   };
 
   Grid: ?React.ElementRef<typeof Grid>;
