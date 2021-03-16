@@ -457,6 +457,12 @@ var List =
 
           /** Width of list */
           width: _propTypes['default'].number.isRequired,
+
+          /** aria-role */
+          role: _propTypes['default'].string.isRequired,
+
+          /** container role */
+          containerRole: _propTypes['default'].string.isRequired,
         },
   ),
   _temp);
@@ -474,4 +480,6 @@ exports['default'] = List;
   scrollToAlignment: 'auto',
   scrollToIndex: -1,
   style: {},
+  role: 'navigation',
+  containerRole: 'listbox',
 });

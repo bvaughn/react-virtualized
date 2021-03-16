@@ -409,6 +409,12 @@ var List =
 
           /** Width of list */
           width: PropTypes.number.isRequired,
+
+          /** aria-role */
+          role: PropTypes.string.isRequired,
+
+          /** container role */
+          containerRole: PropTypes.string.isRequired,
         },
   ),
   _temp);
@@ -426,6 +432,8 @@ _defineProperty(List, 'defaultProps', {
   scrollToAlignment: 'auto',
   scrollToIndex: -1,
   style: {},
+  role: 'navigation',
+  containerRole: 'listbox',
 });
 
 export {List as default};

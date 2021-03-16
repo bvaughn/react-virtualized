@@ -5952,6 +5952,8 @@
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
     style: {},
+    role: 'navigation',
+    containerRole: 'listbox',
   });
   var bounds = {
     ge: function(a, y, c, l, h) {
@@ -8378,6 +8380,7 @@
               scrollToIndex = _this$props.scrollToIndex,
               style = _this$props.style,
               width = _this$props.width,
+              role = _this$props.role,
               scrollbarWidth = this.state.scrollbarWidth,
               availableRowsHeight = disableHeader
                 ? height
@@ -8417,7 +8420,7 @@
                   'aria-rowcount': this.props.rowCount,
                   className: clsx('ReactVirtualized__Table', className),
                   id: id,
-                  role: 'grid',
+                  role: role,
                   style: style,
                 },
                 !disableHeader &&
@@ -8818,6 +8821,7 @@
   _defineProperty(Table, 'propTypes', {
     'aria-label': propTypes.string,
     'aria-labelledby': propTypes.string,
+    role: propTypes.string,
     autoHeight: propTypes.bool,
     children: function(props) {
       for (
@@ -8894,6 +8898,7 @@
       scrollToAlignment: 'auto',
       scrollToIndex: -1,
       style: {},
+      role: 'grid',
     });
   var mountedInstances = [],
     originalBodyPointerEvents = null,

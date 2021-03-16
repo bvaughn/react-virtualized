@@ -274,7 +274,8 @@ var Table = /*#__PURE__*/ (function(_React$PureComponent) {
           rowStyle = _this$props.rowStyle,
           scrollToIndex = _this$props.scrollToIndex,
           style = _this$props.style,
-          width = _this$props.width;
+          width = _this$props.width,
+          role = _this$props.role;
         var scrollbarWidth = this.state.scrollbarWidth;
         var availableRowsHeight = disableHeader
           ? height
@@ -318,7 +319,7 @@ var Table = /*#__PURE__*/ (function(_React$PureComponent) {
             'aria-rowcount': this.props.rowCount,
             className: clsx('ReactVirtualized__Table', className),
             id: id,
-            role: 'grid',
+            role: role,
             style: style,
           },
           !disableHeader &&
@@ -761,6 +762,7 @@ _defineProperty(Table, 'defaultProps', {
   scrollToAlignment: 'auto',
   scrollToIndex: -1,
   style: {},
+  role: 'grid',
 });
 
 export {Table as default};
@@ -777,6 +779,7 @@ Table.propTypes =
          * Removes fixed height from the scrollingContainer so that the total height
          * of rows can stretch the window. Intended for use with WindowScroller
          */
+        role: PropTypes.string,
         autoHeight: PropTypes.bool,
 
         /** One or more Columns describing the data displayed in this row */
