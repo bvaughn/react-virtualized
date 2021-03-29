@@ -118,6 +118,10 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
         width: dimensions.width,
       });
     }
+
+    if (this.props.updateScrollTopOnUpdatePosition) {
+      this.__handleWindowScrollEvent();
+    }
   }
 
   componentDidMount() {
