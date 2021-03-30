@@ -17,7 +17,7 @@ const bootstrap = async () => {
   return page;
 };
 
-const renderWindowScroller = () => {
+const renderWindowScroller = updateScrollTopOnUpdatePosition => {
   const {render} = window.ReactDOM;
   const {createElement, useState, useEffect} = window.React;
   const {WindowScroller} = window.ReactVirtualized;
@@ -43,7 +43,7 @@ const renderWindowScroller = () => {
       createElement(
         WindowScroller,
         {
-          updateScrollTopOnUpdatePosition: true,
+          updateScrollTopOnUpdatePosition,
           ref: windowScroller => {
             window.windowScroller = windowScroller;
           },
@@ -87,7 +87,7 @@ test('will react to header height updates if notified through updatePosition', a
   await page.exposeFunction('resizeFn', resizeFn);
 
   await page.setViewport({width: 400, height: 600});
-  await page.evaluate(renderWindowScroller);
+  await page.evaluate(renderWindowScroller, true);
 
   const el = await page.$('[data-test-id="main-container"]');
   expect(el).not.toBeNull();
@@ -108,7 +108,47 @@ test('will react to header height updates if notified through updatePosition', a
   });
   await delay(500);
 
-  // await jestPuppeteer.pa();
+  await page.evaluate(() => {
+    console.log('update position');
+    window.windowScroller.updatePosition();
+  });
+  await delay(500);
+
+  // Despite header updates, we'd expect the scrollTop to be the same.
+  {
+    const scrollTop = await page.evaluate(() => window.windowScrollerScrollTop);
+    expect(scrollTop).toEqual(100);
+  }
+});
+
+test('will NOT react to header height updates if notified through updatePosition if `updateScrollTopOnUpdatePosition` is false', async () => {
+  const page = await bootstrap();
+  const scrollFn = jest.fn();
+  const resizeFn = jest.fn();
+  await page.exposeFunction('scrollFn', scrollFn);
+  await page.exposeFunction('resizeFn', resizeFn);
+
+  await page.setViewport({width: 400, height: 600});
+  await page.evaluate(renderWindowScroller, false);
+
+  const el = await page.$('[data-test-id="main-container"]');
+  expect(el).not.toBeNull();
+
+  await page.evaluate(() => window.scrollTo(0, 200));
+  await delay(500);
+
+  {
+    const scrollTop = await page.evaluate(() => window.windowScrollerScrollTop);
+    expect(scrollTop).toEqual(100);
+  }
+  await delay(500);
+
+  // Update the header height
+  await page.evaluate(() => {
+    console.log('change header height');
+    window.setHeaderHeight(200);
+  });
+  await delay(500);
 
   await page.evaluate(() => {
     console.log('update position');
@@ -116,13 +156,12 @@ test('will react to header height updates if notified through updatePosition', a
   });
   await delay(500);
 
-  // await jestPuppeteer.debug();
-
   // Despite header updates, we'd expect the scrollTop to be the same.
-  {
-    const scrollTop = await page.evaluate(() => window.windowScrollerScrollTop);
+  // As the fix is off, this will fail.
+  const scrollTop = await page.evaluate(() => window.windowScrollerScrollTop);
+  expect(() => {
     expect(scrollTop).toEqual(100);
-  }
+  }).toThrow();
 });
 
 test('will properly process scroll events after header height updates', async () => {
@@ -133,7 +172,7 @@ test('will properly process scroll events after header height updates', async ()
   await page.exposeFunction('resizeFn', resizeFn);
 
   await page.setViewport({width: 400, height: 600});
-  await page.evaluate(renderWindowScroller);
+  await page.evaluate(renderWindowScroller, true);
 
   const el = await page.$('[data-test-id="main-container"]');
   expect(el).not.toBeNull();
