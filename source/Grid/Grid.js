@@ -257,7 +257,6 @@ type State = {
  */
 class Grid extends React.PureComponent<Props, State> {
   static defaultProps = {
-    'aria-label': 'grid',
     'aria-readonly': true,
     autoContainerWidth: false,
     autoHeight: false,
