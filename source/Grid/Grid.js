@@ -1056,7 +1056,7 @@ class Grid extends React.PureComponent<Props, State> {
         {childrenToDisplay.length > 0 && (
           <div
             className="ReactVirtualized__Grid__innerScrollContainer"
-            id="scroll-container"
+            id="virtualized-grid-container"
             role={containerRole}
             style={{
               width: autoContainerWidth ? 'auto' : totalColumnsWidth,
