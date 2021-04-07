@@ -47,6 +47,9 @@ type Props = {
 
   /** Width used for server-side rendering */
   serverWidth: number,
+
+  /** Force scrollTop updates when .updatePosition is called, fixing forced header height change updates */
+  updateScrollTopOnUpdatePosition?: boolean,
 };
 
 type State = {
@@ -117,6 +120,10 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
         height: dimensions.height,
         width: dimensions.width,
       });
+    }
+
+    if (this.props.updateScrollTopOnUpdatePosition === true) {
+      this.__handleWindowScrollEvent();
     }
   }
 
