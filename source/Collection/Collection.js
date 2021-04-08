@@ -12,7 +12,7 @@ import type {ScrollPosition, SizeInfo} from './types';
  */
 export default class Collection extends React.PureComponent {
   static propTypes = {
-    'aria-label': PropTypes.string,
+    'aria-label'?: PropTypes.string,
 
     /**
      * Number of cells in Collection.
@@ -48,7 +48,6 @@ export default class Collection extends React.PureComponent {
   };
 
   static defaultProps = {
-    'aria-label': 'grid',
     cellGroupRenderer: defaultCellGroupRenderer,
   };
 

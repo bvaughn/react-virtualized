@@ -58,8 +58,9 @@ type ScrollPosition = {
 };
 
 type Props = {
-  'aria-label': string,
+  'aria-label'?: string,
   'aria-readonly'?: boolean,
+  'aria-activedescendant'?: string,
 
   /**
    * Set the width of the inner scrollable container to 'auto'.
@@ -1044,6 +1045,7 @@ class Grid extends React.PureComponent<Props, State> {
         {...containerProps}
         aria-label={this.props['aria-label']}
         aria-readonly={this.props['aria-readonly']}
+        aria-activedescendant={this.props['aria-activedescendant']}
         className={clsx('ReactVirtualized__Grid', className)}
         id={id}
         onScroll={this._onScroll}

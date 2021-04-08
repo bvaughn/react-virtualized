@@ -20,7 +20,8 @@ import SortDirection from './SortDirection';
 export default class Table extends React.PureComponent {
   static propTypes = {
     /** This is just set on the grid top element. */
-    'aria-label': PropTypes.string,
+    'aria-label'?: PropTypes.string,
+    'aria-activedescendant'?: PropTypes.string,
 
     /** This is just set on the grid top element. */
     'aria-labelledby': PropTypes.string,
@@ -430,6 +431,7 @@ export default class Table extends React.PureComponent {
 
         <Grid
           {...this.props}
+          aria-activedescendant={this.props['aria-activedescendant']}
           aria-readonly={null}
           autoContainerWidth
           className={clsx('ReactVirtualized__Table__Grid', gridClassName)}

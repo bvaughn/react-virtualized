@@ -27,6 +27,7 @@ import clsx from 'clsx';
 
 type Props = {
   'aria-label'?: string,
+  'aria-activedescendant'?: string,
 
   /**
    * Removes fixed height from the scrollingContainer so that the total height
