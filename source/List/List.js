@@ -50,8 +50,13 @@ type Props = {
   /** Optional renderer to be used in place of rows when rowCount is 0 */
   noRowsRenderer: NoContentRenderer,
 
-  /** Callback invoked with information about the slice of rows that were just rendered.  */
+  /** Callback invoked when list is focused.  */
+  onFocus: (params: Event) => void,
 
+  /** Callback invoked when list is blured.  */
+  onBlur: (params: Event) => void,
+
+  /** Callback invoked with information about the slice of rows that were just rendered.  */
   onRowsRendered: (params: RenderedRows) => void,
 
   /**
