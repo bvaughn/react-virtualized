@@ -307,6 +307,7 @@ var List =
       ? null
       : {
           'aria-label': PropTypes.string,
+          'aria-activedescendant': PropTypes.string,
 
           /**
            * Removes fixed height from the scrollingContainer so that the total height

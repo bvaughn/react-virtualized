@@ -1032,6 +1032,7 @@ var Grid =
                 {
                   'aria-label': this.props['aria-label'],
                   'aria-readonly': this.props['aria-readonly'],
+                  'aria-activedescendant': this.props['aria-activedescendant'],
                   className: (0, _clsx['default'])(
                     'ReactVirtualized__Grid',
                     className,
@@ -1048,6 +1049,7 @@ var Grid =
                   'div',
                   {
                     className: 'ReactVirtualized__Grid__innerScrollContainer',
+                    id: 'virtualized-grid-container',
                     role: containerRole,
                     style: _objectSpread(
                       {
@@ -1836,8 +1838,9 @@ var Grid =
     process.env.NODE_ENV === 'production'
       ? null
       : {
-          'aria-label': _propTypes['default'].string.isRequired,
+          'aria-label': _propTypes['default'].string,
           'aria-readonly': _propTypes['default'].bool,
+          'aria-activedescendant': _propTypes['default'].string,
 
           /**
            * Set the width of the inner scrollable container to 'auto'.
@@ -2065,7 +2068,6 @@ var Grid =
   ),
   _temp);
 (0, _defineProperty2['default'])(Grid, 'defaultProps', {
-  'aria-label': 'grid',
   'aria-readonly': true,
   autoContainerWidth: false,
   autoHeight: false,

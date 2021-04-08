@@ -396,6 +396,7 @@ var Table = /*#__PURE__*/ (function(_React$PureComponent) {
           /*#__PURE__*/ React.createElement(
             _Grid2['default'],
             (0, _extends2['default'])({}, this.props, {
+              'aria-activedescendant': this.props['aria-activedescendant'],
               'aria-readonly': null,
               autoContainerWidth: true,
               className: (0, _clsx['default'])(
@@ -837,6 +838,7 @@ Table.propTypes =
     ? {
         /** This is just set on the grid top element. */
         'aria-label': _propTypes['default'].string,
+        'aria-activedescendant': _propTypes['default'].string,
 
         /** This is just set on the grid top element. */
         'aria-labelledby': _propTypes['default'].string,

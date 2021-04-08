@@ -2730,7 +2730,7 @@
                     direction: 'ltr',
                     height: autoHeight ? 'auto' : height,
                     position: 'relative',
-                    WebkitOverflowScrolling: 'touch',
+                    webkitOverflowScrolling: 'touch',
                     width: width,
                     willChange: 'transform',
                   },
@@ -2903,7 +2903,6 @@
     width: propTypes.number.isRequired,
   }),
     _defineProperty(CollectionView, 'defaultProps', {
-      'aria-label': 'grid',
       horizontalOverscanSize: 0,
       noContentRenderer: function() {
         return null;
@@ -3334,7 +3333,6 @@
     sectionSize: propTypes.number,
   }),
     _defineProperty(Collection, 'defaultProps', {
-      'aria-label': 'grid',
       cellGroupRenderer: function(_ref4) {
         var cellCache = _ref4.cellCache,
           cellRenderer = _ref4.cellRenderer,
@@ -4771,6 +4769,9 @@
                     {
                       'aria-label': this.props['aria-label'],
                       'aria-readonly': this.props['aria-readonly'],
+                      'aria-activedescendant': this.props[
+                        'aria-activedescendant'
+                      ],
                       className: clsx('ReactVirtualized__Grid', className),
                       id: id,
                       onScroll: this._onScroll,
@@ -4788,6 +4789,7 @@
                       {
                         className:
                           'ReactVirtualized__Grid__innerScrollContainer',
+                        id: 'virtualized-grid-container',
                         role: containerRole,
                         style: _objectSpread2(
                           {
@@ -5448,7 +5450,6 @@
       );
     })();
   _defineProperty(Grid, 'defaultProps', {
-    'aria-label': 'grid',
     'aria-readonly': !0,
     autoContainerWidth: !1,
     autoHeight: !1,
@@ -8443,6 +8444,9 @@
                 React.createElement(
                   Grid,
                   _extends({}, this.props, {
+                    'aria-activedescendant': this.props[
+                      'aria-activedescendant'
+                    ],
                     'aria-readonly': null,
                     autoContainerWidth: !0,
                     className: clsx(
@@ -8820,6 +8824,7 @@
   })();
   _defineProperty(Table, 'propTypes', {
     'aria-label': propTypes.string,
+    'aria-activedescendant': propTypes.string,
     'aria-labelledby': propTypes.string,
     role: propTypes.string,
     autoHeight: propTypes.bool,

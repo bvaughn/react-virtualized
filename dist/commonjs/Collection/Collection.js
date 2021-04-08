@@ -280,7 +280,6 @@ var Collection = /*#__PURE__*/ (function(_React$PureComponent) {
 
 exports['default'] = Collection;
 (0, _defineProperty2['default'])(Collection, 'defaultProps', {
-  'aria-label': 'grid',
   cellGroupRenderer: defaultCellGroupRenderer,
 });
 Collection.propTypes =

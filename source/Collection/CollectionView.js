@@ -29,7 +29,7 @@ const SCROLL_POSITION_CHANGE_REASONS = {
  */
 class CollectionView extends React.PureComponent {
   static propTypes = {
-    'aria-label'?: PropTypes.string,
+    'aria-label': PropTypes.string,
 
     /**
      * Removes fixed height from the scrollingContainer so that the total height
@@ -359,7 +359,7 @@ class CollectionView extends React.PureComponent {
       direction: 'ltr',
       height: autoHeight ? 'auto' : height,
       position: 'relative',
-      WebkitOverflowScrolling: 'touch',
+      webkitOverflowScrolling: 'touch',
       width,
       willChange: 'transform',
     };

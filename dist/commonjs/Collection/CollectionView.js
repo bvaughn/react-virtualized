@@ -508,7 +508,7 @@ var CollectionView = /*#__PURE__*/ (function(_React$PureComponent) {
             direction: 'ltr',
             height: autoHeight ? 'auto' : height,
             position: 'relative',
-            WebkitOverflowScrolling: 'touch',
+            webkitOverflowScrolling: 'touch',
             width: width,
             willChange: 'transform',
           }; // Force browser to hide scrollbars when we know they aren't necessary.
@@ -693,7 +693,6 @@ var CollectionView = /*#__PURE__*/ (function(_React$PureComponent) {
 })(React.PureComponent);
 
 (0, _defineProperty2['default'])(CollectionView, 'defaultProps', {
-  'aria-label': 'grid',
   horizontalOverscanSize: 0,
   noContentRenderer: function noContentRenderer() {
     return null;

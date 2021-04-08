@@ -240,7 +240,6 @@ var Collection = /*#__PURE__*/ (function(_React$PureComponent) {
 })(React.PureComponent);
 
 _defineProperty(Collection, 'defaultProps', {
-  'aria-label': 'grid',
   cellGroupRenderer: defaultCellGroupRenderer,
 });
 

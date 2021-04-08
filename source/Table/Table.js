@@ -20,8 +20,8 @@ import SortDirection from './SortDirection';
 export default class Table extends React.PureComponent {
   static propTypes = {
     /** This is just set on the grid top element. */
-    'aria-label'?: PropTypes.string,
-    'aria-activedescendant'?: PropTypes.string,
+    'aria-label': PropTypes.string,
+    'aria-activedescendant': PropTypes.string,
 
     /** This is just set on the grid top element. */
     'aria-labelledby': PropTypes.string,

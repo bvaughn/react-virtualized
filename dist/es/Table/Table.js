@@ -339,6 +339,7 @@ var Table = /*#__PURE__*/ (function(_React$PureComponent) {
           /*#__PURE__*/ React.createElement(
             Grid,
             _extends({}, this.props, {
+              'aria-activedescendant': this.props['aria-activedescendant'],
               'aria-readonly': null,
               autoContainerWidth: true,
               className: clsx('ReactVirtualized__Table__Grid', gridClassName),
@@ -771,6 +772,7 @@ Table.propTypes =
     ? {
         /** This is just set on the grid top element. */
         'aria-label': PropTypes.string,
+        'aria-activedescendant': PropTypes.string,
 
         /** This is just set on the grid top element. */
         'aria-labelledby': PropTypes.string,
