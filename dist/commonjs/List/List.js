@@ -380,6 +380,12 @@ var List =
             ).apply(this, arguments);
           },
 
+          /** Callback invoked when list is focused.  */
+          onFocus: _propTypes['default'].func,
+
+          /** Callback invoked when list is blured.  */
+          onBlur: _propTypes['default'].func,
+
           /** Callback invoked with information about the slice of rows that were just rendered.  */
           onRowsRendered: _propTypes['default'].func.isRequired,
 

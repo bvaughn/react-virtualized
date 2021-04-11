@@ -337,6 +337,12 @@ var List =
             ).apply(this, arguments);
           },
 
+          /** Callback invoked when list is focused.  */
+          onFocus: PropTypes.func,
+
+          /** Callback invoked when list is blured.  */
+          onBlur: PropTypes.func,
+
           /** Callback invoked with information about the slice of rows that were just rendered.  */
           onRowsRendered: PropTypes.func.isRequired,
 

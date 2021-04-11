@@ -1041,6 +1041,8 @@ var Grid =
                   onScroll: this._onScroll,
                   role: role,
                   style: _objectSpread(_objectSpread({}, gridStyle), style),
+                  onFocus: this.props['onFocus'],
+                  onBlur: this.props['onBlur'],
                   tabIndex: tabIndex,
                 },
               ),
@@ -1841,6 +1843,12 @@ var Grid =
           'aria-label': _propTypes['default'].string,
           'aria-readonly': _propTypes['default'].bool,
           'aria-activedescendant': _propTypes['default'].string,
+
+          /** Callback invoked when list is focused.  */
+          onFocus: _propTypes['default'].func,
+
+          /** Callback invoked when list is blured.  */
+          onBlur: _propTypes['default'].func,
 
           /**
            * Set the width of the inner scrollable container to 'auto'.

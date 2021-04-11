@@ -4780,6 +4780,8 @@
                         _objectSpread2({}, gridStyle),
                         style,
                       ),
+                      onFocus: this.props.onFocus,
+                      onBlur: this.props.onBlur,
                       tabIndex: tabIndex,
                     },
                   ),

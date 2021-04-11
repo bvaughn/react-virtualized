@@ -51,10 +51,10 @@ type Props = {
   noRowsRenderer: NoContentRenderer,
 
   /** Callback invoked when list is focused.  */
-  onFocus: (params: Event) => void,
+  onFocus?: (params: Event) => void,
 
   /** Callback invoked when list is blured.  */
-  onBlur: (params: Event) => void,
+  onBlur?: (params: Event) => void,
 
   /** Callback invoked with information about the slice of rows that were just rendered.  */
   onRowsRendered: (params: RenderedRows) => void,

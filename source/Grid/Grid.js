@@ -63,10 +63,10 @@ type Props = {
   'aria-activedescendant'?: string,
 
   /** Callback invoked when list is focused.  */
-  onFocus: (params: Event) => void,
+  onFocus?: (params: Event) => void,
 
   /** Callback invoked when list is blured.  */
-  onBlur: (params: Event) => void,
+  onBlur?: (params: Event) => void,
 
   /**
    * Set the width of the inner scrollable container to 'auto'.
@@ -1061,7 +1061,7 @@ class Grid extends React.PureComponent<Props, State> {
           ...style,
         }}
         onFocus={this.props['onFocus']}
-        onBLur={this.props['onBlur']}
+        onBlur={this.props['onBlur']}
         tabIndex={tabIndex}>
         {childrenToDisplay.length > 0 && (
           <div
