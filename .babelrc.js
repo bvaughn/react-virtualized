@@ -14,6 +14,7 @@ if (env === 'commonjs' || env === 'es') {
     plugins: [
       '@babel/plugin-transform-runtime',
       '@babel/plugin-proposal-class-properties',
+      '@babel/plugin-transform-flow-comments',
       ['flow-react-proptypes', {deadCode: true, useESModules: true}],
       ['transform-react-remove-prop-types', {mode: 'wrap'}],
     ],
