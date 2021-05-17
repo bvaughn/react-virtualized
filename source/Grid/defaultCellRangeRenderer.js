@@ -1,6 +1,7 @@
 /** @flow */
 
 import type {CellRangeRendererParams} from './types';
+import React from 'react';
 
 /**
  * Default implementation of cellRangeRenderer used by Grid.
@@ -136,6 +137,10 @@ export default function defaultCellRangeRenderer({
 
       if (process.env.NODE_ENV !== 'production') {
         warnAboutMissingStyle(parent, renderedCell);
+      }
+
+      if (!renderedCell.props.role) {
+        renderedCell = React.cloneElement(renderedCell, {role: 'gridcell'});
       }
 
       renderedCells.push(renderedCell);
