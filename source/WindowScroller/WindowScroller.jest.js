@@ -1,3 +1,4 @@
+import {mount} from 'enzyme';
 import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import {render} from '../TestUtils';
@@ -162,6 +163,62 @@ describe('WindowScroller', () => {
     expect(document.body.style.pointerEvents).toEqual('none');
     render.unmount();
     expect(document.body.style.pointerEvents).toEqual('all');
+  });
+
+  it('should mount new scroll handlers if the scrollElement changes', async () => {
+    const onScroll = jest.fn();
+    const windowOnScroll = jest.fn();
+    const scrollElementDivOnScroll = jest.fn();
+
+    const scrollElementDiv = document.createElement('div');
+    scrollElementDiv.id = 'container';
+    scrollElementDiv.style = 'overflow: auto; height: 768px; width: 1024px';
+    const innerScrollElementDiv = document.createElement('div');
+    innerScrollElementDiv.style = 'height: 10000px; width: 10000px';
+    scrollElementDiv.appendChild(innerScrollElementDiv);
+    scrollElementDiv.addEventListener('scroll', scrollElementDivOnScroll);
+    document.body.appendChild(scrollElementDiv);
+
+    window.addEventListener('scroll', windowOnScroll);
+
+    const windowScroller = (
+      <WindowScroller
+        onScroll={onScroll}
+        scrollElement={document.getElementById('container')}>
+        {params => <div>&nbsp;</div>}
+      </WindowScroller>
+    );
+
+    // JSDom doesn't implement a working getBoundingClientRect()
+    // But WindowScroller requires it
+    mockGetBoundingClientRectForHeader({
+      documentOffset: 0,
+      height: 0,
+      width: 0,
+    });
+
+    const windowScrollerWrapper = mount(windowScroller);
+
+    // Allow scrolling timeout to complete so that the component computes state
+    await new Promise(resolve => setTimeout(resolve, 150));
+
+    windowScrollerWrapper.setProps({scrollElement: window}); // Change the prop value
+
+    // Render again which should remount the component (after our prop change)
+    windowScrollerWrapper.update();
+
+    // Allow scrolling timeout to complete so that the component computes state
+    await new Promise(resolve => setTimeout(resolve, 150));
+
+    simulateWindowScroll({scrollX: 0, scrollY: 5000});
+
+    // Allow scrolling timeout to complete so that the component computes state
+    await new Promise(resolve => setTimeout(resolve, 150));
+
+    expect(windowOnScroll).toHaveBeenCalledTimes(1);
+    expect(scrollElementDivOnScroll).toHaveBeenCalledTimes(0);
+
+    expect(windowScrollerWrapper.state('scrollTop')).toEqual(5000);
   });
 
   describe('onScroll', () => {

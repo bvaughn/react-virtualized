@@ -192,6 +192,8 @@ export default function createDetectElementResize(nonce, hostWindow) {
         element.appendChild(element.__resizeTriggers__);
         resetTriggers(element);
         element.addEventListener('scroll', scrollListener, true);
+        // Store reference to original instantiated scrollListener so it can be unbound later
+        element.__scrollListener__ = scrollListener;
 
         /* Listen for a css animation to detect element display/re-attach */
         if (animationstartevent) {
@@ -221,7 +223,14 @@ export default function createDetectElementResize(nonce, hostWindow) {
         1,
       );
       if (!element.__resizeListeners__.length) {
-        element.removeEventListener('scroll', scrollListener, true);
+        if (element.__scrollListener__) {
+          element.removeEventListener(
+            'scroll',
+            element.__scrollListener__,
+            true,
+          );
+        }
+
         if (element.__resizeTriggers__.__animationListener__) {
           element.__resizeTriggers__.removeEventListener(
             animationstartevent,

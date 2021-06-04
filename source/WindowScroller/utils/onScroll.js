@@ -7,7 +7,13 @@ import {
 } from '../../utils/requestAnimationTimeout';
 import type WindowScroller from '../WindowScroller.js';
 
-let mountedInstances = [];
+// Checking a component's props is unreliable. Instead we store the element used at the time
+type MountedInstancesReference = {
+  component: WindowScroller,
+  element: Element,
+};
+
+let mountedInstances: MountedInstancesReference[] = [];
 let originalBodyPointerEvents = null;
 let disablePointerEventsTimeoutId = null;
 
@@ -25,7 +31,7 @@ function enablePointerEventsIfDisabled() {
 
 function enablePointerEventsAfterDelayCallback() {
   enablePointerEventsIfDisabled();
-  mountedInstances.forEach(instance => instance.__resetIsScrolling());
+  mountedInstances.forEach(kvp => kvp.component.__resetIsScrolling());
 }
 
 function enablePointerEventsAfterDelay() {
@@ -34,10 +40,10 @@ function enablePointerEventsAfterDelay() {
   }
 
   var maximumTimeout = 0;
-  mountedInstances.forEach(instance => {
+  mountedInstances.forEach(kvp => {
     maximumTimeout = Math.max(
       maximumTimeout,
-      instance.props.scrollingResetTimeInterval,
+      kvp.component.props.scrollingResetTimeInterval,
     );
   });
 
@@ -58,9 +64,9 @@ function onScrollWindow(event: Event) {
     document.body.style.pointerEvents = 'none';
   }
   enablePointerEventsAfterDelay();
-  mountedInstances.forEach(instance => {
-    if (instance.props.scrollElement === event.currentTarget) {
-      instance.__handleWindowScrollEvent();
+  mountedInstances.forEach(kvp => {
+    if (kvp.component.props.scrollElement === event.currentTarget) {
+      kvp.component.__handleWindowScrollEvent();
     }
   });
 }
@@ -69,22 +75,26 @@ export function registerScrollListener(
   component: WindowScroller,
   element: Element,
 ) {
-  if (
-    !mountedInstances.some(instance => instance.props.scrollElement === element)
-  ) {
+  if (!mountedInstances.some(kvp => kvp.element === element)) {
     element.addEventListener('scroll', onScrollWindow);
   }
-  mountedInstances.push(component);
+
+  mountedInstances.push({component, element});
 }
 
 export function unregisterScrollListener(
   component: WindowScroller,
   element: Element,
 ) {
+  // Remove the given component from our known instances
   mountedInstances = mountedInstances.filter(
-    instance => instance !== component,
+    kvp => kvp.component !== component,
   );
-  if (!mountedInstances.length) {
+
+  if (
+    !mountedInstances.length || // If current length is 0, remove listener
+    !mountedInstances.some(kvp => kvp.element === element) // No current mounted instances have the element
+  ) {
     element.removeEventListener('scroll', onScrollWindow);
     if (disablePointerEventsTimeoutId) {
       cancelAnimationTimeout(disablePointerEventsTimeoutId);
