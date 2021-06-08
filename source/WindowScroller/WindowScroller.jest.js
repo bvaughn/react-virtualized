@@ -510,9 +510,7 @@ describe('WindowScroller', () => {
       // detectElementResize && unregisterScrollListener
       expect(addEventListener).toHaveBeenCalledTimes(2);
 
-      windowScroller.setProps({scrollElement: undefined}); // Change the prop value
-
-      // Render again which should remount the component (after our prop change)
+      windowScroller.setProps({scrollElement: undefined}); // Change to window
       windowScroller.update();
 
       // detectElementResize && unregisterScrollListener
@@ -534,7 +532,7 @@ describe('WindowScroller', () => {
       // detectElementResize && unregisterScrollListener
       expect(addEventListener).toHaveBeenCalledTimes(2);
 
-      windowScroller.setProps({onScroll: jest.fn()}); // Change the prop value
+      windowScroller.setProps({onScroll: jest.fn()}); // Change random prop
       windowScroller.update();
 
       // detectElementResize && unregisterScrollListener
@@ -543,7 +541,7 @@ describe('WindowScroller', () => {
       windowScroller.unmount();
     });
 
-    it('should re-mount new scroll handlers if the scrollElement changes (multiple WindowScrollers on different elements)', async () => {
+    it('should retain existing handlers if they are still used (multiple WindowScrollers on different elements)', async () => {
       const windowScrollerOnWindow = generateWindowScrollerWrapper(window);
 
       const windowScrollerThatChanges = generateWindowScrollerWrapper(
@@ -561,11 +559,10 @@ describe('WindowScroller', () => {
         scrollElement: undefined,
       });
 
-      // Render again which should remount the component (after our prop change)
       windowScrollerThatChanges.update();
       windowScrollerOnDivElement.update();
 
-      // No unmounting because we still have WindowScrollers attached
+      // No unmounting because we still have WindowScrollers attached to the div
       expect(removeEventListener).toHaveBeenCalledTimes(0);
 
       simulateWindowScroll({scrollX: 0, scrollY: 5000});
@@ -594,7 +591,6 @@ describe('WindowScroller', () => {
       windowScroller2.setProps({scrollElement: undefined});
       windowScroller1.setProps({scrollElement: undefined});
 
-      // Render again which should remount the component (after our prop change)
       windowScroller1.update();
       windowScroller2.update();
       windowScroller3.update();

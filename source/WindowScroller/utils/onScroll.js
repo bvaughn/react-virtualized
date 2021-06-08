@@ -31,7 +31,7 @@ function enablePointerEventsIfDisabled() {
 
 function enablePointerEventsAfterDelayCallback() {
   enablePointerEventsIfDisabled();
-  mountedInstances.forEach(kvp => kvp.component.__resetIsScrolling());
+  mountedInstances.forEach(mi => mi.component.__resetIsScrolling());
 }
 
 function enablePointerEventsAfterDelay() {
@@ -40,10 +40,10 @@ function enablePointerEventsAfterDelay() {
   }
 
   var maximumTimeout = 0;
-  mountedInstances.forEach(kvp => {
+  mountedInstances.forEach(mi => {
     maximumTimeout = Math.max(
       maximumTimeout,
-      kvp.component.props.scrollingResetTimeInterval,
+      mi.component.props.scrollingResetTimeInterval,
     );
   });
 
@@ -64,9 +64,9 @@ function onScrollWindow(event: Event) {
     document.body.style.pointerEvents = 'none';
   }
   enablePointerEventsAfterDelay();
-  mountedInstances.forEach(kvp => {
-    if (kvp.component.props.scrollElement === event.currentTarget) {
-      kvp.component.__handleWindowScrollEvent();
+  mountedInstances.forEach(mi => {
+    if (mi.component.props.scrollElement === event.currentTarget) {
+      mi.component.__handleWindowScrollEvent();
     }
   });
 }
@@ -75,7 +75,7 @@ export function registerScrollListener(
   component: WindowScroller,
   element: Element,
 ) {
-  if (!mountedInstances.some(kvp => kvp.element === element)) {
+  if (!mountedInstances.some(mi => mi.element === element)) {
     element.addEventListener('scroll', onScrollWindow);
   }
 
@@ -87,13 +87,11 @@ export function unregisterScrollListener(
   element: Element,
 ) {
   // Remove the given component from our known instances
-  mountedInstances = mountedInstances.filter(
-    kvp => kvp.component !== component,
-  );
+  mountedInstances = mountedInstances.filter(mi => mi.component !== component);
 
   if (
     !mountedInstances.length || // If current length is 0, remove listener
-    !mountedInstances.some(kvp => kvp.element === element) // No current mounted instances have the element
+    !mountedInstances.some(mi => mi.element === element) // No current mounted instances have the element
   ) {
     element.removeEventListener('scroll', onScrollWindow);
     if (disablePointerEventsTimeoutId) {
