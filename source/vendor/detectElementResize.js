@@ -9,6 +9,7 @@
  * 3) Avoid unnecessary reflows by not measuring size for scroll events bubbling from children.
  * 4) Add nonce for style element.
  * 5) Added support for injecting custom window object
+ * 6) Fix the addResizeListener/removeResizeListener which fails to unmount the scroll listener if there are multiple instances
  **/
 
 export default function createDetectElementResize(nonce, hostWindow) {
@@ -192,6 +193,8 @@ export default function createDetectElementResize(nonce, hostWindow) {
         element.appendChild(element.__resizeTriggers__);
         resetTriggers(element);
         element.addEventListener('scroll', scrollListener, true);
+        // Store reference to original instantiated scrollListener so it can be unbound later
+        element.__scrollListener__ = scrollListener;
 
         /* Listen for a css animation to detect element display/re-attach */
         if (animationstartevent) {
@@ -221,7 +224,13 @@ export default function createDetectElementResize(nonce, hostWindow) {
         1,
       );
       if (!element.__resizeListeners__.length) {
-        element.removeEventListener('scroll', scrollListener, true);
+        if (element.__scrollListener__) {
+          element.removeEventListener(
+            'scroll',
+            element.__scrollListener__,
+            true,
+          );
+        }
 
         if (element.__resizeTriggers__.__animationListener__) {
           element.__resizeTriggers__.removeEventListener(
