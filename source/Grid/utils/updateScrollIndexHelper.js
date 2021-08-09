@@ -91,6 +91,12 @@ export default function updateScrollIndexHelper({
     // To do this, we don't need to measure everything; CellMeasurer would perform poorly.
     // Just check to make sure we're still okay.
     // Only adjust the scroll position if we've scrolled below the last set of rows.
+    cellSizeAndPositionManager.getUpdatedOffsetForIndex({
+      align: 'auto',
+      containerSize: size,
+      currentOffset: scrollOffset,
+      targetIndex: cellCount - 1
+    })
     if (scrollOffset > cellSizeAndPositionManager.getTotalSize() - size) {
       updateScrollIndexCallback(cellCount - 1);
     }
