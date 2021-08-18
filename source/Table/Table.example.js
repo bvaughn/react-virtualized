@@ -29,7 +29,9 @@ export default class TableExample extends React.PureComponent {
 
     this.state = {
       disableHeader: false,
+      enableFooter: false,
       headerHeight: 30,
+      footerHeight: 30,
       height: 270,
       hideIndexRow: false,
       overscanRowCount: 10,
@@ -44,6 +46,7 @@ export default class TableExample extends React.PureComponent {
 
     this._getRowHeight = this._getRowHeight.bind(this);
     this._headerRenderer = this._headerRenderer.bind(this);
+    this._footerRenderer = this._footerRenderer.bind(this);
     this._noRowsRenderer = this._noRowsRenderer.bind(this);
     this._onRowCountChange = this._onRowCountChange.bind(this);
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this);
@@ -54,7 +57,9 @@ export default class TableExample extends React.PureComponent {
   render() {
     const {
       disableHeader,
+      enableFooter,
       headerHeight,
+      footerHeight,
       height,
       hideIndexRow,
       overscanRowCount,
@@ -124,6 +129,18 @@ export default class TableExample extends React.PureComponent {
             />
             Hide header?
           </label>
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label="Show footer?"
+              checked={enableFooter}
+              className={styles.checkbox}
+              type="checkbox"
+              onChange={event =>
+                this.setState({enableFooter: event.target.checked})
+              }
+            />
+            Show footer?
+          </label>
         </ContentBoxParagraph>
 
         <InputRow>
@@ -170,6 +187,16 @@ export default class TableExample extends React.PureComponent {
             value={headerHeight}
           />
           <LabeledInput
+            label="Footer height"
+            name="footerHeight"
+            onChange={event =>
+              this.setState({
+                footerHeight: parseInt(event.target.value, 10) || 1,
+              })
+            }
+            value={footerHeight}
+          />
+          <LabeledInput
             label="Overscan"
             name="overscanRowCount"
             onChange={event =>
@@ -187,8 +214,11 @@ export default class TableExample extends React.PureComponent {
               <Table
                 ref="Table"
                 disableHeader={disableHeader}
+                enableFooter={enableFooter}
                 headerClassName={styles.headerColumn}
                 headerHeight={headerHeight}
+                footerClassName={styles.footerColumn}
+                footerHeight={footerHeight}
                 height={height}
                 noRowsRenderer={this._noRowsRenderer}
                 overscanRowCount={overscanRowCount}
@@ -214,6 +244,7 @@ export default class TableExample extends React.PureComponent {
                   dataKey="name"
                   disableSort={!this._isSortEnabled()}
                   headerRenderer={this._headerRenderer}
+                  footerRenderer={this._footerRenderer}
                   width={90}
                 />
                 <Column
@@ -250,6 +281,10 @@ export default class TableExample extends React.PureComponent {
         {sortBy === dataKey && <SortIndicator sortDirection={sortDirection} />}
       </div>
     );
+  }
+
+  _footerRenderer() {
+    return <div>Full Name</div>;
   }
 
   _isSortEnabled() {

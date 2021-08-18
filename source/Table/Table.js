@@ -11,6 +11,7 @@ import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 
 import defaultRowRenderer from './defaultRowRenderer';
 import defaultHeaderRowRenderer from './defaultHeaderRowRenderer';
+import defaultFooterRowRenderer from './defaultFooterRowRenderer';
 import SortDirection from './SortDirection';
 
 /**
@@ -48,6 +49,9 @@ export default class Table extends React.PureComponent {
     /** Disable rendering the header at all */
     disableHeader: PropTypes.bool,
 
+    /** Enable rendering the footer at all */
+    enableFooter: PropTypes.bool,
+
     /**
      * Used to estimate the total height of a Table before all of its rows have actually been measured.
      * The estimated total height is adjusted as rows are rendered.
@@ -79,6 +83,25 @@ export default class Table extends React.PureComponent {
     /** Optional custom inline style to attach to table header columns. */
     headerStyle: PropTypes.object,
 
+    /** Optional CSS class to apply to all column footers */
+    footerClassName: PropTypes.string,
+
+    /** Fixed height of footer row */
+    footerHeight: PropTypes.number.isRequired,
+
+    /**
+     * Responsible for rendering a table row given an array of columns:
+     * Should implement the following interface: ({
+     *   className: string,
+     *   columns: any[],
+     *   style: any
+     * }): PropTypes.node
+     */
+    footerRowRenderer: PropTypes.func,
+
+    /** Optional custom inline style to attach to table footer columns. */
+    footerStyle: PropTypes.object,
+
     /** Fixed/available height for out DOM element */
     height: PropTypes.number.isRequired,
 
@@ -99,6 +122,12 @@ export default class Table extends React.PureComponent {
      * ({ columnData: any, dataKey: string }): void
      */
     onHeaderClick: PropTypes.func,
+
+    /**
+     * Optional callback when a column's footer is clicked.
+     * ({ columnData: any, dataKey: string }): void
+     */
+    onFooterClick: PropTypes.func,
 
     /**
      * Callback invoked when a user clicks on a table row.
@@ -235,9 +264,12 @@ export default class Table extends React.PureComponent {
 
   static defaultProps = {
     disableHeader: false,
+    enableFooter: false,
     estimatedRowSize: 30,
     headerHeight: 0,
     headerStyle: {},
+    footerHeight: 0,
+    footerStyle: {},
     noRowsRenderer: () => null,
     onRowsRendered: () => null,
     onScroll: () => null,
@@ -245,6 +277,7 @@ export default class Table extends React.PureComponent {
     overscanRowCount: 10,
     rowRenderer: defaultRowRenderer,
     headerRowRenderer: defaultHeaderRowRenderer,
+    footerRowRenderer: defaultFooterRowRenderer,
     rowStyle: {},
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
@@ -361,10 +394,13 @@ export default class Table extends React.PureComponent {
       children,
       className,
       disableHeader,
+      enableFooter,
       gridClassName,
       gridStyle,
       headerHeight,
       headerRowRenderer,
+      footerHeight,
+      footerRowRenderer,
       height,
       id,
       noRowsRenderer,
@@ -376,7 +412,11 @@ export default class Table extends React.PureComponent {
     } = this.props;
     const {scrollbarWidth} = this.state;
 
-    const availableRowsHeight = disableHeader ? height : height - headerHeight;
+    let availableRowsHeight = disableHeader ? height : height - headerHeight;
+
+    if (enableFooter) {
+      availableRowsHeight = availableRowsHeight - footerHeight;
+    }
 
     const rowClass =
       typeof rowClassName === 'function'
@@ -447,6 +487,18 @@ export default class Table extends React.PureComponent {
             overflowX: 'hidden',
           }}
         />
+        {enableFooter &&
+          footerRowRenderer({
+            className: clsx('ReactVirtualized__Table__footerRow', rowClass),
+            columns: this._getFooterColumns(),
+            style: {
+              height: footerHeight,
+              overflow: 'hidden',
+              paddingRight: scrollbarWidth,
+              width: width,
+              ...rowStyleObject,
+            },
+          })}
       </div>
     );
   }
@@ -609,6 +661,64 @@ export default class Table extends React.PureComponent {
     );
   }
 
+  _createFooter({column, index}) {
+    const {footerClassName, footerStyle, onFooterClick} = this.props;
+    const {columnData, dataKey, footerRenderer, id, label} = column.props;
+
+    const classNames = clsx(
+      'ReactVirtualized__Table__footerColumn',
+      footerClassName,
+      column.props.footerClassName,
+    );
+    const style = this._getFlexStyleForColumn(column, {
+      ...footerStyle,
+      ...column.props.footerStyle,
+    });
+
+    const renderedFooter = footerRenderer({
+      columnData,
+      dataKey,
+      label,
+    });
+
+    let footerOnClick, footerOnKeyDown, footerTabIndex, footerAriaLabel;
+
+    if (onFooterClick) {
+      const onClick = event => {
+        onFooterClick && onFooterClick({columnData, dataKey, event});
+      };
+
+      const onKeyDown = event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          onClick(event);
+        }
+      };
+
+      footerAriaLabel = column.props['aria-label'] || label || dataKey;
+      footerTabIndex = 0;
+      footerOnClick = onClick;
+      footerOnKeyDown = onKeyDown;
+    }
+
+    // Avoid using object-spread syntax with multiple objects here,
+    // Since it results in an extra method call to 'babel-runtime/helpers/extends'
+    // See PR https://github.com/bvaughn/react-virtualized/pull/942
+    return (
+      <div
+        aria-label={footerAriaLabel}
+        className={classNames}
+        id={id}
+        key={'Footer-Col' + index}
+        onClick={footerOnClick}
+        onKeyDown={footerOnKeyDown}
+        role="columnfooter"
+        style={style}
+        tabIndex={footerTabIndex}>
+        {renderedFooter}
+      </div>
+    );
+  }
+
   _createRow({rowIndex: index, isScrolling, key, parent, style}) {
     const {
       children,
@@ -698,6 +808,13 @@ export default class Table extends React.PureComponent {
     const items = disableHeader ? [] : React.Children.toArray(children);
 
     return items.map((column, index) => this._createHeader({column, index}));
+  }
+
+  _getFooterColumns() {
+    const {children, enableFooter} = this.props;
+    const items = enableFooter ? React.Children.toArray(children) : [];
+
+    return items.map((column, index) => this._createFooter({column, index}));
   }
 
   _getRowHeight(rowIndex) {
