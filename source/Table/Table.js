@@ -412,7 +412,10 @@ export default class Table extends React.PureComponent {
     } = this.props;
     const {scrollbarWidth} = this.state;
 
-    const availableRowsHeight = disableHeader ? height : height - headerHeight;
+    let availableRowsHeight = disableHeader ? height : height - headerHeight;
+    if (enableFooter) {
+      availableRowsHeight -= footerHeight;
+    }
 
     const rowClass =
       typeof rowClassName === 'function'

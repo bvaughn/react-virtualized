@@ -32,7 +32,8 @@
 }
 
 .ReactVirtualized__Table__footerRow {
-  position: fixed;
+  position: absolute;
+  bottom: 0;
 }
 
 .ReactVirtualized__Table__row {
