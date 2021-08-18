@@ -4345,9 +4345,7 @@
         }, {
             key: "render",
             value: function() {
-                var _this2 = this, _this$props = this.props, children = _this$props.children, className = _this$props.className, disableHeader = _this$props.disableHeader, enableFooter = _this$props.enableFooter, gridClassName = _this$props.gridClassName, gridStyle = _this$props.gridStyle, headerHeight = _this$props.headerHeight, headerRowRenderer = _this$props.headerRowRenderer, footerHeight = _this$props.footerHeight, footerRowRenderer = _this$props.footerRowRenderer, height = _this$props.height, id = _this$props.id, noRowsRenderer = _this$props.noRowsRenderer, rowClassName = _this$props.rowClassName, rowStyle = _this$props.rowStyle, scrollToIndex = _this$props.scrollToIndex, style = _this$props.style, width = _this$props.width, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = disableHeader ? height : height - headerHeight;
-                enableFooter && (availableRowsHeight -= footerHeight);
-                var rowClass = "function" == typeof rowClassName ? rowClassName({
+                var _this2 = this, _this$props = this.props, children = _this$props.children, className = _this$props.className, disableHeader = _this$props.disableHeader, enableFooter = _this$props.enableFooter, gridClassName = _this$props.gridClassName, gridStyle = _this$props.gridStyle, headerHeight = _this$props.headerHeight, headerRowRenderer = _this$props.headerRowRenderer, footerHeight = _this$props.footerHeight, footerRowRenderer = _this$props.footerRowRenderer, height = _this$props.height, id = _this$props.id, noRowsRenderer = _this$props.noRowsRenderer, rowClassName = _this$props.rowClassName, rowStyle = _this$props.rowStyle, scrollToIndex = _this$props.scrollToIndex, style = _this$props.style, width = _this$props.width, scrollbarWidth = this.state.scrollbarWidth, availableRowsHeight = disableHeader ? height : height - headerHeight, rowClass = "function" == typeof rowClassName ? rowClassName({
                     index: -1
                 }) : rowClassName, rowStyleObject = "function" == typeof rowStyle ? rowStyle({
                     index: -1

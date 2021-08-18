@@ -52,4 +52,4 @@
   style: any,
   key: string,
 };*/
-'use strict';
+"use strict";

@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-Object.defineProperty(exports, '__esModule', {
-  value: true,
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
-exports['default'] = defaultOverscanIndicesGetter;
+exports["default"] = defaultOverscanIndicesGetter;
 exports.SCROLL_DIRECTION_VERTICAL = exports.SCROLL_DIRECTION_HORIZONTAL = exports.SCROLL_DIRECTION_FORWARD = exports.SCROLL_DIRECTION_BACKWARD = void 0;
 
 /*:: import type {OverscanIndicesGetterParams, OverscanIndices} from './types';*/
@@ -21,26 +21,24 @@ var SCROLL_DIRECTION_VERTICAL = 'vertical';
 
 exports.SCROLL_DIRECTION_VERTICAL = SCROLL_DIRECTION_VERTICAL;
 
-function defaultOverscanIndicesGetter(_ref) {
-  /*: OverscanIndices*/
+function defaultOverscanIndicesGetter(_ref)
+/*: OverscanIndices*/
+{
   var cellCount = _ref.cellCount,
-    overscanCellsCount = _ref.overscanCellsCount,
-    scrollDirection = _ref.scrollDirection,
-    startIndex = _ref.startIndex,
-    stopIndex = _ref.stopIndex;
+      overscanCellsCount = _ref.overscanCellsCount,
+      scrollDirection = _ref.scrollDirection,
+      startIndex = _ref.startIndex,
+      stopIndex = _ref.stopIndex;
 
   if (scrollDirection === SCROLL_DIRECTION_FORWARD) {
     return {
       overscanStartIndex: Math.max(0, startIndex),
-      overscanStopIndex: Math.min(
-        cellCount - 1,
-        stopIndex + overscanCellsCount,
-      ),
+      overscanStopIndex: Math.min(cellCount - 1, stopIndex + overscanCellsCount)
     };
   } else {
     return {
       overscanStartIndex: Math.max(0, startIndex - overscanCellsCount),
-      overscanStopIndex: Math.min(cellCount - 1, stopIndex),
+      overscanStopIndex: Math.min(cellCount - 1, stopIndex)
     };
   }
 }

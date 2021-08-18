@@ -11,4 +11,4 @@
   getHeight(rowIndex: number, columnIndex?: number): number;
   getWidth(rowIndex: number, columnIndex?: number): number;
 }*/
-'use strict';
+"use strict";

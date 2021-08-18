@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-Object.defineProperty(exports, '__esModule', {
-  value: true,
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
 exports.getMaxElementSize = void 0;
 var DEFAULT_MAX_ELEMENT_SIZE = 1500000;
@@ -15,7 +15,8 @@ var isChrome = function isChrome() {
   return !!window.chrome;
 };
 
-var getMaxElementSize = function getMaxElementSize() /*: number*/
+var getMaxElementSize = function getMaxElementSize()
+/*: number*/
 {
   if (isBrowser()) {
     if (isChrome()) {

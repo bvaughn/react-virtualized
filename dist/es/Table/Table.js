@@ -207,11 +207,6 @@ function (_React$PureComponent) {
           width = _this$props.width;
       var scrollbarWidth = this.state.scrollbarWidth;
       var availableRowsHeight = disableHeader ? height : height - headerHeight;
-
-      if (enableFooter) {
-        availableRowsHeight = availableRowsHeight - footerHeight;
-      }
-
       var rowClass = typeof rowClassName === 'function' ? rowClassName({
         index: -1
       }) : rowClassName;

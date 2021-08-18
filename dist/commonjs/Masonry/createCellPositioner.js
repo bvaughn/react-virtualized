@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-Object.defineProperty(exports, '__esModule', {
-  value: true,
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
-exports['default'] = createCellPositioner;
+exports["default"] = createCellPositioner;
 
 /*:: import type {CellMeasurerCache, Positioner} from './Masonry';*/
 
@@ -19,13 +19,14 @@ exports['default'] = createCellPositioner;
   columnWidth: number,
   spacer?: number,
 };*/
-function createCellPositioner(_ref) {
-  /*: Positioner*/
+function createCellPositioner(_ref)
+/*: Positioner*/
+{
   var cellMeasurerCache = _ref.cellMeasurerCache,
-    columnCount = _ref.columnCount,
-    columnWidth = _ref.columnWidth,
-    _ref$spacer = _ref.spacer,
-    spacer = _ref$spacer === void 0 ? 0 : _ref$spacer;
+      columnCount = _ref.columnCount,
+      columnWidth = _ref.columnWidth,
+      _ref$spacer = _ref.spacer,
+      spacer = _ref$spacer === void 0 ? 0 : _ref$spacer;
   var columnHeights;
   initOrResetDerivedValues();
 
@@ -41,16 +42,16 @@ function createCellPositioner(_ref) {
 
     var left = columnIndex * (columnWidth + spacer);
     var top = columnHeights[columnIndex] || 0;
-    columnHeights[columnIndex] =
-      top + cellMeasurerCache.getHeight(index) + spacer;
+    columnHeights[columnIndex] = top + cellMeasurerCache.getHeight(index) + spacer;
     return {
       left: left,
-      top: top,
+      top: top
     };
   }
 
-  function initOrResetDerivedValues() {
-    /*: void*/
+  function initOrResetDerivedValues()
+  /*: void*/
+  {
     // Track the height of each column.
     // Layout algorithm below always inserts into the shortest column.
     columnHeights = [];
@@ -60,11 +61,11 @@ function createCellPositioner(_ref) {
     }
   }
 
-  function reset(
-    params,
-    /*: resetParams*/
-  ) {
-    /*: void*/
+  function reset(params
+  /*: resetParams*/
+  )
+  /*: void*/
+  {
     columnCount = params.columnCount;
     columnWidth = params.columnWidth;
     spacer = params.spacer;

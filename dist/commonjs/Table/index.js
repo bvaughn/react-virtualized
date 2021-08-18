@@ -1,121 +1,107 @@
-'use strict';
+"use strict";
 
-var _interopRequireDefault = require('@babel/runtime/helpers/interopRequireDefault');
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, '__esModule', {
-  value: true,
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
-Object.defineProperty(exports, 'createMultiSort', {
+Object.defineProperty(exports, "createMultiSort", {
   enumerable: true,
   get: function get() {
-    return _createMultiSort['default'];
-  },
+    return _createMultiSort["default"];
+  }
 });
-Object.defineProperty(exports, 'defaultCellDataGetter', {
+Object.defineProperty(exports, "defaultCellDataGetter", {
   enumerable: true,
   get: function get() {
-    return _defaultCellDataGetter['default'];
-  },
+    return _defaultCellDataGetter["default"];
+  }
 });
-Object.defineProperty(exports, 'defaultCellRenderer', {
+Object.defineProperty(exports, "defaultCellRenderer", {
   enumerable: true,
   get: function get() {
-    return _defaultCellRenderer['default'];
-  },
+    return _defaultCellRenderer["default"];
+  }
 });
-Object.defineProperty(exports, 'defaultHeaderRowRenderer', {
+Object.defineProperty(exports, "defaultHeaderRowRenderer", {
   enumerable: true,
   get: function get() {
-    return _defaultHeaderRowRenderer['default'];
-  },
+    return _defaultHeaderRowRenderer["default"];
+  }
 });
-Object.defineProperty(exports, 'defaultFooterRowRenderer', {
+Object.defineProperty(exports, "defaultFooterRowRenderer", {
   enumerable: true,
   get: function get() {
-    return _defaultFooterRowRenderer['default'];
-  },
+    return _defaultFooterRowRenderer["default"];
+  }
 });
-Object.defineProperty(exports, 'defaultHeaderRenderer', {
+Object.defineProperty(exports, "defaultHeaderRenderer", {
   enumerable: true,
   get: function get() {
-    return _defaultHeaderRenderer['default'];
-  },
+    return _defaultHeaderRenderer["default"];
+  }
 });
-Object.defineProperty(exports, 'defaultFooterRenderer', {
+Object.defineProperty(exports, "defaultFooterRenderer", {
   enumerable: true,
   get: function get() {
-    return _defaultFooterRenderer['default'];
-  },
+    return _defaultFooterRenderer["default"];
+  }
 });
-Object.defineProperty(exports, 'defaultRowRenderer', {
+Object.defineProperty(exports, "defaultRowRenderer", {
   enumerable: true,
   get: function get() {
-    return _defaultRowRenderer['default'];
-  },
+    return _defaultRowRenderer["default"];
+  }
 });
-Object.defineProperty(exports, 'Column', {
+Object.defineProperty(exports, "Column", {
   enumerable: true,
   get: function get() {
-    return _Column['default'];
-  },
+    return _Column["default"];
+  }
 });
-Object.defineProperty(exports, 'SortDirection', {
+Object.defineProperty(exports, "SortDirection", {
   enumerable: true,
   get: function get() {
-    return _SortDirection['default'];
-  },
+    return _SortDirection["default"];
+  }
 });
-Object.defineProperty(exports, 'SortIndicator', {
+Object.defineProperty(exports, "SortIndicator", {
   enumerable: true,
   get: function get() {
-    return _SortIndicator['default'];
-  },
+    return _SortIndicator["default"];
+  }
 });
-Object.defineProperty(exports, 'Table', {
+Object.defineProperty(exports, "Table", {
   enumerable: true,
   get: function get() {
-    return _Table['default'];
-  },
+    return _Table["default"];
+  }
 });
-exports['default'] = void 0;
+exports["default"] = void 0;
 
-var _createMultiSort = _interopRequireDefault(require('./createMultiSort'));
+var _createMultiSort = _interopRequireDefault(require("./createMultiSort"));
 
-var _defaultCellDataGetter = _interopRequireDefault(
-  require('./defaultCellDataGetter'),
-);
+var _defaultCellDataGetter = _interopRequireDefault(require("./defaultCellDataGetter"));
 
-var _defaultCellRenderer = _interopRequireDefault(
-  require('./defaultCellRenderer'),
-);
+var _defaultCellRenderer = _interopRequireDefault(require("./defaultCellRenderer"));
 
-var _defaultHeaderRowRenderer = _interopRequireDefault(
-  require('./defaultHeaderRowRenderer.js'),
-);
+var _defaultHeaderRowRenderer = _interopRequireDefault(require("./defaultHeaderRowRenderer.js"));
 
-var _defaultFooterRowRenderer = _interopRequireDefault(
-  require('./defaultFooterRowRenderer.js'),
-);
+var _defaultFooterRowRenderer = _interopRequireDefault(require("./defaultFooterRowRenderer.js"));
 
-var _defaultHeaderRenderer = _interopRequireDefault(
-  require('./defaultHeaderRenderer'),
-);
+var _defaultHeaderRenderer = _interopRequireDefault(require("./defaultHeaderRenderer"));
 
-var _defaultFooterRenderer = _interopRequireDefault(
-  require('./defaultFooterRenderer'),
-);
+var _defaultFooterRenderer = _interopRequireDefault(require("./defaultFooterRenderer"));
 
-var _defaultRowRenderer = _interopRequireDefault(
-  require('./defaultRowRenderer'),
-);
+var _defaultRowRenderer = _interopRequireDefault(require("./defaultRowRenderer"));
 
-var _Column = _interopRequireDefault(require('./Column'));
+var _Column = _interopRequireDefault(require("./Column"));
 
-var _SortDirection = _interopRequireDefault(require('./SortDirection'));
+var _SortDirection = _interopRequireDefault(require("./SortDirection"));
 
-var _SortIndicator = _interopRequireDefault(require('./SortIndicator'));
+var _SortIndicator = _interopRequireDefault(require("./SortIndicator"));
 
-var _Table = _interopRequireDefault(require('./Table'));
+var _Table = _interopRequireDefault(require("./Table"));
 
-var _default = _Table['default'];
-exports['default'] = _default;
+var _default = _Table["default"];
+exports["default"] = _default;

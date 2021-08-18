@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-Object.defineProperty(exports, '__esModule', {
-  value: true,
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
-exports['default'] = void 0;
+exports["default"] = void 0;
 var SortDirection = {
   /**
    * Sort items in ascending order.
@@ -15,7 +15,7 @@ var SortDirection = {
    * Sort items in descending order.
    * This means arranging from the highest value to the lowest (e.g. z-a, 9-0).
    */
-  DESC: 'DESC',
+  DESC: 'DESC'
 };
 var _default = SortDirection;
-exports['default'] = _default;
+exports["default"] = _default;

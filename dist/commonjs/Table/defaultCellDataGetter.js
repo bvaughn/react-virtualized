@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-Object.defineProperty(exports, '__esModule', {
-  value: true,
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
-exports['default'] = defaultCellDataGetter;
+exports["default"] = defaultCellDataGetter;
 
 /*:: import type {CellDataGetterParams} from './types';*/
 
@@ -14,7 +14,7 @@ exports['default'] = defaultCellDataGetter;
  */
 function defaultCellDataGetter(_ref) {
   var dataKey = _ref.dataKey,
-    rowData = _ref.rowData;
+      rowData = _ref.rowData;
 
   if (typeof rowData.get === 'function') {
     return rowData.get(dataKey);
