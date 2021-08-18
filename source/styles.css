@@ -30,6 +30,11 @@
   flex-direction: row;
   align-items: center;
 }
+
+.ReactVirtualized__Table__footerRow {
+  position: fixed;
+}
+
 .ReactVirtualized__Table__row {
   display: flex;
   flex-direction: row;
