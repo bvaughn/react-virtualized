@@ -22,7 +22,8 @@
 .ReactVirtualized__Table__Grid {
 }
 
-.ReactVirtualized__Table__headerRow {
+.ReactVirtualized__Table__headerRow,
+.ReactVirtualized__Table__footerRow {
   font-weight: 700;
   text-transform: uppercase;
   display: flex;
@@ -35,7 +36,8 @@
   align-items: center;
 }
 
-.ReactVirtualized__Table__headerTruncatedText {
+.ReactVirtualized__Table__headerTruncatedText,
+.ReactVirtualized__Table__footerTruncatedText {
   display: inline-block;
   max-width: 100%;
   white-space: nowrap;
@@ -44,6 +46,7 @@
 }
 
 .ReactVirtualized__Table__headerColumn,
+.ReactVirtualized__Table__footerColumn,
 .ReactVirtualized__Table__rowColumn {
   margin-right: 10px;
   min-width: 0px;
@@ -54,6 +57,7 @@
 }
 
 .ReactVirtualized__Table__headerColumn:first-of-type,
+.ReactVirtualized__Table__footerColumn:first-of-type,
 .ReactVirtualized__Table__rowColumn:first-of-type {
   margin-left: 10px;
 }
