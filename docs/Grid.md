@@ -93,10 +93,10 @@ Useful for animating position changes.
 
 The Grid component supports the following static class names
 
-| Property                                     | Description           |
-| :------------------------------------------- | :-------------------- |
-| ReactVirtualized\_\_Grid                     | Main (outer) element  |
-| ReactVirtualized**Grid**innerScrollContainer | Inner scrollable area |
+| Property                                         | Description           |
+| :----------------------------------------------- | :-------------------- |
+| ReactVirtualized\_\_Grid                         | Main (outer) element  |
+| ReactVirtualized\_\_Grid\_\_innerScrollContainer | Inner scrollable area |
 
 ### cellRangeRenderer
 
