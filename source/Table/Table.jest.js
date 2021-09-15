@@ -1243,9 +1243,14 @@ describe('Table', () => {
   });
 
   describe('a11y properties', () => {
-    it('should set aria role on the table', () => {
+    it('should set default aria role on the table', () => {
       const node = findDOMNode(render(getMarkup()));
       expect(node.getAttribute('role')).toEqual('grid');
+    });
+
+    it('should set aria role on the table based on props value', () => {
+      const node = findDOMNode(render(getMarkup({role: 'table'})));
+      expect(node.getAttribute('role')).toEqual('table');
     });
 
     it('should set aria col/row count on the table', () => {
