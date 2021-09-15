@@ -50,6 +50,7 @@ describe('Table', () => {
     minWidth,
     defaultSortDirection,
     label,
+    flexibleCellProps, // @NOTE: Use flexibleCellProps to customize props sent to Column components
     ...flexTableProps
   } = {}) {
     return (
@@ -76,6 +77,7 @@ describe('Table', () => {
           style={columnStyle}
           headerStyle={columnHeaderStyle}
           id={columnID}
+          {...flexibleCellProps}
         />
         <Column
           label="Email"
@@ -83,6 +85,7 @@ describe('Table', () => {
           maxWidth={maxWidth}
           minWidth={minWidth}
           width={50}
+          {...flexibleCellProps}
         />
         {false}
         {true}
@@ -1297,12 +1300,22 @@ describe('Table', () => {
       expect(rows[1].getAttribute('aria-rowindex')).toEqual('2');
     });
 
-    it('should set aria role on a cell', () => {
+    it('should set a default aria role on a cell', () => {
       const rendered = findDOMNode(render(getMarkup()));
       const cell = rendered.querySelector(
         '.ReactVirtualized__Table__rowColumn',
       );
       expect(cell.getAttribute('role')).toEqual('gridcell');
+    });
+
+    it('should set a customized aria role on a cell based on prop values', () => {
+      const rendered = findDOMNode(
+        render(getMarkup({flexibleCellProps: {role: 'cell'}})),
+      );
+      const cell = rendered.querySelector(
+        '.ReactVirtualized__Table__rowColumn',
+      );
+      expect(cell.getAttribute('role')).toEqual('cell');
     });
 
     it('should set aria colindex on a cell', () => {
