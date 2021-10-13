@@ -97,6 +97,9 @@ type Props = {
   /** Unfiltered props for the Grid container. */
   containerProps?: Object,
 
+  /** Optional custom container component */
+  containerComponent?: React.ComponentType<React.ElementProps<HTMLDivElement>>,
+
   /** ARIA role for the cell-container.  */
   containerRole: string,
 
@@ -967,6 +970,7 @@ class Grid extends React.PureComponent<Props, State> {
       autoWidth,
       className,
       containerProps,
+      containerComponent,
       containerRole,
       containerStyle,
       height,
@@ -1039,8 +1043,10 @@ class Grid extends React.PureComponent<Props, State> {
     const showNoContentRenderer =
       childrenToDisplay.length === 0 && height > 0 && width > 0;
 
+    const ContainerComponent = containerComponent ? containerComponent : 'div';
+
     return (
-      <div
+      <ContainerComponent
         ref={this._setScrollingContainerRef}
         {...containerProps}
         aria-label={this.props['aria-label']}
@@ -1072,7 +1078,7 @@ class Grid extends React.PureComponent<Props, State> {
           </div>
         )}
         {showNoContentRenderer && noContentRenderer()}
-      </div>
+      </ContainerComponent>
     );
   }
 

@@ -11,6 +11,7 @@ import {
   SCROLL_DIRECTION_FORWARD,
 } from './defaultOverscanIndicesGetter';
 import {getMaxElementSize} from './utils/maxElementSize.js';
+import {forwardRef} from 'react';
 
 const DEFAULT_COLUMN_WIDTH = 50;
 const DEFAULT_HEIGHT = 100;
@@ -2750,6 +2751,40 @@ describe('Grid', () => {
         }),
       );
       expect(onScrollbarPresenceChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Custom container component', () => {
+    it('should render custom container component', async done => {
+      const testComponentId = 'testComponentId';
+
+      const TestContainerComponent = forwardRef((props, ref) => {
+        return (
+          <div ref={ref} {...props} id={testComponentId}>
+            {props.children}
+          </div>
+        );
+      });
+
+      const props = {
+        containerComponent: TestContainerComponent,
+      };
+
+      const grid = render(getMarkup(props));
+
+      expect(grid._scrollingContainer.id).toBe(testComponentId);
+
+      done();
+    });
+
+    it('should render default container component', async done => {
+      const props = {};
+
+      const grid = render(getMarkup(props));
+
+      expect(grid._scrollingContainer.id).toBe('');
+
+      done();
     });
   });
 
