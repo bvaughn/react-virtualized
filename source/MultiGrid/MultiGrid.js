@@ -642,7 +642,7 @@ class MultiGrid extends React.PureComponent {
         onScroll={enableFixedColumnScroll ? this._onScrollTop : undefined}
         ref={this._bottomLeftGridRef}
         rowCount={Math.max(0, rowCount - fixedRowCount) + additionalRowCount}
-        rowHeight={this._rowHeightBottomGrid}
+        rowHeight={this._rowHeightBottomLeftGrid}
         style={this._bottomLeftGridStyle}
         tabIndex={null}
         width={gridWidth}
@@ -788,6 +788,11 @@ class MultiGrid extends React.PureComponent {
     }
     return topRightGrid;
   }
+  
+  _rowHeightBottomLeftGrid = ({ index }) => {
+    const additionalRowCount = this.state.showHorizontalScrollbar ? 1 : 0;
+    return this._rowHeightBottomGrid({ index: index - additionalRowCount });
+  };
 
   _rowHeightBottomGrid = ({index}) => {
     const {fixedRowCount, rowCount, rowHeight} = this.props;
