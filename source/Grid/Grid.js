@@ -1258,14 +1258,18 @@ class Grid extends React.PureComponent<Props, State> {
    */
   _debounceScrollEnded() {
     const {scrollingResetTimeInterval} = this.props;
+    const parentWindow = this._scrollingContainer.ownerDocument
+      ? this._scrollingContainer.ownerDocument.defaultView
+      : null;
 
     if (this._disablePointerEventsTimeoutId) {
-      cancelAnimationTimeout(this._disablePointerEventsTimeoutId);
+      cancelAnimationTimeout(this._disablePointerEventsTimeoutId, parentWindow);
     }
 
     this._disablePointerEventsTimeoutId = requestAnimationTimeout(
       this._debounceScrollEndedCallback,
       scrollingResetTimeInterval,
+      parentWindow,
     );
   }
 

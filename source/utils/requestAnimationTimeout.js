@@ -1,13 +1,15 @@
 /** @flow */
 
-import {caf, raf} from './animationFrame';
+import {cafCreator, rafCreator} from './animationFrame';
 
 export type AnimationTimeoutId = {
   id: number,
 };
 
-export const cancelAnimationTimeout = (frame: AnimationTimeoutId) =>
-  caf(frame.id);
+export const cancelAnimationTimeout = (
+  frame: AnimationTimeoutId,
+  parentWindow?: any,
+) => cafCreator(parentWindow)(frame.id);
 
 /**
  * Recursively calls requestAnimationFrame until a specified delay has been met or exceeded.
@@ -18,8 +20,10 @@ export const cancelAnimationTimeout = (frame: AnimationTimeoutId) =>
 export const requestAnimationTimeout = (
   callback: Function,
   delay: number,
+  parentWindow?: any,
 ): AnimationTimeoutId => {
   let start;
+  const raf = rafCreator(parentWindow);
   // wait for end of processing current event handler, because event handler may be long
   Promise.resolve().then(() => {
     start = Date.now();

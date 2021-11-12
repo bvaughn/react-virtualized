@@ -16,25 +16,29 @@ if (typeof window !== 'undefined') {
 
 // requestAnimationFrame() shim by Paul Irish
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-const request =
-  win.requestAnimationFrame ||
-  win.webkitRequestAnimationFrame ||
-  win.mozRequestAnimationFrame ||
-  win.oRequestAnimationFrame ||
-  win.msRequestAnimationFrame ||
+const request = (parentWindow?: any) =>
+  (parentWindow || win).requestAnimationFrame ||
+  (parentWindow || win).webkitRequestAnimationFrame ||
+  (parentWindow || win).mozRequestAnimationFrame ||
+  (parentWindow || win).oRequestAnimationFrame ||
+  (parentWindow || win).msRequestAnimationFrame ||
   function(callback: Callback): RequestAnimationFrame {
-    return (win: any).setTimeout(callback, 1000 / 60);
+    return (parentWindow || win: any).setTimeout(callback, 1000 / 60);
   };
 
-const cancel =
-  win.cancelAnimationFrame ||
-  win.webkitCancelAnimationFrame ||
-  win.mozCancelAnimationFrame ||
-  win.oCancelAnimationFrame ||
-  win.msCancelAnimationFrame ||
+const cancel = (parentWindow?: any) =>
+  (parentWindow || win).cancelAnimationFrame ||
+  (parentWindow || win).webkitCancelAnimationFrame ||
+  (parentWindow || win).mozCancelAnimationFrame ||
+  (parentWindow || win).oCancelAnimationFrame ||
+  (parentWindow || win).msCancelAnimationFrame ||
   function(id: number) {
-    (win: any).clearTimeout(id);
+    (parentWindow || win: any).clearTimeout(id);
   };
 
-export const raf: RequestAnimationFrame = (request: any);
-export const caf: CancelAnimationFrame = (cancel: any);
+export const rafCreator: (
+  parentWindow?: any,
+) => RequestAnimationFrame = (request: any);
+export const cafCreator: (
+  parentWindow?: any,
+) => CancelAnimationFrame = (cancel: any);
