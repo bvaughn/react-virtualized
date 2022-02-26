@@ -1,5 +1,14 @@
 ## Changelog
 
+##### NEXT
+
+- Update peer dependencies to allow React 17 ([levenleven](https://github.com/levenleven) - [#1625](https://github.com/bvaughn/react-virtualized/pull/1625))
+- Use DOM API instead of creating Trusted Types policy to append a markup ([shhnjk](https://github.com/shhnjk) - [#1627](https://github.com/bvaughn/react-virtualized/pull/1627))
+- Fix bug in WindowScroller::updatePosition ([yamadapc](https://github.com/yamadapc) - [#1642](https://github.com/bvaughn/react-virtualized/pull/1642), [#1648](https://github.com/bvaughn/react-virtualized/pull/1648))
+- Fix babel tranform es error ([fupengl](https://github.com/fupengl) - [#1651](https://github.com/bvaughn/react-virtualized/pull/1651))
+- Fix issue with unused import being emitted ([mewhhaha](https://github.com/mewhhaha) - [#1635](https://github.com/bvaughn/react-virtualized/pull/1635))
+- Fix grid roles for accessbility ([asnewman](https://github.com/asnewman) - [#1624](https://github.com/bvaughn/react-virtualized/pull/1624))
+
 ##### 9.22.3
 
 - Add Trusted Types support ([shhnjk](https://github.com/shhnjk) - [#1614](https://github.com/bvaughn/react-virtualized/pull/1614))
