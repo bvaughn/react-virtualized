@@ -490,7 +490,10 @@ export default class Table extends React.PureComponent {
         aria-colindex={columnIndex + 1}
         aria-describedby={id}
         className={clsx('ReactVirtualized__Table__rowColumn', className)}
-        key={'Row' + rowIndex + '-' + 'Col' + columnIndex}
+        key={
+          (renderedCell && renderedCell.key) ||
+          `Row${rowIndex}-Col${columnIndex}`
+        }
         onClick={onClick}
         role="gridcell"
         style={style}
@@ -598,7 +601,7 @@ export default class Table extends React.PureComponent {
         aria-sort={headerAriaSort}
         className={classNames}
         id={id}
-        key={'Header-Col' + index}
+        key={column.key || `Header-Col${index}`}
         onClick={headerOnClick}
         onKeyDown={headerOnKeyDown}
         role="columnheader"
@@ -658,7 +661,7 @@ export default class Table extends React.PureComponent {
       columns,
       index,
       isScrolling,
-      key,
+      key: (columns[0] && columns[0].key) || key,
       onRowClick,
       onRowDoubleClick,
       onRowRightClick,
