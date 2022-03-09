@@ -1563,4 +1563,34 @@ describe('Table', () => {
     findDOMNode(render(getMarkup({cellRenderer})));
     expect(cellRenderer.mock.calls[0][0].parent).not.toBeUndefined();
   });
+
+  it('`key` prop rendered on cells should work as expected', () => {
+    let mutableList = [
+      {id: 1, name: 'foo'},
+      {id: 2, name: 'bar'},
+      {id: 3, name: 'baz'},
+    ];
+    const rerender = () =>
+      findDOMNode(
+        render(
+          getMarkup({
+            rowGetter: ({index}) => mutableList[index],
+            cellRenderer: props => (
+              <div key={props.cellData} id={props.cellData}>
+                Cell
+              </div>
+            ),
+            rowCount: mutableList.length,
+          }),
+        ),
+      );
+    let rendered = rerender();
+    expect(rendered.querySelector('#foo')).toBeTruthy();
+    const bazElem = rendered.querySelector('#baz');
+    mutableList = mutableList.slice(1);
+    rendered = rerender();
+    expect(rendered.querySelector('#foo')).toBeFalsy();
+    // dom node should have been reused when `key` worked
+    expect(rendered.querySelector('#baz')).toBe(bazElem);
+  });
 });
