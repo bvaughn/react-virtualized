@@ -27,6 +27,7 @@ import clsx from 'clsx';
 
 type Props = {
   'aria-label'?: string,
+  'aria-activedescendant'?: string,
 
   /**
    * Removes fixed height from the scrollingContainer so that the total height
@@ -49,8 +50,13 @@ type Props = {
   /** Optional renderer to be used in place of rows when rowCount is 0 */
   noRowsRenderer: NoContentRenderer,
 
-  /** Callback invoked with information about the slice of rows that were just rendered.  */
+  /** Callback invoked when list is focused.  */
+  onFocus?: (params: Event) => void,
 
+  /** Callback invoked when list is blured.  */
+  onBlur?: (params: Event) => void,
+
+  /** Callback invoked with information about the slice of rows that were just rendered.  */
   onRowsRendered: (params: RenderedRows) => void,
 
   /**
@@ -94,6 +100,12 @@ type Props = {
 
   /** Width of list */
   width: number,
+
+  /** aria-role */
+  role: string,
+
+  /** container role */
+  containerRole: string,
 };
 
 export default class List extends React.PureComponent<Props> {
@@ -108,6 +120,8 @@ export default class List extends React.PureComponent<Props> {
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
     style: {},
+    role: 'navigation',
+    containerRole: 'listbox',
   };
 
   Grid: ?React.ElementRef<typeof Grid>;

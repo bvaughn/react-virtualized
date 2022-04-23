@@ -129,7 +129,6 @@ class CollectionView extends React.PureComponent {
   };
 
   static defaultProps = {
-    'aria-label': 'grid',
     horizontalOverscanSize: 0,
     noContentRenderer: () => null,
     onScroll: () => null,
@@ -360,7 +359,7 @@ class CollectionView extends React.PureComponent {
       direction: 'ltr',
       height: autoHeight ? 'auto' : height,
       position: 'relative',
-      WebkitOverflowScrolling: 'touch',
+      webkitOverflowScrolling: 'touch',
       width,
       willChange: 'transform',
     };

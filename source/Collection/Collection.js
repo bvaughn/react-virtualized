@@ -48,7 +48,6 @@ export default class Collection extends React.PureComponent {
   };
 
   static defaultProps = {
-    'aria-label': 'grid',
     cellGroupRenderer: defaultCellGroupRenderer,
   };
 

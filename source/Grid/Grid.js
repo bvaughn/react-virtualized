@@ -58,8 +58,15 @@ type ScrollPosition = {
 };
 
 type Props = {
-  'aria-label': string,
+  'aria-label'?: string,
   'aria-readonly'?: boolean,
+  'aria-activedescendant'?: string,
+
+  /** Callback invoked when list is focused.  */
+  onFocus?: (params: Event) => void,
+
+  /** Callback invoked when list is blured.  */
+  onBlur?: (params: Event) => void,
 
   /**
    * Set the width of the inner scrollable container to 'auto'.
@@ -257,7 +264,6 @@ type State = {
  */
 class Grid extends React.PureComponent<Props, State> {
   static defaultProps = {
-    'aria-label': 'grid',
     'aria-readonly': true,
     autoContainerWidth: false,
     autoHeight: false,
@@ -1045,6 +1051,7 @@ class Grid extends React.PureComponent<Props, State> {
         {...containerProps}
         aria-label={this.props['aria-label']}
         aria-readonly={this.props['aria-readonly']}
+        aria-activedescendant={this.props['aria-activedescendant']}
         className={clsx('ReactVirtualized__Grid', className)}
         id={id}
         onScroll={this._onScroll}
@@ -1053,10 +1060,13 @@ class Grid extends React.PureComponent<Props, State> {
           ...gridStyle,
           ...style,
         }}
+        onFocus={this.props['onFocus']}
+        onBlur={this.props['onBlur']}
         tabIndex={tabIndex}>
         {childrenToDisplay.length > 0 && (
           <div
             className="ReactVirtualized__Grid__innerScrollContainer"
+            id="virtualized-grid-container"
             role={containerRole}
             style={{
               width: autoContainerWidth ? 'auto' : totalColumnsWidth,
