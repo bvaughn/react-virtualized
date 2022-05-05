@@ -93,7 +93,12 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _child: ?Element;
 
   state = {
-    ...getDimensions(this.props.scrollElement, this.props),
+    ...getDimensions(
+      this.props.serverHeight > 0 || this.props.serverWidth > 0
+        ? null
+        : this.props.scrollElement,
+      this.props,
+    ),
     isScrolling: false,
     scrollLeft: 0,
     scrollTop: 0,
