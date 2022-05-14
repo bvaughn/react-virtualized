@@ -201,45 +201,33 @@ export function scanForUnloadedRanges({
     }
   }
 
+  const isMultiple = range =>
+    !((range.stopIndex - range.startIndex + 1) % minimumBatchSize);
+
   // If :rangeStopIndex is not null it means we haven't ran out of unloaded rows.
-  // Scan forward to try filling our :minimumBatchSize.
+  // Scan forward to try and hit a multiple of our :minimumBatchSize.
   if (rangeStopIndex !== null) {
-    const potentialStopIndex = Math.min(
-      Math.max(rangeStopIndex, rangeStartIndex + minimumBatchSize - 1),
-      rowCount - 1,
-    );
-
-    for (let index = rangeStopIndex + 1; index <= potentialStopIndex; index++) {
-      if (!isRowLoaded({index})) {
-        rangeStopIndex = index;
-      } else {
-        break;
-      }
-    }
-
-    unloadedRanges.push({
+    const range = {
       startIndex: rangeStartIndex,
       stopIndex: rangeStopIndex,
-    });
+    };
+
+    let index = range.stopIndex + 1;
+    while (index < rowCount && !isMultiple(range) && !isRowLoaded({index})) {
+      range.stopIndex = index++;
+    }
+
+    unloadedRanges.push(range);
   }
 
   // Check to see if our first range ended prematurely.
-  // In this case we should scan backwards to try filling our :minimumBatchSize.
+  // In this case we should scan backwards to try and hit a multiple of our :minimumBatchSize.
   if (unloadedRanges.length) {
-    const firstUnloadedRange = unloadedRanges[0];
+    const range = unloadedRanges[0];
 
-    while (
-      firstUnloadedRange.stopIndex - firstUnloadedRange.startIndex + 1 <
-        minimumBatchSize &&
-      firstUnloadedRange.startIndex > 0
-    ) {
-      let index = firstUnloadedRange.startIndex - 1;
-
-      if (!isRowLoaded({index})) {
-        firstUnloadedRange.startIndex = index;
-      } else {
-        break;
-      }
+    let index = range.startIndex - 1;
+    while (index >= 0 && !isMultiple(range) && !isRowLoaded({index})) {
+      range.startIndex = index--;
     }
   }
 
