@@ -187,6 +187,7 @@ export default class List extends React.PureComponent<Props> {
   }
 
   render() {
+    console.log('rendering listtt');
     const {className, noRowsRenderer, scrollToIndex, width} = this.props;
 
     const classNames = clsx('ReactVirtualized__List', className);

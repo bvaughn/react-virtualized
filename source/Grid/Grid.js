@@ -238,6 +238,8 @@ type InstanceProps = {
 
   scrollbarSize: number,
   scrollbarSizeMeasured: boolean,
+  prevScrollLeft: ?number,
+  prevScrollTop: ?number,
 };
 
 type State = {
@@ -342,6 +344,8 @@ class Grid extends React.PureComponent<Props, State> {
         prevIsScrolling: props.isScrolling === true,
         prevScrollToColumn: props.scrollToColumn,
         prevScrollToRow: props.scrollToRow,
+        prevScrollLeft: props.scrollLeft,
+        prevScrollTop: props.scrollTop,
 
         scrollbarSize: 0,
         scrollbarSizeMeasured: false,
@@ -349,8 +353,8 @@ class Grid extends React.PureComponent<Props, State> {
       isScrolling: false,
       scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
       scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
-      scrollLeft: 0,
-      scrollTop: 0,
+      scrollLeft: props.scrollLeft || 0,
+      scrollTop: props.scrollTop || 0,
       scrollPositionChangeReason: null,
 
       needToResetStyleCache: false,
@@ -832,9 +836,10 @@ class Grid extends React.PureComponent<Props, State> {
       // only use scroll{Left,Top} from props if scrollTo{Column,Row} isn't specified
       // scrollTo{Column,Row} should override scroll{Left,Top}
     } else if (
-      (nextProps.scrollLeft !== prevState.scrollLeft &&
+      (nextProps.scrollLeft !== instanceProps.prevScrollLeft &&
         nextProps.scrollToColumn < 0) ||
-      (nextProps.scrollTop !== prevState.scrollTop && nextProps.scrollToRow < 0)
+      (nextProps.scrollTop !== instanceProps.prevScrollTop &&
+        nextProps.scrollToRow < 0)
     ) {
       Object.assign(
         newState,
@@ -944,6 +949,8 @@ class Grid extends React.PureComponent<Props, State> {
     instanceProps.prevRowHeight = nextProps.rowHeight;
     instanceProps.prevScrollToColumn = nextProps.scrollToColumn;
     instanceProps.prevScrollToRow = nextProps.scrollToRow;
+    instanceProps.prevScrollLeft = nextProps.scrollLeft;
+    instanceProps.prevScrollTop = nextProps.scrollTop;
 
     // getting scrollBarSize (moved from componentWillMount)
     instanceProps.scrollbarSize = nextProps.getScrollbarSize();
