@@ -177,10 +177,10 @@ type Props = {
    * onScrollToXXWillUpdate: do something when scrollToXX will be update
    * onScrollToXXDidUpdate: do something when scrollToXX has updated
    */
-  onScrollToRowWillUpdate: (scrollToRow: number) => void,
-  onScrollToRowDidUpdate: (scrollToRow: number) => void,
-  onScrollToColumnWillUpdate: (scrollToColumn: number) => void,
-  onScrollToColumnDidUpdate: (scrollToColumn: number) => void,
+  onScrollToRowWillUpdate?: (scrollToRow: number) => void,
+  onScrollToRowDidUpdate?: (scrollToRow: number) => void,
+  onScrollToColumnWillUpdate?: (scrollToColumn: number) => void,
+  onScrollToColumnDidUpdate?: (scrollToColumn: number) => void,
 
   /**
    * Number of rows to render above/below the visible section of the grid.
@@ -326,6 +326,8 @@ class Grid extends React.PureComponent<Props, State> {
 
   _styleCache: StyleCache = {};
   _cellCache: CellCache = {};
+  _nextTickScrollToRow = -1;
+  _nextTickScrollToColumn = -1;
 
   constructor(props: Props) {
     super(props);
