@@ -94,6 +94,9 @@ type Props = {
 
   /** Width of list */
   width: number,
+
+  /** Optional inline style applied to inner cell-container */
+  containerStyle: Object,
 };
 
 export default class List extends React.PureComponent<Props> {
@@ -108,6 +111,7 @@ export default class List extends React.PureComponent<Props> {
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
     style: {},
+    containerStyle: {},
   };
 
   Grid: ?React.ElementRef<typeof Grid>;
@@ -187,7 +191,13 @@ export default class List extends React.PureComponent<Props> {
   }
 
   render() {
-    const {className, noRowsRenderer, scrollToIndex, width} = this.props;
+    const {
+      className,
+      noRowsRenderer,
+      scrollToIndex,
+      width,
+      containerStyle,
+    } = this.props;
 
     const classNames = clsx('ReactVirtualized__List', className);
 
@@ -199,6 +209,7 @@ export default class List extends React.PureComponent<Props> {
         className={classNames}
         columnWidth={width}
         columnCount={1}
+        containerStyle={containerStyle}
         noContentRenderer={noRowsRenderer}
         onScroll={this._onScroll}
         onSectionRendered={this._onSectionRendered}

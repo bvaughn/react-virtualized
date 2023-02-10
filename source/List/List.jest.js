@@ -346,6 +346,15 @@ describe('List', () => {
       const cell = rendered.querySelector('.listItem');
       expect(cell.style.width).toEqual('100%');
     });
+
+    it('should use a custom :containerStyle if specified', () => {
+      const containerStyle = {backgroundColor: 'red'};
+      const rendered = findDOMNode(render(getMarkup({containerStyle})));
+      expect(
+        rendered.querySelector('.ReactVirtualized__Grid__innerScrollContainer')
+          .style.backgroundColor,
+      ).toEqual('red');
+    });
   });
 
   describe('overscanRowCount', () => {
