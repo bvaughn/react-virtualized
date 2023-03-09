@@ -10,13 +10,46 @@ This component uses [`javascript-detect-element-resize`](https://github.com/sdec
 
 If the parent has style `position: static` (default value), it changes to `position: relative`. It also injects a sibling `div` for size measuring.
 
-#### Why is my `AutoSizer` setting a height of 0?
+#### `AutoSizer` component is not displaying (`AutoSizer` height is 0)?
 
 `AutoSizer` expands to _fill_ its parent but it will not _stretch_ the parent.
 This is done to prevent problems with flexbox layouts.
-If `AutoSizer` is reporting a height (or width) of 0- then it's likely that the parent element (or one of its parents) has a height of 0.
-One easy way to test this is to add a style property (eg `background-color: red;`) to the parent to ensure that it is the correct size.
-(eg You may need to add `height: 100%` or `flex: 1` to the parent.)
+
+**If `AutoSizer` is reporting a height (or width) of 0 - then it's likely that the parent element (or one of its parents) has a height of 0. ⚠️** One easy way to test this is to add a style property (eg `background-color: red;`) to the parent to ensure that it is the correct size.
+
+#### How to fix `AutoSizer` setting a height of 0?
+
+If you are using `AutoSizer` within a flexbox layout, you may need to do a few things:
+
+1. Add `height: 100%;` style property to all of the `AutoSizer` _ancestor_ elements, not just the parent, eg `html, body, #root, .app, .logs { height: 100%; }`. For the `AutoSizer` _parent_ element you can add `flex: 1` instead (they both work).
+
+2. You may need to also add `box-sizing: border-box;` to all the elements eg `* { box-sizing: border-box; }`.
+
+```jsx
+<div
+  style={{
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%', // AutoSizer's ancestor element: add the height of 100%.
+  }}>
+  /* Add children components here. For the AutoSizer parent add `height: 100%`
+  or `flex: 1`. They both work. */
+  <div style={{height: '100%'}}>
+    <AutoSizer>
+      {({height, width}) => (
+        <List
+          className="List"
+          height={height}
+          itemCount={1000}
+          itemSize={35}
+          width={width}>
+          {Row}
+        </List>
+      )}
+    </AutoSizer>
+  </div>
+</div>
+```
 
 #### Can I use AutoSizer to manage only width or height (not both)?
 
