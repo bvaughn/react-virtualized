@@ -28,13 +28,27 @@ const headerRenderer = ({dataKey, label}) => {
   );
 };
 
+// When rendering your footer columns,
+// Use the sort state exposed by sortState:
+const footerRenderer = ({label}) => {
+  return (
+    <>
+      <span title={label}>{label}</span>
+    </>
+  );
+};
+
 // Connect sortState to Table by way of the 'sort' prop:
 <Table
   {...tableProps}
   sort={sortState.sort}
   sortBy={undefined}
   sortDirection={undefined}>
-  <Column {...columnProps} headerRenderer={headerRenderer} />
+  <Column
+    {...columnProps}
+    headerRenderer={headerRenderer}
+    footerRenderer={footerRenderer}
+  />
 </Table>;
 ```
 

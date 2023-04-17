@@ -23,6 +23,7 @@ export {
   defaultCellRenderer as defaultTableCellRenderer,
   defaultHeaderRenderer as defaultTableHeaderRenderer,
   defaultHeaderRowRenderer as defaultTableHeaderRowRenderer,
+  defaultFooterRowRenderer as defaultTableFooterRowRenderer,
   defaultRowRenderer as defaultTableRowRenderer,
   Table,
   Column,

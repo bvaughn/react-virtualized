@@ -10,7 +10,8 @@
 .oddRow {
   background-color: #fafafa;
 }
-.headerColumn {
+.headerColumn,
+.footerColumn {
   text-transform: none;
 }
 .exampleColumn {
@@ -20,7 +21,7 @@
 }
 
 .checkboxLabel {
-  margin-left: .5rem;
+  margin-left: 0.5rem;
 }
 .checkboxLabel:first-of-type {
   margin-left: 0;

@@ -20,7 +20,7 @@ Learn more about which class names a component supports in the [API docs](https:
 
 #### CSS Modules
 
-If you are using CSS modules you can specify custom class names to be appended to a component instance (eg. `Table` supports `className`, `headerClassName`, and `rowClassName` properties).
+If you are using CSS modules you can specify custom class names to be appended to a component instance (eg. `Table` supports `className`, `headerClassName`, `footerClassName` and `rowClassName` properties).
 
 Learn more about which class names are supported in the [API docs](https://github.com/bvaughn/react-virtualized/blob/master/docs/).
 
