@@ -98,6 +98,7 @@ type Props = {
 
 export default class List extends React.PureComponent<Props> {
   static defaultProps = {
+    'aria-label': 'list',
     autoHeight: false,
     estimatedRowSize: 30,
     onScroll: () => {},
@@ -204,6 +205,7 @@ export default class List extends React.PureComponent<Props> {
         onSectionRendered={this._onSectionRendered}
         ref={this._setRef}
         scrollToRow={scrollToIndex}
+        role="list"
       />
     );
   }
