@@ -263,6 +263,7 @@ export default class Table extends React.PureComponent {
     this._onScroll = this._onScroll.bind(this);
     this._onSectionRendered = this._onSectionRendered.bind(this);
     this._setRef = this._setRef.bind(this);
+    this._updateTimeoutHandle = null;
   }
 
   forceUpdateGrid() {
@@ -353,7 +354,21 @@ export default class Table extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    this._setScrollbarWidth();
+    if (this._updateTimeoutHandle) {
+      clearTimeout(this._updateTimeoutHandle);
+    }
+
+    // We move this update to separated macro-task in order to not create long executed tasks
+    this._updateTimeoutHandle = setTimeout(() => {
+      this._updateTimeoutHandle = null;
+      this._setScrollbarWidth();
+    }, 0);
+  }
+
+  componentWillUnmount() {
+    if (this._updateTimeoutHandle) {
+      clearTimeout(this._updateTimeoutHandle);
+    }
   }
 
   render() {
