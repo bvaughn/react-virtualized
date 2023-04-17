@@ -78,7 +78,7 @@ export default class Column extends React.Component {
     style: PropTypes.object,
 
     /** Flex basis (width) for this column; This value can grow or shrink based on :flexGrow and :flexShrink properties. */
-    width: PropTypes.number.isRequired,
+    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   };
 
   static defaultProps = {
