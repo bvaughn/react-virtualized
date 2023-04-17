@@ -150,6 +150,7 @@ function cellRenderer ({ columnIndex, key, parent, rowIndex, style }) {
     >
       {({registerChild}) => (
         <div
+          ref={registerChild}
           style={{
             ...style,
             height: 35,
