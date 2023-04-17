@@ -100,7 +100,7 @@ The Table component supports the following static class names
 | Property                                          | Description                                 |
 | :------------------------------------------------ | :------------------------------------------ |
 | ReactVirtualized\_\_Table                         | Main (outer) element                        |
-| ReactVirtualized\_\_Table\_\_headerColumnn        | Header cell (similar to `thead > tr > th`)  |
+| ReactVirtualized\_\_Table\_\_headerColumn         | Header cell (similar to `thead > tr > th`)  |
 | ReactVirtualized\_\_Table\_\_headerRow            | Header row (similar to `thead > tr`)        |
 | ReactVirtualized\_\_Table\_\_row                  | Table row (akin to `tbody > tr`)            |
 | ReactVirtualized\_\_Table\_\_rowColumn            | Table column (akin to `tbody > tr > td`)    |
