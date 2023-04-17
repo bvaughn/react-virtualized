@@ -36,5 +36,5 @@ const cancel =
     (win: any).clearTimeout(id);
   };
 
-export const raf: RequestAnimationFrame = (request: any);
-export const caf: CancelAnimationFrame = (cancel: any);
+export const raf: RequestAnimationFrame = (request: any).bind(win);
+export const caf: CancelAnimationFrame = (cancel: any).bind(win);
