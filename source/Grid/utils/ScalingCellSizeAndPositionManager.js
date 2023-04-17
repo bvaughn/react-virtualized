@@ -1,6 +1,6 @@
 /** @flow */
 
-import type {Alignment, CellSizeGetter, VisibleCellRange} from '../types';
+import type {Alignment, CellSize, VisibleCellRange} from '../types';
 
 import CellSizeAndPositionManager from './CellSizeAndPositionManager';
 import {getMaxElementSize} from './maxElementSize.js';
@@ -19,7 +19,7 @@ type ContainerSizeAndOffset = {
 type Params = {
   maxScrollSize?: number,
   cellCount: number,
-  cellSizeGetter: CellSizeGetter,
+  cellSize: CellSize,
   estimatedCellSize: number,
 };
 
@@ -45,7 +45,7 @@ export default class ScalingCellSizeAndPositionManager {
   configure(params: {
     cellCount: number,
     estimatedCellSize: number,
-    cellSizeGetter: CellSizeGetter,
+    cellSize: CellSize,
   }) {
     this._cellSizeAndPositionManager.configure(params);
   }

@@ -9,7 +9,7 @@ describe('ScalingCellSizeAndPositionManager', () => {
   } = {}) {
     const cellSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount,
-      cellSizeGetter: () => cellSize,
+      cellSize,
       estimatedCellSize,
       maxScrollSize,
     });

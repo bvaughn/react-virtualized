@@ -5,7 +5,6 @@ import type {
   CellRangeRenderer,
   CellPosition,
   CellSize,
-  CellSizeGetter,
   NoContentRenderer,
   Scroll,
   ScrollbarPresenceChange,
@@ -322,12 +321,12 @@ class Grid extends React.PureComponent<Props, State> {
     super(props);
     const columnSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.columnCount,
-      cellSizeGetter: params => Grid._wrapSizeGetter(props.columnWidth)(params),
+      cellSize: props.columnWidth,
       estimatedCellSize: Grid._getEstimatedColumnSize(props),
     });
     const rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.rowCount,
-      cellSizeGetter: params => Grid._wrapSizeGetter(props.rowHeight)(params),
+      cellSize: props.rowHeight,
       estimatedCellSize: Grid._getEstimatedRowSize(props),
     });
 
@@ -862,13 +861,13 @@ class Grid extends React.PureComponent<Props, State> {
     instanceProps.columnSizeAndPositionManager.configure({
       cellCount: nextProps.columnCount,
       estimatedCellSize: Grid._getEstimatedColumnSize(nextProps),
-      cellSizeGetter: Grid._wrapSizeGetter(nextProps.columnWidth),
+      cellSize: nextProps.columnWidth,
     });
 
     instanceProps.rowSizeAndPositionManager.configure({
       cellCount: nextProps.rowCount,
       estimatedCellSize: Grid._getEstimatedRowSize(nextProps),
-      cellSizeGetter: Grid._wrapSizeGetter(nextProps.rowHeight),
+      cellSize: nextProps.rowHeight,
     });
 
     if (
@@ -1445,10 +1444,6 @@ class Grid extends React.PureComponent<Props, State> {
       stateUpdate.needToResetStyleCache = false;
       this.setState(stateUpdate);
     }
-  }
-
-  static _wrapSizeGetter(value: CellSize): CellSizeGetter {
-    return typeof value === 'function' ? value : () => (value: any);
   }
 
   static _getCalculatedScrollLeft(nextProps: Props, prevState: State) {
