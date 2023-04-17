@@ -1,16 +1,9 @@
 [<img src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" alt="React virtualized" data-canonical-src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" width="330" height="100" />](http://bvaughn.github.io/react-virtualized/)
 
-[![NPM version](https://img.shields.io/npm/v/react-virtualized.svg?style=flat)](https://www.npmjs.com/package/react-virtualized)
-![NPM license](https://img.shields.io/npm/l/react-virtualized.svg?style=flat)
-[![NPM total downloads](https://img.shields.io/npm/dt/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
-[![NPM monthly downloads](https://img.shields.io/npm/dm/react-virtualized.svg?style=flat)](https://npmcharts.com/compare/react-virtualized?minimal=true)
-[![CircleCI](https://circleci.com/gh/bvaughn/react-virtualized/tree/master.svg?style=svg)](https://circleci.com/gh/bvaughn/react-virtualized/tree/master)
-[![Codecov badge](https://img.shields.io/codecov/c/github/bvaughn/react-virtualized/master.svg)](https://codecov.io/github/bvaughn/react-virtualized)
-[![OpenCollective](https://opencollective.com/react-virtualized/backers/badge.svg)](#backers)
-[![OpenCollective](https://opencollective.com/react-virtualized/sponsors/badge.svg)](#sponsors)
-
 React components for efficiently rendering large lists and tabular data.
 Check out [the demo](https://bvaughn.github.io/react-virtualized/) for some examples.
+
+### If you like this project, 🎉 [become a sponsor](https://github.com/sponsors/bvaughn/) or ☕ [buy me a coffee](http://givebrian.coffee/)
 
 ### Sponsors
 
