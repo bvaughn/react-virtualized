@@ -29,7 +29,7 @@ type Props = {
   scrollToRow: number,
 };
 
-type State = ScrollIndices & {
+type State = $Diff<ScrollIndices, {event: Event}> & {
   instanceProps: {
     prevScrollToColumn: number,
     prevScrollToRow: number,
@@ -156,7 +156,7 @@ class ArrowKeyStepper extends React.PureComponent<Props, State> {
     ) {
       event.preventDefault();
 
-      this._updateScrollState({scrollToColumn, scrollToRow});
+      this._updateScrollState({scrollToColumn, scrollToRow, event});
     }
   };
 
@@ -176,11 +176,11 @@ class ArrowKeyStepper extends React.PureComponent<Props, State> {
     return this.props.isControlled ? this.props : this.state;
   }
 
-  _updateScrollState({scrollToColumn, scrollToRow}: ScrollIndices) {
+  _updateScrollState({scrollToColumn, scrollToRow, event}: ScrollIndices) {
     const {isControlled, onScrollToChange} = this.props;
 
     if (typeof onScrollToChange === 'function') {
-      onScrollToChange({scrollToColumn, scrollToRow});
+      onScrollToChange({scrollToColumn, scrollToRow, event});
     }
 
     if (!isControlled) {

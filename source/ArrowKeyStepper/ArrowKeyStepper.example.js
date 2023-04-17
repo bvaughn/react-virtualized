@@ -180,10 +180,11 @@ export default class ArrowKeyStepperExample extends React.PureComponent<
         key={key}
         onClick={
           this.state.isClickable &&
-          (() =>
+          (event =>
             this._selectCell({
               scrollToColumn: columnIndex,
               scrollToRow: rowIndex,
+              event,
             }))
         }
         style={style}>
