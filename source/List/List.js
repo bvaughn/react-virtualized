@@ -63,6 +63,15 @@ type Props = {
   overscanIndicesGetter: OverscanIndicesGetter,
 
   /**
+   * onScrollToXXWillUpdate: do something when scrollToXX will be update
+   * onScrollToXXDidUpdate: do something when scrollToXX has updated
+   */
+  onScrollToRowWillUpdate?: (scrollToRow: number) => void,
+  onScrollToRowDidUpdate?: (scrollToRow: number) => void,
+  onScrollToColumnWillUpdate?: (scrollToColumn: number) => void,
+  onScrollToColumnDidUpdate?: (scrollToColumn: number) => void,
+
+  /**
    * Number of rows to render above/below the visible bounds of the list.
    * These rows can help for smoother scrolling on touch devices.
    */

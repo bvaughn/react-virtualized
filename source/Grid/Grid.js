@@ -174,6 +174,15 @@ type Props = {
   overscanIndicesGetter: OverscanIndicesGetter,
 
   /**
+   * onScrollToXXWillUpdate: do something when scrollToXX will be update
+   * onScrollToXXDidUpdate: do something when scrollToXX has updated
+   */
+  onScrollToRowWillUpdate?: (scrollToRow: number) => void,
+  onScrollToRowDidUpdate?: (scrollToRow: number) => void,
+  onScrollToColumnWillUpdate?: (scrollToColumn: number) => void,
+  onScrollToColumnDidUpdate?: (scrollToColumn: number) => void,
+
+  /**
    * Number of rows to render above/below the visible section of the grid.
    * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
    */
@@ -317,6 +326,8 @@ class Grid extends React.PureComponent<Props, State> {
 
   _styleCache: StyleCache = {};
   _cellCache: CellCache = {};
+  _nextTickScrollToRow = -1;
+  _nextTickScrollToColumn = -1;
 
   constructor(props: Props) {
     super(props);
@@ -685,6 +696,10 @@ class Grid extends React.PureComponent<Props, State> {
       scrollToColumn,
       scrollToRow,
       width,
+      onScrollToRowWillUpdate,
+      onScrollToRowDidUpdate,
+      onScrollToColumnWillUpdate,
+      onScrollToColumnDidUpdate,
     } = this.props;
     const {
       scrollLeft,
@@ -738,6 +753,16 @@ class Grid extends React.PureComponent<Props, State> {
       (prevProps.width === 0 || prevProps.height === 0) &&
       height > 0 &&
       width > 0;
+    // Execute onScrollToRowDidUpdate when scrollToRow is actually mounted on the DOM node
+    if (this._nextTickScrollToRow > -1 && onScrollToRowDidUpdate) {
+      onScrollToRowDidUpdate(this._nextTickScrollToRow);
+      this._nextTickScrollToRow = -1;
+    }
+    // Execute onScrollToColumnDidUpdate when scrollToRow is actually mounted on the DOM node
+    if (this._nextTickScrollToColumn > -1 && onScrollToColumnDidUpdate) {
+      onScrollToColumnDidUpdate(this._nextTickScrollToRow);
+      this._nextTickScrollToRow = -1;
+    }
 
     // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
     // @TODO Do we also need this check or can the one in componentWillUpdate() suffice?
@@ -757,8 +782,13 @@ class Grid extends React.PureComponent<Props, State> {
         scrollToIndex: scrollToColumn,
         size: width,
         sizeJustIncreasedFromZero,
-        updateScrollIndexCallback: () =>
-          this._updateScrollLeftForScrollToColumn(this.props),
+        updateScrollIndexCallback: () => {
+          this._updateScrollLeftForScrollToColumn(this.props);
+          this._nextTickScrollToColumn = scrollToColumn; // It will be reset the next time you render
+          // Execute onScrollToColumnWillUpdate when scrollToColumn is about to be mounted on the DOM node
+          onScrollToColumnWillUpdate &&
+            onScrollToColumnWillUpdate(scrollToColumn);
+        },
       });
     }
 
@@ -778,8 +808,12 @@ class Grid extends React.PureComponent<Props, State> {
         scrollToIndex: scrollToRow,
         size: height,
         sizeJustIncreasedFromZero,
-        updateScrollIndexCallback: () =>
-          this._updateScrollTopForScrollToRow(this.props),
+        updateScrollIndexCallback: () => {
+          this._updateScrollTopForScrollToRow(this.props);
+          this._nextTickScrollToRow = scrollToRow; // It will be reset the next time you render
+          // Execute onScrollToRowWillUpdate when scrollToRow is about to be mounted on the DOM node
+          onScrollToRowWillUpdate && onScrollToRowWillUpdate(scrollToRow);
+        },
       });
     }
 
