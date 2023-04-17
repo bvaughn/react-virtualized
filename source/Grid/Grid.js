@@ -1011,9 +1011,13 @@ class Grid extends React.PureComponent<Props, State> {
     // Otherwise once scrollbars appear they may not disappear again.
     // For more info see issue #116
     const verticalScrollBarSize =
-      totalRowsHeight > height ? instanceProps.scrollbarSize : 0;
+      totalRowsHeight + this._horizontalScrollBarSize > height
+        ? instanceProps.scrollbarSize
+        : 0;
     const horizontalScrollBarSize =
-      totalColumnsWidth > width ? instanceProps.scrollbarSize : 0;
+      totalColumnsWidth + this._verticalScrollBarSize > width
+        ? instanceProps.scrollbarSize
+        : 0;
 
     if (
       horizontalScrollBarSize !== this._horizontalScrollBarSize ||
