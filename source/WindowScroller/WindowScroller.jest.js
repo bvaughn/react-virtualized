@@ -1,3 +1,4 @@
+import {mount} from 'enzyme';
 import * as React from 'react';
 import {findDOMNode} from 'react-dom';
 import {render} from '../TestUtils';
@@ -471,6 +472,142 @@ describe('WindowScroller', () => {
       expect(renderFn).lastCalledWith(
         expect.objectContaining({scrollTop: 200}),
       );
+    });
+  });
+
+  describe('when scrollElement prop changes', () => {
+    let scrollElementDiv;
+    let addEventListener;
+    let removeEventListener;
+
+    const generateWindowScrollerWrapper = scrollElement => {
+      return mount(
+        <WindowScroller scrollElement={scrollElement}>
+          {params => <div>&nbsp;</div>}
+        </WindowScroller>,
+      );
+    };
+
+    beforeEach(() => {
+      scrollElementDiv = document.createElement('div');
+
+      // Spy on the add/remove listener on this element so we can determine how and when it is used
+      addEventListener = jest.spyOn(scrollElementDiv, 'addEventListener');
+      removeEventListener = jest.spyOn(scrollElementDiv, 'removeEventListener');
+
+      // JSDom doesn't implement a working getBoundingClientRect()
+      // But WindowScroller requires it
+      mockGetBoundingClientRectForHeader({
+        documentOffset: 0,
+        height: 0,
+        width: 0,
+      });
+    });
+
+    it('should re-mount new scroll handlers if the scrollElement changes (single WindowScroller)', async () => {
+      const windowScroller = generateWindowScrollerWrapper(scrollElementDiv);
+
+      // detectElementResize && unregisterScrollListener
+      expect(addEventListener).toHaveBeenCalledTimes(2);
+
+      windowScroller.setProps({scrollElement: undefined}); // Change to window
+      windowScroller.update();
+
+      // detectElementResize && unregisterScrollListener
+      expect(removeEventListener).toHaveBeenCalledTimes(2);
+
+      simulateWindowScroll({scrollX: 0, scrollY: 5000});
+
+      // Allow scrolling timeout to complete so that the component computes state
+      await new Promise(resolve => setTimeout(resolve, 150));
+
+      expect(windowScroller.state('scrollTop')).toEqual(5000);
+
+      windowScroller.unmount();
+    });
+
+    it('should do nothing if you change a different prop', () => {
+      const windowScroller = generateWindowScrollerWrapper(scrollElementDiv);
+
+      // detectElementResize && unregisterScrollListener
+      expect(addEventListener).toHaveBeenCalledTimes(2);
+
+      windowScroller.setProps({onScroll: jest.fn()}); // Change random prop
+      windowScroller.update();
+
+      // detectElementResize && unregisterScrollListener
+      expect(removeEventListener).toHaveBeenCalledTimes(0);
+
+      windowScroller.unmount();
+    });
+
+    it('should retain existing handlers if they are still used (multiple WindowScrollers on different elements)', async () => {
+      const windowScrollerOnWindow = generateWindowScrollerWrapper(window);
+
+      const windowScrollerThatChanges = generateWindowScrollerWrapper(
+        scrollElementDiv,
+      );
+      const windowScrollerOnDivElement = generateWindowScrollerWrapper(
+        scrollElementDiv,
+      );
+
+      // detectElementResize && unregisterScrollListener
+      expect(addEventListener).toHaveBeenCalledTimes(2);
+
+      // Change from div to window
+      windowScrollerThatChanges.setProps({
+        scrollElement: undefined,
+      });
+
+      windowScrollerThatChanges.update();
+      windowScrollerOnDivElement.update();
+
+      // No unmounting because we still have WindowScrollers attached to the div
+      expect(removeEventListener).toHaveBeenCalledTimes(0);
+
+      simulateWindowScroll({scrollX: 0, scrollY: 5000});
+
+      // Allow scrolling timeout to complete so that the component computes state
+      await new Promise(resolve => setTimeout(resolve, 150));
+
+      expect(windowScrollerOnWindow.state('scrollTop')).toEqual(5000);
+      expect(windowScrollerThatChanges.state('scrollTop')).toEqual(5000);
+      expect(windowScrollerOnDivElement.state('scrollTop')).toEqual(0);
+
+      windowScrollerOnWindow.unmount();
+      windowScrollerThatChanges.unmount();
+      windowScrollerOnDivElement.unmount();
+    });
+
+    it('should remove old scroll handlers if the scrollElement changes (multiple WindowScrollers)', async () => {
+      const windowScroller1 = generateWindowScrollerWrapper(scrollElementDiv);
+      const windowScroller2 = generateWindowScrollerWrapper(scrollElementDiv);
+      const windowScroller3 = generateWindowScrollerWrapper(scrollElementDiv);
+
+      // detectElementResize && unregisterScrollListener added to divElement
+      expect(addEventListener).toHaveBeenCalledTimes(2);
+
+      windowScroller3.setProps({scrollElement: undefined});
+      windowScroller2.setProps({scrollElement: undefined});
+      windowScroller1.setProps({scrollElement: undefined});
+
+      windowScroller1.update();
+      windowScroller2.update();
+      windowScroller3.update();
+
+      // detectElementResize && unregisterScrollListener should be unmounted from divElement
+      expect(removeEventListener).toHaveBeenCalledTimes(2);
+
+      simulateWindowScroll({scrollX: 0, scrollY: 5000});
+
+      // Allow scrolling timeout to complete so that the component computes state
+      await new Promise(resolve => setTimeout(resolve, 150));
+
+      expect(windowScroller1.state('scrollTop')).toEqual(5000);
+
+      windowScroller1.unmount();
+      windowScroller2.unmount();
+      windowScroller3.unmount();
     });
   });
 });
