@@ -257,7 +257,6 @@ type State = {
  */
 class Grid extends React.PureComponent<Props, State> {
   static defaultProps = {
-    'aria-label': 'grid',
     'aria-readonly': true,
     autoContainerWidth: false,
     autoHeight: false,
@@ -1057,6 +1056,7 @@ class Grid extends React.PureComponent<Props, State> {
         {childrenToDisplay.length > 0 && (
           <div
             className="ReactVirtualized__Grid__innerScrollContainer"
+            id="scroll-container"
             role={containerRole}
             style={{
               width: autoContainerWidth ? 'auto' : totalColumnsWidth,
