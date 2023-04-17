@@ -42,6 +42,13 @@ export function ContentBoxHeader({text, sourceLink, docsLink}) {
   );
 }
 
-export function ContentBoxParagraph({children}) {
-  return <div className={styles.Paragraph}>{children}</div>;
+export function ContentBoxParagraph({aria, children}) {
+  return (
+    <div
+      aria-label={aria}
+      aria-live={aria ? 'assertive' : null}
+      className={styles.Paragraph}>
+      {aria ? <div aria-hidden="true">{children}</div> : children}
+    </div>
+  );
 }

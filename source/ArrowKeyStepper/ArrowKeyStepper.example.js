@@ -108,7 +108,8 @@ export default class ArrowKeyStepperExample extends React.PureComponent<
           scrollToRow={scrollToRow}>
           {({onSectionRendered, scrollToColumn, scrollToRow}) => (
             <div>
-              <ContentBoxParagraph>
+              <ContentBoxParagraph
+                aria={`row: ${scrollToRow}, column: ${scrollToColumn}`}>
                 {`Most-recently-stepped column: ${scrollToColumn}, row: ${scrollToRow}`}
               </ContentBoxParagraph>
 
