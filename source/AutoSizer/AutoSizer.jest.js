@@ -19,14 +19,14 @@ describe('AutoSizer', () => {
     disableHeight = false,
     disableWidth = false,
     foo = 456,
-    height = 100,
+    height = 100.333,
     onResize,
     paddingBottom = 0,
     paddingLeft = 0,
     paddingRight = 0,
     paddingTop = 0,
     style = undefined,
-    width = 200,
+    width = 200.666,
   } = {}) {
     const wrapperStyle = {
       boxSizing: 'border-box',
@@ -63,16 +63,23 @@ describe('AutoSizer', () => {
     );
   }
 
-  // AutoSizer uses offsetWidth and offsetHeight.
+  // AutoSizer uses getBoundingClientRect, detectElementResize uses offsetWidth and offsetHeight.
   // Jest runs in JSDom which doesn't support measurements APIs.
   function mockOffsetSize(width, height) {
+    Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => ({
+        width,
+        height,
+      }),
+    });
     Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
       configurable: true,
-      value: height,
+      value: Math.round(height),
     });
     Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
       configurable: true,
-      value: width,
+      value: Math.round(width),
     });
   }
 
@@ -84,8 +91,8 @@ describe('AutoSizer', () => {
 
   it('should set the correct initial width and height of ChildComponent or React child', () => {
     const rendered = findDOMNode(render(getMarkup()));
-    expect(rendered.textContent).toContain('height:100');
-    expect(rendered.textContent).toContain('width:200');
+    expect(rendered.textContent).toContain('height:100.333,');
+    expect(rendered.textContent).toContain('width:200.666,');
   });
 
   it('should account for padding when calculating the available width and height', () => {
@@ -99,20 +106,20 @@ describe('AutoSizer', () => {
         }),
       ),
     );
-    expect(rendered.textContent).toContain('height:75');
-    expect(rendered.textContent).toContain('width:192');
+    expect(rendered.textContent).toContain('height:75.333,');
+    expect(rendered.textContent).toContain('width:192.666,');
   });
 
   it('should not update :width if :disableWidth is true', () => {
     const rendered = findDOMNode(render(getMarkup({disableWidth: true})));
-    expect(rendered.textContent).toContain('height:100');
-    expect(rendered.textContent).toContain('width:undefined');
+    expect(rendered.textContent).toContain('height:100.333,');
+    expect(rendered.textContent).toContain('width:undefined,');
   });
 
   it('should not update :height if :disableHeight is true', () => {
     const rendered = findDOMNode(render(getMarkup({disableHeight: true})));
-    expect(rendered.textContent).toContain('height:undefined');
-    expect(rendered.textContent).toContain('width:200');
+    expect(rendered.textContent).toContain('height:undefined,');
+    expect(rendered.textContent).toContain('width:200.666,');
   });
 
   async function simulateResize({element, height, width}) {
@@ -128,19 +135,12 @@ describe('AutoSizer', () => {
   }
 
   it('should update :height after a resize event', async done => {
-    const rendered = findDOMNode(
-      render(
-        getMarkup({
-          height: 100,
-          width: 200,
-        }),
-      ),
-    );
-    expect(rendered.textContent).toContain('height:100');
-    expect(rendered.textContent).toContain('width:200');
+    const rendered = findDOMNode(render(getMarkup()));
+    expect(rendered.textContent).toContain('height:100.333,');
+    expect(rendered.textContent).toContain('width:200.666,');
     await simulateResize({element: rendered, height: 400, width: 300});
-    expect(rendered.textContent).toContain('height:400');
-    expect(rendered.textContent).toContain('width:300');
+    expect(rendered.textContent).toContain('height:400,');
+    expect(rendered.textContent).toContain('width:300,');
     done();
   });
 
@@ -154,9 +154,7 @@ describe('AutoSizer', () => {
         render(
           getMarkup({
             ChildComponent,
-            height: 100,
             onResize,
-            width: 200,
           }),
         ),
       );
@@ -178,15 +176,13 @@ describe('AutoSizer', () => {
           getMarkup({
             ChildComponent,
             disableWidth: true,
-            height: 100,
             onResize,
-            width: 200,
           }),
         ),
       );
       ChildComponent.mockClear(); // TODO Improve initial check in version 10; see AutoSizer render()
       expect(onResize).toHaveBeenCalledTimes(1);
-      await simulateResize({element: rendered, height: 100, width: 300});
+      await simulateResize({element: rendered, height: 100.333, width: 300});
       expect(ChildComponent).toHaveBeenCalledTimes(0);
       expect(onResize).toHaveBeenCalledTimes(1);
       await simulateResize({element: rendered, height: 200, width: 300});
@@ -205,15 +201,13 @@ describe('AutoSizer', () => {
           getMarkup({
             ChildComponent,
             disableHeight: true,
-            height: 100,
             onResize,
-            width: 200,
           }),
         ),
       );
       ChildComponent.mockClear(); // TODO Improve initial check in version 10; see AutoSizer render()
       expect(onResize).toHaveBeenCalledTimes(1);
-      await simulateResize({element: rendered, height: 200, width: 200});
+      await simulateResize({element: rendered, height: 200, width: 200.666});
       expect(ChildComponent).toHaveBeenCalledTimes(0);
       expect(onResize).toHaveBeenCalledTimes(1);
       await simulateResize({element: rendered, height: 200, width: 300});
