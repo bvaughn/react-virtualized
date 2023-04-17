@@ -309,6 +309,65 @@ describe('Grid', () => {
     });
   });
 
+  describe('RTL direction', () => {
+    it('should apply style direction rtl to the grid container', () => {
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            direction: 'rtl',
+          }),
+        ),
+      );
+
+      expect(rendered.style.direction).toEqual('rtl');
+    });
+
+    it('should use right property for setting cell offset', () => {
+      const rendered = findDOMNode(
+        render(
+          getMarkup({
+            direction: 'rtl',
+          }),
+        ),
+      );
+
+      const cell = rendered.querySelector('.gridItem');
+
+      expect(cell.style.right).toEqual('0px');
+      expect(cell.style.left).toEqual('');
+    });
+
+    it('should reset scrollLeft to 0 when direction changes', () => {
+      const props = {
+        direction: 'ltr',
+        columnWidth: 50,
+        columnCount: 100,
+        height: 100,
+        rowCount: 100,
+        rowHeight: 20,
+        scrollToColumn: 50,
+        scrollToRow: 50,
+        width: 100,
+      };
+
+      let grid = render(getMarkup(props));
+
+      expect(grid.state.scrollLeft).toEqual(2450);
+
+      simulateScroll({grid, scrollLeft: 2250});
+      expect(grid.state.scrollLeft).toEqual(2250);
+
+      grid = render(
+        getMarkup({
+          ...props,
+          direction: 'rtl',
+        }),
+      );
+
+      expect(grid.state.scrollLeft).toEqual(0);
+    });
+  });
+
   /** Tests scrolling via initial props */
   describe(':scrollToColumn and :scrollToRow', () => {
     it('should scroll to the left', () => {

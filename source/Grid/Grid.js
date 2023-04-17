@@ -6,6 +6,7 @@ import type {
   CellPosition,
   CellSize,
   CellSizeGetter,
+  Direction,
   NoContentRenderer,
   Scroll,
   ScrollbarPresenceChange,
@@ -34,6 +35,7 @@ import {
   requestAnimationTimeout,
   cancelAnimationTimeout,
 } from '../utils/requestAnimationTimeout';
+import getRTLOffsetType from './utils/getRTLOffsetType';
 
 /**
  * Specifies the number of milliseconds during which to disable pointer events while a scroll is in progress.
@@ -53,6 +55,8 @@ const SCROLL_POSITION_CHANGE_REASONS = {
 const renderNull: NoContentRenderer = () => null;
 
 type ScrollPosition = {
+  scrollWidth?: number,
+  clientWidth?: number,
   scrollTop?: number,
   scrollLeft?: number,
 };
@@ -108,6 +112,9 @@ type Props = {
    * A shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data.
    */
   deferredMeasurementCache?: Object,
+
+  /** Direction (RTL or LTR) */
+  direction: Direction,
 
   /**
    * Used to estimate the total width of a Grid before all of its columns have actually been measured.
@@ -241,6 +248,7 @@ type InstanceProps = {
 };
 
 type State = {
+  direction: Direction,
   instanceProps: InstanceProps,
   isScrolling: boolean,
   scrollDirectionHorizontal: -1 | 1,
@@ -265,6 +273,7 @@ class Grid extends React.PureComponent<Props, State> {
     cellRangeRenderer: defaultCellRangeRenderer,
     containerRole: 'row',
     containerStyle: {},
+    direction: 'ltr',
     estimatedColumnSize: 100,
     estimatedRowSize: 30,
     getScrollbarSize: scrollbarSize,
@@ -347,6 +356,7 @@ class Grid extends React.PureComponent<Props, State> {
         scrollbarSize: 0,
         scrollbarSizeMeasured: false,
       },
+      direction: props.direction,
       isScrolling: false,
       scrollDirectionHorizontal: SCROLL_DIRECTION_FORWARD,
       scrollDirectionVertical: SCROLL_DIRECTION_FORWARD,
@@ -412,6 +422,8 @@ class Grid extends React.PureComponent<Props, State> {
    * It's an advanced method and should probably not be used unless you're implementing a custom scroll-bar solution.
    */
   handleScrollEvent({
+    scrollWidth = 0,
+    clientWidth = 0,
     scrollLeft: scrollLeftParam = 0,
     scrollTop: scrollTopParam = 0,
   }: ScrollPosition) {
@@ -424,7 +436,7 @@ class Grid extends React.PureComponent<Props, State> {
     // Prevent pointer events from interrupting a smooth scroll
     this._debounceScrollEnded();
 
-    const {autoHeight, autoWidth, height, width} = this.props;
+    const {autoHeight, autoWidth, direction, height, width} = this.props;
     const {instanceProps} = this.state;
 
     // When this component is shrunk drastically, React dispatches a series of back-to-back scroll events,
@@ -434,9 +446,29 @@ class Grid extends React.PureComponent<Props, State> {
     const scrollbarSize = instanceProps.scrollbarSize;
     const totalRowsHeight = instanceProps.rowSizeAndPositionManager.getTotalSize();
     const totalColumnsWidth = instanceProps.columnSizeAndPositionManager.getTotalSize();
+
+    let calculatedScrollLeft = scrollLeftParam;
+
+    // TRICKY According to the spec, scrollLeft should be negative for RTL aligned elements.
+    // This is not the case for all browsers though (e.g. Chrome reports values as positive, measured relative to the left).
+    // It's also easier for this component if we convert offsets to the same format as they would be in for ltr.
+    // So the simplest solution is to determine which browser behavior we're dealing with, and convert based on it.
+    if (direction === 'rtl') {
+      switch (getRTLOffsetType()) {
+        case 'negative': {
+          calculatedScrollLeft = -scrollLeftParam;
+          break;
+        }
+        case 'positive-descending': {
+          calculatedScrollLeft = scrollWidth - clientWidth - scrollLeftParam;
+          break;
+        }
+      }
+    }
+
     const scrollLeft = Math.min(
       Math.max(0, totalColumnsWidth - width + scrollbarSize),
-      scrollLeftParam,
+      calculatedScrollLeft,
     );
     const scrollTop = Math.min(
       Math.max(0, totalRowsHeight - height + scrollbarSize),
@@ -687,6 +719,7 @@ class Grid extends React.PureComponent<Props, State> {
       width,
     } = this.props;
     const {
+      direction,
       scrollLeft,
       scrollPositionChangeReason,
       scrollTop,
@@ -703,23 +736,51 @@ class Grid extends React.PureComponent<Props, State> {
       (columnCount > 0 && prevProps.columnCount === 0) ||
       (rowCount > 0 && prevProps.rowCount === 0);
 
+    const directionChanged = direction !== prevState.direction;
+
     // Make sure requested changes to :scrollLeft or :scrollTop get applied.
     // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
     // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
     // So we only set these when we require an adjustment of the scroll position.
     // See issue #2 for more information.
     if (
-      scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED
+      scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED ||
+      directionChanged
     ) {
       // @TRICKY :autoHeight and :autoWidth properties instructs Grid to leave :scrollTop and :scrollLeft management to an external HOC (eg WindowScroller).
       // In this case we should avoid checking scrollingContainer.scrollTop and scrollingContainer.scrollLeft since it forces layout/flow.
       if (
-        !autoWidth &&
-        scrollLeft >= 0 &&
-        (scrollLeft !== this._scrollingContainer.scrollLeft ||
-          columnOrRowCountJustIncreasedFromZero)
+        (!autoWidth &&
+          scrollLeft >= 0 &&
+          (scrollLeft !== this._scrollingContainer.scrollLeft ||
+            columnOrRowCountJustIncreasedFromZero)) ||
+        directionChanged
       ) {
-        this._scrollingContainer.scrollLeft = scrollLeft;
+        // TRICKY According to the spec, scrollLeft should be negative for RTL aligned elements.
+        // This is not the case for all browsers though (e.g. Chrome reports values as positive, measured relative to the left).
+        // So we need to determine which browser behavior we're dealing with, and mimic it.
+        if (direction === 'rtl') {
+          switch (getRTLOffsetType()) {
+            case 'negative': {
+              this._scrollingContainer.scrollLeft = -scrollLeft;
+
+              break;
+            }
+            case 'positive-ascending': {
+              this._scrollingContainer.scrollLeft = scrollLeft;
+              break;
+            }
+            default: {
+              const {clientWidth, scrollWidth} = this._scrollingContainer;
+
+              this._scrollingContainer.scrollLeft =
+                scrollWidth - clientWidth - scrollLeft;
+              break;
+            }
+          }
+        } else {
+          this._scrollingContainer.scrollLeft = Math.max(0, scrollLeft);
+        }
       }
       if (
         !autoHeight &&
@@ -816,6 +877,7 @@ class Grid extends React.PureComponent<Props, State> {
    * 1) Empty content (0 rows or columns)
    * 2) New scroll props overriding the current state
    * 3) Cells-count or cells-size has changed, making previous scroll offsets invalid
+   * 4) The direction (rtl or ltr) has changed, making any previous scroll offset invalid
    */
   static getDerivedStateFromProps(
     nextProps: Props,
@@ -829,6 +891,10 @@ class Grid extends React.PureComponent<Props, State> {
     ) {
       newState.scrollLeft = 0;
       newState.scrollTop = 0;
+    } else if (nextProps.direction !== prevState.direction) {
+      newState.scrollLeft = 0;
+      newState.scrollTop = 0;
+      newState.direction = nextProps.direction;
 
       // only use scroll{Left,Top} from props if scrollTo{Column,Row} isn't specified
       // scrollTo{Column,Row} should override scroll{Left,Top}
@@ -853,7 +919,8 @@ class Grid extends React.PureComponent<Props, State> {
     newState.needToResetStyleCache = false;
     if (
       nextProps.columnWidth !== instanceProps.prevColumnWidth ||
-      nextProps.rowHeight !== instanceProps.prevRowHeight
+      nextProps.rowHeight !== instanceProps.prevRowHeight ||
+      nextProps.direction !== prevState.direction
     ) {
       // Reset cache. set it to {} in render
       newState.needToResetStyleCache = true;
@@ -902,6 +969,8 @@ class Grid extends React.PureComponent<Props, State> {
       computeMetadataCallback: () =>
         instanceProps.columnSizeAndPositionManager.resetCell(0),
       computeMetadataCallbackProps: nextProps,
+      direction: prevState.direction,
+      nextDirection: nextProps.direction,
       nextCellsCount: nextProps.columnCount,
       nextCellSize:
         typeof nextProps.columnWidth === 'number'
@@ -969,6 +1038,7 @@ class Grid extends React.PureComponent<Props, State> {
       containerProps,
       containerRole,
       containerStyle,
+      direction,
       height,
       id,
       noContentRenderer,
@@ -983,7 +1053,7 @@ class Grid extends React.PureComponent<Props, State> {
 
     const gridStyle: Object = {
       boxSizing: 'border-box',
-      direction: 'ltr',
+      direction,
       height: autoHeight ? 'auto' : height,
       position: 'relative',
       width: autoWidth ? 'auto' : width,
@@ -1086,6 +1156,7 @@ class Grid extends React.PureComponent<Props, State> {
       cellRenderer,
       cellRangeRenderer,
       columnCount,
+      direction,
       deferredMeasurementCache,
       height,
       overscanColumnCount,
@@ -1228,6 +1299,7 @@ class Grid extends React.PureComponent<Props, State> {
         columnStartIndex,
         columnStopIndex,
         deferredMeasurementCache,
+        direction,
         horizontalOffsetAdjustment,
         isScrolling,
         isScrollingOptOut,

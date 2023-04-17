@@ -30,6 +30,7 @@ export default class GridExample extends React.PureComponent {
       scrollToColumn: undefined,
       scrollToRow: undefined,
       useDynamicRowHeight: false,
+      direction: 'ltr',
     };
 
     this._cellRenderer = this._cellRenderer.bind(this);
@@ -55,6 +56,7 @@ export default class GridExample extends React.PureComponent {
       rowCount,
       scrollToColumn,
       scrollToRow,
+      direction,
       useDynamicRowHeight,
     } = this.state;
 
@@ -85,6 +87,17 @@ export default class GridExample extends React.PureComponent {
               }
             />
             Use dynamic row height?
+          </label>
+
+          <label className={styles.checkboxLabel}>
+            <input
+              aria-label="Use RTL direction"
+              className={styles.checkbox}
+              type="checkbox"
+              value={direction === 'rtl'}
+              onChange={event => this._updateDirection(event.target.checked)}
+            />
+            Use RTL direction
           </label>
         </ContentBoxParagraph>
 
@@ -163,6 +176,7 @@ export default class GridExample extends React.PureComponent {
               className={styles.BodyGrid}
               columnWidth={this._getColumnWidth}
               columnCount={columnCount}
+              direction={direction}
               height={height}
               noContentRenderer={this._noContentRenderer}
               overscanColumnCount={overscanColumnCount}
@@ -270,6 +284,12 @@ export default class GridExample extends React.PureComponent {
   _updateUseDynamicRowHeights(value) {
     this.setState({
       useDynamicRowHeight: value,
+    });
+  }
+
+  _updateDirection(value) {
+    this.setState({
+      direction: value ? 'rtl' : 'ltr',
     });
   }
 
