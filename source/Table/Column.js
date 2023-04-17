@@ -74,6 +74,9 @@ export default class Column extends React.Component {
     /** Minimum width of column. */
     minWidth: PropTypes.number,
 
+    /** Optional role to apply to the column */
+    role: PropTypes.string,
+
     /** Optional inline style to apply to cell */
     style: PropTypes.object,
 
@@ -88,6 +91,7 @@ export default class Column extends React.Component {
     flexGrow: 0,
     flexShrink: 1,
     headerRenderer: defaultHeaderRenderer,
+    role: 'gridcell',
     style: {},
   };
 }

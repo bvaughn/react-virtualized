@@ -223,6 +223,9 @@ export default class Table extends React.PureComponent {
     /** Table data is currently sorted in this direction (if it is sorted at all) */
     sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
 
+    /** Optional role to apply to the table */
+    role: PropTypes.string,
+
     /** Optional inline style */
     style: PropTypes.object,
 
@@ -245,6 +248,7 @@ export default class Table extends React.PureComponent {
     overscanRowCount: 10,
     rowRenderer: defaultRowRenderer,
     headerRowRenderer: defaultHeaderRowRenderer,
+    role: 'grid',
     rowStyle: {},
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
@@ -368,6 +372,7 @@ export default class Table extends React.PureComponent {
       height,
       id,
       noRowsRenderer,
+      role,
       rowClassName,
       rowStyle,
       scrollToIndex,
@@ -410,7 +415,7 @@ export default class Table extends React.PureComponent {
         aria-rowcount={this.props.rowCount}
         className={clsx('ReactVirtualized__Table', className)}
         id={id}
-        role="grid"
+        role={role}
         style={style}>
         {!disableHeader &&
           headerRowRenderer({
@@ -460,6 +465,7 @@ export default class Table extends React.PureComponent {
       columnData,
       dataKey,
       id,
+      role,
     } = column.props;
 
     const cellData = cellDataGetter({columnData, dataKey, rowData});
@@ -492,7 +498,7 @@ export default class Table extends React.PureComponent {
         className={clsx('ReactVirtualized__Table__rowColumn', className)}
         key={'Row' + rowIndex + '-' + 'Col' + columnIndex}
         onClick={onClick}
-        role="gridcell"
+        role={role}
         style={style}
         title={title}>
         {renderedCell}
