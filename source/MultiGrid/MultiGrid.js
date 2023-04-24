@@ -470,9 +470,11 @@ class MultiGrid extends React.PureComponent {
       };
     }
 
+    const {showHorizontalScrollbar} = this.state;
     if (
       resetAll ||
-      styleBottomLeftGrid !== this._lastRenderedStyleBottomLeftGrid
+      styleBottomLeftGrid !== this._lastRenderedStyleBottomLeftGrid ||
+      showHorizontalScrollbar !== this._lastRenderedShowHorizontalScrollbar
     ) {
       this._bottomLeftGridStyle = {
         left: 0,
@@ -481,6 +483,16 @@ class MultiGrid extends React.PureComponent {
         position: 'absolute',
         ...styleBottomLeftGrid,
       };
+
+      // When bottomRightGrid has scrollbar add height style to bottomLeftGrid
+      // to compensate the difference of grids containers height,
+      // which appears due scrollbar size.
+      // Without of this, bottomLeftGrid cannot be scrolled to such position as
+      // bottomRightGrid, which happens at the end of the grid.
+      if (showHorizontalScrollbar) {
+        const {scrollbarSize} = this.state;
+        this._bottomLeftGridStyle.height = `calc(100% - ${scrollbarSize}px)`;
+      }
     }
 
     if (
@@ -532,6 +544,7 @@ class MultiGrid extends React.PureComponent {
     this._lastRenderedStyleTopLeftGrid = styleTopLeftGrid;
     this._lastRenderedStyleTopRightGrid = styleTopRightGrid;
     this._lastRenderedWidth = width;
+    this._lastRenderedShowHorizontalScrollbar = showHorizontalScrollbar;
   }
 
   _prepareForRender() {
@@ -617,14 +630,12 @@ class MultiGrid extends React.PureComponent {
       rowCount,
       hideBottomLeftGridScrollbar,
     } = props;
-    const {showVerticalScrollbar} = this.state;
 
     if (!fixedColumnCount) {
       return null;
     }
 
-    const additionalRowCount = showVerticalScrollbar ? 1 : 0,
-      height = this._getBottomGridHeight(props),
+    const height = this._getBottomGridHeight(props),
       width = this._getLeftGridWidth(props),
       scrollbarSize = this.state.showVerticalScrollbar
         ? this.state.scrollbarSize
@@ -641,7 +652,7 @@ class MultiGrid extends React.PureComponent {
         height={height}
         onScroll={enableFixedColumnScroll ? this._onScrollTop : undefined}
         ref={this._bottomLeftGridRef}
-        rowCount={Math.max(0, rowCount - fixedRowCount) + additionalRowCount}
+        rowCount={Math.max(0, rowCount - fixedRowCount)}
         rowHeight={this._rowHeightBottomGrid}
         style={this._bottomLeftGridStyle}
         tabIndex={null}

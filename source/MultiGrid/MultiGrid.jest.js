@@ -299,7 +299,7 @@ describe('MultiGrid', () => {
       ] = gridsAfter;
       expect(topLeftAfter.style.getPropertyValue('height')).toEqual('125px');
       expect(topRightAfter.style.getPropertyValue('height')).toEqual('125px');
-      expect(bottomLeftAfter.style.getPropertyValue('height')).toEqual('175px');
+      expect(bottomLeftAfter.style.getPropertyValue('height')).toEqual('225px');
       expect(bottomRightAfter.style.getPropertyValue('height')).toEqual(
         '175px',
       );
