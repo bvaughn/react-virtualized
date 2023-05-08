@@ -9,8 +9,8 @@ type createCellPositionerParams = {
 };
 
 type resetParams = {
-  columnCount: number,
-  columnWidth: number,
+  columnCount?: number,
+  columnWidth?: number,
   spacer?: number,
 };
 
@@ -55,9 +55,15 @@ export default function createCellPositioner({
   }
 
   function reset(params: resetParams): void {
-    columnCount = params.columnCount;
-    columnWidth = params.columnWidth;
-    spacer = params.spacer;
+    if (params.columnCount) {
+      columnCount = params.columnCount;
+    }
+    if (params.columnWidth) {
+      columnWidth = params.columnWidth;
+    }
+    if (params.spacer) {
+      spacer = params.spacer;
+    }
 
     initOrResetDerivedValues();
   }
