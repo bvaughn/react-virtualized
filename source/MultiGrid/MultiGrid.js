@@ -157,9 +157,17 @@ class MultiGrid extends React.PureComponent {
         rowIndex,
       });
 
+    const oldLeftGridWidth = this._leftGridWidth;
+    const oldTopGridHeight = this._topGridHeight;
     this._leftGridWidth = null;
     this._topGridHeight = null;
     this._maybeCalculateCachedStyles(true);
+    if (
+      oldLeftGridWidth !== this._leftGridWidth ||
+      oldTopGridHeight !== this._topGridHeight
+    ) {
+      this.forceUpdate();
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
