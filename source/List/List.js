@@ -94,6 +94,9 @@ type Props = {
 
   /** Width of list */
   width: number,
+
+  /** Click handler for items in the list */
+  onClick?: (index: number) => void,
 };
 
 export default class List extends React.PureComponent<Props> {
@@ -108,6 +111,9 @@ export default class List extends React.PureComponent<Props> {
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
     style: {},
+    // onClick: () => {
+    //   console.log('List item clicked');
+    // },
   };
 
   Grid: ?React.ElementRef<typeof Grid>;
@@ -216,7 +222,7 @@ export default class List extends React.PureComponent<Props> {
     isVisible,
     key,
   }: CellRendererParams) => {
-    const {rowRenderer} = this.props;
+    const {rowRenderer, onClick} = this.props || {};
 
     // TRICKY The style object is sometimes cached by Grid.
     // This prevents new style objects from bypassing shallowCompare().
@@ -230,7 +236,17 @@ export default class List extends React.PureComponent<Props> {
       style.width = '100%';
     }
 
-    return rowRenderer({
+    // return rowRenderer({
+    //   index: rowIndex,
+    //   style,
+    //   isScrolling,
+    //   isVisible,
+    //   key,
+    //   parent,
+    // });
+
+    // Assuming each rowRenderer returns a clickable item
+    const clickableRow = rowRenderer({
       index: rowIndex,
       style,
       isScrolling,
@@ -238,6 +254,19 @@ export default class List extends React.PureComponent<Props> {
       key,
       parent,
     });
+
+    // Add onClick handler to the clickable item
+    const clickableItemWithOnClick = React.cloneElement(clickableRow, {
+      onClick: onClick
+        ? () => {
+            onClick(rowIndex);
+          }
+        : () => {
+            console.log(`#${rowIndex} List item clicked`);
+          },
+    });
+
+    return clickableItemWithOnClick;
   };
 
   _setRef = (ref: ?React.ElementRef<typeof Grid>) => {
