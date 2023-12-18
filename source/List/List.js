@@ -256,15 +256,17 @@ export default class List extends React.PureComponent<Props> {
     });
 
     // Add onClick handler to the clickable item
-    const clickableItemWithOnClick = React.cloneElement(clickableRow, {
-      onClick: onClick
-        ? () => {
-            onClick(rowIndex);
-          }
-        : () => {
-            console.log(`#${rowIndex} List item clicked`);
-          },
-    });
+    const clickableItemWithOnClick = clickableRow
+      ? React.cloneElement(clickableRow, {
+          onClick: onClick
+            ? () => {
+                onClick(rowIndex);
+              }
+            : () => {
+                console.log(`#${rowIndex} List item clicked`);
+              },
+        })
+      : null;
 
     return clickableItemWithOnClick;
   };
