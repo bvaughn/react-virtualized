@@ -255,20 +255,24 @@ export default class List extends React.PureComponent<Props> {
       parent,
     });
 
-    // Add onClick handler to the clickable item
-    const clickableItemWithOnClick = clickableRow
-      ? React.cloneElement(clickableRow, {
-          onClick: onClick
-            ? () => {
-                onClick(rowIndex);
-              }
-            : () => {
-                console.log(`#${rowIndex} List item clicked`);
-              },
-        })
-      : null;
+    // Check if clickableRow is a valid React element
+    if (React.isValidElement(clickableRow)) {
+      // Clone the element and add onClick handler
+      const clickableItemWithOnClick = React.cloneElement(clickableRow, {
+        onClick: onClick
+          ? () => {
+              onClick(rowIndex);
+            }
+          : () => {
+              console.log(`#${rowIndex} List item clicked`);
+            },
+      });
 
-    return clickableItemWithOnClick;
+      return clickableItemWithOnClick;
+    }
+
+    // Handle the case where rowRenderer returns null or an invalid value
+    return null;
   };
 
   _setRef = (ref: ?React.ElementRef<typeof Grid>) => {
