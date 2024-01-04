@@ -221,6 +221,9 @@ type Props = {
 
   /** Width of Grid; this property determines the number of visible (vs virtualized) columns.  */
   width: number,
+
+  /** scroller props */
+  scrollerProps?: Object,
 };
 
 type InstanceProps = {
@@ -976,6 +979,7 @@ class Grid extends React.PureComponent<Props, State> {
       style,
       tabIndex,
       width,
+      scrollerProps,
     } = this.props;
     const {instanceProps, needToResetStyleCache} = this.state;
 
@@ -1056,6 +1060,7 @@ class Grid extends React.PureComponent<Props, State> {
         tabIndex={tabIndex}>
         {childrenToDisplay.length > 0 && (
           <div
+            {...scrollerProps}
             className="ReactVirtualized__Grid__innerScrollContainer"
             role={containerRole}
             style={{
