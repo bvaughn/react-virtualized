@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {findDOMNode} from 'react-dom';
 import {render} from '../TestUtils';
 import ArrowKeyStepper from './ArrowKeyStepper';
 import {Simulate} from 'react-dom/test-utils';
@@ -15,6 +14,7 @@ function ChildComponent({scrollToColumn, scrollToRow}) {
 describe('ArrowKeyStepper', () => {
   function renderHelper(props = {}) {
     let onSectionRenderedCallback;
+    const ref = React.createRef();
 
     const component = render(
       <ArrowKeyStepper columnCount={10} mode="edges" rowCount={10} {...props}>
@@ -22,19 +22,20 @@ describe('ArrowKeyStepper', () => {
           onSectionRenderedCallback = onSectionRendered;
 
           return (
-            <ChildComponent
-              scrollToColumn={scrollToColumn}
-              scrollToRow={scrollToRow}
-            />
+            <div ref={ref}>
+              <ChildComponent
+                scrollToColumn={scrollToColumn}
+                scrollToRow={scrollToRow}
+              />
+            </div>
           );
         }}
       </ArrowKeyStepper>,
     );
-    const node = findDOMNode(component);
 
     return {
       component,
-      node,
+      node: ref.current,
       onSectionRendered: onSectionRenderedCallback,
     };
   }

@@ -91,6 +91,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
   _positionFromLeft = 0;
   _detectElementResize: DetectElementResize;
   _child: ?Element;
+  _windowScrollerRef = React.createRef();
 
   state = {
     ...getDimensions(this.props.scrollElement, this.props),
@@ -103,7 +104,7 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     const {onResize} = this.props;
     const {height, width} = this.state;
 
-    const thisNode = this._child || ReactDOM.findDOMNode(this);
+    const thisNode = this._child || this._windowScrollerRef.current;
     if (thisNode instanceof Element && scrollElement) {
       const offset = getPositionOffset(thisNode, scrollElement);
       this._positionFromTop = offset.top;
@@ -176,15 +177,21 @@ export default class WindowScroller extends React.PureComponent<Props, State> {
     const {children} = this.props;
     const {isScrolling, scrollTop, scrollLeft, height, width} = this.state;
 
-    return children({
-      onChildScroll: this._onChildScroll,
-      registerChild: this._registerChild,
-      height,
-      isScrolling,
-      scrollLeft,
-      scrollTop,
-      width,
-    });
+    return React.createElement(
+      'div',
+      {
+        ref: this._windowScrollerRef,
+      },
+      children({
+        onChildScroll: this._onChildScroll,
+        registerChild: this._registerChild,
+        height,
+        isScrolling,
+        scrollLeft,
+        scrollTop,
+        width,
+      }),
+    );
   }
 
   _registerChild = element => {
