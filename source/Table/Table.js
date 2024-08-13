@@ -339,7 +339,7 @@ export default class Table extends React.PureComponent {
 
   getScrollbarWidth() {
     if (this.Grid) {
-      const Grid = findDOMNode(this.Grid);
+      const Grid = this.Grid.scrollingContainer;
       const clientWidth = Grid.clientWidth || 0;
       const offsetWidth = Grid.offsetWidth || 0;
       return offsetWidth - clientWidth;
