@@ -1248,6 +1248,11 @@ describe('Table', () => {
       expect(node.getAttribute('role')).toEqual('grid');
     });
 
+    it('should set alternative aria role on table', () => {
+      const node = findDOMNode(render(getMarkup({role: 'treegrid'})));
+      expect(node.getAttribute('role')).toEqual('treegrid');
+    });
+
     it('should set aria col/row count on the table', () => {
       const node = findDOMNode(render(getMarkup()));
       expect(node.getAttribute('aria-colcount')).toEqual('2');

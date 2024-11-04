@@ -153,6 +153,11 @@ export default class Table extends React.PureComponent {
     overscanRowCount: PropTypes.number.isRequired,
 
     /**
+     * ARIA role for the table; defaults to "grid"
+     */
+    role: PropTypes.string,
+
+    /**
      * Optional CSS class to apply to all table rows (including the header row).
      * This property can be a CSS class name (string) or a function that returns a class name.
      * If a function is provided its signature should be: ({ index: number }): string
@@ -245,6 +250,7 @@ export default class Table extends React.PureComponent {
     overscanRowCount: 10,
     rowRenderer: defaultRowRenderer,
     headerRowRenderer: defaultHeaderRowRenderer,
+    role: 'grid',
     rowStyle: {},
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
@@ -410,7 +416,7 @@ export default class Table extends React.PureComponent {
         aria-rowcount={this.props.rowCount}
         className={clsx('ReactVirtualized__Table', className)}
         id={id}
-        role="grid"
+        role={this.props.role}
         style={style}>
         {!disableHeader &&
           headerRowRenderer({
