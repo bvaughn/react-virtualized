@@ -222,6 +222,7 @@ type Props = {
   /** Width of Grid; this property determines the number of visible (vs virtualized) columns.  */
   width: number,
 
+  /** Reference to DOM element */
   elRef?: React.Ref<HTMLDivElement>,
 };
 
