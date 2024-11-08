@@ -6,12 +6,13 @@ import clsx from 'clsx';
 import Column from './Column';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import {findDOMNode} from 'react-dom';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 
 import defaultRowRenderer from './defaultRowRenderer';
 import defaultHeaderRowRenderer from './defaultHeaderRowRenderer';
 import SortDirection from './SortDirection';
+import defaultCellDataGetter from './defaultCellDataGetter';
+import defaultCellRenderer from './defaultCellRenderer';
 
 /**
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
@@ -263,6 +264,7 @@ export default class Table extends React.PureComponent {
     this._onScroll = this._onScroll.bind(this);
     this._onSectionRendered = this._onSectionRendered.bind(this);
     this._setRef = this._setRef.bind(this);
+    this._gridElementRef = React.createRef();
   }
 
   forceUpdateGrid() {
@@ -338,8 +340,8 @@ export default class Table extends React.PureComponent {
   }
 
   getScrollbarWidth() {
-    if (this.Grid) {
-      const Grid = findDOMNode(this.Grid);
+    if (this._gridElementRef.current) {
+      const Grid = this._gridElementRef.current;
       const clientWidth = Grid.clientWidth || 0;
       const offsetWidth = Grid.offsetWidth || 0;
       return offsetWidth - clientWidth;
@@ -390,7 +392,7 @@ export default class Table extends React.PureComponent {
     React.Children.toArray(children).forEach((column, index) => {
       const flexStyles = this._getFlexStyleForColumn(
         column,
-        column.props.style,
+        column.props.style ?? Column.defaultProps.style,
       );
 
       this._cachedColumnStyles[index] = {
@@ -427,6 +429,7 @@ export default class Table extends React.PureComponent {
 
         <Grid
           {...this.props}
+          elRef={this._gridElementRef}
           aria-readonly={null}
           autoContainerWidth
           className={clsx('ReactVirtualized__Table__Grid', gridClassName)}
@@ -454,8 +457,8 @@ export default class Table extends React.PureComponent {
   _createColumn({column, columnIndex, isScrolling, parent, rowData, rowIndex}) {
     const {onColumnClick} = this.props;
     const {
-      cellDataGetter,
-      cellRenderer,
+      cellDataGetter = defaultCellDataGetter,
+      cellRenderer = defaultCellRenderer,
       className,
       columnData,
       dataKey,
@@ -512,9 +515,9 @@ export default class Table extends React.PureComponent {
     const {
       columnData,
       dataKey,
-      defaultSortDirection,
+      defaultSortDirection = Column.defaultProps.defaultSortDirection,
       disableSort,
-      headerRenderer,
+      headerRenderer = Column.defaultProps.headerRenderer,
       id,
       label,
     } = column.props;
@@ -673,7 +676,9 @@ export default class Table extends React.PureComponent {
    * Determines the flex-shrink, flex-grow, and width values for a cell (header or column).
    */
   _getFlexStyleForColumn(column, customStyle = {}) {
-    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${column.props.width}px`;
+    const flexValue = `${column.props.flexGrow ??
+      Column.defaultProps.flexGrow} ${column.props.flexShrink ??
+      Column.defaultProps.flexShrink} ${column.props.width}px`;
 
     const style = {
       ...customStyle,
