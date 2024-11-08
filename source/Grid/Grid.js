@@ -223,7 +223,7 @@ type Props = {
   width: number,
 
   /** Reference to DOM element */
-  elRef?: React.Ref<HTMLDivElement>,
+  elRef?: React.Ref<React.ElementType>,
 };
 
 type InstanceProps = {
@@ -1386,7 +1386,7 @@ class Grid extends React.PureComponent<Props, State> {
   _setScrollingContainerRef = (ref: Element) => {
     this._scrollingContainer = ref;
 
-    if (typeof this.props.ref === 'function') {
+    if (typeof this.props.elRef === 'function') {
       this.props.elRef(ref);
     } else if (typeof this.props.elRef === 'object') {
       this.props.elRef.current = ref;
