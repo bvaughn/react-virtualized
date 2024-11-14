@@ -1447,6 +1447,10 @@ class Grid extends React.PureComponent<Props, State> {
     }
   }
 
+  getDOMNode() {
+    return this._scrollingContainer;
+  }
+
   static _wrapSizeGetter(value: CellSize): CellSizeGetter {
     return typeof value === 'function' ? value : () => (value: any);
   }
