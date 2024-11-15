@@ -47,8 +47,8 @@
 
 "@babel/generator@^7.12.13":
   version "7.13.16"
-  resolved "https://registry.nlark.com/@babel/generator/download/@babel/generator-7.13.16.tgz#0befc287031a201d84cdfc173b46b320ae472d14"
-  integrity sha1-C+/ChwMaIB2EzfwXO0azIK5HLRQ=
+  resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.13.16.tgz#0befc287031a201d84cdfc173b46b320ae472d14"
+  integrity sha512-grBBR75UnKOcUWMp8WoDxNsWCFl//XCK6HWTrBQKTr5SV9f5g0pNOjdyzi/DTBv12S9GnYPInIXQBTky7OXEMg==
   dependencies:
     "@babel/types" "^7.13.16"
     jsesc "^2.5.1"
@@ -196,8 +196,8 @@
 
 "@babel/helper-plugin-utils@^7.12.13":
   version "7.13.0"
-  resolved "https://registry.npm.taobao.org/@babel/helper-plugin-utils/download/@babel/helper-plugin-utils-7.13.0.tgz#806526ce125aed03373bc416a828321e3a6a33af"
-  integrity sha1-gGUmzhJa7QM3O8QWqCgyHjpqM68=
+  resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.13.0.tgz#806526ce125aed03373bc416a828321e3a6a33af"
+  integrity sha512-ZPafIPSwzUlAoWT8DKs1W2VyF2gOWthGd5NGFMsBcMMol+ZhK+EQY/e6V96poa6PA/Bh+C9plWN0hXO1uB8AfQ==
 
 "@babel/helper-regex@^7.0.0", "@babel/helper-regex@^7.4.4":
   version "7.5.5"
@@ -244,8 +244,8 @@
 
 "@babel/helper-validator-identifier@^7.12.11":
   version "7.12.11"
-  resolved "https://registry.nlark.com/@babel/helper-validator-identifier/download/@babel/helper-validator-identifier-7.12.11.tgz#c9a1f021917dcb5ccf0d4e453e399022981fc9ed"
-  integrity sha1-yaHwIZF9y1zPDU5FPjmQIpgfye0=
+  resolved "https://registry.yarnpkg.com/@babel/helper-validator-identifier/-/helper-validator-identifier-7.12.11.tgz#c9a1f021917dcb5ccf0d4e453e399022981fc9ed"
+  integrity sha512-np/lG3uARFybkoHokJUmf1QfEvRVCPbmQeUQpKow5cQ3xWrV9i3rUHodKDJPQfTVX61qKi+UdYk8kik84n7XOw==
 
 "@babel/helper-wrap-function@^7.7.0":
   version "7.7.0"
@@ -360,8 +360,8 @@
 
 "@babel/plugin-syntax-flow@^7.12.13":
   version "7.12.13"
-  resolved "https://registry.npm.taobao.org/@babel/plugin-syntax-flow/download/@babel/plugin-syntax-flow-7.12.13.tgz#5df9962503c0a9c918381c929d51d4d6949e7e86"
-  integrity sha1-XfmWJQPAqckYOBySnVHU1pSefoY=
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-flow/-/plugin-syntax-flow-7.12.13.tgz#5df9962503c0a9c918381c929d51d4d6949e7e86"
+  integrity sha512-J/RYxnlSLXZLVR7wTRsozxKT8qbsx1mNKJzXEEjQ0Kjx1ZACcyHgbanNWNCFtc36IzuWhYWPpvJFFoexoOWFmA==
   dependencies:
     "@babel/helper-plugin-utils" "^7.12.13"
 
@@ -491,8 +491,8 @@
 
 "@babel/plugin-transform-flow-comments@^7.12.13":
   version "7.12.13"
-  resolved "https://registry.nlark.com/@babel/plugin-transform-flow-comments/download/@babel/plugin-transform-flow-comments-7.12.13.tgz#b6f0de89ac4955572913f4af82f6b8ddbff38bf1"
-  integrity sha1-tvDeiaxJVVcpE/Svgva43b/zi/E=
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-flow-comments/-/plugin-transform-flow-comments-7.12.13.tgz#b6f0de89ac4955572913f4af82f6b8ddbff38bf1"
+  integrity sha512-o4Z7Mw9KvrfAxBwSr+Ia+E0+LLb6ZzDXQTsJb628ejXuvvNoCDyu3FLBcz2/W8B7q/MOzm6d6pbNM6ur/aegMQ==
   dependencies:
     "@babel/generator" "^7.12.13"
     "@babel/helper-plugin-utils" "^7.12.13"
@@ -848,8 +848,8 @@
 
 "@babel/types@^7.13.16":
   version "7.13.17"
-  resolved "https://registry.nlark.com/@babel/types/download/@babel/types-7.13.17.tgz#48010a115c9fba7588b4437dd68c9469012b38b4"
-  integrity sha1-SAEKEVyfunWItEN91oyUaQErOLQ=
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.13.17.tgz#48010a115c9fba7588b4437dd68c9469012b38b4"
+  integrity sha512-RawydLgxbOPDlTLJNtoIypwdmAy//uQIzlKt2+iBiJaRlVuI6QLUxVAyWGNfOzp8Yu4L4lLIacoCyTNtpb4wiA==
   dependencies:
     "@babel/helper-validator-identifier" "^7.12.11"
     to-fast-properties "^2.0.0"
