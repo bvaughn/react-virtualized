@@ -392,7 +392,7 @@ export default class Table extends React.PureComponent {
     React.Children.toArray(children).forEach((column, index) => {
       const flexStyles = this._getFlexStyleForColumn(
         column,
-        column.props.style ?? Column.defaultProps.style,
+        column.props.style || Column.defaultProps.style,
       );
 
       this._cachedColumnStyles[index] = {
@@ -676,8 +676,8 @@ export default class Table extends React.PureComponent {
    * Determines the flex-shrink, flex-grow, and width values for a cell (header or column).
    */
   _getFlexStyleForColumn(column, customStyle = {}) {
-    const flexValue = `${column.props.flexGrow ??
-      Column.defaultProps.flexGrow} ${column.props.flexShrink ??
+    const flexValue = `${column.props.flexGrow ||
+      Column.defaultProps.flexGrow} ${column.props.flexShrink ||
       Column.defaultProps.flexShrink} ${column.props.width}px`;
 
     const style = {
