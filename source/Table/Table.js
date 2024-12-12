@@ -264,7 +264,7 @@ export default class Table extends React.PureComponent {
     this._onScroll = this._onScroll.bind(this);
     this._onSectionRendered = this._onSectionRendered.bind(this);
     this._setRef = this._setRef.bind(this);
-    this._gridElementRef = React.createRef();
+    this._setGridElementRef = this._setGridElementRef.bind(this);
   }
 
   forceUpdateGrid() {
@@ -340,8 +340,8 @@ export default class Table extends React.PureComponent {
   }
 
   getScrollbarWidth() {
-    if (this._gridElementRef.current) {
-      const Grid = this._gridElementRef.current;
+    if (this.GridEl) {
+      const Grid = this.GridEl;
       const clientWidth = Grid.clientWidth || 0;
       const offsetWidth = Grid.offsetWidth || 0;
       return offsetWidth - clientWidth;
@@ -429,7 +429,7 @@ export default class Table extends React.PureComponent {
 
         <Grid
           {...this.props}
-          elRef={this._gridElementRef}
+          elRef={this._setGridElementRef}
           aria-readonly={null}
           autoContainerWidth
           className={clsx('ReactVirtualized__Table__Grid', gridClassName)}
@@ -737,6 +737,10 @@ export default class Table extends React.PureComponent {
 
   _setRef(ref) {
     this.Grid = ref;
+  }
+
+  _setGridElementRef(ref) {
+    this.GridEl = ref;
   }
 
   _setScrollbarWidth() {
