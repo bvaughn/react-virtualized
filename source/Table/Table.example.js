@@ -49,6 +49,8 @@ export default class TableExample extends React.PureComponent {
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this);
     this._rowClassName = this._rowClassName.bind(this);
     this._sort = this._sort.bind(this);
+
+    this.tableRef = React.createRef();
   }
 
   render() {
@@ -185,7 +187,7 @@ export default class TableExample extends React.PureComponent {
           <AutoSizer disableHeight>
             {({width}) => (
               <Table
-                ref="Table"
+                ref={this.tableRef}
                 disableHeader={disableHeader}
                 headerClassName={styles.headerColumn}
                 headerHeight={headerHeight}

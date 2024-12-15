@@ -35,6 +35,8 @@ export default class ListExample extends React.PureComponent {
     this._onRowCountChange = this._onRowCountChange.bind(this);
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this);
     this._rowRenderer = this._rowRenderer.bind(this);
+
+    this.listRef = React.createRef();
   }
 
   render() {
@@ -143,7 +145,7 @@ export default class ListExample extends React.PureComponent {
           <AutoSizer disableHeight>
             {({width}) => (
               <List
-                ref="List"
+                ref={this.listRef}
                 className={styles.List}
                 height={listHeight}
                 overscanRowCount={overscanRowCount}

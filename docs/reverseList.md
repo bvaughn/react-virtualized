@@ -12,6 +12,8 @@ export default class Example extends Component {
     this.state = {
       list: [],
     };
+
+    this.listRef = createRef();
   }
 
   componentDidMount() {
@@ -28,7 +30,7 @@ export default class Example extends Component {
     return (
       <div className={styles.ListExample}>
         <List
-          ref="List"
+          ref={this.listRef}
           className={styles.List}
           width={300}
           height={200}
