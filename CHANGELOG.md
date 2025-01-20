@@ -9,6 +9,10 @@
 - Fix issue with unused import being emitted ([mewhhaha](https://github.com/mewhhaha) - [#1635](https://github.com/bvaughn/react-virtualized/pull/1635))
 - Fix grid roles for accessbility ([asnewman](https://github.com/asnewman) - [#1624](https://github.com/bvaughn/react-virtualized/pull/1624))
 
+##### 9.22.5
+
+- React 19 support added; special thanks to ([artur-ptaszek-mck](https://github.com/artur-ptaszek-mck) and ([adubrouski](https://github.com/adubrouski)
+
 ##### 9.22.4
 
 - README changes
