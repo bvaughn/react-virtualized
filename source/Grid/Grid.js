@@ -221,6 +221,9 @@ type Props = {
 
   /** Width of Grid; this property determines the number of visible (vs virtualized) columns.  */
   width: number,
+
+  /** Reference to DOM node */
+  elementRef?: React.Ref<React.ElementType>,
 };
 
 type InstanceProps = {
@@ -1382,6 +1385,12 @@ class Grid extends React.PureComponent<Props, State> {
 
   _setScrollingContainerRef = (ref: Element) => {
     this._scrollingContainer = ref;
+
+    if (typeof this.props.elementRef === 'function') {
+      this.props.elementRef(ref);
+    } else if (typeof this.props.elementRef === 'object') {
+      this.props.elementRef.current = ref;
+    }
   };
 
   /**
