@@ -11,6 +11,8 @@ import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 import defaultRowRenderer from './defaultRowRenderer';
 import defaultHeaderRowRenderer from './defaultHeaderRowRenderer';
 import SortDirection from './SortDirection';
+import defaultCellDataGetter from './defaultCellDataGetter';
+import defaultCellRenderer from './defaultCellRenderer';
 
 /**
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
@@ -455,8 +457,8 @@ export default class Table extends React.PureComponent {
   _createColumn({column, columnIndex, isScrolling, parent, rowData, rowIndex}) {
     const {onColumnClick} = this.props;
     const {
-      cellDataGetter,
-      cellRenderer,
+      cellDataGetter = defaultCellDataGetter,
+      cellRenderer = defaultCellRenderer,
       className,
       columnData,
       dataKey,
@@ -513,9 +515,9 @@ export default class Table extends React.PureComponent {
     const {
       columnData,
       dataKey,
-      defaultSortDirection,
+      defaultSortDirection = Column.defaultProps.defaultSortDirection,
       disableSort,
-      headerRenderer,
+      headerRenderer = Column.defaultProps.headerRenderer,
       id,
       label,
     } = column.props;
@@ -674,7 +676,9 @@ export default class Table extends React.PureComponent {
    * Determines the flex-shrink, flex-grow, and width values for a cell (header or column).
    */
   _getFlexStyleForColumn(column, customStyle = {}) {
-    const flexValue = `${column.props.flexGrow} ${column.props.flexShrink} ${column.props.width}px`;
+    const flexValue = `${column.props.flexGrow ||
+      Column.defaultProps.flexGrow} ${column.props.flexShrink ||
+      Column.defaultProps.flexShrink} ${column.props.width}px`;
 
     const style = {
       ...customStyle,
