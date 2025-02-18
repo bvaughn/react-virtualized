@@ -91,6 +91,9 @@ ReactDOM.render(
             width={...}
           />
         </div>
+        <footer>
+          Table footer
+        </footer>
       </div>
     )}
   </WindowScroller>,

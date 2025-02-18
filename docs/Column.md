@@ -19,7 +19,11 @@ Describes the header and cell contents of a table column.
 | headerRenderer       | Function                          |           | Optional callback responsible for rendering a column's header column. [Learn more](#headerrenderer)                                           |
 | headerStyle          | Object                            |           | Optional inline style to apply to this column's header                                                                                        |
 | id                   | String                            |           | Optional id to set on the column header; used for [`aria-describedby`](https://www.w3.org/TR/wai-aria/states_and_properties#aria-describedby) |
-| label                | Node                              |           | Header label for this column                                                                                                                  |
+| label                | Node                              |           | Header label for this                                                                                                                         |
+| footerClassName      | String                            |           | CSS class to apply to this column's footer                                                                                                    |
+| footerRenderer       | Function                          |           | Optional callback responsible for rendering a column's footer column. [Learn more](#footerrenderer)                                           |
+| footerStyle          | Object                            |           | Optional inline style to apply to this column's footer                                                                                        |
+| column               |
 | maxWidth             | Number                            |           | Maximum width of column; this property will only be used if :flexGrow is greater than 0                                                       |
 | minWidth             | Number                            |           | Minimum width of column                                                                                                                       |
 | style                | Object                            |           | Optional inline style to apply to rendered cell container                                                                                     |
@@ -80,3 +84,16 @@ function ({
 
 A [default `headerRenderer`](https://github.com/bvaughn/react-virtualized/blob/master/source/Table/defaultHeaderRenderer.js) is provided that displays the column `label` along with a sort indicator if the column is sort-enabled and active.
 You should override this default method if you want to customize the appearance of table columns.
+
+#### footerRenderer
+
+Callback responsible for rendering a cell's footer column.
+It should implement the following signature:
+
+```javascript
+function ({
+  columnData: any,
+  dataKey: string,
+  label: any
+}): element
+```

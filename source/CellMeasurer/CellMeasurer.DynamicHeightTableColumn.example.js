@@ -31,6 +31,7 @@ export default class DynamicHeightTableColumn extends React.PureComponent {
       <Table
         deferredMeasurementCache={this._cache}
         headerHeight={20}
+        footerHeight={20}
         height={400}
         overscanRowCount={2}
         rowClassName={styles.tableRow}

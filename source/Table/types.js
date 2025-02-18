@@ -28,6 +28,18 @@ export type HeaderRendererParams = {
   sortDirection: ?string,
 };
 
+export type FooterRowRendererParams = {
+  className: string,
+  columns: Array<any>,
+  style: any,
+};
+
+export type FooterRendererParams = {
+  columnData: ?any,
+  dataKey: string,
+  label: ?any,
+};
+
 export type RowRendererParams = {
   className: string,
   columns: Array<any>,
