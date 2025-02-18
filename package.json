@@ -3,7 +3,7 @@
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com>",
   "user": "bvaughn",
-  "version": "9.22.3",
+  "version": "9.22.6",
   "homepage": "https://github.com/bvaughn/react-virtualized",
   "main": "dist/commonjs/index.js",
   "module": "dist/es/index.js",
@@ -75,9 +75,9 @@
     "@babel/core": "^7.7.2",
     "@babel/plugin-external-helpers": "^7.2.0",
     "@babel/plugin-proposal-class-properties": "^7.7.0",
+    "@babel/plugin-transform-flow-comments": "^7.12.13",
     "@babel/plugin-transform-modules-commonjs": "^7.7.0",
     "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/plugin-transform-flow-comments": "^7.12.13",
     "@babel/polyfill": "^7.7.0",
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-flow": "^7.0.0",
@@ -126,7 +126,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-test-renderer": "^17.0.1",
-    "rimraf": "^3.0.0",
+    "rimraf": "^6.0.1",
     "rollup": "^1.26.5",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -148,8 +148,8 @@
     "react-lifecycles-compat": "^3.0.4"
   },
   "peerDependencies": {
-    "react": "^15.3.0 || ^16.0.0-alpha || ^17.0.1",
-    "react-dom": "^15.3.0 || ^16.0.0-alpha || ^17.0.1"
+    "react": "^16.3.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^16.3.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "browserify": {
     "transform": [

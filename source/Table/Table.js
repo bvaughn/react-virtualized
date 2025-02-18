@@ -6,7 +6,6 @@ import clsx from 'clsx';
 import Column from './Column';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import {findDOMNode} from 'react-dom';
 import Grid, {accessibilityOverscanIndicesGetter} from '../Grid';
 
 import defaultRowRenderer from './defaultRowRenderer';
@@ -296,6 +295,7 @@ export default class Table extends React.PureComponent {
     this._onScroll = this._onScroll.bind(this);
     this._onSectionRendered = this._onSectionRendered.bind(this);
     this._setRef = this._setRef.bind(this);
+    this._setGridElementRef = this._setGridElementRef.bind(this);
   }
 
   forceUpdateGrid() {
@@ -371,8 +371,8 @@ export default class Table extends React.PureComponent {
   }
 
   getScrollbarWidth() {
-    if (this.Grid) {
-      const Grid = findDOMNode(this.Grid);
+    if (this.GridElement) {
+      const Grid = this.GridElement;
       const clientWidth = Grid.clientWidth || 0;
       const offsetWidth = Grid.offsetWidth || 0;
       return offsetWidth - clientWidth;
@@ -429,7 +429,7 @@ export default class Table extends React.PureComponent {
     React.Children.toArray(children).forEach((column, index) => {
       const flexStyles = this._getFlexStyleForColumn(
         column,
-        column.props.style,
+        column.props.style || Column.defaultProps.style,
       );
 
       this._cachedColumnStyles[index] = {
@@ -466,6 +466,7 @@ export default class Table extends React.PureComponent {
 
         <Grid
           {...this.props}
+          elementRef={this._setGridElementRef}
           aria-readonly={null}
           autoContainerWidth
           className={clsx('ReactVirtualized__Table__Grid', gridClassName)}
@@ -848,6 +849,10 @@ export default class Table extends React.PureComponent {
 
   _setRef(ref) {
     this.Grid = ref;
+  }
+
+  _setGridElementRef(ref) {
+    this.GridElement = ref;
   }
 
   _setScrollbarWidth() {
