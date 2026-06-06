@@ -558,6 +558,26 @@ describe('Grid', () => {
       expect(grid.state.scrollTop).toEqual(1900);
     });
 
+    it('should preserve scrollTop state after scrollToCell when scrollTop prop is unchanged', () => {
+      // Render with autoHeight=true and an explicit scrollTop=0 prop, as WindowScroller would apply initially.
+      const grid = render(
+        getMarkup({
+          autoHeight: true,
+          scrollTop: 0,
+        }),
+      );
+      expect(grid.state.scrollTop).toEqual(0);
+
+      // Call scrollToCell imperatively (equivalent to list.scrollToRow()).
+      // It should result in a scroll movement, ignoring the scrollTop prop.
+      grid.scrollToCell({rowIndex: 49});
+
+      // 100 rows * 20px rowHeight = 2,000px total height
+      // viewport height = 100px → 5 rows visible
+      // Minimum scroll to show row 49 at bottom = 49*20 + 20 - 100 = 900
+      expect(grid.state.scrollTop).toEqual(900);
+    });
+
     it('should support scrollToPosition() public method', () => {
       const grid = render(getMarkup());
       expect(grid.state.scrollLeft).toEqual(0);
