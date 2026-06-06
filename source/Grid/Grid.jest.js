@@ -2227,6 +2227,23 @@ describe('Grid', () => {
         grid.state.instanceProps.rowSizeAndPositionManager.getTotalSize(),
       ).toEqual(2000);
     });
+
+    it('should scroll to the start of the last row without clamping to totalSize - containerSize', () => {
+      // With autoHeight the window scrolls, not the inner container, so the
+      // scroll offset is not bounded by totalSize - containerSize.
+      // 100 rows * 20px = 2000px totalSize; viewport (containerSize) = 100px
+      // row 99 datum.offset = 1980px; align='start' idealOffset = 1980
+      // Without fix: clamped to min(2000 - 100, 1980) = 1900
+      // With fix:    clamped to min(2000 - 0,   1980) = 1980
+      const grid = render(
+        getMarkup({
+          autoHeight: true,
+          scrollToAlignment: 'start',
+          scrollToRow: NUM_ROWS - 1,
+        }),
+      );
+      expect(grid.state.scrollTop).toEqual((NUM_ROWS - 1) * DEFAULT_ROW_HEIGHT); // 1980
+    });
   });
 
   describe('autoWidth', () => {

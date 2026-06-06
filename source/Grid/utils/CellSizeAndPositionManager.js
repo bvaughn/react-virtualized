@@ -6,12 +6,14 @@ type CellSizeAndPositionManagerParams = {
   cellCount: number,
   cellSizeGetter: CellSizeGetter,
   estimatedCellSize: number,
+  autoSize: boolean,
 };
 
 type ConfigureParams = {
   cellCount: number,
   estimatedCellSize: number,
   cellSizeGetter: CellSizeGetter,
+  autoSize: boolean,
 };
 
 type GetUpdatedOffsetForIndex = {
@@ -49,25 +51,34 @@ export default class CellSizeAndPositionManager {
   _cellCount: number;
   _cellSizeGetter: CellSizeGetter;
   _estimatedCellSize: number;
+  _autoSize: boolean;
 
   constructor({
     cellCount,
     cellSizeGetter,
     estimatedCellSize,
+    autoSize,
   }: CellSizeAndPositionManagerParams) {
     this._cellSizeGetter = cellSizeGetter;
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
+    this._autoSize = autoSize;
   }
 
   areOffsetsAdjusted() {
     return false;
   }
 
-  configure({cellCount, estimatedCellSize, cellSizeGetter}: ConfigureParams) {
+  configure({
+    cellCount,
+    estimatedCellSize,
+    cellSizeGetter,
+    autoSize,
+  }: ConfigureParams) {
     this._cellCount = cellCount;
     this._estimatedCellSize = estimatedCellSize;
     this._cellSizeGetter = cellSizeGetter;
+    this._autoSize = autoSize;
   }
 
   getCellCount(): number {
@@ -202,7 +213,10 @@ export default class CellSizeAndPositionManager {
 
     const totalSize = this.getTotalSize();
 
-    return Math.max(0, Math.min(totalSize - containerSize, idealOffset));
+    return Math.max(
+      0,
+      Math.min(totalSize - (this._autoSize ? 0 : containerSize), idealOffset),
+    );
   }
 
   getVisibleCellRange(params: GetVisibleCellRangeParams): VisibleCellRange {

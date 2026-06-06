@@ -186,6 +186,7 @@ describe('CellSizeAndPositionManager', () => {
   describe('getUpdatedOffsetForIndex', () => {
     function getUpdatedOffsetForIndexHelper({
       align = 'auto',
+      autoSize = false,
       cellCount = 10,
       cellSize = 10,
       containerSize = 50,
@@ -194,6 +195,7 @@ describe('CellSizeAndPositionManager', () => {
       targetIndex = 0,
     }) {
       const cellSizeAndPositionManager = new CellSizeAndPositionManager({
+        autoSize,
         cellCount,
         cellSizeGetter: () => cellSize,
         estimatedCellSize,
@@ -334,6 +336,21 @@ describe('CellSizeAndPositionManager', () => {
           targetIndex: 2,
         }),
       ).toEqual(0);
+    });
+
+    it('should allow scrolling past totalSize - containerSize when autoSize is true', () => {
+      // 10 cells * 10px = 100px totalSize; containerSize = 50px
+      // last cell (index 9) offset = 90px; align='start' idealOffset = 90
+      // Without autoSize: clamped to min(100 - 50, 90) = 50
+      // With autoSize:    clamped to min(100 - 0,  90) = 90
+      expect(
+        getUpdatedOffsetForIndexHelper({
+          autoSize: true,
+          align: 'start',
+          currentOffset: 0,
+          targetIndex: 9,
+        }),
+      ).toEqual(90);
     });
   });
 

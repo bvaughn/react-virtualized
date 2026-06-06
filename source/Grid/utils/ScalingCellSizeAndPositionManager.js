@@ -21,6 +21,7 @@ type Params = {
   cellCount: number,
   cellSizeGetter: CellSizeGetter,
   estimatedCellSize: number,
+  autoSize: boolean,
 };
 
 /**
@@ -46,6 +47,7 @@ export default class ScalingCellSizeAndPositionManager {
     cellCount: number,
     estimatedCellSize: number,
     cellSizeGetter: CellSizeGetter,
+    autoSize: boolean,
   }) {
     this._cellSizeAndPositionManager.configure(params);
   }

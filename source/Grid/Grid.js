@@ -327,11 +327,13 @@ class Grid extends React.PureComponent<Props, State> {
       cellCount: props.columnCount,
       cellSizeGetter: params => Grid._wrapSizeGetter(props.columnWidth)(params),
       estimatedCellSize: Grid._getEstimatedColumnSize(props),
+      autoSize: props.autoWidth,
     });
     const rowSizeAndPositionManager = new ScalingCellSizeAndPositionManager({
       cellCount: props.rowCount,
       cellSizeGetter: params => Grid._wrapSizeGetter(props.rowHeight)(params),
       estimatedCellSize: Grid._getEstimatedRowSize(props),
+      autoSize: props.autoHeight,
     });
 
     this.state = {
@@ -866,12 +868,14 @@ class Grid extends React.PureComponent<Props, State> {
       cellCount: nextProps.columnCount,
       estimatedCellSize: Grid._getEstimatedColumnSize(nextProps),
       cellSizeGetter: Grid._wrapSizeGetter(nextProps.columnWidth),
+      autoSize: nextProps.autoWidth,
     });
 
     instanceProps.rowSizeAndPositionManager.configure({
       cellCount: nextProps.rowCount,
       estimatedCellSize: Grid._getEstimatedRowSize(nextProps),
       cellSizeGetter: Grid._wrapSizeGetter(nextProps.rowHeight),
+      autoSize: nextProps.autoHeight,
     });
 
     if (
