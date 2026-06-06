@@ -204,6 +204,11 @@ type Props = {
    */
   scrollToAlignment: Alignment,
 
+  /**
+   * Allows an additional offset to be applied to scroll-to-cell behavior of the Grid.
+   */
+  scrollToOffset: number,
+
   /** Column index to ensure visible (by forcefully scrolling if necessary) */
   scrollToColumn: number,
 
@@ -233,6 +238,7 @@ type InstanceProps = {
   prevColumnCount: number,
   prevRowCount: number,
   prevIsScrolling: boolean,
+  prevScrollToOffset: number,
   prevScrollToColumn: number,
   prevScrollToRow: number,
 
@@ -281,6 +287,7 @@ class Grid extends React.PureComponent<Props, State> {
     role: 'grid',
     scrollingResetTimeInterval: DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
     scrollToAlignment: 'auto',
+    scrollToOffset: 0,
     scrollToColumn: -1,
     scrollToRow: -1,
     style: {},
@@ -344,6 +351,7 @@ class Grid extends React.PureComponent<Props, State> {
         prevColumnCount: props.columnCount,
         prevRowCount: props.rowCount,
         prevIsScrolling: props.isScrolling === true,
+        prevScrollToOffset: props.scrollToOffset,
         prevScrollToColumn: props.scrollToColumn,
         prevScrollToRow: props.scrollToRow,
 
@@ -567,7 +575,7 @@ class Grid extends React.PureComponent<Props, State> {
   /**
    * Ensure column and row are visible.
    */
-  scrollToCell({columnIndex, rowIndex}: CellPosition) {
+  scrollToCell({columnIndex, rowIndex, offset}: CellPosition) {
     const {columnCount} = this.props;
 
     const props = this.props;
@@ -578,6 +586,7 @@ class Grid extends React.PureComponent<Props, State> {
       this._updateScrollLeftForScrollToColumn({
         ...props,
         scrollToColumn: columnIndex,
+        scrollToOffset: offset !== undefined ? offset : props.scrollToOffset,
       });
     }
 
@@ -585,6 +594,7 @@ class Grid extends React.PureComponent<Props, State> {
       this._updateScrollTopForScrollToRow({
         ...props,
         scrollToRow: rowIndex,
+        scrollToOffset: offset !== undefined ? offset : props.scrollToOffset,
       });
     }
   }
@@ -1467,6 +1477,7 @@ class Grid extends React.PureComponent<Props, State> {
       scrollToAlignment,
       scrollToColumn,
       width,
+      scrollToOffset,
     } = nextProps;
     const {scrollLeft, instanceProps} = prevState;
 
@@ -1482,13 +1493,13 @@ class Grid extends React.PureComponent<Props, State> {
           ? instanceProps.scrollbarSize
           : 0;
 
-      return instanceProps.columnSizeAndPositionManager.getUpdatedOffsetForIndex(
-        {
+      return (
+        instanceProps.columnSizeAndPositionManager.getUpdatedOffsetForIndex({
           align: scrollToAlignment,
           containerSize: width - scrollBarSize,
           currentOffset: scrollLeft,
           targetIndex,
-        },
+        }) + scrollToOffset
       );
     }
     return 0;
@@ -1540,7 +1551,14 @@ class Grid extends React.PureComponent<Props, State> {
   }
 
   static _getCalculatedScrollTop(nextProps: Props, prevState: State) {
-    const {height, rowCount, scrollToAlignment, scrollToRow, width} = nextProps;
+    const {
+      height,
+      rowCount,
+      scrollToAlignment,
+      scrollToRow,
+      width,
+      scrollToOffset,
+    } = nextProps;
     const {scrollTop, instanceProps} = prevState;
 
     if (rowCount > 0) {
@@ -1553,12 +1571,14 @@ class Grid extends React.PureComponent<Props, State> {
           ? instanceProps.scrollbarSize
           : 0;
 
-      return instanceProps.rowSizeAndPositionManager.getUpdatedOffsetForIndex({
-        align: scrollToAlignment,
-        containerSize: height - scrollBarSize,
-        currentOffset: scrollTop,
-        targetIndex,
-      });
+      return (
+        instanceProps.rowSizeAndPositionManager.getUpdatedOffsetForIndex({
+          align: scrollToAlignment,
+          containerSize: height - scrollBarSize,
+          currentOffset: scrollTop,
+          targetIndex,
+        }) + scrollToOffset
+      );
     }
     return 0;
   }

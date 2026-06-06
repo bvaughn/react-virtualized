@@ -38,6 +38,7 @@ A windowed grid of elements. `Grid` only renders cells necessary to fill itself 
 | scrollLeft                 | Number             |           | Horizontal offset                                                                                                                                                                                                                                                                                                                                                                                  |
 | scrollToAlignment          | String             |           | Controls the alignment of scrolled-to-cells. The default ("_auto_") scrolls the least amount possible to ensure that the specified cell is fully visible. Use "_start_" to always align cells to the top/left of the `Grid` and "_end_" to align them bottom/right. Use "_center_" to align specified cell in the middle of container.                                                             |
 | scrollToColumn             | Number             |           | Column index to ensure visible (by forcefully scrolling if necessary). Takes precedence over `scrollLeft`.                                                                                                                                                                                                                                                                                         |
+| scrollToOffset             | Number             |           | Additional pixel offset applied on top of the scroll-to-cell result. Only takes effect when a scroll is triggered (e.g. by `scrollToRow`/`scrollToColumn` changing or `scrollToCell()` being called); changing this prop alone has no effect. Useful for accounting for a sticky header so that the target cell is not obscured.                                                                   |
 | scrollToRow                | Number             |           | Row index to ensure visible (by forcefully scrolling if necessary). Takes precedence over `scrollTop`.                                                                                                                                                                                                                                                                                             |
 | scrollTop                  | Number             |           | Vertical offset                                                                                                                                                                                                                                                                                                                                                                                    |
 | style                      | Object             |           | Optional custom inline style to attach to root `Grid` element.                                                                                                                                                                                                                                                                                                                                     |
@@ -79,10 +80,12 @@ Since `Grid` only receives `columnCount` and `rowCount` it has no way of detecti
 
 This method will also force a render cycle (via `forceUpdate`) to ensure that the updated measurements are reflected in the rendered grid.
 
-##### scrollToCell ({ columnIndex: number, rowIndex: number })
+##### scrollToCell ({ columnIndex: number, rowIndex: number, offset?: number })
 
 Ensure column and row are visible.
 This method can be used to safely scroll back to a cell that a user has scrolled away from even if it was previously scrolled to.
+
+The optional `offset` parameter applies an additional pixel offset on top of the calculated scroll position, overriding the `scrollToOffset` prop for this call. Useful for accounting for a sticky header so that the target cell is not obscured.
 
 ##### scrollToPosition ({ scrollLeft, scrollTop })
 

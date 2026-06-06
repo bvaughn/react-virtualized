@@ -147,6 +147,54 @@ describe('List', () => {
     });
   });
 
+  describe(':scrollToOffset', () => {
+    it('should apply scrollToOffset prop when scrollToIndex prop is set', () => {
+      const list = render(
+        getMarkup({
+          scrollToAlignment: 'start',
+          scrollToIndex: 49,
+          scrollToOffset: 5,
+        }),
+      );
+      // Row 49 starts at offset 490; align=start so idealOffset=490; +5 = 495
+      expect(list.Grid.state.scrollTop).toEqual(495);
+    });
+
+    it('should apply offset parameter in scrollToRow() method call', () => {
+      const list = render(getMarkup());
+      list.scrollToPosition(0); // reset scroll from any prior test state
+      list.scrollToRow(49, 5);
+      // auto align from 0: minOffset=400, clamp to 400; +5 = 405
+      expect(list.Grid.state.scrollTop).toEqual(405);
+    });
+
+    it('should allow offset=0 to override a non-zero scrollToOffset prop', () => {
+      const list = render(getMarkup({scrollToOffset: 5}));
+      list.scrollToRow(49, 0);
+      // offset=0 must override prop=5; auto from 0 = 400; +0 = 400
+      expect(list.Grid.state.scrollTop).toEqual(400);
+    });
+
+    it('should apply scrollToOffset when scrollToIndex prop changes', () => {
+      render(
+        getMarkup({
+          scrollToAlignment: 'start',
+          scrollToIndex: 0,
+          scrollToOffset: 5,
+        }),
+      );
+      const list = render(
+        getMarkup({
+          scrollToAlignment: 'start',
+          scrollToIndex: 49,
+          scrollToOffset: 5,
+        }),
+      );
+      // Row 49 at offset 490; +5 = 495
+      expect(list.Grid.state.scrollTop).toEqual(495);
+    });
+  });
+
   describe('property updates', () => {
     it('should update :scrollToIndex position when :rowHeight changes', () => {
       let rendered = findDOMNode(render(getMarkup({scrollToIndex: 50})));

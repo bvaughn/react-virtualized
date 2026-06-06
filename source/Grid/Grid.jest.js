@@ -761,6 +761,87 @@ describe('Grid', () => {
       expect(grid.state.scrollLeft).toEqual(2450 + getScrollbarSize20());
       expect(grid.state.scrollTop).toEqual(920 + getScrollbarSize20());
     });
+
+    describe(':scrollToOffset', () => {
+      it('should apply scrollToOffset to initial scrollToRow with alignment start', () => {
+        const grid = render(
+          getMarkup({
+            scrollToAlignment: 'start',
+            scrollToRow: 49,
+            scrollToOffset: 10,
+          }),
+        );
+        // Row 49 starts at offset 980; align=start so idealOffset=980; +10 = 990
+        expect(grid.state.scrollTop).toEqual(990);
+      });
+
+      it('should apply scrollToOffset to initial scrollToColumn with alignment start', () => {
+        const grid = render(
+          getMarkup({
+            scrollToAlignment: 'start',
+            scrollToColumn: 24,
+            scrollToOffset: 10,
+          }),
+        );
+        // Col 24 starts at offset 1200; align=start so idealOffset=1200; +10 = 1210
+        expect(grid.state.scrollLeft).toEqual(1210);
+      });
+
+      it('should apply offset parameter in scrollToCell() method call', () => {
+        const grid = render(getMarkup());
+        grid.scrollToCell({rowIndex: 49, offset: 10});
+        // auto align from 0: minOffset=900, clamp to 900; +10 = 910
+        expect(grid.state.scrollTop).toEqual(910);
+        grid.scrollToCell({columnIndex: 24, offset: 10});
+        // auto align from 0: minOffset=1050, clamp to 1050; +10 = 1060
+        expect(grid.state.scrollLeft).toEqual(1060);
+      });
+
+      it('should allow offset=0 to override a non-zero scrollToOffset prop', () => {
+        const grid = render(getMarkup({scrollToOffset: 10}));
+        grid.scrollToCell({rowIndex: 49, offset: 0});
+        // offset=0 must override prop=10; auto from 0 = 900; +0 = 900
+        expect(grid.state.scrollTop).toEqual(900);
+      });
+
+      it('should apply scrollToOffset when scrollToRow prop changes', () => {
+        render(
+          getMarkup({
+            scrollToAlignment: 'start',
+            scrollToRow: 0,
+            scrollToOffset: 10,
+          }),
+        );
+        const grid = render(
+          getMarkup({
+            scrollToAlignment: 'start',
+            scrollToRow: 49,
+            scrollToOffset: 10,
+          }),
+        );
+        // Row 49 at offset 980; +10 = 990
+        expect(grid.state.scrollTop).toEqual(990);
+      });
+
+      it('should apply scrollToOffset when scrollToColumn prop changes', () => {
+        render(
+          getMarkup({
+            scrollToAlignment: 'start',
+            scrollToColumn: 0,
+            scrollToOffset: 10,
+          }),
+        );
+        const grid = render(
+          getMarkup({
+            scrollToAlignment: 'start',
+            scrollToColumn: 24,
+            scrollToOffset: 10,
+          }),
+        );
+        // Col 24 at offset 1200; +10 = 1210
+        expect(grid.state.scrollLeft).toEqual(1210);
+      });
+    });
   });
 
   describe('property updates', () => {

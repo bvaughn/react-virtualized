@@ -83,6 +83,12 @@ type Props = {
   /** Row index to ensure visible (by forcefully scrolling if necessary) */
   scrollToIndex: number,
 
+  /**
+   * Allows an additional offset to be applied to scroll-to-row behaviour.
+   * See Grid#scrollToOffset
+   */
+  scrollToOffset: number,
+
   /** Vertical offset. */
   scrollTop?: number,
 
@@ -107,6 +113,7 @@ export default class List extends React.PureComponent<Props> {
     overscanRowCount: 10,
     scrollToAlignment: 'auto',
     scrollToIndex: -1,
+    scrollToOffset: 0,
     style: {},
   };
 
@@ -177,11 +184,12 @@ export default class List extends React.PureComponent<Props> {
   }
 
   /** See Grid#scrollToCell */
-  scrollToRow(index: number = 0) {
+  scrollToRow(index: number = 0, offset?: number) {
     if (this.Grid) {
       this.Grid.scrollToCell({
         columnIndex: 0,
         rowIndex: index,
+        offset,
       });
     }
   }
