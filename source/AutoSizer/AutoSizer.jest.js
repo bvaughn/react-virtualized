@@ -25,6 +25,7 @@ describe('AutoSizer', () => {
     paddingLeft = 0,
     paddingRight = 0,
     paddingTop = 0,
+    roundingMode = undefined,
     style = undefined,
     width = 200,
   } = {}) {
@@ -49,6 +50,7 @@ describe('AutoSizer', () => {
           disableHeight={disableHeight}
           disableWidth={disableWidth}
           onResize={onResize}
+          roundingMode={roundingMode}
           style={style}>
           {({height, width}) => (
             <ChildComponent
@@ -63,8 +65,8 @@ describe('AutoSizer', () => {
     );
   }
 
-  // AutoSizer uses offsetWidth and offsetHeight.
-  // Jest runs in JSDom which doesn't support measurements APIs.
+  // AutoSizer reads getBoundingClientRect; detectElementResize (resize
+  // simulation below) reads offsetWidth/offsetHeight. Both need mocking in JSDom.
   function mockOffsetSize(width, height) {
     Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
       configurable: true,
@@ -74,6 +76,10 @@ describe('AutoSizer', () => {
       configurable: true,
       value: width,
     });
+    HTMLElement.prototype.getBoundingClientRect = jest.fn(() => ({
+      height,
+      width,
+    }));
   }
 
   it('should relay properties to ChildComponent or React child', () => {
@@ -86,6 +92,26 @@ describe('AutoSizer', () => {
     const rendered = findDOMNode(render(getMarkup()));
     expect(rendered.textContent).toContain('height:100');
     expect(rendered.textContent).toContain('width:200');
+  });
+
+  describe('roundingMode', () => {
+    it.each`
+      roundingMode | height   | width    | expectedHeight | expectedWidth | scenario
+      ${undefined} | ${100.4} | ${199.1} | ${101}         | ${200}        | ${'round fractional measurements up by default'}
+      ${'ceil'}    | ${100.4} | ${199.1} | ${101}         | ${200}        | ${'round up when roundingMode is "ceil"'}
+      ${'floor'}   | ${100.6} | ${199.6} | ${100}         | ${199}        | ${'round down when roundingMode is "floor"'}
+      ${'round'}   | ${100.4} | ${199.6} | ${100}         | ${200}        | ${'round to the nearest integer when roundingMode is "round"'}
+      ${'invalid'} | ${100.4} | ${199.1} | ${101}         | ${200}        | ${'fall back to rounding up when roundingMode is not a recognized value'}
+    `(
+      'should $scenario',
+      ({roundingMode, height, width, expectedHeight, expectedWidth}) => {
+        const rendered = findDOMNode(
+          render(getMarkup({height, width, roundingMode})),
+        );
+        expect(rendered.textContent).toContain(`height:${expectedHeight}`);
+        expect(rendered.textContent).toContain(`width:${expectedWidth}`);
+      },
+    );
   });
 
   it('should account for padding when calculating the available width and height', () => {
