@@ -1,0 +1,1 @@
+{"root":["./src/main.tsx","./src/vite-env.d.ts","./src/routes/home.tsx","./src/routes/windowscrollercontainerresize.tsx","./src/routes/windowscrollerheaderresize.tsx","./src/routes/windowscrollerscroll.tsx"],"version":"5.8.3"}

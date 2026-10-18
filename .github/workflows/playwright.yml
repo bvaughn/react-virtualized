@@ -1,0 +1,42 @@
+name: "Playwright Tests"
+on:
+  push:
+    branches: [master]
+  pull_request:
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --recursive
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(pnpm -C integrations/tests exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browser binaries
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright # Default Linux path
+          key: ${{ runner.os }}-playwright-chromium-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers and dependencies (on cache miss)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm e2e:install
+
+      - name: Build library
+        run: pnpm prerelease
+      - name: Run Playwright tests
+        run: pnpm dev:integrations & pnpm e2e:test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: integrations/tests/test-results/
+          retention-days: 14

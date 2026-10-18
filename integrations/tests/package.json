@@ -1,0 +1,17 @@
+{
+  "name": "tests",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "react-virtualized": "workspace:*"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1",
+    "typescript": "~5.8.3"
+  }
+}

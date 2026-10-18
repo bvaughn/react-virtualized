@@ -2,12 +2,12 @@ Thanks for contributing to react-virtualized!
 
 **Before submitting a pull request,** please complete the following checklist:
 
-- [ ] The existing test suites (`npm test`) all pass
+- [ ] The existing test suites (`pnpm test`) all pass
 - [ ] For any new features or bug fixes, both positive and negative test cases have been added
 - [ ] For any new features, documentation has been added
 - [ ] For any documentation changes, the text has been proofread and is clear to both experienced users and beginners.
-- [ ] Format your code with [prettier](https://github.com/prettier/prettier) (`yarn run prettier`).
-- [ ] Run the [Flow](https://flowtype.org/) typechecks (`yarn run typecheck`).
+- [ ] Format your code with [prettier](https://github.com/prettier/prettier) (`pnpm prettier`).
+- [ ] Run the [TypeScript](https://www.typescriptlang.org/) typechecks (`pnpm tsc`) and lint (`pnpm lint`).
 
 Here is a short checklist of additional things to keep in mind before submitting:
 

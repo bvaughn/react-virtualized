@@ -1,0 +1,335 @@
+{
+  "description": [
+    {
+      "content": "<p>It is inefficient to create and manage a large list of DOM elements within a scrolling container\nif only a few of those elements are visible. The primary purpose of this component is to improve\nperformance by only rendering the DOM nodes that a user is able to see based on their current\nscroll position.</p>\n"
+    },
+    {
+      "content": "<p>This component renders a virtualized list of elements with either fixed or dynamic heights.</p>\n"
+    }
+  ],
+  "filePath": "lib/components/List/List.tsx",
+  "name": "List",
+  "props": {
+    "cellRangeRenderer": {
+      "description": [
+        {
+          "content": "<p>Responsible for rendering a group of cells given their index ranges.</p>\n"
+        },
+        {
+          "content": "<p>This is an advanced property.\nIt is useful for situations where the <code>Grid</code> requires additional, overlayed UI (such as a Gantt chart or a calendar application).\nThe easiest way to override it is to decorate <code>defaultCellRangeRenderer</code>.</p>\n"
+        },
+        {
+          "content": "<p>Defaults to <code>defaultCellRangeRenderer</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">cellRangeRenderer</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CellRangeRenderer</span></div>",
+      "name": "cellRangeRenderer",
+      "required": false
+    },
+    "containerProps": {
+      "description": [
+        {
+          "content": "<p>Additional props (eg <code>onWheel</code>) to spread onto the outer <code>Grid</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">containerProps</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">HTMLAttributes</span><span class=\"\">&#60;</span><span class=\"tok-typeName\">HTMLDivElement</span><span class=\"\">&#62;</span></div>",
+      "name": "containerProps",
+      "required": false
+    },
+    "containerStyle": {
+      "description": [
+        {
+          "content": "<p>Optional custom inline style to attach to inner cell-container element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">containerStyle</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"tok-punctuation\">}</span></div>",
+      "name": "containerStyle",
+      "required": false
+    },
+    "deferredMeasurementCache": {
+      "description": [
+        {
+          "content": "<p>If CellMeasurer is used to measure this Grid's children, this should be a pointer to its CellMeasurerCache.\nA shared CellMeasurerCache reference enables Grid and CellMeasurer to share measurement data.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">deferredMeasurementCache</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CellMeasureCache</span></div>",
+      "name": "deferredMeasurementCache",
+      "required": false
+    },
+    "elementRef": {
+      "description": [
+        {
+          "content": "<p>Reference to the outer (scrolling) DOM element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">elementRef</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">Ref</span><span class=\"\">&#60;</span><span class=\"tok-typeName\">HTMLDivElement</span><span class=\"\">&#62;</span></div>",
+      "name": "elementRef",
+      "required": false
+    },
+    "getScrollbarSize": {
+      "description": [
+        {
+          "content": "<p>Returns the size of the browser's scrollbar.\nExposed for testing purposes only.</p>\n"
+        },
+        {
+          "content": "<p>Defaults to <code>dom-helpers</code>' <code>scrollbarSize</code> (which returns <code>undefined</code> during server rendering).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">getScrollbarSize</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "getScrollbarSize",
+      "required": false
+    },
+    "initialScrollTop": {
+      "description": [
+        {
+          "content": "<p>Vertical scroll offset to initially render (and scroll to) the <code>Grid</code> at.\nOnly the initial value is used: changing this prop later has no effect (use <code>scrollToPosition</code> to scroll).\nThis also works with server rendering: the cells at this offset are rendered on the server,\nand they stay in place when the page is hydrated.\nIgnored if a <code>scrollElement</code> is specified (which then determines the vertical offset).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">initialScrollTop</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "initialScrollTop",
+      "required": false
+    },
+    "isScrollingOptOut": {
+      "description": [
+        {
+          "content": "<p>Prevents re-rendering of visible cells on scroll end.\n(Opts out of the isScrolling param passed to cellRangeRenderer, to avoid the extra render when scroll stops.)\nVisible cells are still re-rendered when the <code>Grid</code>'s props change or <code>forceUpdate()</code> is called.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">isScrollingOptOut</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-bool\">false</span></div>",
+      "name": "isScrollingOptOut",
+      "required": false
+    },
+    "onScrollbarPresenceChange": {
+      "description": [
+        {
+          "content": "<p>Called whenever a horizontal or vertical scrollbar is added or removed:\n<code>({ horizontal: boolean, size: number, vertical: boolean }): void</code>.\nThis prop is not intended for end-user use;\nit is used by MultiGrid to support fixed-row/fixed-column scroll syncing.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onScrollbarPresenceChange</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">ScrollbarPresenceChange</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span></div>",
+      "name": "onScrollbarPresenceChange",
+      "required": false
+    },
+    "scrollingResetTimeInterval": {
+      "description": [
+        {
+          "content": "<p>Wait this amount of time (in milliseconds) after the last scroll event before resetting Grid <code>pointer-events</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">scrollingResetTimeInterval</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">150</span></div>",
+      "name": "scrollingResetTimeInterval",
+      "required": false
+    },
+    "aria-label": {
+      "description": [
+        {
+          "content": "<p>ARIA label for the list element. There is no default label.\n(With <code>role=&quot;grid&quot;</code>, it defaults to <code>&quot;grid&quot;</code>, as in version 9.)</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">aria-label</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "aria-label",
+      "required": false
+    },
+    "aria-readonly": {
+      "description": [
+        {
+          "content": "<p>ARIA readonly attribute for the list element.\nNot set by default (it doesn't apply to <code>role=&quot;list&quot;</code>); with <code>role=&quot;grid&quot;</code>, it defaults to <code>true</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">aria-readonly</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span></div>",
+      "name": "aria-readonly",
+      "required": false
+    },
+    "containerRole": {
+      "description": [
+        {
+          "content": "<p>ARIA role for the inner container of the rows.\nDefaults to <code>&quot;presentation&quot;</code> (so that the rows belong to the list), or to <code>&quot;row&quot;</code> with <code>role=&quot;grid&quot;</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">containerRole</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "containerRole",
+      "required": false
+    },
+    "role": {
+      "description": [
+        {
+          "content": "<p>ARIA role for the list element.\nWith the default <code>&quot;list&quot;</code>, rows that don't specify a <code>role</code> get <code>role=&quot;listitem&quot;</code> (#1657).\nPass <code>&quot;grid&quot;</code> for the version 9 roles (a <code>grid</code> element whose rows are <code>gridcell</code>s within a single <code>row</code>).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">role</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-string\">\"list\"</span></div>",
+      "name": "role",
+      "required": false
+    },
+    "className": {
+      "description": [
+        {
+          "content": "<p>Optional custom CSS class name to attach to root <code>List</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">className</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "className",
+      "required": false
+    },
+    "estimatedRowSize": {
+      "description": [
+        {
+          "content": "<p>Used to estimate the total height of a <code>List</code> before all of its rows have actually been measured.\nThe estimated total height is adjusted as rows are rendered.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">estimatedRowSize</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">30</span></div>",
+      "name": "estimatedRowSize",
+      "required": false
+    },
+    "height": {
+      "description": [
+        {
+          "content": "<p>Height constraint for list (determines how many actual rows are rendered).\nRequired, unless a <code>scrollElement</code> is specified.</p>\n"
+        },
+        {
+          "content": "<p>With a <code>scrollElement</code>, the height of the scroll element's viewport is used instead;\nthis prop is then only used until the scroll element has been measured (e.g. during server rendering).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">height</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "height",
+      "required": false
+    },
+    "id": {
+      "description": [
+        {
+          "content": "<p>Optional custom id to attach to root <code>List</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">id</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "id",
+      "required": false
+    },
+    "noRowsRenderer": {
+      "description": [
+        {
+          "content": "<p>Callback used to render placeholder content when <code>rowCount</code> is 0.\nBy default, nothing is rendered.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">noRowsRenderer</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">NoContentRenderer</span></div>",
+      "name": "noRowsRenderer",
+      "required": false
+    },
+    "onRowsRendered": {
+      "description": [
+        {
+          "content": "<p>Callback invoked with information about the slice of rows that were just rendered:\n<code>({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onRowsRendered</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">RenderedRows</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span></div>",
+      "name": "onRowsRendered",
+      "required": false
+    },
+    "onScroll": {
+      "description": [
+        {
+          "content": "<p>Callback invoked whenever the scroll offset changes within the inner scrollable region:\n<code>({ clientHeight: number, scrollHeight: number, scrollTop: number }): void</code>.\nThis callback can be used to sync scrolling between lists, tables, or grids.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onScroll</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">Scroll</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span></div>",
+      "name": "onScroll",
+      "required": false
+    },
+    "overscanIndicesGetter": {
+      "description": [
+        {
+          "content": "<p>Responsible for calculating the number of rows to overscan before and after a specified range.\nBy default (<code>accessibilityOverscanIndicesGetter</code>), at least one row is overscanned in each direction (for accessibility).\nSee <code>Grid</code> <code>overscanIndicesGetter</code> for details.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">overscanIndicesGetter</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">OverscanIndicesGetter</span></div>",
+      "name": "overscanIndicesGetter",
+      "required": false
+    },
+    "overscanRowCount": {
+      "description": [
+        {
+          "content": "<p>Number of rows to render above/below the visible bounds of the list.\nThis can help reduce flickering during scrolling on certain browsers/devices.</p>\n"
+        },
+        {
+          "content": "<p>Note that this property has performance implications: the higher the value, the more work needs to be done in reaction to each scroll event.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">overscanRowCount</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">10</span></div>",
+      "name": "overscanRowCount",
+      "required": false
+    },
+    "rowCount": {
+      "description": [
+        {
+          "content": "<p>Number of rows in list.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">rowCount</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "rowCount",
+      "required": true
+    },
+    "rowHeight": {
+      "description": [
+        {
+          "content": "<p>Either a fixed row height (number) or a function that returns the height of a row given its index: <code>({ index: number }): number</code>.\nIf function is used, specify <code>estimatedRowSize</code> for more consistent scrolling behavior.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">rowHeight</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CellSize</span></div>",
+      "name": "rowHeight",
+      "required": true
+    },
+    "rowRenderer": {
+      "description": [
+        {
+          "content": "<p>Responsible for rendering a row given its index.\nIt receives <code>index</code>, <code>isScrolling</code>, <code>isVisible</code>, <code>key</code>, <code>parent</code>, and <code>style</code> parameters.</p>\n"
+        },
+        {
+          "content": "<p>The <code>style</code> parameter specifies how the row is to be sized and positioned and must be passed through to the rendered row element.\nThe <code>key</code> parameter must also be applied to the rendered element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">rowRenderer</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">RowRenderer</span></div>",
+      "name": "rowRenderer",
+      "required": true
+    },
+    "scrollElement": {
+      "description": [
+        {
+          "content": "<p>Element that scrolls the <code>List</code> (instead of the <code>List</code> scrolling itself): <code>&quot;window&quot;</code>, or a scrollable DOM element\n(e.g. a container that the <code>List</code> is rendered within, along with other content).</p>\n"
+        },
+        {
+          "content": "<p>The <code>List</code> then renders at its full height, renders only the rows visible within the scroll element's viewport,\nand its scroll methods scroll the scroll element.\nIts position within the scroll element is measured when the scroll element scrolls or is resized, and when the <code>List</code> re-renders\n(e.g. call <code>forceUpdateGrid()</code> if content above the <code>List</code> changes size without the <code>List</code> re-rendering).\nPass <code>null</code> while the scroll element isn't available yet (e.g. before a ref to it has been attached);\nthe <code>List</code> then renders the rows at its top.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">scrollElement</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">ScrollElement</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-keyword\">null</span></div>",
+      "name": "scrollElement",
+      "required": false
+    },
+    "style": {
+      "description": [
+        {
+          "content": "<p>Optional custom inline style to attach to root <code>List</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">style</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"tok-punctuation\">}</span></div>",
+      "name": "style",
+      "required": false
+    },
+    "tabIndex": {
+      "description": [
+        {
+          "content": "<p>Optional override of tab index default.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">tabIndex</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-keyword\">null</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">0</span></div>",
+      "name": "tabIndex",
+      "required": false
+    },
+    "width": {
+      "description": [
+        {
+          "content": "<p>Width of the list.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">width</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "width",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "description": [
+    {
+      "content": "<p>Options accepted by the <code>CellMeasurerCache</code> constructor (all optional).</p>\n"
+    }
+  ],
+  "filePath": "lib/components/CellMeasurer/CellMeasurerCache.ts",
+  "name": "CellMeasurerCacheOptions",
+  "props": {
+    "defaultHeight": {
+      "description": [
+        {
+          "content": "<p>Unmeasured cells will initially report this height\n(or <code>minHeight</code>, if that is greater).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">defaultHeight</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">30</span></div>",
+      "name": "defaultHeight",
+      "required": false
+    },
+    "defaultWidth": {
+      "description": [
+        {
+          "content": "<p>Unmeasured cells will initially report this width\n(or <code>minWidth</code>, if that is greater).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">defaultWidth</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">100</span></div>",
+      "name": "defaultWidth",
+      "required": false
+    },
+    "fixedHeight": {
+      "description": [
+        {
+          "content": "<p>Rendered cells will have a fixed height and a dynamic (measured) width.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">fixedHeight</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-bool\">false</span></div>",
+      "name": "fixedHeight",
+      "required": false
+    },
+    "fixedWidth": {
+      "description": [
+        {
+          "content": "<p>Rendered cells will have a fixed width and a dynamic (measured) height.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">fixedWidth</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-bool\">false</span></div>",
+      "name": "fixedWidth",
+      "required": false
+    },
+    "minHeight": {
+      "description": [
+        {
+          "content": "<p>Derived row height (of multiple cells) should not be less than this value.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">minHeight</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">0</span></div>",
+      "name": "minHeight",
+      "required": false
+    },
+    "minWidth": {
+      "description": [
+        {
+          "content": "<p>Derived column width (of multiple cells) should not be less than this value.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">minWidth</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">0</span></div>",
+      "name": "minWidth",
+      "required": false
+    },
+    "keyMapper": {
+      "description": [
+        {
+          "content": "<p>Maps a cell's row and column index to a cache key, e.g. an item ID.\nThis prevents the cached measurements from being invalidated when the parent collection is modified\n(e.g. items are inserted or reordered).\nDefaults to a mapper that returns <code>`${rowIndex}-${columnIndex}`</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">keyMapper</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">rowIndex</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">,</span><span class=\"\"> </span><span class=\"tok-variableName tok-definition\">columnIndex</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">unknown</span><span class=\"tok-punctuation\">)</span></div>",
+      "name": "keyMapper",
+      "required": false
+    }
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "description": [
+    {
+      "content": "<p>Describes the header and cell contents of a table column.</p>\n"
+    },
+    {
+      "content": "<p>This component does not render anything itself;\n<code>Table</code> reads the props of its children to render headers and cells\n(applying <code>defaultColumnProps</code> to each child's props).\nComponents that render a <code>Column</code> (e.g. <code>const MyColumn = (props) =&gt; &lt;Column {...props} /&gt;</code>) can be used as <code>Table</code> children too;\ntheir props are read the same way (the wrapper component itself is never rendered).</p>\n"
+    }
+  ],
+  "filePath": "lib/components/Table/Column.tsx",
+  "name": "Column",
+  "props": {
+    "aria-label": {
+      "description": [
+        {
+          "content": "<p>Optional aria-label value to set on the column header.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">aria-label</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "aria-label",
+      "required": false
+    },
+    "cellDataGetter": {
+      "description": [
+        {
+          "content": "<p>Callback responsible for returning a cell's data, given its <code>dataKey</code>:\n<code>({ columnData: any, dataKey: string, rowData: any }): any</code>.</p>\n"
+        },
+        {
+          "content": "<p>The default <code>cellDataGetter</code> expects to operate on either a vanilla Object or a Map-like object with a <code>get</code> method.\nYou should override it if your data is calculated or requires any custom processing.\nDefaults to <code>defaultTableCellDataGetter</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">cellDataGetter</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">TableCellDataGetter</span></div>",
+      "name": "cellDataGetter",
+      "required": false
+    },
+    "cellRenderer": {
+      "description": [
+        {
+          "content": "<p>Callback responsible for rendering a cell's contents:\n<code>({ cellData: any, columnData: any, columnIndex: number, dataKey: string, isScrolling: boolean, parent: TableImperativeAPI, rowData: any, rowIndex: number }): ReactNode</code>.</p>\n"
+        },
+        {
+          "content": "<p>The default <code>cellRenderer</code> (<code>defaultTableCellRenderer</code>) displays an attribute as a simple string.\nYou should override it if your data is some other type of object or requires custom formatting.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">cellRenderer</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">TableCellRenderer</span></div>",
+      "name": "cellRenderer",
+      "required": false
+    },
+    "className": {
+      "description": [
+        {
+          "content": "<p>Optional CSS class to apply to the rendered cell container.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">className</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "className",
+      "required": false
+    },
+    "columnData": {
+      "description": [
+        {
+          "content": "<p>Additional data passed to this column's <code>cellDataGetter</code>, <code>cellRenderer</code>, and <code>headerRenderer</code>.\nUse this object to relay action-creators or relational data.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">columnData</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">any</span></div>",
+      "name": "columnData",
+      "required": false
+    },
+    "dataKey": {
+      "description": [
+        {
+          "content": "<p>Uniquely identifies the row-data attribute corresponding to this cell\n(eg this might be &quot;name&quot; in an array of user objects).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">dataKey</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "dataKey",
+      "required": true
+    },
+    "defaultSortDirection": {
+      "description": [
+        {
+          "content": "<p>Default sort order when clicked for the first time.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">defaultSortDirection</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">SortDirectionType</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-string\">\"ASC\"</span></div>",
+      "name": "defaultSortDirection",
+      "required": false
+    },
+    "disableSort": {
+      "description": [
+        {
+          "content": "<p>If sort is enabled for the table at large, disable it for this column.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">disableSort</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span></div>",
+      "name": "disableSort",
+      "required": false
+    },
+    "flexGrow": {
+      "description": [
+        {
+          "content": "<p>Flex grow style.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">flexGrow</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">0</span></div>",
+      "name": "flexGrow",
+      "required": false
+    },
+    "flexShrink": {
+      "description": [
+        {
+          "content": "<p>Flex shrink style.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">flexShrink</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">1</span></div>",
+      "name": "flexShrink",
+      "required": false
+    },
+    "headerClassName": {
+      "description": [
+        {
+          "content": "<p>Optional CSS class to apply to this column's header.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">headerClassName</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "headerClassName",
+      "required": false
+    },
+    "headerRenderer": {
+      "description": [
+        {
+          "content": "<p>Optional callback responsible for rendering a column's header contents:\n<code>({ columnData: any, dataKey: string, disableSort: boolean, label: ReactNode, sortBy: string, sortDirection: SortDirection }): ReactNode</code>.</p>\n"
+        },
+        {
+          "content": "<p>The default <code>headerRenderer</code> (<code>defaultTableHeaderRenderer</code>) displays the column <code>label</code> along with a sort indicator if the column is sort-enabled and active.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">headerRenderer</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">TableHeaderRenderer</span></div>",
+      "name": "headerRenderer",
+      "required": false
+    },
+    "headerStyle": {
+      "description": [
+        {
+          "content": "<p>Optional inline style to apply to this column's header.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">headerStyle</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span></div>",
+      "name": "headerStyle",
+      "required": false
+    },
+    "id": {
+      "description": [
+        {
+          "content": "<p>Optional id to set on the column header; used for the cells' <code>aria-describedby</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">id</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "id",
+      "required": false
+    },
+    "label": {
+      "description": [
+        {
+          "content": "<p>Header label for this column.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">label</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">ReactNode</span></div>",
+      "name": "label",
+      "required": false
+    },
+    "maxWidth": {
+      "description": [
+        {
+          "content": "<p>Maximum width of column; this property will only be used if <code>flexGrow</code> is greater than 0.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">maxWidth</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "maxWidth",
+      "required": false
+    },
+    "minWidth": {
+      "description": [
+        {
+          "content": "<p>Minimum width of column.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">minWidth</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "minWidth",
+      "required": false
+    },
+    "style": {
+      "description": [
+        {
+          "content": "<p>Optional inline style to apply to the rendered cell container.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">style</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"tok-punctuation\">}</span></div>",
+      "name": "style",
+      "required": false
+    },
+    "width": {
+      "description": [
+        {
+          "content": "<p>Flex basis (width) for this column;\nThis value can grow or shrink based on <code>flexGrow</code> and <code>flexShrink</code> properties.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">width</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "width",
+      "required": true
+    }
+  }
+}

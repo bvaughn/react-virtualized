@@ -1,0 +1,20 @@
+{
+  "description": [
+    {
+      "content": "<p>Imperative API exposed by <code>InfiniteLoader</code> (e.g. via <code>useRef&lt;InfiniteLoaderImperativeAPI&gt;(null)</code>).</p>\n"
+    }
+  ],
+  "filePath": "lib/components/InfiniteLoader/types.ts",
+  "methods": [
+    {
+      "description": [
+        {
+          "content": "<p>Reset any cached data about already-loaded rows.\nThis method should be called if any/all loaded data needs to be refetched (e.g. a filtered list where the search criteria changes).\nIf <code>autoReload</code> is true, the last loaded batch will be automatically reloaded.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">resetLoadMoreRowsCache</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">autoReload</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span><span class=\"\">)</span><span class=\"tok-operator\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "resetLoadMoreRowsCache"
+    }
+  ],
+  "name": "InfiniteLoaderImperativeAPI"
+}

@@ -1,0 +1,56 @@
+{
+  "description": [
+    {
+      "content": "<p>Imperative API of a <code>Masonry</code> (accessed using a ref, eg <code>useRef&lt;MasonryImperativeAPI&gt;(null)</code>).\nThis is also the <code>parent</code> value passed to <code>cellRenderer</code> (for <code>CellMeasurer</code>).</p>\n"
+    }
+  ],
+  "filePath": "lib/components/Masonry/types.ts",
+  "methods": [
+    {
+      "description": [
+        {
+          "content": "<p>Clears the internal position cache and re-renders.\nCells are positioned again (by the <code>cellPositioner</code>) as they are rendered.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">clearCellPositions</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "clearCellPositions"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Forcefully re-renders the <code>Masonry</code> (and its visible cells).\nRe-rendering a <code>Masonry</code> with the same props does not re-render its cells (it is memoized).\nUse this method if the underlying cell data has changed but the props have not.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">forceUpdate</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "forceUpdate"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Notifies the <code>Masonry</code> that the specified cell has been measured for the first time (while rendering);\nthe cell is positioned (by the <code>cellPositioner</code>) once the current render has been committed, then the <code>Masonry</code> re-renders.\nOnly <code>rowIndex</code> (the cell's index) is used.\nThis method is intended for <code>CellMeasurer</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">invalidateCellSizeAfterRender</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> MasonryCellPosition</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "invalidateCellSizeAfterRender"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Resets the internal position cache, synchronously re-computes the positions of all measured cells\n(by calling the <code>cellPositioner</code> for each of them, in index order), then re-renders.\nReset the <code>cellPositioner</code> (e.g. with its <code>reset</code> method) before calling this method.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">recomputeCellPositions</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "recomputeCellPositions"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Re-renders the <code>Masonry</code>, e.g. after more cells have been loaded (this method is called by <code>InfiniteLoader</code>)\nor a cell has been re-measured (it is called by <code>CellMeasurer</code>'s <code>measure</code> function).\nParameters (the index of the first changed cell, as <code>rowIndex</code>) are accepted for compatibility with <code>Grid</code> and ignored.\nCached cell positions are not changed: to re-position cells after their sizes have changed,\nreset the <code>cellPositioner</code> and call <code>recomputeCellPositions()</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">recomputeGridSize</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">Partial</span><span class=\"\">&#60;</span><span class=\"tok-typeName\">MasonryCellPosition</span><span class=\"\">&#62;)</span><span class=\"tok-operator\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "recomputeGridSize"
+    }
+  ],
+  "name": "MasonryImperativeAPI"
+}

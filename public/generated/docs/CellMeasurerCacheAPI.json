@@ -1,0 +1,119 @@
+{
+  "description": [
+    {
+      "content": "<p>Public API of a <code>CellMeasurerCache</code> instance.</p>\n"
+    }
+  ],
+  "filePath": "lib/components/CellMeasurer/types.ts",
+  "methods": [
+    {
+      "description": [
+        {
+          "content": "<p>Reset cached measurements for a specific cell.\nThis should be called when a cell needs to be re-measured to handle dynamic content\n(e.g. replacing a loading indicator with loaded content, or reacting to state changes for stateful cells).\n<code>columnIndex</code> defaults to <code>0</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">clear</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">rowIndex</span><span class=\"tok-punctuation\">:</span><span class=\"\"> number</span><span class=\"tok-punctuation\">,</span><span class=\"\"> </span><span class=\"tok-variableName\">columnIndex</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\">)</span><span class=\"tok-operator\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "clear"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Reset cached measurements for all cells.\nThis should be called when a <code>Grid</code>, <code>List</code> or <code>Table</code> needs to reflow its content due to a resize in a responsive layout\n(e.g. a change in window width may impact the height of cells).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">clearAll</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "clearAll"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Returns the derived width of a column (its widest measured cell) or the default width.\nPass this as the <code>columnWidth</code> prop of a <code>Grid</code> (or <code>MultiGrid</code>);\nit's bound to the cache, so it can be passed as-is.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">columnWidth</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"> </span><span class=\"tok-labelName\">index</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-punctuation\">}</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "columnWidth"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Height reported for unmeasured cells (read-only).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">readonly </span><span class=\"tok-labelName\">defaultHeight</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "defaultHeight"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Width reported for unmeasured cells (read-only).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">readonly </span><span class=\"tok-labelName\">defaultWidth</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "defaultWidth"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Returns the (measured or default) height of the specified cell.\n<code>columnIndex</code> defaults to <code>0</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">getHeight</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">rowIndex</span><span class=\"tok-punctuation\">:</span><span class=\"\"> number</span><span class=\"tok-punctuation\">,</span><span class=\"\"> </span><span class=\"tok-variableName\">columnIndex</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\">)</span><span class=\"tok-operator\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "getHeight"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Returns the (measured or default) width of the specified cell.\n<code>columnIndex</code> defaults to <code>0</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">getWidth</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">rowIndex</span><span class=\"tok-punctuation\">:</span><span class=\"\"> number</span><span class=\"tok-punctuation\">,</span><span class=\"\"> </span><span class=\"tok-variableName\">columnIndex</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\">)</span><span class=\"tok-operator\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "getWidth"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Returns true if the specified cell has already been measured.\n<code>columnIndex</code> defaults to <code>0</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">has</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">rowIndex</span><span class=\"tok-punctuation\">:</span><span class=\"\"> number</span><span class=\"tok-punctuation\">,</span><span class=\"\"> </span><span class=\"tok-variableName\">columnIndex</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\">)</span><span class=\"tok-operator\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "has"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Returns true if cells have a fixed height (and a dynamic, measured width);\nsee the <code>fixedHeight</code> option.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">hasFixedHeight</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "hasFixedHeight"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Returns true if cells have a fixed width (and a dynamic, measured height);\nsee the <code>fixedWidth</code> option.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">hasFixedWidth</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "hasFixedWidth"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Returns the derived height of a row (its tallest measured cell) or the default height.\nPass this as the <code>rowHeight</code> prop of a <code>Grid</code>, <code>List</code> or <code>Table</code>;\nit's bound to the cache, so it can be passed as-is.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">rowHeight</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"> </span><span class=\"tok-labelName\">index</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-punctuation\">}</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "rowHeight"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Stores the measured size of the specified cell.\nThis is called by <code>CellMeasurer</code> and doesn't usually need to be called directly.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">set</span><span class=\"tok-punctuation\">(</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-variableName\">rowIndex</span><span class=\"tok-punctuation\">:</span><span class=\"\"> number</span><span class=\"tok-punctuation\">,</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-variableName\">columnIndex</span><span class=\"tok-punctuation\">:</span><span class=\"\"> number</span><span class=\"tok-punctuation\">,</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-variableName\">width</span><span class=\"tok-punctuation\">:</span><span class=\"\"> number</span><span class=\"tok-punctuation\">,</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-variableName\">height</span><span class=\"tok-punctuation\">:</span><span class=\"\"> number</span></div>\n<div><span class=\"\">  </span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "set"
+    }
+  ],
+  "name": "CellMeasurerCacheAPI"
+}

@@ -1,0 +1,11 @@
+/codemods
+/dist
+/docs
+/generated
+/integrations/*/dist
+/integrations/tests/test-results
+/public
+
+CHANGELOG.md
+README.md
+pnpm-lock.yaml
