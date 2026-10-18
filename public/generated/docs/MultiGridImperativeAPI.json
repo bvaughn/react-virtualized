@@ -1,0 +1,65 @@
+{
+  "description": [
+    {
+      "content": "<p>Public (imperative) methods of a <code>MultiGrid</code> instance.</p>\n"
+    }
+  ],
+  "filePath": "lib/components/MultiGrid/types.ts",
+  "methods": [
+    {
+      "description": [
+        {
+          "content": "<p>Pass-thru that calls <code>forceUpdate</code> on all child <code>Grid</code>s.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">forceUpdateGrids</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "forceUpdateGrids"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Invalidate the size of a cell (after the current render has been committed); see <code>Grid#invalidateCellSizeAfterRender</code>.\nThe invalidated cells (of all child <code>Grid</code>s) are recomputed, and the <code>MultiGrid</code> re-rendered, once the current render has been committed.\nThis method is intended for <code>CellMeasurer</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">invalidateCellSizeAfterRender</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">Partial</span><span class=\"\">&#60;</span><span class=\"tok-typeName\">CellPosition</span><span class=\"\">&#62;)</span><span class=\"tok-operator\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "invalidateCellSizeAfterRender"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Pass-thru that calls <code>measureAllCells</code> on all child <code>Grid</code>s.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">measureAllCells</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "measureAllCells"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Pass-thru that calls <code>recomputeGridSize</code> on all child <code>Grid</code>s\n(adjusting the specified indices for fixed rows and columns).\nBoth indices default to 0.\nThis also recomputes the <code>MultiGrid</code>'s own layout (the height of the fixed rows and the width of the fixed columns)\nand re-renders it.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">recomputeGridSize</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"> </span><span class=\"tok-propertyName tok-definition\">columnIndex</span><span class=\"\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"> </span><span class=\"tok-variableName\">rowIndex</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-punctuation\">}</span><span class=\"\">)</span><span class=\"tok-operator\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "recomputeGridSize"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Ensure the specified column and/or row is visible (scrolling if necessary); see <code>Grid#scrollToCell</code>.\nIndices include the fixed columns and rows (which are always visible, so they are not scrolled to).\nThe fixed rows and columns are kept in sync with the scrolled section.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">scrollToCell</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-propertyName tok-definition\">align</span><span class=\"\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">Alignment</span><span class=\"tok-punctuation\">;</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-propertyName tok-definition\">columnIndex</span><span class=\"\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-propertyName tok-definition\">rowIndex</span><span class=\"\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"></span></div>\n<div><span class=\"\">  </span><span class=\"tok-punctuation\">}</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "scrollToCell"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Scroll to the specified offset(s) of the scrollable (bottom-right) section; see <code>Grid#scrollToPosition</code>.\nThe fixed rows and columns are kept in sync with it.\nThis allows a <code>MultiGrid</code> to be used with <code>ScrollSync</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">scrollToPosition</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> ScrollPosition</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "scrollToPosition"
+    }
+  ],
+  "name": "MultiGridImperativeAPI"
+}

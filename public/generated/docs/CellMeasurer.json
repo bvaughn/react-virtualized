@@ -1,0 +1,83 @@
+{
+  "description": [
+    {
+      "content": "<p>Wraps a cell and measures its rendered content.\nMeasurements are stored in a per-cell cache.\nCached-content is not be re-measured.</p>\n"
+    },
+    {
+      "content": "<p>The child must be a DOM element (e.g. <code>&lt;div&gt;</code>) or a component that passes its <code>ref</code> along to one;\notherwise use a function child and pass <code>registerChild</code> as the <code>ref</code> of the element to be measured.</p>\n"
+    }
+  ],
+  "filePath": "lib/components/CellMeasurer/CellMeasurer.tsx",
+  "name": "CellMeasurer",
+  "props": {
+    "cache": {
+      "description": [
+        {
+          "content": "<p>Cache to be shared between <code>CellMeasurer</code> and its parent <code>Grid</code>.\nTypically an instance of <code>CellMeasurerCache</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">cache</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CellMeasureCache</span></div>",
+      "name": "cache",
+      "required": true
+    },
+    "children": {
+      "description": [
+        {
+          "content": "<p>Either a React element as a child (eg <code>&lt;div /&gt;</code>) or a function\n(eg. <code>({ measure, registerChild }) =&gt; &lt;div ref={registerChild} /&gt;</code>).</p>\n"
+        },
+        {
+          "content": "<p><code>CellMeasurer</code> attaches a <code>ref</code> to the child element to find the DOM element to measure\n(the child's own <code>ref</code>, if any, still receives the element).\nSo the child must be a DOM element (e.g. <code>&lt;div&gt;</code>) or a component that passes its <code>ref</code> along to one:\nin React 19, a function component can pass its <code>ref</code> prop to a DOM element;\nin React 18, function components must use <code>forwardRef</code> for this.</p>\n"
+        },
+        {
+          "content": "<p>The function receives a <code>measure</code> callback (to re-measure the cell, e.g. after an image has loaded)\nand a <code>registerChild</code> callback (to specify the DOM element to be measured; can be used as a <code>ref</code>).\nUse <code>registerChild</code> if the child doesn't pass its <code>ref</code> along to a DOM element,\nor to measure an element nested within the child.</p>\n"
+        },
+        {
+          "content": "<p>Children that can't be measured (e.g. text, an array or a fragment, without <code>registerChild</code>) are rendered as-is,\nand a warning is logged in development mode.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">children</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">ReactNode</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-variableName\">CellMeasurerChildFunction</span></div>",
+      "name": "children",
+      "required": true
+    },
+    "columnIndex": {
+      "description": [
+        {
+          "content": "<p>Index of column being measured (within the parent <code>Grid</code>) or 0 (if used within a <code>List</code> or <code>Table</code>).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">columnIndex</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">0</span></div>",
+      "name": "columnIndex",
+      "required": false
+    },
+    "index": {
+      "description": [
+        {
+          "content": "<p>Index of row being measured; alias of <code>rowIndex</code> (as passed to a <code>List</code> row renderer).\nOnly used if <code>rowIndex</code> is not specified.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">index</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "index",
+      "required": false
+    },
+    "parent": {
+      "description": [
+        {
+          "content": "<p>Reference to the parent <code>Grid</code> (or <code>List</code>, <code>Table</code>, <code>MultiGrid</code>, <code>Masonry</code>);\nthis value is passed by <code>Grid</code> to the <code>cellRenderer</code> and should be passed along as-is.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">parent</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CellMeasurerParent</span></div>",
+      "name": "parent",
+      "required": true
+    },
+    "rowIndex": {
+      "description": [
+        {
+          "content": "<p>Index of row being measured (within the parent <code>Grid</code>).\nDefaults to <code>index</code> (or 0 if neither is specified).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">rowIndex</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "rowIndex",
+      "required": false
+    }
+  }
+}

@@ -1,0 +1,3 @@
+{
+  "html": "<div><span class=\"tok-comment\">// Import the default styles once, e.g. in your app's entry point</span><span class=\"\"></span></div>\n<div><span class=\"\"></span><span class=\"tok-keyword\">import</span><span class=\"\"> </span><span class=\"tok-string\">\"react-virtualized/styles.css\"</span><span class=\"tok-punctuation\">;</span></div>"
+}

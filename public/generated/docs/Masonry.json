@@ -1,0 +1,216 @@
+{
+  "description": [
+    {
+      "content": "<p>This component efficiently displays arbitrarily positioned cells using windowing techniques.\nCell position is determined by an injected <code>cellPositioner</code> property.\nWindowing is vertical; this component does not support horizontal scrolling.</p>\n"
+    },
+    {
+      "content": "<p>Rendering occurs in two phases:</p>\n<ol>\n<li>First pass uses estimated cell sizes (provided by the cache) to determine how many cells to measure in a batch.\nBatch size is chosen using a fast, naive layout algorithm that stacks images in order until the viewport has been filled.\nAfter measurement is complete (once the render has been committed) this component evaluates positioned cells\nin order to determine if another measurement pass is required (eg if actual cell sizes were less than estimated sizes).\nAll measurements are permanently cached (keyed by <code>keyMapper</code>) for performance purposes.</li>\n<li>Second pass uses the external <code>cellPositioner</code> to layout cells.\nAt this time the positioner has access to cached size measurements for all cells.\nThe positions it returns are cached by Masonry for fast access later.\nPhase one is repeated if the user scrolls beyond the current layout's bounds.\nIf the layout is invalidated due to eg a resize, cached positions can be cleared using <code>recomputeCellPositions()</code>.</li>\n</ol>\n"
+    },
+    {
+      "content": "<p>Animation constraints:\nSimple animations are supported (eg translate/slide into place on initial reveal).\nMore complex animations are not (eg flying from one position to another on resize).</p>\n"
+    },
+    {
+      "content": "<p>Layout constraints:\nThis component supports multi-column layout.\nThe height of each item may vary.\nThe width of each item must not exceed the width of the column it is &quot;in&quot;.\nThe left position of all items within a column must align.\n(Items may not span multiple columns.)</p>\n"
+    }
+  ],
+  "filePath": "lib/components/Masonry/Masonry.tsx",
+  "name": "Masonry",
+  "props": {
+    "aria-label": {
+      "description": [
+        {
+          "content": "<p>Optional ARIA label to attach to root <code>Masonry</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">aria-label</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "aria-label",
+      "required": false
+    },
+    "cellCount": {
+      "description": [
+        {
+          "content": "<p>Total number of items.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">cellCount</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "cellCount",
+      "required": true
+    },
+    "cellMeasurerCache": {
+      "description": [
+        {
+          "content": "<p>Caches item measurements (typically an instance of <code>CellMeasurerCache</code>).\nDefault sizes help <code>Masonry</code> decide how many images to batch-measure.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">cellMeasurerCache</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">MasonryCellMeasurerCache</span></div>",
+      "name": "cellMeasurerCache",
+      "required": true
+    },
+    "cellPositioner": {
+      "description": [
+        {
+          "content": "<p>Positions a cell given an index: <code>(index: number) =&gt; ({ left: number, top: number })</code>.\nSee <code>createMasonryCellPositioner</code> for a built-in positioner.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">cellPositioner</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">Positioner</span></div>",
+      "name": "cellPositioner",
+      "required": true
+    },
+    "cellRenderer": {
+      "description": [
+        {
+          "content": "<p>Responsible for rendering a cell given an index:\n<code>({ index: number, isScrolling: boolean, key: Key, parent: MasonryImperativeAPI, style: CSSProperties }) =&gt; ReactNode</code>.\nThe <code>style</code> param must be passed through to the rendered cell element.\nThe cell should typically be wrapped in a <code>CellMeasurer</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">cellRenderer</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">MasonryCellRenderer</span></div>",
+      "name": "cellRenderer",
+      "required": true
+    },
+    "className": {
+      "description": [
+        {
+          "content": "<p>Optional custom CSS class name to attach to root <code>Masonry</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">className</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-keyword\">null</span></div>",
+      "name": "className",
+      "required": false
+    },
+    "height": {
+      "description": [
+        {
+          "content": "<p>Height of the component; this value determines the number of visible items.\nRequired, unless a <code>scrollElement</code> is specified.</p>\n"
+        },
+        {
+          "content": "<p>With a <code>scrollElement</code>, the height of the scroll element's viewport is used instead;\nthis prop is then only used until the scroll element has been measured (e.g. during server rendering).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">height</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "height",
+      "required": false
+    },
+    "id": {
+      "description": [
+        {
+          "content": "<p>Optional custom id to attach to root <code>Masonry</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">id</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-keyword\">null</span></div>",
+      "name": "id",
+      "required": false
+    },
+    "keyMapper": {
+      "description": [
+        {
+          "content": "<p>Maps an index to a unique id to store cached measurement and position info for a cell.\nThis prevents eg cached measurements from being invalidated when a collection is re-ordered.\nDefaults to the identity function (<code>index =&gt; index</code>).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">keyMapper</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">MasonryKeyMapper</span></div>",
+      "name": "keyMapper",
+      "required": false
+    },
+    "onCellsRendered": {
+      "description": [
+        {
+          "content": "<p>Callback invoked with information about the cells that were most recently rendered.\nThis callback is only invoked when visible cells have changed:\n<code>({ startIndex: number, stopIndex: number }): void</code>.\nDoes nothing by default.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onCellsRendered</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">MasonryOnCellsRenderedCallback</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-keyword\">null</span></div>",
+      "name": "onCellsRendered",
+      "required": false
+    },
+    "onScroll": {
+      "description": [
+        {
+          "content": "<p>Callback invoked whenever the scroll offset changes within the inner scrollable region:\n<code>({ clientHeight: number, scrollHeight: number, scrollTop: number }): void</code>.\nDoes nothing by default.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onScroll</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">MasonryOnScrollCallback</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-keyword\">null</span></div>",
+      "name": "onScroll",
+      "required": false
+    },
+    "overscanByPixels": {
+      "description": [
+        {
+          "content": "<p>Render this many additional pixels above and below the viewport.\nThis helps reduce flicker when a user scrolls quickly.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">overscanByPixels</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">20</span></div>",
+      "name": "overscanByPixels",
+      "required": false
+    },
+    "role": {
+      "description": [
+        {
+          "content": "<p>Optional override of ARIA role default.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">role</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-string\">\"grid\"</span></div>",
+      "name": "role",
+      "required": false
+    },
+    "rowDirection": {
+      "description": [
+        {
+          "content": "<p>Row direction of items; can be &quot;ltr&quot; or &quot;rtl&quot;.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">rowDirection</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-string\">\"ltr\"</span></div>",
+      "name": "rowDirection",
+      "required": false
+    },
+    "scrollElement": {
+      "description": [
+        {
+          "content": "<p>Element that scrolls the <code>Masonry</code> (instead of the <code>Masonry</code> scrolling itself): <code>&quot;window&quot;</code>, or a scrollable DOM element\n(e.g. a container that the <code>Masonry</code> is rendered within, along with other content).</p>\n"
+        },
+        {
+          "content": "<p>The <code>Masonry</code> then renders at its full height, and renders only the cells visible within the scroll element's viewport.\nIts position within the scroll element is measured when the scroll element scrolls or is resized, and when the <code>Masonry</code> re-renders\n(e.g. call <code>forceUpdate()</code> if content above the <code>Masonry</code> changes size without the <code>Masonry</code> re-rendering).\nPass <code>null</code> while the scroll element isn't available yet (e.g. before a ref to it has been attached);\nthe <code>Masonry</code> then renders the cells at its top.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">scrollElement</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">ScrollElement</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-keyword\">null</span></div>",
+      "name": "scrollElement",
+      "required": false
+    },
+    "scrollingResetTimeInterval": {
+      "description": [
+        {
+          "content": "<p>Wait this amount of time (in milliseconds) after the last scroll event before resetting <code>pointer-events</code>\n(and the <code>isScrolling</code> parameter passed to <code>cellRenderer</code>).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">scrollingResetTimeInterval</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">150</span></div>",
+      "name": "scrollingResetTimeInterval",
+      "required": false
+    },
+    "style": {
+      "description": [
+        {
+          "content": "<p>Optional custom inline style to attach to root <code>Masonry</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">style</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"tok-punctuation\">}</span></div>",
+      "name": "style",
+      "required": false
+    },
+    "tabIndex": {
+      "description": [
+        {
+          "content": "<p>Optional override of tab index default.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">tabIndex</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">0</span></div>",
+      "name": "tabIndex",
+      "required": false
+    },
+    "width": {
+      "description": [
+        {
+          "content": "<p>Width of the component; this value determines the number of visible items.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">width</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "width",
+      "required": true
+    }
+  }
+}

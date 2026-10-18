@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>[Vite] react-virtualized integration</title>
+    <style>
+      /*
+       * The legacy (jest-puppeteer) e2e tests rendered into a blank page,
+       * which renders in quirks mode where percentage heights resolve against the viewport.
+       * Give the root elements explicit heights so that "height: 100%" behaves the same way here.
+       */
+      html,
+      body,
+      #root {
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

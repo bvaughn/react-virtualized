@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+
+    "paths": {
+      "react-virtualized": ["./lib"]
+    },
+    "types": [
+      "csstype",
+      "node",
+      "vitest/globals",
+      "@testing-library/jest-dom",
+      "@testing-library/jest-dom/vitest"
+    ]
+  },
+  "include": [
+    "integrations",
+    "lib",
+    "scripts",
+    "src",
+    "index.tsx",
+    "vitest.setup.ts"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "description": [
+    {
+      "content": "<p>HOC that simplifies the process of synchronizing scrolling between two or more virtualized components.</p>\n"
+    }
+  ],
+  "filePath": "lib/components/ScrollSync/ScrollSync.tsx",
+  "name": "ScrollSync",
+  "props": {
+    "children": {
+      "description": [
+        {
+          "content": "<p>Function responsible for rendering 2 or more virtualized components.\nIt is passed the current scroll and size values (<code>clientHeight</code>, <code>clientWidth</code>, <code>scrollHeight</code>, <code>scrollLeft</code>, <code>scrollTop</code>, <code>scrollWidth</code>),\nan <code>onScroll</code> callback that should be passed through to the virtualized children that the user can scroll,\nand a <code>registerChild</code> function that returns a ref callback for each virtualized child that should be kept in sync\n(e.g. <code>&lt;Grid ref={registerChild(&quot;body&quot;)} onScroll={onScroll} /&gt;</code>).\nThe scroll and size values can also be used for custom rendering (e.g. shading based on the scroll offset).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">children</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">ScrollSyncChildProps</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">ReactNode</span></div>",
+      "name": "children",
+      "required": true
+    }
+  }
+}

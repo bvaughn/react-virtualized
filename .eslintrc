@@ -1,8 +1,0 @@
-{
-  "parser": "babel-eslint",
-  "plugins": ["react"],
-  "extends": ["fbjs", "eslint:recommended", "plugin:prettier/recommended"],
-  "rules": {
-    "no-console": 0
-  }
-}

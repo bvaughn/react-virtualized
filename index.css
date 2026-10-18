@@ -1,0 +1,25 @@
+@source "node_modules/react-lib-tools";
+
+@import "tailwindcss";
+@import "react-lib-tools/styles.css";
+
+@theme {
+  --color-background-gradient-1: var(--color-sky-400);
+  --color-background-gradient-2: var(--color-violet-500);
+  --color-background-gradient-3: var(--color-sky-400);
+  --color-header-section: var(--color-sky-200);
+  --color-nav-active: var(--color-sky-300);
+  --color-nav-hover: var(--color-sky-200);
+  --color-search-match: var(--color-sky-300);
+  --color-search-result-active: var(--color-sky-950);
+  --color-common-question-header: var(--color-violet-100);
+  --color-focus-1: var(--color-cyan-300);
+  --color-focus-2: var(--color-cyan-400);
+  --color-focus-3: var(--color-cyan-500);
+}
+
+/* Tailwind's preflight makes SVGs block-level, which pushes Table's default sort indicator below the header label */
+.ReactVirtualized__Table__sortableHeaderIcon {
+  display: inline-block;
+  vertical-align: middle;
+}

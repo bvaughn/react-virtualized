@@ -1,0 +1,64 @@
+{
+  "description": [
+    {
+      "content": "<p>High-order component that auto-calculates column-widths for <code>Grid</code> cells.</p>\n"
+    }
+  ],
+  "filePath": "lib/components/ColumnSizer/ColumnSizer.tsx",
+  "name": "ColumnSizer",
+  "props": {
+    "children": {
+      "description": [
+        {
+          "content": "<p>Function responsible for rendering a virtualized <code>Grid</code>.\nIt is passed <code>{ adjustedWidth, columnWidth, getColumnWidth, registerChild }</code>.</p>\n"
+        },
+        {
+          "content": "<p>The <code>columnWidth</code> value should be passed to the <code>Grid</code>'s <code>columnWidth</code> property,\nand <code>registerChild</code> should be passed to the <code>Grid</code>'s <code>ref</code> property.\nThe <code>adjustedWidth</code> value is optional; it reflects the lesser of the overall width or the width of all columns.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">children</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">ColumnSizerChildProps</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">ReactNode</span></div>",
+      "name": "children",
+      "required": true
+    },
+    "columnMaxWidth": {
+      "description": [
+        {
+          "content": "<p>Optional maximum allowed column width.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">columnMaxWidth</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "columnMaxWidth",
+      "required": false
+    },
+    "columnMinWidth": {
+      "description": [
+        {
+          "content": "<p>Optional minimum allowed column width.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">columnMinWidth</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "columnMinWidth",
+      "required": false
+    },
+    "columnCount": {
+      "description": [
+        {
+          "content": "<p>Number of columns in the <code>Grid</code> or <code>Table</code> child.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">columnCount</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "columnCount",
+      "required": true
+    },
+    "width": {
+      "description": [
+        {
+          "content": "<p>Width of the <code>Grid</code> or <code>Table</code> child.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">width</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "width",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "description": [
+    {
+      "content": "<p>Higher-order component that manages lazy-loading for &quot;infinite&quot; data.\nThis component decorates a virtual component and just-in-time prefetches rows as a user scrolls.\nIt is intended as a convenience component; fork it if you'd like finer-grained control over data-loading.</p>\n"
+    }
+  ],
+  "filePath": "lib/components/InfiniteLoader/InfiniteLoader.tsx",
+  "name": "InfiniteLoader",
+  "props": {
+    "children": {
+      "description": [
+        {
+          "content": "<p>Function responsible for rendering a virtualized component.\nIt is passed <code>onRowsRendered</code> and <code>registerChild</code> parameters.\nThe <code>onRowsRendered</code> function should be passed through to the child's <code>onRowsRendered</code> property.\nThe <code>registerChild</code> callback should be set as the virtualized component's <code>ref</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">children</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">InfiniteLoaderChildProps</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">ReactNode</span></div>",
+      "name": "children",
+      "required": true
+    },
+    "isRowLoaded": {
+      "description": [
+        {
+          "content": "<p>Function responsible for tracking the loaded state of each row.\nRows that are currently loading can be treated as loaded to avoid requesting them multiple times.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">isRowLoaded</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"> </span><span class=\"tok-propertyName tok-definition\">index</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"> </span><span class=\"tok-punctuation\">}</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span></div>",
+      "name": "isRowLoaded",
+      "required": true
+    },
+    "loadMoreRows": {
+      "description": [
+        {
+          "content": "<p>Callback to be invoked when more rows must be loaded.\nThe returned Promise should be resolved once row data has finished loading.\nIt will be used to determine when to refresh the list with the newly-loaded data.\nThis callback may be called multiple times in reaction to a single scroll event.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">loadMoreRows</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">IndexRange</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-variableName\">Promise</span><span class=\"\">&#60;</span><span class=\"tok-typeName\">unknown</span><span class=\"\">&#62;</span></div>",
+      "name": "loadMoreRows",
+      "required": true
+    },
+    "minimumBatchSize": {
+      "description": [
+        {
+          "content": "<p>Minimum number of rows to be loaded at a time.\nThis property can be used to batch requests to reduce HTTP requests.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">minimumBatchSize</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">10</span></div>",
+      "name": "minimumBatchSize",
+      "required": false
+    },
+    "rowCount": {
+      "description": [
+        {
+          "content": "<p>Number of rows in list; can be arbitrary high number if actual number is unknown.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">rowCount</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">0</span></div>",
+      "name": "rowCount",
+      "required": false
+    },
+    "threshold": {
+      "description": [
+        {
+          "content": "<p>Threshold at which to pre-fetch data.\nA threshold X means that data will start loading when a user scrolls within X rows.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">threshold</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">15</span></div>",
+      "name": "threshold",
+      "required": false
+    }
+  }
+}

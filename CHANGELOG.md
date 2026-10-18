@@ -2,12 +2,176 @@
 
 ##### NEXT
 
-- Update peer dependencies to allow React 17 ([levenleven](https://github.com/levenleven) - [#1625](https://github.com/bvaughn/react-virtualized/pull/1625))
-- Use DOM API instead of creating Trusted Types policy to append a markup ([shhnjk](https://github.com/shhnjk) - [#1627](https://github.com/bvaughn/react-virtualized/pull/1627))
-- Fix bug in WindowScroller::updatePosition ([yamadapc](https://github.com/yamadapc) - [#1642](https://github.com/bvaughn/react-virtualized/pull/1642), [#1648](https://github.com/bvaughn/react-virtualized/pull/1648))
-- Fix babel tranform es error ([fupengl](https://github.com/fupengl) - [#1651](https://github.com/bvaughn/react-virtualized/pull/1651))
-- Fix issue with unused import being emitted ([mewhhaha](https://github.com/mewhhaha) - [#1635](https://github.com/bvaughn/react-virtualized/pull/1635))
-- Fix grid roles for accessbility ([asnewman](https://github.com/asnewman) - [#1624](https://github.com/bvaughn/react-virtualized/pull/1624))
+Version 10 is a modernization of react-virtualized. The source has been converted to TypeScript, every component has been rewritten as a function component with hooks, and React 18 or newer is required. Along the way, several long-standing bugs that were inherent in the 9.x architecture have been fixed (see "Bug fixes" below), which required some breaking API changes. The migration guide below covers each of them.
+
+###### Migrating from 9.x
+
+**1. Update React.** React 18 or newer is required (`react` and `react-dom` `^18.0.0 || ^19.0.0`).
+
+**2. Import from the package root.** Deep imports (`react-virtualized/dist/commonjs/List`, `react-virtualized/dist/es/List`) and the UMD build are gone; bundlers tree-shake unused components.
+
+```js
+// Before
+import List from 'react-virtualized/dist/commonjs/List';
+// After
+import {List} from 'react-virtualized';
+```
+
+**3. Replace `AutoSizer`** with the [`react-virtualized-auto-sizer`](https://www.npmjs.com/package/react-virtualized-auto-sizer) package (2.x). Width and height are `undefined` until measured, so `disableHeight`/`disableWidth`/`defaultHeight`/`defaultWidth` are no longer needed:
+
+```jsx
+// Before
+import {AutoSizer, List} from 'react-virtualized';
+<AutoSizer>{({height, width}) => <List height={height} width={width} {...props} />}</AutoSizer>
+
+// After
+import {AutoSizer} from 'react-virtualized-auto-sizer';
+import {List} from 'react-virtualized';
+<AutoSizer
+  renderProp={({height, width}) =>
+    height !== undefined && width !== undefined ? (
+      <List height={height} width={width} {...props} />
+    ) : null
+  }
+/>
+```
+
+**4. Replace controlled scroll props with ref methods.** `scrollToIndex`, `scrollToRow`, `scrollToColumn`, `scrollToAlignment`, `scrollTop`, and `scrollLeft` are no longer props:
+
+```jsx
+// Before
+<List scrollToIndex={index} scrollToAlignment="center" {...props} />
+
+// After
+const listRef = useRef(null); // useRef<ListImperativeAPI>(null)
+<List ref={listRef} {...props} />
+listRef.current.scrollToRow({index, align: 'center'});
+```
+
+Use `scrollToCell({columnIndex, rowIndex, align})` for `Grid`/`MultiGrid` and `scrollToPosition({scrollLeft, scrollTop})` for offsets. These methods are one-time scrolls: unlike the props, the target isn't re-applied when sizes or counts change afterwards. To scroll to a row that is being added, call `scrollToRow` once it has rendered (e.g. in an effect); rows not yet measured by `CellMeasurer` are positioned using their estimated size. `List`/`Table` `scrollToRow(index)` and `scrollToPosition(scrollTop)` now take objects: `scrollToRow({index})`, `scrollToPosition({scrollTop})`. To start at a scroll position (e.g. one restored from the URL), pass `initialScrollTop`/`initialScrollLeft` instead of `scrollTop`/`scrollLeft`; they are only read when the component mounts (and also work with server rendering).
+
+**5. Use refs as imperative handles.** Components are function components, so refs no longer point to component instances. Type them with the exported `*ImperativeAPI` types (e.g. `useRef<GridImperativeAPI>(null)`); internals such as `list.Grid` are no longer reachable. The documented `grid.forceUpdate()` pattern still works through the handle: `gridRef.current.forceUpdate()` (or `forceUpdateGrid()` for `List`/`Table`). Static `defaultProps` are replaced by exported objects such as `defaultGridProps` and `defaultColumnProps`.
+
+**6. Update `ScrollSync` and `ArrowKeyStepper` children.** Instead of passing `scrollLeft`/`scrollTop` (or `scrollToColumn`/`scrollToRow`) to the `Grid`, attach the `registerChild` ref callback:
+
+```jsx
+<ScrollSync>
+  {({onScroll, registerChild}) => (
+    <>
+      <Grid ref={registerChild('header')} {...headerProps} />
+      <Grid ref={registerChild('body')} onScroll={onScroll} {...bodyProps} />
+    </>
+  )}
+</ScrollSync>
+
+<ArrowKeyStepper columnCount={columnCount} rowCount={rowCount}>
+  {({onSectionRendered, registerChild, scrollToColumn, scrollToRow}) => (
+    // scrollToColumn/scrollToRow are the active cell (e.g. to highlight it)
+    <Grid ref={registerChild} onSectionRendered={onSectionRendered} {...props} />
+  )}
+</ArrowKeyStepper>
+```
+
+**7. Replace `WindowScroller` with the `scrollElement` prop.** `WindowScroller` has been removed. Instead, pass `scrollElement="window"` (or a scrollable element) to a `Grid`, `List`, `Masonry` or `Table`. The component then renders at its full height, renders only the rows visible within the scroll element's viewport, and its `scrollToRow`/`scrollToCell`/`scrollToPosition` methods scroll the scroll element. `height` is optional: the viewport height of the scroll element is used.
+
+```jsx
+// Before
+<WindowScroller>
+  {({height, isScrolling, onChildScroll, registerChild, scrollTop}) => (
+    <div ref={registerChild}>
+      <List autoHeight height={height} isScrolling={isScrolling} onScroll={onChildScroll} scrollTop={scrollTop} width={width} {...props} />
+    </div>
+  )}
+</WindowScroller>
+
+// After
+<List ref={listRef} scrollElement="window" width={width} {...props} />
+```
+
+- `registerChild` and the wrapper element: not needed; use a regular `ref` to call the component's methods.
+- `height`/`width` render params: the viewport height is measured by the component; use `AutoSizer` (`renderProp={({width}) => …}`) for the width.
+- `updatePosition()` (and `updateScrollTopOnUpdatePosition`): not needed; the component's position within the scroll element is measured again on every scroll, on resize, and whenever it re-renders. If content above it changes size without it re-rendering, call `forceUpdateGrid()` (`List`/`Table`) or `forceUpdate()` (`Grid`/`Masonry`).
+- `scrollElement={element}`: pass the element itself (e.g. stored with a `useState` ref callback); `null` until it is available (the component then renders its top rows).
+- `onScroll`: use the component's own `onScroll`. `onResize`: listen to the window's `resize` event (or observe the scroll element).
+- `serverHeight`/`serverWidth`: pass `height` (used as the viewport height until the scroll element has been measured, e.g. on the server) and `width`.
+- `scrollingResetTimeInterval`: use the prop of the `Grid`, `List`, `Masonry` or `Table`.
+
+**8. Replace `Column` subclasses with wrapper components.** `Table` applies `defaultColumnProps` to any child element, so `const MyColumn = (props) => <Column {...props} />` works as a column.
+
+**9. Make sure `CellMeasurer` children can be measured.** The child must be a DOM element, or a component that passes its `ref` to one (a regular prop in React 19, `forwardRef` in React 18). Otherwise use the `registerChild` render prop. A DEV warning is logged when there is nothing to measure.
+
+**10. Remove `Collection`.** It has been removed; there is no direct replacement.
+
+###### Breaking changes
+
+- React 18 or newer is required (`react` and `react-dom` peer dependencies are `^18.0.0 || ^19.0.0`).
+- The package ships a single ES module (`dist/react-virtualized.js`) and a single CommonJS module (`dist/react-virtualized.cjs`), with an `exports` map. Deep imports and the UMD build (`dist/umd/react-virtualized.js`) are no longer supported.
+- Components no longer define `propTypes`; prop validation is done by TypeScript.
+- `AutoSizer` has been removed; use [`react-virtualized-auto-sizer`](https://www.npmjs.com/package/react-virtualized-auto-sizer) 2.x (`renderProp`/`ChildComponent` replace the `children` function).
+- `Collection` (and its `ReactVirtualized__Collection*` styles) has been removed.
+- All components are function components wrapped in `memo`; refs expose imperative handles (`*ImperativeAPI` types) instead of component instances, and static `defaultProps` are replaced by exported `default*Props` objects. Subclassing components is no longer supported.
+- Controlled scroll props have been removed: `scrollToRow`, `scrollToColumn`, and `scrollToAlignment` from `Grid`; `scrollToIndex` and `scrollToAlignment` from `List` and `Table`; `scrollLeft`, `scrollTop`, `scrollToRow`, `scrollToColumn`, and `scrollToAlignment` from `MultiGrid`. To render (or server-render) at an initial scroll position, use the new `initialScrollTop`/`initialScrollLeft` props.
+- `List`/`Table`: `scrollToRow(index)` is now `scrollToRow({ index, align })` and `scrollToPosition(scrollTop)` is now `scrollToPosition({ scrollTop })`. `scrollToPosition` ignores unchanged offsets and clamps to the scrollable range.
+- `Grid`'s `getOffsetForCell()` and `List`/`Table`'s `getOffsetForRow()` default to the last cell (or row) and `"auto"` alignment; they used to default to the `scrollToColumn`/`scrollToRow` props, which no longer exist.
+- `List`'s props no longer include the `Grid` props that don't apply to a single-column list (`estimatedColumnSize`, `overscanColumnCount`).
+- The `parent` passed to `List`'s `rowRenderer`, `Table`'s `cellRenderer`, `Masonry`'s `cellRenderer`, and every `MultiGrid` quadrant's `cellRenderer` is now that component's imperative handle.
+- `WindowScroller` has been removed, along with `defaultWindowScrollerProps`, `IS_SCROLLING_TIMEOUT` and the `WindowScroller*` types. `Grid`, `List`, `Masonry` and `Table` take a `scrollElement` prop instead (see the migration guide). `updatePosition()` is replaced by automatic re-measuring: a component's position within its scroll element is measured on every scroll, on resize, and after every render.
+- The `autoHeight`, `autoWidth`, `scrollTop`, `scrollLeft` and `isScrolling` props have been removed from `Grid`, `List`, `Table`, `Masonry` and `MultiGrid`. They only existed to connect a component to `WindowScroller`; use the `scrollElement` prop instead. Horizontal window scrolling (`autoWidth` with `scrollLeft`) is no longer supported (a `Grid` with a `scrollElement` still scrolls horizontally itself).
+- With a `scrollElement`, `height` is optional (the scroll element's viewport height is used; `height` is only a fallback until it has been measured, e.g. during server rendering), and `initialScrollTop` is ignored. Without either, `Grid`, `List`, `Table` and `Masonry` log a DEV warning (and render nothing).
+- `ArrowKeyStepper` and `ScrollSync` drive their children through `registerChild` instead of controlled scroll props. `ArrowKeyStepper` scrolls the active cell into view when it changes (rather than re-applying it on every `Grid` update).
+- `CellMeasurer` children must accept a `ref` (or use `registerChild`); cells with no DOM node to measure keep the cache's default size instead of being cached as 0×0.
+- `InfiniteLoader` re-renders its registered child with the first method it implements: `recomputeGridSize`, `recomputeRowHeights`, `forceUpdateGrid`, then `forceUpdate`. Custom function-component children must expose one of these through their imperative handle.
+- Size changes of a `scrollElement` element are detected with `ResizeObserver` (window scrolling used to inject resize-trigger elements and a `<style>` tag, and set `position: relative` on the scroll element; none of this happens anymore).
+- A non-`Column` child of `Table` no longer throws; it is treated as a column with the default column props.
+- `CellMeasurerCache` derives column widths and row heights from measured cells only, so a column (or row) can now be smaller than `defaultWidth`/`defaultHeight` once any of its cells have been measured (see "Bug fixes").
+- `List` renders a list rather than a single-column grid ([#1657](https://github.com/bvaughn/react-virtualized/issues/1657)): its `role` defaults to `"list"`, rows without a `role` get `role="listitem"`, the rows' container gets `role="presentation"`, and `aria-label` (which defaulted to `"grid"`) and `aria-readonly` are no longer set by default. `defaultListProps` has `role` instead of `"aria-label"`. Pass `role="grid"` for the version 9 roles.
+- With `align: "auto"` (the default), `scrollToRow`, `scrollToCell` (and `ArrowKeyStepper`) align a row or cell that is larger than the viewport to its start, instead of its end ([#1263](https://github.com/bvaughn/react-virtualized/issues/1263)).
+
+###### New
+
+- TypeScript types for every component's props (e.g. `GridProps`, `ListProps`, `TableProps`, `ColumnProps`), imperative handles (`*ImperativeAPI`), and renderer params (e.g. `RowRendererParams`, `CellRendererParams`, `TableCellProps`). `ListProps` and `TableProps` include the `Grid` props they relay to their inner `Grid` (e.g. `isScrollingOptOut`, `scrollingResetTimeInterval`, `containerStyle`), except those that don't apply to a single column (e.g. `overscanColumnCount`).
+- `Grid`'s handle adds `forceUpdate()`; `scrollToCell` takes an `align` parameter. `List`, `Table`, and `MultiGrid` add `scrollToCell()`; `MultiGrid` adds `scrollToPosition()`; `Masonry` adds `forceUpdate()`, `recomputeGridSize()`, and `invalidateCellSizeAfterRender()` (so it works with `InfiniteLoader` and `CellMeasurer`'s `measure()`).
+- `scrollElement` prop (`Grid`, `List`, `Masonry`, `Table`): `"window"` or a scrollable element that scrolls the component instead of the component scrolling itself (replaces `WindowScroller`). The component renders at its full height, renders only the rows within the scroll element's viewport, and its scroll methods scroll the scroll element. New `ScrollElement` type. See https://react-virtualized.vercel.app/window-scrolling
+- `initialScrollTop` (`Grid`, `List`, `Table`, `MultiGrid`) and `initialScrollLeft` (`Grid`, `MultiGrid`) props render a component at an initial scroll offset, including during server rendering: the rows at that offset are rendered on the server and stay in place when the page is hydrated. See the new server rendering guide.
+- `List`/`Table` `getOffsetForRow` accepts `align` (`alignment` is deprecated). `Table`'s `headerHeight` prop is optional (it already defaulted to 0).
+- New type exports: `ScrollElement`, `ScrollSyncChild`, `ScrollSyncChildProps`, `ScrollSyncScrollParams`, `ArrowKeyStepperChild`, `ArrowKeyStepperChildProps`, `InfiniteLoaderChildInstance`, `CellMeasurerChildParams`, `CellMeasurerChildFunction`, `CellMeasurerCacheAPI` (the public methods and properties of `CellMeasurerCache`).
+- The build is no longer minified (component names show up in React DevTools), and unused components are tree-shaken.
+- The `react-lifecycles-compat`, `prop-types`, `@babel/runtime`, and `loose-envify` dependencies have been removed. The stylesheet is still available as `react-virtualized/styles.css`.
+- New documentation site, with live examples: https://react-virtualized.vercel.app/
+
+###### Bug fixes
+
+- Fix `Table` crashing under React 19 (e.g. "headerRenderer is not a function") when a `Column` omitted props that have default values. React 19's JSX runtime no longer applies a class component's `defaultProps` until it renders, and `Table` reads `Column` props without rendering them.
+- `Grid.measureAllCells()`, `List.measureAllRows()`, `Table.measureAllRows()` and `MultiGrid.measureAllCells()` no longer throw when there are no rows or columns (or, for `MultiGrid`, when every row or column is fixed).
+- `Masonry`: calling `cellPositioner.reset()` without a `spacer` now defaults `spacer` to 0 instead of producing `NaN` positions.
+- `Masonry` no longer treats a column with a height of 0 as unset, which could stop measuring early and leave gaps.
+- `Masonry` no longer renders cells at indices ≥ `cellCount` after `cellCount` shrinks, and `recomputeCellPositions()` no longer recomputes positions for removed cells.
+- `createTableMultiSort` no longer mutates the `defaultSortBy` array passed to it, so several tables can share the same default. It also creates new `sortBy` and `sortDirection` values whenever the sort criteria change (instead of mutating them in place), so storing them in React state (e.g. with `useState`) re-renders the `Table` ([#1585](https://github.com/bvaughn/react-virtualized/issues/1585)). The returned object's `sortBy` and `sortDirection` always refer to the latest values; a reference kept to an earlier value no longer changes.
+- `MultiGrid`: `CellMeasurerCacheDecorator`'s `columnWidth()` and `rowHeight()` now return the measured size instead of `undefined`.
+- `Grid`: cells whose size getter returns `null` (not yet measured) after the last measured cell are no longer marked as measured, and a size getter that throws no longer corrupts the cached measurements.
+- `InfiniteLoader` now recomputes `Grid`/`List` sizes starting from the newly loaded row instead of from row 0.
+- `Grid` works with React's StrictMode and concurrent rendering (its derived state was mutated during render).
+- `Grid` no longer renders stale cell styles after `rowCount`/`columnCount` change while the size getter stays the same.
+- `Grid` with `isScrollingOptOut` re-renders visible cells when props change or `forceUpdate()` is called.
+- `CellMeasurer` measures function-component children that forward their `ref`, gives an element registered with `registerChild` priority over its child, no longer crashes on text/array/fragment/`undefined`/`false` children, ignores `measure()` after unmounting (it used to write 0×0 into the cache), and no longer triggers React 19's "Accessing element.ref" warning.
+- `Masonry`'s estimated total height no longer counts removed cells after `cellCount` decreases.
+- `MultiGrid`: `recomputeGridSize()` updates its own layout; toggling `enableFixedColumnScroll`/`enableFixedRowScroll` after mount takes effect; `CellMeasurer` caches follow `fixedRowCount`/`fixedColumnCount`/`deferredMeasurementCache` changes; top-left cells get the `MultiGrid` as `parent`; scrollbar spacers are keyed on the correct axis; numeric `columnWidth`/`rowHeight` changes are applied; changing `cellRenderer` re-renders all quadrants; and reducing `columnCount` to `fixedColumnCount` (or `rowCount` to `fixedRowCount`) with variable sizes no longer throws "Requested index 0 is outside of range 0..0" ([#1351](https://github.com/bvaughn/react-virtualized/issues/1351)).
+- `Grid`: when the row or column count shrinks, measured sizes of the removed cells are discarded, so the total size (and the scrollable range) no longer counts them.
+- A `scrollElement` that changes from `null` to an element (and back) is picked up (attaching and removing listeners as needed); `WindowScroller` used to ignore the change, leak listeners, or throw on unmount.
+- `scrollToRow`, `scrollToCell` and `scrollToPosition` now work for window-scrolled components (with the `scrollElement` prop, which replaces `WindowScroller`): they scroll the window (or scroll element) instead of updating internal state that was then overwritten ([#1498](https://github.com/bvaughn/react-virtualized/issues/1498), [#1506](https://github.com/bvaughn/react-virtualized/issues/1506), [#1507](https://github.com/bvaughn/react-virtualized/issues/1507), [#1563](https://github.com/bvaughn/react-virtualized/issues/1563), [#1623](https://github.com/bvaughn/react-virtualized/issues/1623), [#1834](https://github.com/bvaughn/react-virtualized/issues/1834), [#1893](https://github.com/bvaughn/react-virtualized/issues/1893)).
+- Scrolling a window-scrolled component (e.g. with `scrollToRow`) no longer resets the scroll element's horizontal scroll position.
+- `scrollToRow` and `scrollToCell` on a component with a `scrollElement` are no longer limited to the end of the component, so the last rows can be scrolled to the top of the viewport (e.g. with `align: "start"`) when there is content below the component; the scroll element limits the offset to its own scrollable range.
+- A scroll element's listener is removed as soon as no component uses that element.
+- A custom scroll element's size is measured before the first paint (`WindowScroller` passed `undefined` on the first render in browsers, and called `onResize` spuriously after mounting).
+- Scroll offsets are only scaled (to stay within the browser's maximum element size) once the content is taller than about 16.7M px, in every browser. Version 9 used Internet Explorer's 1.5M px limit in every browser other than Chrome, so Firefox and Safari scaled the offsets of lists with more than about 50,000 rows, which made scrolling jumpy and `scrollToRow` imprecise ([#1086](https://github.com/bvaughn/react-virtualized/issues/1086), [#1178](https://github.com/bvaughn/react-virtualized/issues/1178), [#1394](https://github.com/bvaughn/react-virtualized/issues/1394), [#1457](https://github.com/bvaughn/react-virtualized/issues/1457), [#1847](https://github.com/bvaughn/react-virtualized/issues/1847)).
+- `Table` keys its header and row cells by each `Column`'s `key` (instead of its position), so the cells of a column move with it when columns are reordered.
+- `Table` no longer sets `aria-sort="none"` on a column header that isn't sortable (e.g. a column with `disableSort` and an `onHeaderClick` handler) ([#1291](https://github.com/bvaughn/react-virtualized/issues/1291)).
+- `CellMeasurerCache` updates the derived column widths and row heights incrementally, instead of checking every cell of the column (or row) each time a cell is measured. Measuring cells near the end of a long list (e.g. after scrolling to the bottom of a 100,000-row grid) is no longer slow ([#1747](https://github.com/bvaughn/react-virtualized/issues/1747)).
+- `CellMeasurerCache` derives a column's width (and a row's height) from its measured cells only. Unmeasured cells used to count as `defaultWidth`/`defaultHeight`, so a column whose first rows hadn't been measured (e.g. a grid first rendered scrolled down) could never be narrower than `defaultWidth`. The default size is still used for a column (or row) with no measured cells.
+
+##### 9.22.6
+
+- Republished 9.22.5 (no changes).
 
 ##### 9.22.5
 
@@ -16,6 +180,12 @@
 ##### 9.22.4
 
 - README changes
+- Update peer dependencies to allow React 17 ([levenleven](https://github.com/levenleven) - [#1625](https://github.com/bvaughn/react-virtualized/pull/1625))
+- Use DOM API instead of creating Trusted Types policy to append a markup ([shhnjk](https://github.com/shhnjk) - [#1627](https://github.com/bvaughn/react-virtualized/pull/1627))
+- Fix bug in WindowScroller::updatePosition ([yamadapc](https://github.com/yamadapc) - [#1642](https://github.com/bvaughn/react-virtualized/pull/1642), [#1648](https://github.com/bvaughn/react-virtualized/pull/1648))
+- Fix babel tranform es error ([fupengl](https://github.com/fupengl) - [#1651](https://github.com/bvaughn/react-virtualized/pull/1651))
+- Fix issue with unused import being emitted ([mewhhaha](https://github.com/mewhhaha) - [#1635](https://github.com/bvaughn/react-virtualized/pull/1635))
+- Fix grid roles for accessbility ([asnewman](https://github.com/asnewman) - [#1624](https://github.com/bvaughn/react-virtualized/pull/1624))
 
 ##### 9.22.3
 
@@ -554,7 +724,137 @@ Initial attempt at fixing regression with scaled `Grid`s that caused position of
 # 8.0.0
 
 Version 8 changes are described in detail on the [Version 8 Roadmap](https://github.com/bvaughn/react-virtualized/issues/386).
-Upgrade instructions and [jscodeshift](https://github.com/facebook/jscodeshift) mods can be found [here](docs/upgrades/Version8.md).
+Upgrade instructions and [jscodeshift](https://github.com/facebook/jscodeshift) mods are below.
+
+###### Step 1: Rename components (`FlexColumn`, `FlexTable`, `VirtualScroll`)
+
+The simplest way to update component names is to use the provided codemod:
+
+```sh
+cd /path/to/your/project
+
+# Install jscodeshift (if you have not already)
+npm i jscodeshift
+
+# Shallow checkout react-virtualized
+# Codemods aren't stored in NPM (to keep the download small)
+git clone git@github.com:bvaughn/react-virtualized.git --depth 1
+
+# Run the rename migration on your project's source code
+jscodeshift -t ./react-virtualized/codemods/7-to-8/rename-components.js ./source
+
+# Remove the shallow checkout
+rm -rf ./react-virtualized
+```
+
+###### Step 2: Update cell and row renderers
+
+Renderers in version 8 must handle new `style` & `key` params. This enables react-virtualized to remove one layer of DOM nodes which in turn makes things faster.
+
+Due to the complexity of this change there is no codemod. However you can use the following helper function to adapt your version 7 renderers to version 8 and allow you to update them one at a time:
+
+```jsx
+// Can be used for Grid, List, or Table
+function createCellRenderer(cellRenderer) {
+  console.warn('cellRenderer udpate needed');
+
+  return function cellRendererWrapper({key, style, ...rest}) {
+    return (
+      <div className="Grid__cell" key={key} style={style}>
+        {cellRenderer(rest)}
+      </div>
+    );
+  };
+}
+
+// Demonstrates example usage
+function renderGrid(props) {
+  const {cellRenderer, ...rest} = props;
+
+  return <Grid cellRenderer={createCellRenderer(cellRenderer)} {...rest} />;
+}
+```
+
+###### Step 3: Update cell/row CSS class names and styles
+
+Removing the DOM wrapper for cells (and rows) means that you can now fully control a cell's styles.
+However this means that you'll need to audit your code to ensure that you've migrated the following properties:
+
+| Component       | Properties to be removed                 |
+| :-------------- | :--------------------------------------- |
+| `Grid`          | `cellClassName`, `cellStyle`             |
+| `VirtualScroll` | `rowClassName`, `rowStyle`               |
+| `FlexTable`     | `rowWrapperClassName`, `rowWrapperStyle` |
+
+Here is an example:
+
+```jsx
+// Before
+function renderGrid (props) {
+  return (
+    <Grid
+      cellClassName='yourCustomClass'
+      cellStyle={yourCustomStyle}
+      cellRenderer={
+        ({ columnIndex, rowIndex } => (
+          <div>
+            {list[rowIndex][columnIndex]}
+          </div>
+        ))
+      }
+      {...props}
+    />
+  )
+}
+
+// After
+function renderGrid (props) {
+  return (
+    <Grid
+      cellRenderer={
+        ({ columnIndex, key, rowIndex, style } => (
+          <div
+            className='yourCustomClass'
+            key={key}
+            style={{
+              ...style,
+              ...yourCustomStyle
+            }}
+          >
+            {list[rowIndex][columnIndex]}
+          </div>
+        ))
+      }
+      {...props}
+    />
+  )
+}
+```
+
+###### Step 4: Update CSS class names
+
+Typically this step will not require any action. However if you have customized react-virtualized's global styles, you'll need to be update your overrides as follows:
+
+1. Add the prefix: \_ReactVirtualized\_\_\_.
+2. Replace _FlexTable_ with _Table_ and _VirtualScroll_ with _List_.
+
+```css
+/* before */
+.Collection,
+.FlexTable,
+.Grid,
+.VirtualScroll {
+}
+
+/* after */
+.ReactVirtualized__Collection,
+.ReactVirtualized__Grid,
+.ReactVirtualized__List,
+.ReactVirtualized__Table {
+}
+```
+
+The `Grid__cell` CSS class has been removed _entirely_ as a result of the renderer changes (mentioned above). Scan your code for any references to them and adjust as necessary. (Note that the above suggested `cellRenderer` helper function will temporarily preserve the `Grid__cell` class to make migration easier.)
 
 ##### 7.24.3
 

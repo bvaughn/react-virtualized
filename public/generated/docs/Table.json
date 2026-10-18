@@ -1,0 +1,528 @@
+{
+  "description": [
+    {
+      "content": "<p>Table component with fixed headers and virtualized rows for improved performance with large data sets.\nThis component expects explicit width, height, and padding parameters.</p>\n"
+    },
+    {
+      "content": "<p>Columns are described by <code>Column</code> children (or components that render a <code>Column</code>).\nScrolling is done through the imperative handle (<code>ref</code>): see <code>scrollToRow</code>, <code>scrollToCell</code>, and <code>scrollToPosition</code>.</p>\n"
+    }
+  ],
+  "filePath": "lib/components/Table/Table.tsx",
+  "name": "Table",
+  "props": {
+    "cellRangeRenderer": {
+      "description": [
+        {
+          "content": "<p>Responsible for rendering a group of cells given their index ranges.</p>\n"
+        },
+        {
+          "content": "<p>This is an advanced property.\nIt is useful for situations where the <code>Grid</code> requires additional, overlayed UI (such as a Gantt chart or a calendar application).\nThe easiest way to override it is to decorate <code>defaultCellRangeRenderer</code>.</p>\n"
+        },
+        {
+          "content": "<p>Defaults to <code>defaultCellRangeRenderer</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">cellRangeRenderer</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CellRangeRenderer</span></div>",
+      "name": "cellRangeRenderer",
+      "required": false
+    },
+    "containerProps": {
+      "description": [
+        {
+          "content": "<p>Additional props (eg <code>onWheel</code>) to spread onto the outer <code>Grid</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">containerProps</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">HTMLAttributes</span><span class=\"\">&#60;</span><span class=\"tok-typeName\">HTMLDivElement</span><span class=\"\">&#62;</span></div>",
+      "name": "containerProps",
+      "required": false
+    },
+    "containerRole": {
+      "description": [
+        {
+          "content": "<p>ARIA role for the inner cell-container.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">containerRole</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-string\">\"row\"</span></div>",
+      "name": "containerRole",
+      "required": false
+    },
+    "containerStyle": {
+      "description": [
+        {
+          "content": "<p>Optional custom inline style to attach to inner cell-container element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">containerStyle</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"tok-punctuation\">}</span></div>",
+      "name": "containerStyle",
+      "required": false
+    },
+    "getScrollbarSize": {
+      "description": [
+        {
+          "content": "<p>Returns the size of the browser's scrollbar.\nExposed for testing purposes only.</p>\n"
+        },
+        {
+          "content": "<p>Defaults to <code>dom-helpers</code>' <code>scrollbarSize</code> (which returns <code>undefined</code> during server rendering).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">getScrollbarSize</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "getScrollbarSize",
+      "required": false
+    },
+    "isScrollingOptOut": {
+      "description": [
+        {
+          "content": "<p>Prevents re-rendering of visible cells on scroll end.\n(Opts out of the isScrolling param passed to cellRangeRenderer, to avoid the extra render when scroll stops.)\nVisible cells are still re-rendered when the <code>Grid</code>'s props change or <code>forceUpdate()</code> is called.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">isScrollingOptOut</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-bool\">false</span></div>",
+      "name": "isScrollingOptOut",
+      "required": false
+    },
+    "onScrollbarPresenceChange": {
+      "description": [
+        {
+          "content": "<p>Called whenever a horizontal or vertical scrollbar is added or removed:\n<code>({ horizontal: boolean, size: number, vertical: boolean }): void</code>.\nThis prop is not intended for end-user use;\nit is used by MultiGrid to support fixed-row/fixed-column scroll syncing.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onScrollbarPresenceChange</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">ScrollbarPresenceChange</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span></div>",
+      "name": "onScrollbarPresenceChange",
+      "required": false
+    },
+    "scrollingResetTimeInterval": {
+      "description": [
+        {
+          "content": "<p>Wait this amount of time (in milliseconds) after the last scroll event before resetting Grid <code>pointer-events</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">scrollingResetTimeInterval</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">150</span></div>",
+      "name": "scrollingResetTimeInterval",
+      "required": false
+    },
+    "aria-label": {
+      "description": [
+        {
+          "content": "<p>ARIA label set on the outer <code>Table</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">aria-label</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "aria-label",
+      "required": false
+    },
+    "aria-labelledby": {
+      "description": [
+        {
+          "content": "<p>ARIA labelledby attribute set on the outer <code>Table</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">aria-labelledby</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "aria-labelledby",
+      "required": false
+    },
+    "children": {
+      "description": [
+        {
+          "content": "<p>One or more <code>Column</code>s describing the data displayed in this table.\nFalsy children are ignored, to allow easier dynamic showing/hiding of columns.</p>\n"
+        },
+        {
+          "content": "<p><code>Table</code> reads the props of its children (with <code>defaultColumnProps</code> applied) without rendering them,\nso components that wrap <code>Column</code> (e.g. <code>const MyColumn = (props: ColumnProps) =&gt; &lt;Column {...props} /&gt;</code>) can be used as children too.\n(Subclassing <code>Column</code> is no longer supported.)</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">children</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">ReactNode</span></div>",
+      "name": "children",
+      "required": false
+    },
+    "className": {
+      "description": [
+        {
+          "content": "<p>Optional custom CSS class name to attach to root <code>Table</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">className</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "className",
+      "required": false
+    },
+    "deferredMeasurementCache": {
+      "description": [
+        {
+          "content": "<p>If <code>CellMeasurer</code> is used to measure this Table's cells, this should be a pointer to its <code>CellMeasurerCache</code>.\nIt is passed through to the inner <code>Grid</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">deferredMeasurementCache</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CellMeasureCache</span></div>",
+      "name": "deferredMeasurementCache",
+      "required": false
+    },
+    "disableHeader": {
+      "description": [
+        {
+          "content": "<p>Do not render the table header (only the rows).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">disableHeader</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">boolean</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-bool\">false</span></div>",
+      "name": "disableHeader",
+      "required": false
+    },
+    "estimatedRowSize": {
+      "description": [
+        {
+          "content": "<p>Used to estimate the total height of a <code>Table</code> before all of its rows have actually been measured.\nThe estimated total height is adjusted as rows are rendered.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">estimatedRowSize</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">30</span></div>",
+      "name": "estimatedRowSize",
+      "required": false
+    },
+    "gridClassName": {
+      "description": [
+        {
+          "content": "<p>Optional custom CSS class name to attach to inner <code>Grid</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">gridClassName</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "gridClassName",
+      "required": false
+    },
+    "gridStyle": {
+      "description": [
+        {
+          "content": "<p>Optional inline style to attach to inner <code>Grid</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">gridStyle</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span></div>",
+      "name": "gridStyle",
+      "required": false
+    },
+    "headerClassName": {
+      "description": [
+        {
+          "content": "<p>Optional CSS class to apply to all column headers.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">headerClassName</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "headerClassName",
+      "required": false
+    },
+    "headerHeight": {
+      "description": [
+        {
+          "content": "<p>Fixed height of header row.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">headerHeight</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">0</span></div>",
+      "name": "headerHeight",
+      "required": false
+    },
+    "headerRowRenderer": {
+      "description": [
+        {
+          "content": "<p>Responsible for rendering the table header row given an array of columns:\n<code>({ className: string, columns: ReactNode[], style: CSSProperties }): ReactNode</code>.</p>\n"
+        },
+        {
+          "content": "<p>This is an advanced property.\nIt is useful for situations where you require additional hooks into <code>Table</code> to render additional custom UI elements.\nYou may want to start by forking the <code>defaultTableHeaderRowRenderer</code> function (the default).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">headerRowRenderer</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">TableHeaderRowRenderer</span></div>",
+      "name": "headerRowRenderer",
+      "required": false
+    },
+    "headerStyle": {
+      "description": [
+        {
+          "content": "<p>Optional custom inline style to attach to table header columns.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">headerStyle</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"tok-punctuation\">}</span></div>",
+      "name": "headerStyle",
+      "required": false
+    },
+    "height": {
+      "description": [
+        {
+          "content": "<p>Fixed/available height for the outer DOM element.\nRequired, unless a <code>scrollElement</code> is specified.</p>\n"
+        },
+        {
+          "content": "<p>With a <code>scrollElement</code>, the height of the scroll element's viewport is used instead;\nthis prop is then only used until the scroll element has been measured (e.g. during server rendering).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">height</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "height",
+      "required": false
+    },
+    "id": {
+      "description": [
+        {
+          "content": "<p>Optional custom id to attach to root <code>Table</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">id</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "id",
+      "required": false
+    },
+    "initialScrollTop": {
+      "description": [
+        {
+          "content": "<p>Vertical scroll offset to initially render (and scroll to) the <code>Table</code> at.\nOnly the initial value is used: changing this prop later has no effect (use <code>scrollToPosition</code> to scroll).\nThis also works with server rendering: the rows at this offset are rendered on the server,\nand they stay in place when the page is hydrated.\nIgnored if a <code>scrollElement</code> is specified (which then determines the vertical offset).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">initialScrollTop</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "initialScrollTop",
+      "required": false
+    },
+    "noRowsRenderer": {
+      "description": [
+        {
+          "content": "<p>Optional renderer to be used in place of table body rows when <code>rowCount</code> is 0.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">noRowsRenderer</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">ReactNode</span></div>",
+      "name": "noRowsRenderer",
+      "required": false
+    },
+    "onColumnClick": {
+      "description": [
+        {
+          "content": "<p>Callback invoked when a user clicks on a table column (cell):\n<code>({ columnData: any, dataKey: string, event: Event }): void</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onColumnClick</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">TableColumnEventHandlerParams</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span></div>",
+      "name": "onColumnClick",
+      "required": false
+    },
+    "onHeaderClick": {
+      "description": [
+        {
+          "content": "<p>Callback invoked when a user clicks on (or activates via the ENTER or SPACE key) a table header:\n<code>({ columnData: any, dataKey: string, event: Event }): void</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onHeaderClick</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">TableColumnEventHandlerParams</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span></div>",
+      "name": "onHeaderClick",
+      "required": false
+    },
+    "onRowClick": {
+      "description": [
+        {
+          "content": "<p>Callback invoked when a user clicks on a table row:\n<code>({ event: Event, index: number, rowData: any }): void</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onRowClick</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">TableRowMouseEventHandler</span></div>",
+      "name": "onRowClick",
+      "required": false
+    },
+    "onRowDoubleClick": {
+      "description": [
+        {
+          "content": "<p>Callback invoked when a user double-clicks on a table row:\n<code>({ event: Event, index: number, rowData: any }): void</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onRowDoubleClick</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">TableRowMouseEventHandler</span></div>",
+      "name": "onRowDoubleClick",
+      "required": false
+    },
+    "onRowMouseOut": {
+      "description": [
+        {
+          "content": "<p>Callback invoked when the mouse leaves a table row:\n<code>({ event: Event, index: number, rowData: any }): void</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onRowMouseOut</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">TableRowMouseEventHandler</span></div>",
+      "name": "onRowMouseOut",
+      "required": false
+    },
+    "onRowMouseOver": {
+      "description": [
+        {
+          "content": "<p>Callback invoked when a user moves the mouse over a table row:\n<code>({ event: Event, index: number, rowData: any }): void</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onRowMouseOver</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">TableRowMouseEventHandler</span></div>",
+      "name": "onRowMouseOver",
+      "required": false
+    },
+    "onRowRightClick": {
+      "description": [
+        {
+          "content": "<p>Callback invoked when a user right-clicks on a table row:\n<code>({ event: Event, index: number, rowData: any }): void</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onRowRightClick</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">TableRowMouseEventHandler</span></div>",
+      "name": "onRowRightClick",
+      "required": false
+    },
+    "onRowsRendered": {
+      "description": [
+        {
+          "content": "<p>Callback invoked with information about the slice of rows that were just rendered:\n<code>({ overscanStartIndex: number, overscanStopIndex: number, startIndex: number, stopIndex: number }): void</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onRowsRendered</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">TableRowsRenderedParams</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span></div>",
+      "name": "onRowsRendered",
+      "required": false
+    },
+    "onScroll": {
+      "description": [
+        {
+          "content": "<p>Callback invoked whenever the scroll offset changes within the inner scrollable region:\n<code>({ clientHeight: number, scrollHeight: number, scrollTop: number }): void</code>.\nThis callback can be used to sync scrolling between lists, tables, or grids.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">onScroll</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">TableScrollParams</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span></div>",
+      "name": "onScroll",
+      "required": false
+    },
+    "overscanIndicesGetter": {
+      "description": [
+        {
+          "content": "<p>Responsible for calculating the number of rows to overscan before and after a specified range (see <code>Grid</code> <code>overscanIndicesGetter</code>).\nBy default (<code>accessibilityOverscanIndicesGetter</code>), <code>Table</code> overscans by at least one row in each direction (for accessibility).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">overscanIndicesGetter</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">OverscanIndicesGetter</span></div>",
+      "name": "overscanIndicesGetter",
+      "required": false
+    },
+    "overscanRowCount": {
+      "description": [
+        {
+          "content": "<p>Number of rows to render above/below the visible bounds of the list.\nThis can help reduce flickering during scrolling on certain browsers/devices.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">overscanRowCount</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">10</span></div>",
+      "name": "overscanRowCount",
+      "required": false
+    },
+    "rowClassName": {
+      "description": [
+        {
+          "content": "<p>Optional CSS class to apply to all table rows (including the header row).\nThis value may be either a static string or a function with the signature <code>({ index: number }): string</code>.\nNote that for the header row an index of <code>-1</code> is provided.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">rowClassName</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"> </span><span class=\"tok-propertyName tok-definition\">index</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"> </span><span class=\"tok-punctuation\">}</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span><span class=\"tok-punctuation\">)</span></div>",
+      "name": "rowClassName",
+      "required": false
+    },
+    "rowCount": {
+      "description": [
+        {
+          "content": "<p>Number of rows in table.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">rowCount</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "rowCount",
+      "required": true
+    },
+    "rowGetter": {
+      "description": [
+        {
+          "content": "<p>Callback responsible for returning a data row given an index:\n<code>({ index: number }): any</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">rowGetter</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"> </span><span class=\"tok-propertyName tok-definition\">index</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"> </span><span class=\"tok-punctuation\">}</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">any</span></div>",
+      "name": "rowGetter",
+      "required": true
+    },
+    "rowHeight": {
+      "description": [
+        {
+          "content": "<p>Either a fixed row height (number) or a function that returns the height of a row given its index:\n<code>({ index: number }): number</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">rowHeight</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CellSize</span></div>",
+      "name": "rowHeight",
+      "required": true
+    },
+    "rowRenderer": {
+      "description": [
+        {
+          "content": "<p>Responsible for rendering a table row given an array of columns.</p>\n"
+        },
+        {
+          "content": "<p>This is an advanced property.\nIt is useful for situations where you require additional hooks into <code>Table</code> (eg integration with a library like <code>react-sortable-hoc</code>).\nThe easiest way to override it is to decorate (or fork) the <code>defaultTableRowRenderer</code> function (the default).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">rowRenderer</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">TableRowRenderer</span></div>",
+      "name": "rowRenderer",
+      "required": false
+    },
+    "rowStyle": {
+      "description": [
+        {
+          "content": "<p>Optional custom inline style to attach to table rows (including the header row).\nThis value may be either a style object or a function with the signature <code>({ index: number }): CSSProperties</code>.\nNote that for the header row an index of <code>-1</code> is provided.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">rowStyle</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"> </span><span class=\"tok-propertyName tok-definition\">index</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"> </span><span class=\"tok-punctuation\">}</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"tok-punctuation\">}</span></div>",
+      "name": "rowStyle",
+      "required": false
+    },
+    "sort": {
+      "description": [
+        {
+          "content": "<p>Sort function to be called if a sortable header is clicked:\n<code>({ defaultSortDirection: SortDirection, event: Event, sortBy: string, sortDirection: SortDirection }): void</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">sort</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName tok-definition\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">TableSortParams</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span></div>",
+      "name": "sort",
+      "required": false
+    },
+    "sortBy": {
+      "description": [
+        {
+          "content": "<p>Data is currently sorted by this <code>dataKey</code> (if it is sorted at all).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">sortBy</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">string</span></div>",
+      "name": "sortBy",
+      "required": false
+    },
+    "sortDirection": {
+      "description": [
+        {
+          "content": "<p>Data is currently sorted in this direction (if it is sorted at all).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">sortDirection</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">SortDirectionType</span></div>",
+      "name": "sortDirection",
+      "required": false
+    },
+    "scrollElement": {
+      "description": [
+        {
+          "content": "<p>Element that scrolls the <code>Table</code> (instead of the <code>Table</code> scrolling itself): <code>&quot;window&quot;</code>, or a scrollable DOM element\n(e.g. a container that the <code>Table</code> is rendered within, along with other content).</p>\n"
+        },
+        {
+          "content": "<p>The <code>Table</code> then renders all of its rows at their full height (below its header, which scrolls along with them), renders only the rows visible within the scroll element's viewport,\nand its scroll methods scroll the scroll element.\nIts position within the scroll element is measured when the scroll element scrolls or is resized, and when the <code>Table</code> re-renders\n(e.g. call <code>forceUpdateGrid()</code> if content above the <code>Table</code> changes size without the <code>Table</code> re-rendering).\nPass <code>null</code> while the scroll element isn't available yet (e.g. before a ref to it has been attached);\nthe <code>Table</code> then renders the rows at its top.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">scrollElement</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">ScrollElement</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-keyword\">null</span></div>",
+      "name": "scrollElement",
+      "required": false
+    },
+    "style": {
+      "description": [
+        {
+          "content": "<p>Optional custom inline style to attach to root <code>Table</code> element.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">style</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">CSSProperties</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"tok-punctuation\">}</span></div>",
+      "name": "style",
+      "required": false
+    },
+    "tabIndex": {
+      "description": [
+        {
+          "content": "<p>Optional override of inner <code>Grid</code> tab index default.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">tabIndex</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-operator\">|</span><span class=\"\"> </span><span class=\"tok-keyword\">null</span><span class=\"\"> </span><span class=\"tok-operator\">=</span><span class=\"\"> </span><span class=\"tok-number\">0</span></div>",
+      "name": "tabIndex",
+      "required": false
+    },
+    "width": {
+      "description": [
+        {
+          "content": "<p>Width of the table.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-labelName\"><span class=\"tok-propertyName\">width</span></span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
+      "name": "width",
+      "required": true
+    }
+  }
+}

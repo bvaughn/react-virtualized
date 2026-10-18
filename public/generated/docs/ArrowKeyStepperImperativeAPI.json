@@ -1,0 +1,20 @@
+{
+  "description": [
+    {
+      "content": "<p>Public methods available on an <code>ArrowKeyStepper</code> ref.</p>\n"
+    }
+  ],
+  "filePath": "lib/components/ArrowKeyStepper/types.ts",
+  "methods": [
+    {
+      "description": [
+        {
+          "content": "<p>Override the local state of the component with new values for <code>scrollToRow</code> and <code>scrollToColumn</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">setScrollIndexes</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> ScrollIndices</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "setScrollIndexes"
+    }
+  ],
+  "name": "ArrowKeyStepperImperativeAPI"
+}

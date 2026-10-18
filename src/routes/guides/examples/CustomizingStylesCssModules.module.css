@@ -1,0 +1,11 @@
+.table {
+  font-size: 0.875rem;
+}
+
+.headerColumn {
+  color: #7dd3fc;
+}
+
+.row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}

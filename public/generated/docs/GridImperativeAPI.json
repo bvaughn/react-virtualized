@@ -1,0 +1,101 @@
+{
+  "description": [
+    {
+      "content": "<p>Public (imperative) methods of a <code>Grid</code> (its ref handle).</p>\n"
+    }
+  ],
+  "filePath": "lib/components/Grid/types.ts",
+  "methods": [
+    {
+      "description": [
+        {
+          "content": "<p>Forcefully re-render the <code>Grid</code> (and its visible cells),\ne.g. because the data rendered by <code>cellRenderer</code> has changed but the <code>Grid</code>'s props have not.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">forceUpdate</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "forceUpdate"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Gets offsets for a given cell and alignment (see <code>scrollToCell</code> for the alignment values).\nThe alignment defaults to &quot;auto&quot;; an index of <code>-1</code> (the default) refers to the last column or row.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">getOffsetForCell</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-propertyName tok-definition\">alignment</span><span class=\"\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">Alignment</span><span class=\"tok-punctuation\">;</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-variableName\">columnIndex</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-variableName\">rowIndex</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"></span></div>\n<div><span class=\"\">  </span><span class=\"tok-punctuation\">}</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"> </span><span class=\"tok-propertyName tok-definition\">scrollLeft</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"> </span><span class=\"tok-propertyName tok-definition\">scrollTop</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"\"> </span><span class=\"tok-punctuation\">}</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "getOffsetForCell"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Gets estimated total rows' height.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">getTotalRowsHeight</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "getTotalRowsHeight"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Gets estimated total columns' width.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">getTotalColumnsWidth</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "getTotalColumnsWidth"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>This method handles a scroll event originating from an external scroll control.\nIt's an advanced method and should probably not be used unless you're implementing a custom scroll-bar solution.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">handleScrollEvent</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> ScrollPosition</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "handleScrollEvent"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Invalidate the size of a cell and recompute visible cells after the current render has been committed.\nThis is a deferred version of <code>recomputeGridSize()</code> (batching the invalidations of a render);\nit is intended for advanced use-cases like <code>CellMeasurer</code>.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">invalidateCellSizeAfterRender</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> CellPosition</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "invalidateCellSizeAfterRender"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Pre-measure all columns and rows in a <code>Grid</code>.\nTypically cells are only measured as needed and estimated sizes are used for cells that have not yet been measured.\nThis method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">measureAllCells</span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "measureAllCells"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Recomputes row heights and column widths after the specified index (both default to 0).\nThis function should be called if dynamic column or row sizes have changed but nothing else has.\nSince <code>Grid</code> only receives <code>columnCount</code> and <code>rowCount</code> it has no way of detecting when the underlying data changes.\nThis method will also force a render cycle to ensure that the updated measurements are reflected in the rendered grid.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">recomputeGridSize</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"> </span><span class=\"tok-propertyName tok-definition\">columnIndex</span><span class=\"\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"> </span><span class=\"tok-variableName\">rowIndex</span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span><span class=\"\"> </span><span class=\"tok-punctuation\">}</span><span class=\"\">)</span><span class=\"tok-operator\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "recomputeGridSize"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Ensure the specified column and/or row is visible (scrolling if necessary).\nThis method can be used to safely scroll back to a cell that a user has scrolled away from even if it was previously scrolled to.\nThe <code>align</code> parameter (default &quot;auto&quot;) controls the alignment of the cell:\n&quot;auto&quot; scrolls the least amount possible to ensure that the specified cell is fully visible\n(a cell larger than the <code>Grid</code> is aligned to its start, so that its start is visible);\n&quot;start&quot; aligns the cell to the top/left of the <code>Grid</code> and &quot;end&quot; to the bottom/right;\n&quot;center&quot; aligns the cell in the middle of the <code>Grid</code>.\nThis is a one-time scroll: the cell is not kept in view afterwards (e.g. if the <code>Grid</code>'s size or its cell sizes change).\nCells that haven't been measured yet (e.g. by <code>CellMeasurer</code>) are positioned using their estimated sizes.\nNothing is scrolled while the <code>Grid</code>'s width or height is 0.\nThe column is ignored for single-column grids (e.g. <code>List</code>, <code>Table</code>).\nIf the <code>Grid</code> has a <code>scrollElement</code>, the scroll element (e.g. the window) is scrolled vertically instead.</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">scrollToCell</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">{</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-propertyName tok-definition\">align</span><span class=\"\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">Alignment</span><span class=\"tok-punctuation\">;</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-propertyName tok-definition\">columnIndex</span><span class=\"\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"></span></div>\n<div><span class=\"\">    </span><span class=\"tok-propertyName tok-definition\">rowIndex</span><span class=\"\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-typeName\">number</span><span class=\"tok-punctuation\">;</span><span class=\"\"></span></div>\n<div><span class=\"\">  </span><span class=\"tok-punctuation\">}</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "scrollToCell"
+    },
+    {
+      "description": [
+        {
+          "content": "<p>Scroll to the specified offset(s); an omitted offset is left unchanged.\nOffsets are clamped to the scrollable range.\nCalling this method with the current offsets does nothing.\nIf the <code>Grid</code> has a <code>scrollElement</code>, <code>scrollTop</code> scrolls the scroll element (e.g. the window) instead\n(to the position at which the <code>Grid</code> is scrolled by <code>scrollTop</code>).</p>\n"
+        }
+      ],
+      "html": "<div><span class=\"tok-variableName\">scrollToPosition</span><span class=\"tok-punctuation\">(</span><span class=\"tok-variableName\">params</span><span class=\"tok-punctuation\">:</span><span class=\"\"> ScrollPosition</span><span class=\"tok-punctuation\">)</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-keyword\">void</span><span class=\"tok-punctuation\">;</span></div>",
+      "name": "scrollToPosition"
+    }
+  ],
+  "name": "GridImperativeAPI"
+}
