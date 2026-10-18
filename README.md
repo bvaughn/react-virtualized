@@ -1,4 +1,4 @@
-[<img src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" alt="React virtualized" data-canonical-src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" width="330" height="100" />](https://react-virtualized-docs.vercel.app/)
+[<img width="1200" height="630" alt="Image" src="https://github.com/user-attachments/assets/f24f3a0f-f2e5-48a2-b3c1-adf95baccacf" />](https://react-virtualized-docs.vercel.app/)
 
 React components for efficiently rendering large lists and tabular data.
 Check out [the documentation](https://react-virtualized-docs.vercel.app/) for live examples.
