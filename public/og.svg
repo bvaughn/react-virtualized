@@ -1,0 +1,10 @@
+<svg viewBox="0 0 1200 630" width="600" height="315" xmlns="http://www.w3.org/2000/svg"><linearGradient id="generated-og-image-bg"><stop offset="0%" stop-color="oklch(74.6% 0.16 232.661)"></stop><stop offset="100%" stop-color="oklch(60.6% 0.25 292.717)"></stop></linearGradient><rect fill="url('#generated-og-image-bg')" width="1200" height="630"></rect><g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="rv-logo" x="98" y="112" width="360" height="360" preserveAspectRatio="xMidYMid meet" overflow="visible">
+  <style>
+    .rv-logo path, .rv-logo rect {
+      stroke: #1A1A1A;
+    }
+  </style>
+  <path d="M5 8.25a5 5 0 0 1 10 0" fill="none" stroke-width="2.5" stroke-dasharray="2.10 1.04" stroke-dashoffset="-0.52" opacity="0.45" />
+  <rect x="2.25" y="8.25" width="15.5" height="9.5" rx="2.75" fill="none" stroke-width="2.5" />
+  <path d="M6 12.75h2M12 12.75h2" fill="none" stroke-width="2.5" stroke-linecap="round" />
+</svg></g><g fill="#fff" font-family="system-ui" font-size="118" font-weight="bold"><text dominant-baseline="middle" x="498" y="254.23">react</text><text dominant-baseline="middle" x="498" y="375.77">virtualized</text></g></svg>

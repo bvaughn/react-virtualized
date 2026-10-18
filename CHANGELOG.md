@@ -1,6 +1,6 @@
 ## Changelog
 
-##### NEXT
+# 10.0.0
 
 Version 10 is a modernization of react-virtualized. The source has been converted to TypeScript, every component has been rewritten as a function component with hooks, and React 18 or newer is required. Along the way, several long-standing bugs that were inherent in the 9.x architecture have been fixed (see "Bug fixes" below), which required some breaking API changes. The migration guide below covers each of them.
 
