@@ -122,7 +122,8 @@ export default function OverscanRoute() {
         />
       </Block>
       {section && (
-        <div className="text-sm">
+        // Rendered after the grid reports its section, so whether a crawl sees it is timing-dependent
+        <div className="text-sm" data-search-ignore>
           Visible rows:{" "}
           <strong>
             {section.rowStartIndex}–{section.rowStopIndex}
