@@ -1,7 +1,7 @@
-[<img src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" alt="React virtualized" data-canonical-src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" width="330" height="100" />](https://react-virtualized.vercel.app/)
+[<img src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" alt="React virtualized" data-canonical-src="https://cloud.githubusercontent.com/assets/29597/11737732/0ca1e55e-9f91-11e5-97f3-098f2f8ed866.png" width="330" height="100" />](https://react-virtualized-docs.vercel.app/)
 
 React components for efficiently rendering large lists and tabular data.
-Check out [the documentation](https://react-virtualized.vercel.app/) for live examples.
+Check out [the documentation](https://react-virtualized-docs.vercel.app/) for live examples.
 
 ### If you like this project, 🎉 [become a sponsor](https://github.com/sponsors/bvaughn/) or ☕ [buy me a coffee](http://givebrian.coffee/)
 
@@ -139,53 +139,53 @@ For example:
 
 ###### Public methods
 
-`Grid` components can be forcefully re-rendered by calling [`forceUpdate`](https://react-virtualized.vercel.app/grid/methods#forceUpdate) on their ref.
-For `Table` and `List`, you'll need to call [`forceUpdateGrid`](https://react-virtualized.vercel.app/table/methods#forceUpdateGrid) to ensure that the inner `Grid` is also updated. For `MultiGrid`, you'll need to call [`forceUpdateGrids`](https://react-virtualized.vercel.app/grid/multi-grid-methods#forceUpdateGrids) to ensure that the inner `Grid`s are updated.
+`Grid` components can be forcefully re-rendered by calling [`forceUpdate`](https://react-virtualized-docs.vercel.app/grid/methods#forceUpdate) on their ref.
+For `Table` and `List`, you'll need to call [`forceUpdateGrid`](https://react-virtualized-docs.vercel.app/table/methods#forceUpdateGrid) to ensure that the inner `Grid` is also updated. For `MultiGrid`, you'll need to call [`forceUpdateGrids`](https://react-virtualized-docs.vercel.app/grid/multi-grid-methods#forceUpdateGrids) to ensure that the inner `Grid`s are updated.
 
 ## Documentation
 
-Documentation and live examples for every component are available at [react-virtualized.vercel.app](https://react-virtualized.vercel.app/).
+Documentation and live examples for every component are available at [react-virtualized-docs.vercel.app](https://react-virtualized-docs.vercel.app/).
 
 Components:
 
-- [Grid](https://react-virtualized.vercel.app/grid)
-- [List](https://react-virtualized.vercel.app/list)
-- [Masonry](https://react-virtualized.vercel.app/masonry)
-- [MultiGrid](https://react-virtualized.vercel.app/grid/fixed-rows-and-columns) (a `Grid` with fixed rows and columns)
-- [Table](https://react-virtualized.vercel.app/table)
+- [Grid](https://react-virtualized-docs.vercel.app/grid)
+- [List](https://react-virtualized-docs.vercel.app/list)
+- [Masonry](https://react-virtualized-docs.vercel.app/masonry)
+- [MultiGrid](https://react-virtualized-docs.vercel.app/grid/fixed-rows-and-columns) (a `Grid` with fixed rows and columns)
+- [Table](https://react-virtualized-docs.vercel.app/table)
 
-[CellMeasurer](https://react-virtualized.vercel.app/cell-measurer) measures cells whose sizes aren't known ahead of time.
+[CellMeasurer](https://react-virtualized-docs.vercel.app/cell-measurer) measures cells whose sizes aren't known ahead of time.
 
-`Grid`, `List`, `Masonry` and `Table` can also be [scrolled by the window](https://react-virtualized.vercel.app/window-scrolling) (or another scrollable element) with the `scrollElement` prop.
+`Grid`, `List`, `Masonry` and `Table` can also be [scrolled by the window](https://react-virtualized-docs.vercel.app/window-scrolling) (or another scrollable element) with the `scrollElement` prop.
 
 Higher-order components:
 
-- [ArrowKeyStepper](https://react-virtualized.vercel.app/arrow-key-stepper)
-- [ColumnSizer](https://react-virtualized.vercel.app/column-sizer)
-- [InfiniteLoader](https://react-virtualized.vercel.app/infinite-loader)
-- [ScrollSync](https://react-virtualized.vercel.app/scroll-sync)
+- [ArrowKeyStepper](https://react-virtualized-docs.vercel.app/arrow-key-stepper)
+- [ColumnSizer](https://react-virtualized-docs.vercel.app/column-sizer)
+- [InfiniteLoader](https://react-virtualized-docs.vercel.app/infinite-loader)
+- [ScrollSync](https://react-virtualized-docs.vercel.app/scroll-sync)
 
 > [!NOTE]
 > `AutoSizer` is no longer part of react-virtualized (as of version 10); it is available as the separate [`react-virtualized-auto-sizer`](https://www.npmjs.com/package/react-virtualized-auto-sizer) package.
-> See [sizing components](https://react-virtualized.vercel.app/guides/sizing-components) for how to use it with react-virtualized.
+> See [sizing components](https://react-virtualized-docs.vercel.app/guides/sizing-components) for how to use it with react-virtualized.
 
 There are also a couple of how-to guides:
 
-- [Customizing classes and styles](https://react-virtualized.vercel.app/guides/customizing-styles)
-- [Displaying items in reverse order](https://react-virtualized.vercel.app/guides/reverse-list)
-- [Sizing components](https://react-virtualized.vercel.app/guides/sizing-components)
-- [Server rendering](https://react-virtualized.vercel.app/guides/server-rendering)
-- [Creating an infinite-loading list](https://react-virtualized.vercel.app/guides/infinite-loading-list)
-- [Natural sort Table](https://react-virtualized.vercel.app/guides/natural-sort-table)
-- [Sorting a Table by multiple columns](https://react-virtualized.vercel.app/guides/multi-column-sort-table)
+- [Customizing classes and styles](https://react-virtualized-docs.vercel.app/guides/customizing-styles)
+- [Displaying items in reverse order](https://react-virtualized-docs.vercel.app/guides/reverse-list)
+- [Sizing components](https://react-virtualized-docs.vercel.app/guides/sizing-components)
+- [Server rendering](https://react-virtualized-docs.vercel.app/guides/server-rendering)
+- [Creating an infinite-loading list](https://react-virtualized-docs.vercel.app/guides/infinite-loading-list)
+- [Natural sort Table](https://react-virtualized-docs.vercel.app/guides/natural-sort-table)
+- [Sorting a Table by multiple columns](https://react-virtualized-docs.vercel.app/guides/multi-column-sort-table)
 
 ## Examples
 
 Here are some "recipe" type demos:
 
 - [Table with resizable (drag and drop) columns](https://codesandbox.io/s/j30k46l7xw)
-- [Dynamic cell measuring](https://react-virtualized.vercel.app/cell-measurer)
-- [Fixed header and column (spreadsheet)](https://react-virtualized.vercel.app/grid/fixed-rows-and-columns)
+- [Dynamic cell measuring](https://react-virtualized-docs.vercel.app/cell-measurer)
+- [Fixed header and column (spreadsheet)](https://react-virtualized-docs.vercel.app/grid/fixed-rows-and-columns)
 
 ## Supported Browsers
 

@@ -131,13 +131,13 @@ Use `scrollToCell({columnIndex, rowIndex, align})` for `Grid`/`MultiGrid` and `s
 
 - TypeScript types for every component's props (e.g. `GridProps`, `ListProps`, `TableProps`, `ColumnProps`), imperative handles (`*ImperativeAPI`), and renderer params (e.g. `RowRendererParams`, `CellRendererParams`, `TableCellProps`). `ListProps` and `TableProps` include the `Grid` props they relay to their inner `Grid` (e.g. `isScrollingOptOut`, `scrollingResetTimeInterval`, `containerStyle`), except those that don't apply to a single column (e.g. `overscanColumnCount`).
 - `Grid`'s handle adds `forceUpdate()`; `scrollToCell` takes an `align` parameter. `List`, `Table`, and `MultiGrid` add `scrollToCell()`; `MultiGrid` adds `scrollToPosition()`; `Masonry` adds `forceUpdate()`, `recomputeGridSize()`, and `invalidateCellSizeAfterRender()` (so it works with `InfiniteLoader` and `CellMeasurer`'s `measure()`).
-- `scrollElement` prop (`Grid`, `List`, `Masonry`, `Table`): `"window"` or a scrollable element that scrolls the component instead of the component scrolling itself (replaces `WindowScroller`). The component renders at its full height, renders only the rows within the scroll element's viewport, and its scroll methods scroll the scroll element. New `ScrollElement` type. See https://react-virtualized.vercel.app/window-scrolling
+- `scrollElement` prop (`Grid`, `List`, `Masonry`, `Table`): `"window"` or a scrollable element that scrolls the component instead of the component scrolling itself (replaces `WindowScroller`). The component renders at its full height, renders only the rows within the scroll element's viewport, and its scroll methods scroll the scroll element. New `ScrollElement` type. See https://react-virtualized-docs.vercel.app/window-scrolling
 - `initialScrollTop` (`Grid`, `List`, `Table`, `MultiGrid`) and `initialScrollLeft` (`Grid`, `MultiGrid`) props render a component at an initial scroll offset, including during server rendering: the rows at that offset are rendered on the server and stay in place when the page is hydrated. See the new server rendering guide.
 - `List`/`Table` `getOffsetForRow` accepts `align` (`alignment` is deprecated). `Table`'s `headerHeight` prop is optional (it already defaulted to 0).
 - New type exports: `ScrollElement`, `ScrollSyncChild`, `ScrollSyncChildProps`, `ScrollSyncScrollParams`, `ArrowKeyStepperChild`, `ArrowKeyStepperChildProps`, `InfiniteLoaderChildInstance`, `CellMeasurerChildParams`, `CellMeasurerChildFunction`, `CellMeasurerCacheAPI` (the public methods and properties of `CellMeasurerCache`).
 - The build is no longer minified (component names show up in React DevTools), and unused components are tree-shaken.
 - The `react-lifecycles-compat`, `prop-types`, `@babel/runtime`, and `loose-envify` dependencies have been removed. The stylesheet is still available as `react-virtualized/styles.css`.
-- New documentation site, with live examples: https://react-virtualized.vercel.app/
+- New documentation site, with live examples: https://react-virtualized-docs.vercel.app/
 
 ###### Bug fixes
 
