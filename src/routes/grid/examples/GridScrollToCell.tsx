@@ -9,8 +9,8 @@ function cellRenderer({
   return (
     <div
       className={[
-        "flex items-center justify-center border-r border-b border-white/10 text-sm",
-        rowIndex % 2 === 1 ? "bg-white/5" : ""
+        "flex items-center justify-center border-r border-b border-ink/10 text-sm",
+        rowIndex % 2 === 1 ? "bg-ink/5" : ""
       ].join(" ")}
       key={key}
       style={style}
@@ -21,9 +21,9 @@ function cellRenderer({
 }
 
 const BUTTON_CLASS_NAME =
-  "cursor-pointer whitespace-nowrap rounded border border-white/15 bg-white/5 px-2 py-1 text-sm hover:bg-white/10";
+  "cursor-pointer whitespace-nowrap rounded border border-ink/15 bg-ink/5 px-2 py-1 text-sm hover:bg-ink/10";
 const INPUT_CLASS_NAME =
-  "w-24 rounded border border-white/15 bg-slate-900 px-2 py-1 text-sm";
+  "w-24 rounded border border-ink/15 bg-paper px-2 py-1 text-sm";
 const LABEL_CLASS_NAME = "flex flex-col gap-1 text-sm";
 
 // <begin>

@@ -49,7 +49,7 @@ function Example({ items }: { items: ListItem[] }) {
         rowIndex={rowIndex}
       >
         <div
-          className="flex items-center px-3 whitespace-nowrap border-r border-b border-white/10"
+          className="flex items-center px-3 whitespace-nowrap border-r border-b border-ink/10"
           style={{ ...style, height: 35 }}
         >
           {content}

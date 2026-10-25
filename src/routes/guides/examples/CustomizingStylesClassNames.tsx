@@ -13,16 +13,16 @@ function Example({ items }: { items: ListItem[] }) {
           <Table
             className="text-sm"
             gridClassName="outline-none"
-            headerClassName="text-sky-300"
+            headerClassName="text-sky-700 dark:text-sky-300"
             headerHeight={30}
             height={height}
             // The header row is passed an index of -1
             rowClassName={({ index }) =>
               index < 0
-                ? "border-b-2 border-white/20"
+                ? "border-b-2 border-ink/20"
                 : index % 2
-                  ? "hover:bg-white/10"
-                  : "bg-white/5 hover:bg-white/10"
+                  ? "hover:bg-ink/10"
+                  : "bg-ink/5 hover:bg-ink/10"
             }
             rowCount={items.length}
             rowGetter={({ index }) => items[index]}

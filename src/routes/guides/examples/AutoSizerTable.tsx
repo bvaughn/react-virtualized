@@ -11,7 +11,7 @@ function Example({ items }: { items: ListItem[] }) {
       renderProp={({ height, width }) =>
         height !== undefined && width !== undefined ? (
           <Table
-            headerClassName="text-white"
+            headerClassName="text-ink"
             headerHeight={30}
             height={height}
             rowCount={items.length}

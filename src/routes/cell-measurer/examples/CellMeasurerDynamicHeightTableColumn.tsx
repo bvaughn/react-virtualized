@@ -24,10 +24,10 @@ function Example({ items }: { items: ListItem[] }) {
         height !== undefined && width !== undefined ? (
           <Table
             deferredMeasurementCache={cache}
-            headerClassName="text-white"
+            headerClassName="text-ink"
             headerHeight={30}
             height={height}
-            rowClassName="border-b border-white/10"
+            rowClassName="border-b border-ink/10"
             rowCount={items.length}
             rowGetter={({ index }) => items[index]}
             rowHeight={cache.rowHeight}

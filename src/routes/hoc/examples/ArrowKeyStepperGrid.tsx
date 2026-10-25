@@ -18,8 +18,8 @@ function renderCell({
   return (
     <div
       className={[
-        "flex items-center justify-center border-r border-b border-white/10 text-sm",
-        isSelected ? "bg-sky-500/40 text-white" : ""
+        "flex items-center justify-center border-r border-b border-ink/10 text-sm",
+        isSelected ? "bg-sky-500/40 text-ink" : ""
       ].join(" ")}
       key={key}
       style={style}

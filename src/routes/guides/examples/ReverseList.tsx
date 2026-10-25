@@ -48,19 +48,19 @@ function ReverseList({ paused }: { paused: boolean }) {
 
     return (
       <div
-        className="flex items-center gap-4 px-4 overflow-hidden border-b border-white/10"
+        className="flex items-center gap-4 px-4 overflow-hidden border-b border-ink/10"
         key={key}
         style={style}
       >
         <div
-          className="w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-white"
+          className="w-8 h-8 shrink-0 rounded-full flex items-center justify-center text-ink"
           style={{ backgroundColor: item.color }}
         >
           {item.name.charAt(0)}
         </div>
         <div className="min-w-0">
           <div className="font-bold">{item.name}</div>
-          <div className="text-xs text-slate-400 truncate">
+          <div className="text-xs text-ink/60 truncate">
             {item.createdAt.toLocaleTimeString()} &middot; {item.random}
           </div>
         </div>

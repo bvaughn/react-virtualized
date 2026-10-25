@@ -99,7 +99,7 @@ function MasonryLayout({
         return (
           <CellMeasurer cache={cache} index={index} key={key} parent={parent}>
             <div
-              className="flex flex-col gap-2 rounded-lg bg-white/5 p-2 text-sm"
+              className="flex flex-col gap-2 rounded-lg bg-ink/5 p-2 text-sm"
               style={{ ...style, width: columnWidth }}
             >
               <div

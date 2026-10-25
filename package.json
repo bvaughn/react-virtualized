@@ -112,7 +112,7 @@
     "react": "^19.2.3",
     "react-docgen-typescript": "^2.4.0",
     "react-dom": "^19.2.3",
-    "react-lib-tools": "0.0.69",
+    "react-lib-tools": "0.0.70",
     "react-virtualized-auto-sizer": "^2.0.4",
     "rollup-plugin-visualizer": "^6.0.3",
     "rollup-preserve-directives": "^1.1.3",

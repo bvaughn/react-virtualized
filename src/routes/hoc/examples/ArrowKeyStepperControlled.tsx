@@ -35,8 +35,8 @@ function ArrowKeyStepperControlled({ width }: { width: number }) {
     return (
       <div
         className={[
-          "flex cursor-pointer items-center justify-center border-r border-b border-white/10 text-sm",
-          isSelected ? "bg-sky-500/40 text-white" : "hover:bg-white/5"
+          "flex cursor-pointer items-center justify-center border-r border-b border-ink/10 text-sm",
+          isSelected ? "bg-sky-500/40 text-ink" : "hover:bg-ink/5"
         ].join(" ")}
         key={key}
         onClick={() =>

@@ -15,7 +15,7 @@ function Example() {
           <Table
             headerHeight={36}
             height={250}
-            rowClassName="border-b border-white/10"
+            rowClassName="border-b border-ink/10"
             rowCount={list.length}
             rowGetter={({ index }) => list[index]}
             rowHeight={40}
@@ -25,7 +25,7 @@ function Example() {
               // Render a custom cell (a colored badge)
               cellRenderer={({ cellData, rowData }) => (
                 <div
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-ink"
                   style={{ backgroundColor: rowData.color }}
                 >
                   {cellData}
@@ -43,7 +43,7 @@ function Example() {
               flexGrow={1}
               // Decorate the default header (label and sort indicator)
               headerRenderer={(props) => (
-                <span className="text-sky-300">
+                <span className="text-sky-700 dark:text-sky-300">
                   {defaultTableHeaderRenderer(props)}
                 </span>
               )}

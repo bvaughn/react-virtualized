@@ -3,7 +3,7 @@ import { LIST } from "../../../utils/data";
 const list = LIST;
 
 const buttonClassName =
-  "px-2 py-1 rounded border border-white/15 bg-white/5 hover:bg-white/10 cursor-pointer";
+  "px-2 py-1 rounded border border-ink/15 bg-ink/5 hover:bg-ink/10 cursor-pointer";
 
 // <begin>
 
@@ -68,7 +68,7 @@ function Example() {
 
   const rowRenderer = ({ index, key, style }: RowRendererParams) => (
     <div
-      className="flex items-center px-4 border-b border-white/10"
+      className="flex items-center px-4 border-b border-ink/10"
       key={key}
       style={style}
     >
@@ -76,7 +76,7 @@ function Example() {
         list[index].name
       ) : (
         <div
-          className="h-3 rounded bg-white/10 animate-pulse"
+          className="h-3 rounded bg-ink/10 animate-pulse"
           style={{ width: list[index].size }}
         />
       )}
@@ -93,7 +93,7 @@ function Example() {
         <button className={buttonClassName} onClick={clearData}>
           Flush cached data
         </button>
-        <div className="text-sm text-slate-400">
+        <div className="text-sm text-ink/60">
           {loadingCount} loading, {loadedCount} loaded
         </div>
       </div>

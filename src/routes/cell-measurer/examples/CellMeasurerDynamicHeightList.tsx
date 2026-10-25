@@ -30,10 +30,10 @@ function Example({ items }: { items: ListItem[] }) {
         rowIndex={index}
       >
         <div
-          className="flex flex-col gap-1 px-3 py-2 border-b border-white/10"
+          className="flex flex-col gap-1 px-3 py-2 border-b border-ink/10"
           style={style}
         >
-          <div className="font-bold text-white">{item.name}</div>
+          <div className="font-bold text-ink">{item.name}</div>
           <div>{item.randomLong}</div>
         </div>
       </CellMeasurer>

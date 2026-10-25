@@ -3,9 +3,9 @@ import { LIST } from "../../../utils/data";
 const list = LIST;
 
 const BUTTON_CLASS_NAME =
-  "cursor-pointer whitespace-nowrap rounded border border-white/15 bg-white/5 px-2 py-1 text-sm hover:bg-white/10";
+  "cursor-pointer whitespace-nowrap rounded border border-ink/15 bg-ink/5 px-2 py-1 text-sm hover:bg-ink/10";
 const INPUT_CLASS_NAME =
-  "w-24 rounded border border-white/15 bg-slate-900 px-2 py-1 text-sm";
+  "w-24 rounded border border-ink/15 bg-paper px-2 py-1 text-sm";
 const LABEL_CLASS_NAME = "flex flex-col gap-1 text-sm";
 
 // <begin>
@@ -22,7 +22,7 @@ import { AutoSizer } from "react-virtualized-auto-sizer";
 function rowRenderer({ index, key, style }: RowRendererParams) {
   return (
     <div
-      className="flex items-center justify-between px-4 border-b border-white/10"
+      className="flex items-center justify-between px-4 border-b border-ink/10"
       key={key}
       style={style}
     >

@@ -34,7 +34,7 @@ function cellRenderer({
   if (columnIndex === 0) {
     return (
       <div
-        className="flex items-center justify-center border-b border-white/10 text-xl text-white"
+        className="flex items-center justify-center border-b border-ink/10 text-xl text-ink"
         key={key}
         // Don't modify the style object; Grid caches and re-uses it
         style={{ ...style, backgroundColor: item.color }}
@@ -60,8 +60,8 @@ function cellRenderer({
   return (
     <div
       className={[
-        "flex items-center truncate border-r border-b border-white/10 px-2",
-        rowIndex % 2 === 1 ? "bg-white/5" : "",
+        "flex items-center truncate border-r border-b border-ink/10 px-2",
+        rowIndex % 2 === 1 ? "bg-ink/5" : "",
         columnIndex > 2 ? "justify-center" : ""
       ].join(" ")}
       key={key}

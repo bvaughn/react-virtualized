@@ -34,7 +34,7 @@ function Example() {
     style
   }) => (
     <div
-      className={`${className} bg-sky-950 text-sky-200`}
+      className={`${className} bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-200`}
       role="row"
       style={style}
     >
@@ -51,7 +51,7 @@ function Example() {
             headerRowRenderer={headerRowRenderer}
             height={250}
             onRowClick={({ index }) => setSelectedIndex(index)}
-            rowClassName="border-b border-white/10 cursor-pointer"
+            rowClassName="border-b border-ink/10 cursor-pointer"
             rowCount={list.length}
             rowGetter={({ index }) => list[index]}
             rowHeight={36}

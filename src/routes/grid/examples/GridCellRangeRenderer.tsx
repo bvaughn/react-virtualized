@@ -8,7 +8,7 @@ function cellRenderer({
 }: CellRendererParams) {
   return (
     <div
-      className="flex items-center justify-center border-r border-b border-white/10 text-xs text-white/50"
+      className="flex items-center justify-center border-r border-b border-ink/10 text-xs text-ink/50"
       key={key}
       style={style}
     >
@@ -55,7 +55,7 @@ const cellRangeRenderer: CellRangeRenderer = (params) => {
 
   children.push(
     <div
-      className="pointer-events-none absolute flex items-center justify-center rounded border border-sky-400 bg-sky-400/20 text-sky-100"
+      className="pointer-events-none absolute flex items-center justify-center rounded border border-sky-400 bg-sky-400/20 text-sky-900 dark:text-sky-100"
       key="overlay"
       style={{
         left: start.column.offset + horizontalOffsetAdjustment,

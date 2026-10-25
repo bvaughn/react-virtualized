@@ -38,7 +38,7 @@ function InfiniteLoadingList({
   // Render a list item or a loading indicator.
   const rowRenderer = ({ index, key, style }: RowRendererParams) => (
     <div
-      className="flex items-center px-4 border-b border-white/10"
+      className="flex items-center px-4 border-b border-ink/10"
       key={key}
       style={style}
     >

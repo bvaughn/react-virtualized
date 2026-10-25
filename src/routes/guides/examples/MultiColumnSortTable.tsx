@@ -69,7 +69,7 @@ function Example() {
           <>
             <SortIndicator sortDirection={sortDirection[dataKey]} />
             {sortBy.length > 1 && (
-              <span className="text-xs text-slate-400">{position + 1}</span>
+              <span className="text-xs text-ink/60">{position + 1}</span>
             )}
           </>
         )}
@@ -84,7 +84,7 @@ function Example() {
           <Table
             headerHeight={36}
             height={250}
-            rowClassName="border-b border-white/10"
+            rowClassName="border-b border-ink/10"
             rowCount={sortedList.length}
             rowGetter={({ index }) => sortedList[index]}
             rowHeight={30}

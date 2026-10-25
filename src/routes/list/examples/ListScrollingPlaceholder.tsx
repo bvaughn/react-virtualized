@@ -12,7 +12,7 @@ function rowRenderer({ index, isScrolling, key, style }: RowRendererParams) {
     // Render a light-weight placeholder while the list is being scrolled
     return (
       <div
-        className="flex items-center px-4 border-b border-white/10 italic text-slate-500"
+        className="flex items-center px-4 border-b border-ink/10 italic text-slate-500"
         key={key}
         style={style}
       >
@@ -23,7 +23,7 @@ function rowRenderer({ index, isScrolling, key, style }: RowRendererParams) {
 
   return (
     <div
-      className="flex items-center px-4 border-b border-white/10"
+      className="flex items-center px-4 border-b border-ink/10"
       key={key}
       style={style}
     >

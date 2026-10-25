@@ -34,7 +34,7 @@ function bodyCellRenderer({
     <div
       className={[
         "flex items-center justify-center text-sm",
-        (rowIndex + columnIndex) % 2 === 1 ? "bg-black/15" : ""
+        (rowIndex + columnIndex) % 2 === 1 ? "bg-black/5 dark:bg-black/15" : ""
       ].join(" ")}
       key={key}
       style={style}
@@ -79,7 +79,7 @@ function ScrollSyncSpreadsheet({ width }: { width: number }) {
             <div style={{ width: COLUMN_WIDTH }}>
               {/* Fixed top-left cell */}
               <div
-                className="flex items-center justify-center border-r border-b border-white/10"
+                className="flex items-center justify-center border-r border-b border-ink/10"
                 style={{ height: ROW_HEIGHT }}
               />
               {/* Fixed first column; ScrollSync scrolls it vertically with the body */}

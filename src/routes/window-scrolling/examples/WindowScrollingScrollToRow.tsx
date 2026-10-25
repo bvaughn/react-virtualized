@@ -22,11 +22,11 @@ function Example({ items }: { items: ListItem[] }) {
 
   const rowRenderer = ({ index, key, style }: RowRendererParams) => (
     <div
-      className="flex items-center gap-2 px-3 border-b border-white/10"
+      className="flex items-center gap-2 px-3 border-b border-ink/10"
       key={key}
       style={style}
     >
-      <span className="w-10 text-right text-slate-400">{index}</span>
+      <span className="w-10 text-right text-ink/60">{index}</span>
       {items[index].name}
     </div>
   );
@@ -35,7 +35,7 @@ function Example({ items }: { items: ListItem[] }) {
     <div className="flex flex-col gap-2 h-full">
       <div className="flex flex-wrap gap-2">
         <button
-          className="px-2 rounded bg-white/10"
+          className="px-2 rounded bg-ink/10"
           onClick={() =>
             listRef.current?.scrollToRow({ align: "center", index: 500 })
           }
@@ -43,7 +43,7 @@ function Example({ items }: { items: ListItem[] }) {
           Scroll to row 500
         </button>
         <button
-          className="px-2 rounded bg-white/10"
+          className="px-2 rounded bg-ink/10"
           onClick={() =>
             listRef.current?.scrollToRow({ align: "start", index: 0 })
           }
@@ -52,9 +52,7 @@ function Example({ items }: { items: ListItem[] }) {
         </button>
       </div>
       <div className="grow min-h-0 overflow-auto" ref={setScrollElement}>
-        <div className="p-3 mb-2 rounded bg-white/10">
-          Content above the list
-        </div>
+        <div className="p-3 mb-2 rounded bg-ink/10">Content above the list</div>
         <AutoSizer
           renderProp={({ width }) =>
             width !== undefined ? (

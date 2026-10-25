@@ -9,10 +9,10 @@ function cellRenderer({
   return (
     <div
       className={[
-        "flex items-center justify-center truncate border-r border-b border-white/10 text-sm",
+        "flex items-center justify-center truncate border-r border-b border-ink/10 text-sm",
         columnIndex === 0 ? "border-l" : "",
         rowIndex === 0 ? "border-t" : "",
-        rowIndex % 2 === 1 ? "bg-white/5" : ""
+        rowIndex % 2 === 1 ? "bg-ink/5" : ""
       ].join(" ")}
       key={key}
       style={style}

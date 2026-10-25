@@ -100,8 +100,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(react@19.2.3)
       react-lib-tools:
-        specifier: 0.0.69
-        version: 0.0.69(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.3)
+        specifier: 0.0.70
+        version: 0.0.70(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.3)
       react-virtualized-auto-sizer:
         specifier: ^2.0.4
         version: 2.0.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -2541,8 +2541,8 @@ packages:
   react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
-  react-lib-tools@0.0.69:
-    resolution: {integrity: sha512-IabRh/TxH4ELoBIpOvkKGARQ2ki8fund759/wRkqPmE9ed96zuXd/ivDdfdeT6T94B4Wd1yb6IU8eOCitZkoIA==}
+  react-lib-tools@0.0.70:
+    resolution: {integrity: sha512-tG4BtReGqqBAZZq7TI+AIhH4YhOAfUi/vIirr5iIr6nyMysT6+TTjjj7Oarc70bdCvmu8W5XClHT8BxeYB0liA==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -5359,7 +5359,7 @@ snapshots:
 
   react-is@17.0.2: {}
 
-  react-lib-tools@0.0.69(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.3):
+  react-lib-tools@0.0.70(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.8.3):
     dependencies:
       '@codemirror/lang-css': 6.3.1
       '@codemirror/lang-html': 6.4.11

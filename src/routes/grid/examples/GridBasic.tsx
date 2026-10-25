@@ -19,7 +19,7 @@ function cellRenderer({
 
   return (
     <div
-      className="truncate border-b border-white/10 px-2 leading-[30px]"
+      className="truncate border-b border-ink/10 px-2 leading-[30px]"
       key={key}
       style={style}
     >

@@ -30,9 +30,7 @@ function rowRenderer({ index, key, style }: RowRendererParams) {
   return (
     <div
       className={
-        index % 2
-          ? "flex items-center px-2"
-          : "flex items-center px-2 bg-white/5"
+        index % 2 ? "flex items-center px-2" : "flex items-center px-2 bg-ink/5"
       }
       key={key}
       style={style}

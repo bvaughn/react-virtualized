@@ -3,7 +3,7 @@ import { LIST } from "../../../utils/data";
 const list = LIST;
 
 const buttonClassName =
-  "px-2 py-1 rounded border border-white/15 bg-white/5 hover:bg-white/10 cursor-pointer";
+  "px-2 py-1 rounded border border-ink/15 bg-ink/5 hover:bg-ink/10 cursor-pointer";
 
 // <begin>
 
@@ -18,7 +18,7 @@ import { AutoSizer } from "react-virtualized-auto-sizer";
 function rowRenderer({ index, key, style }: RowRendererParams) {
   return (
     <div
-      className="flex items-center justify-between px-4 border-b border-white/10"
+      className="flex items-center justify-between px-4 border-b border-ink/10"
       key={key}
       style={style}
     >

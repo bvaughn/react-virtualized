@@ -15,8 +15,8 @@ function cellRenderer({
   return (
     <div
       className={[
-        "flex items-center truncate border-b border-white/10 px-2",
-        rowIndex % 2 === 1 ? "bg-white/5" : ""
+        "flex items-center truncate border-b border-ink/10 px-2",
+        rowIndex % 2 === 1 ? "bg-ink/5" : ""
       ].join(" ")}
       key={key}
       style={style}

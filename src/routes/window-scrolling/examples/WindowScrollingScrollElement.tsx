@@ -16,7 +16,7 @@ function Example({ items }: { items: ListItem[] }) {
 
   const rowRenderer = ({ index, key, style }: RowRendererParams) => (
     <div
-      className="flex items-center px-3 border-b border-white/10"
+      className="flex items-center px-3 border-b border-ink/10"
       key={key}
       style={style}
     >
@@ -26,7 +26,7 @@ function Example({ items }: { items: ListItem[] }) {
 
   return (
     <div className="h-full overflow-auto" ref={setScrollElement}>
-      <div className="p-3 mb-2 rounded bg-white/10">Content above the list</div>
+      <div className="p-3 mb-2 rounded bg-ink/10">Content above the list</div>
       <AutoSizer
         renderProp={({ width }) =>
           width !== undefined ? (

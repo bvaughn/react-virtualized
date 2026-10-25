@@ -11,7 +11,7 @@ function cellRenderer({
 }: CellRendererParams) {
   return (
     <div
-      className="flex items-center justify-center border-r border-b border-white/10"
+      className="flex items-center justify-center border-r border-b border-ink/10"
       key={key}
       style={style}
     >
@@ -33,9 +33,9 @@ function Example({
         height !== undefined && width !== undefined ? (
           <MultiGrid
             cellRenderer={cellRenderer}
-            classNameBottomLeftGrid="bg-white/5 border-r-2 border-white/20"
-            classNameTopLeftGrid="bg-white/10 font-bold border-r-2 border-b-2 border-white/20"
-            classNameTopRightGrid="bg-white/10 font-bold border-b-2 border-white/20"
+            classNameBottomLeftGrid="bg-ink/5 border-r-2 border-ink/20"
+            classNameTopLeftGrid="bg-ink/10 font-bold border-r-2 border-b-2 border-ink/20"
+            classNameTopRightGrid="bg-ink/10 font-bold border-b-2 border-ink/20"
             columnCount={50}
             columnWidth={75}
             enableFixedColumnScroll

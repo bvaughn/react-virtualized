@@ -47,17 +47,17 @@ function Example({
             headerHeight={36}
             height={300}
             noRowsRenderer={() => (
-              <div className="h-full flex items-center justify-center text-slate-400">
+              <div className="h-full flex items-center justify-center text-ink/60">
                 No rows
               </div>
             )}
             overscanRowCount={10}
             rowClassName={({ index }) =>
               index < 0
-                ? "border-b border-white/20 bg-white/5"
+                ? "border-b border-ink/20 bg-ink/5"
                 : index % 2 === 0
-                  ? "border-b border-white/10"
-                  : "border-b border-white/10 bg-white/5"
+                  ? "border-b border-ink/10"
+                  : "border-b border-ink/10 bg-ink/5"
             }
             rowCount={sortedList.length}
             rowGetter={({ index }) => sortedList[index]}
@@ -83,7 +83,7 @@ function Example({
             />
             <Column
               cellRenderer={({ cellData }) => (
-                <span className="text-slate-300">{cellData}</span>
+                <span className="text-ink/80">{cellData}</span>
               )}
               className="truncate"
               dataKey="random"

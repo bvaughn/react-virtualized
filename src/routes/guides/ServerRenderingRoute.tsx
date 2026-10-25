@@ -16,11 +16,11 @@ import { LIST } from "../../utils/data";
 function rowRenderer({ index, key, style }: RowRendererParams) {
   return (
     <div
-      className="flex items-center gap-2 px-3 border-b border-white/10"
+      className="flex items-center gap-2 px-3 border-b border-ink/10"
       key={key}
       style={style}
     >
-      <span className="w-10 text-right text-slate-400">{index}</span>
+      <span className="w-10 text-right text-ink/60">{index}</span>
       {LIST[index].name}
     </div>
   );
