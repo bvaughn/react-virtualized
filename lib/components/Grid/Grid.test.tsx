@@ -3643,6 +3643,52 @@ describe("Grid", () => {
       expect(args.vertical).toBe(true);
     });
 
+    it("should account for a vertical scrollbar causing horizontal overflow", () => {
+      const onScrollbarPresenceChange = vi.fn();
+
+      render(
+        getMarkup({
+          columnCount: 2,
+          columnWidth: 50,
+          getScrollbarSize: getScrollbarSize20,
+          height: 100,
+          onScrollbarPresenceChange,
+          rowCount: 6,
+          rowHeight: 20,
+          width: 100
+        })
+      );
+
+      expect(onScrollbarPresenceChange).toHaveBeenCalledWith({
+        horizontal: true,
+        size: 20,
+        vertical: true
+      });
+    });
+
+    it("should account for a horizontal scrollbar causing vertical overflow", () => {
+      const onScrollbarPresenceChange = vi.fn();
+
+      render(
+        getMarkup({
+          columnCount: 3,
+          columnWidth: 40,
+          getScrollbarSize: getScrollbarSize20,
+          height: 100,
+          onScrollbarPresenceChange,
+          rowCount: 5,
+          rowHeight: 20,
+          width: 100
+        })
+      );
+
+      expect(onScrollbarPresenceChange).toHaveBeenCalledWith({
+        horizontal: true,
+        size: 20,
+        vertical: true
+      });
+    });
+
     it("should trigger on-update if scrollbar visibility has changed", () => {
       const onScrollbarPresenceChange = vi.fn();
       render(

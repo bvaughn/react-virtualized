@@ -1369,10 +1369,18 @@ export const Grid = /* @__PURE__ */ memo(
       // Force browser to hide scrollbars when we know they aren't necessary.
       // Otherwise once scrollbars appear they may not disappear again.
       // For more info see issue #116
+      const verticalContentOverflows = totalRowsHeight > height;
+      const horizontalContentOverflows = totalColumnsWidth > width;
       const verticalScrollBarSize =
-        totalRowsHeight > height ? scrollbarSize : 0;
+        totalRowsHeight + (horizontalContentOverflows ? scrollbarSize : 0) >
+        height
+          ? scrollbarSize
+          : 0;
       const horizontalScrollBarSize =
-        totalColumnsWidth > width ? scrollbarSize : 0;
+        totalColumnsWidth + (verticalContentOverflows ? scrollbarSize : 0) >
+        width
+          ? scrollbarSize
+          : 0;
 
       // Equivalent of the 9.x componentDidMount/componentDidUpdate
       useIsomorphicLayoutEffect(() => {
