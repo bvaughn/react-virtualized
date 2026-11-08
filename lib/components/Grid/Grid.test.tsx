@@ -3659,7 +3659,8 @@ describe("Grid", () => {
         })
       );
 
-      expect(onScrollbarPresenceChange).toHaveBeenCalledWith({
+      expect(onScrollbarPresenceChange).toHaveBeenCalledTimes(1);
+      expect(onScrollbarPresenceChange).toHaveBeenNthCalledWith(1, {
         horizontal: true,
         size: 20,
         vertical: true
@@ -3682,11 +3683,158 @@ describe("Grid", () => {
         })
       );
 
-      expect(onScrollbarPresenceChange).toHaveBeenCalledWith({
+      expect(onScrollbarPresenceChange).toHaveBeenCalledTimes(1);
+      expect(onScrollbarPresenceChange).toHaveBeenNthCalledWith(1, {
         horizontal: true,
         size: 20,
         vertical: true
       });
+    });
+
+    it("should not report scrollbars when the content exactly fits", () => {
+      const onScrollbarPresenceChange = vi.fn();
+
+      const grid = render(
+        getMarkup({
+          columnCount: 2,
+          columnWidth: 50,
+          getScrollbarSize: getScrollbarSize20,
+          height: 100,
+          onScrollbarPresenceChange,
+          rowCount: 5,
+          rowHeight: 20,
+          width: 100
+        })
+      );
+
+      expect(onScrollbarPresenceChange).not.toHaveBeenCalled();
+      expect(findDOMNode(grid).style.overflowX).toBe("hidden");
+      expect(findDOMNode(grid).style.overflowY).toBe("hidden");
+    });
+
+    it("should report only a horizontal scrollbar for a linked Grid (which never has a vertical one)", () => {
+      const onScrollbarPresenceChange = vi.fn();
+      const container = createScrollContainer({ height: 600, width: 1000 });
+
+      const grid = render(
+        getMarkup({
+          columnCount: 99,
+          columnWidth: 10,
+          getScrollbarSize: getScrollbarSize20,
+          height: 600,
+          onScrollbarPresenceChange,
+          rowCount: 5000,
+          rowHeight: 20,
+          scrollElement: container.element,
+          width: 1000
+        })
+      );
+
+      // 990px of columns fit in 1000px because a linked Grid has no vertical scrollbar
+      expect(onScrollbarPresenceChange).not.toHaveBeenCalled();
+      expect(findDOMNode(grid).style.overflowX).toBe("hidden");
+
+      render(
+        getMarkup({
+          columnCount: 101,
+          columnWidth: 10,
+          getScrollbarSize: getScrollbarSize20,
+          height: 600,
+          onScrollbarPresenceChange,
+          rowCount: 5000,
+          rowHeight: 20,
+          scrollElement: container.element,
+          width: 1000
+        })
+      );
+      expect(onScrollbarPresenceChange).toHaveBeenCalledTimes(1);
+      expect(onScrollbarPresenceChange).toHaveBeenNthCalledWith(1, {
+        horizontal: true,
+        size: 20,
+        vertical: false
+      });
+    });
+
+    it("should not report a horizontal scrollbar caused by a vertical one when autoContainerWidth is set", () => {
+      const onScrollbarPresenceChange = vi.fn();
+      const grid = render<GridImperativeAPI>(
+        getMarkup({
+          autoContainerWidth: true,
+          columnCount: 1,
+          columnWidth: 100,
+          getScrollbarSize: getScrollbarSize20,
+          height: 100,
+          onScrollbarPresenceChange,
+          rowCount: 6,
+          rowHeight: 20,
+          width: 100
+        })
+      );
+      expect(onScrollbarPresenceChange).toHaveBeenCalledTimes(1);
+      expect(onScrollbarPresenceChange).toHaveBeenNthCalledWith(1, {
+        horizontal: false,
+        size: 20,
+        vertical: true
+      });
+      act(() => {
+        grid.scrollToCell({ align: "end", rowIndex: 5 });
+      });
+      expect(getScrollPosition(grid).scrollTop).toBe(20);
+    });
+
+    it("should not subtract a vertical scrollbar when scrolling a linked Grid to the last column", () => {
+      const container = createScrollContainer({ height: 100, width: 100 });
+      const grid = render<GridImperativeAPI>(
+        getMarkup({
+          columnCount: 3,
+          columnWidth: 40,
+          getScrollbarSize: getScrollbarSize20,
+          height: 100,
+          rowCount: 50,
+          rowHeight: 20,
+          scrollElement: container.element,
+          width: 100
+        })
+      );
+      act(() => {
+        grid.scrollToCell({ align: "end", columnIndex: 2 });
+      });
+      // 120px of columns in a 100px wide Grid (a linked Grid has no vertical scrollbar)
+      expect(getScrollPosition(grid).scrollLeft).toBe(20);
+    });
+
+    it("should leave room for a horizontal scrollbar caused by a vertical one when scrolling to the last row", () => {
+      const grid = renderAndScrollToCell(
+        {
+          columnCount: 2,
+          columnWidth: 50,
+          getScrollbarSize: getScrollbarSize20,
+          height: 100,
+          rowCount: 6,
+          rowHeight: 20,
+          width: 100
+        },
+        { align: "end", rowIndex: 5 }
+      );
+      // 120px of rows in an 80px tall viewport (100px minus the horizontal scrollbar)
+      expect(getScrollPosition(grid).scrollTop).toBe(40);
+    });
+
+    it("should leave room for a vertical scrollbar caused by a horizontal one when scrolling to the last column", () => {
+      const grid = renderAndScrollToCell(
+        {
+          columnCount: 3,
+          columnWidth: 40,
+          getScrollbarSize: getScrollbarSize20,
+          height: 100,
+          rowCount: 5,
+          rowHeight: 20,
+          width: 100
+        },
+        { align: "end", columnIndex: 2 }
+      );
+      // 120px of columns in an 80px wide viewport (100px minus the vertical scrollbar)
+      expect(getScrollPosition(grid).scrollLeft).toBe(40);
     });
 
     it("should trigger on-update if scrollbar visibility has changed", () => {
