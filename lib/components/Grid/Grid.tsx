@@ -47,6 +47,7 @@ import type {
   ScrollbarPresenceChange,
   StyleCache
 } from "./types";
+import { getScrollbarSizes } from "./utils/getScrollbarSizes";
 import { ScalingCellSizeAndPositionManager } from "./utils/ScalingCellSizeAndPositionManager";
 import { updateScrollIndexHelper } from "./utils/updateScrollIndexHelper";
 
@@ -83,6 +84,7 @@ const INITIAL_SCROLL_STATE: ScrollState = {
 // They are updated in an insertion effect, so they are current when the methods are called during the commit phase
 // (e.g. by a CellMeasurer cell that mounts before the Grid's own layout effects run).
 type LatestValues = {
+  autoContainerWidth: boolean;
   columnCount: number;
   height: number;
   onScroll: (params: Scroll) => void;
@@ -223,6 +225,7 @@ function isNumericSizeChange(prevSize: CellSize, nextSize: CellSize) {
 function createGridInstance(
   initialProps: Pick<
     GridProps,
+    | "autoContainerWidth"
     | "columnCount"
     | "columnWidth"
     | "estimatedColumnSize"
@@ -238,6 +241,7 @@ function createGridInstance(
     Required<
       Pick<
         GridProps,
+        | "autoContainerWidth"
         | "estimatedColumnSize"
         | "estimatedRowSize"
         | "onScroll"
@@ -297,6 +301,7 @@ function createGridInstance(
     disablePointerEventsTimeoutId: null,
     element: null,
     latest: {
+      autoContainerWidth: initialProps.autoContainerWidth,
       columnCount,
       height: initialProps.height,
       onScroll: initialProps.onScroll,
@@ -362,8 +367,14 @@ function createGridInstance(
     scrollToColumn: number,
     currentScrollLeft: number
   ): number => {
-    const { columnCount, height, scrollbarSize, scrollbarSizeMeasured, width } =
-      internals.latest;
+    const {
+      autoContainerWidth,
+      columnCount,
+      height,
+      scrollbarSize,
+      scrollbarSizeMeasured,
+      width
+    } = internals.latest;
 
     if (columnCount > 0) {
       const finalColumn = columnCount - 1;
@@ -373,8 +384,17 @@ function createGridInstance(
           : Math.min(finalColumn, scrollToColumn);
       const totalRowsHeight =
         internals.rowSizeAndPositionManager.getTotalSize();
-      const scrollBarSize =
-        scrollbarSizeMeasured && totalRowsHeight > height ? scrollbarSize : 0;
+      const totalColumnsWidth =
+        internals.columnSizeAndPositionManager.getTotalSize();
+      const scrollBarSize = getScrollbarSizes({
+        autoContainerWidth,
+        height,
+        isLinked: internals.link !== null,
+        scrollbarSize: scrollbarSizeMeasured ? scrollbarSize : 0,
+        totalColumnsWidth,
+        totalRowsHeight,
+        width
+      }).verticalSize;
 
       return internals.columnSizeAndPositionManager.getUpdatedOffsetForIndex({
         align: alignment,
@@ -391,8 +411,14 @@ function createGridInstance(
     scrollToRow: number,
     currentScrollTop: number
   ): number => {
-    const { height, rowCount, scrollbarSize, scrollbarSizeMeasured, width } =
-      internals.latest;
+    const {
+      autoContainerWidth,
+      height,
+      rowCount,
+      scrollbarSize,
+      scrollbarSizeMeasured,
+      width
+    } = internals.latest;
 
     if (rowCount > 0) {
       const finalRow = rowCount - 1;
@@ -400,8 +426,17 @@ function createGridInstance(
         scrollToRow < 0 ? finalRow : Math.min(finalRow, scrollToRow);
       const totalColumnsWidth =
         internals.columnSizeAndPositionManager.getTotalSize();
-      const scrollBarSize =
-        scrollbarSizeMeasured && totalColumnsWidth > width ? scrollbarSize : 0;
+      const totalRowsHeight =
+        internals.rowSizeAndPositionManager.getTotalSize();
+      const scrollBarSize = getScrollbarSizes({
+        autoContainerWidth,
+        height,
+        isLinked: internals.link !== null,
+        scrollbarSize: scrollbarSizeMeasured ? scrollbarSize : 0,
+        totalColumnsWidth,
+        totalRowsHeight,
+        width
+      }).horizontalSize;
       const containerSize = height - scrollBarSize;
       const rowSizeAndPositionManager = internals.rowSizeAndPositionManager;
 
@@ -1063,6 +1098,7 @@ export const Grid = /* @__PURE__ */ memo(
       ] = useState(() =>
         createGridInstance(
           {
+            autoContainerWidth,
             columnCount,
             columnWidth,
             estimatedColumnSize,
@@ -1105,6 +1141,7 @@ export const Grid = /* @__PURE__ */ memo(
       const scrollbarSize = measuredScrollbarSize ?? 0;
 
       const latest: LatestValues = {
+        autoContainerWidth,
         columnCount,
         height,
         onScroll,
@@ -1369,10 +1406,20 @@ export const Grid = /* @__PURE__ */ memo(
       // Force browser to hide scrollbars when we know they aren't necessary.
       // Otherwise once scrollbars appear they may not disappear again.
       // For more info see issue #116
-      const verticalScrollBarSize =
-        totalRowsHeight > height ? scrollbarSize : 0;
-      const horizontalScrollBarSize =
-        totalColumnsWidth > width ? scrollbarSize : 0;
+      const {
+        horizontalOverflow,
+        horizontalSize: horizontalScrollBarSize,
+        verticalOverflow,
+        verticalSize: verticalScrollBarSize
+      } = getScrollbarSizes({
+        autoContainerWidth,
+        height,
+        isLinked: linked,
+        scrollbarSize,
+        totalColumnsWidth,
+        totalRowsHeight,
+        width
+      });
 
       // Equivalent of the 9.x componentDidMount/componentDidUpdate
       useIsomorphicLayoutEffect(() => {
@@ -1594,10 +1641,8 @@ export const Grid = /* @__PURE__ */ memo(
       // But an initial scroll index of offset is set as an external prop.
       // Without this style, Grid would render the correct range of cells but would NOT update its internal offset.
       // This was originally reported via clauderic/react-infinite-calendar/issues/23
-      gridStyle.overflowX =
-        totalColumnsWidth + verticalScrollBarSize <= width ? "hidden" : "auto";
-      gridStyle.overflowY =
-        totalRowsHeight + horizontalScrollBarSize <= height ? "hidden" : "auto";
+      gridStyle.overflowX = horizontalOverflow ? "auto" : "hidden";
+      gridStyle.overflowY = verticalOverflow ? "auto" : "hidden";
 
       const showNoContentRenderer =
         childrenToDisplay.length === 0 && height > 0 && width > 0;

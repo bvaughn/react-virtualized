@@ -1,5 +1,9 @@
 ## Changelog
 
+##### 10.0.1
+
+- `Grid` accounts for one scrollbar causing the other (a vertical scrollbar narrowing the grid enough to need a horizontal one, and vice versa) when reporting `onScrollbarPresenceChange` and when aligning `scrollToRow`/`scrollToColumn`/`scrollToCell` to the end, so the last row or column is no longer hidden behind a scrollbar. A `Grid` with a `scrollElement` no longer reports a vertical scrollbar, since its scroll element does the scrolling ([NoyChan](https://github.com/NoyChan) - [#1901](https://github.com/bvaughn/react-virtualized/pull/1901)).
+
 # 10.0.0
 
 Version 10 is a modernization of react-virtualized. The source has been converted to TypeScript, every component has been rewritten as a function component with hooks, and React 18 or newer is required. Along the way, several long-standing bugs that were inherent in the 9.x architecture have been fixed (see "Bug fixes" below), which required some breaking API changes. The migration guide below covers each of them.
