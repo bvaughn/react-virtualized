@@ -1,7 +1,7 @@
 name: "TypeScript"
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
 jobs:
   typescript:

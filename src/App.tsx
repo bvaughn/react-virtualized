@@ -19,7 +19,6 @@ import { routes, type Path } from "./routes";
 export default function App() {
   return (
     <AppRoot
-      collapseNavSections
       commonQuestions={commonQuestions}
       enableSiteSearch
       nav={nav}

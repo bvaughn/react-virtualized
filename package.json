@@ -1,7 +1,7 @@
 {
   "name": "react-virtualized",
   "description": "React components for efficiently rendering large, scrollable lists and tabular data",
-  "version": "10.0.0",
+  "version": "10.0.1",
   "type": "module",
   "author": "Brian Vaughn <brian.david.vaughn@gmail.com> (https://github.com/bvaughn/)",
   "contributors": [
@@ -112,7 +112,7 @@
     "react": "^19.2.3",
     "react-docgen-typescript": "^2.4.0",
     "react-dom": "^19.2.3",
-    "react-lib-tools": "0.0.74",
+    "react-lib-tools": "0.0.75",
     "react-virtualized-auto-sizer": "^2.0.4",
     "rollup-plugin-visualizer": "^6.0.3",
     "rollup-preserve-directives": "^1.1.3",

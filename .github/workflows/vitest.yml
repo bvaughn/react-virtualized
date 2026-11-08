@@ -1,7 +1,7 @@
 name: "Vitest"
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
 jobs:
   unit-tests:
