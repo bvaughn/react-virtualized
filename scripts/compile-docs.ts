@@ -36,8 +36,7 @@ await compileDocs({
     "MasonryImperativeAPI",
     "MultiGridImperativeAPI",
     "TableImperativeAPI"
-  ],
-  readmePath: false
+  ]
 });
 
 // The CellMeasurerCache constructor options are a plain type (not component props),
