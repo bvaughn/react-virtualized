@@ -1,5 +1,9 @@
 ## Changelog
 
+##### Unreleased
+
+- The ES build no longer imports `dom-helpers/scrollbarSize`, which webpack 5 and Node's ESM loader could not resolve (it is a directory import without a file extension). The scrollbar size is now measured by react-virtualized itself, and `dom-helpers` is no longer a dependency ([gkapsalakis](https://github.com/gkapsalakis) - [#1903](https://github.com/bvaughn/react-virtualized/issues/1903)).
+
 ##### 10.0.1
 
 - `Grid` accounts for one scrollbar causing the other (a vertical scrollbar narrowing the grid enough to need a horizontal one, and vice versa) when reporting `onScrollbarPresenceChange` and when aligning `scrollToRow`/`scrollToColumn`/`scrollToCell` to the end, so the last row or column is no longer hidden behind a scrollbar. A `Grid` with a `scrollElement` no longer reports a vertical scrollbar, since its scroll element does the scrolling ([NoyChan](https://github.com/NoyChan) - [#1901](https://github.com/bvaughn/react-virtualized/pull/1901)).

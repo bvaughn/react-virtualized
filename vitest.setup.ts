@@ -7,8 +7,8 @@ import { vi } from "vitest";
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
 ).IS_REACT_ACT_ENVIRONMENT = true;
 
-vi.mock("dom-helpers/scrollbarSize", () => ({
-  default: function getScrollbarSize() {
+vi.mock("./lib/utils/getScrollbarSize", () => ({
+  getScrollbarSize: function getScrollbarSize() {
     return 20;
   }
 }));
