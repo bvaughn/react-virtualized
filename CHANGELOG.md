@@ -1,6 +1,6 @@
 ## Changelog
 
-##### Unreleased
+##### 10.0.2
 
 - The ES build no longer imports `dom-helpers/scrollbarSize`, which webpack 5 and Node's ESM loader could not resolve (it is a directory import without a file extension). The scrollbar size is now measured by react-virtualized itself, and `dom-helpers` is no longer a dependency ([gkapsalakis](https://github.com/gkapsalakis) - [#1903](https://github.com/bvaughn/react-virtualized/issues/1903)).
 
