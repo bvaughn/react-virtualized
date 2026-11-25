@@ -1,4 +1,4 @@
-import scrollbarSize from "dom-helpers/scrollbarSize";
+import { getScrollbarSize } from "../../utils/getScrollbarSize";
 import { DEFAULT_SCROLLING_RESET_TIME_INTERVAL } from "./constants";
 import { defaultCellRangeRenderer } from "./defaultCellRangeRenderer";
 import { defaultOverscanIndicesGetter } from "./defaultOverscanIndicesGetter";
@@ -44,7 +44,7 @@ export const defaultGridProps: Readonly<
   containerStyle: /* @__PURE__ */ Object.freeze({}),
   estimatedColumnSize: 100,
   estimatedRowSize: 30,
-  getScrollbarSize: scrollbarSize,
+  getScrollbarSize,
   isScrollingOptOut: false,
   noContentRenderer: () => null,
   onScroll: noop,

@@ -311,7 +311,7 @@ export type GridProps = {
    * Returns the size of the browser's scrollbar.
    * Exposed for testing purposes only.
    *
-   * Defaults to `dom-helpers`' `scrollbarSize` (which returns `undefined` during server rendering).
+   * Defaults to measuring (and caching) the width of the browser's native scrollbar.
    */
   getScrollbarSize?: () => number;
 

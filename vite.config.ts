@@ -29,7 +29,7 @@ const libraryConfig: UserConfig = {
     // Consumers minify their own bundles; keeping names readable helps debugging (e.g. component names in React DevTools)
     minify: false,
     rollupOptions: {
-      // Also externalize deep imports (e.g. "dom-helpers/scrollbarSize", "react/jsx-runtime")
+      // Also externalize deep imports (e.g. "react/jsx-runtime")
       external: (id) =>
         externalPackages.some(
           (name) => id === name || id.startsWith(`${name}/`)

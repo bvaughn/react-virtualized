@@ -592,7 +592,7 @@ The estimated total height is adjusted as rows are rendered.</p>
       <td>getScrollbarSize</td>
       <td><p>Returns the size of the browser&#39;s scrollbar.
 Exposed for testing purposes only.</p>
-<p>Defaults to <code>dom-helpers</code>&#39; <code>scrollbarSize</code> (which returns <code>undefined</code> during server rendering).</p>
+<p>Defaults to measuring (and caching) the width of the browser&#39;s native scrollbar.</p>
 </td>
     </tr>
     <tr>
@@ -881,7 +881,7 @@ A shared CellMeasurerCache reference enables Grid and CellMeasurer to share meas
       <td>getScrollbarSize</td>
       <td><p>Returns the size of the browser&#39;s scrollbar.
 Exposed for testing purposes only.</p>
-<p>Defaults to <code>dom-helpers</code>&#39; <code>scrollbarSize</code> (which returns <code>undefined</code> during server rendering).</p>
+<p>Defaults to measuring (and caching) the width of the browser&#39;s native scrollbar.</p>
 </td>
     </tr>
     <tr>
@@ -1338,7 +1338,7 @@ The estimated total height is adjusted as rows are rendered.</p>
       <td>getScrollbarSize</td>
       <td><p>Returns the size of the browser&#39;s scrollbar.
 Exposed for testing purposes only.</p>
-<p>Defaults to <code>dom-helpers</code>&#39; <code>scrollbarSize</code> (which returns <code>undefined</code> during server rendering).</p>
+<p>Defaults to measuring (and caching) the width of the browser&#39;s native scrollbar.</p>
 </td>
     </tr>
     <tr>
@@ -1628,7 +1628,7 @@ The easiest way to override it is to decorate <code>defaultCellRangeRenderer</co
       <td>getScrollbarSize</td>
       <td><p>Returns the size of the browser&#39;s scrollbar.
 Exposed for testing purposes only.</p>
-<p>Defaults to <code>dom-helpers</code>&#39; <code>scrollbarSize</code> (which returns <code>undefined</code> during server rendering).</p>
+<p>Defaults to measuring (and caching) the width of the browser&#39;s native scrollbar.</p>
 </td>
     </tr>
     <tr>

@@ -734,7 +734,7 @@
       {
         "id": "getScrollbarSize",
         "title": "getScrollbarSize",
-        "text": "Returns the size of the browser's scrollbar.\nExposed for testing purposes only.\n Defaults to dom-helpers' scrollbarSize (which returns undefined during server rendering)."
+        "text": "Returns the size of the browser's scrollbar.\nExposed for testing purposes only.\n Defaults to measuring (and caching) the width of the browser's native scrollbar."
       },
       {
         "id": "height",
@@ -1193,7 +1193,7 @@
       {
         "id": "getScrollbarSize",
         "title": "getScrollbarSize",
-        "text": "Returns the size of the browser's scrollbar.\nExposed for testing purposes only.\n Defaults to dom-helpers' scrollbarSize (which returns undefined during server rendering)."
+        "text": "Returns the size of the browser's scrollbar.\nExposed for testing purposes only.\n Defaults to measuring (and caching) the width of the browser's native scrollbar."
       },
       {
         "id": "height",
@@ -1783,7 +1783,7 @@
       {
         "id": "getScrollbarSize",
         "title": "getScrollbarSize",
-        "text": "Returns the size of the browser's scrollbar.\nExposed for testing purposes only.\n Defaults to dom-helpers' scrollbarSize (which returns undefined during server rendering)."
+        "text": "Returns the size of the browser's scrollbar.\nExposed for testing purposes only.\n Defaults to measuring (and caching) the width of the browser's native scrollbar."
       },
       {
         "id": "gridClassName",

@@ -16,5 +16,7 @@ jobs:
         run: pnpm install --frozen-lockfile --recursive
       - name: Build NPM packages
         run: pnpm run build
+      - name: Verify package entry points load in Node
+        run: pnpm run test:dist
       - name: Run tests
         run: pnpm run test:ci

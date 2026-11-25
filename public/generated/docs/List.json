@@ -72,7 +72,7 @@
           "content": "<p>Returns the size of the browser's scrollbar.\nExposed for testing purposes only.</p>\n"
         },
         {
-          "content": "<p>Defaults to <code>dom-helpers</code>' <code>scrollbarSize</code> (which returns <code>undefined</code> during server rendering).</p>\n"
+          "content": "<p>Defaults to measuring (and caching) the width of the browser's native scrollbar.</p>\n"
         }
       ],
       "html": "<div><span class=\"tok-variableName\"><span class=\"tok-propertyName\">getScrollbarSize</span></span><span class=\"tok-operator\">?</span><span class=\"tok-punctuation\">:</span><span class=\"\"> </span><span class=\"tok-punctuation\">(</span><span class=\"tok-punctuation\">)</span><span class=\"\"> </span><span class=\"tok-punctuation\">=&#62;</span><span class=\"\"> </span><span class=\"tok-variableName\">number</span></div>",
